@@ -1,3 +1,22 @@
+# firebase artifacts
+.firebase
+
+# IDEs
+/.idea
+/.vscode
+/.awcache
+/.angular
+
+# misc
+.DS_Store
+Thumbs.db
+npm-debug.log
+*~
+*.sw[mnpcod]
+*.log
+*.tmp
+*.tmp.*
+
 # Logs
 logs
 *.log
