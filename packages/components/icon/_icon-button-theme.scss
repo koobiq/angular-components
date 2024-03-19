@@ -1,0 +1,129 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+
+
+@mixin kbq-icon-button-theme($themeObj) {
+    $icon-button: map.get(map.get($themeObj, components), icon-button);
+
+    $theme: map.get($icon-button, theme);
+    $contrast: map.get($icon-button, contrast);
+    $fade-contrast: map.get($icon-button, fade-contrast);
+    $error: map.get($icon-button, error);
+    $success: map.get($icon-button, success);
+    $warning: map.get($icon-button, warning);
+
+    .kbq-icon-button {
+        &:focus {
+            outline: none;
+        }
+
+        &.kbq-theme {
+            color: map.get($theme, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($theme, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($theme, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($theme, state-disabled);
+            }
+        }
+
+        &.kbq-contrast {
+            color: map.get($contrast, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($contrast, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($contrast, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($contrast, state-disabled);
+            }
+        }
+
+        &.kbq-contrast-fade {
+            color: map.get($fade-contrast, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($fade-contrast, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($fade-contrast, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($fade-contrast, state-disabled);
+            }
+        }
+
+        &.kbq-error {
+            color: map.get($error, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($error, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($error, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($error, state-disabled);
+            }
+        }
+
+        &.kbq-success {
+            color: map.get($success, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($success, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($success, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($success, state-disabled);
+            }
+        }
+
+        &.kbq-warning {
+            color: map.get($warning, default);
+
+            &:active,
+            &.kbq-active {
+                color: map.get($warning, state-active);
+            }
+
+            &:not(.kbq-disabled):hover {
+                color: map.get($warning, state-hover);
+            }
+
+            &.kbq-disabled {
+                color: map.get($warning, state-disabled);
+            }
+        }
+
+        &.cdk-keyboard-focused {
+            box-shadow:
+                inset 0 0 0 1px map.get(map.get($themeObj, states), focused-color),
+                0 0 0 1px map.get(map.get($themeObj, states), focused-color);
+        }
+    }
+}

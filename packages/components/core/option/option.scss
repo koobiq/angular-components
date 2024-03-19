@@ -1,0 +1,17 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../styles/common';
+
+
+.kbq-option {
+    @include common.kbq-list-item-base();
+
+    &:not(.kbq-disabled) {
+        cursor: pointer;
+    }
+}
+
+.kbq-option-text {
+    @include common.kbq-list-text();
+}

@@ -1,0 +1,26 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-risk-level {
+    box-sizing: border-box;
+
+    display: inline-flex;
+    text-align: center;
+
+    border-style: solid;
+
+    padding:
+        var(--kbq-risk-level-size-padding-vertical, map.get($tokens, risk-level-size-padding-vertical))
+        var(--kbq-risk-level-size-padding-horizontal, map.get($tokens, risk-level-size-padding-horizontal));
+
+    border: {
+        width: var(--kbq-risk-level-size-border-width, map.get($tokens, risk-level-size-border-width));
+        radius: var(--kbq-risk-level-size-border-radius, map.get($tokens, risk-level-size-border-radius));
+    }
+}

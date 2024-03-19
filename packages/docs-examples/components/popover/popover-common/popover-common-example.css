@@ -1,0 +1,21 @@
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttons-container button + button {
+    margin-left: 16px;
+}
+
+.buttons-container button:first-child {
+    margin-right: auto;
+}
+
+.example-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.example-radio-button {
+    margin-bottom: 10px;
+}

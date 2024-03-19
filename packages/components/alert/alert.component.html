@@ -1,0 +1,19 @@
+<div class="kbq-alert__icon" *ngIf="iconItem">
+    <ng-content select="[kbq-icon-item]"></ng-content>
+</div>
+
+<div class="kbq-alert__content">
+    <ng-content select="[kbq-alert-title]"></ng-content>
+
+    <div class="kbq-alert__text">
+        <ng-content></ng-content>
+    </div>
+
+    <div class="kbq-alert__controls" *ngIf="control">
+        <ng-content select="[kbq-alert-control]"></ng-content>
+    </div>
+</div>
+
+<div class="kbq-alert__close-button" [hidden]="!closeButton">
+    <ng-content select="[kbq-alert-close-button]"></ng-content>
+</div>

@@ -1,0 +1,48 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-popover-theme($theme) {
+    $popover: map.get(map.get($theme, components), popover);
+
+    $container: map.get($popover, container);
+
+    $header: map.get($popover, header);
+    $content: map.get($popover, content);
+    $footer: map.get($popover, footer);
+
+    .kbq-popover {
+        box-shadow: map.get($container, box-shadow);
+    }
+
+    .kbq-popover__container {
+        background: map.get($container, background);
+    }
+
+    .kbq-popover__arrow {
+        box-shadow: map.get($container, box-shadow);
+        background: map.get($container, background);
+    }
+
+    .kbq-popover__header {
+        color: map.get($header, text);
+    }
+
+    .kbq-popover__content {
+        color: map.get($content, text);
+    }
+}
+
+@mixin kbq-popover-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-popover__header {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, popover-font-header));
+    }
+
+    .kbq-popover__content {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, popover-font-content));
+    }
+}

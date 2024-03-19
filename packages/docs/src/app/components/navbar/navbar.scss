@@ -1,0 +1,75 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-navbar {
+    position: sticky;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: $size-l $size-xxl;
+}
+
+.docs-navbar-show-small {
+    display: none !important;
+}
+
+.docs-navbar__left {
+    display: flex;
+    align-items: center;
+}
+
+.docs-navbar__right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .kbq-button-icon {
+        margin-left: $size-l;
+    }
+
+    .docs-navbar__github-icon {
+        display: flex;
+
+        & .kbq-button-wrapper {
+            justify-content: center;
+        }
+
+        & .kbq-icon {
+            width: $size-l;
+            height: $size-l;
+        }
+    }
+}
+
+.docs-navbar__mobile-logo,
+.docs-navbar__mobile-menu {
+    display: none !important;
+}
+
+@media (width <= 768px) {
+    .docs-navbar__mobile-logo,
+    .docs-navbar__mobile-menu {
+        display: block !important;
+    }
+
+    .docs-navbar {
+        padding: $size-s $size-xxs $size-s $size-l;
+
+        .kbq-button-icon {
+            width: $size-5xl;
+            height: $size-5xl;
+
+            margin-left: $size-xxs;
+        }
+
+        .docs-navbar__right {
+            justify-content: end;
+
+            .docs-navbar__anchor {
+                display: none;
+            }
+        }
+    }
+}

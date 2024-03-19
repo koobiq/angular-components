@@ -1,0 +1,39 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+@use '../core/styles/common';
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-file-upload {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .dropzone,
+    .file-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .kbq-ellipsis-center {
+        position: relative;
+        display: flex;
+
+        .data-text-start {
+            flex: 0 1 auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: pre;
+        }
+
+        .data-text-end {
+            flex: 1 0 auto;
+            overflow: hidden;
+            white-space: pre;
+        }
+    }
+}

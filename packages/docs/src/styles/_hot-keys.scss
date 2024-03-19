@@ -1,0 +1,40 @@
+@use '../dist/components/core/styles/theming';
+
+
+@mixin hot-key-button-theme($theme) {
+    $foreground: map-get($theme, foreground);
+
+    .hot-key-button {
+        @if(map-get($theme, is-dark)) {
+            color: theming.kbq-color($foreground, contrast);
+            border-color: #808080;
+
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+        } @else {
+            color: theming.kbq-color($foreground, contrast);
+            border-color: #D8D9DB;
+
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04);
+        }
+    }
+}
+
+.hot-key-button {
+    display: inline-block;
+    min-width: 32px;
+    max-height: 32px;
+
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 8px;
+
+    box-sizing: border-box;
+
+    padding: 7px;
+
+    font-family: 'Inter';
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: -0.14px;
+    text-align: center;
+}

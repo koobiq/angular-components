@@ -1,0 +1,67 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tag {
+    position: relative;
+
+    display: inline-block;
+
+    max-width: 100%;
+
+    padding:
+        var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical))
+        var(--kbq-tag-size-padding-horizontal, map.get($tokens, tag-size-padding-horizontal));
+
+    border-radius: 4px;
+
+    cursor: default;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    & .kbq-icon.kbq-tag-remove {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        margin-right:
+            var(--kbq-tag-size-close-button-margin-right, map.get($tokens, tag-size-close-button-margin-right));
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &.kbq-disabled .kbq-icon.kbq-tag-remove:hover {
+        cursor: default;
+    }
+
+    & .kbq-tag__text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        margin: 0 var(--kbq-tag-size-content-gap-horizontal, map.get($tokens, tag-size-content-gap-horizontal));
+    }
+
+    & .kbq-icon_left {
+        margin-left: var(--kbq-tag-size-icon-margin-left, map.get($tokens, tag-size-icon-margin-left));
+    }
+}
+
+.kbq-tag__wrapper {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    flex: 1 1 100%;
+}

@@ -1,0 +1,259 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+@use '../core/styles/common';
+
+$tokens: meta.module-variables(tokens) !default;
+
+//todo нужно рефакторить со стилями тут сложно
+/* stylelint-disable no-descending-specificity */
+
+.kbq-multiple-file-upload .kbq-file-upload {
+    border-radius: var(
+        --kbq-file-upload-size-multiple-big-container-border-radius,
+        map.get($tokens, file-upload-size-multiple-big-container-border-radius)
+    );
+    border-width: var(
+        --kbq-file-upload-size-multiple-big-container-border-width,
+        map.get($tokens, file-upload-size-multiple-big-container-border-width)
+    );
+    border-style: dashed;
+
+    &.default:not(.selected) {
+        justify-content: center;
+
+        padding:
+            var(
+                --kbq-file-upload-size-multiple-big-container-padding-vertical,
+                map.get($tokens, file-upload-size-multiple-big-container-padding-vertical)
+            )
+            var(
+                --kbq-file-upload-size-multiple-big-container-padding-vertical,
+                map.get($tokens, file-upload-size-multiple-big-container-padding-vertical)
+            );
+
+        min-height: var(
+            --kbq-file-upload-size-multiple-big-container-min-height,
+            map.get($tokens, file-upload-size-multiple-big-container-min-height)
+        );
+
+        min-width: var(
+            --kbq-file-upload-size-multiple-big-container-min-width,
+            map.get($tokens, file-upload-size-multiple-big-container-min-width)
+        );
+
+        & .dropzone {
+            gap: var(
+                --kbq-file-upload-size-multiple-big-container-content-gap-horizontal,
+                map.get($tokens, file-upload-size-multiple-big-container-content-gap-horizontal)
+            );
+        }
+
+        & .dropzone__text {
+            & .multiple__caption {
+                padding-top: var(
+                    --kbq-file-upload-size-multiple-big-text-block-content-gap-vertical,
+                    map.get($tokens, file-upload-size-multiple-big-text-block-content-gap-vertical)
+                );
+
+                gap: var(
+                    --kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal,
+                    map.get($tokens, file-upload-size-multiple-big-text-block-content-gap-horizontal)
+                );
+            }
+        }
+    }
+
+    &.compact:not(.selected) {
+        padding:
+            var(
+                --kbq-file-upload-size-single-container-padding-vertical,
+                map.get($tokens, file-upload-size-single-container-padding-vertical)
+            )
+            var(
+                --kbq-file-upload-size-single-container-padding-horizontal,
+                map.get($tokens, file-upload-size-single-container-padding-horizontal)
+            );
+
+        & .dropzone {
+            gap: var(
+                --kbq-file-upload-size-single-container-content-gap-horizontal,
+                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
+            );
+
+            & .dropzone__text.multiple__caption {
+                padding-top: var(
+                    --kbq-file-upload-size-single-text-block-padding-vertical,
+                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+                );
+
+                padding-bottom: var(
+                    --kbq-file-upload-size-single-text-block-padding-vertical,
+                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+                );
+
+                gap: var(
+                    --kbq-file-upload-size-single-text-block-content-gap-horizontal,
+                    map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
+                );
+            }
+        }
+    }
+
+    & .kbq-list-option.multiple__uploaded-item {
+        padding: 0;
+
+        & .kbq-list-text {
+            $padding-vertical: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-vertical);
+            $padding-horizontal: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-horizontal);
+            $outline-width: map.get($tokens, list-size-container-focus-outline-width);
+
+            padding:
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical, $padding-vertical) -
+                    var(--kbq-list-size-container-focus-outline-width, $outline-width)
+                )
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal, $padding-horizontal) -
+                    var(--kbq-list-size-container-focus-outline-width, $outline-width)
+                );
+        }
+
+        .kbq-icon {
+            margin-right: 0;
+        }
+    }
+
+    .kbq-file-upload__grid {
+        min-height: 144px;
+    }
+
+    .kbq-file-multiple-uploaded__header-inner,
+    .kbq-file-upload__row {
+        display: flex;
+        align-items: center;
+
+        .kbq-file-upload__file {
+            width: 65%;
+            max-width: 65%;
+
+            gap: var(
+                --kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal,
+                map.get($tokens, file-upload-size-multiple-big-grid-cell-content-gap-horizontal)
+            );
+        }
+
+        .kbq-file-upload__size {
+            width: map.get($tokens, size-7xl);
+            min-width: map.get($tokens, size-7xl);
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .kbq-file-upload__file,
+        .kbq-file-upload__size,
+        .kbq-file-upload__action, {
+            //padding-left: $horizontal-padding-item;
+            //padding-right: $horizontal-padding-item;
+        }
+    }
+
+    .kbq-file-upload__row {
+        .kbq-file-upload__file {
+            display: flex;
+            align-items: center;
+
+            .file-item__text {
+                margin-left: 0;
+                width: 90%;
+            }
+        }
+    }
+
+    .kbq-file-multiple-uploaded__header {
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+
+        .kbq-file-multiple-uploaded__header-inner {
+            $padding-vertical: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-vertical);
+            $padding-horizontal: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-horizontal);
+            $compensation: 3px;
+
+            padding:
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical, $padding-vertical) +
+                    $compensation
+                )
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal, $padding-horizontal) +
+                    $compensation
+                );
+        }
+
+    }
+
+    .btn-upload {
+        $padding-vertical: map.get($tokens, file-upload-size-single-container-padding-vertical);
+        $padding-horizontal: map.get($tokens, file-upload-size-single-container-padding-horizontal);
+        $border-width: map.get($tokens, file-upload-size-single-container-border-width);
+
+        padding:
+            calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
+            calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
+
+        border-top-left-radius: var(
+            --kbq-file-upload-size-single-container-border-radius,
+            map.get($tokens, file-upload-size-single-container-border-radius)
+        );
+
+        border-top-right-radius: var(
+            --kbq-file-upload-size-single-container-border-radius,
+            map.get($tokens, file-upload-size-single-container-border-radius)
+        );
+        border-top-width: var(
+            --kbq-file-upload-size-single-container-border-width,
+            map.get($tokens, file-upload-size-single-container-border-width)
+        );
+        border-top-style: dashed;
+
+        & .dropzone {
+            gap: var(
+                --kbq-file-upload-size-single-container-content-gap-horizontal,
+                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
+            );
+
+            & .dropzone__text.multiple__caption {
+                padding-top: var(
+                    --kbq-file-upload-size-single-text-block-padding-vertical,
+                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+                );
+
+                padding-bottom: var(
+                    --kbq-file-upload-size-single-text-block-padding-vertical,
+                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+                );
+
+                gap: var(
+                    --kbq-file-upload-size-single-text-block-content-gap-horizontal,
+                    map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
+                );
+            }
+        }
+    }
+
+    .file-upload__dropzone {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.kbq-hint {
+    display: block;
+}
+
+.kbq-file-upload__hint {
+    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+}
+/* stylelint-enable no-descending-specificity */

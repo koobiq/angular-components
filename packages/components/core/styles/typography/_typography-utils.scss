@@ -1,0 +1,78 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+
+
+@function kbq-typography-level(
+    $font-size,
+    $line-height: $font-size,
+    $letter-spacing: normal,
+    $font-weight: normal,
+    $font-family: null,
+    $text-transform: null,
+    $font-feature-settings: null
+) {
+    @return (
+        font-size: $font-size,
+        line-height: $line-height,
+        font-weight: $font-weight,
+        font-family: $font-family,
+        letter-spacing: $letter-spacing,
+        text-transform: $text-transform,
+        font-feature-settings: $font-feature-settings
+    );
+}
+
+@function _kbq-get-type-value($config, $level, $name) {
+    @return map.get(map.get($config, $level), $name);
+}
+
+@function kbq-font-size($config, $level) {
+    @return _kbq-get-type-value($config, $level, font-size);
+}
+
+@function kbq-line-height($config, $level) {
+    @return _kbq-get-type-value($config, $level, line-height);
+}
+
+@function kbq-font-weight($config, $level) {
+    @return _kbq-get-type-value($config, $level, font-weight);
+}
+
+@function kbq-letter-spacing($config, $level) {
+    @return _kbq-get-type-value($config, $level, letter-spacing);
+}
+
+@function kbq-text-transform($config, $level) {
+    @return _kbq-get-type-value($config, $level, text-transform);
+}
+
+@function kbq-font-feature-settings($config, $level) {
+    @return _kbq-get-type-value($config, $level, font-feature-settings);
+}
+
+// Gets the font-family from a typography config and removes the quotes around it.
+@function kbq-font-family($config, $level: null) {
+    $font-family: map.get($config, font-family);
+
+    @if $level != null {
+        $font-family: _kbq-get-type-value($config, $level, font-family);
+    }
+
+    // Guard against unquoting non-string values, because it's deprecated.
+    @return if(meta.type-of($font-family) == string, string.unquote($font-family), $font-family);
+}
+
+@mixin kbq-typography-level-to-styles($config, $level) {
+    $font-size: kbq-font-size($config, $level);
+    $font-weight: kbq-font-weight($config, $level);
+    $line-height: kbq-line-height($config, $level);
+    $font-family: kbq-font-family($config, $level);
+    $text-transform: kbq-text-transform($config, $level);
+    $font-feature-settings: kbq-font-feature-settings($config, $level);
+
+    font: $font-weight #{$font-size}/#{$line-height} $font-family;
+    letter-spacing: kbq-letter-spacing($config, $level);
+    text-transform: kbq-text-transform($config, $level);
+    font-feature-settings: kbq-font-feature-settings($config, $level);
+}

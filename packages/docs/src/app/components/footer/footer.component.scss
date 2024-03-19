@@ -1,0 +1,42 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-footer {
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    will-change: transform;
+
+    padding: $size-l $size-xxl;
+
+    gap: $size-l;
+
+    min-height: 112px;
+}
+
+.docs-footer__item {
+    display: flex;
+    flex-direction: column;
+
+    .docs-footer__control {
+        display: inline-flex;
+        align-items: baseline;
+
+        gap: $size-3xs;
+
+        cursor: pointer;
+    }
+}
+
+@media (width <= 768px) {
+    .docs-footer {
+        padding: $size-xxl $size-l;
+        min-height: 140px;
+
+        .docs-footer__label {
+            margin-bottom: $size-3xs;
+        }
+    }
+}

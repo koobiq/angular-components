@@ -1,0 +1,102 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-toggle {
+    display: inline-block;
+
+    .kbq-toggle__circle {
+        position: absolute;
+
+        border-radius: 50%;
+
+        transform: translateX(-1px); // due to EDGE animation features
+
+        height: 10px;
+        width: 10px;
+    }
+
+    .kbq-toggle-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        cursor: inherit;
+
+        &.left {
+            flex-direction: row-reverse;
+        }
+    }
+
+    .kbq-toggle-bar-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .kbq-toggle-bar {
+        position: relative;
+        box-sizing: border-box;
+
+        display: flex;
+        align-items: center;
+
+        border: {
+            width: 1px;
+            style: solid;
+            radius: 8px;
+        }
+
+        height: var(--kbq-toggle-size-normal-height, map.get($tokens, toggle-size-normal-height));
+        width: var(--kbq-toggle-size-normal-width, map.get($tokens, toggle-size-normal-width));
+    }
+
+    .kbq-hint {
+        margin-top: var(
+            --kbq-toggle-size-normal-vertical-content-padding,
+            map.get($tokens, toggle-size-normal-vertical-content-padding)
+        );
+    }
+}
+
+.kbq-toggle__content {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    &.left {
+        margin-right: var(
+            --kbq-toggle-size-normal-horizontal-content-padding,
+            map.get($tokens, toggle-size-normal-horizontal-content-padding)
+        );
+    }
+
+    &.right {
+        margin-left: var(
+            --kbq-toggle-size-normal-horizontal-content-padding,
+            map.get($tokens, toggle-size-normal-horizontal-content-padding)
+        );
+    }
+}
+
+.kbq-toggle.kbq-toggle_big {
+    & .kbq-toggle-bar {
+        height: var(--kbq-toggle-size-big-height, map.get($tokens, toggle-size-big-height));
+        width: var(--kbq-toggle-size-big-width, map.get($tokens, toggle-size-big-width));
+    }
+
+    & .kbq-hint {
+        margin-top: var(
+            --kbq-toggle-size-big-vertical-content-padding,
+            map.get($tokens, toggle-size-big-vertical-content-padding)
+        );
+    }
+}
+
+.kbq-toggle:not(.kbq-disabled) {
+    cursor: pointer;
+}

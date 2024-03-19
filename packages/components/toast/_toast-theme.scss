@@ -1,0 +1,49 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-toast($toast) {
+    box-shadow: map.get($toast, box-shadow);
+
+    background: map.get($toast, background);
+
+    .kbq-toast__title {
+        color: map.get($toast, title);
+    }
+
+    .kbq-toast__text {
+        color: map.get($toast, text);
+    }
+}
+
+
+@mixin kbq-toast-theme($theme) {
+    $toast: map.get(map.get($theme, components), toast);
+
+    $contrast: map.get($toast, contrast);
+    $error: map.get($toast, error);
+
+    .kbq-toast {
+        &.kbq-toast_contrast {
+            @include kbq-toast($contrast);
+        }
+
+        &.kbq-toast_error {
+            @include kbq-toast($error);
+        }
+    }
+}
+
+@mixin kbq-toast-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-toast {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, toast-font-text));
+    }
+
+    .kbq-toast__title {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, toast-font-title));
+    }
+}

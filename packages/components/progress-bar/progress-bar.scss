@@ -1,0 +1,68 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/functions/timing';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+@keyframes kbq-progress-bar-indeterminate {
+    0% {
+        width: 25%;
+        transform: translateX(-150%);
+    }
+
+    100% {
+        width: 40%;
+        transform: translateX(250%);
+    }
+}
+
+.kbq-progress-bar {
+    display: block;
+    overflow: hidden;
+
+    .kbq-progress-bar-text {
+        margin-bottom: var(
+            --kbq-progress-bar-size-container-content-gap,
+            map.get($tokens, progress-bar-size-container-content-gap)
+        );
+    }
+
+    .kbq-progress-bar-caption {
+        margin-top: var(
+            --kbq-progress-bar-size-container-content-gap,
+            map.get($tokens, progress-bar-size-container-content-gap)
+        );
+    }
+
+    & .kbq-progress-bar__inner {
+        overflow: hidden;
+
+        height: var(--kbq-progress-bar-size-bar-height, map.get($tokens, progress-bar-size-bar-height));
+        border-radius: var(
+            --kbq-progress-bar-size-container-border-radius,
+            map.get($tokens, progress-bar-size-container-border-radius)
+        );
+    }
+
+    & .kbq-progress-bar__line {
+        height: 100%;
+        transform-origin: top left;
+
+        border-radius: var(
+            --kbq-progress-bar-size-bar-border-radius,
+            map.get($tokens, progress-bar-size-bar-border-radius)
+        );
+    }
+
+    &.kbq-progress-bar_determinate .kbq-progress-bar__line {
+        transition: width 0.3s;
+    }
+
+    &.kbq-progress-bar_indeterminate .kbq-progress-bar__line {
+        animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
+    }
+}

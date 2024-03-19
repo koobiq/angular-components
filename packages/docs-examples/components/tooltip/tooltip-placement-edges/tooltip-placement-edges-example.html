@@ -1,0 +1,6 @@
+<div class="tooltip-example__visual-box">
+    <div *ngFor="let placement of placements"
+         class="tooltip-example__trigger tooltip-example__trigger_{{placement}}"
+         [kbqTooltip]="'Tooltip\nkbqPlacement: ' + placement"
+         [kbqPlacement]="placement"></div>
+</div>

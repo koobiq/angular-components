@@ -1,0 +1,41 @@
+@use 'sass:map';
+
+@use '../styles/theming/theming' as *;
+@use '../styles/typography/typography-utils' as *;
+
+
+@mixin kbq-option-action-theme($theme) {
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
+
+    $secondary: map.get($theme, secondary);
+
+    $is-dark: map.get($theme, is-dark);
+
+    .kbq-option-action {
+        &.cdk-keyboard-focused {
+            border-color: map.get(map.get($theme, states), focused-color);
+        }
+
+        &:active,
+        &.kbq-pressed {
+            & .kbq-icon {
+                color: kbq-color($secondary, if($is-dark, 70, 30));
+            }
+
+            background-color: kbq-color($secondary, A16);
+        }
+
+        &:hover .kbq-icon {
+            color: kbq-color($secondary, if($is-dark, 70, 30));
+        }
+
+        &.kbq-disabled {
+            & .kbq-icon {
+                color: kbq-color($secondary, if($is-dark, 30, 70));
+            }
+
+            background-color: transparent;
+        }
+    }
+}

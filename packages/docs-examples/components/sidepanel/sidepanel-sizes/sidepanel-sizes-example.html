@@ -1,0 +1,32 @@
+<div class="example-container">
+    <button kbq-button (click)="showSmall()">Small</button>
+
+    <button kbq-button (click)="showMedium()">Medium</button>
+
+    <button kbq-button (click)="showLarge()">Large</button>
+</div>
+
+<ng-template>
+    <kbq-sidepanel-header [closeable]="true">
+        Sidepanel Template Content
+    </kbq-sidepanel-header>
+    <kbq-sidepanel-body class="layout-padding">
+        <div class="kbq-subheading">Sidepanel Template Body</div>
+
+        <div *ngFor="let item of array; index as i">
+            {{ i + 1 }}
+        </div>
+    </kbq-sidepanel-body>
+
+    <kbq-sidepanel-footer>
+        <kbq-sidepanel-actions align="left">
+            <button cdkFocusInitial kbq-button [color]="'contrast'">
+                <span>Button</span>
+            </button>
+        </kbq-sidepanel-actions>
+
+        <kbq-sidepanel-actions align="right">
+            <span>Action</span>
+        </kbq-sidepanel-actions>
+    </kbq-sidepanel-footer>
+</ng-template>

@@ -1,0 +1,16 @@
+<docs-sidenav
+    class="kbq-scrollbar"
+    [class.docs-sidenav_opened]="opened"
+    [class.docs-sidenav_closed]="!opened"
+    [@openCloseSidenav]="opened ? 'open' : 'closed'"
+></docs-sidenav>
+
+<div class="docs-app-container layout-column flex">
+    <docs-navbar [class.docs-top-overflown]="docStates.viewerTopOverflown.value"></docs-navbar>
+
+    <kbq-divider></kbq-divider>
+
+    <router-outlet></router-outlet>
+
+    <div class="docs-overlay" [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"></div>
+</div>

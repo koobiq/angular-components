@@ -1,0 +1,76 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-table {
+    border-spacing: 0;
+
+    & > thead,
+    & > tbody,
+    & > tfoot {
+        & > tr {
+            & > th,
+            & > td {
+                padding: {
+                    top: var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical));
+                    right: calc((var(
+                        --kbq-table-size-row-padding-horizontal,
+                        map.get($tokens, table-size-row-padding-horizontal)
+                    ) / 2));
+                    bottom: calc(
+                        var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical)) -
+                        var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width))
+                    );
+                    left: calc((var(
+                        --kbq-table-size-row-padding-horizontal,
+                        map.get($tokens, table-size-row-padding-horizontal)
+                    ) / 2))
+                };
+
+                vertical-align: baseline;
+                text-align: left;
+            }
+
+            & > th:first-child,
+            & > td:first-child {
+                padding-left:
+                    var(--kbq-table-size-row-padding-horizontal, map.get($tokens, table-size-row-padding-horizontal));
+            }
+
+            & > th:last-child,
+            & > td:last-child {
+                padding-right:
+                    var(--kbq-table-size-row-padding-horizontal, map.get($tokens, table-size-row-padding-horizontal));
+            }
+        }
+    }
+
+    /* stylelint-disable no-descending-specificity */
+    & > thead {
+        & > tr > th {
+            padding: {
+                top: var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical));
+                bottom: (
+                    calc(var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical)) -
+                    var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)))
+                );
+            }
+
+            border-bottom:
+                var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)) solid transparent;
+        }
+    }
+
+    & > tbody > tr {
+        & th,
+        & td {
+            border-bottom:
+                var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)) solid transparent;
+        }
+    }
+    /* stylelint-enable no-descending-specificity */
+}

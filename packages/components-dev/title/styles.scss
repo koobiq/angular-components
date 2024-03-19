@@ -1,0 +1,58 @@
+@use '../main';
+
+
+.dev-container {
+    max-width: 400px;
+
+    border: 1px solid red;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+
+    &.responsive {
+        max-width: 50%;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+.parent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    max-width: 100%;
+}
+
+.child {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.text-with-tooltip {
+    max-width: 150px;
+
+    & .kbq-button-wrapper {
+        max-width: 100%;
+
+        display: block !important;
+        flex-grow: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+
+.margin {
+    margin-left: 50px;
+}

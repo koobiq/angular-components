@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "outDir": "../../dist/cli",
+        "target": "ES2022",
+        "strict": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "downlevelIteration": true,
+        "resolveJsonModule": true,
+        "jsx": "preserve",
+        "lib": ["esnext", "dom"],
+        "module": "esnext",
+        "moduleResolution": "node"
+    },
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs"
+        }
+    }
+}

@@ -1,0 +1,73 @@
+@use '../dist/components';
+
+@use '../dist/components/core/styles/visual';
+@use '../dist/components/core/styles/typography';
+
+@use '../dist/components/core/styles/koobiq-theme' as *;
+
+@use '../app/containers/docs-app/docs-app-theme';
+@use '../app/containers/icons-viewer/icons-viewer-theme';
+@use '../app/components/component-viewer/component-viewer-theme';
+@use '../app/components/anchors/anchors-theme';
+@use '../app/components/footer/footer-theme';
+@use '../app/components/sidenav/sidenav-theme';
+@use '../app/components/navbar/navbar-theme';
+@use '../app/components/welcome/welcome-theme';
+
+@use '../app/components/stackblitz/stackblitz-button-theme';
+@use '../app/components/example-viewer/example-viewer-theme';
+@use '../app/components/docs-example-source/docs-example-source-theme';
+@use '../app/components/page-not-found/page-not-found-theme';
+
+@use '../styles/hot-keys';
+
+
+@include components.kbq-core();
+
+@include visual.body-html();
+@include visual.layouts-for-breakpoint();
+
+
+// Include all typography for the components.
+@mixin docs-typography($tokens, $config, $md-config) {
+    @include typography.kbq-typography-level-to-styles($config, body);
+
+    @include koobiq-typography($tokens, $config, $md-config);
+
+    @include footer-theme.kbq-docs-footer-typography($config);
+    @include anchors-theme.kbq-docs-anchors-typography($config);
+    @include sidenav-theme.kbq-docs-sidenav-typography($config);
+    @include navbar-theme.kbq-docs-navbar-typography($config);
+    @include docs-example-source-theme.kbq-docs-example-source-typography($config);
+    @include icons-viewer-theme.kbq-docs-icons-viewer-typography($config);
+    @include welcome-theme.kbq-docs-welcome-typography($config);
+}
+
+// Include all theme styles for the components.
+@mixin docs-components-theme($theme) {
+    @include docs-app-theme.kbq-docs-app-theme($theme);
+    @include component-viewer-theme.kbq-docs-component-viewer-theme($theme);
+    @include anchors-theme.kbq-docs-anchors-theme($theme);
+    @include footer-theme.kbq-docs-footer-theme($theme);
+    @include sidenav-theme.kbq-docs-sidenav-theme($theme);
+    @include navbar-theme.kbq-docs-navbar-theme($theme);
+    @include icons-viewer-theme.kbq-docs-icons-viewer-theme($theme);
+    @include stackblitz-button-theme.kbq-docs-stackblitz-theme($theme);
+    @include example-viewer-theme.kbq-docs-example-viewer-theme($theme);
+    @include docs-example-source-theme.kbq-docs-example-source-theme($theme);
+    @include hot-keys.hot-key-button-theme($theme);
+    @include page-not-found-theme.kbq-docs-page-not-found-theme($theme);
+    @include welcome-theme.kbq-docs-welcome-theme($theme);
+}
+
+@mixin kbq-docs-theme($theme) {
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    background: components.kbq-color($background, bg);
+    color: components.kbq-color($foreground, contrast);
+
+    @include koobiq-theme($theme);
+    @include docs-components-theme($theme);
+}
+

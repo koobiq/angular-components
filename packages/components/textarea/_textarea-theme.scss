@@ -1,0 +1,13 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-textarea-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-textarea {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, textarea-font-default));
+    }
+}

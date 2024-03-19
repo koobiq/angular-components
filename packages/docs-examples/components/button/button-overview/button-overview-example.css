@@ -1,0 +1,12 @@
+.overview__example-button.kbq-button {
+    margin-bottom: 16px;
+    align-self: start;
+}
+
+.kbq-checkbox {
+    margin-right: 16px;
+}
+
+.kbq-checkbox:last-of-type {
+    margin-right: 0;
+}

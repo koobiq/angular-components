@@ -1,0 +1,73 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+@mixin kbq-button-toggle-color($state) {
+    background: map.get($state, background);
+
+    color: map.get($state, text);
+
+    & .kbq-icon {
+        color: map.get($state, icon);
+    }
+}
+
+@mixin kbq-button-toggle-theme($theme) {
+    $button-toggle: map.get(map.get($theme, components), button-toggle);
+
+    .kbq-button-toggle-group {
+        $container: map.get($button-toggle, container);
+
+        background: map.get($container, background);
+
+        .kbq-button-toggle {
+            $button: map.get($button-toggle, item);
+
+            & > .kbq-button,
+            & > .kbq-icon-button {
+                @include kbq-button-toggle-color(map.get($button, default));
+
+                &:hover:not(.kbq-disabled) {
+                    @include kbq-button-toggle-color(map.get($button, hover));
+                }
+
+                &:active:not(.kbq-disabled) {
+                    @include kbq-button-toggle-color(map.get($button, active));
+                }
+
+                &.kbq-selected:not(.kbq-disabled) {
+                    @include kbq-button-toggle-color(map.get($button, selected));
+
+                    &:hover {
+                        @include kbq-button-toggle-color(map.get($button, selected-hover));
+                    }
+
+                    &:active {
+                        @include kbq-button-toggle-color(map.get($button, selected-active));
+                    }
+                }
+
+                &.kbq-disabled {
+                    @include kbq-button-toggle-color(map.get($button, disabled));
+                }
+
+                &.cdk-keyboard-focused {
+                    border-color: map.get($button, focused);
+                }
+            }
+        }
+    }
+}
+
+@mixin kbq-button-toggle-typography($config) {
+    .kbq-button-toggle .kbq-button-toggle-wrapper {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, button-toggle-font-item));
+    }
+}
+

@@ -1,0 +1,376 @@
+<ng-template #customContent>
+    <ng-container [ngSwitch]="popoverActiveStage">
+        <ng-container *ngSwitchCase="1">
+            В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке.
+        </ng-container>
+        <ng-container *ngSwitchCase="2">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+        </ng-container>
+        <ng-container *ngSwitchCase="3">
+            Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum.
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #customFooter>
+    <div class="flex-100 layout-row layout-align-space-between-center">
+        <button class="step"
+                kbq-button
+                [color]="'contrast'"
+                (click)="changeStep(-1)">
+            &larr; Назад
+        </button>
+
+        <button class="step"
+                kbq-button
+                [color]="'contrast'"
+                (click)="changeStep(1)">
+            Дальше &rarr;
+        </button>
+    </div>
+</ng-template>
+
+<div class="container flex-100 layout-column layout-align-start-start">
+    <div class="kbq-form-vertical layout-row layou-align-start-start config" [style]="getOrder('config')">
+        <div class="flex-20 kbq-form__fieldset">
+            <div class="kbq-form__row">
+                <label class="kbq-form__label" for="order">Inverse layout order</label>
+
+                <kbq-checkbox class="kbq-form__control" id="order" [(ngModel)]="selectedOrder">Yes/No</kbq-checkbox>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="element" class="kbq-form__label">
+                    Choose trigger element
+                </label>
+
+                <kbq-form-field id="element" class="kbq-form__control">
+                    <kbq-select [(value)]="selectedElement" [placeholder]="'Select element'">
+                        <kbq-option [value]="ELEMENTS.BUTTON">Button</kbq-option>
+                        <kbq-option [value]="ELEMENTS.CONFIRM_BUTTON">Confirm Button</kbq-option>
+                        <kbq-option [value]="ELEMENTS.ICON">Icon</kbq-option>
+                        <kbq-option [value]="ELEMENTS.INPUT">Input</kbq-option>
+                        <kbq-option [value]="ELEMENTS.RADIO_GROUP">Radio group</kbq-option>
+                        <kbq-option [value]="ELEMENTS.LINK">Link</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row" [style.display]="(selectedElement === ELEMENTS.CONFIRM_BUTTON) ? 'none' : 'initial'">
+                <label for="trigger" class="kbq-form__label">
+                    Choose popover trigger
+                </label>
+
+                <div class="kbq-form__control">
+                    <kbq-form-field id="trigger">
+                        <kbq-select [(value)]="selectedTrigger" [placeholder]="'Select trigger'">
+                            <kbq-option [value]="TRIGGERS.CLICK">Click</kbq-option>
+                            <kbq-option [value]="TRIGGERS.HOVER">Hover</kbq-option>
+                            <kbq-option [value]="TRIGGERS.FOCUS">Focus</kbq-option>
+                            <kbq-option [value]="TRIGGERS.CUSTOM">Custom</kbq-option>
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
+
+                <div class="kbq-form__control layout-padding-top-s" *ngIf="selectedTrigger === TRIGGERS.CUSTOM">
+                    <button class="layout-margin-right-s"
+                            kbq-button
+                            (click)="openPopover()">
+                        Open
+                    </button>
+
+                    <button kbq-button
+                            (click)="closePopover()">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+            <div class="kbq-form__row" [style.display]="(selectedElement === ELEMENTS.CONFIRM_BUTTON) ? 'none' : 'initial'">
+                <label for="size" class="kbq-form__label">
+                    Choose popover size
+                </label>
+
+                <kbq-form-field id="size" class="kbq-form__control">
+                    <kbq-select [(value)]="selectedSize" [placeholder]="'Select size'">
+                        <kbq-option [value]="SIZE.SMALL">Small</kbq-option>
+                        <kbq-option [value]="SIZE.MEDIUM">Medium</kbq-option>
+                        <kbq-option [value]="SIZE.LARGE">Large</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="layout" class="kbq-form__label">
+                    Choose layout content placement
+                </label>
+
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <kbq-select [(value)]="layoutClass" [placeholder]="'Select layout'">
+                        <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-start'">Center start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-center'">Center center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-end'">Center end</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-start'">End start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-center'">End center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-end'">End end</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row" [style.display]="(selectedElement === ELEMENTS.CONFIRM_BUTTON) ? 'initial' : 'none'">
+                <label for="layout" class="kbq-form__label">
+                    Set confirm text
+                </label>
+
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <input kbqInput [(ngModel)]="confirmText"/>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row" [style.display]="(selectedElement === ELEMENTS.CONFIRM_BUTTON) ? 'initial' : 'none'">
+                <label for="layout" class="kbq-form__label">
+                    Set confirm button text
+                </label>
+
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <input kbqInput [(ngModel)]="confirmButtonText"/>
+                </kbq-form-field>
+            </div>
+        </div>
+        <div class="flex left-padding layout-align-center-center">
+            <label for="trigger" class="flex kbq-form__label">
+                Choose kbqPlacement
+            </label>
+            <div class="visual-box">
+                <div (click)="setPlacement(popUpPlacements.TopLeft)"
+                     [ngClass]="{
+                        active: activated('topLeft'),
+                        actual: isActual('topLeft')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top-left"></div>
+                <div (click)="setPlacement(popUpPlacements.Top)"
+                     [ngClass]="{
+                        active: activated('top'),
+                        actual: isActual('top')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top"></div>
+                <div (click)="setPlacement(popUpPlacements.TopRight)"
+                     [ngClass]="{
+                        active: activated('topRight'),
+                        actual: isActual('topRight')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top-right"></div>
+                <div (click)="setPlacement(popUpPlacements.RightTop)"
+                     [ngClass]="{
+                        active: activated('rightTop'),
+                        actual: isActual('rightTop')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right-top"></div>
+                <div (click)="setPlacement(popUpPlacements.Right)"
+                     [ngClass]="{
+                        active: activated('right'),
+                        actual: isActual('right')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right"></div>
+                <div (click)="setPlacement(popUpPlacements.RightBottom)"
+                     [ngClass]="{
+                        active: activated('rightBottom'),
+                        actual: isActual('rightBottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.BottomRight)"
+                     [ngClass]="{
+                        active: activated('bottomRight'),
+                        actual: isActual('bottomRight')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom-right"></div>
+                <div (click)="setPlacement(popUpPlacements.Bottom)"
+                     [ngClass]="{
+                        active: activated('bottom'),
+                        actual: isActual('bottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.BottomLeft)"
+                     [ngClass]="{
+                        active: activated('bottomLeft'),
+                        actual: isActual('bottomLeft')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom-left"></div>
+                <div (click)="setPlacement(popUpPlacements.LeftBottom)"
+                     [ngClass]="{
+                        active: activated('leftBottom'),
+                        actual: isActual('leftBottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.Left)"
+                     [ngClass]="{
+                        active: activated('left'),
+                        actual: isActual('left')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left"></div>
+                <div (click)="setPlacement(popUpPlacements.LeftTop)"
+                     [ngClass]="{
+                        active: activated('leftTop'),
+                        actual: isActual('leftTop')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left-top"></div>
+            </div>
+
+            <div class="kbq-form__row flex-50">
+                <label for="size" class="kbq-form__label">
+                    Choose kbqPlacementPriority
+                </label>
+
+                <kbq-form-field class="kbq-form__control">
+                    <kbq-select [multiple]="true" [(value)]="multipleSelected">
+                        <kbq-option [value]="popUpPlacements.Top" disabled>Top</kbq-option>
+                        <kbq-option [value]="popUpPlacements.TopLeft">TopLeft</kbq-option>
+                        <kbq-option [value]="popUpPlacements.TopRight">TopRight</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Bottom">Bottom</kbq-option>
+                        <kbq-option [value]="popUpPlacements.BottomLeft">BottomLeft</kbq-option>
+                        <kbq-option [value]="popUpPlacements.BottomRight">BottomRight</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Right">Right</kbq-option>
+                        <kbq-option [value]="popUpPlacements.RightTop">RightTop</kbq-option>
+                        <kbq-option [value]="popUpPlacements.RightBottom">RightBottom</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Left">Left</kbq-option>
+                        <kbq-option [value]="popUpPlacements.LeftTop">LeftTop</kbq-option>
+                        <kbq-option [value]="popUpPlacements.LeftBottom">LeftBottom</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+        </div>
+        <div class="flex left-padding">
+            <h3>Configuration:</h3>
+            <ul>
+                <li>Popover size: {{selectedSize}}</li>
+                <li>Popover trigger: {{selectedTrigger}}</li>
+                <li>Popover anchor placement: {{selectedPlacement}}</li>
+                <li>Popover anchored element: {{selectedElement}}</li>
+                <li *ngIf="this.isFallbackActivated" class="actual red">Popover activated fallback position: {{activatedPosition}}</li>
+                <li>Layout positioning: {{layoutClass}}</li>
+                <li *ngIf="multipleSelected">Placement priority order: {{multipleSelected}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="{{layoutClass}} result" [style]="getOrder('result')" style="overflow: scroll" cdkScrollable>
+        <div [ngSwitch]="showElement()" style="min-width: 1500px; display: flex; justify-content: center">
+            <button kbq-button
+                    *ngSwitchCase="ELEMENTS.BUTTON"
+                    kbqPopover
+                    [kbqPopoverClass]="'popover-485'"
+                    [kbqPopoverHeader]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
+                    [kbqPopoverPlacement]="selectedPlacement"
+                    [kbqPopoverPlacementPriority]="multipleSelected"
+                    [kbqPopoverSize]="selectedSize"
+                    [kbqTrigger]="selectedTrigger"
+                    [kbqPopoverContent]="customContent"
+                    [kbqPopoverFooter]="customFooter"
+                    (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                    (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">
+                Button
+            </button>
+            <button kbq-button
+                    *ngSwitchCase="ELEMENTS.CONFIRM_BUTTON"
+                    kbqPopoverConfirm
+                    (confirm)="onConfirm()"
+                    [kbqPopoverConfirmText]="confirmText"
+                    [kbqPopoverConfirmButtonText]="confirmButtonText"
+                    [kbqPopoverClass]="'popover-485'"
+                    [kbqPopoverPlacement]="selectedPlacement"
+                    [kbqPopoverPlacementPriority]="multipleSelected"
+                    (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                    (kbqVisibleChange)="onPopoverVisibleChange($event)">
+                Confirm Button
+            </button>
+            <kbq-form-field *ngSwitchCase="ELEMENTS.INPUT">
+                <input kbqInput
+                       [(ngModel)]="content"
+                       placeholder="Button content"
+                       kbqPopover
+                       [kbqPopoverClass]="'popover-485'"
+                       [kbqPopoverHeader]="'Lorem ipsum'"
+                       [kbqPopoverPlacement]="selectedPlacement"
+                       [kbqPopoverPlacementPriority]="multipleSelected"
+                       [kbqPopoverSize]="selectedSize"
+                       [kbqTrigger]="selectedTrigger"
+                       [kbqPopoverContent]="customContent"
+                       [kbqPopoverFooter]="customFooter"
+                       (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                       (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">
+            </kbq-form-field>
+            <div *ngSwitchCase="ELEMENTS.ICON">
+                <i kbq-icon="kbq-calendar_16"
+                   kbqPopover
+                   [kbqPopoverClass]="'popover-485'"
+                   [kbqPopoverHeader]="'Header text'"
+                   [kbqPopoverPlacement]="selectedPlacement"
+                   [kbqPopoverPlacementPriority]="multipleSelected"
+                   [kbqPopoverSize]="selectedSize"
+                   [kbqTrigger]="selectedTrigger"
+                   [kbqPopoverContent]="customContent"
+                   [kbqPopoverFooter]="customFooter"
+                   (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                   (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">
+                </i>
+            </div>
+            <div *ngSwitchCase="ELEMENTS.LINK">
+                <span kbq-link pseudo
+                      kbqPopover
+                      [kbqPopoverClass]="'popover-485'"
+                      [kbqPopoverHeader]="'Header text'"
+                      [kbqPopoverPlacement]="selectedPlacement"
+                      [kbqPopoverPlacementPriority]="multipleSelected"
+                      [kbqPopoverSize]="selectedSize"
+                      [kbqTrigger]="selectedTrigger"
+                      [kbqPopoverContent]="customContent"
+                      [kbqPopoverFooter]="customFooter"
+                      (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                      (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">
+                    Link
+                </span>
+            </div>
+            <form
+                *ngSwitchCase="ELEMENTS.RADIO_GROUP">
+                <kbq-radio-group>
+                    <kbq-radio-button class="example-radio-button">
+                        <span kbq-link
+                              kbqPopover
+                              [kbqPopoverClass]="'popover-485'"
+                              [kbqPopoverHeader]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
+                              [kbqPopoverPlacement]="selectedPlacement"
+                              [kbqPopoverPlacementPriority]="multipleSelected"
+                              [kbqPopoverSize]="selectedSize"
+                              [kbqTrigger]="selectedTrigger"
+                              [kbqPopoverContent]="customContent"
+                              [kbqPopoverFooter]="customFooter"
+                              (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                              (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">span.kbq-link</span>
+                    </kbq-radio-button>
+
+                    <br/><br/>
+
+                    <kbq-radio-button class="example-radio-button">
+                        <button kbq-button
+                                kbqPopover
+                                [kbqPopoverClass]="'popover-485'"
+                                [kbqPopoverHeader]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
+                                [kbqPopoverPlacement]="selectedPlacement"
+                                [kbqPopoverPlacementPriority]="multipleSelected"
+                                [kbqPopoverSize]="selectedSize"
+                                [kbqTrigger]="selectedTrigger"
+                                [kbqPopoverContent]="customContent"
+                                [kbqPopoverFooter]="customFooter"
+                                (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
+                                (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)">
+                            Button
+                        </button>
+                    </kbq-radio-button>
+                </kbq-radio-group>
+            </form>
+        </div>
+    </div>
+</div>

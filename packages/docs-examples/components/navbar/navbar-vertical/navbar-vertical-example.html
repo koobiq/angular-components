@@ -1,0 +1,128 @@
+<kbq-dropdown
+    #verticalNavbarDropdown_1="kbqDropdown"
+    [overlapTriggerY]="true"
+    [overlapTriggerX]="false">
+
+    <button kbq-dropdown-item>Point 1</button>
+    <button kbq-dropdown-item>Point 2</button>
+    <button kbq-dropdown-item>Point 3</button>
+</kbq-dropdown>
+
+<kbq-dropdown
+    #verticalNavbarDropdown_2="kbqDropdown"
+    [overlapTriggerY]="true"
+    [overlapTriggerX]="false">
+
+    <button kbq-dropdown-item>Point 1</button>
+    <button kbq-dropdown-item>Point 2</button>
+</kbq-dropdown>
+
+<kbq-dropdown
+    #verticalNavbarDropdown_3="kbqDropdown"
+    [overlapTriggerY]="true"
+    [overlapTriggerX]="false">
+
+    <button kbq-dropdown-item>Point 1</button>
+    <button kbq-dropdown-item>Point 2</button>
+</kbq-dropdown>
+
+<div class="demo-vertical-navbar">
+    <kbq-vertical-navbar #verticalNavbar>
+        <kbq-navbar-container>
+            <a kbq-navbar-item
+               bento
+               #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"
+               [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
+               [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened">
+
+                <i kbq-icon="mc-bento_24"></i>
+            </a>
+
+            <a href="#" kbq-navbar-brand>
+                <div kbq-navbar-logo>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 25c0 2.63 0 4.09.955 5.045C2.909 31 4.37 31 7 31h18c2.63 0 4.09 0 5.045-.955C31 29.091 31 27.63 31 25V7c0-2.63 0-4.09-.955-5.045C29.091 1 27.63 1 25 1H7c-2.63 0-4.09 0-5.045.955C1 2.909 1 4.37 1 7v18Z" fill="red"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.376 13.314v3.057c0 1.456.625 2.02 2.017 2.02h2.071v2.462h-2.572c-2.82 0-4.165-1.466-4.165-4.168V7h2.65v3.851h4.087v2.463h-4.088Zm-9.247 5.272c-1.444 0-2.48-1.15-2.48-2.734s1.036-2.734 2.48-2.734c1.454 0 2.509 1.15 2.509 2.734s-1.055 2.734-2.51 2.734Zm.576-7.93c-1.13 0-2.163.414-2.826 1.157h-.23v-.962H7v13.853h2.65V19.89h.229c.614.67 1.61 1.158 2.826 1.158 2.724 0 4.583-2.191 4.583-5.197 0-3.006-1.859-5.197-4.583-5.197Z" fill="#fff"/></svg>
+                </div>
+
+                <div kbq-navbar-title>Application Name Application Name</div>
+            </a>
+
+            <a href="#" kbq-navbar-item>
+                <i kbq-icon="mc-chart-bar_24"></i>
+                <kbq-navbar-title>Контрольная панель</kbq-navbar-title>
+            </a>
+
+            <kbq-navbar-item
+                #verticalNavbarDropdownTrigger_2="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="verticalNavbarDropdown_2"
+                [class.kbq-active]="verticalNavbarDropdownTrigger_2.opened">
+
+                <i kbq-icon="mc-list_24"></i>
+                <kbq-navbar-title>Участники информационного обмена</kbq-navbar-title>
+                <div kbq-navbar-subtitle>Длинная подпись во второй строке</div>
+            </kbq-navbar-item>
+
+            <button kbq-navbar-item>
+                <i kbq-icon="mc-folder-open-o_24"></i>
+                <span kbq-navbar-title>Инциденты</span>
+            </button>
+
+            <kbq-navbar-item
+                #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
+                [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened">
+
+                <i kbq-icon="mc-ellipsis_24"></i>
+                <kbq-navbar-title>Еще</kbq-navbar-title>
+            </kbq-navbar-item>
+
+            <kbq-navbar-item>
+                <button kbq-button
+                        [class.kbq-button-icon]="!verticalNavbar.expanded"
+                        [color]="'contrast'"
+                        [kbqTooltip]="'Новый инцидент'"
+                        [kbqPlacement]="popUpPlacements.Right"
+                        [kbqTooltipDisabled]="verticalNavbar.expanded">
+                    <i kbq-icon="mc-info-o_16"></i>
+                    <span *ngIf="verticalNavbar.expanded">Новый инцидент</span>
+                </button>
+            </kbq-navbar-item>
+        </kbq-navbar-container>
+
+        <kbq-navbar-container>
+            <kbq-navbar-item>
+                <i kbq-icon="mc-search_24"></i>
+                <kbq-navbar-title>Поиск</kbq-navbar-title>
+            </kbq-navbar-item>
+
+            <kbq-navbar-item
+                #verticalPopover="kbqPopover"
+                kbqPopover
+                [kbqPopoverPlacement]="popUpPlacements.RightBottom"
+                [class.kbq-active]="verticalPopover.isOpen"
+                [kbqPopoverHeader]="'Центр уведомлений'"
+                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '">
+                <i kbq-icon="mc-bell-o_24"></i>
+                <kbq-navbar-title>Уведомления</kbq-navbar-title>
+                <span class="kbq-badge kbq-badge_default kbq-badge_solid kbq-badge_error">5</span>
+            </kbq-navbar-item>
+
+            <kbq-navbar-divider></kbq-navbar-divider>
+
+            <kbq-navbar-item>
+                <i kbq-icon="mc-question-circle_24"></i>
+                <kbq-navbar-title>Справка</kbq-navbar-title>
+            </kbq-navbar-item>
+
+            <kbq-navbar-item [disabled]="true">
+                <i kbq-icon="mc-user-o_24"></i>
+                <kbq-navbar-title>Профиль</kbq-navbar-title>
+            </kbq-navbar-item>
+
+            <kbq-navbar-divider></kbq-navbar-divider>
+
+            <kbq-navbar-toggle [kbqCollapsedTooltip]="'Развернуть меню'">
+                <kbq-navbar-title>Свернуть меню</kbq-navbar-title>
+            </kbq-navbar-toggle>
+        </kbq-navbar-container>
+    </kbq-vertical-navbar>
+</div>

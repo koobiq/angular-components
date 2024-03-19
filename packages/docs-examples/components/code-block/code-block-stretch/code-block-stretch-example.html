@@ -1,0 +1,13 @@
+<kbq-toggle
+    class="kbq-toggle_small"
+    style="margin: 10px 0"
+    [(ngModel)]="isFixedHeight">
+    Фиксированная высота
+</kbq-toggle>
+
+<kbq-code-block
+    [lineNumbers]="true"
+    [filled]="false"
+    [codeFiles]="files"
+    [maxHeight]="isFixedHeight ? maxHeight : 0">
+</kbq-code-block>

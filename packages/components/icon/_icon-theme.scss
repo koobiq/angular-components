@@ -1,0 +1,36 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+
+
+@mixin kbq-icon-theme($themeObj) {
+    $icon: map.get(map.get($themeObj, components), icon);
+
+    $theme: map.get($icon, theme);
+    $contrast: map.get($icon, contrast);
+    $fade-contrast: map.get($icon, fade-contrast);
+    $error: map.get($icon, error);
+    $success: map.get($icon, success);
+
+    .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
+        &.kbq-theme {
+            color: map.get($theme, color);
+        }
+
+        &.kbq-contrast {
+            color: map.get($contrast, color);
+        }
+
+        &.kbq-contrast-fade {
+            color: map.get($fade-contrast, color);
+        }
+
+        &.kbq-error {
+            color: map.get($error, color);
+        }
+
+        &.kbq-success {
+            color: map.get($success, color);
+        }
+    }
+}

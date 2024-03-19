@@ -1,0 +1,6 @@
+.hug-content__example-badge-group {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}

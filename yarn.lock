@@ -3795,7 +3795,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/conventional-changelog-writer@npm:*, @types/conventional-changelog-writer@npm:^4.0.1":
+"@types/conventional-changelog-writer@npm:*, @types/conventional-changelog-writer@npm:^4.0.10":
   version: 4.0.10
   resolution: "@types/conventional-changelog-writer@npm:4.0.10"
   dependencies:
@@ -3805,15 +3805,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/conventional-changelog@npm:3.1.1":
-  version: 3.1.1
-  resolution: "@types/conventional-changelog@npm:3.1.1"
+"@types/conventional-changelog@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "@types/conventional-changelog@npm:3.1.5"
   dependencies:
     "@types/conventional-changelog-core": "npm:*"
     "@types/conventional-changelog-writer": "npm:*"
     "@types/conventional-commits-parser": "npm:*"
     "@types/node": "npm:*"
-  checksum: 10c0/6c6c41992b486c8addad074e5cd714550bf2004faefe2265be08eb67d765d696840c785bf6d4411681ad25a0ba7296b3728a55b0e4901bc4368ba1a27f462507
+  checksum: 10c0/a2b4d9d31661ea3fb4f03aa2787ba8343a741047cf65e255eb3ea94192c4bef40ae21fac911dcaa5d0c78bb1df2cea53e5448fb7724abec14acb61f133ef8932
   languageName: node
   linkType: hard
 
@@ -4121,12 +4121,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^20.11.10":
+"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
   version: 20.11.29
   resolution: "@types/node@npm:20.11.29"
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10c0/b839bad64b2d0e2b4a2d09a53c019ac06c732ac66ea88f3a86a9d2f28a789caf8fd56b888f577183459733abfa1b77e4bf6986cde18b2ec63e1939427aa0d387
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.19.25":
+  version: 18.19.25
+  resolution: "@types/node@npm:18.19.25"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10c0/4cd82b81700c38464cfc8ce5a94d3e115ef9e9befe7637a89c732c4036ab7c761ec69e4d93717a7c05ab58c87cf046eaafd3e0157d5406e387bcb185d27710ab
   languageName: node
   linkType: hard
 
@@ -5728,13 +5737,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"builtin-modules@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "builtin-modules@npm:1.1.1"
-  checksum: 10c0/58d72ea7f59db3c2ae854e1058d85b226f75ff7386d0f71d628e25a600383fc6652af218e20ba2361925c605a4144590ceb890dfdca298fdf8f3d040c0591a23
-  languageName: node
-  linkType: hard
-
 "builtin-modules@npm:^3.3.0":
   version: 3.3.0
   resolution: "builtin-modules@npm:3.3.0"
@@ -5977,7 +5979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^2.3.0, chalk@npm:^2.4.2":
+"chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -6524,7 +6526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^2.12.1, commander@npm:^2.20.0":
+"commander@npm:^2.20.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
   checksum: 10c0/74c781a5248c2402a0a3e966a0a2bba3c054aad144f5c023364be83265e796b20565aa9feff624132ff629aa64e16999fa40a743c10c12f7c61e96a794b99288
@@ -10944,7 +10946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^9.0.0":
+"husky@npm:^9.0.11":
   version: 9.0.11
   resolution: "husky@npm:9.0.11"
   bin:
@@ -12524,8 +12526,8 @@ __metadata:
     "@schematics/angular": "npm:17.2.0"
     "@stackblitz/sdk": "npm:^1.5.5"
     "@types/chalk": "npm:^2.2.0"
-    "@types/conventional-changelog": "npm:3.1.1"
-    "@types/conventional-changelog-writer": "npm:^4.0.1"
+    "@types/conventional-changelog": "npm:^3.1.5"
+    "@types/conventional-changelog-writer": "npm:^4.0.10"
     "@types/fs-extra": "npm:^5.1.0"
     "@types/glob": "npm:^7.1.4"
     "@types/gulp": "npm:^4.0.9"
@@ -12533,7 +12535,7 @@ __metadata:
     "@types/jasmine": "npm:^4.0.3"
     "@types/luxon": "npm:^3.4.2"
     "@types/merge2": "npm:^0.3.30"
-    "@types/node": "npm:^20.11.10"
+    "@types/node": "npm:^18.19.25"
     "@types/ws": "npm:<8.5.5"
     chalk: "npm:^4.0.0"
     commander: "npm:^9.3.0"
@@ -12559,7 +12561,7 @@ __metadata:
     gulp-sass: "npm:^5.0.0"
     gulp-transform: "npm:^2.0.0"
     highlight.js: "npm:^10.4.1"
-    husky: "npm:^9.0.0"
+    husky: "npm:^9.0.11"
     inquirer: "npm:^7.3.3"
     jasmine: "npm:^4.2.1"
     jasmine-core: "npm:^3.99.1"
@@ -12576,19 +12578,19 @@ __metadata:
     marked: "npm:^4.0.18"
     merge2: "npm:^1.2.3"
     moment: "npm:~2.29.2"
-    ng-packagr: "npm:^17.0.0"
+    ng-packagr: "npm:^17.2.1"
     ngx-highlightjs: "npm:^10.0.0"
     node-fetch: "npm:^3.3.1"
     prettier: "npm:^3.2.5"
     prettier-plugin-organize-imports: "npm:^3.2.4"
-    resolve-bin: "npm:^0.4.0"
+    resolve-bin: "npm:^0.4.3"
     rimraf: "npm:^4.4.1"
-    rollup: "npm:^3.28.0"
+    rollup: "npm:^3.29.4"
     rollup-plugin-terser: "npm:^7.0.2"
-    rollup-plugin-typescript2: "npm:^0.34.1"
-    rxjs: "npm:^7.8.0"
-    sass: "npm:^1.67.0"
-    snyk: "npm:^1.667.0"
+    rollup-plugin-typescript2: "npm:^0.36.0"
+    rxjs: "npm:7.8.0"
+    sass: "npm:^1.72.0"
+    snyk: "npm:^1.1285.0"
     spdx-satisfies: "npm:^5.0.0"
     style-dictionary: "npm:^3.7.1"
     stylelint: "npm:^13.6.1"
@@ -12598,10 +12600,9 @@ __metadata:
     tsconfig-paths: "npm:^3.9.0"
     tsickle: "npm:^0.39.1"
     tslib: "npm:^2.6.2"
-    tslint: "npm:^6.1.3"
-    typescript: "npm:^5.3.3"
-    wallaby-webpack: "npm:^3.9.13"
-    yaml-lint: "npm:^1.2.4"
+    typescript: "npm:5.3.3"
+    wallaby-webpack: "npm:^3.9.16"
+    yaml-lint: "npm:^1.7.0"
     zone.js: "npm:^0.14.4"
   languageName: unknown
   linkType: soft
@@ -14057,7 +14058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5, mkdirp@npm:^0.5.6":
+"mkdirp@npm:^0.5.5, mkdirp@npm:^0.5.6":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
   dependencies:
@@ -14270,7 +14271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ng-packagr@npm:^17.0.0":
+"ng-packagr@npm:^17.2.1":
   version: 17.3.0
   resolution: "ng-packagr@npm:17.3.0"
   dependencies:
@@ -16729,7 +16730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve-bin@npm:^0.4.0":
+"resolve-bin@npm:^0.4.3":
   version: 0.4.3
   resolution: "resolve-bin@npm:0.4.3"
   dependencies:
@@ -16791,7 +16792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:1.22.8, resolve@npm:^1.1.6, resolve@npm:^1.1.7, resolve@npm:^1.10.0, resolve@npm:^1.14.2, resolve@npm:^1.22.1, resolve@npm:^1.3.2, resolve@npm:^1.4.0, resolve@npm:~1.22.1":
+"resolve@npm:1.22.8, resolve@npm:^1.1.6, resolve@npm:^1.1.7, resolve@npm:^1.10.0, resolve@npm:^1.14.2, resolve@npm:^1.22.1, resolve@npm:^1.4.0, resolve@npm:~1.22.1":
   version: 1.22.8
   resolution: "resolve@npm:1.22.8"
   dependencies:
@@ -16814,7 +16815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.6#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.7#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.10.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.14.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.1#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.3.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.4.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A~1.22.1#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.6#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.7#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.10.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.14.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.1#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.4.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A~1.22.1#optional!builtin<compat/resolve>":
   version: 1.22.8
   resolution: "resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
   dependencies:
@@ -16953,23 +16954,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-typescript2@npm:^0.34.1":
-  version: 0.34.1
-  resolution: "rollup-plugin-typescript2@npm:0.34.1"
+"rollup-plugin-typescript2@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "rollup-plugin-typescript2@npm:0.36.0"
   dependencies:
     "@rollup/pluginutils": "npm:^4.1.2"
     find-cache-dir: "npm:^3.3.2"
     fs-extra: "npm:^10.0.0"
-    semver: "npm:^7.3.7"
-    tslib: "npm:^2.4.0"
+    semver: "npm:^7.5.4"
+    tslib: "npm:^2.6.2"
   peerDependencies:
     rollup: ">=1.26.3"
     typescript: ">=2.4.0"
-  checksum: 10c0/957171f167e6bbefab68bd05ed2796aafd14c8d47bf544b92532bcea056b5a63fe300816a428c49361736160b2ffc7e8b1109bf4fa9de95e54a9fdd161e0bf62
+  checksum: 10c0/3c8d17cd852ded36eaad2759caf170f90e091d8f86ff7b016d1823bc8b507b8f689156bcccda348fc88471681dc79cc9eb13ddb09a4dfcf0d07ac9a249e2d79b
   languageName: node
   linkType: hard
 
-"rollup@npm:^3.28.0":
+"rollup@npm:^3.29.4":
   version: 3.29.4
   resolution: "rollup@npm:3.29.4"
   dependencies:
@@ -17075,7 +17076,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.1, rxjs@npm:^7.5.1, rxjs@npm:^7.5.5, rxjs@npm:^7.8.0, rxjs@npm:^7.8.1":
+"rxjs@npm:7.8.0":
+  version: 7.8.0
+  resolution: "rxjs@npm:7.8.0"
+  dependencies:
+    tslib: "npm:^2.1.0"
+  checksum: 10c0/c48833638ae5d339332f8b792e716c3c662950ba95ba04e9e97a8cfd4628d8f009129672793c6c067c872a4dab5757231d41d7256a2114a5fabbf30d8a5b9d67
+  languageName: node
+  linkType: hard
+
+"rxjs@npm:7.8.1, rxjs@npm:^7.5.1, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -17176,7 +17186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.67.0, sass@npm:^1.69.5":
+"sass@npm:^1.69.5, sass@npm:^1.72.0":
   version: 1.72.0
   resolution: "sass@npm:1.72.0"
   dependencies:
@@ -17653,7 +17663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"snyk@npm:^1.667.0":
+"snyk@npm:^1.1285.0":
   version: 1.1285.0
   resolution: "snyk@npm:1.1285.0"
   dependencies:
@@ -19048,53 +19058,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
+"tslib@npm:2.6.2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.13.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0":
+"tslib@npm:^1.9.0":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: 10c0/69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2
-  languageName: node
-  linkType: hard
-
-"tslint@npm:^6.1.3":
-  version: 6.1.3
-  resolution: "tslint@npm:6.1.3"
-  dependencies:
-    "@babel/code-frame": "npm:^7.0.0"
-    builtin-modules: "npm:^1.1.1"
-    chalk: "npm:^2.3.0"
-    commander: "npm:^2.12.1"
-    diff: "npm:^4.0.1"
-    glob: "npm:^7.1.1"
-    js-yaml: "npm:^3.13.1"
-    minimatch: "npm:^3.0.4"
-    mkdirp: "npm:^0.5.3"
-    resolve: "npm:^1.3.2"
-    semver: "npm:^5.3.0"
-    tslib: "npm:^1.13.0"
-    tsutils: "npm:^2.29.0"
-  peerDependencies:
-    typescript: ">=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >=3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 4.0.0-dev"
-  bin:
-    tslint: bin/tslint
-  checksum: 10c0/04717de06d187ee46ffa99e28af80f1b5a2edbec051e32b43ca681da625a61e94e5eb9ebb638fafe07975fb3536760ffd772f76c57134db723a9ecff6aeac380
-  languageName: node
-  linkType: hard
-
-"tsutils@npm:^2.29.0":
-  version: 2.29.0
-  resolution: "tsutils@npm:2.29.0"
-  dependencies:
-    tslib: "npm:^1.8.1"
-  peerDependencies:
-    typescript: ">=2.1.0 || >=2.1.0-dev || >=2.2.0-dev || >=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >= 3.0.0-dev || >= 3.1.0-dev"
-  checksum: 10c0/e37794513526dbf1cf960414d0a65b956ad319dbc93171bccfe08e3fece1eea35b4e130153f41d917a0f28ecac04f3ca78e9a99c4bddc64a5f225925abc0cf14
   languageName: node
   linkType: hard
 
@@ -19233,7 +19207,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.2.0, typescript@npm:^5.3.3":
+"typescript@npm:^5.2.0":
   version: 5.4.2
   resolution: "typescript@npm:5.4.2"
   bin:
@@ -19253,7 +19227,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.2.0#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.3.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.2.0#optional!builtin<compat/typescript>":
   version: 5.4.2
   resolution: "typescript@patch:typescript@npm%3A5.4.2#optional!builtin<compat/typescript>::version=5.4.2&hash=5adc0c"
   bin:
@@ -19966,7 +19940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wallaby-webpack@npm:^3.9.13":
+"wallaby-webpack@npm:^3.9.16":
   version: 3.9.16
   resolution: "wallaby-webpack@npm:3.9.16"
   dependencies:
@@ -20519,7 +20493,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml-lint@npm:^1.2.4":
+"yaml-lint@npm:^1.7.0":
   version: 1.7.0
   resolution: "yaml-lint@npm:1.7.0"
   dependencies:

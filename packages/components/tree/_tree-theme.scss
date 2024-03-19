@@ -1,0 +1,81 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-tree-option($state) {
+    background: map.get($state, container-background);
+
+    .kbq-option-text {
+        color: map.get($state, text);
+    }
+
+    // todo выглядит как баг
+    //.kbq-icon {
+    //    color: map.get($state, icon);
+    //}
+
+    .kbq-tree-node-toggle .kbq-icon {
+        color: map.get($state, tree-toggle);
+    }
+
+    .kbq-option-action .kbq-icon {
+        color: map.get($state, action-button);
+    }
+
+    .kbq-option-caption {
+        color: map.get($state, caption);
+    }
+}
+
+
+@mixin kbq-tree-theme($theme) {
+    .kbq-tree-selection:focus {
+        outline: none;
+    }
+
+    .kbq-tree-option {
+        $tree-item: map.get(map.get($theme, components), tree-item);
+
+        @include kbq-tree-option(map.get($tree-item, default));
+
+        &:hover:not(.kbq-disabled) {
+            @include kbq-tree-option(map.get($tree-item, hover));
+        }
+
+        &.kbq-focused,
+        &.kbq-active {
+            border-color: map.get(map.get($tree-item, focused), focus-outline);
+        }
+
+        &.kbq-selected {
+            @include kbq-tree-option(map.get($tree-item, selected));
+
+            &:hover:not(.kbq-disabled) {
+                @include kbq-tree-option(map.get($tree-item, selected-hover));
+            }
+        }
+
+        &.kbq-disabled {
+            @include kbq-tree-option(map.get($tree-item, disabled));
+
+            & .kbq-icon {
+                cursor: default;
+            }
+        }
+    }
+}
+
+@mixin kbq-tree-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-tree-option {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-text));
+    }
+
+    .kbq-tree-option-caption {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-caption));
+    }
+}

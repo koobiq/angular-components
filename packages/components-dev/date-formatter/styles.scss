@@ -1,0 +1,22 @@
+@use '../main';
+
+
+.common-container {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.light-text-secondary {
+    color: #CCC;
+}
+
+.row-border {
+    padding: 8px;
+    border-bottom: 1px solid #CCC;
+}
+
+.p-fixed {
+    position: fixed;
+    background: #b3b3b3;
+    border-radius: 4px;
+}

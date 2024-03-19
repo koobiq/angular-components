@@ -1,0 +1,10 @@
+@use 'sass:map';
+
+
+@mixin kbq-divider-theme($theme) {
+    $divider: map.get(map.get($theme, components), divider);
+
+    .kbq-divider {
+        background: map.get($divider, color);
+    }
+}

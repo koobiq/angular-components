@@ -1,0 +1,39 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-timezone-option.kbq-option {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    padding: var(--kbq-timezone-option-size-padding, map.get($tokens, timezone-option-size-padding));
+    column-gap: var(--kbq-timezone-option-size-column-gap, map.get($tokens, timezone-option-size-column-gap));
+}
+
+.kbq-timezone-option__label {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    flex: 1;
+    min-width: 0;
+}
+
+.kbq-timezone-option__offset-wrapper {
+    min-width: 77px;
+}
+
+.kbq-timezone-option__cities {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    max-height: var(--kbq-timezone-option-size-max-height, map.get($tokens, timezone-option-size-max-height));
+    overflow: hidden;
+}
+
+.kbq-select__panel .kbq-timezone-option {
+    height: var(--kbq-timezone-option-size-height, map.get($tokens, timezone-option-size-height));
+}

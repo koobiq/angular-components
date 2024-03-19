@@ -1,0 +1,98 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+@use '../core/styles/variables';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-loader-overlay_parent {
+    position: relative;
+}
+
+.kbq-loader-overlay-text,
+.kbq-loader-overlay-caption {
+    max-width: 90%;
+
+    text-align: center;
+}
+
+.kbq-loader-overlay {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    z-index: variables.$z-index-loader-overlay;
+
+    & .kbq-loader-overlay__container {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+
+        width: 80%;
+        max-width: 80%;
+    }
+
+    &.kbq-loader-overlay_big {
+        padding-left: var(
+            --kbq-loader-overlay-size-big-overlay-padding-horizontal,
+            map.get($tokens, loader-overlay-size-big-overlay-padding-horizontal)
+        );
+
+        padding-right: var(
+            --kbq-loader-overlay-size-big-overlay-padding-horizontal,
+            map.get($tokens, loader-overlay-size-big-overlay-padding-horizontal)
+        );
+
+        & .kbq-progress-spinner {
+            margin-bottom: var(
+                --kbq-loader-overlay-size-big-loader-margin-bottom,
+                map.get($tokens, loader-overlay-size-big-loader-margin-bottom)
+            );
+        }
+
+        & .kbq-loader-overlay-text {
+            margin-bottom: var(
+                --kbq-loader-overlay-size-big-content-content-gap-vertical,
+                map.get($tokens, loader-overlay-size-big-content-content-gap-vertical)
+            );
+        }
+    }
+
+    &.kbq-loader-overlay_compact {
+        padding-left: var(
+            --kbq-loader-overlay-size-compact-overlay-padding-horizontal,
+            map.get($tokens, loader-overlay-size-compact-overlay-padding-horizontal)
+        );
+
+        padding-right: var(
+            --kbq-loader-overlay-size-compact-overlay-padding-horizontal,
+            map.get($tokens, loader-overlay-size-compact-overlay-padding-horizontal)
+        );
+
+        & .kbq-progress-spinner {
+            margin-bottom: var(
+                --kbq-loader-overlay-size-compact-loader-margin-bottom,
+                map.get($tokens, loader-overlay-size-compact-loader-margin-bottom)
+            );
+        }
+
+        & .kbq-loader-overlay-text {
+            margin-bottom: var(
+                --kbq-loader-overlay-size-compact-content-content-gap-vertical,
+                map.get($tokens, loader-overlay-size-compact-content-content-gap-vertical)
+            );
+        }
+    }
+}

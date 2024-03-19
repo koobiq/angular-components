@@ -1,0 +1,63 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/layout';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tab-group {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    text-align: left;
+
+    &.kbq-tab-group_inverted-header {
+        flex-direction: column-reverse;
+    }
+}
+
+.kbq-tab-group_vertical {
+    flex-direction: row;
+
+    .kbq-tab-list__content {
+        gap: var(
+            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
+            map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
+        ) 0;
+    }
+
+    & .kbq-tab-header__content {
+        overflow-y: auto;
+    }
+}
+
+.kbq-tab-body__wrapper {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.kbq-tab-body {
+    @include layout.kbq-fill;
+
+    display: block;
+    overflow: hidden;
+
+    &.kbq-tab-body__active {
+        position: relative;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        z-index: 1;
+        flex-grow: 1;
+    }
+
+    .kbq-tab-group.kbq-tab-group_dynamic-height &.kbq-tab-body__active {
+        overflow-y: hidden;
+    }
+}

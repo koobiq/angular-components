@@ -1,0 +1,85 @@
+<br>
+
+<div class="layout-row layout-align-space-between">
+    <div>
+        <button kbq-button (click)="leftSidebar.toggle()">toggle by method</button>&nbsp;
+    </div>
+
+    <div>
+        <button kbq-button (click)="rightSidebar.toggle()">toggle by method</button>&nbsp;
+    </div>
+</div>
+
+<br><br>
+
+<div class="container layout-row layout-align-space-between">
+    <kbq-sidebar
+        #leftSidebar="kbqSidebar"
+        [position]="sidebarPositions.Left"
+        (stateChanged)="onStateChanged($event)">
+        <div kbq-sidebar-opened class="kbq-sidebar-opened">kbq-sidebar-opened</div>
+        <div kbq-sidebar-closed class="kbq-sidebar-closed">kbq-sidebar-closed</div>
+    </kbq-sidebar>
+
+    <div class="container__body">main area</div>
+
+    <kbq-sidebar
+        #rightSidebar="kbqSidebar"
+        [position]="sidebarPositions.Right"
+        (stateChanged)="onStateChanged($event)">
+        <div kbq-sidebar-opened class="kbq-sidebar-opened">kbq-sidebar-opened</div>
+        <div kbq-sidebar-closed class="kbq-sidebar-closed">kbq-sidebar-closed</div>
+    </kbq-sidebar>
+</div>
+
+<br><br><br>
+
+<div class="layout-row layout-align-space-between">
+    <div>
+        <button kbq-button (click)="toggleLeftSidebar()">toggle by state</button>&nbsp;
+        <button kbq-button (click)="toggleLeftSplitterState()">toggle splitter state</button>&nbsp;
+    </div>
+
+    <div>
+        <button kbq-button (click)="toggleRightSidebar()">toggle by state</button>&nbsp;
+    </div>
+</div>
+
+<br><br>
+
+<kbq-splitter
+    class="container layout-row layout-align-space-between"
+    [direction]="direction.Horizontal"
+    [disabled]="leftSplitterState">
+    <kbq-sidebar
+        kbq-splitter-area
+        [position]="sidebarPositions.Left"
+        [opened]="leftSidebarSidebarState"
+        (stateChanged)="onStateChanged($event)">
+        <div class="kbq-sidebar-opened"
+             kbq-sidebar-opened
+             [minWidth]="'320px'"
+             [maxWidth]="'600px'">
+            kbq-sidebar-opened
+        </div>
+
+        <div class="kbq-sidebar-closed" kbq-sidebar-closed [width]="'32px'">
+            kbq-sidebar-closed
+        </div>
+    </kbq-sidebar>
+
+    <div kbq-splitter-area class="flex container__body">main body</div>
+
+    <kbq-sidebar
+        kbq-splitter-area
+        [position]="sidebarPositions.Right"
+        [opened]="rightSidebarSidebarState"
+        (stateChanged)="onStateChanged($event)">
+        <div kbq-sidebar-opened class="kbq-sidebar-opened">kbq-sidebar-opened</div>
+        <div kbq-sidebar-closed class="kbq-sidebar-closed">kbq-sidebar-closed</div>
+    </kbq-sidebar>
+</kbq-splitter>
+
+<br><br><br>
+
+<div>{{ leftSidebar.params | json }}</div>

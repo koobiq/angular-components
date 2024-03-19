@@ -1,0 +1,115 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-welcome {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    min-width: 0;
+
+    padding-top: $size-l;
+    padding-bottom: $size-7xl;
+    padding-left: 160px;
+}
+
+.docs-welcome__image {
+    min-width: 0;
+    width: 100%;
+    max-width: 1024px;
+}
+
+.docs-welcome__header {
+    padding-top: $size-5xl;
+    padding-bottom: $size-3xl;
+}
+
+.docs-welcome__articles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: $size-3xl;
+}
+
+.docs-welcome__article {
+    .docs-welcome__article-header {
+        margin-bottom: $size-s;
+    }
+}
+
+@media (width <= 768px) {
+    .docs-welcome {
+        padding: $size-l $size-l $size-3xl;
+    }
+
+    .docs-welcome__header {
+        padding-top: $size-3xl;
+        padding-bottom: $size-4xl;
+    }
+
+    .docs-welcome__articles {
+        gap: $size-xxl;
+        flex-direction: column;
+    }
+
+    .docs-welcome__image,
+    .docs-welcome__header,
+    .docs-welcome__articles {
+        min-width: 343px;
+        max-width: 700px;
+    }
+}
+
+@media (769px <= width <= 1200px) {
+    .docs-welcome {
+        padding: $size-l $size-xxl $size-7xl;
+    }
+
+    .docs-welcome__articles {
+        flex-direction: column;
+    }
+
+    .docs-welcome__image,
+    .docs-welcome__header,
+    .docs-welcome__articles {
+        min-width: 480px;
+        max-width: 772px;
+    }
+}
+
+@media (1201px <= width <= 1920px) {
+    .docs-welcome {
+        padding: $size-l $size-7xl $size-7xl;
+    }
+
+    .docs-welcome__article {
+        min-width: 370px;
+        width: 370px;
+    }
+
+    .docs-welcome__image,
+    .docs-welcome__header,
+    .docs-welcome__articles {
+        min-width: 772px;
+        max-width: 1024px
+    }
+}
+
+@media (width >= 1920px) {
+    .docs-welcome__image,
+    .docs-welcome__header,
+    .docs-welcome__articles {
+        max-width: 1024px;
+    }
+
+    .docs-welcome__article {
+        min-width: 496px;
+        width: 496px;
+    }
+}

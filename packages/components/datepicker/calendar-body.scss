@@ -1,0 +1,46 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-calendar__body-cell {
+    position: relative;
+    height: 0;
+    line-height: 0;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+
+    padding: 0;
+}
+
+.kbq-disabled {
+    cursor: default;
+}
+
+.kbq-calendar__body-cell-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    height: 32px;
+
+    // Prevents text being off-center on Android.
+    line-height: 1;
+
+    border-radius: var(
+        --kbq-datepicker-size-grid-cell-border-radius,
+        map.get($tokens, datepicker-size-grid-cell-border-radius)
+    );
+
+    margin-bottom: var(
+        --kbq-datepicker-size-grid-content-gap-vertical,
+        map.get($tokens, datepicker-size-grid-content-gap-vertical)
+    );
+}
+

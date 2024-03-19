@@ -1,0 +1,8 @@
+<span *ngIf="isLabelSuccessVisible" kbq-link pseudo disabled>
+    <i class="mc mc-check_16"></i>
+    <span class="kbq-link__text">{{ successLabelText }}</span>
+</span>
+
+<span *ngIf="!isLabelSuccessVisible" kbq-link pseudo>
+    <i class="mc kbq-copy_16" (click)="copyContent()"></i>
+</span>

@@ -1,0 +1,108 @@
+<div class="common-container">
+    <kbq-radio-group
+        class="layout-column example-radio-group"
+        (change)="setLocale($event)">
+        <kbq-radio-button *ngFor="let language of languageList"
+                         [value]="language"
+                         [checked]="language.name === selectedLanguage.name"
+                         class="example-radio-button">
+            {{ language.name }}
+        </kbq-radio-button>
+    </kbq-radio-group>
+
+    <br>
+
+    <div class="kbq-subheading">
+        <label>localeService.id: </label><span>{{ this.localeService.id | json }}</span>
+    </div>
+</div>
+
+<div class="kbq-body">
+    <kbq-radio-group class="layout-column" [(ngModel)]="timeFormat">
+        <kbq-radio-button [value]="TimeFormats.HHmm">{{ TimeFormats.HHmm.toLowerCase() }}</kbq-radio-button>
+        <kbq-radio-button [value]="TimeFormats.HHmmss">{{ TimeFormats.HHmmss.toLowerCase() }}</kbq-radio-button>
+    </kbq-radio-group>
+
+    <br>
+
+    <div>value: {{ ngModelValue }}</div>
+    <div>minDate: {{ minDate }}</div>
+    <div>maxDate: {{ maxDate }}</div>
+
+    <br><br>
+
+    <div>Validation state: {{ reactiveFormControlValue.errors | json }}</div>
+
+    <kbq-form-field (click)="myDatepicker2.toggle()">
+        <input
+            [(ngModel)]="ngModelValue"
+            [min]="minDate"
+            [max]="maxDate"
+            [kbqDatepicker]="myDatepicker2" />
+        <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+        <kbq-datepicker #myDatepicker2></kbq-datepicker>
+    </kbq-form-field>
+
+    <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input
+            kbqTimepicker
+            [(ngModel)]="ngModelValue"
+            [min]="minDate"
+            [max]="maxDate"
+            [format]="timeFormat">
+<!--        <kbq-hint class="kbq-caption" *ngIf="reactiveFormControlValue.errors?.kbqTimepickerParse">Только цифры</kbq-hint>-->
+    </kbq-form-field>
+
+<!--    <br><br><br>-->
+
+<!--    <kbq-form-field-->
+<!--        [kbqWarningTooltip]="'Только цифры'"-->
+<!--        #tooltip="kbqWarningTooltip">-->
+<!--        <i kbqPrefix kbq-icon="mc-clock_16"></i>-->
+<!--        <input-->
+<!--            kbqTimepicker-->
+<!--            [formControl]="reactiveFormControlValue"-->
+<!--            (ngModelChange)="ngModelChange($event)"-->
+<!--            [kbqValidationTooltip]="tooltip"-->
+<!--            [max]="maxDate"-->
+<!--            [format]="timeFormats.HHmmss">-->
+<!--    </kbq-form-field>-->
+
+<!--    <br><br><br>-->
+
+<!--    <kbq-form-field>-->
+<!--        <input-->
+<!--            kbqTimepicker-->
+<!--            placeholder="чч:мм"-->
+<!--            [formControl]="reactiveFormControlValue"-->
+<!--            [max]="maxDate"-->
+<!--            [format]="timeFormats.HHmm"-->
+<!--            size="3">-->
+<!--    </kbq-form-field>-->
+
+<!--    <kbq-form-field>-->
+<!--        <input-->
+<!--            kbqTimepicker-->
+<!--            placeholder="чч:мм"-->
+<!--            [formControl]="reactiveFormControlValue"-->
+<!--            [max]="maxDate"-->
+<!--            [format]="timeFormats.HHmmss"-->
+<!--            size="6">-->
+<!--    </kbq-form-field>-->
+
+<!--    <br><br><br>-->
+
+<!--    <div>Validation state: {{ formControlValue.errors | json }}</div>-->
+<!--    <kbq-form-field>-->
+<!--        <i kbqPrefix kbq-icon="mc-clock_16"></i>-->
+<!--        <input kbqTimepicker [formControl]="formControlValue" [max]="maxDate" [min]="minDate">-->
+<!--    </kbq-form-field>-->
+
+<!--    <br><br><br>-->
+
+<!--    <kbq-form-field>-->
+<!--        <i kbqPrefix kbq-icon="mc-clock_16"></i>-->
+<!--        <input kbqTimepicker [(ngModel)]="ngModelValue" [format]="timeFormats.HHmmss" [max]="maxDate" [min]="minDate">-->
+<!--    </kbq-form-field>-->
+</div>

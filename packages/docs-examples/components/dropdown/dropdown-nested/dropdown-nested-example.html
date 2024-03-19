@@ -1,0 +1,60 @@
+<button kbq-button [kbqDropdownTriggerFor]="appDropdownWithNested">
+    dropdown <i kbq-icon="mc-angle-down-S_16"></i>
+</button>
+
+<kbq-dropdown #appDropdownWithNested="kbqDropdown">
+    <button kbq-dropdown-item>Search settings</button>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Text</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Paragraph styles</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Align & intent</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Line spacing</button>
+    <button kbq-dropdown-item [disabled]="true" [kbqDropdownTriggerFor]="appDropdownNested">Columns</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Bullets & numbering</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Headers & footers</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Page numbers</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Table</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Image</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Clear formatting</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Border & lines</button>
+</kbq-dropdown>
+
+<kbq-dropdown #appDropdownNested="kbqDropdown">
+    <button kbq-dropdown-item>Border and shading</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Normal text</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Title</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Subtitle</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 1</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 2</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 3</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 4</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 5</button>
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 6</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">Options</button>
+</kbq-dropdown>
+
+<kbq-dropdown #appDropdownNestedNested="kbqDropdown">
+    <button kbq-dropdown-item>Apply 'Title'</button>
+    <button kbq-dropdown-item>Update 'Title' to match style</button>
+</kbq-dropdown>

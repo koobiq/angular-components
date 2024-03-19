@@ -1,0 +1,21 @@
+<button kbq-button class="modal-example-button" (click)="createTplModal(tplTitle, tplContent, tplFooter)">Delete</button>
+
+<ng-template #tplTitle>
+    <span>Заголовок окна</span>
+</ng-template>
+<ng-template #tplContent>
+    Кибербезопасность сегодня — это целое направление информационных технологий, которое затрагивает практически все
+    сферы жизни человека.
+</ng-template>
+<ng-template #tplFooter>
+    <div class="layout-row flex-grow layout-align-space-between">
+        <button kbq-button (click)="destroyTplModal()">Доп. действие</button>
+
+        <span>
+            <button kbq-button kbq-modal-main-action [color]="'contrast'" (click)="destroyTplModal()">
+                Сохранить
+            </button>
+            <button kbq-button (click)="destroyTplModal()">Отмена</button>
+        </span>
+    </div>
+</ng-template>

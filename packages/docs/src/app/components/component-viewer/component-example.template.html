@@ -1,0 +1,13 @@
+<div *ngIf="documentLost" class="layout-margin-top-xl kbq-alert kbq-alert_error kbq-alert_dismissible">
+    <span>Oops, {{componentDocItem.id}} component seems to be lost... But you can help us find it!
+        Just send a Pull Request to this repository:
+        <a class="kbq-markdown__a" href="#"> Koobiq</a>
+    </span>
+</div>
+
+<doc-example-viewer
+    *ngIf="!documentLost"
+    [documentUrl]="docItemUrl"
+    (contentRendered)="scrollToSelectedContentSection()"
+    (contentRenderFailed)="showDocumentLostAlert()">
+</doc-example-viewer>

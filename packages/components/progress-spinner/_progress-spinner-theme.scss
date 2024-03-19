@@ -1,0 +1,35 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-progress-spinner-theme($theme) {
+    $progress-spinner: map.get(map.get($theme, components), progress-spinner);
+
+    .kbq-progress-spinner {
+        .kbq-progress-spinner__circle {
+            stroke: map.get($progress-spinner, circle);
+        }
+    }
+
+    .kbq-progress-spinner-text {
+        color: map.get($progress-spinner, text);
+    }
+
+    .kbq-progress-spinner-caption {
+        color: map.get($progress-spinner, caption);
+    }
+}
+
+@mixin kbq-progress-spinner-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-progress-spinner-text {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-label));
+    }
+
+    .kbq-progress-spinner-caption {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-caption));
+    }
+}

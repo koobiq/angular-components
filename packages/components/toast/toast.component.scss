@@ -1,0 +1,83 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/variables' as *;
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-toast {
+    display: flex;
+    box-sizing: border-box;
+
+    z-index: $z-index-toast;
+
+    min-width: var(--kbq-toast-size-container-min-width, map.get($tokens, toast-size-container-min-width));
+    max-width: 480px;
+
+    height: auto;
+
+    border-radius: var(--kbq-toast-size-container-border-radius, map.get($tokens, toast-size-container-border-radius));
+
+    padding:
+        var(--kbq-toast-size-container-padding-vertical, map.get($tokens, toast-size-container-padding-vertical))
+        var(--kbq-toast-size-container-padding-horizontal, map.get($tokens, toast-size-container-padding-horizontal));
+
+    gap: var(
+        --kbq-toast-size-container-content-gap-horizontal,
+        map.get($tokens, toast-size-container-content-gap-horizontal)
+    );
+}
+
+.kbq-toast__container {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    gap: var(
+        --kbq-toast-size-container-content-gap-vertical,
+        map.get($tokens, toast-size-container-content-gap-vertical)
+    )
+}
+
+.kbq-toast__title {
+    & > p {
+        margin: 0;
+    }
+}
+
+.kbq-toast__text {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+.kbq-toast__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.kbq-toast__actions {
+    display: flex;
+
+    padding-top: var(--kbq-toast-size-button-stack-padding-top, map.get($tokens, toast-size-button-stack-padding-top));
+
+    gap: var(
+        --kbq-toast-size-button-stack-content-gap-horizontal,
+        map.get($tokens, toast-size-button-stack-content-gap-horizontal)
+    );
+
+    & * + .kbq-link {
+        margin-left: 12px;
+    }
+}
+
+.kbq-toast__close-button {
+    margin-top: var(--kbq-toast-size-close-button-margin-top, map.get($tokens, toast-size-close-button-margin-top));
+    margin-right: var(
+        --kbq-toast-size-close-button-margin-right, map.get($tokens, toast-size-close-button-margin-right)
+    );
+}

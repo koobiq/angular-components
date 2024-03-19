@@ -1,0 +1,13 @@
+@use '../../../components/markdown/markdown';
+@use '../../../components/table/table';
+
+
+.kbq-docs-table {
+    .kbq-docs-table__name {
+        width: 70%;
+    }
+
+    .kbq-docs-table__description {
+        width: 30%;
+    }
+}

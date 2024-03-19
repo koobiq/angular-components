@@ -1,0 +1,52 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-modal-theme($theme) {
+    $modal: map.get(map.get($theme, components), modal);
+
+    .kbq-modal {
+        background: map.get($modal, container-background);
+        box-shadow: map.get($modal, container-box-shadow);
+
+        .kbq-modal-header {
+            & .kbq-modal-title {
+                color: map.get($modal, header);
+            }
+
+            & .kbq-modal-close {
+                color: map.get($modal, close-button);
+            }
+        }
+
+        .kbq-modal-content {
+            color: map.get($modal, content);
+        }
+
+        .kbq-modal-header.kbq-modal-body_top-overflow {
+            box-shadow: map.get($modal, body-top-shadow);
+        }
+
+        .kbq-modal-footer.kbq-modal-body_bottom-overflow {
+            box-shadow: map.get($modal, body-bottom-shadow);
+        }
+    }
+
+    .kbq-modal-mask {
+        background-color: map.get($modal, overlay);
+    }
+}
+
+@mixin kbq-modal-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-modal-title {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, modal-font-header));
+    }
+
+    .kbq-modal-body {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, modal-font-content));
+    }
+}

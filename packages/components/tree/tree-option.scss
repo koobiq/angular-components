@@ -1,0 +1,80 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common';
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-tree-option {
+    @include common.kbq-no-select;
+
+    $padding-vertical: map.get($tokens, tree-size-container-padding-vertical);
+    $padding-right: map.get($tokens, tree-size-container-padding-right);
+
+    $outline-width: map.get($tokens, tree-size-container-focus-outline-width);
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 32px;
+
+    word-wrap: break-word;
+
+    border-width: var(--kbq-tree-size-container-focus-outline-width, $outline-width);
+    border-style: solid;
+    border-color: transparent;
+
+    padding-top: calc(
+        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) -
+        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
+    );
+    padding-right: calc(
+        var(--kbq-tree-size-container-padding-right, $padding-right) -
+        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
+    );
+    padding-bottom: calc(
+        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) -
+        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
+    );
+
+    gap: var(
+        --kbq-tree-size-container-content-gap-horizontal, map.get($tokens, tree-size-container-content-gap-horizontal)
+    );
+
+    & .kbq-option-text {
+        $tokens: meta.module-variables(tokens) !default;
+
+        @include common.kbq-line-wrapper-base();
+        display: inline-block;
+
+        @include common.kbq-truncate-line();
+
+        padding-top: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+        padding-bottom: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:not(.kbq-disabled) {
+        cursor: pointer;
+    }
+
+    & .kbq-option-action {
+        display: none;
+    }
+
+    &:not(.kbq-disabled):hover,
+    &:not(.kbq-disabled).kbq-focused,
+    &:not(.kbq-disabled).kbq-action-button-focused {
+        & .kbq-option-action {
+            display: flex;
+        }
+    }
+}

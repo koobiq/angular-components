@@ -1,0 +1,49 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/pop-up/pop-up' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-tooltip-color($tooltip) {
+    box-shadow: map.get($tooltip, shadow);
+
+    & .kbq-tooltip__inner {
+        color: map.get($tooltip, text);
+
+        background-color: map.get($tooltip, background);
+    }
+
+    & .kbq-tooltip__arrow {
+        background-color: map.get($tooltip, background);
+        box-shadow: map.get($tooltip, shadow);
+    }
+}
+
+@mixin kbq-tooltip-theme($theme) {
+    $tooltip: map.get(map.get($theme, components), tooltip);
+
+    $theme-fade-off: map.get($tooltip, theme-fade-off);
+    $contrast-fade-off: map.get($tooltip, contrast-fade-off);
+    $contrast-fade-on: map.get($tooltip, contrast-fade-on);
+
+    .kbq-tooltip.kbq-theme {
+        @include kbq-tooltip-color($theme-fade-off);
+    }
+
+    .kbq-tooltip.kbq-contrast {
+        @include kbq-tooltip-color($contrast-fade-off);
+    }
+
+    .kbq-tooltip.kbq-contrast-fade {
+        @include kbq-tooltip-color($contrast-fade-on);
+    }
+}
+
+@mixin kbq-tooltip-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-tooltip {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, tooltip-font-default));
+    }
+}

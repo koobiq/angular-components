@@ -1,0 +1,12 @@
+<kbq-form-field
+    (click)="myDatepicker.toggle()"
+    [kbqWarningTooltip]="'Только цифры'"
+    #tooltip="kbqWarningTooltip">
+
+    <input
+        [(ngModel)]="date"
+        [kbqDatepicker]="myDatepicker"
+        [kbqValidationTooltip]="tooltip"/>
+    <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+    <kbq-datepicker #myDatepicker></kbq-datepicker>
+</kbq-form-field>

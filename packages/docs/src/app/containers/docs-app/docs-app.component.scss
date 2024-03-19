@@ -1,0 +1,74 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+@use '../../../../../components/core/styles/variables';
+
+
+.docs-app {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+
+    min-width: 0;
+
+    overflow-y: auto;
+
+    scroll-behavior: smooth;
+
+    & .docs-app-container > .kbq-divider {
+        display: none;
+    }
+}
+
+.docs-overlay {
+    display: none;
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* stylelint-disable no-descending-specificity */
+@media (width <= 768px) {
+    body {
+        max-width: 100vw;
+        overflow: hidden;
+    }
+
+    .docs-app {
+        flex-direction: column-reverse;
+        overflow-x: hidden;
+
+        & .docs-app-container > .kbq-divider {
+            display: block;
+            margin: 0 !important;
+        }
+    }
+
+    .docs-navbar,
+    .kbq-divider {
+        z-index: 2;
+    }
+
+    .docs-sidenav {
+        position: absolute !important;
+        width: 100%;
+        height: calc(100% - 64px);
+        z-index: variables.$z-index-modal;
+    }
+
+    .docs-sidenav.docs-sidenav_opened {
+
+    }
+
+}
+
+@media (width >= 768px) {
+    .docs-overlay {
+        display: none !important;
+    }
+}
+
+/* stylelint-enable no-descending-specificity */

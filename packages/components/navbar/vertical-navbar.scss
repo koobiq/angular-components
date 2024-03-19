@@ -1,0 +1,46 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-vertical-navbar {
+    position: relative;
+
+    min-width: var(
+        --kbq-vertical-navbar-size-states-collapsed-width,
+        map.get($tokens, vertical-navbar-size-states-collapsed-width)
+    );
+    height: 100%;
+
+    & .kbq-navbar-container {
+        flex-direction: column;
+        align-items: unset;
+    }
+
+    & .kbq-vertical-navbar__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: absolute;
+        z-index: 998;
+
+        height: 100%;
+
+        &.kbq-collapsed {
+            width: var(
+                --kbq-vertical-navbar-size-states-collapsed-width,
+                map.get($tokens, vertical-navbar-size-states-collapsed-width)
+            );
+        }
+
+        &.kbq-expanded {
+            width: var(
+                --kbq-vertical-navbar-size-states-expanded-width,
+                map.get($tokens, vertical-navbar-size-states-expanded-width)
+            );
+        }
+    }
+}

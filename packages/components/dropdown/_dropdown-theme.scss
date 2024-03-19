@@ -1,0 +1,77 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-dropdown-item-state($state) {
+    background: map.get($state, container-background);
+    color: map.get($state, text);
+
+    .kbq-dropdown-item__caption {
+        color: map.get($state, caption);
+    }
+}
+
+@mixin kbq-dropdown-theme($theme) {
+    $dropdown: map.get(map.get($theme, components), dropdown);
+    $divider: map.get(map.get($theme, components), divider);
+
+    .kbq-dropdown__panel {
+        box-shadow: map.get($dropdown, box-shadow);
+        background: map.get($dropdown, background);
+    }
+
+    .kbq-dropdown-item {
+        $dropdown-item: map.get(map.get($theme, components), list-item);
+
+        @include kbq-dropdown-item-state(map.get($dropdown-item, default));
+
+        &.kbq-dropdown-item_highlighted,
+        &:hover:not(.kbq-disabled) {
+            @include kbq-dropdown-item-state(map.get($dropdown-item, hover));
+        }
+
+        &.cdk-keyboard-focused {
+            border-color: map.get(map.get($dropdown-item, focused), focus-outline);
+        }
+
+        &.kbq-selected {
+            @include kbq-dropdown-item-state(map.get($dropdown-item, selected));
+
+            &:hover:not(.kbq-disabled) {
+                @include kbq-dropdown-item-state(map.get($dropdown-item, selected-hover));
+            }
+        }
+
+        &.kbq-disabled {
+            @include kbq-dropdown-item-state(map.get($dropdown-item, disabled));
+        }
+    }
+
+    .kbq-dropdown-item-overlay {
+        background: transparent;
+    }
+}
+
+@mixin kbq-dropdown-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-dropdown-item,
+    .kbq-dropdown__content {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+    }
+
+    .kbq-dropdown-item__caption {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+    }
+
+    .kbq-dropdown__group-header {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-header));
+
+        &.kbq-dropdown__group-header_small {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-subheading));
+        }
+    }
+}

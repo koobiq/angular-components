@@ -1,0 +1,31 @@
+@use '@koobiq/icons/dist/fonts/mc-icons';
+
+@use 'highlightjs/material-dark' as *;
+@use 'highlightjs/material-light' as *;
+
+@use './styles/theme.kbq' as theme-kbq;
+
+@use 'styles/koobiq' as tokens;
+
+@use './styles/markdown';
+
+
+.kbq {
+    @include theme-kbq.docs-typography(
+        tokens.$tokens,
+        tokens.$typography-config,
+        tokens.$markdown-typography-config
+    );
+
+    &.theme-light {
+        @include hljs-light-theme();
+
+        @include theme-kbq.kbq-docs-theme(tokens.$default-theme-light);
+    }
+
+    &.theme-dark {
+        @include hljs-dark-theme();
+
+        @include theme-kbq.kbq-docs-theme(tokens.$default-theme-dark);
+    }
+}

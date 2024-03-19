@@ -1,0 +1,36 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-example-source__code {
+    flex-grow: 1;
+
+    overflow-y: hidden;
+
+    margin: 0;
+    padding: 12px;
+}
+
+.docs-example-source {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 200px;
+    flex: 1;
+}
+
+.docs-example-source__source-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.docs-example-source__numbers {
+    text-align: right;
+    min-width: 24px;
+    padding: 12px 8px;
+    margin: 0;
+}

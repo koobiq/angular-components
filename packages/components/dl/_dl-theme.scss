@@ -1,0 +1,32 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-dl-theme($theme) {
+    $dl: map.get(map.get($theme, components), dl);
+
+    .kbq-dt {
+        color: map.get($dl, dt);
+    }
+
+    .kbq-dd {
+        color: map.get($dl, dd);
+    }
+}
+
+@mixin kbq-dl-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-dl {
+        & .kbq-dt {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, description-list-font-term));
+        }
+
+        & .kbq-dd {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, description-list-font-description));
+        }
+    }
+}
+

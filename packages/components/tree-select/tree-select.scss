@@ -1,0 +1,36 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common';
+@use '../core/styles/common/select' as *;
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tree-select {
+    @extend %kbq-select-base;
+}
+
+.kbq-tree-select__panel {
+    @extend %kbq-select-panel;
+
+    & .kbq-tree-select__footer {
+        @extend %kbq-select-footer;
+    }
+}
+
+.kbq-tree-select__content {
+    @extend %kbq-select-content;
+
+    & .kbq-tree-selection {
+        height: 100%;
+    }
+}
+
+.kbq-form-field-type-select {
+    &:not(.kbq-disabled) .kbq-form-field-flex {
+        cursor: pointer;
+    }
+}

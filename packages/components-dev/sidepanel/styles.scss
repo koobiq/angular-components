@@ -1,0 +1,11 @@
+@use '../main';
+@use '../../components/core/styles/visual/layout';
+
+
+@include layout.layouts-for-breakpoint();
+
+.sidepanel-demo {
+    .template-button {
+        margin-left: 12px;
+    }
+}

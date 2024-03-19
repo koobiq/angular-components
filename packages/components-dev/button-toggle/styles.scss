@@ -1,0 +1,40 @@
+@use '../main';
+
+.dev-container {
+    max-width: 400px;
+
+    border: 1px solid red;
+
+    padding: 24px;
+
+    margin-bottom: 24px;
+
+    &.responsive {
+        max-width: 300px;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .toggle {
+        &-group {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        &-item {
+            color: black;
+            padding: 15px;
+        }
+
+
+    }
+
+    .overflown {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+    }
+}

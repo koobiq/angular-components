@@ -1,0 +1,14 @@
+<ng-content></ng-content>
+
+<ng-template ngFor let-area [ngForOf]="areas" let-index="index" let-last="last">
+    <kbq-gutter *ngIf="last === false"
+               [direction]="direction"
+               [attr.disabled]="disabled || null"
+               [style.display]="hideGutters ? 'none' : 'flex'"
+               [size]="gutterSize"
+               [order]="index * 2 + 1"
+               (mousedown)="onMouseDown($event, index, index + 1)">
+    </kbq-gutter>
+</ng-template>
+
+<kbq-gutter-ghost *ngIf="useGhost"></kbq-gutter-ghost>

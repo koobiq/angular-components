@@ -1,0 +1,57 @@
+@use '../dist/components/core/styles/theming';
+@use '../dist/components/core/styles/typography';
+
+
+@mixin kbq-docs-icons-viewer-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $states-background: map-get(map-get($theme, states), background);
+    $line: map-get($theme, line);
+
+    $theme: map-get($theme, theme);
+
+    .docs-icons-viewer__header {
+        background: map-get($background, bg);
+    }
+
+    .docs-icons-viewer__header-text {
+        color: theming.kbq-color($foreground, contrast);
+    }
+
+    .docs-icons-viewer__table-cell {
+        background: map-get($background, bg);
+        border-color: map-get($line, contrast-fade);
+
+
+        > .docs-icons-viewer__table-cell-name {
+            color: map-get($foreground, text-less-contrast);
+        }
+
+        &:focus {
+            outline: 2px solid theming.kbq-color($theme, default);
+        }
+
+        &:hover {
+            background: map-get($states-background, transparent-hover);
+        }
+
+        &:active {
+            background: map-get($states-background, transparent-active);
+        }
+    }
+
+    .icon-preview-modal__preview-area {
+        background: map-get($background, background-under);
+    }
+}
+
+@mixin kbq-docs-icons-viewer-typography($config) {
+    .docs-icons-viewer__table-cell-name {
+        @include typography.kbq-typography-level-to-styles($config, caption);
+    }
+
+    .docs-icons-viewer__table-empty-results,
+    .docs-icons-viewer__header-text {
+        @include typography.kbq-typography-level-to-styles($config, display-3);
+    }
+}

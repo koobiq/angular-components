@@ -1,0 +1,19 @@
+<div class="visual-box">
+    <div *ngFor="let placement of placements"
+        kbqPopover
+        #popover="kbqPopover"
+        [kbqPopoverHeader]="'Заголовок поповера'"
+        [kbqPopoverPlacement]="placement"
+        kbqPopoverContent="kbqPopoverPlacement: {{placement}}"
+        [kbqPopoverFooter]="customFooter"
+        (kbqPopoverVisibleChange)="activePlacement = ($event ? placement : null)"
+        [class.active]="activePlacement === placement"
+        class="popover-trigger popover-trigger-{{placement}}"></div>
+</div>
+
+<ng-template #customFooter>
+    <div class="buttons-container">
+        <button kbq-button [color]="'contrast'">Сохранить</button>
+        <button kbq-button>Отмена</button>
+    </div>
+</ng-template>

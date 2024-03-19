@@ -1,0 +1,76 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tag-list {
+    display: flex;
+    flex-direction: row;
+
+    box-sizing: border-box;
+
+    &:focus-visible {
+        outline: none;
+    }
+}
+
+.kbq-tag-input {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    text-overflow: ellipsis;
+
+    min-height: unset;
+
+    padding-top: var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical));
+    padding-bottom: var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical));
+    padding-left: 4px;
+    padding-right: unset;
+}
+
+.kbq-tags-list__list-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+
+    box-sizing: border-box;
+
+    min-width: 0;
+
+    gap: var(--kbq-tag-list-size-content-gap, map.get($tokens, tag-list-size-content-gap));
+
+    & .kbq-tag-input {
+        max-width: 100%;
+
+        flex: 1 1 auto;
+    }
+}
+
+.kbq-tags-list__cleaner {
+    & .kbq-cleaner {
+        max-height: 24px;
+    }
+}
+
+.kbq-form-field-type-tag-list {
+    & .kbq-form-field__container {
+        $padding-vertical: map.get($tokens, tag-input-size-padding-vertical);
+        $border-width: map.get($tokens, form-field-size-border-width);
+
+        padding:
+            calc(
+                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
+                var(--kbq-form-field-size-border-width, $border-width)
+            )
+            var(--kbq-tag-input-size-padding-right, map.get($tokens, tag-input-size-padding-right))
+            calc(
+                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
+                var(--kbq-form-field-size-border-width, $border-width)
+            )
+            var(--kbq-tag-input-size-padding-left, map.get($tokens, tag-input-size-padding-left));
+    }
+}

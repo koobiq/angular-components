@@ -1,0 +1,18 @@
+@import '@koobiq/components/prebuilt-themes/light-theme.css';
+@import '@koobiq/icons/dist/fonts/mc-icons.scss';
+
+
+body {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+}
+
+.basic-container {
+    padding: 30px;
+}
+
+.version-info {
+    font-size: 8pt;
+    padding-right: 8px;
+    float: right;
+}

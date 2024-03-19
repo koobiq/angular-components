@@ -1,0 +1,32 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+
+
+@mixin kbq-splitter-theme($theme) {
+    $background: map.get(map.get($theme, states), background);
+
+    .kbq-gutter {
+        cursor: col-resize;
+
+        &:hover,
+        &.kbq-gutter_dragged {
+            background-color: map.get($background, ghost-hover);
+        }
+
+        &.kbq-gutter_vertical {
+            cursor: row-resize;
+        }
+
+        // todo
+        &[disabled] {
+            background-color: kbq-color($background, disabled);
+
+            cursor: default;
+        }
+    }
+
+    .kbq-gutter-ghost {
+        background: kbq-color($background, ghost-active);
+    }
+}

@@ -1,0 +1,264 @@
+<ng-template #tooltipContent>
+    <div>В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
+        добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов
+        неизвестным печатником еще в XVI веке.
+    </div>
+</ng-template>
+
+<ng-template #tooltipHeader>
+    <span>Header</span>
+</ng-template>
+
+
+<div class="container flex-100 layout-column layout-align-start-start">
+    <div class="kbq-form-vertical layout-row layou-align-start-start config" [style]="getOrder('config')">
+        <div class="flex-20 kbq-form__fieldset">
+            <div class="kbq-form__row">
+                <label class="kbq-form__label" for="order">Inverse layout order</label>
+
+                <kbq-checkbox class="kbq-form__control" id="order" [(ngModel)]="selectedOrder">Yes/No</kbq-checkbox>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="element" class="kbq-form__label">Choose color</label>
+
+                <kbq-form-field id="color" class="kbq-form__control">
+                    <kbq-select [(value)]="selectedColor" [placeholder]="'Select element'">
+                        <kbq-option [value]="componentColors.Contrast">Contrast</kbq-option>
+                        <kbq-option [value]="componentColors.ContrastFade">ContrastFade</kbq-option>
+                        <kbq-option [value]="componentColors.Theme">Theme</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="element" class="kbq-form__label">
+                    Choose trigger element
+                </label>
+
+                <kbq-form-field id="element" class="kbq-form__control">
+                    <kbq-select [(value)]="selectedElement" [placeholder]="'Select element'">
+                        <kbq-option [value]="'button'">Button</kbq-option>
+                        <kbq-option [value]="'icon'">Icon</kbq-option>
+                        <kbq-option [value]="'input'">Input</kbq-option>
+                        <kbq-option [value]="'extended'">extended</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="trigger" class="kbq-form__label">
+                    Choose popover trigger
+                </label>
+
+                <kbq-form-field id="trigger" class="kbq-form__control">
+                    <kbq-select [(value)]="selectedTrigger" [placeholder]="'Select trigger'">
+                        <kbq-option [value]="'click'">Click</kbq-option>
+                        <kbq-option [value]="'hover'">Hover</kbq-option>
+                        <kbq-option [value]="'focus'">Focus</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="layout" class="kbq-form__label">
+                    Choose layout content placement
+                </label>
+
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <kbq-select [(value)]="layoutClass" [placeholder]="'Select layout'">
+                        <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-start'">Center start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-center'">Center center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-center-end'">Center end</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-start'">End start</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-center'">End center</kbq-option>
+                        <kbq-option [value]="'layout-row layout-align-end-end'">End end</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label for="layout" class="kbq-form__label">
+                    Choose tooltip text
+                </label>
+                <kbq-form-field>
+                    <input kbqInput [(ngModel)]="inputText">
+                </kbq-form-field>
+            </div>
+        </div>
+        <div class="flex left-padding layout-align-center-center">
+            <label for="trigger" class="flex kbq-form__label">
+                Choose kbqPlacement
+            </label>
+            <div class="visual-box">
+                <div (click)="setPlacement(popUpPlacements.TopLeft)"
+                     [ngClass]="{
+                        active: activated('topLeft'),
+                        actual: isActual('topLeft')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top-left"></div>
+                <div (click)="setPlacement(popUpPlacements.Top)"
+                     [ngClass]="{
+                        active: activated('top'),
+                        actual: isActual('top')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top"></div>
+                <div (click)="setPlacement(popUpPlacements.TopRight)"
+                     [ngClass]="{
+                        active: activated('topRight'),
+                        actual: isActual('topRight')
+                     }"
+                     class="visual-box_clickable visual-box_placement-top-right"></div>
+                <div (click)="setPlacement(popUpPlacements.RightTop)"
+                     [ngClass]="{
+                        active: activated('rightTop'),
+                        actual: isActual('rightTop')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right-top"></div>
+                <div (click)="setPlacement(popUpPlacements.Right)"
+                     [ngClass]="{
+                        active: activated('right'),
+                        actual: isActual('right')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right"></div>
+                <div (click)="setPlacement(popUpPlacements.RightBottom)"
+                     [ngClass]="{
+                        active: activated('rightBottom'),
+                        actual: isActual('rightBottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-right-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.BottomRight)"
+                     [ngClass]="{
+                        active: activated('bottomRight'),
+                        actual: isActual('bottomRight')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom-right"></div>
+                <div (click)="setPlacement(popUpPlacements.Bottom)"
+                     [ngClass]="{
+                        active: activated('bottom'),
+                        actual: isActual('bottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.BottomLeft)"
+                     [ngClass]="{
+                        active: activated('bottomLeft'),
+                        actual: isActual('bottomLeft')
+                     }"
+                     class="visual-box_clickable visual-box_placement-bottom-left"></div>
+                <div (click)="setPlacement(popUpPlacements.LeftBottom)"
+                     [ngClass]="{
+                        active: activated('leftBottom'),
+                        actual: isActual('leftBottom')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left-bottom"></div>
+                <div (click)="setPlacement(popUpPlacements.Left)"
+                     [ngClass]="{
+                        active: activated('left'),
+                        actual: isActual('left')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left"></div>
+                <div (click)="setPlacement(popUpPlacements.LeftTop)"
+                     [ngClass]="{
+                        active: activated('leftTop'),
+                        actual: isActual('leftTop')
+                     }"
+                     class="visual-box_clickable visual-box_placement-left-top"></div>
+            </div>
+
+            <div class="kbq-form__row flex-50">
+                <label class="kbq-form__label">
+                    Choose kbqPlacementPriority
+                </label>
+
+                <kbq-form-field class="kbq-form__control">
+                    <kbq-select [multiple]="true" [(value)]="multipleSelected">
+                        <kbq-option [value]="popUpPlacements.Top" disabled>Top</kbq-option>
+                        <kbq-option [value]="popUpPlacements.TopLeft">TopLeft</kbq-option>
+                        <kbq-option [value]="popUpPlacements.TopRight">TopRight</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Bottom">Bottom</kbq-option>
+                        <kbq-option [value]="popUpPlacements.BottomLeft">BottomLeft</kbq-option>
+                        <kbq-option [value]="popUpPlacements.BottomRight">BottomRight</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Right">Right</kbq-option>
+                        <kbq-option [value]="popUpPlacements.RightTop">RightTop</kbq-option>
+                        <kbq-option [value]="popUpPlacements.RightBottom">RightBottom</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Left">Left</kbq-option>
+                        <kbq-option [value]="popUpPlacements.LeftTop">LeftTop</kbq-option>
+                        <kbq-option [value]="popUpPlacements.LeftBottom">LeftBottom</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+        </div>
+        <div class="flex left-padding">
+            <h3>Configuration:</h3>
+            <ul>
+                <li>Tooltip trigger: {{selectedTrigger}}</li>
+                <li>Tooltip anchor placement: {{selectedPlacement}}</li>
+                <li>Tooltip anchored element: {{selectedElement}}</li>
+                <li *ngIf="this.isFallbackActivated" class="actual red">Tooltip activated fallback
+                    position: {{activatedPosition}}</li>
+                <li>Layout positioning: {{layoutClass}}</li>
+                <li *ngIf="multipleSelected">Placement priority order: {{multipleSelected}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="{{layoutClass}} result" [style]="getOrder('result')">
+        <div [ngSwitch]="showElement()">
+            <button kbq-button
+                    *ngSwitchCase="ELEMENTS.BUTTON"
+                    [kbqTooltip]="inputText"
+                    [kbqTooltipColor]="selectedColor"
+                    [kbqPlacement]="selectedPlacement"
+                    [kbqPlacementPriority]="multipleSelected"
+                    [kbqTrigger]="selectedTrigger"
+                    (kbqPlacementChange)="onPlacementChange($event)"
+                    (kbqVisibleChange)="onTooltipVisibleChange($event)">
+                Button
+            </button>
+
+            <button kbq-button
+                    *ngSwitchCase="ELEMENTS.EXTENDED"
+                    [kbqExtendedTooltip]="tooltipContent"
+                    [kbqTooltipColor]="selectedColor"
+                    [kbqTooltipHeader]="tooltipHeader"
+                    [kbqTooltipClass]="'tooltip-485'"
+                    [kbqPlacement]="selectedPlacement"
+                    [kbqPlacementPriority]="multipleSelected"
+                    [kbqTrigger]="selectedTrigger"
+                    (kbqPlacementChange)="onPlacementChange($event)"
+                    (kbqVisibleChange)="onTooltipVisibleChange($event)">
+                Button
+            </button>
+
+            <kbq-form-field *ngSwitchCase="ELEMENTS.INPUT">
+                <input kbqInput
+                       [(ngModel)]="content"
+                       placeholder="Button content"
+                       [kbqTooltip]="inputText"
+                       [kbqTooltipColor]="selectedColor"
+                       [kbqPlacement]="selectedPlacement"
+                       [kbqPlacementPriority]="multipleSelected"
+                       [kbqTrigger]="selectedTrigger"
+                       (kbqPlacementChange)="onPlacementChange($event)"
+                       (kbqVisibleChange)="onTooltipVisibleChange($event)">
+            </kbq-form-field>
+
+            <div *ngSwitchCase="ELEMENTS.ICON">
+                <i kbq-icon="mc-calendar_16"
+                   [kbqTooltip]="inputText"
+                   [kbqTooltipColor]="selectedColor"
+                   [kbqPlacement]="selectedPlacement"
+                   [kbqPlacementPriority]="multipleSelected"
+                   [kbqTrigger]="selectedTrigger"
+                   (kbqPlacementChange)="onPlacementChange($event)"
+                   (kbqVisibleChange)="onTooltipVisibleChange($event)">
+                </i>
+            </div>
+        </div>
+    </div>
+</div>
+
+

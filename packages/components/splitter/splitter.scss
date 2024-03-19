@@ -1,0 +1,48 @@
+.kbq-splitter {
+    display: flex;
+    position: relative;
+    flex-wrap: nowrap;
+    align-items: stretch;
+
+    overflow: hidden;
+
+    .kbq-splitter-area {
+        overflow: hidden;
+
+        &_resizing {
+            pointer-events: none;
+        }
+    }
+
+}
+
+.kbq-gutter {
+    display: flex;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    &.kbq-gutter_vertical > .kbq-icon {
+        transform: rotate(90deg);
+    }
+}
+
+.kbq-gutter-ghost {
+    position: absolute;
+    z-index: 999;
+    display: none;
+    overflow: hidden;
+
+    &.kbq-gutter-ghost_vertical > .kbq-icon {
+        transform: rotate(90deg);
+    }
+
+    &.kbq-gutter-ghost_visible {
+        display: block;
+    }
+}

@@ -1,0 +1,27 @@
+.kbq-option-action {
+    box-sizing: border-box;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    margin-right: -2px;
+
+    width: 24px;
+    height: 24px;
+
+    cursor: pointer;
+
+    outline: none;
+
+    border: 2px solid transparent;
+
+    background: transparent;
+
+    &.kbq-disabled {
+        cursor: default;
+    }
+}

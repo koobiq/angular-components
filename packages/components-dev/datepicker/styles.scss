@@ -1,0 +1,13 @@
+@use '../main';
+
+
+.container {
+    height: calc(100vh - 16px);
+}
+
+.example-radio-group {
+    width: 150px;
+    flex-direction: column;
+    display: flex;
+    gap: 4px;
+}

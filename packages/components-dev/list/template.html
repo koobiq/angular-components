@@ -1,0 +1,188 @@
+<h5>single selection</h5>
+<kbq-list-selection
+    [(ngModel)]="selected"
+    (onCopy)="onCopy($event)">
+    <kbq-list-option [value]="'Disabled'" [disabled]="true">
+        <i kbq-icon="mc-play_16"></i>
+        Disabled
+    </kbq-list-option>
+    <kbq-list-option [value]="'Normal'" [showCheckbox]="true">
+        <i kbq-icon="mc-play_16"></i>
+        Normal
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="$any('right')"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Hovered'" class="kbq-hovered">
+        Hovered
+        <div kbq-list-option-caption>kbq-list-option-caption</div>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Focused'" class="kbq-focused">Focused</kbq-list-option>
+    <kbq-list-option [value]="'Selected'" class="kbq-selected">Selected</kbq-list-option>
+</kbq-list-selection>
+<br>
+<div>selected: {{ selected }}</div>
+
+<br><br><br>
+
+<h2>Multiple selection: Keyboard</h2>
+<kbq-list-selection
+    style="height: 100px; overflow-y: scroll"
+    [disabled]="true"
+    multiple="keyboard"
+    [autoSelect]="true"
+    [(ngModel)]="multipleSelected"
+    (selectionChange)="onSelectionChange($event)">
+    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
+    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
+    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
+    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
+    <kbq-list-option [value]="'Selected'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected1'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected2'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected3'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected4'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected5'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected6'">Selected</kbq-list-option>
+    <kbq-list-option [value]="'Selected7'">Selected</kbq-list-option>
+</kbq-list-selection>
+<br>
+<div>multipleSelected: {{ multipleSelected }}</div>
+
+<h2>Multiple selection: Checkbox</h2>
+<kbq-list-selection
+    multiple="checkbox"
+    [(ngModel)]="multipleSelectedCheckbox"
+    (selectionChange)="onSelectionChange($event)">
+    <kbq-list-option [value]="'Normal'">
+        Normal
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Hovered'">
+        Hovered
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Focused'">
+        Focused
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Disabled'">
+        Disabled
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+    <kbq-list-option [value]="'Selected'">
+        Selected
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-list-option>
+</kbq-list-selection>
+
+<kbq-dropdown #dropdown>
+    <button kbq-dropdown-item>item 1</button>
+    <button kbq-dropdown-item>item 2</button>
+    <button kbq-dropdown-item>item 3</button>
+</kbq-dropdown>
+<br>
+<div>multipleSelectedCheckbox: {{ multipleSelectedCheckbox|json }}</div>
+
+<br><br><br>
+
+<h2>Multiple selection with Async: Checkbox</h2>
+<kbq-list-selection
+    multiple="checkbox"
+    [(ngModel)]="multipleSelected"
+    (selectionChange)="onSelectionChange($event)">
+    <kbq-list-option *ngFor="let shoe of asyncUpdate$ | async " [value]="shoe" >{{shoe}}</kbq-list-option>
+</kbq-list-selection>
+<br>
+<div>multipleSelectedCheckbox: {{ multipleSelected|json }}</div>
+
+<br><br><br>
+
+<h2>Single selection</h2>
+<kbq-list-selection
+    [(ngModel)]="singleSelected"
+    (selectionChange)="onSelectionChange($event)"
+    (onSelectAll)="onSelectAll($event)"
+    (onCopy)="onCopy($event)">
+    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
+    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
+    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
+    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
+    <kbq-list-option [value]="'Selected'">Selected</kbq-list-option>
+</kbq-list-selection>
+<br>
+<div>singleSelected: {{ singleSelected }}</div>
+
+<br><br><br>
+
+<h2>Single selection with overflown option with tooltip</h2>
+<kbq-list-selection
+    [(ngModel)]="singleSelected"
+    (selectionChange)="onSelectionChange($event)"
+    (onSelectAll)="onSelectAll($event)"
+    (onCopy)="onCopy($event)"
+    style="max-width: 25%">
+    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
+    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
+    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
+    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
+    <kbq-list-option [value]="'Selected'" kbq-title>Selected and long long and long long text</kbq-list-option>
+</kbq-list-selection>
+<br>
+<div>singleSelected: {{ singleSelected }}</div>
+
+<br><br><br>
+
+
+<!--<h5>vertical scroll</h5>-->
+<!--<kbq-list-selection style="height: 160px; overflow-y: scroll">-->
+    <!--<kbq-list-option [value]="'Disabled'" [disabled]="true">Disabled</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Normal'">Normal</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Hovered'" class="kbq-hovered">Hovered</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Focused'" class="kbq-focused">Focused</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Selected'" class="kbq-selected">Selected</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Progress'" class="kbq-progress">Progress</kbq-list-option>-->
+
+    <!--<kbq-list-option *ngFor="let shoe of typesOfShoes">{{ shoe }}</kbq-list-option>-->
+<!--</kbq-list-selection>-->
+
+
+<!--<br><br><br>-->
+
+<!--<h5>horizontal scroll</h5>-->
+<!--<kbq-list-selection style="display: flex; width: 500px; height: 50px; overflow-x: scroll" horizontal>-->
+    <!--<kbq-list-option [value]="'Disabled'" [disabled]="true">Disabled</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Normal'">Normal</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Hovered'" class="kbq-hovered">Hovered</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Focused'" class="kbq-focused">Focused</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Selected'" class="kbq-selected">Selected</kbq-list-option>-->
+    <!--<kbq-list-option [value]="'Progress'" class="kbq-progress">Progress</kbq-list-option>-->
+
+    <!--<kbq-list-option *ngFor="let shoe of typesOfShoes">{{ shoe }}</kbq-list-option>-->
+<!--</kbq-list-selection>-->

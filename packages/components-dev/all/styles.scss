@@ -1,0 +1,125 @@
+@use '../main';
+
+
+.dev-row {
+    display: flex;
+
+    flex-direction: row;
+
+    flex-wrap: wrap;
+}
+
+.dev-box {
+    min-width: 30%;
+    width: 30%;
+
+    margin: 20px;
+}
+
+.kbq-badge {
+    margin-right: 15px;
+}
+
+.kbq-alert {
+    margin-bottom: 15px;
+}
+
+.kbq-card {
+    margin-right: 10px;
+}
+
+.line {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.simple-content {
+    padding: 8px;
+}
+
+.buttons-container {
+    margin-left: auto;
+    justify-self: flex-end;
+}
+
+.footer-button {
+    margin-left: 16px!important;
+}
+
+.lines {
+    flex-grow: 1;
+    margin-top: 8px;
+}
+
+.line-container:not(:first-child) {
+    margin-top: 16px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+
+    .percent {
+        margin-right: 8px;
+        width: 60px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .spinners {
+        display: flex;
+        flex-grow: 1;
+        margin-top: 8px;
+        list-style: none;
+        padding: 0;
+    }
+
+    .spinner-container {
+        margin-left: 16px;
+    }
+
+    .line-container:not(:first-child) {
+        margin-top: 16px;
+    }
+}
+
+.example-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.example-radio-button {
+    margin-bottom: 10px;
+}
+
+.example-selected-value {
+    margin: 15px 0;
+}
+
+.kbq-tag {
+    margin-right: 4px;
+}
+
+.container .kbq-form-field {
+    width: 200px;
+}
+
+.toggle-demo-container {
+    margin-bottom: 8px;
+}
+
+.control-buttons-container {
+    display: inline-block;
+    margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+.toggles-container {
+    max-width: 500px;
+}
+
+.kbq-tree-selection {
+    overflow-y: auto;
+}

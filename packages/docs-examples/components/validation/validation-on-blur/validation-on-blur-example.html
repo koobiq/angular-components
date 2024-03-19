@@ -1,0 +1,23 @@
+<div class="docs-width kbq-form-vertical">
+    <div class="kbq-form__fieldset">
+        <div class="kbq-form__row">
+            <div class="kbq-form__label">IP-адрес</div>
+            <kbq-form-field class="kbq-form__control">
+                <input kbqInput [formControl]="ipAddress">
+                <kbq-hint [color]="themePalette.Error" *ngIf="ipAddress.invalid">IP-адрес не соответствует стандартам RFC</kbq-hint>
+
+                <kbq-cleaner></kbq-cleaner>
+            </kbq-form-field>
+        </div>
+
+        <div class="kbq-form__row">
+            <div class="kbq-form__label">Частота обновлений (часы)</div>
+            <kbq-form-field class="kbq-form__control">
+                <input type="number" kbqInput [formControl]="frequency">
+                <kbq-hint>Введите значение от 1 до 24</kbq-hint>
+                <kbq-hint [color]="themePalette.Error" *ngIf="frequency.errors?.min">Минимальное значение: 1 час</kbq-hint>
+                <kbq-hint [color]="themePalette.Error" *ngIf="frequency.errors?.max">Максимальное значение: 24 часа</kbq-hint>
+            </kbq-form-field>
+        </div>
+    </div>
+</div>

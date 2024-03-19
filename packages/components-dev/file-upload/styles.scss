@@ -1,0 +1,28 @@
+@use '../main';
+
+
+.dev-container {
+    max-width: 400px;
+
+    border: 1px solid red;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+
+    &.responsive {
+        max-width: 50%;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+
+.margin {
+    margin-left: 50px;
+}

@@ -1,0 +1,28 @@
+<kbq-form-field>
+    <kbq-tree-select
+        [multiple]="true"
+        [formControl]="control"
+        (selectionChange)="onSelectionChange($event)">
+
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl">
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [checkboxThirdState]="true"
+                kbqTreeNodePadding>
+
+                {{ treeControl.getViewValue(node) }}
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                [checkboxThirdState]="true"
+                kbqTreeNodePadding>
+
+                <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                {{ treeControl.getViewValue(node) }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    </kbq-tree-select>
+</kbq-form-field>

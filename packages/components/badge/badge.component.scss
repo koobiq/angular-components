@@ -1,0 +1,83 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-badge {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    text-align: center;
+    white-space: nowrap;
+
+    border-style: solid;
+
+    box-sizing: border-box;
+
+    padding:
+        var(--kbq-badge-size-normal-vertical-padding, map.get($tokens, badge-size-normal-vertical-padding))
+        var(--kbq-badge-size-normal-horizontal-padding, map.get($tokens, badge-size-normal-horizontal-padding));
+
+    border: {
+        width: var(--kbq-badge-size-normal-border-width, map.get($tokens, badge-size-normal-border-width));
+        radius: var(--kbq-badge-size-normal-border-radius, map.get($tokens, badge-size-normal-border-radius));
+    }
+
+    & .kbq-badge-caption {
+        padding-left:
+            var(--kbq-badge-size-normal-content-padding, map.get($tokens, badge-size-normal-content-padding));
+    }
+
+    & .kbq-icon_left {
+        margin-right: var(
+            --kbq-badge-size-normal-icon-left-margin-right,
+            map.get($tokens, badge-size-normal-icon-left-margin-right)
+        );
+    }
+
+    & .kbq-icon_right {
+        margin-left: var(
+            --kbq-badge-size-normal-icon-right-margin-left,
+            map.get($tokens, badge-size-normal-icon-right-margin-left)
+        );
+    }
+
+    &.kbq-badge_compact {
+        padding:
+            var(--kbq-badge-size-compact-vertical-padding, map.get($tokens, badge-size-compact-vertical-padding))
+            var(
+                --kbq-badge-size-compact-horizontal-padding,
+                map.get($tokens, badge-size-compact-horizontal-padding)
+            );
+
+        border: {
+            width: var(--kbq-badge-size-compact-border-width, map.get($tokens, badge-size-compact-border-width));
+            radius: var(--kbq-badge-size-compact-border-radius, map.get($tokens, badge-size-compact-border-radius));
+        }
+
+        & .kbq-badge-caption {
+            padding-left:
+                var(--kbq-badge-size-compact-content-padding, map.get($tokens, badge-size-compact-content-padding));
+        }
+
+        & .kbq-icon_left {
+            margin-right: var(
+                --kbq-badge-size-compact-icon-left-margin-right,
+                map.get($tokens, badge-size-compact-icon-left-margin-right)
+            );
+        }
+
+        & .kbq-icon_right {
+            margin-left: var(
+                --kbq-badge-size-compact-icon-right-margin-left,
+                map.get($tokens, badge-size-compact-icon-right-margin-left)
+            );
+        }
+    }
+}

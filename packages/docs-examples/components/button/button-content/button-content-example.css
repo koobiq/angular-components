@@ -1,0 +1,14 @@
+.content__example-button-group {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 32px;
+    max-width: 480px;
+}
+
+.content__example-button-group .example-button {
+    width: 128px;
+}
+
+.example-label {
+    margin-bottom: 12px;
+}

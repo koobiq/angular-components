@@ -1,0 +1,21 @@
+<kbq-form-field>
+    <input type="text" kbqInput (ngModelChange)="onFilterChange($event)" [(ngModel)]="filterValue">
+</kbq-form-field>
+
+<br><br><br>
+
+<kbq-tree-selection
+    [(ngModel)]="modelValue"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl">
+
+    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+    </kbq-tree-option>
+
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+    </kbq-tree-option>
+</kbq-tree-selection>

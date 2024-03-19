@@ -1,0 +1,22 @@
+{
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/components",
+    "assets": [
+        {
+            "input": "",
+            "glob": "**/*.scss",
+            "ignore": [
+                "**/dark-theme.scss",
+                "**/light-theme.scss"
+            ],
+            "output": ""
+        }, {
+            "input": "",
+            "glob": "*.scss",
+            "output": ""
+        }
+    ],
+    "lib": {
+        "entryFile": "index.ts"
+    }
+}

@@ -1,0 +1,18 @@
+<div class="kbq-body">
+    <button kbq-button (click)="toggleSidepanel()">Открыть боковую панель</button>
+</div>
+
+<ng-template>
+    <kbq-sidepanel-header [closeable]="true">
+        Блок кода без рамки в боковой панели
+    </kbq-sidepanel-header>
+
+    <kbq-sidepanel-body class="layout-padding">
+        <kbq-code-block
+            class="code-block_no-border"
+            [lineNumbers]="true"
+            [filled]="false"
+            [codeFiles]="files">
+        </kbq-code-block>
+    </kbq-sidepanel-body>
+</ng-template>

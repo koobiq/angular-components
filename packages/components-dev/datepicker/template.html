@@ -1,0 +1,115 @@
+<div>Validation state: {{ formControlValue.errors | json }}</div>
+
+
+<kbq-radio-group
+    class="example-radio-group"
+    (change)="setFormat($event)">
+    <kbq-radio-button
+        *ngFor="let language of languageList"
+        [value]="language"
+        [checked]="language.id === selectedLanguage.id"
+        class="example-radio-button">
+        {{ language.id }}
+    </kbq-radio-button>
+    <br>
+</kbq-radio-group>
+
+<br><br><br>
+<div>{{ date }}</div>
+<br><br><br>
+
+<div class="container">
+    <label>Default datepicker toggle</label>
+    <kbq-form-field (click)="myDatepicker1.toggle()"
+                   [kbqWarningTooltip]="'Только цифры'"
+                   #tooltip="kbqWarningTooltip">
+
+        <input [(ngModel)]="date"
+               [min]="minDate"
+               [max]="maxDate"
+               [kbqDatepicker]="myDatepicker1"
+               [kbqValidationTooltip]="tooltip"
+               (dateChange)="onDateChange()"
+               (dateInput)="onDateInput()"/>
+<!--        <kbq-datepicker-toggle [tabIndex]="7" kbqSuffix [for]="myDatepicker1"></kbq-datepicker-toggle>-->
+        <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+        <kbq-datepicker #myDatepicker1
+                       [startAt]="startAt"
+                       [minDate]="minDate"
+                       [maxDate]="maxDate">
+        </kbq-datepicker>
+    </kbq-form-field>
+
+    <br/><br/>
+
+    <label>Datepicker toggle with custom icon</label>
+    <kbq-form-field (click)="myDatepicker2.toggle()">
+        <input [(ngModel)]="date" [kbqDatepicker]="myDatepicker2" />
+        <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+        <kbq-datepicker #myDatepicker2></kbq-datepicker>
+    </kbq-form-field>
+
+    <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [(ngModel)]="date">
+    </kbq-form-field>
+
+<!--    <br/><br/>-->
+
+<!--    <label>Datepicker with multi year view</label>-->
+<!--    <kbq-form-field>-->
+<!--        <input kbqInput [kbqDatepicker]="myDatepicker3" />-->
+<!--        <kbq-datepicker-toggle kbqSuffix [for]="myDatepicker3">-->
+<!--            <i kbq-icon="mc-angle-down-M_16" kbqDatepickerToggleIcon></i>-->
+<!--        </kbq-datepicker-toggle>-->
+<!--        <kbq-datepicker #myDatepicker3 [startView]="kbqCalendarView.MultiYear"></kbq-datepicker>-->
+<!--    </kbq-form-field>-->
+
+<!--    <br/><br/>-->
+
+<!--    <label>Datepicker disabled</label>-->
+<!--    <kbq-form-field>-->
+<!--        <input kbqInput [kbqDatepicker]="myDatepicker4" />-->
+<!--        <kbq-datepicker-toggle kbqSuffix [for]="myDatepicker4">-->
+<!--            <i kbq-icon="mc-angle-down-M_16" kbqDatepickerToggleIcon></i>-->
+<!--        </kbq-datepicker-toggle>-->
+<!--        <kbq-datepicker [disabled]="true" #myDatepicker4 [startView]="kbqCalendarView.MultiYear"></kbq-datepicker>-->
+<!--    </kbq-form-field>-->
+
+<!--    <br/><br/>-->
+
+<!--    <label>Datepicker with disabled input</label>-->
+<!--    <kbq-form-field>-->
+<!--        <input kbqInput [kbqDatepicker]="myDatepicker5" [disabled]="true"/>-->
+<!--        <kbq-datepicker-toggle kbqSuffix [for]="myDatepicker5">-->
+<!--            <i kbq-icon="mc-angle-down-M_16" kbqDatepickerToggleIcon></i>-->
+<!--        </kbq-datepicker-toggle>-->
+<!--        <kbq-datepicker #myDatepicker5 ></kbq-datepicker>-->
+<!--    </kbq-form-field>-->
+
+<!--    <br/><br/>-->
+
+<!--    <label>Datepicker with readonly input</label>-->
+<!--    <kbq-form-field>-->
+<!--        <input kbqInput [kbqDatepicker]="myDatepicker6" readonly/>-->
+<!--        <kbq-datepicker-toggle kbqSuffix [for]="myDatepicker6">-->
+<!--            <i kbq-icon="mc-angle-down-M_16" kbqDatepickerToggleIcon></i>-->
+<!--        </kbq-datepicker-toggle>-->
+<!--        <kbq-datepicker #myDatepicker6 ></kbq-datepicker>-->
+<!--    </kbq-form-field>-->
+
+<!--    <br/><br/>-->
+
+<!--    <label>Datepicker with some dates disabled</label>-->
+<!--    <kbq-form-field>-->
+<!--        <input kbqInput-->
+<!--               [kbqDatepicker]="myDatepicker7"-->
+<!--               [kbqDatepickerFilter]="$any(myFilter)"-->
+<!--               [min]="minDate"-->
+<!--               [max]="maxDate"/>-->
+<!--        <kbq-datepicker-toggle kbqSuffix [for]="myDatepicker7">-->
+<!--            <i kbq-icon="mc-angle-down-M_16" kbqDatepickerToggleIcon></i>-->
+<!--        </kbq-datepicker-toggle>-->
+<!--        <kbq-datepicker #myDatepicker7></kbq-datepicker>-->
+<!--    </kbq-form-field>-->
+</div>

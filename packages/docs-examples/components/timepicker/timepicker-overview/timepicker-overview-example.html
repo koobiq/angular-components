@@ -1,0 +1,26 @@
+<div class="example-timepicker-group">
+    <div class="example-timepicker__controls">
+        <kbq-form-field class="">
+            <kbq-select [(value)]="timeFormat">
+                <kbq-radio-button [value]="TimeFormats.HHmm">{{ TimeFormats.HHmm.toLowerCase() }}</kbq-radio-button>
+                <kbq-radio-button [value]="TimeFormats.HHmmss">{{ TimeFormats.HHmmss.toLowerCase() }}</kbq-radio-button>
+            </kbq-select>
+        </kbq-form-field>
+
+        <kbq-checkbox class="" [(ngModel)]="isIconVisible">Show icon</kbq-checkbox>
+        <kbq-checkbox class="" [(ngModel)]="isDisabled">Disabled</kbq-checkbox>
+    </div>
+
+    <kbq-form-field
+        class="example-timepicker-element"
+        [kbqWarningTooltip]="'Только цифры'"
+        #tooltip="kbqWarningTooltip">
+
+        <i *ngIf="isIconVisible" kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker
+               [(ngModel)]="value"
+               [disabled]="isDisabled"
+               [format]="timeFormat"
+               [kbqValidationTooltip]="tooltip">
+    </kbq-form-field>
+</div>

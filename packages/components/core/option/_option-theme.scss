@@ -1,0 +1,67 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../styles/typography/typography-utils' as *;
+
+
+@mixin kbq-option($state) {
+    background: map.get($state, container-background);
+
+    .kbq-option-text {
+        color: map.get($state, text);
+    }
+
+    // todo выглядит как баг
+    //.kbq-icon {
+    //    color: map.get($state, icon);
+    //}
+
+    .kbq-option-action .kbq-icon {
+        color: map.get($state, icon-button);
+    }
+
+    .kbq-option-caption {
+        color: map.get($state, caption);
+    }
+}
+
+@mixin kbq-option-theme($theme) {
+    $list-item: map.get(map.get($theme, components), list-item);
+
+    .kbq-option {
+        @include kbq-option(map.get($list-item, default));
+
+        &:hover:not(.kbq-disabled) {
+            @include kbq-option(map.get($list-item, hover));
+        }
+
+        &.kbq-focused,
+        &.kbq-active {
+            border-color: map.get(map.get($list-item, focused), focus-outline);
+        }
+
+        &.kbq-selected {
+            @include kbq-option(map.get($list-item, selected));
+
+            &:hover:not(.kbq-disabled) {
+                @include kbq-option(map.get($list-item, selected-hover));
+            }
+        }
+
+        &.kbq-disabled {
+            @include kbq-option(map.get($list-item, disabled));
+        }
+    }
+}
+
+@mixin kbq-option-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-option {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+    }
+
+    .kbq-list-option-caption {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+    }
+}

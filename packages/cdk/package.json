@@ -1,0 +1,20 @@
+{
+    "name": "@koobiq/cdk",
+    "version": "{{VERSION}}",
+    "description": "Component Development Kit",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/koobiq/angular-components.git"
+    },
+    "keywords": [
+        "cdk",
+        "component",
+        "development",
+        "kit"
+    ],
+    "license": "MIT",
+    "peerDependencies": {
+        "@angular/common": "{{NG_VERSION}}"
+    },
+    "sideEffects": false
+}

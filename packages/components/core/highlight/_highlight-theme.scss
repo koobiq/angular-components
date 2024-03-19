@@ -1,0 +1,8 @@
+@mixin kbq-highlight-theme($theme) {
+    .kbq-highlight {
+        color: inherit;
+
+        font-weight: bold;
+        background-color: transparent;
+    }
+}

@@ -1,0 +1,38 @@
+<div class="example-timepicker-group">
+    <div class="example-timepicker-element">
+        <label for="Time"
+               class="flex-35 kbq-form-label">Выберите время между min и max</label>
+        <kbq-form-field
+            [kbqWarningTooltip]="'Только цифры'"
+            #tooltip="kbqWarningTooltip">
+
+            <i kbqPrefix kbq-icon="mc-clock_16"></i>
+            <input kbqTimepicker
+                   id="Time"
+                   [min]="getStartTime()"
+                   [max]="getEndTime()"
+                   [(ngModel)]="time"
+                   [kbqValidationTooltip]="tooltip">
+        </kbq-form-field>
+    </div>
+
+    <div class="example-timepicker-element">
+        <label for="startTime"
+               class="flex-35 kbq-form-label">min</label>
+        <kbq-form-field>
+            <input kbqTimepicker
+                   id="startTime"
+                   [(ngModel)]="startTime">
+        </kbq-form-field>
+    </div>
+
+    <div class="example-timepicker-element">
+        <label for="endTime"
+               class="flex-35 kbq-form-label">max</label>
+        <kbq-form-field>
+            <input kbqTimepicker
+                   id="endTime"
+                   [(ngModel)]="endTime">
+        </kbq-form-field>
+    </div>
+</div>

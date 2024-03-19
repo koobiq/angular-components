@@ -1,0 +1,53 @@
+@use '../dist/components/core/styles/theming';
+@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common';
+
+
+@mixin kbq-docs-anchors-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+
+    $shadow: theming.kbq-color($foreground, text-less-contrast);
+
+    .docs-anchors {
+        background-color: theming.kbq-color($background, bg);
+    }
+
+    .docs-anchors__link {
+        display: block;
+
+        outline: none;
+        text-decoration: none;
+        color: inherit;
+
+        @include common.kbq-truncate-line();
+    }
+
+    .docs-anchors__element {
+        &:first-child {
+            padding: 0 0 0 16px;
+            margin: 0;
+
+            & .docs-anchors__link {
+                padding: 6px 16px 6px 0;
+            }
+        }
+
+        &.docs-anchors__element_active{
+            @include box-shadow(inset 3px 0 0 #363949);
+        }
+    }
+}
+
+@mixin box-shadow ($shadow) {
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    -o-box-shadow: $shadow;
+    box-shadow: $shadow;
+}
+
+@mixin kbq-docs-anchors-typography($config) {
+    .docs-anchors__element {
+        @include typography.kbq-typography-level-to-styles($config, body);
+    }
+}

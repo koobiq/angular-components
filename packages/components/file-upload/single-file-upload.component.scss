@@ -1,0 +1,80 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+@use '../core/styles/common';
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-single-file-upload .kbq-file-upload {
+    $padding-vertical: map.get($tokens, file-upload-size-single-container-padding-vertical);
+    $padding-horizontal: map.get($tokens, file-upload-size-single-container-padding-horizontal);
+    $border-width: map.get($tokens, file-upload-size-single-container-border-width);
+
+    padding:
+        calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
+        calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
+
+    border-radius: var(
+        --kbq-file-upload-size-single-container-border-radius,
+        map.get($tokens, file-upload-size-single-container-border-radius)
+    );
+    border-width: var(
+        --kbq-file-upload-size-single-container-border-width,
+        map.get($tokens, file-upload-size-single-container-border-width)
+    );
+    border-style: dashed;
+
+    & .dropzone__text {
+        padding-top: var(
+            --kbq-file-upload-size-single-text-block-padding-vertical,
+            map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+        );
+
+        padding-bottom: var(
+            --kbq-file-upload-size-single-text-block-padding-vertical,
+            map.get($tokens, file-upload-size-single-text-block-padding-vertical)
+        );
+
+        gap: var(
+            --kbq-file-upload-size-single-text-block-content-gap-horizontal,
+            map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
+        );
+    }
+
+    & .dropzone {
+        gap: var(
+            --kbq-file-upload-size-single-container-content-gap-horizontal,
+            map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
+        );
+    }
+
+    .file-item {
+        width: 100%;
+
+        .file-item__text-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+            gap: var(
+                --kbq-file-upload-size-single-container-content-gap-horizontal,
+                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
+            );
+
+            .file-item__text {
+                width: 120px;
+                flex-grow: 1;
+            }
+        }
+    }
+}
+
+.kbq-hint {
+    display: block;
+}
+
+.kbq-file-upload__hint {
+    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+}

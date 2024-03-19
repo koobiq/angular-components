@@ -1,0 +1,25 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out-tsc/spec",
+        "types": [
+            "jasmine",
+            "node"
+        ],
+        "paths": {
+            "@koobiq/cdk/*": ["../../dist/packages/cdk/*"],
+            "@koobiq/components/*": ["../../dist/packages/components/*"],
+            "@koobiq/docs-examples/*": ["../../dist/packages/docs-examples/*"],
+            "@koobiq/docs-examples": ["../../dist/packages/docs-examples"]
+
+        }
+    },
+    "files": [
+        "src/test.ts",
+        "src/polyfills.ts"
+    ],
+    "include": [
+        "src/**/*.spec.ts",
+        "src/**/*.d.ts"
+    ]
+}

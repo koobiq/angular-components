@@ -1,0 +1,137 @@
+<div class="layout-margin">
+    <h1 class="kbq-h1">Splitter examples</h1>
+
+    <p>
+        Import @koobiq/icons to use default gutter icon.
+    </p>
+
+    <br>
+
+    <h2 class="kbq-h2">Ghost</h2>
+    <kbq-splitter [useGhost]="true" [direction]="DIRECTION.Horizontal" class="horizontal-block custom-gutter">
+        <div kbq-splitter-area class="flex">first</div>
+        <div kbq-splitter-area class="min-width-enabled layout">
+            <kbq-splitter [useGhost]="true" class="flex custom-color" [direction]="DIRECTION.Vertical">
+                <div kbq-splitter-area class="flex">min-width: 200px</div>
+                <div kbq-splitter-area class="min-height-enabled">min-height: 30px</div>
+            </kbq-splitter>
+        </div>
+    </kbq-splitter>
+
+
+    <h2 class="kbq-h2">With iframe inside</h2>
+    <kbq-splitter [useGhost]="true" [direction]="DIRECTION.Horizontal" class="horizontal-block custom-gutter">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">
+            <iframe src="https://example.org"
+                    title="iframe Example" width="100%" height="100%">
+            </iframe>
+        </div>
+        <div kbq-splitter-area class="min-width-enabled">third min-width: 200px</div>
+    </kbq-splitter>
+
+    <h2 class="kbq-h2">Horizontal</h2>
+
+
+    <kbq-splitter class="horizontal-block" [direction]="DIRECTION.Horizontal">
+        <div kbq-splitter-area style="min-width: 200px"><input type="text"></div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">Vertical</h2>
+
+    <kbq-splitter class="vertical-block" [direction]="DIRECTION.Vertical">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">Default direction</h2>
+
+    <kbq-splitter class="horizontal-block">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">Disabled</h2>
+
+    <kbq-splitter class="horizontal-block" [direction]="DIRECTION.Horizontal" [disabled]="true">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <button kbq-button (click)="toggleVisibility()">
+        <i kbq-icon="mc-play_16"></i>
+        toggle visibility of gutters
+    </button>&nbsp;
+
+    <h2 class="kbq-h2">Hidden gutters</h2>
+
+    <kbq-splitter class="horizontal-block"
+                 [direction]="DIRECTION.Horizontal"
+                 [hideGutters]="guttersVisibility">
+
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">min-width for the first area</h2>
+
+    <kbq-splitter class="horizontal-block">
+        <div kbq-splitter-area class="min-width-enabled">first (with min-width)</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area class="min-width-enabled">third (with min-width)</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">Nested</h2>
+
+    <kbq-splitter class="horizontal-block custom-color">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">
+            <kbq-splitter class="custom-color" [direction]="DIRECTION.Vertical">
+                <div kbq-splitter-area>top</div>
+                <div kbq-splitter-area>center</div>
+                <div kbq-splitter-area>bottom</div>
+            </kbq-splitter>
+        </div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">With custom color</h2>
+
+    <kbq-splitter class="horizontal-block custom-color">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+
+    <h2 class="kbq-h2">With custom gutter image</h2>
+
+    <kbq-splitter class="horizontal-block custom-gutter">
+        <div kbq-splitter-area>first</div>
+        <div kbq-splitter-area class="flex">second</div>
+        <div kbq-splitter-area>third</div>
+    </kbq-splitter>
+
+    <br>
+</div>

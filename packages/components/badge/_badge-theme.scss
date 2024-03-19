@@ -1,0 +1,123 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-badge-style($badge) {
+    color: map.get($badge, color);
+    background: map.get($badge, background);
+
+    & .kbq-badge-caption {
+        color: map.get($badge, caption);
+    }
+
+    & .kbq-icon {
+        color: map.get($badge, icon) !important;
+    }
+}
+
+@mixin kbq-badge-filled-color($badge) {
+    @include kbq-badge-style($badge);
+
+    border: transparent;
+}
+
+@mixin kbq-badge-outline-color($badge) {
+    @include kbq-badge-style($badge);
+
+    border-color: map.get($badge, border);
+}
+
+@mixin kbq-badge-theme($theme) {
+    $badge: map.get(map.get($theme, components), badge);
+
+    $filled: map.get($badge, filled);
+    $outline: map.get($badge, outline);
+
+    .kbq-badge-filled {
+        $fade-on: map.get($filled, fade-on);
+
+        &.kbq-badge_fade-contrast {
+            @include kbq-badge-filled-color(map.get($fade-on, contrast));
+        }
+
+        &.kbq-badge_fade-theme {
+            @include kbq-badge-filled-color(map.get($fade-on, theme));
+        }
+
+        &.kbq-badge_fade-success {
+            @include kbq-badge-filled-color(map.get($fade-on, success));
+        }
+
+        &.kbq-badge_fade-warning {
+            @include kbq-badge-filled-color(map.get($fade-on, warning));
+        }
+
+        &.kbq-badge_fade-error {
+            @include kbq-badge-filled-color(map.get($fade-on, error));
+        }
+
+        $fade-off: map.get($filled, fade-off);
+
+        &.kbq-badge_theme {
+            @include kbq-badge-filled-color(map.get($fade-off, theme));
+        }
+
+        &.kbq-badge_success {
+            @include kbq-badge-filled-color(map.get($fade-off, success));
+        }
+
+        &.kbq-badge_warning {
+            @include kbq-badge-filled-color(map.get($fade-off, warning));
+        }
+
+        &.kbq-badge_error {
+            @include kbq-badge-filled-color(map.get($fade-off, error));
+        }
+    }
+
+    .kbq-badge-outline {
+        $fade-on: map.get($outline, fade-on);
+
+        &.kbq-badge_fade-contrast {
+            @include kbq-badge-outline-color(map.get($fade-on, contrast));
+        }
+
+        &.kbq-badge_fade-theme {
+            @include kbq-badge-outline-color(map.get($fade-on, theme));
+        }
+
+        &.kbq-badge_fade-success {
+            @include kbq-badge-outline-color(map.get($fade-on, success));
+        }
+
+        &.kbq-badge_fade-warning {
+            @include kbq-badge-outline-color(map.get($fade-on, warning));
+        }
+
+        &.kbq-badge_fade-error {
+            @include kbq-badge-outline-color(map.get($fade-on, error));
+        }
+    }
+}
+
+@mixin kbq-badge-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-badge {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-default));
+
+        & .kbq-badge-caption {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-caption));
+        }
+    }
+
+    .kbq-badge_compact {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-default));
+
+        & .kbq-badge-caption {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-caption));
+        }
+    }
+}

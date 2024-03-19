@@ -1,0 +1,52 @@
+<kbq-tab-header
+    #tabHeader
+    [vertical]="vertical"
+    [selectedIndex]="selectedIndex"
+    (indexFocused)="focusChanged($event)"
+    (selectFocusedIndex)="selectedIndex = $event">
+
+    <div class="kbq-tab-label"
+         kbqTabLabelWrapper
+         cdkMonitorElementFocus
+         [attr.tabindex]="getTabIndex(tab, i)"
+         [class.kbq-tab-label_horizontal]="!vertical"
+         [class.kbq-tab-label_vertical]="vertical"
+         [class.kbq-tab-label_empty]="tab.empty"
+         [class.kbq-selected]="selectedIndex == i"
+         *ngFor="let tab of tabs; let i = index"
+         [tab]="tab"
+         [id]="getTabLabelId(i)"
+         [disabled]="tab.disabled"
+         (click)="handleClick(tab, tabHeader, i)"
+
+         [kbqTooltip]="tab.tooltipTitle"
+         [kbqTooltipDisabled]="!tab.empty && !tab.isOverflown"
+         [kbqTrigger]="'hover, focus'"
+         [kbqPlacement]="tab.tooltipPlacement">
+
+        <div #labelContent class="kbq-tab-label__content"
+            [class.kbq-tab-label__template]="tab.templateLabel">
+            <!-- If there is a label template, use it. -->
+            <ng-template [ngIf]="tab.templateLabel">
+                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+            </ng-template>
+
+            <!-- If there is not a label template, fall back to the text label. -->
+            <ng-template [ngIf]="!tab.templateLabel">{{ tab.textLabel }}</ng-template>
+        </div>
+    </div>
+</kbq-tab-header>
+
+<div class="kbq-tab-body__wrapper" #tabBodyWrapper>
+    <kbq-tab-body
+        *ngFor="let tab of tabs; let i = index"
+        [id]="getTabContentId(i)"
+        [class.kbq-tab-body__active]="selectedIndex == i"
+        [content]="tab.content!"
+        [position]="tab.position!"
+        [origin]="tab.origin!"
+        [animationDuration]="animationDuration"
+        (onCentered)="removeTabBodyWrapperHeight()"
+        (onCentering)="setTabBodyWrapperHeight($event)">
+    </kbq-tab-body>
+</div>

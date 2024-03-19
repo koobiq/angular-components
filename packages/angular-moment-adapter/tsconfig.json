@@ -1,0 +1,29 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        // Needed for Moment.js since it doesn't have a default export.
+        "allowSyntheticDefaultImports": true,
+        "types": [
+            "node",
+            "jasmine"
+        ],
+        "paths": {
+            "@koobiq/cdk/*": ["./dist/cdk/*"],
+            "@koobiq/components/*": ["./dist/components/*"]
+        }
+    },
+    "include": [
+        "./**/*.ts"
+    ],
+    "angularCompilerOptions": {
+        "annotateForClosureCompiler": true,
+        "allowSyntheticDefaultImports": true,
+        "skipTemplateCodegen": true,
+        "strictMetadataEmit": true,
+        "strictTemplates": true,
+        "flatModuleId": "@koobiq/angular-moment-adapter",
+        "strictInjectionParameters": true,
+        "enableResourceInlining": true,
+        "compilationMode": "partial"
+    }
+}

@@ -1,0 +1,176 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin _icon($left-icon, $right-icon) {
+    .kbq-icon {
+        color: $left-icon;
+
+        &.kbq-icon_left {
+            color: $left-icon;
+        }
+
+        &.kbq-icon_right {
+            color: $right-icon;
+        }
+    }
+}
+
+@mixin kbq-filled-button($params) {
+    border-color: map.get($params, border);
+    color: map.get($params, foreground);
+    background: map.get($params, background);
+
+    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
+
+    &:hover:not(.kbq-disabled),
+    &.kbq-hover:not(.kbq-disabled) {
+        background: map.get($params, states_hover_background);
+    }
+
+    &:active:not(.kbq-disabled),
+    &.kbq-active:not(.kbq-disabled) {
+        background: map.get($params, states_active_background);
+    }
+
+    &.kbq-disabled {
+        color: map.get($params, states_disabled_foreground);
+        background: map.get($params, states_disabled_background);
+
+        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
+    }
+}
+
+@mixin kbq-outline-button($params) {
+    border-color: map.get($params, border);
+    color: map.get($params, foreground);
+    background: map.get($params, background);
+
+    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
+
+    &:hover:not(.kbq-disabled),
+    &.kbq-hover:not(.kbq-disabled) {
+        background: map.get($params, states_hover_background);
+    }
+
+    &:active:not(.kbq-disabled),
+    &.kbq-active:not(.kbq-disabled) {
+        background: map.get($params, states_active_background);
+    }
+
+    &.kbq-disabled {
+        border-color: map.get($params, states_disabled_border);
+        color: map.get($params, states_disabled_foreground);
+
+        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
+    }
+}
+
+@mixin kbq-transparent-button($params) {
+    border-color: map.get($params, border);
+    color: map.get($params, foreground);
+    background: map.get($params, background);
+
+    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
+
+    &:hover:not(.kbq-disabled),
+    &.kbq-hover:not(.kbq-disabled) {
+        background: map.get($params, states_hover_background);
+    }
+
+    &:active:not(.kbq-disabled),
+    &.kbq-active:not(.kbq-disabled) {
+        background: map.get($params, states_active_background);
+    }
+
+    &.kbq-disabled {
+        border-color: map.get($params, states_disabled_border);
+        color: map.get($params, states_disabled_foreground);
+
+        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
+    }
+}
+
+@mixin kbq-button-theme($theme) {
+    $primary: map.get($theme, theme);
+    $background: map.get($theme, background);
+
+    $button: map.get(map.get($theme, components), button);
+
+    .kbq-button-overlay {
+        display: none;
+    }
+
+    .kbq-button,
+    .kbq-button-icon {
+        -webkit-font-smoothing: antialiased;
+
+        &.kbq-button_filled {
+            &.kbq-contrast {
+                $filled-contrast: map.get(map.get($button, filled), contrast-fade-off);
+
+                @include kbq-filled-button($filled-contrast);
+            }
+
+            &.kbq-contrast-fade {
+                $filled-fade-contrast: map.get(map.get($button, filled), contrast-fade-on);
+
+                @include kbq-filled-button($filled-fade-contrast);
+            }
+        }
+
+        &.kbq-button_outline {
+            &.kbq-theme-fade {
+                $outline-theme-fade-on: map.get(map.get($button, outline), theme-fade-on);
+
+                @include kbq-outline-button($outline-theme-fade-on);
+            }
+
+            &.kbq-contrast-fade {
+                $outline-contrast-fade-on: map.get(map.get($button, outline), contrast-fade-on);
+
+                @include kbq-outline-button($outline-contrast-fade-on);
+            }
+        }
+
+        &.kbq-button_transparent {
+            &.kbq-theme {
+                $transparent-theme: map.get(map.get($button, transparent), theme);
+
+                @include kbq-transparent-button($transparent-theme);
+            }
+
+            &.kbq-contrast {
+                $transparent-contrast: map.get(map.get($button, transparent), contrast);
+
+                @include kbq-transparent-button($transparent-contrast);
+            }
+        }
+
+        &.kbq-button_filled,
+        &.kbq-button_outline,
+        &.kbq-button_transparent {
+            &.cdk-keyboard-focused {
+                border-color: map.get(map.get($theme, states), focused-color);
+            }
+        }
+    }
+}
+
+@mixin kbq-button-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-button,
+    .kbq-button-icon {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, button-font-default));
+    }
+
+    .kbq-button-icon.kbq-button-wrapper {
+        .kbq-icon {
+            line-height: kbq-line-height($config, body);
+        }
+    }
+}
+

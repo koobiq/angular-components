@@ -1,0 +1,23 @@
+<ng-content select="kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]"></ng-content>
+
+<ng-container [ngSwitch]="externalPseudoCheckbox">
+    <ng-content *ngSwitchCase="true" select="kbq-pseudo-checkbox"></ng-content>
+
+    <ng-container *ngSwitchCase="false">
+        <kbq-pseudo-checkbox
+            *ngIf="showCheckbox"
+            [state]="checkboxState"
+            [disabled]="disabled">
+        </kbq-pseudo-checkbox>
+    </ng-container>
+</ng-container>
+
+<ng-content select="kbq-checkbox"></ng-content>
+
+<ng-content select="[kbq-icon]"></ng-content>
+
+<ng-content select="kbq-progress-spinner"></ng-content>
+
+<span class="kbq-option-text" #kbqTitleContainer><ng-content></ng-content></span>
+
+<ng-content select="kbq-option-action"></ng-content>

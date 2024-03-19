@@ -1,0 +1,87 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming';
+@use '../core/styles/typography/typography-utils' as *;
+
+
+$kbq-datepicker-selected-fade-amount: 0.6;
+$kbq-datepicker-today-fade-amount: 0.2;
+
+@mixin kbq-datepicker-theme($theme) {
+    $datepicker: map.get(map.get($theme, components), datepicker);
+
+    $container: map.get($datepicker, container);
+    $header: map.get($datepicker, header);
+    $cell: map.get($datepicker, cell);
+
+    .kbq-datepicker__content {
+        background: map.get($container, background);
+        box-shadow: map.get($container, box-shadow);
+    }
+
+    .kbq-calendar__table-header {
+        color: map.get($header, text);
+    }
+
+    .kbq-calendar__table-header-divider::after {
+        background: map.get($header, divider);
+    }
+
+    .kbq-calendar__body-cell-content {
+        $default: map.get($cell, default);
+
+        background: map.get($default, background);
+        color: map.get($default, text);
+
+        &.kbq-calendar__body-today {
+            $today: map.get($cell, today);
+
+            background: map.get($today, background);
+            color: map.get($today, text);
+        }
+
+        &:hover:not(.kbq-disabled) {
+            $hover: map.get($cell, hover);
+
+            background: map.get($hover, background);
+        }
+
+        &:active:not(.kbq-disabled) {
+            $active: map.get($cell, active);
+
+            background: map.get($active, background);
+        }
+
+        &.kbq-selected:not(.kbq-disabled) {
+            $selected: map.get($cell, selected);
+
+            background: map.get($selected, background);
+            color: map.get($selected, text);
+
+            &:hover {
+                $selected-hover: map.get($cell, selected-hover);
+
+                background: map.get($selected-hover, background);
+            }
+        }
+
+        &.kbq-disabled {
+            $disabled: map.get($cell, disabled);
+
+            background: map.get($disabled, background);
+        }
+    }
+}
+
+@mixin kbq-datepicker-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-calendar {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+    }
+
+    .kbq-calendar__table-header th {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+    }
+}

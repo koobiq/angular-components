@@ -1,0 +1,99 @@
+<div class="kbq-column-container">
+    <h1>Alerts</h1>
+</div>
+
+<div class="layout-row flex-100">
+    <div class="flex-33 kbq-column-container">
+        <h3>Colors</h3>
+
+        <kbq-alert class="kbq-alert_error">
+            <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
+            <div kbq-alert-title>kbq-alert-title</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert class="">
+            <i kbq-icon-item="mc-info_16" [color]="colors.Error"></i>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+    </div>
+    <div class="flex-33 kbq-column-container">
+        <h3>Normal composition</h3>
+
+        <kbq-alert class="kbq-alert_error ">
+            <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert>
+            <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            <button kbq-button [color]="colors.Contrast" kbq-alert-control>normal</button>&nbsp;
+            <button kbq-button [kbqStyle]="style.Transparent" [color]="colors.Theme" kbq-alert-control>normal</button>&nbsp;
+        </kbq-alert>
+
+        <kbq-alert>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            <a href="" kbq-link [pseudo]="true" kbq-alert-control>kbq-link</a>
+            <a href="" kbq-link [pseudo]="true" kbq-alert-control>kbq-link2</a>
+        </kbq-alert>
+
+        <kbq-alert>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            <button kbq-button [color]="colors.Contrast" kbq-alert-control>normal</button>&nbsp;
+            <button kbq-button [kbqStyle]="style.Transparent" [color]="colors.Theme" kbq-alert-control>normal</button>&nbsp;
+        </kbq-alert>
+    </div>
+</div>
+
+<div class="kbq-column-container">
+    <h2>Long text</h2>
+</div>
+
+<div class="layout-row flex-100">
+    <div class="flex-50 kbq-column-container">
+        <h3>Normal composition</h3>
+
+        <kbq-alert class="">
+            <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis risus ac varius ultricies. Aenean maximus ex at ornare tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque sit amet ipsum id augue porta dignissim tristique at nibh. Nullam interdum libero in laoreet pretium. Maecenas et placerat sem. Donec fringilla viverra nunc in vestibulum. Pellentesque suscipit odio ut erat ullamcorper pellentesque eget ac elit. Quisque eleifend orci sit amet erat bibendum sollicitudin. Donec elementum facilisis dui, at volutpat purus. Aliquam posuere non lacus sollicitudin aliquam. Donec nec semper diam, eget imperdiet dui. Integer ornare quam magna, a pretium metus iaculis non. Ut fermentum risus vel sem accumsan, ac egestas nulla sollicitudin. Vivamus nec mi mauris.
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+    </div>
+</div>
