@@ -4,6 +4,7 @@
 # compiled output
 dist
 tmp
+temp
 /out-tsc
 
 # IDEs
