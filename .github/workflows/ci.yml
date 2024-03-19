@@ -24,12 +24,18 @@ jobs:
         run: yarn install --immutable
       - name: Build
         run: |
-            yarn run build:cdk
-            yarn run build:components
-            yarn run build:angular-luxon-adapter
-            yarn run build:angular-moment-adapter
-            yarn run styles:built-all
-            yarn run build:cli
+          yarn run build:cdk
+          yarn run build:components
+          yarn run build:angular-luxon-adapter
+          yarn run build:angular-moment-adapter
+          yarn run styles:built-all
+          yarn run build:cli
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.sha }}
+          path: dist
+          compression-level: 9
 
   check-api:
     runs-on: ubuntu-latest
@@ -46,6 +52,11 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
       - name: Install
         run: yarn install --immutable
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.sha }}
+          path: dist
       - name: Check API
         run: yarn run check-api
 
@@ -64,6 +75,11 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
       - name: Install
         run: yarn install --immutable
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.sha }}
+          path: dist
       - name: Unit
         run: |
           yarn run unit:cdk
