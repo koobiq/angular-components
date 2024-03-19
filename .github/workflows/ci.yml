@@ -9,6 +9,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -32,7 +35,6 @@ jobs:
             yarn run build:angular-moment-adapter
             yarn run styles:built-all
             yarn run build:cli
-
 
   check-api:
     runs-on: ubuntu-latest
@@ -68,4 +70,3 @@ jobs:
       - name: Unit
         run: |
           yarn run unit:cdk
-
