@@ -26,8 +26,7 @@ jobs:
       - name: Install
         run: yarn install --immutable
       - name: Build
-        run:
-          - |
+        run: |
             yarn run build:cdk
             yarn run build:components
             yarn run build:angular-luxon-adapter
