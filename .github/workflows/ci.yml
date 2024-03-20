@@ -83,3 +83,6 @@ jobs:
       - name: Unit
         run: |
           yarn run unit:cdk
+          yarn run unit:components
+          yarn run unit:angular-moment-adapter
+          yarn run unit:angular-luxon-adapter
