@@ -220,7 +220,7 @@ export class CodeBlockNoborderExample {
             filename: '',
             content: codeJs2,
             language: 'typescript',
-            link: 'https://stackblitz.com/'
+            link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.ts'
         }];
     }
 

@@ -28,17 +28,17 @@ $tokens: meta.module-variables(tokens) !default;
 
     .kbq-tab-header {
         // 4 buttons + margin
-        margin-right: calc(32 * 4) + 24px;
+        $buttons-margin: calc(32 * 4) + 24px;
 
         padding:
             var(
                 --kbq-code-block-size-header-padding-vertical,
                 map.get($tokens, code-block-size-header-padding-vertical)
             )
-            var(
+            calc(var(
                 --kbq-code-block-size-header-padding-right,
                 map.get($tokens, code-block-size-header-padding-right)
-            )
+            ) + $buttons-margin)
             var(
                 --kbq-code-block-size-header-padding-vertical,
                 map.get($tokens, code-block-size-header-padding-vertical)
@@ -121,6 +121,12 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 
+    &:not(:has(.kbq-code-block__show-more)) {
+        .kbq-code-block__code {
+            overflow-y: auto;
+        }
+    }
+
     pre {
         margin: 0;
     }
@@ -140,7 +146,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     &.kbq-code-block__code_view-all {
         max-height: unset;
-        overflow-y: unset;
+        overflow-y: auto;
     }
 
     &.kbq-code-block__code_soft-wrap {
@@ -197,6 +203,10 @@ $tokens: meta.module-variables(tokens) !default;
             --kbq-code-block-size-collapse-expanded-padding-bottom,
             map.get($tokens, code-block-size-collapse-expanded-padding-bottom)
         );
+    }
+
+    .bg-wrapper {
+        border-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
     }
 }
 /* stylelint-enable no-descending-specificity */

@@ -8,7 +8,6 @@ import { PublishReleaseFromDistTask } from './release/publish-release-from-dist'
 import { PublishReleaseCIGitlabTask } from './release/publish-release-gitlab-ci';
 import { StageReleaseTask } from './release/stage-release';
 import { StageReleaseCommitTask } from './release/stage-release-commit';
-import { PublishReleaseCIGithubTask } from './release/publish-release-github-ci';
 
 
 const ROOT_DIR = process.env['INIT_CWD'] ?? process.cwd();
@@ -18,8 +17,7 @@ enum CommandTypes {
     StageCommit = 'stage-commit',
     PublishCi = 'publish-ci',
     PublishDist = 'publish-dist',
-    PublishCIGitlab = 'publish-ci-gitlab',
-    PublishCIGithub = 'publish-ci-github'
+    PublishCIGitlab = 'publish-ci-gitlab'
 }
 
 export const runCliCommands = () => {
@@ -51,8 +49,6 @@ export const runCliCommands = () => {
                     break;
                 case CommandTypes.PublishCIGitlab:
                     new PublishReleaseCIGitlabTask(options).run();
-                case CommandTypes.PublishCIGithub:
-                    new PublishReleaseCIGithubTask(options).run();
             }
         });
 

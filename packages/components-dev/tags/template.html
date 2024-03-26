@@ -59,8 +59,8 @@
                    [formControl]="tagCtrl"
                    [kbqTagInputFor]="inputTagList"
                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [distinct]="true"
                    (kbqTagInputTokenEnd)="inputOnCreate($event)">
-
             <kbq-cleaner #kbqTagListCleaner (click)="onClear()"></kbq-cleaner>
         </kbq-tag-list>
     </kbq-form-field>
@@ -76,6 +76,7 @@
             </kbq-tag>
             <input placeholder="Новый тег..."
                    #autocompleteTagInput
+                   [distinct]="true"
                    [formControl]="tagCtrl"
                    [kbqAutocomplete]="autocomplete"
                    [kbqTagInputAddOnBlur]="false"
@@ -84,9 +85,10 @@
                    (blur)="addOnBlurFunc($event)">
         </kbq-tag-list>
         <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
-            <kbq-option *ngIf="autocompleteTagInput.value" [value]="{ new: true, value: autocompleteTagInput.value }">
+            <kbq-option *ngIf="canCreate" [value]="{ new: true, value: autocompleteTagInput.value }">
                 Создать: {{ autocompleteTagInput.value }}
             </kbq-option>
+            <kbq-option *ngIf="hasDuplicates" [disabled]="true">Ничего не найдено</kbq-option>
             <kbq-option *ngFor="let tag of autocompleteFilteredTags | async" [value]="tag">{{ tag }}</kbq-option>
         </kbq-autocomplete>
     </kbq-form-field>

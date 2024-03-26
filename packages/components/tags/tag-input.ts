@@ -18,6 +18,7 @@ import { KbqTrim } from '@koobiq/components/form-field';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
 import { KbqTagTextControl } from './tag-text-control';
+import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 
 
 const KbqTagInputDefaultSeparators: { [key: number]: KbqTagSeparator } = {
@@ -61,7 +62,7 @@ let nextUniqueId = 0;
         '[attr.placeholder]': 'placeholder || null',
 
         '(keydown)': 'onKeydown($event)',
-        '(blur)': 'blur()',
+        '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
@@ -99,6 +100,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** Emitted when a tag is to be added. */
     @Output('kbqTagInputTokenEnd') tagEnd: EventEmitter<KbqTagInputEvent> = new EventEmitter<KbqTagInputEvent>();
+
+    /** A value indicating whether allow/prevent tags duplication  */
+    @Input() distinct: boolean = false;
 
     /** The input's placeholder text. */
     @Input() placeholder: string = '';
@@ -161,7 +165,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         private renderer: Renderer2,
         @Inject(KBQ_TAGS_DEFAULT_OPTIONS) private defaultOptions: KbqTagsDefaultOptions,
         @Optional() @Self() private trimDirective: KbqTrim,
-        @Optional() @Self() public ngControl: NgControl
+        @Optional() @Self() public ngControl: NgControl,
+        @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
     ) {
         // tslint:disable-next-line: no-unnecessary-type-assertion
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
@@ -188,7 +193,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     /** Checks to see if the blur should emit the (tagEnd) event. */
-    blur() {
+    blur(event: FocusEvent) {
         this.focused = false;
         // Blur the tag list if it is not focused
         if (!this._tagList.focused) {
@@ -198,7 +203,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
 
         // tslint:disable-next-line: no-unnecessary-type-assertion
-        if (this.addOnBlur) {
+        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur(event) || true)) {
             this.emitTagEnd();
         }
 
@@ -214,9 +219,16 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Checks to see if the (tagEnd) event needs to be emitted. */
     emitTagEnd() {
         if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
+            if (this.distinct && this.hasDuplicates) { return; }
+
             this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
             this.updateInputWidth();
         }
+    }
+
+    get hasDuplicates(): boolean {
+        return this._tagList.tags.map(({ value }) => value)
+            .some((tagValue) => tagValue === this.trimValue(this.inputElement.value));
     }
 
     onInput() {
@@ -250,7 +262,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             items.push(data);
         }
 
-        items.forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
+        const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
+        items.filter((item) => !tagValues.includes(item))
+            .forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
 
         this.updateInputWidth();
 

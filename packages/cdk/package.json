@@ -10,11 +10,14 @@
         "cdk",
         "component",
         "development",
-        "kit"
+        "kit",
+        "mosaic"
     ],
     "license": "MIT",
     "peerDependencies": {
         "@angular/common": "{{NG_VERSION}}"
     },
-    "sideEffects": false
+    "dependencies": {
+        "tslib": "^2.6.2"
+    }
 }

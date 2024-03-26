@@ -738,7 +738,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     get selectedValues(): any {
-        const selectedValues = this.selectionModel.selected.map((value) => this.tree.treeControl.getValue(value));
+        const selectedValues = this.selectionModel.selected
+            .map((value) => this.tree.treeControl.getValue(value));
 
         return this.multiple ? selectedValues : selectedValues[0];
     }
@@ -835,6 +836,13 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
         this.selectionModel
             .deselect(this.selected.find((value) => this.tree.treeControl.getValue(value) === selectedOption.value));
+
+        this.selectionChange.emit(
+            new KbqTreeSelectChange(
+                this,
+                this.options.find((option) => option.value === selectedOption.value) || selectedOption.value
+            )
+        );
 
         this.onChange(this.selectedValues);
     }

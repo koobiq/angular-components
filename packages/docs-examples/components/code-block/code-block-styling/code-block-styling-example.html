@@ -1,10 +1,9 @@
-<kbq-toggle class="kbq-toggle_small"
-           style="margin: 10px 0"
+<kbq-toggle class="kbq-toggle_small layout-padding-top-m layout-padding-bottom-m"
            [(ngModel)]="lessContrast">
     Контрастный фон
 </kbq-toggle>
-<!--TODO фон не переключается в примерах-->
 <kbq-code-block
+    [maxHeight]="286"
     [lineNumbers]="true"
     [filled]="lessContrast"
     [codeFiles]="files">

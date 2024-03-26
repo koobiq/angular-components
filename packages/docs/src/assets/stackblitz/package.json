@@ -27,7 +27,7 @@
         "@mosaic-design/moment-date-adapter": "^2.1.2",
         "@mosaic-design/luxon-date-adapter": "^2.1.2",
         "@mosaic-design/date-formatter": "^2.1.2",
-        "@koobiq/design-tokens": "3.0.0-beta.26",
+        "@koobiq/design-tokens": "3.0.0-beta.27",
         "marked": "^4.0.18",
         "@messageformat/core": "^3.0.0",
         "moment": "~2.29.2",

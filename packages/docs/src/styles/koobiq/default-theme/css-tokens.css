@@ -262,7 +262,10 @@
   --kbq-risk-level-size-border-width: 1px;
   --kbq-risk-level-size-border-radius: 4px;
   --kbq-scrollbar-size-track-width: 16px;
+  --kbq-scrollbar-size-track-padding-vertical: 2px;
+  --kbq-scrollbar-size-track-padding-horizontal: 2px;
   --kbq-scrollbar-size-thumb-width: 8px;
+  --kbq-scrollbar-size-thumb-min-height: 20px;
   --kbq-scrollbar-size-thumb-border-radius: 8px;
   --kbq-select-size-single-padding-left: 12px;
   --kbq-select-size-single-padding-right: 4px;

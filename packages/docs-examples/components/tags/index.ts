@@ -7,6 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
+import { TagsAutocompleteOptionOperationsExample } from './tags-autocomplete-option-operations/tags-autocomplete-option-operations-example';
 import { TagsAutocompleteExample } from './tags-autocomplete/tags-autocomplete-example';
 import { TagsContentExample } from './tags-content/tags-content-example';
 import { TagsFillAndStyleExample } from './tags-fill-and-style/tags-fill-and-style-example';
@@ -23,7 +24,8 @@ export {
     TagsHugContentExample,
     TagsInputExample,
     TagsListExample,
-    TagsAutocompleteExample
+    TagsAutocompleteExample,
+    TagsAutocompleteOptionOperationsExample
 };
 
 const EXAMPLES = [
@@ -33,7 +35,8 @@ const EXAMPLES = [
     TagsHugContentExample,
     TagsInputExample,
     TagsListExample,
-    TagsAutocompleteExample
+    TagsAutocompleteExample,
+    TagsAutocompleteOptionOperationsExample
 ];
 
 @NgModule({

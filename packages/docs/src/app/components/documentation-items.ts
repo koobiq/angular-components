@@ -316,6 +316,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['radio-types']
                 },
                 {
+                    id: 'scrollbar',
+                    name: 'Scrollbar',
+                    hasApi: true,
+                    apiId: 'scrollbar',
+                    hasExamples: false,
+                    examples: []
+                },
+                {
                     id: 'select',
                     name: 'Select',
                     hasApi: true,

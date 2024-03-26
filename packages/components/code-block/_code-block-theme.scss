@@ -6,6 +6,7 @@
 
 
 @mixin kbq-code-block-style($style) {
+    $header: map.get($style, header);
     $container: map.get($style, container);
     $actionbar: map.get($style, actionbar);
     $collapse: map.get($style, collapse);
@@ -18,8 +19,14 @@
         background: map.get($header, background) !important;
     }
 
-    &:not(.kbq-code-block_no-header) .kbq-code-block__code {
-        box-shadow: map.get($container, shadow);
+    & .kbq-code-block-actionbar {
+        background: map.get($actionbar, background);
+    }
+
+    &.kbq-code-block_header-with-shadow {
+        & .kbq-tab-header {
+            box-shadow: map.get($header, shadow);
+        }
     }
 
     &.kbq-code-block_no-header {
@@ -30,10 +37,12 @@
         }
     }
 
-    & .kbq-code-block-actionbar {
-        background: map.get($actionbar, background);
+    .kbq-code-block__show-more {
+        .bg-wrapper {
+            background: map.get($collapse, button-expand-background);
+            opacity: 90%;
+        }
     }
-
 
     & .kbq-code-block__show-more_expanded {
         background: map.get($collapse, expanded-background);
@@ -310,7 +319,7 @@
             }
 
             &-ln-n {
-                color: map.get($code-block, line-numbers-color);
+                color: map.get($hljs, line-numbers-color);
             }
 
             &-line-numbers {
@@ -331,9 +340,6 @@
             & .kbq-tab-header__pagination {
                 border-bottom-color: transparent;
             }
-        }
-
-        .kbq-code-block__show-more {
         }
     }
 

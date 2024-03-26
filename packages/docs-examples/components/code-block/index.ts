@@ -14,6 +14,7 @@ import { CodeBlockNoborderExample } from './code-block-noborder/code-block-nobor
 import { CodeBlockSingleLineExample } from './code-block-single-line/code-block-single-line-example';
 import { CodeBlockStretchExample } from './code-block-stretch/code-block-stretch-example';
 import { CodeBlockStylingExample } from './code-block-styling/code-block-styling-example';
+import { CodeBlockTabsWithOverflowExample } from './code-block-tabs-with-overflow/code-block-tabs-with-overflow-example';
 import { CodeBlockTabsExample } from './code-block-tabs/code-block-tabs-example';
 import { CodeBlockTitleExample } from './code-block-title/code-block-title-example';
 
@@ -24,6 +25,7 @@ export {
     CodeBlockSingleLineExample,
     CodeBlockLineWrapExample,
     CodeBlockTabsExample,
+    CodeBlockTabsWithOverflowExample,
     CodeBlockTitleExample,
     CodeBlockCutExample,
     CodeBlockStylingExample,
@@ -37,6 +39,7 @@ const EXAMPLES = [
     CodeBlockSingleLineExample,
     CodeBlockLineWrapExample,
     CodeBlockTabsExample,
+    CodeBlockTabsWithOverflowExample,
     CodeBlockTitleExample,
     CodeBlockCutExample,
     CodeBlockStylingExample,

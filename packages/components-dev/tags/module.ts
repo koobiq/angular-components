@@ -15,9 +15,9 @@ import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } 
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagList, KbqTagsModule, KbqTagInputEvent } from '@koobiq/components/tags';
+import { KbqTagList, KbqTagsModule, KbqTagInputEvent, KbqTag, KbqTagInput } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
@@ -43,7 +43,9 @@ export class DemoComponent implements AfterViewInit {
     autocompleteAllTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     autocompleteSelectedTags: string[] = ['tag1'];
     autocompleteFilteredTagsByInput: string[] = [];
-    autocompleteFilteredTags: any;
+    autocompleteFilteredTags: Observable<string[]>;
+
+    readonly optionTagName = 'KBQ-OPTION';
 
     readonly separatorKeysCodes: number[] = [ENTER, SPACE, TAB, COMMA];
 
@@ -51,29 +53,43 @@ export class DemoComponent implements AfterViewInit {
     @ViewChild('inputTagList', {static: false}) inputTagList: KbqTagList;
 
     @ViewChild('autocompleteTagInput', {static: false}) autocompleteTagInput: ElementRef<HTMLInputElement>;
+    @ViewChild('autocompleteTagInput', {read: KbqTagInput, static: false}) autoCompleteTagInputRef: KbqTagInput;
     @ViewChild('autocompleteTagList', {static: false}) autocompleteTagList: KbqTagList;
     @ViewChild('autocomplete', {static: false}) autocomplete: KbqAutocomplete;
 
     @ViewChild('enterTagInput', {static: false}) enterTagInput: ElementRef<HTMLInputElement>;
     @ViewChild('enterInputTagList', {static: false}) enterInputTagList: KbqTagList;
+    hasDuplicates: boolean;
+
+    get canCreate(): boolean {
+        const cleanedValue = (this.tagCtrl.value || '').trim();
+
+        return cleanedValue && [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))]
+            .every((tag) => tag !== cleanedValue);
+    }
 
     ngAfterViewInit(): void {
         this.autocompleteFilteredTags = merge(
             this.autocompleteTagList.tagChanges.asObservable()
-                .pipe(map((selectedTags) => {
+                .pipe(map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag) => tag.value);
 
                     return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
                 })),
             this.tagCtrl.valueChanges
-                .pipe(map((value) => {
-                    const typedText = (value && value.new) ? value.value : value;
+                .pipe(map((value: any) => {
+                    const typedText = ((value?.new) ? value.value : value)?.trim();
 
                     this.autocompleteFilteredTagsByInput = typedText ?
                         this.filter(typedText) : this.autocompleteAllTags.slice();
 
-                    return this.autocompleteFilteredTagsByInput
+                    const inputAndSelectionTagsDiff = this.autocompleteFilteredTagsByInput
                         .filter((tag) => !this.autocompleteSelectedTags.includes(tag));
+
+                    // check for scenario where duplicate exists but also can create/select other tags
+                    this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.autoCompleteTagInputRef.hasDuplicates;
+
+                    return inputAndSelectionTagsDiff;
                 }))
         );
     }
@@ -106,29 +122,36 @@ export class DemoComponent implements AfterViewInit {
         }
     }
 
-    autocompleteOnCreate(event: KbqTagInputEvent): void {
-        const input = event.input;
-        const value = event.value;
+    autocompleteOnCreate({ input, value }: KbqTagInputEvent): void {
+        this.tagCtrl.setValue(value);
+        const cleanedValue = (value || '').trim();
 
-        if ((value || '').trim()) {
+        if (cleanedValue) {
             const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
-            if (!isOptionSelected) {
-                this.autocompleteSelectedTags.push(value.trim());
+            if (!isOptionSelected && this.canCreate) {
+                this.autocompleteSelectedTags.push(cleanedValue);
+
+                // Reset the input value
+                if (input) {
+                    input.value = '';
+                }
+
+                this.tagCtrl.setValue(null);
+
+                return;
             }
         }
 
-        // Reset the input value
-        if (input) {
-            input.value = '';
+        if (!this.canCreate) {
+            input.value = cleanedValue;
+            this.tagCtrl.setValue(cleanedValue);
         }
-
-        this.tagCtrl.setValue(null);
     }
 
     addOnBlurFunc(event: FocusEvent) {
         const target: HTMLElement = event.relatedTarget as HTMLElement;
 
-        if (!target || target.tagName !== 'kbq-OPTION') {
+        if (!target || target.tagName !== this.optionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
                 input: this.autocompleteTagInput.nativeElement,
                 value : this.autocompleteTagInput.nativeElement.value
@@ -138,12 +161,12 @@ export class DemoComponent implements AfterViewInit {
         }
     }
 
-    autocompleteOnSelect(event: KbqAutocompleteSelectedEvent): void {
-        event.option.deselect();
-        if (event.option.value.new) {
-            this.autocompleteSelectedTags.push(event.option.value.value);
+    autocompleteOnSelect({ option }: KbqAutocompleteSelectedEvent): void {
+        option.deselect();
+        if (option.value.new) {
+            this.autocompleteSelectedTags.push(option.value.value);
         } else {
-            this.autocompleteSelectedTags.push(event.option.value);
+            this.autocompleteSelectedTags.push(option.value);
         }
         this.autocompleteTagInput.nativeElement.value = '';
         this.tagCtrl.setValue(null);
@@ -184,8 +207,8 @@ export class DemoComponent implements AfterViewInit {
     private filter(value: string): string[] {
         const filterValue = value.toLowerCase();
 
-        // todo добавить фильтрацию
-        return this.autocompleteAllTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
+        return [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))]
+            .filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
 }
 

@@ -111,7 +111,7 @@ describe('KbqTagInput', () => {
             testTagInput.addOnBlur = true;
             fixture.detectChanges();
 
-            tagInputDirective.blur();
+            tagInputDirective.blur({} as FocusEvent);
             expect(testTagInput.add).toHaveBeenCalled();
         });
 
@@ -121,7 +121,7 @@ describe('KbqTagInput', () => {
             testTagInput.addOnBlur = false;
             fixture.detectChanges();
 
-            tagInputDirective.blur();
+            tagInputDirective.blur({} as FocusEvent);
             expect(testTagInput.add).not.toHaveBeenCalled();
         });
     });

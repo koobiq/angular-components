@@ -156,6 +156,17 @@ export class KbqAutocompleteTrigger implements
         this._autocompleteDisabled = coerceBooleanProperty(value);
     }
 
+    /**
+     * Event handler for input blur events.
+     * Determines whether the blur event is triggered outside the specific target
+     * @returns A boolean indicating if the blur event happened outside the target element
+     */
+    @Input('kbqAutocompleteOnBlur') onInputBlur = (event: FocusEvent): boolean => {
+        const target: HTMLElement = event.relatedTarget as HTMLElement;
+
+        return !target || target.tagName !== 'KBQ-OPTION';
+    };
+
     private _autocompleteDisabled = false;
 
     private overlayAttached: boolean = false;

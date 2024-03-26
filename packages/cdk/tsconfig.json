@@ -10,6 +10,7 @@
         "**/*.ts"
     ],
     "angularCompilerOptions": {
+        "annotateForClosureCompiler": true,
         "strictTemplates": true,
         "strictMetadataEmit": true,
         "flatModuleId": "@koobiq/cdk",

@@ -1,0 +1,10 @@
+.scrollarea_with-scroll-to-top {
+    position: relative;
+    width: 400px;
+}
+
+.kbq-button.button_scroll-to-top {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}

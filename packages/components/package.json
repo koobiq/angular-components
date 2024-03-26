@@ -24,8 +24,8 @@
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@mosaic-design/date-formatter": "^2.1.1",
         "@koobiq/icons": "^7.1.0",
-        "@koobiq/tokens-builder": "^3.0.0-beta.26",
-        "@koobiq/design-tokens": "^3.0.0-beta.26",
+        "@koobiq/tokens-builder": "^3.0.0-beta.27",
+        "@koobiq/design-tokens": "^3.0.0-beta.27",
         "marked": "^4.0.18"
     },
     "dependencies": {

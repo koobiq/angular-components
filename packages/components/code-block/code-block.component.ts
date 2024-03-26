@@ -72,13 +72,13 @@ const actionBarBlockLeftMargin = 24;
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers',
         '[class.kbq-code-block_single-file]': 'singleFile',
         '[class.kbq-code-block_no-header]': 'noHeader',
+        '[class.kbq-code-block_header-with-shadow]': 'isTopOverflow',
         '(window:resize)': 'resizeStream.next($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqCodeBlockComponent implements OnDestroy {
-
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
 
     @Input() lineNumbers = true;
@@ -99,6 +99,7 @@ export class KbqCodeBlockComponent implements OnDestroy {
     copied: boolean = false;
     viewAll: boolean = false;
     multiLine: boolean = false;
+    isTopOverflow: boolean = false;
 
     readonly resizeStream = new Subject<Event>();
 
@@ -128,7 +129,7 @@ export class KbqCodeBlockComponent implements OnDestroy {
 
         this.renderer.setStyle(
             this.tabGroup.tabHeader.elementRef.nativeElement,
-            'margin-right',
+            'padding-right',
             `${actionBarBlockLeftMargin + clientWidth}px`
         );
 
@@ -169,14 +170,29 @@ export class KbqCodeBlockComponent implements OnDestroy {
     }
 
     getMaxHeight(): string {
-        return this.maxHeight > 0 && !this.viewAll ? `${this.maxHeight}px` : 'none';
+        return this.maxHeight > 0 && !this.viewAll ? `${this.maxHeight}px` : '';
     }
 
     onSelectTab($event: KbqTabChangeEvent) {
         this.selectedTabIndex = $event.index;
         this.updateMultiline();
+        this.isTopOverflow = false;
 
         setTimeout(this.updateHeader);
+    }
+
+    checkOverflow(currentCodeContentElement: HTMLElement) {
+        if (this.noHeader) { return; }
+        this.isTopOverflow = currentCodeContentElement.scrollTop > 0;
+    }
+
+    onShowMoreClick(currentCodeContentElement: HTMLPreElement) {
+        this.toggleViewAll();
+
+        // Should explicitly scroll to top so content will be cropped from the bottom
+        if (!this.viewAll) {
+            currentCodeContentElement?.scroll({ top: 0, behavior: 'instant' });
+        }
     }
 
     private updateMultiline = () => {

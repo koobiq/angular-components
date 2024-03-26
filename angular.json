@@ -1377,18 +1377,18 @@
                 }
             }
         },
-        "dev-scrollbars": {
+        "dev-scrollbar": {
             "projectType": "application",
-            "root": "packages/components-dev/scrollbars",
-            "sourceRoot": "packages/components-dev/scrollbars",
+            "root": "packages/components-dev/scrollbar",
+            "sourceRoot": "packages/components-dev/scrollbar",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/components-dev/scrollbars",
-                        "tsConfig": "packages/components-dev/scrollbars/tsconfig.app.json",
+                        "outputPath": "dist/components-dev/scrollbar",
+                        "tsConfig": "packages/components-dev/scrollbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/scrollbars/main.ts",
+                        "main": "packages/components-dev/scrollbar/main.ts",
                         "polyfills": "packages/components-dev/polyfills.ts",
                         "vendorChunk": true,
                         "extractLicenses": false,
@@ -1401,7 +1401,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-scrollbars:build"
+                      "buildTarget": "dev-scrollbar:build"
                     }
                 }
             }

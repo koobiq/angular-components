@@ -436,10 +436,10 @@
             container: (
                 background: map-get($tokens, 'code-block-#{$scheme}-filled-container-background'),
                 border: map-get($tokens, 'code-block-#{$scheme}-filled-container-border-color'),
-                shadow: map-get($tokens, 'code-block-#{$scheme}-filled-container-shadow')
             ),
             header: (
-                background: map-get($tokens, 'code-block-#{$scheme}-filled-header-background')
+                background: map-get($tokens, 'code-block-#{$scheme}-filled-header-background'),
+                shadow: map-get($tokens, 'code-block-#{$scheme}-filled-header-shadow')
             ),
             actionbar: (
                 fade-gradient: map-get($tokens, 'code-block-#{$scheme}-filled-actionbar-fade-gradient'),
@@ -447,17 +447,20 @@
             ),
             collapse: (
                 expanded-background: map-get($tokens, 'code-block-#{$scheme}-filled-collapse-expanded-background'),
-                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-filled-collapse-collapsed-background')
+                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-filled-collapse-collapsed-background'),
+                button-expand-background: map-get(
+                    $tokens, 'code-block-#{$scheme}-filled-collapse-button-expand-background'
+                )
             )
         ),
         outline: (
             container: (
                 background: map-get($tokens, 'code-block-#{$scheme}-outline-container-background'),
                 border: map-get($tokens, 'code-block-#{$scheme}-outline-container-border-color'),
-                shadow: map-get($tokens, 'code-block-#{$scheme}-outline-container-shadow')
             ),
             header: (
-                background: map-get($tokens, 'code-block-#{$scheme}-outline-header-background')
+                background: map-get($tokens, 'code-block-#{$scheme}-outline-header-background'),
+                shadow: map-get($tokens, 'code-block-#{$scheme}-outline-header-shadow')
             ),
             actionbar: (
                 fade-gradient: map-get($tokens, 'code-block-#{$scheme}-outline-actionbar-fade-gradient'),
@@ -465,7 +468,10 @@
             ),
             collapse: (
                 expanded-background: map-get($tokens, 'code-block-#{$scheme}-outline-collapse-expanded-background'),
-                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-outline-collapse-collapsed-background')
+                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-outline-collapse-collapsed-background'),
+                button-expand-background: map-get(
+                    $tokens, 'code-block-#{$scheme}-outline-collapse-button-expand-background'
+                )
             )
         ),
 
@@ -500,6 +506,7 @@
             function-color: map-get($tokens, 'code-block-#{$scheme}-hljs-function-color'),
             keyword-background: map-get($tokens, 'code-block-#{$scheme}-hljs-keyword-background'),
             keyword-color: map-get($tokens, 'code-block-#{$scheme}-hljs-keyword-color'),
+            line-numbers-color: map-get($tokens, 'code-block-#{$scheme}-hljs-line-numbers-color'),
             link-background: map-get($tokens, 'code-block-#{$scheme}-hljs-link-background'),
             link-color: map-get($tokens, 'code-block-#{$scheme}-hljs-link-color'),
             literal-background: map-get($tokens, 'code-block-#{$scheme}-hljs-literal-background'),
@@ -1784,7 +1791,12 @@
         default: map-get($tokens, 'scrollbar-#{$scheme}-thumb-default-background'),
         hover: map-get($tokens, 'scrollbar-#{$scheme}-thumb-hover-background'),
         active: map-get($tokens, 'scrollbar-#{$scheme}-thumb-active-background'),
-        disabled: map-get($tokens, 'scrollbar-#{$scheme}-thumb-disabled-background')
+        disabled: map-get($tokens, 'scrollbar-#{$scheme}-thumb-disabled-background'),
+        track: (
+            default: map-get($tokens, 'scrollbar-#{$scheme}-track-default-background'),
+            hover: map-get($tokens, 'scrollbar-#{$scheme}-track-hover-background'),
+            active: map-get($tokens, 'scrollbar-#{$scheme}-track-active-background'),
+        )
     );
 
     @return (
