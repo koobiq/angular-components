@@ -1,0 +1,41 @@
+name: PR Docs
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'koobiq' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build packages
+        run: |
+          yarn run build:cdk
+          yarn run build:components
+          yarn run build:angular-luxon-adapter
+          yarn run build:angular-moment-adapter
+          yarn run styles:built-all
+
+      - name: Build Docs
+        run: |
+          yarn run build:docs-examples-module
+          yarn run build:docs-examples
+          yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+          yarn run docs:prod-build:aot
+
+      - name: Deploy
+        run: npx firebase deploy --only hosting:next --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
