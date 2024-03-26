@@ -178,6 +178,7 @@
         "release:publish:ci": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci",
         "release:publish:dist": "ts-node --project p ackages/cli/tsconfig.lib.json packages/cli/src/cli publish-dist",
         "release:publish:ci-gitlab": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-gitlab",
+        "release:publish:ci-github": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-github",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
         "check-api": "yarn run approve-api onlyCheck",
         "dev:all": "ng serve dev-all --port 3003",
