@@ -193,6 +193,15 @@
                         "tsConfig": "packages/cdk/tsconfig.spec.json",
                         "codeCoverage": true
                     }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/cdk/**/*.ts",
+                            "packages/cdk/**/*.html"
+                        ]
+                    }
                 }
             }
         },
@@ -223,6 +232,15 @@
                         "main": "packages/components/test.ts",
                         "tsConfig": "packages/components/tsconfig.spec.json",
                         "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/components/**/*.ts",
+                            "packages/components/**/*.html"
+                        ]
                     }
                 }
             }
@@ -255,6 +273,15 @@
                         "tsConfig": "packages/angular-moment-adapter/tsconfig.spec.json",
                         "codeCoverage": true
                     }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/angular-moment-adapter/**/*.ts",
+                            "packages/angular-moment-adapter/**/*.html"
+                        ]
+                    }
                 }
             }
         },
@@ -285,6 +312,15 @@
                         "main": "packages/angular-luxon-adapter/test.ts",
                         "tsConfig": "packages/angular-luxon-adapter/tsconfig.spec.json",
                         "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/angular-luxon-adapter/**/*.ts",
+                            "packages/angular-luxon-adapter/**/*.html"
+                        ]
                     }
                 }
             }
