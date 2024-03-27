@@ -25,6 +25,7 @@ import * as i4 from '@angular/common';
 import * as i5 from '@angular/cdk/platform';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
+import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -137,18 +138,23 @@ export interface KbqTagEvent {
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
-    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl);
+    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl, autocompleteTrigger?: KbqAutocompleteTrigger | undefined);
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
-    blur(): void;
+    // (undocumented)
+    autocompleteTrigger?: KbqAutocompleteTrigger | undefined;
+    blur(event: FocusEvent): void;
     // (undocumented)
     countOfSymbolsForUpdateWidth: number;
     get disabled(): boolean;
     set disabled(value: boolean);
+    distinct: boolean;
     emitTagEnd(): void;
     get empty(): boolean;
     focus(): void;
     focused: boolean;
+    // (undocumented)
+    get hasDuplicates(): boolean;
     id: string;
     // (undocumented)
     ngControl: NgControl;
@@ -173,9 +179,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // (undocumented)
     updateInputWidth(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, [null, null, null, { optional: true; self: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, [null, null, null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
 }
 
 // @public

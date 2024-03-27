@@ -49,6 +49,8 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 export class KbqCodeBlockComponent implements OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, config: KbqCodeBlockConfiguration);
     // (undocumented)
+    checkOverflow(currentCodeContentElement: HTMLElement): void;
+    // (undocumented)
     codeFiles: KbqCodeFile[];
     // (undocumented)
     config: KbqCodeBlockConfiguration;
@@ -63,6 +65,8 @@ export class KbqCodeBlockComponent implements OnDestroy {
     // (undocumented)
     getMaxHeight(): string;
     // (undocumented)
+    isTopOverflow: boolean;
+    // (undocumented)
     lineNumbers: boolean;
     // (undocumented)
     maxHeight: number;
@@ -76,6 +80,8 @@ export class KbqCodeBlockComponent implements OnDestroy {
     onHighlighted(): void;
     // (undocumented)
     onSelectTab($event: KbqTabChangeEvent): void;
+    // (undocumented)
+    onShowMoreClick(currentCodeContentElement: HTMLPreElement): void;
     // (undocumented)
     openExternalSystem(): void;
     // (undocumented)
