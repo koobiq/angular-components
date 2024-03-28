@@ -1,0 +1,31 @@
+<label [attr.for]="inputId" class="kbq-checkbox__layout" #label>
+    <div class="kbq-checkbox__inner-container"
+         [class.kbq-checkbox__inner-container_no-side-margin]="!checkboxLabel.textContent || !checkboxLabel.textContent.trim()">
+        <input #input
+               type="checkbox"
+               class="kbq-checkbox-input cdk-visually-hidden"
+               [id]="inputId"
+               [required]="required"
+               [checked]="checked"
+               [attr.value]="value"
+               [disabled]="disabled"
+               [attr.name]="name"
+               [tabIndex]="tabIndex"
+               [indeterminate]="indeterminate"
+               [attr.aria-checked]="getAriaChecked()"
+               (change)="onInteractionEvent($event)"
+               (click)="onInputClick($event)">
+        <div class="kbq-checkbox__frame">
+            <i class="kbq-checkbox-checkmark mc mc-check_16"></i>
+            <i class="kbq-checkbox-mixedmark mc mc-minus_16"></i>
+        </div>
+    </div>
+
+    <div class="kbq-checkbox__text-container">
+        <span class="kbq-checkbox-label" #checkboxLabel (cdkObserveContent)="onLabelTextChange()">
+            <ng-content></ng-content>
+        </span>
+
+        <ng-content select="kbq-hint"></ng-content>
+    </div>
+</label>

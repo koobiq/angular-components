@@ -1,0 +1,1975 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "koobiq-docs": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "",
+            "sourceRoot": "",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "sourceMap": true,
+                        "outputPath": "./dist/releases/koobiq-docs",
+                        "index": "packages/docs/src/index.html",
+                        "main": "packages/docs/src/main.ts",
+                        "polyfills": "packages/docs/src/polyfills.ts",
+                        "tsConfig": "packages/docs/tsconfig.app.json",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/dist/svg",
+                                "output": "/assets/SVGIcons"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/dist/info",
+                                "output": "/assets/SVGIcons"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "packages/docs/src/assets",
+                                "output": "/assets"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "dist/docs-content",
+                                "output": "/docs-content"
+                            },
+                            {
+                                "glob": "favicon.ico",
+                                "input": "packages/docs/src",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "packages/docs/src/styles",
+                                "output": "/tokens"
+                            },
+                            "src/robots.txt",
+                            "src/sitemap.xml"
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["packages"]
+                        },
+                        "styles": [{
+                            "input": "packages/docs/src/main.scss"
+                        }],
+                        "scripts": [],
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "optimization": false,
+                        "namedChunks": true
+                    },
+                    "configurations": {
+                        "development": {
+                            "tsConfig": "packages/docs/tsconfig.dev.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "packages/docs/src/environments/environment.ts",
+                                    "with": "packages/docs/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                }
+                            ]
+                        },
+                        "production": {
+                            "tsConfig": "packages/docs/tsconfig.aot.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "packages/docs/src/environments/environment.ts",
+                                    "with": "packages/docs/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": {
+                                "scripts": true,
+                                "styles": true,
+                                "fonts": false
+                            },
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "aot": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "koobiq-docs:build"
+                    },
+                    "configurations": {
+                        "development": {
+                          "buildTarget": "koobiq-docs:build:development"
+                        },
+                        "production": {
+                          "buildTarget": "koobiq-docs:build:production"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "packages/docs/src/test.ts",
+                        "polyfills": "packages/docs/src/polyfills.ts",
+                        "tsConfig": "packages/docs/tsconfig.spec.json",
+                        "karmaConfig": "packages/docs/karma.conf.js",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "packages/docs/src/assets",
+                                "output": "/assets"
+                            },
+                            {
+                                "glob": "favicon.ico",
+                                "input": "packages/docs/src",
+                                "output": "/"
+                            }
+                        ],
+                        "styles": [
+                            {
+                                "input": "packages/docs/src/main.scss"
+                            }
+                        ],
+                        "scripts": []
+                    }
+                }
+            }
+        },
+        "cdk": {
+            "projectType": "library",
+            "root": "packages/cdk",
+            "sourceRoot": "packages/cdk",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/cdk/tsconfig.lib.json",
+                        "project": "packages/cdk/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "karmaConfig": "packages/cdk/karma.conf.js",
+                        "main": "packages/cdk/test.ts",
+                        "tsConfig": "packages/cdk/tsconfig.spec.json",
+                        "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/cdk/**/*.ts",
+                            "packages/cdk/**/*.html"
+                        ]
+                    }
+                }
+            }
+        },
+        "components": {
+            "projectType": "library",
+            "root": "packages/components",
+            "sourceRoot": "packages/components",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/components/tsconfig.lib.json",
+                        "project": "packages/components/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "karmaConfig": "packages/components/karma.conf.js",
+                        "main": "packages/components/test.ts",
+                        "tsConfig": "packages/components/tsconfig.spec.json",
+                        "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/components/**/*.ts",
+                            "packages/components/**/*.html"
+                        ]
+                    }
+                }
+            }
+        },
+        "angular-moment-adapter": {
+            "projectType": "library",
+            "root": "packages/angular-moment-adapter",
+            "sourceRoot": "packages/angular-moment-adapter",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/angular-moment-adapter/tsconfig.lib.json",
+                        "project": "packages/angular-moment-adapter/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "karmaConfig": "packages/angular-moment-adapter/karma.conf.js",
+                        "main": "packages/angular-moment-adapter/test.ts",
+                        "tsConfig": "packages/angular-moment-adapter/tsconfig.spec.json",
+                        "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/angular-moment-adapter/**/*.ts",
+                            "packages/angular-moment-adapter/**/*.html"
+                        ]
+                    }
+                }
+            }
+        },
+        "angular-luxon-adapter": {
+            "projectType": "library",
+            "root": "packages/angular-luxon-adapter",
+            "sourceRoot": "packages/angular-luxon-adapter",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/angular-luxon-adapter/tsconfig.lib.json",
+                        "project": "packages/angular-luxon-adapter/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "karmaConfig": "packages/angular-luxon-adapter/karma.conf.js",
+                        "main": "packages/angular-luxon-adapter/test.ts",
+                        "tsConfig": "packages/angular-luxon-adapter/tsconfig.spec.json",
+                        "codeCoverage": true
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "packages/angular-luxon-adapter/**/*.ts",
+                            "packages/angular-luxon-adapter/**/*.html"
+                        ]
+                    }
+                }
+            }
+        },
+        "docs-examples": {
+            "projectType": "library",
+            "root": "packages/docs-examples",
+            "sourceRoot": "packages/docs-examples",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/docs-examples/tsconfig.lib.json",
+                        "project": "packages/docs-examples/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                }
+            }
+        },
+        "components-utils": {
+            "projectType": "library",
+            "root": "packages/components-utils",
+            "sourceRoot": "packages/components-utils",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/components-utils/tsconfig.json",
+                        "project": "packages/components-utils/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                }
+            }
+        },
+        "dev-alert": {
+            "projectType": "application",
+            "root": "packages/components-dev/alert",
+            "sourceRoot": "packages/components-dev/alert",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/alert",
+                        "tsConfig": "packages/components-dev/alert/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/alert/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-alert:build"
+                    }
+                }
+            }
+        },
+        "dev-all": {
+            "projectType": "application",
+            "root": "packages/components-dev/all",
+            "sourceRoot": "packages/components-dev/all",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/all",
+                        "tsConfig": "packages/components-dev/all/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/all/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-all:build"
+                    }
+                }
+            }
+        },
+        "dev-autocomplete": {
+            "projectType": "application",
+            "root": "packages/components-dev/autocomplete",
+            "sourceRoot": "packages/components-dev/autocomplete",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/autocomplete",
+                        "tsConfig": "packages/components-dev/autocomplete/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/autocomplete/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-autocomplete:build"
+                    }
+                }
+            }
+        },
+        "dev-badge": {
+            "projectType": "application",
+            "root": "packages/components-dev/badge",
+            "sourceRoot": "packages/components-dev/badge",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/badge",
+                        "tsConfig": "packages/components-dev/badge/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/badge/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-badge:build"
+                    }
+                }
+            }
+        },
+        "dev-button": {
+            "projectType": "application",
+            "root": "packages/components-dev/button",
+            "sourceRoot": "packages/components-dev/button",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/button",
+                        "tsConfig": "packages/components-dev/button/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/button/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-button:build"
+                    }
+                }
+            }
+        },
+        "dev-button-toggle": {
+            "projectType": "application",
+            "root": "packages/components-dev/button-toggle",
+            "sourceRoot": "packages/components-dev/button-toggle",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/button-toggle",
+                        "tsConfig": "packages/components-dev/button-toggle/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/button-toggle/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-button-toggle:build"
+                    }
+                }
+            }
+        },
+        "dev-card": {
+            "projectType": "application",
+            "root": "packages/components-dev/card",
+            "sourceRoot": "packages/components-dev/card",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/card",
+                        "tsConfig": "packages/components-dev/card/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/card/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-card:build"
+                    }
+                }
+            }
+        },
+        "dev-checkbox": {
+            "projectType": "application",
+            "root": "packages/components-dev/checkbox",
+            "sourceRoot": "packages/components-dev/checkbox",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/checkbox",
+                        "tsConfig": "packages/components-dev/checkbox/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/checkbox/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-checkbox:build"
+                    }
+                }
+            }
+        },
+        "dev-code-block": {
+            "projectType": "application",
+            "root": "packages/components-dev/code-block",
+            "sourceRoot": "packages/components-dev/code-block",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/code-block",
+                        "tsConfig": "packages/components-dev/code-block/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/code-block/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-code-block:build"
+                    }
+                }
+            }
+        },
+        "dev-date-formatter": {
+            "projectType": "application",
+            "root": "packages/components-dev/date-formatter",
+            "sourceRoot": "packages/components-dev/date-formatter",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/date-formatter",
+                        "tsConfig": "packages/components-dev/date-formatter/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/date-formatter/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-date-formatter:build"
+                    }
+                }
+            }
+        },
+        "dev-date-pipes": {
+            "projectType": "application",
+            "root": "packages/components-dev/date-pipes",
+            "sourceRoot": "packages/components-dev/date-pipes",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/date-pipes",
+                        "tsConfig": "packages/components-dev/date-pipes/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/date-pipes/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-date-pipes:build"
+                    }
+                }
+            }
+        },
+        "dev-datepicker": {
+            "projectType": "application",
+            "root": "packages/components-dev/datepicker",
+            "sourceRoot": "packages/components-dev/datepicker",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/datepicker",
+                        "tsConfig": "packages/components-dev/datepicker/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/datepicker/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-datepicker:build"
+                    }
+                }
+            }
+        },
+        "dev-divider": {
+            "projectType": "application",
+            "root": "packages/components-dev/divider",
+            "sourceRoot": "packages/components-dev/divider",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/divider",
+                        "tsConfig": "packages/components-dev/divider/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/divider/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-divider:build"
+                    }
+                }
+            }
+        },
+        "dev-dl": {
+            "projectType": "application",
+            "root": "packages/components-dev/dl",
+            "sourceRoot": "packages/components-dev/dl",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/dl",
+                        "tsConfig": "packages/components-dev/dl/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/dl/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-dl:build"
+                    }
+                }
+            }
+        },
+        "dev-dropdown": {
+            "projectType": "application",
+            "root": "packages/components-dev/dropdown",
+            "sourceRoot": "packages/components-dev/dropdown",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/dropdown",
+                        "tsConfig": "packages/components-dev/dropdown/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/dropdown/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-dropdown:build"
+                    }
+                }
+            }
+        },
+        "dev-form-field": {
+            "projectType": "application",
+            "root": "packages/components-dev/form-field",
+            "sourceRoot": "packages/components-dev/form-field",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/form-field",
+                        "tsConfig": "packages/components-dev/form-field/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/form-field/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-form-field:build"
+                    }
+                }
+            }
+        },
+        "dev-forms": {
+            "projectType": "application",
+            "root": "packages/components-dev/forms",
+            "sourceRoot": "packages/components-dev/forms",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/forms",
+                        "tsConfig": "packages/components-dev/forms/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/forms/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-forms:build"
+                    }
+                }
+            }
+        },
+        "dev-flex-layout": {
+            "projectType": "application",
+            "root": "packages/components-dev/flex-layout",
+            "sourceRoot": "packages/components-dev/flex-layout",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/flex-layout",
+                        "tsConfig": "packages/components-dev/flex-layout/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/flex-layout/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-flex-layout:build"
+                    }
+                }
+            }
+        },
+        "dev-file-upload": {
+            "projectType": "application",
+            "root": "packages/components-dev/file-upload",
+            "sourceRoot": "packages/components-dev/file-upload",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/file-upload",
+                        "tsConfig": "packages/components-dev/file-upload/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/file-upload/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-file-upload:build"
+                    }
+                }
+            }
+        },
+        "dev-icon": {
+            "projectType": "application",
+            "root": "packages/components-dev/icon",
+            "sourceRoot": "packages/components-dev/icon",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/icon",
+                        "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/icon/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-icon:build"
+                    }
+                }
+            }
+        },
+        "dev-hint": {
+            "projectType": "application",
+            "root": "packages/components-dev/hint",
+            "sourceRoot": "packages/components-dev/hint",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/hint",
+                        "tsConfig": "packages/components-dev/hint/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/hint/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-hint:build"
+                    }
+                }
+            }
+        },
+        "dev-input": {
+            "projectType": "application",
+            "root": "packages/components-dev/input",
+            "sourceRoot": "packages/components-dev/input",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/input",
+                        "tsConfig": "packages/components-dev/input/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/input/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-input:build"
+                    }
+                }
+            }
+        },
+        "dev-link": {
+            "projectType": "application",
+            "root": "packages/components-dev/link",
+            "sourceRoot": "packages/components-dev/link",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/link",
+                        "tsConfig": "packages/components-dev/link/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/link/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-link:build"
+                    }
+                }
+            }
+        },
+        "dev-list": {
+            "projectType": "application",
+            "root": "packages/components-dev/list",
+            "sourceRoot": "packages/components-dev/list",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/list",
+                        "tsConfig": "packages/components-dev/list/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/list/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-list:build"
+                    }
+                }
+            }
+        },
+        "dev-loader-overlay": {
+            "projectType": "application",
+            "root": "packages/components-dev/loader-overlay",
+            "sourceRoot": "packages/components-dev/loader-overlay",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/loader-overlay",
+                        "tsConfig": "packages/components-dev/loader-overlay/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/loader-overlay/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-loader-overlay:build"
+                    }
+                }
+            }
+        },
+        "dev-locale": {
+            "projectType": "application",
+            "root": "packages/components-dev/locale",
+            "sourceRoot": "packages/components-dev/locale",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/locale",
+                        "tsConfig": "packages/components-dev/locale/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/locale/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-locale:build"
+                    }
+                }
+            }
+        },
+        "dev-markdown": {
+            "projectType": "application",
+            "root": "packages/components-dev/markdown",
+            "sourceRoot": "packages/markdown-dev/markdown",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/markdown",
+                        "tsConfig": "packages/components-dev/markdown/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/markdown/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-markdown:build"
+                    }
+                }
+            }
+        },
+        "dev-modal": {
+            "projectType": "application",
+            "root": "packages/components-dev/modal",
+            "sourceRoot": "packages/components-dev/modal",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/modal",
+                        "tsConfig": "packages/components-dev/modal/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/modal/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-modal:build"
+                    }
+                }
+            }
+        },
+        "dev-navbar": {
+            "projectType": "application",
+            "root": "packages/components-dev/navbar",
+            "sourceRoot": "packages/components-dev/navbar",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/navbar",
+                        "tsConfig": "packages/components-dev/navbar/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/navbar/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-navbar:build"
+                    }
+                }
+            }
+        },
+        "dev-number-formatter": {
+            "projectType": "application",
+            "root": "packages/components-dev/number-formatter",
+            "sourceRoot": "packages/components-dev/number-formatter",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/number-formatter",
+                        "tsConfig": "packages/components-dev/number-formatter/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/number-formatter/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-number-formatter:build"
+                    }
+                }
+            }
+        },
+        "dev-panel": {
+            "projectType": "application",
+            "root": "packages/components-dev/panel",
+            "sourceRoot": "packages/components-dev/panel",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/panel",
+                        "tsConfig": "packages/components-dev/panel/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/panel/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-panel:build"
+                    }
+                }
+            }
+        },
+        "dev-popover": {
+            "projectType": "application",
+            "root": "packages/components-dev/popover",
+            "sourceRoot": "packages/components-dev/popover",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/popover",
+                        "tsConfig": "packages/components-dev/popover/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/popover/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-popover:build"
+                    }
+                }
+            }
+        },
+        "dev-progress-bar": {
+            "projectType": "application",
+            "root": "packages/components-dev/progress-bar",
+            "sourceRoot": "packages/components-dev/progress-bar",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/progress-bar",
+                        "tsConfig": "packages/components-dev/progress-bar/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/progress-bar/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-progress-bar:build"
+                    }
+                }
+            }
+        },
+        "dev-progress-spinner": {
+            "projectType": "application",
+            "root": "packages/components-dev/progress-spinner",
+            "sourceRoot": "packages/components-dev/progress-spinner",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/progress-spinner",
+                        "tsConfig": "packages/components-dev/progress-spinner/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/progress-spinner/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-progress-spinner:build"
+                    }
+                }
+            }
+        },
+        "dev-radio": {
+            "projectType": "application",
+            "root": "packages/components-dev/radio",
+            "sourceRoot": "packages/components-dev/radio",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/radio",
+                        "tsConfig": "packages/components-dev/radio/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/radio/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-radio:build"
+                    }
+                }
+            }
+        },
+        "dev-risk-level": {
+            "projectType": "application",
+            "root": "packages/components-dev/risk-level",
+            "sourceRoot": "packages/components-dev/risk-level",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/risk-level",
+                        "tsConfig": "packages/components-dev/risk-level/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/risk-level/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-risk-level:build"
+                    }
+                }
+            }
+        },
+        "dev-scrollbar": {
+            "projectType": "application",
+            "root": "packages/components-dev/scrollbar",
+            "sourceRoot": "packages/components-dev/scrollbar",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/scrollbar",
+                        "tsConfig": "packages/components-dev/scrollbar/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/scrollbar/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-scrollbar:build"
+                    }
+                }
+            }
+        },
+        "dev-select": {
+            "projectType": "application",
+            "root": "packages/components-dev/select",
+            "sourceRoot": "packages/components-dev/select",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/select",
+                        "tsConfig": "packages/components-dev/select/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/select/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-select:build"
+                    }
+                }
+            }
+        },
+        "dev-sidebar": {
+            "projectType": "application",
+            "root": "packages/components-dev/sidebar",
+            "sourceRoot": "packages/components-dev/sidebar",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/sidebar",
+                        "tsConfig": "packages/components-dev/sidebar/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/sidebar/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-sidebar:build"
+                    }
+                }
+            }
+        },
+        "dev-sidepanel": {
+            "projectType": "application",
+            "root": "packages/components-dev/sidepanel",
+            "sourceRoot": "packages/components-dev/sidepanel",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/sidepanel",
+                        "tsConfig": "packages/components-dev/sidepanel/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/sidepanel/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-sidepanel:build"
+                    }
+                }
+            }
+        },
+        "dev-splitter": {
+            "projectType": "application",
+            "root": "packages/components-dev/splitter",
+            "sourceRoot": "packages/components-dev/splitter",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/splitter",
+                        "tsConfig": "packages/components-dev/splitter/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/splitter/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-splitter:build"
+                    }
+                }
+            }
+        },
+        "dev-table": {
+            "projectType": "application",
+            "root": "packages/components-dev/table",
+            "sourceRoot": "packages/components-dev/table",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/table",
+                        "tsConfig": "packages/components-dev/table/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/table/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-table:build"
+                    }
+                }
+            }
+        },
+        "dev-tabs": {
+            "projectType": "application",
+            "root": "packages/components-dev/tabs",
+            "sourceRoot": "packages/components-dev/tabs",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/tabs",
+                        "tsConfig": "packages/components-dev/tabs/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/tabs/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-tabs:build"
+                    }
+                }
+            }
+        },
+        "dev-tags": {
+            "projectType": "application",
+            "root": "packages/components-dev/tags",
+            "sourceRoot": "packages/components-dev/tags",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/tags",
+                        "tsConfig": "packages/components-dev/tags/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/tags/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-tags:build"
+                    }
+                }
+            }
+        },
+        "dev-textarea": {
+            "projectType": "application",
+            "root": "packages/components-dev/textarea",
+            "sourceRoot": "packages/components-dev/textarea",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/textarea",
+                        "tsConfig": "packages/components-dev/textarea/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/textarea/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-textarea:build"
+                    }
+                }
+            }
+        },
+        "dev-timepicker": {
+            "projectType": "application",
+            "root": "packages/components-dev/timepicker",
+            "sourceRoot": "packages/components-dev/timepicker",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/timepicker",
+                        "tsConfig": "packages/components-dev/timepicker/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/timepicker/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-timepicker:build"
+                    }
+                }
+            }
+        },
+        "dev-timezone": {
+            "projectType": "application",
+            "root": "packages/components-dev/timezone",
+            "sourceRoot": "packages/components-dev/timezone",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/timezone",
+                        "tsConfig": "packages/components-dev/timezone/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/timezone/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-timezone:build"
+                    }
+                }
+            }
+        },
+        "dev-toast": {
+            "projectType": "application",
+            "root": "packages/components-dev/toast",
+            "sourceRoot": "packages/components-dev/toast",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/toast",
+                        "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/toast/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-toast:build"
+                    }
+                }
+            }
+        },
+        "dev-toggle": {
+            "projectType": "application",
+            "root": "packages/components-dev/toggle",
+            "sourceRoot": "packages/components-dev/toggle",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/toggle",
+                        "tsConfig": "packages/components-dev/toggle/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/toggle/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-toggle:build"
+                    }
+                }
+            }
+        },
+        "dev-tooltip": {
+            "projectType": "application",
+            "root": "packages/components-dev/tooltip",
+            "sourceRoot": "packages/components-dev/tooltip",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/tooltip",
+                        "tsConfig": "packages/components-dev/tooltip/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/tooltip/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-tooltip:build"
+                    }
+                }
+            }
+        },
+        "dev-tree": {
+            "projectType": "application",
+            "root": "packages/components-dev/tree",
+            "sourceRoot": "packages/components-dev/tree",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/tree",
+                        "tsConfig": "packages/components-dev/tree/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/tree/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-tree:build"
+                    }
+                }
+            }
+        },
+        "dev-tree-select": {
+            "projectType": "application",
+            "root": "packages/components-dev/tree-select",
+            "sourceRoot": "packages/components-dev/tree-select",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/tree-select",
+                        "tsConfig": "packages/components-dev/tree-select/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/tree-select/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-tree-select:build"
+                    }
+                }
+            }
+        },
+        "dev-typography": {
+            "projectType": "application",
+            "root": "packages/components-dev/typography",
+            "sourceRoot": "packages/components-dev/typography",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/typography",
+                        "tsConfig": "packages/components-dev/typography/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/typography/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-typography:build"
+                    }
+                }
+            }
+        },
+        "dev-title": {
+            "projectType": "application",
+            "root": "packages/components-dev/title",
+            "sourceRoot": "packages/components-dev/title",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/title",
+                        "tsConfig": "packages/components-dev/title/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/title/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-title:build"
+                    }
+                }
+            }
+        },
+        "dev-validation": {
+            "projectType": "application",
+            "root": "packages/components-dev/validation",
+            "sourceRoot": "packages/components-dev/validation",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/validation",
+                        "tsConfig": "packages/components-dev/validation/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/validation/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dev-validation:build"
+                    }
+                }
+            }
+        }
+    },
+    "cli": {
+        "packageManager": "yarn",
+        "analytics": false,
+        "cache": {
+            "enabled": false
+        }
+    }
+}

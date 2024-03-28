@@ -1,0 +1,33 @@
+@use '../main';
+
+
+app {
+    display: block;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    height: 200px;
+}
+
+.container__body {
+    flex: 1 1 30%;
+
+    background-color: antiquewhite;
+}
+
+.kbq-sidebar {
+
+}
+
+.kbq-sidebar-opened {
+    background-color: #6fba53;
+}
+
+.kbq-sidebar-closed {
+    background-color: darkgray;
+}
+

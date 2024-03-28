@@ -1,0 +1,116 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-button-toggle-group {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: var(
+        --kbq-button-toggle-size-container-content-gap-horizontal,
+        map.get($tokens, button-toggle-size-container-content-gap-horizontal)
+    );
+
+    border-radius: var(
+        --kbq-button-toggle-size-container-border-radius,
+        map.get($tokens, button-toggle-size-container-border-radius)
+    );
+
+    padding:
+        var(
+            --kbq-button-toggle-size-container-padding-vertical,
+            map.get($tokens, button-toggle-size-container-padding-vertical)
+        )
+        var(
+            --kbq-button-toggle-size-container-padding-horizontal,
+            map.get($tokens, button-toggle-size-container-padding-horizontal)
+        );
+
+    .kbq-button-toggle {
+        display: flex;
+        overflow: hidden;
+        justify-content: flex-start;
+
+        $padding-vertical: map.get($tokens, button-toggle-size-item-padding-vertical);
+        $padding-horizontal: map.get($tokens, button-toggle-size-item-padding-horizontal);
+        $outline-width: map.get($tokens, button-toggle-size-item-focus-outline-width);
+
+        border-radius: var(
+            --kbq-button-toggle-size-item-border-radius,
+            map.get($tokens, button-toggle-size-item-border-radius)
+        );
+
+        > .kbq-button,
+        > .kbq-button-icon {
+            border-radius: var(
+                --kbq-button-toggle-size-item-border-radius,
+                map.get($tokens, button-toggle-size-item-border-radius)
+            );
+
+            padding:
+                calc(var(--kbq-button-toggle-size-item-padding-vertical, $padding-vertical) - $outline-width)
+                calc(var(--kbq-button-toggle-size-item-padding-horizontal, $padding-horizontal) - $outline-width);
+
+            & .kbq-button-wrapper {
+                width: 100%;
+
+            }
+
+            .kbq-button-toggle-wrapper {
+                display: inline-flex;
+
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+
+                width: 100%;
+
+                gap: var(
+                    --kbq-button-toggle-size-item-content-gap-horizontal,
+                    map.get($tokens, button-toggle-size-item-content-gap-horizontal)
+                );
+            }
+        }
+    }
+
+    &:not(.kbq-button-toggle_vertical) {
+        .kbq-button-toggle {
+            > .kbq-button,
+            > .kbq-button-icon {
+                max-width: 100%;
+
+                height: unset;
+                min-height: unset;
+            }
+        }
+    }
+}
+
+/* stylelint-disable no-descending-specificity */
+.kbq-button-toggle_vertical {
+    flex-direction: column;
+
+    .kbq-button-toggle {
+        width: 100%;
+
+        > .kbq-button,
+        > .kbq-button-icon {
+            width: 100%;
+
+            border-radius: var(
+                --kbq-button-toggle-size-item-border-radius,
+                map.get($tokens, button-toggle-size-item-border-radius)
+            );
+        }
+    }
+}
+
+/* stylelint-enable no-descending-specificity */

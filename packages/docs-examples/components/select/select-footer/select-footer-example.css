@@ -1,0 +1,18 @@
+.paragraph {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.paragraph:first-of-type {
+    margin-top: 0;
+}
+
+.kbq-select__footer_icon {
+    padding-left: 4px;
+}
+
+.kbq-select__footer > .kbq-select__no-options-message {
+    padding: 0;
+    display: block;
+    height: unset;
+}

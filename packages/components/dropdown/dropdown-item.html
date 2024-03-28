@@ -1,0 +1,12 @@
+<ng-content select="[kbq-icon]"></ng-content>
+
+<div class="kbq-dropdown-item__text" #kbqTitleText>
+    <ng-content></ng-content>
+</div>
+
+<i *ngIf="isNested"
+   class="kbq-dropdown-trigger__icon"
+   kbq-icon="mc-angle-right-S_16">
+</i>
+
+<div class="kbq-dropdown-item-overlay" (click)="haltDisabledEvents($event)"></div>

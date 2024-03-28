@@ -1,0 +1,81 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-alert {
+    display: flex;
+
+    border-radius: var(--kbq-alert-size-container-border-radius, map.get($tokens, alert-size-container-border-radius));
+
+    min-width: var(--kbq-alert-size-container-min-width, map.get($tokens, alert-size-container-min-width));
+    min-height: calc(
+        var(--kbq-alert-size-container-min-height, map.get($tokens, alert-size-container-min-height)) -
+        (var(--kbq-alert-size-container-padding-vertical, map.get($tokens, alert-size-container-padding-vertical)) * 2)
+    );
+
+    padding:
+        var(--kbq-alert-size-container-padding-vertical, map.get($tokens, alert-size-container-padding-vertical))
+        var(--kbq-alert-size-container-padding-horizontal, map.get($tokens, alert-size-container-padding-horizontal));
+}
+
+.kbq-alert__icon {
+    margin-right: var(
+        --kbq-alert-size-container-content-gap-horizontal,
+        map.get($tokens, alert-size-container-content-gap-horizontal)
+    );
+}
+
+.kbq-alert__title {
+    margin-bottom: var(
+        --kbq-alert-size-container-content-gap-vertical,
+        map.get($tokens, alert-size-container-content-gap-vertical)
+    );
+}
+
+.kbq-alert__controls {
+    margin-top: var(
+        --kbq-alert-size-container-content-gap-vertical,
+        map.get($tokens, alert-size-container-content-gap-vertical)
+    );
+
+    padding-top: var(
+        --kbq-alert-size-button-stack-content-padding-top,
+        map.get($tokens, alert-size-button-stack-padding-top)
+    );
+
+    & .kbq-button {
+        margin-right: var(
+            --kbq-alert-size-button-stack-content-content-gap-horizontal,
+            map.get($tokens, alert-size-button-stack-content-gap-horizontal)
+        );
+    }
+
+    & .kbq-link {
+        margin-right: 16px;
+    }
+}
+
+.kbq-alert__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    justify-content: center;
+}
+
+.kbq-alert__close-button {
+    margin-left: var(
+        --kbq-alert-size-container-content-gap-horizontal,
+        map.get($tokens, alert-size-container-content-gap-horizontal)
+    );
+}
+
+.kbq-alert_dismissible .kbq-alert__close-button {
+    margin-top: var(--kbq-alert-size-close-button-margin-top, map.get($tokens, alert-size-close-button-margin-top));
+    margin-right:
+        var(--kbq-alert-size-close-button-margin-right, map.get($tokens, alert-size-close-button-margin-right));
+}

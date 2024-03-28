@@ -1,0 +1,1847 @@
+@function kbq-components-theme($tokens, $scheme) {
+    $alert: (
+        contrast: (
+            background: map-get($tokens, 'alert-#{$scheme}-contrast-container-background'),
+            title: map-get($tokens, 'alert-#{$scheme}-contrast-container-title'),
+            text: map-get($tokens, 'alert-#{$scheme}-contrast-container-text')
+        ),
+        error: (
+            background: map-get($tokens, 'alert-#{$scheme}-error-container-background'),
+            title: map-get($tokens, 'alert-#{$scheme}-error-container-title'),
+            text: map-get($tokens, 'alert-#{$scheme}-error-container-text')
+        )
+    );
+
+    $popup: (
+        shadow: map-get($tokens, 'popup-#{$scheme}-shadow'),
+        border: map-get($tokens, 'popup-#{$scheme}-border'),
+
+        background: map-get($tokens, 'popup-#{$scheme}-background'),
+        footer-background: map-get($tokens, 'popup-#{$scheme}-footer-background')
+    );
+
+    $dropdown: (
+        box-shadow: map-get($tokens, 'dropdown-#{$scheme}-container-box-shadow'),
+        background: map-get($tokens, 'dropdown-#{$scheme}-container-background'),
+    );
+
+    $badge: (
+        filled: (
+            fade-off: (
+                theme: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-theme-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-theme-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-theme-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-theme-icon')
+                ),
+                success: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-success-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-success-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-success-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-success-icon')
+                ),
+                warning: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-warning-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-warning-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-warning-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-warning-icon')
+                ),
+                error: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-error-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-error-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-error-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-off-error-icon')
+                )
+            ),
+            fade-on: (
+                theme: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-theme-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-theme-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-theme-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-theme-icon')
+                ),
+                contrast: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-contrast-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-contrast-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-contrast-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-contrast-icon')
+                ),
+                success: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-success-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-success-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-success-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-success-icon')
+                ),
+                warning: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-warning-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-warning-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-warning-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-warning-icon')
+                ),
+                error: (
+                    color: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-error-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-error-background'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-error-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-filled-fade-on-error-icon')
+                )
+            )
+        ),
+        outline: (
+            fade-on: (
+                theme: (
+                    color: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-theme-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-theme-background'),
+                    border: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-theme-border'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-theme-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-theme-icon')
+                ),
+                contrast: (
+                    color: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-contrast-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-contrast-background'),
+                    border: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-contrast-border'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-contrast-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-contrast-icon')
+                ),
+                success: (
+                    color: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-success-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-success-background'),
+                    border: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-success-border'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-success-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-success-icon')
+                ),
+                warning: (
+                    color: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-warning-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-warning-background'),
+                    border: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-warning-border'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-warning-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-warning-icon')
+                ),
+                error: (
+                    color: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-error-color'),
+                    background: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-error-background'),
+                    border: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-error-border'),
+                    caption: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-error-caption'),
+                    icon: map-get($tokens, 'badge-#{$scheme}-outline-fade-on-error-icon')
+                )
+            )
+        )
+    );
+
+    $button: (
+        filled: (
+            contrast-fade-off: (
+                border: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-active-background'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-foreground'
+                ),
+                states_disabled_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-background'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-right-icon'
+                )
+            ),
+            contrast-fade-on: (
+                border: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-active-background'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-foreground'
+                ),
+                states_disabled_background: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-background'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-right-icon'
+                )
+            )
+        ),
+        outline: (
+            theme-fade-on: (
+                border: map-get($tokens, 'button-#{$scheme}-outline-theme-fade-on-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-outline-theme-fade-on-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-outline-theme-fade-on-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-outline-theme-fade-on-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-outline-theme-fade-on-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-active-background'
+                ),
+                states_disabled_border: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-border'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-foreground'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-right-icon'
+                )
+            ),
+            contrast-fade-on: (
+                border: map-get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-active-background'
+                ),
+                states_disabled_border: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-border'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-foreground'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-right-icon'
+                )
+            )
+        ),
+        transparent: (
+            theme: (
+                border: map-get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-active-background'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-foreground'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-right-icon'
+                )
+            ),
+            contrast: (
+                border: map-get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-border'),
+                foreground: map-get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-foreground'),
+                background: map-get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-background'),
+                left-icon: map-get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-left-icon'),
+                right-icon: map-get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-right-icon'),
+
+                states_hover_background: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-hover-background'
+                ),
+                states_active_background: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-active-background'
+                ),
+                states_disabled_foreground: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-foreground'
+                ),
+                states_disabled_left-icon: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-left-icon'
+                ),
+                states_disabled_right-icon: map-get(
+                    $tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-right-icon'
+                )
+            )
+        )
+    );
+
+    $button-toggle: (
+        container: (
+            background: map-get($tokens, 'button-toggle-#{$scheme}-container-background')
+        ),
+        item: (
+            default: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-default-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-default-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-default-icon')
+            ),
+            hover: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-hover-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-hover-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-hover-icon')
+            ),
+            active: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-active-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-active-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-active-icon')
+            ),
+            selected: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-icon')
+            ),
+            selected-hover: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-hover-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-hover-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-hover-icon')
+            ),
+            selected-active: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-active-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-active-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-active-icon')
+            ),
+            disabled: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-disabled-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-disabled-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-disabled-icon')
+            ),
+            focused: map-get($tokens, 'button-toggle-#{$scheme}-item-states-focused-outline')
+        )
+    );
+
+    $card: (
+        error: (
+            vertical-line: map-get($tokens, 'card-#{$scheme}-error-vertical-line'),
+            background: map-get($tokens, 'card-#{$scheme}-error-background'),
+            shadow: map-get($tokens, 'card-#{$scheme}-error-shadow')
+        ),
+        warning: (
+            vertical-line: map-get($tokens, 'card-#{$scheme}-warning-vertical-line'),
+            background: map-get($tokens, 'card-#{$scheme}-warning-background'),
+            shadow: map-get($tokens, 'card-#{$scheme}-warning-shadow')
+        ),
+        success: (
+            vertical-line: map-get($tokens, 'card-#{$scheme}-success-vertical-line'),
+            background: map-get($tokens, 'card-#{$scheme}-success-background'),
+            shadow: map-get($tokens, 'card-#{$scheme}-success-shadow')
+        ),
+        info: (
+            vertical-line: map-get($tokens, 'card-#{$scheme}-info-vertical-line'),
+            background: map-get($tokens, 'card-#{$scheme}-info-background'),
+            shadow: map-get($tokens, 'card-#{$scheme}-info-shadow')
+        )
+    );
+
+    $checkbox: (
+        theme: (
+            default: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-default-border'),
+                color: map-get($tokens, 'checkbox-#{$scheme}-theme-default-color'),
+                text: map-get($tokens, 'checkbox-#{$scheme}-theme-default-text'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-default-background'),
+                caption: map-get($tokens, 'checkbox-#{$scheme}-theme-default-caption')
+            ),
+            hover: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-hover-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-hover-background')
+            ),
+            checked: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-background')
+            ),
+            checked-hover: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-hover-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-hover-background')
+            ),
+            focused: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-focused-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-focused-background'),
+                outline: map-get($tokens, 'checkbox-#{$scheme}-theme-states-focused-outline')
+            ),
+            checked-focused: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-focused-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-focused-background'),
+                outline: map-get($tokens, 'checkbox-#{$scheme}-theme-states-checked-focused-outline')
+            ),
+            disabled: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-theme-states-disabled-border'),
+                color: map-get($tokens, 'checkbox-#{$scheme}-theme-states-disabled-color'),
+                text: map-get($tokens, 'checkbox-#{$scheme}-theme-states-disabled-text'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-theme-states-disabled-background'),
+                caption: map-get($tokens, 'checkbox-#{$scheme}-theme-states-disabled-caption')
+            )
+        ),
+        error: (
+            default: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-default-border'),
+                color: map-get($tokens, 'checkbox-#{$scheme}-error-default-color'),
+                text: map-get($tokens, 'checkbox-#{$scheme}-error-default-text'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-default-background'),
+            ),
+
+            hover: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-hover-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-hover-background')
+            ),
+            checked: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-background')
+            ),
+            checked-hover: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-hover-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-hover-background')
+            ),
+            focused: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-focused-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-focused-background'),
+                outline: map-get($tokens, 'checkbox-#{$scheme}-error-states-focused-outline')
+            ),
+            checked-focused: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-focused-border'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-focused-background'),
+                outline: map-get($tokens, 'checkbox-#{$scheme}-error-states-checked-focused-outline')
+            ),
+            disabled: (
+                border: map-get($tokens, 'checkbox-#{$scheme}-error-states-disabled-border'),
+                color: map-get($tokens, 'checkbox-#{$scheme}-error-states-disabled-color'),
+                text: map-get($tokens, 'checkbox-#{$scheme}-error-states-disabled-text'),
+                background: map-get($tokens, 'checkbox-#{$scheme}-error-states-disabled-background')
+            )
+        )
+    );
+
+    $code-block: (
+        filled: (
+            container: (
+                background: map-get($tokens, 'code-block-#{$scheme}-filled-container-background'),
+                border: map-get($tokens, 'code-block-#{$scheme}-filled-container-border-color'),
+            ),
+            header: (
+                background: map-get($tokens, 'code-block-#{$scheme}-filled-header-background'),
+                shadow: map-get($tokens, 'code-block-#{$scheme}-filled-header-shadow')
+            ),
+            actionbar: (
+                fade-gradient: map-get($tokens, 'code-block-#{$scheme}-filled-actionbar-fade-gradient'),
+                background: map-get($tokens, 'code-block-#{$scheme}-filled-actionbar-background')
+            ),
+            collapse: (
+                expanded-background: map-get($tokens, 'code-block-#{$scheme}-filled-collapse-expanded-background'),
+                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-filled-collapse-collapsed-background'),
+                button-expand-background: map-get(
+                    $tokens, 'code-block-#{$scheme}-filled-collapse-button-expand-background'
+                )
+            )
+        ),
+        outline: (
+            container: (
+                background: map-get($tokens, 'code-block-#{$scheme}-outline-container-background'),
+                border: map-get($tokens, 'code-block-#{$scheme}-outline-container-border-color'),
+            ),
+            header: (
+                background: map-get($tokens, 'code-block-#{$scheme}-outline-header-background'),
+                shadow: map-get($tokens, 'code-block-#{$scheme}-outline-header-shadow')
+            ),
+            actionbar: (
+                fade-gradient: map-get($tokens, 'code-block-#{$scheme}-outline-actionbar-fade-gradient'),
+                background: map-get($tokens, 'code-block-#{$scheme}-outline-actionbar-background')
+            ),
+            collapse: (
+                expanded-background: map-get($tokens, 'code-block-#{$scheme}-outline-collapse-expanded-background'),
+                collapsed-background: map-get($tokens, 'code-block-#{$scheme}-outline-collapse-collapsed-background'),
+                button-expand-background: map-get(
+                    $tokens, 'code-block-#{$scheme}-outline-collapse-button-expand-background'
+                )
+            )
+        ),
+
+        hljs: (
+            addition-background: map-get($tokens, 'code-block-#{$scheme}-hljs-addition-background'),
+            addition-color: map-get($tokens, 'code-block-#{$scheme}-hljs-addition-color'),
+            attr-background: map-get($tokens, 'code-block-#{$scheme}-hljs-attr-background'),
+            attr-color: map-get($tokens, 'code-block-#{$scheme}-hljs-attr-color'),
+            attribute-background: map-get($tokens, 'code-block-#{$scheme}-hljs-attribute-background'),
+            attribute-color: map-get($tokens, 'code-block-#{$scheme}-hljs-attribute-color'),
+            built-in-background: map-get($tokens, 'code-block-#{$scheme}-hljs-built-in-background'),
+            built-in-color: map-get($tokens, 'code-block-#{$scheme}-hljs-built-in-color'),
+            bullet-background: map-get($tokens, 'code-block-#{$scheme}-hljs-bullet-background'),
+            bullet-color: map-get($tokens, 'code-block-#{$scheme}-hljs-bullet-color'),
+            char-escape-background: map-get($tokens, 'code-block-#{$scheme}-hljs-char-escape-background'),
+            char-escape-color: map-get($tokens, 'code-block-#{$scheme}-hljs-char-escape-color'),
+            class-background: map-get($tokens, 'code-block-#{$scheme}-hljs-class-background'),
+            class-color: map-get($tokens, 'code-block-#{$scheme}-hljs-class-color'),
+            code-background: map-get($tokens, 'code-block-#{$scheme}-hljs-code-background'),
+            code-color: map-get($tokens, 'code-block-#{$scheme}-hljs-code-color'),
+            comment-background: map-get($tokens, 'code-block-#{$scheme}-hljs-comment-background'),
+            comment-color: map-get($tokens, 'code-block-#{$scheme}-hljs-comment-color'),
+            deletion-background: map-get($tokens, 'code-block-#{$scheme}-hljs-deletion-background'),
+            deletion-color: map-get($tokens, 'code-block-#{$scheme}-hljs-deletion-color'),
+            doctag-background: map-get($tokens, 'code-block-#{$scheme}-hljs-doctag-background'),
+            doctag-color: map-get($tokens, 'code-block-#{$scheme}-hljs-doctag-color'),
+            emphasis-background: map-get($tokens, 'code-block-#{$scheme}-hljs-emphasis-background'),
+            emphasis-color: map-get($tokens, 'code-block-#{$scheme}-hljs-emphasis-color'),
+            formula-background: map-get($tokens, 'code-block-#{$scheme}-hljs-formula-background'),
+            formula-color: map-get($tokens, 'code-block-#{$scheme}-hljs-formula-color'),
+            function-background: map-get($tokens, 'code-block-#{$scheme}-hljs-function-background'),
+            function-color: map-get($tokens, 'code-block-#{$scheme}-hljs-function-color'),
+            keyword-background: map-get($tokens, 'code-block-#{$scheme}-hljs-keyword-background'),
+            keyword-color: map-get($tokens, 'code-block-#{$scheme}-hljs-keyword-color'),
+            line-numbers-color: map-get($tokens, 'code-block-#{$scheme}-hljs-line-numbers-color'),
+            link-background: map-get($tokens, 'code-block-#{$scheme}-hljs-link-background'),
+            link-color: map-get($tokens, 'code-block-#{$scheme}-hljs-link-color'),
+            literal-background: map-get($tokens, 'code-block-#{$scheme}-hljs-literal-background'),
+            literal-color: map-get($tokens, 'code-block-#{$scheme}-hljs-literal-color'),
+            meta-background: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-background'),
+            meta-color: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-color'),
+            meta-keyword-background: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-keyword-background'),
+            meta-keyword-color: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-keyword-color'),
+            meta-string-background: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-string-background'),
+            meta-string-color: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-string-color'),
+            meta-prompt-background: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-prompt-background'),
+            meta-prompt-color: map-get($tokens, 'code-block-#{$scheme}-hljs-meta-prompt-color'),
+            name-background: map-get($tokens, 'code-block-#{$scheme}-hljs-name-background'),
+            name-color: map-get($tokens, 'code-block-#{$scheme}-hljs-name-color'),
+            number-background: map-get($tokens, 'code-block-#{$scheme}-hljs-number-background'),
+            number-color: map-get($tokens, 'code-block-#{$scheme}-hljs-number-color'),
+            operator-background: map-get($tokens, 'code-block-#{$scheme}-hljs-operator-background'),
+            operator-color: map-get($tokens, 'code-block-#{$scheme}-hljs-operator-color'),
+            params-background: map-get($tokens, 'code-block-#{$scheme}-hljs-params-background'),
+            params-color: map-get($tokens, 'code-block-#{$scheme}-hljs-params-color'),
+            property-background: map-get($tokens, 'code-block-#{$scheme}-hljs-property-background'),
+            property-color: map-get($tokens, 'code-block-#{$scheme}-hljs-property-color'),
+            punctuation-background: map-get($tokens, 'code-block-#{$scheme}-hljs-punctuation-background'),
+            punctuation-color: map-get($tokens, 'code-block-#{$scheme}-hljs-punctuation-color'),
+            quote-background: map-get($tokens, 'code-block-#{$scheme}-hljs-quote-background'),
+            quote-color: map-get($tokens, 'code-block-#{$scheme}-hljs-quote-color'),
+            regexp-background: map-get($tokens, 'code-block-#{$scheme}-hljs-regexp-background'),
+            regexp-color: map-get($tokens, 'code-block-#{$scheme}-hljs-regexp-color'),
+            section-background: map-get($tokens, 'code-block-#{$scheme}-hljs-section-background'),
+            section-color: map-get($tokens, 'code-block-#{$scheme}-hljs-section-color'),
+            selector-attr-background: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-attr-background'),
+            selector-attr-color: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-attr-color'),
+            selector-class-background: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-class-background'),
+            selector-class-color: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-class-color'),
+            selector-id-background: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-id-background'),
+            selector-id-color: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-id-color'),
+            selector-pseudo-background: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-pseudo-background'),
+            selector-pseudo-color: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-pseudo-color'),
+            selector-tag-background: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-tag-background'),
+            selector-tag-color: map-get($tokens, 'code-block-#{$scheme}-hljs-selector-tag-color'),
+            string-background: map-get($tokens, 'code-block-#{$scheme}-hljs-string-background'),
+            string-color: map-get($tokens, 'code-block-#{$scheme}-hljs-string-color'),
+            strong-background: map-get($tokens, 'code-block-#{$scheme}-hljs-strong-background'),
+            strong-color: map-get($tokens, 'code-block-#{$scheme}-hljs-strong-color'),
+            subst-background: map-get($tokens, 'code-block-#{$scheme}-hljs-subst-background'),
+            subst-color: map-get($tokens, 'code-block-#{$scheme}-hljs-subst-color'),
+            symbol-background: map-get($tokens, 'code-block-#{$scheme}-hljs-symbol-background'),
+            symbol-color: map-get($tokens, 'code-block-#{$scheme}-hljs-symbol-color'),
+            tag-background: map-get($tokens, 'code-block-#{$scheme}-hljs-tag-background'),
+            tag-color: map-get($tokens, 'code-block-#{$scheme}-hljs-tag-color'),
+            template-tag-background: map-get($tokens, 'code-block-#{$scheme}-hljs-template-tag-background'),
+            template-tag-color: map-get($tokens, 'code-block-#{$scheme}-hljs-template-tag-color'),
+            template-variable-background: map-get($tokens, 'code-block-#{$scheme}-hljs-template-variable-background'),
+            template-variable-color: map-get($tokens, 'code-block-#{$scheme}-hljs-template-variable-color'),
+            title-background: map-get($tokens, 'code-block-#{$scheme}-hljs-title-background'),
+            title-color: map-get($tokens, 'code-block-#{$scheme}-hljs-title-color'),
+            title-class-background: map-get($tokens, 'code-block-#{$scheme}-hljs-title-class-background'),
+            title-class-color: map-get($tokens, 'code-block-#{$scheme}-hljs-title-class-color'),
+            title-class-inherited-background: map-get(
+                $tokens, 'code-block-#{$scheme}-hljs-title-class-inherited-background'
+            ),
+            title-class-inherited-color: map-get($tokens, 'code-block-#{$scheme}-hljs-title-class-inherited-color'),
+            title-function-background: map-get($tokens, 'code-block-#{$scheme}-hljs-title-function-background'),
+            title-function-color: map-get($tokens, 'code-block-#{$scheme}-hljs-title-function-color'),
+            title-function-invoke-background: map-get(
+                $tokens, 'code-block-#{$scheme}-hljs-title-function-invoke-background'
+            ),
+            title-function-invoke-color: map-get($tokens, 'code-block-#{$scheme}-hljs-title-function-invoke-color'),
+            type-background: map-get($tokens, 'code-block-#{$scheme}-hljs-type-background'),
+            type-color: map-get($tokens, 'code-block-#{$scheme}-hljs-type-color'),
+            variable-background: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-background'),
+            variable-color: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-color'),
+            variable-constant-background: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-constant-background'),
+            variable-constant-color: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-constant-color'),
+            variable-language-background: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-language-background'),
+            variable-language-color: map-get($tokens, 'code-block-#{$scheme}-hljs-variable-language-color')r
+        )
+    );
+
+    $datepicker: (
+        container: (
+            background: map-get($tokens, 'datepicker-#{$scheme}-container-background'),
+            box-shadow: map-get($tokens, 'datepicker-#{$scheme}-container-box-shadow')
+        ),
+        header: (
+            text: map-get($tokens, 'datepicker-#{$scheme}-header-text'),
+            divider: map-get($tokens, 'datepicker-#{$scheme}-header-divider')
+        ),
+
+        cell: (
+            default: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-default-background'),
+                text: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-default-text')
+            ),
+            today: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-today-background'),
+                text: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-today-text')
+            ),
+            hover: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-hover-background')
+            ),
+            active: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-active-background')
+            ),
+            selected: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-selected-background'),
+                text: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-selected-text')
+            ),
+            selected-hover: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-selected-hover-background')
+            ),
+            disabled: (
+                background: map-get($tokens, 'datepicker-#{$scheme}-grid-cell-states-disabled-background')
+            )
+        )
+    );
+
+    $divider: (
+        color: map-get($tokens, 'divider-#{$scheme}-color')
+    );
+
+    $dl: (
+        dt: map-get($tokens, 'description-list-#{$scheme}-term-color'),
+        dd: map-get($tokens, 'description-list-#{$scheme}-description-color')
+    );
+
+    $form-field: (
+        default: (
+            border: map-get($tokens, 'form-field-#{$scheme}-default-border-color'),
+            background: map-get($tokens, 'form-field-#{$scheme}-default-background'),
+            placeholder: map-get($tokens, 'form-field-#{$scheme}-default-placeholder'),
+            text: map-get($tokens, 'form-field-#{$scheme}-default-text')
+        ),
+        focused: (
+            border: map-get($tokens, 'form-field-#{$scheme}-states-focused-border-color'),
+            background: map-get($tokens, 'form-field-#{$scheme}-states-focused-background'),
+            placeholder: map-get($tokens, 'form-field-#{$scheme}-states-focused-placeholder'),
+            text: map-get($tokens, 'form-field-#{$scheme}-states-focused-text'),
+            focus-outline: map-get($tokens, 'form-field-#{$scheme}-states-focused-focus-outline')
+        ),
+        error: (
+            border: map-get($tokens, 'form-field-#{$scheme}-states-error-border-color'),
+            background: map-get($tokens, 'form-field-#{$scheme}-states-error-background'),
+            placeholder: map-get($tokens, 'form-field-#{$scheme}-states-error-placeholder'),
+            text: map-get($tokens, 'form-field-#{$scheme}-states-error-text'),
+            focus-outline: map-get($tokens, 'form-field-#{$scheme}-states-error-focused-focus-outline')
+        ),
+        autofill: (
+            border: map-get($tokens, 'form-field-#{$scheme}-states-autofill-border-color'),
+            background: map-get($tokens, 'form-field-#{$scheme}-states-autofill-background'),
+            placeholder: map-get($tokens, 'form-field-#{$scheme}-states-autofill-placeholder'),
+            text: map-get($tokens, 'form-field-#{$scheme}-states-autofill-text')
+        ),
+        disabled: (
+            border: map-get($tokens, 'form-field-#{$scheme}-states-disabled-border-color'),
+            background: map-get($tokens, 'form-field-#{$scheme}-states-disabled-background'),
+            placeholder: map-get($tokens, 'form-field-#{$scheme}-states-disabled-placeholder'),
+            text: map-get($tokens, 'form-field-#{$scheme}-states-disabled-text')
+        )
+    );
+
+    $form-field-hint: (
+        text: map-get($tokens, 'form-field-hint-#{$scheme}-text')
+    );
+
+    $hint: (
+        fill-text-on: (
+            fade-contrast: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-on-fade-contrast-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-on-fade-contrast-icon')
+            ),
+            success: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-on-success-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-on-success-icon')
+            ),
+            warning: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-on-warning-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-on-warning-icon')
+            ),
+            error: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-on-error-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-on-error-icon')
+            )
+        ),
+        fill-text-off: (
+            fade-contrast: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-off-fade-contrast-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-off-fade-contrast-icon')
+            ),
+            success: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-off-success-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-off-success-icon')
+            ),
+            warning: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-off-warning-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-off-warning-icon')
+            ),
+            error: (
+                text: map-get($tokens, 'hint-#{$scheme}-fill-text-off-error-text'),
+                icon: map-get($tokens, 'hint-#{$scheme}-fill-text-off-error-icon')
+            )
+        )
+    );
+
+    $file-upload: (
+        single: (
+            default: (
+                border: map-get($tokens, 'file-upload-#{$scheme}-single-default-container-border'),
+                background: map-get($tokens, 'file-upload-#{$scheme}-single-default-container-background'),
+                upload-icon: map-get($tokens, 'file-upload-#{$scheme}-single-default-upload-icon-color'),
+                left-icon: map-get($tokens, 'file-upload-#{$scheme}-single-default-left-icon-color'),
+                text-block: map-get($tokens, 'file-upload-#{$scheme}-single-default-text-block-color'),
+                icon-button: map-get($tokens, 'file-upload-#{$scheme}-single-default-icon-button-color')
+            ),
+            states: (
+                on-drag: (
+                    border: map-get($tokens, 'file-upload-#{$scheme}-single-states-on-drag-container-border'),
+                    background: map-get($tokens, 'file-upload-#{$scheme}-single-states-on-drag-container-background'),
+                    upload-icon: map-get($tokens, 'file-upload-#{$scheme}-single-states-on-drag-upload-icon-color'),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-single-states-on-drag-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-single-states-on-drag-text-block-color')
+                ),
+                error: (
+                    border: map-get($tokens, 'file-upload-#{$scheme}-single-states-error-container-border'),
+                    background: map-get($tokens, 'file-upload-#{$scheme}-single-states-error-container-background'),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-single-states-error-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-single-states-error-text-block-color')
+                ),
+                disabled: (
+                    border: map-get($tokens, 'file-upload-#{$scheme}-single-states-disabled-container-border'),
+                    background: map-get($tokens, 'file-upload-#{$scheme}-single-states-disabled-container-background'),
+                    upload-icon: map-get($tokens, 'file-upload-#{$scheme}-single-states-disabled-upload-icon-color'),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-single-states-disabled-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-single-states-disabled-text-block-color')
+                ),
+                focused: map-get($tokens, 'file-upload-#{$scheme}-single-states-focused-focus-outline-color')
+            )
+        ),
+        multiple: (
+            default: (
+                border: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-container-border'),
+                background: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-container-background'),
+                upload-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-upload-icon-color'),
+                left-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-left-icon-color'),
+                text-block: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-text-block-color'),
+                icon-button: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-icon-button-color'),
+                grid-divider: map-get($tokens, 'file-upload-#{$scheme}-multiple-default-grid-divider-color')
+            ),
+            states: (
+                on-drag: (
+                    border: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-container-border'),
+                    background: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-container-background'),
+                    upload-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-upload-icon-color'),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-text-block-color'),
+                    icon-button: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-icon-button-color'),
+                    grid-divider: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-grid-divider-color')
+                ),
+                error: (
+                    grid-cell-background: map-get(
+                        $tokens, 'file-upload-#{$scheme}-multiple-states-error-grid-cell-background'
+                    ),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-error-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-error-text-block-color'),
+                    icon-button: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-error-icon-button-color')
+                ),
+                disabled: (
+                    border: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-disabled-container-border'),
+                    background: map-get(
+                        $tokens, 'file-upload-#{$scheme}-multiple-states-disabled-container-background'
+                    ),
+                    upload-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-disabled-upload-icon-color'),
+                    left-icon: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-disabled-left-icon-color'),
+                    text-block: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-disabled-text-block-color'),
+                    grid-divider: map-get($tokens, 'file-upload-#{$scheme}-multiple-states-disabled-grid-divider-color')
+                )
+            )
+        )
+    );
+
+    $forms: (
+        label: map-get($tokens, 'forms-#{$scheme}-label'),
+        legend: map-get($tokens, 'forms-#{$scheme}-legend'),
+    );
+
+    $icon: (
+        theme: (
+            color: map-get($tokens, 'icon-#{$scheme}-theme-color')
+        ),
+        contrast: (
+            color: map-get($tokens, 'icon-#{$scheme}-contrast-color')
+        ),
+        fade-contrast: (
+            color: map-get($tokens, 'icon-#{$scheme}-fade-contrast-color')
+        ),
+        error: (
+            color: map-get($tokens, 'icon-#{$scheme}-error-color')
+        ),
+        success: (
+            color: map-get($tokens, 'icon-#{$scheme}-success-color')
+        )
+    );
+
+    $icon-item: (
+        theme: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-theme-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-theme-background')
+        ),
+        contrast: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-contrast-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-contrast-background')
+        ),
+        fade-contrast: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-fade-contrast-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-fade-contrast-background')
+        ),
+        error: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-error-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-error-background')
+        ),
+        success: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-success-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-success-background')
+        )
+    );
+
+    $icon-button: (
+        theme: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-theme-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-theme-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-theme-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-theme-states-disabled')
+        ),
+        contrast: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-contrast-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-contrast-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-contrast-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-contrast-states-disabled')
+        ),
+        fade-contrast: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-fade-contrast-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-fade-contrast-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-fade-contrast-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-fade-contrast-states-disabled')
+        ),
+        error: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-error-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-error-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-error-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-error-states-disabled')
+        ),
+        success: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-success-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-success-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-success-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-success-states-disabled')
+        ),
+        warning: (
+            default: map-get($tokens, 'icon-button-#{$scheme}-warning-default'),
+            state-hover: map-get($tokens, 'icon-button-#{$scheme}-warning-states-hover'),
+            state-active: map-get($tokens, 'icon-button-#{$scheme}-warning-states-active'),
+            state-disabled: map-get($tokens, 'icon-button-#{$scheme}-warning-states-disabled')
+        )
+    );
+
+
+    $link: (
+        default: (
+            text: map-get($tokens, 'link-#{$scheme}-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-border-bottom')
+        ),
+        visited: (
+            text: map-get($tokens, 'link-#{$scheme}-state-visited-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-visited-border-bottom')
+        ),
+        visited-hover: (
+            text: map-get($tokens, 'link-#{$scheme}-state-visited-hover-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-visited-hover-border-bottom')
+        ),
+        visited-active: (
+            text: map-get($tokens, 'link-#{$scheme}-state-visited-active-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-visited-active-border-bottom')
+        ),
+        hover: (
+            text: map-get($tokens, 'link-#{$scheme}-state-hover-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-hover-border-bottom')
+        ),
+        active: (
+            text: map-get($tokens, 'link-#{$scheme}-state-active-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-active-border-bottom')
+        ),
+        focused: (
+            outline: map-get($tokens, 'link-#{$scheme}-state-focused-outline')
+        ),
+        disabled: (
+            text: map-get($tokens, 'link-#{$scheme}-state-disabled-text'),
+            border-bottom: map-get($tokens, 'link-#{$scheme}-state-disabled-border-bottom')
+        )
+    );
+
+    $list-item: (
+        default: (
+            container-background: map-get($tokens, 'list-#{$scheme}-default-container-background'),
+            text: map-get($tokens, 'list-#{$scheme}-default-text-color'),
+            icon: map-get($tokens, 'list-#{$scheme}-default-icon-color'),
+            icon-button: map-get($tokens, 'list-#{$scheme}-default-icon-button-color'),
+            caption: map-get($tokens, 'list-#{$scheme}-default-caption-color')
+        ),
+        hover: (
+            container-background: map-get($tokens, 'list-#{$scheme}-states-hover-container-background'),
+            text: map-get($tokens, 'list-#{$scheme}-states-hover-text-color'),
+            icon: map-get($tokens, 'list-#{$scheme}-states-hover-icon-color'),
+            icon-button: map-get($tokens, 'list-#{$scheme}-states-hover-icon-button-color')
+        ),
+        selected: (
+            container-background: map-get($tokens, 'list-#{$scheme}-states-selected-container-background'),
+            text: map-get($tokens, 'list-#{$scheme}-states-selected-text-color'),
+            icon: map-get($tokens, 'list-#{$scheme}-states-selected-icon-color'),
+            icon-button: map-get($tokens, 'list-#{$scheme}-states-selected-icon-button-color')
+        ),
+        selected-hover: (
+            container-background: map-get($tokens, 'list-#{$scheme}-states-selected-hover-container-background'),
+            text: map-get($tokens, 'list-#{$scheme}-states-selected-hover-text-color'),
+            icon: map-get($tokens, 'list-#{$scheme}-states-selected-hover-icon-color'),
+            icon-button: map-get($tokens, 'list-#{$scheme}-states-selected-hover-icon-button-color')
+        ),
+        focused: (
+            focus-outline: map-get($tokens, 'list-#{$scheme}-states-focused-focus-outline-color')
+        ),
+        disabled: (
+            container-background: map-get($tokens, 'list-#{$scheme}-states-disabled-container-background'),
+            text: map-get($tokens, 'list-#{$scheme}-states-disabled-text-color'),
+            icon: map-get($tokens, 'list-#{$scheme}-states-disabled-icon-color'),
+            icon-button: map-get($tokens, 'list-#{$scheme}-states-disabled-icon-button-color'),
+            caption: map-get($tokens, 'list-#{$scheme}-states-disabled-caption-color')
+        )
+    );
+
+    $loader-overlay: (
+        filled:(
+            background: map-get($tokens, 'loader-overlay-#{$scheme}-filled-overlay-background'),
+
+            text: map-get($tokens, 'loader-overlay-#{$scheme}-filled-text-color'),
+            caption: map-get($tokens, 'loader-overlay-#{$scheme}-filled-caption-color'),
+        ),
+        transparent:(
+            background: map-get($tokens, 'loader-overlay-#{$scheme}-transparent-overlay-background'),
+
+            text: map-get($tokens, 'loader-overlay-#{$scheme}-transparent-text-color'),
+            caption: map-get($tokens, 'loader-overlay-#{$scheme}-transparent-caption-color'),
+        )
+    );
+
+    $modal: (
+        container-background: map-get($tokens, 'modal-#{$scheme}-container-background'),
+        container-box-shadow: map-get($tokens, 'modal-#{$scheme}-container-box-shadow'),
+
+        close-button: map-get($tokens, 'modal-#{$scheme}-close-button-color'),
+        header: map-get($tokens, 'modal-#{$scheme}-header-text-color'),
+        content: map-get($tokens, 'modal-#{$scheme}-content-text-color'),
+
+        overlay: map-get($tokens, 'modal-#{$scheme}-overlay-background')
+    );
+
+    $markdown: (
+        h1-color: map-get($tokens, 'markdown-h1-#{$scheme}-color'),
+        h2-color: map-get($tokens, 'markdown-h2-#{$scheme}-color'),
+        h3-color: map-get($tokens, 'markdown-h3-#{$scheme}-color'),
+        h4-color: map-get($tokens, 'markdown-h4-#{$scheme}-color'),
+        h5-color: map-get($tokens, 'markdown-h5-#{$scheme}-color'),
+        h6-color: map-get($tokens, 'markdown-h6-#{$scheme}-color'),
+
+        p-color: map-get($tokens, 'markdown-p-#{$scheme}-color'),
+
+        list-color: map-get($tokens, 'markdown-list-#{$scheme}-color'),
+
+        blockquote-text: map-get($tokens, 'markdown-blockquote-#{$scheme}-text'),
+        blockquote-line: map-get($tokens, 'markdown-blockquote-#{$scheme}-line'),
+        blockquote-background: map-get($tokens, 'markdown-blockquote-#{$scheme}-background'),
+        blockquote-border: map-get($tokens, 'markdown-blockquote-#{$scheme}-border'),
+
+        code-text: map-get($tokens, 'markdown-code-#{$scheme}-text'),
+        code-background: map-get($tokens, 'markdown-code-#{$scheme}-background'),
+        code-border: map-get($tokens, 'markdown-code-#{$scheme}-border'),
+
+        link-text: map-get($tokens, 'markdown-link-#{$scheme}-text'),
+        link-border-bottom: map-get($tokens, 'markdown-link-#{$scheme}-border-bottom'),
+
+        link-state-visited-text: map-get($tokens, 'markdown-link-#{$scheme}-state-visited-text'),
+        link-state-visited-border-bottom: map-get($tokens, 'markdown-link-#{$scheme}-state-visited-border-bottom'),
+
+        link-state-hover-text: map-get($tokens, 'markdown-link-#{$scheme}-state-hover-text'),
+        link-state-hover-border-bottom: map-get($tokens, 'markdown-link-#{$scheme}-state-hover-border-bottom'),
+
+        link-state-active-text: map-get($tokens, 'markdown-link-#{$scheme}-state-active'),
+
+        link-state-focused-outline: map-get($tokens, 'markdown-link-#{$scheme}-state-focused-outline'),
+
+        image-caption-text: map-get($tokens, 'markdown-image-#{$scheme}-caption-text'),
+
+        hr-color: map-get($tokens, 'markdown-hr-#{$scheme}-color'),
+
+        table-header: map-get($tokens, 'markdown-table-#{$scheme}-header'),
+        table-body: map-get($tokens, 'markdown-table-#{$scheme}-body'),
+        table-border: map-get($tokens, 'markdown-table-#{$scheme}-border')
+    );
+
+    $navbar: (
+        background: map-get($tokens, 'navbar-#{$scheme}-background'),
+
+        divider-background: map-get($tokens, 'navbar-#{$scheme}-divider-background')
+    );
+
+    $navbar-item: (
+        color: map-get($tokens, 'navbar-item-#{$scheme}-text'),
+        icon-color: map-get($tokens, 'navbar-item-#{$scheme}-icon'),
+
+        state-active: map-get($tokens, 'navbar-item-#{$scheme}-states-active'),
+        state-selected: map-get($tokens, 'navbar-item-#{$scheme}-states-selected'),
+        state-hover: map-get($tokens, 'navbar-item-#{$scheme}-states-hover'),
+        state-progress: map-get($tokens, 'navbar-item-#{$scheme}-states-progress'),
+        state-disabled-opacity: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-opacity'),
+    );
+
+    $popover: (
+        container: (
+            background: map-get($tokens, 'popover-#{$scheme}-container-background'),
+            box-shadow: map-get($tokens, 'popover-#{$scheme}-container-box-shadow')
+        ),
+        header: (
+            text: map-get($tokens, 'popover-#{$scheme}-header-text-color'),
+            scroll-shadow: map-get($tokens, 'popover-#{$scheme}-header-scroll-shadow')
+        ),
+        content: (
+            text: map-get($tokens, 'popover-#{$scheme}-content-text-color')
+        ),
+        footer: (
+            scroll-shadow: map-get($tokens, 'popover-#{$scheme}-footer-scroll-shadow')
+        )
+    );
+
+    $progress-bar: (
+        bar: (
+            background: map-get($tokens, 'progress-bar-#{$scheme}-bar-background'),
+            foreground: map-get($tokens, 'progress-bar-#{$scheme}-bar-foreground')
+        ),
+        text: map-get($tokens, 'progress-bar-#{$scheme}-text-color'),
+        caption: map-get($tokens, 'progress-bar-#{$scheme}-caption-color')
+    );
+
+    $progress-spinner: (
+        circle: map-get($tokens, 'progress-spinner-#{$scheme}-circle-background'),
+        text: map-get($tokens, 'progress-spinner-#{$scheme}-text-color'),
+        caption: map-get($tokens, 'progress-spinner-#{$scheme}-caption-color')
+    );
+
+    $radio: (
+        theme: (
+            default: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-theme-default-outer-circle-border'),
+                outer-circle-background: map-get($tokens, 'radio-#{$scheme}-theme-default-outer-circle-background'),
+                inner-circle-background: map-get($tokens, 'radio-#{$scheme}-theme-default-inner-circle-background'),
+                caption: map-get($tokens, 'radio-#{$scheme}-theme-default-caption')
+            ),
+
+            hover: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-theme-states-hover-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-hover-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-hover-inner-circle-background'
+                )
+            ),
+            checked: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-theme-states-checked-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-inner-circle-background'
+                )
+            ),
+            checked-hover: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-hover-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-hover-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-hover-inner-circle-background'
+                )
+            ),
+            checked-disabled: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-disabled-inner-circle-background'
+                )
+            ),
+            focused: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-focused-inner-circle-background'
+                ),
+                outer-circle-shadow: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-shadow'
+                )
+            ),
+            checked-focused: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-focused-inner-circle-background'
+                ),
+                outer-circle-shadow: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-shadow'
+                )
+            ),
+            disabled: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-theme-states-disabled-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-disabled-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-theme-states-disabled-inner-circle-background'
+                ),
+                caption: map-get($tokens, 'radio-#{$scheme}-theme-states-disabled-caption'),
+            )
+        ),
+        error: (
+            default: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-error-default-outer-circle-border'),
+                outer-circle-background: map-get($tokens, 'radio-#{$scheme}-error-default-outer-circle-background'),
+                inner-circle-background: map-get($tokens, 'radio-#{$scheme}-error-default-inner-circle-background'),
+            ),
+
+            hover: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-error-states-hover-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-hover-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-hover-inner-circle-background'
+                )
+            ),
+            checked: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-error-states-checked-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-inner-circle-background'
+                )
+            ),
+            checked-hover: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-hover-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-hover-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-hover-inner-circle-background'
+                )
+            ),
+            checked-disabled: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-disabled-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-disabled-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-disabled-inner-circle-background'
+                )
+            ),
+            focused: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-focused-inner-circle-background'
+                ),
+                outer-circle-shadow: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-shadow'
+                )
+            ),
+            checked-focused: (
+                outer-circle-border: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-border'
+                ),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-focused-inner-circle-background'
+                ),
+                outer-circle-shadow: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-shadow'
+                )
+            ),
+            disabled: (
+                outer-circle-border: map-get($tokens, 'radio-#{$scheme}-error-states-disabled-outer-circle-border'),
+                outer-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-disabled-outer-circle-background'
+                ),
+                inner-circle-background: map-get(
+                    $tokens, 'radio-#{$scheme}-error-states-disabled-inner-circle-background'
+                )
+            )
+        )
+    );
+
+    $risk-level: (
+        filled: (
+            fade-off: (
+                success: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-success-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-success-background')
+                ),
+                warning: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-warning-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-warning-background')
+                ),
+                error: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-error-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-off-error-background')
+                )
+            ),
+            fade-on: (
+                success: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-success-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-success-background')
+                ),
+                warning: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-warning-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-warning-background')
+                ),
+                error: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-error-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-error-background')
+                ),
+                contrast: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-contrast-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-filled-fade-on-contrast-background')
+                )
+            )
+        ),
+        outline: (
+            fade-on: (
+                success: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-background'),
+                    border: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-border')
+                ),
+                warning: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-background'),
+                    border: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-border')
+                ),
+                error: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-background'),
+                    border: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-border')
+                ),
+                contrast: (
+                    color: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-text'),
+                    background: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-background'),
+                    border: map-get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-border')
+                )
+            )
+        )
+    );
+
+    $select-panel: (
+        background: map-get($tokens, 'select-panel-#{$scheme}-dropdown-background'),
+        shadow: map-get($tokens, 'select-panel-#{$scheme}-dropdown-shadow')
+    );
+
+    $sidepanel: (
+        box-shadow: map-get($tokens, 'sidepanel-#{$scheme}-container-box-shadow'),
+        background: map-get($tokens, 'sidepanel-#{$scheme}-container-background'),
+        header-text: map-get($tokens, 'sidepanel-#{$scheme}-header-text-color'),
+        content-text: map-get($tokens, 'sidepanel-#{$scheme}-content-text-color'),
+
+        overlay: map-get($tokens, 'sidepanel-#{$scheme}-overlay-background')
+    );
+
+    $tab-item: (
+        filled: (
+            on-background: (
+                default: (
+                    background: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-default-background'),
+                    text: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-default-text-color'),
+                    icon: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-default-icon-color')
+                ),
+                hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-hover-background'
+                    )
+                ),
+                focused: (
+                    border-color: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-focused-focus-outline-color'
+                    )
+                ),
+                selected: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-background'
+                    )
+                ),
+                selected-hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-hover-background'
+                    )
+                ),
+                selected-disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-icon-color'
+                    )
+                ),
+                disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-icon-color'
+                    )
+                )
+            ),
+            on-surface: (
+                default: (
+                    background: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-default-background'),
+                    text: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-default-text-color'),
+                    icon: map-get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-default-icon-color')
+                ),
+                hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-hover-background'
+                    ),
+                ),
+                focused: (
+                    border-color: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-focused-focus-outline-color'
+                    )
+                ),
+                selected: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-background'
+                    ),
+                ),
+                selected-hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-hover-background'
+                    )
+                ),
+                selected-disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-icon-color'
+                    )
+                ),
+                disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-icon-color'
+                    )
+                )
+            )
+        ),
+        transparent: (
+            on-background: (
+                default: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-background'
+                    ),
+                    text: map-get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-text-color'),
+                    icon: map-get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-icon-color')
+                ),
+                hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-hover-background'
+                    )
+                ),
+                focused: (
+                    border-color: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-focused-focus-outline-color'
+                    )
+                ),
+                selected: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-background'
+                    )
+                ),
+                selected-hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-hover-background'
+                    )
+                ),
+                selected-disabled: (
+                    background: map-get(
+                        $tokens,
+                        'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens,
+                        'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens,
+                        'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-icon-color'
+                    )
+                ),
+                disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-icon-color'
+                    )
+                )
+            ),
+            on-surface: (
+                default: (
+                    background: map-get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-default-background'),
+                    text: map-get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-default-text-color'),
+                    icon: map-get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-default-icon-color')
+                ),
+                hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-hover-background'
+                    ),
+                ),
+                focused: (
+                    border-color: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-focused-focus-outline-color'
+                    )
+                ),
+                selected: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-background'
+                    ),
+                ),
+                selected-hover: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-hover-background'
+                    )
+                ),
+                selected-disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-icon-color'
+                    )
+                ),
+                disabled: (
+                    background: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-background'
+                    ),
+                    text: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-text-color'
+                    ),
+                    icon: map-get(
+                        $tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-icon-color'
+                    )
+                )
+            )
+        )
+    );
+
+    $tab-stack: (
+        filled: (
+            on-background: (
+                background: map-get($tokens, 'tabs-#{$scheme}-tab-stack-filled-on-background-background')
+            ),
+            on-surface: (
+                background: map-get($tokens, 'tabs-#{$scheme}-tab-stack-filled-on-surface-background')
+            )
+        ),
+
+        transparent: (
+            on-background: (
+                background: map-get($tokens, 'tabs-#{$scheme}-tab-stack-transparent-on-background-background')
+            ),
+            on-surface: (
+                background: map-get($tokens, 'tabs-#{$scheme}-tab-stack-transparent-on-surface-background')
+            )
+        )
+    );
+
+    $tag: (
+        theme-fade-on: (
+            default: (
+                background: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-default-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-default-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-default-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-default-close-button')
+            ),
+            hover: (
+                background: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-close-button')
+            ),
+            focus: (
+                background: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-close-button'),
+                outline: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-outline')
+            ),
+            disabled: (
+                background: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-close-button')
+            )
+        ),
+        contrast-fade-on: (
+            default: (
+                background: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-close-button')
+            ),
+            hover: (
+                background: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-close-button')
+            ),
+            focus: (
+                background: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-close-button'),
+                outline: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-outline')
+            ),
+            disabled: (
+                background: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-close-button')
+            )
+        ),
+        error-fade-on: (
+            default: (
+                background: map-get($tokens, 'tag-#{$scheme}-error-fade-on-default-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-error-fade-on-default-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-error-fade-on-default-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-error-fade-on-default-close-button')
+            ),
+            hover: (
+                background: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-close-button')
+            ),
+            focus: (
+                background: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-close-button'),
+                outline: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-outline')
+            ),
+            disabled: (
+                background: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-background'),
+                text: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-text'),
+                icon: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-icon'),
+                close-button: map-get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-close-button')
+            )
+        )
+    );
+
+    $toggle: (
+        theme:(
+            default:(
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-default-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-default-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-default-circle-background')
+            ),
+            hover: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-hover-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-hover-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-hover-circle-background')
+            ),
+            checked: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-circle-background')
+            ),
+            checked-hover: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-hover-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-hover-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-hover-circle-background')
+            ),
+            focused: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-focused-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-focused-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-focused-circle-background'),
+                focus-outline: map-get($tokens, 'toggle-#{$scheme}-theme-states-focused-focus-outline')
+            ),
+            checked-focused: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-focused-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-focused-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-focused-circle-background'),
+                focus-outline: map-get($tokens, 'toggle-#{$scheme}-theme-states-checked-focused-focus-outline')
+            ),
+            disabled: (
+                border: map-get($tokens, 'toggle-#{$scheme}-theme-states-disabled-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-theme-states-disabled-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-theme-states-disabled-circle-background')
+            )
+        ),
+        error:(
+            default:(
+                border: map-get($tokens, 'toggle-#{$scheme}-error-default-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-default-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-default-circle-background')
+            ),
+            hover: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-hover-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-hover-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-hover-circle-background')
+            ),
+            checked: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-circle-background')
+            ),
+            checked-hover: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-hover-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-hover-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-hover-circle-background')
+            ),
+            focused: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-focused-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-focused-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-focused-circle-background'),
+                focus-outline: map-get($tokens, 'toggle-#{$scheme}-error-states-focused-focus-outline'),
+            ),
+            checked-focused: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-focused-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-focused-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-focused-circle-background'),
+                focus-outline: map-get($tokens, 'toggle-#{$scheme}-error-states-checked-focused-focus-outline')
+            ),
+            disabled: (
+                border: map-get($tokens, 'toggle-#{$scheme}-error-states-disabled-border'),
+                background: map-get($tokens, 'toggle-#{$scheme}-error-states-disabled-background'),
+                circle-background: map-get($tokens, 'toggle-#{$scheme}-error-states-disabled-circle-background')
+            )
+        )
+    );
+
+    $timezone: (
+        text: map-get($tokens, 'timezone-option-#{$scheme}-text'),
+        caption: map-get($tokens, 'timezone-option-#{$scheme}-caption'),
+        optgroup-label: map-get($tokens, 'timezone-option-#{$scheme}-optgroup-label')
+    );
+
+    $toast: (
+        contrast: (
+            background: map-get($tokens, 'toast-#{$scheme}-contrast-container-background'),
+            title: map-get($tokens, 'toast-#{$scheme}-contrast-container-title'),
+            text: map-get($tokens, 'toast-#{$scheme}-contrast-container-text'),
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-contrast-container-box-shadow')
+        ),
+        error: (
+            background: map-get($tokens, 'toast-#{$scheme}-error-container-background'),
+            title: map-get($tokens, 'toast-#{$scheme}-error-container-title'),
+            text: map-get($tokens, 'toast-#{$scheme}-error-container-text'),
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-error-container-box-shadow')
+        )
+    );
+
+    $tooltip: (
+        theme-fade-off: (
+            background: map-get($tokens, 'tooltip-#{$scheme}-theme-fade-off-background'),
+            text: map-get($tokens, 'tooltip-#{$scheme}-theme-fade-off-text'),
+            shadow: map-get($tokens, 'tooltip-#{$scheme}-theme-fade-off-shadow')
+        ),
+        contrast-fade-on: (
+            background: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-on-background'),
+            text: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-on-text'),
+            shadow: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-on-shadow')
+        ),
+        contrast-fade-off: (
+            background: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-background'),
+            text: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-text'),
+            shadow: map-get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-shadow')
+        )
+    );
+
+    $tree-item: (
+        default: (
+            container-background: map-get($tokens, 'tree-#{$scheme}-default-container-background'),
+            text: map-get($tokens, 'tree-#{$scheme}-default-text-color'),
+            icon: map-get($tokens, 'tree-#{$scheme}-default-icon-color'),
+            tree-toggle: map-get($tokens, 'tree-#{$scheme}-default-tree-toggle-color'),
+            action-button: map-get($tokens, 'tree-#{$scheme}-default-action-button-color'),
+            caption: map-get($tokens, 'tree-#{$scheme}-default-caption-color')
+        ),
+        hover: (
+            container-background: map-get($tokens, 'tree-#{$scheme}-states-hover-container-background'),
+            text: map-get($tokens, 'tree-#{$scheme}-states-hover-text-color'),
+            icon: map-get($tokens, 'tree-#{$scheme}-states-hover-icon-color'),
+            tree-toggle: map-get($tokens, 'tree-#{$scheme}-states-hover-tree-toggle-color'),
+            action-button: map-get($tokens, 'tree-#{$scheme}-states-hover-action-button-color'),
+            caption: map-get($tokens, 'tree-#{$scheme}-states-hover-caption-color')
+        ),
+        selected: (
+            container-background: map-get($tokens, 'tree-#{$scheme}-states-selected-container-background'),
+            text: map-get($tokens, 'tree-#{$scheme}-states-selected-text-color'),
+            icon: map-get($tokens, 'tree-#{$scheme}-states-selected-icon-color'),
+            tree-toggle: map-get($tokens, 'tree-#{$scheme}-states-selected-tree-toggle-color'),
+            action-button: map-get($tokens, 'tree-#{$scheme}-states-selected-action-button-color'),
+            caption: map-get($tokens, 'tree-#{$scheme}-states-selected-caption-color')
+        ),
+        selected-hover: (
+            container-background: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-container-background'),
+            text: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-text-color'),
+            icon: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-icon-color'),
+            tree-toggle: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-tree-toggle-color'),
+            action-button: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-action-button-color'),
+            caption: map-get($tokens, 'tree-#{$scheme}-states-selected-hover-caption-color')
+        ),
+        focused: (
+            focus-outline: map-get($tokens, 'tree-#{$scheme}-states-focused-focus-outline-color')
+        ),
+        disabled: (
+            container-background: map-get($tokens, 'tree-#{$scheme}-states-disabled-container-background'),
+            text: map-get($tokens, 'tree-#{$scheme}-states-disabled-text-color'),
+            icon: map-get($tokens, 'tree-#{$scheme}-states-disabled-icon-color'),
+            tree-toggle: map-get($tokens, 'tree-#{$scheme}-states-disabled-tree-toggle-color'),
+            action-button: map-get($tokens, 'tree-#{$scheme}-states-disabled-action-button-color'),
+            caption: map-get($tokens, 'tree-#{$scheme}-states-disabled-caption-color')
+        )
+    );
+
+    $scrollbar: (
+        default: map-get($tokens, 'scrollbar-#{$scheme}-thumb-default-background'),
+        hover: map-get($tokens, 'scrollbar-#{$scheme}-thumb-hover-background'),
+        active: map-get($tokens, 'scrollbar-#{$scheme}-thumb-active-background'),
+        disabled: map-get($tokens, 'scrollbar-#{$scheme}-thumb-disabled-background'),
+        track: (
+            default: map-get($tokens, 'scrollbar-#{$scheme}-track-default-background'),
+            hover: map-get($tokens, 'scrollbar-#{$scheme}-track-hover-background'),
+            active: map-get($tokens, 'scrollbar-#{$scheme}-track-active-background'),
+        )
+    );
+
+    @return (
+        alert: $alert,
+        popup: $popup,
+        dropdown: $dropdown,
+        badge: $badge,
+        button: $button,
+        button-toggle: $button-toggle,
+        card: $card,
+        checkbox: $checkbox,
+        code-block: $code-block,
+        datepicker: $datepicker,
+        divider: $divider,
+        dl: $dl,
+        file-upload: $file-upload,
+        form-field: $form-field,
+        form-field-hint: $form-field-hint,
+        hint: $hint,
+        forms: $forms,
+        icon: $icon,
+        icon-item: $icon-item,
+        icon-button: $icon-button,
+        link: $link,
+        list-item: $list-item,
+        loader-overlay: $loader-overlay,
+        modal: $modal,
+        markdown: $markdown,
+        navbar: $navbar,
+        navbar-item: $navbar-item,
+        popover: $popover,
+        progress-bar: $progress-bar,
+        progress-spinner: $progress-spinner,
+        radio: $radio,
+        risk-level: $risk-level,
+        select-panel: $select-panel,
+        sidepanel: $sidepanel,
+        tab-item: $tab-item,
+        tab-stack: $tab-stack,
+        tag: $tag,
+        timezone: $timezone,
+        toast: $toast,
+        toggle: $toggle,
+        tooltip: $tooltip,
+        tree-item: $tree-item,
+        scrollbar: $scrollbar
+    );
+}

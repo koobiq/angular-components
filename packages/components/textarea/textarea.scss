@@ -1,0 +1,45 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-textarea {
+    display: inline-block;
+
+    background: transparent;
+    margin: 0;
+    border: none;
+    outline: none;
+
+    resize: none;
+    overflow: auto;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        var(--kbq-textarea-size-padding-vertical, map.get($tokens, textarea-size-padding-vertical))
+        var(--kbq-textarea-size-padding-horizontal, map.get($tokens, textarea-size-padding-horizontal));
+
+    -webkit-appearance: none; // Chrome textaria height sizing fix
+    vertical-align: bottom; // Chrome textaria height sizing fix
+
+    &:not(.kbq-textarea-resizable) {
+        box-sizing: border-box;
+        overflow-y: hidden;
+    }
+
+    &.kbq-textarea-resizable {
+        resize: vertical;
+        min-height: var(--kbq-textarea-size-min-height, map.get($tokens, textarea-size-min-height));
+    }
+}
+
+/* remove default red border for HTML5 validation invalid fields in Firefox */
+.kbq-textarea:invalid {
+    box-shadow: unset;
+}

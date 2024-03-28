@@ -1,0 +1,9 @@
+@use '../main';
+
+@use '../../components/core/styles/common/animation';
+@use '../../components/dropdown/dropdown';
+
+
+.kbq-button-group_vertical {
+    width: 200px;
+}

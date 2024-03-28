@@ -1,0 +1,15 @@
+@use '../main';
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+
+    & .kbq-form-field {
+        width: 200px;
+    }
+}
+
+.margin {
+    margin-left: 50px;
+}

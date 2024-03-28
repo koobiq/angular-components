@@ -1,0 +1,160 @@
+@use 'components/core/styles/core' as common;
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-icons-viewer {
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    height: 100%;
+
+    scroll-behavior: smooth;
+
+    width: 100%;
+}
+
+.docs-icons-viewer__header {
+    display: flex;
+    flex-direction: column;
+
+    max-height: 140px;
+
+    padding: 0 24px;
+
+    & .docs-icons-viewer__header-text {
+        height: 44px;
+
+        flex-grow: 0;
+
+        margin-bottom: 16px;
+
+        text-align: left;
+    }
+
+    & > .kbq-form-field    {
+        max-width: 320px;
+    }
+}
+
+.docs-icons-viewer__table {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0 24px;
+    object-fit: contain;
+}
+
+.docs-icons-viewer__table-empty-results {
+    margin: auto;
+}
+
+.docs-icons-viewer__table-row-header {
+    display: flex;
+    align-items: flex-end;
+    opacity: 0.7;
+
+    width: 100%;
+    height: 44px;
+}
+
+.docs-icons-viewer__table-row {
+    display: grid;
+    column-gap: $size-l;
+    row-gap: $size-l;
+
+    margin-top: $size-s;
+
+    &_16 {
+        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    }
+
+    &_24 {
+        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    }
+
+    &_32 {
+        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    }
+
+    &_48 {
+        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    }
+
+    &_64 {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    &_128 {
+        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+    }
+
+    &_256 {
+        grid-template-columns: repeat(auto-fill, minmax(304px, 1fr));
+    }
+}
+
+.docs-icons-viewer__table-cell {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    text-align: center;
+
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 1px;
+
+    min-width: 86px;
+    height: 116px;
+
+    cursor: pointer;
+
+    &_16 {
+        max-width: 106px;
+    }
+
+    &_24 {
+        max-width: 106px;
+    }
+
+    &_32 {
+        max-width: 110px;
+    }
+
+    &_48 {
+        max-width: 118px;
+    }
+
+    &_64 {
+        height: 132px;
+        min-width: 120px;
+        max-width: 144px;
+    }
+
+    &_128 {
+        height: 176px;
+        min-width: 136px;
+        max-width: 176px;
+    }
+
+    &_256 {
+        height: 304px;
+        min-width: 304px;
+    }
+
+    & .kbq-icon {
+        margin: auto;
+    }
+}
+
+.docs-icons-viewer__table-cell-name {
+    text-align: center;
+
+    margin: 0 16px 16px 16px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

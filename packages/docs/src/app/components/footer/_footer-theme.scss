@@ -1,0 +1,31 @@
+@use '../dist/components/core/styles/typography';
+
+
+@mixin kbq-docs-footer-theme($theme) {
+    $foreground: map-get($theme, foreground);
+
+    .docs-footer__label,
+    .kbq-dropdown__group-header .kbq-caps-compact-strong {
+        color: map-get($foreground, contrast-secondary);
+    }
+}
+
+@mixin kbq-docs-footer-typography($config) {
+    .docs-footer__label {
+        @include typography.kbq-typography-level-to-styles($config, text-compact);
+    }
+
+    .docs-footer__control {
+        @include typography.kbq-typography-level-to-styles($config, text-normal);
+    }
+
+    @media (width <= 768px) {
+        .docs-footer__label {
+            @include typography.kbq-typography-level-to-styles($config, text-normal);
+        }
+
+        .docs-footer__control {
+            @include typography.kbq-typography-level-to-styles($config, text-big);
+        }
+    }
+}

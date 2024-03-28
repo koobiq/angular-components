@@ -1,0 +1,17 @@
+<div class="docs-example-viewer__example" *ngIf="exampleData">
+    <ng-template *ngIf="exampleComponentType && exampleModuleFactory"
+                 [ngComponentOutlet]="exampleComponentType"
+                 [ngComponentOutletNgModuleFactory]="exampleModuleFactory">
+    </ng-template>
+</div>
+
+<code-block *ngIf="exampleData; else lostExample" [exampleData]="exampleData"></code-block>
+
+<ng-template #lostExample>
+    <div class="kbq-alert kbq-alert_error kbq-alert_dismissible kbq-markdown">
+        <span>Oops, this code example is lost... But you can help us find it!
+            Just send a Pull Request to this repository:
+            <a class="kbq-markdown__a" href="#"> Koobiq</a>
+        </span>
+    </div>
+</ng-template>

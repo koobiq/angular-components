@@ -1,0 +1,27 @@
+@use '../main';
+
+
+.dev-container {
+    width: 50%;
+    min-height: 140px;
+
+    border: 1px solid red;
+
+    padding: 24px;
+}
+
+.kbq-select__panel .kbq-tree-select__footer.custom-footer {
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #B3B3B3;
+
+    * {
+        flex: 1;
+    }
+}
+
+.kbq-tree-select__panel .kbq-tree-select__footer.kbq-tree-select__footer_icon {
+    padding-left: 4px;
+}
+

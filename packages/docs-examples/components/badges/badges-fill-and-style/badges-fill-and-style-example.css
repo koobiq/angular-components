@@ -1,0 +1,22 @@
+.fill-and-style__example-badge-group {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 24px;
+    flex-wrap: wrap;
+    max-width: 504px;
+}
+
+.fill-and-style__example-badge-group .example-label {
+    color: #73738C;
+    margin-bottom: 12px;
+}
+
+.fill-and-style__example-badge-group .example-badge {
+    width: 96px;
+}
+
+.fill-and-style__example-badge-group .fill-and-style__example-badge-row {
+    gap: 24px;
+    flex-wrap: wrap;
+    display: flex;
+}

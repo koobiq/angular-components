@@ -1,0 +1,142 @@
+<style>
+    kbq-tree-selection {
+        overflow-y: scroll;
+        height: 328px;
+    }
+</style>
+
+<button kbq-button (click)="modelValue = 'Applications'">set modelValue = Applications</button>
+<button kbq-button (click)="modelValue = 'Application'">set modelValue = Application</button>
+<br>
+<br>
+<button kbq-button (click)="disableState = !disableState">toggle disableState</button>
+<button kbq-button (click)="switchToDataSource('big')">switch to bigger datasource</button>
+<button kbq-button (click)="switchToDataSource('small')">switch to smaller datasource</button>
+<button kbq-button (click)="treeControl.expandAll()">Expand all</button>
+
+<br><br><br>
+
+<div>ngModel: {{ modelValue | json }}</div>
+
+<br><br><br>
+
+<kbq-form-field>
+    <input type="text" kbqInput (ngModelChange)="onFilterChange($event)" [(ngModel)]="filterValue">
+    <kbq-cleaner></kbq-cleaner>
+</kbq-form-field>
+
+<br><br><br>
+<!--    [noUnselectLast]="false"-->
+<div>
+    <kbq-button-toggle-group #group1="kbqButtonToggleGroup" (change)="onToggleClick($event)">
+        <kbq-button-toggle [value]="TreeStates.ALL" [checked]="true">
+            <i kbq-icon="mc-bell-o_16"></i>All
+        </kbq-button-toggle>
+        <kbq-button-toggle [value]="TreeStates.SELECTED">
+            <i kbq-icon="mc-bell-o_16"></i>Selected
+        </kbq-button-toggle>
+        <kbq-button-toggle [value]="TreeStates.UNSELECTED">
+            <i kbq-icon="mc-bell-o_16"></i>Unselected
+        </kbq-button-toggle>
+    </kbq-button-toggle-group>
+</div>
+
+<kbq-tree-selection
+    multiple="checkbox"
+    [disabled]="disableState"
+    [(ngModel)]="modelValue"
+    (ngModelChange)="onModelValueChange($event)"
+    [autoSelect]="false"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl"
+    (onSelectAll)="onSelectAll($event)">
+
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node"
+        kbqTreeNodePadding>
+        <i kbq-icon="mc-info-o_16"></i>
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+    </kbq-tree-option>
+
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node; when: hasChild"
+        kbqTreeNodePadding
+        [disabled]="node.name === 'Downloads'">
+
+        <i kbq-icon="mc-info-o_16"></i>
+
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="PopUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-tree-option>
+</kbq-tree-selection>
+
+<div style="max-width: 300px">
+    <kbq-tree-selection
+        [disabled]="disableState"
+        [(ngModel)]="modelValue"
+        [autoSelect]="false"
+        [dataSource]="dataSource"
+        [treeControl]="treeControl"
+        (onSelectAll)="onSelectAll($event)">
+
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node"
+            kbq-title
+            kbqTreeNodePadding>
+            <i kbq-icon="mc-info-o_16"></i>
+            <span #kbqTitleText class="highlight-content" [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+        </kbq-tree-option>
+
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node; when: hasChild"
+            kbqTreeNodePadding
+            [disabled]="node.name === 'Downloads'">
+
+            <i kbq-icon="mc-info-o_16"></i>
+
+            <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+            <span class="highlight-content" [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+
+            <kbq-option-action
+                [kbqTooltip]="'Tooltip text'"
+                [kbqPlacement]="PopUpPlacements.Right"
+                [kbqDropdownTriggerFor]="dropdown">
+            </kbq-option-action>
+        </kbq-tree-option>
+    </kbq-tree-selection>
+</div>
+
+<kbq-tree-selection
+    multiple="keyboard"
+    [(ngModel)]="modelValue2"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl2">
+
+    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
+        <i kbq-icon="mc-info-o_16"></i>
+
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+    </kbq-tree-option>
+
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+        <i kbq-icon="mc-info-o_16"></i>
+
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+    </kbq-tree-option>
+</kbq-tree-selection>
+
+<kbq-dropdown #dropdown>
+    <button kbq-dropdown-item>item 1</button>
+    <button kbq-dropdown-item>item 2</button>
+    <button kbq-dropdown-item>item 3</button>
+</kbq-dropdown>

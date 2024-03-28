@@ -1,0 +1,40 @@
+<kbq-radio-group name="my_options">
+    <kbq-radio-button [value]="'option_1'" [disabled]="isDisabled">
+        Option 1
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+
+    <kbq-radio-button [value]="'option_2'" [disabled]="isDisabled">
+        Option 2
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+
+    <kbq-radio-button [value]="'option_3'" [disabled]="isDisabled">
+        Option 3
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+</kbq-radio-group>
+
+<br><br>
+
+<kbq-radio-group
+    class="example-radio-group"
+    [big]="true"
+    name="my_options">
+    <kbq-radio-button [value]="'option_1'" [disabled]="isDisabled">
+        Option 1
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+
+    <kbq-radio-button [value]="'option_2'" [disabled]="isDisabled">
+        Option 2
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+
+    <kbq-radio-button [value]="'option_3'" [disabled]="isDisabled">
+        Option 3
+        <kbq-hint>kbq-hint</kbq-hint>
+    </kbq-radio-button>
+</kbq-radio-group>
+
+<kbq-checkbox class="example-radio-control" [(ngModel)]="isDisabled">Disabled</kbq-checkbox>

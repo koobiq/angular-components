@@ -1,0 +1,33 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-icon-button {
+    &:not(.kbq-disabled) {
+        cursor: pointer;
+    }
+
+    padding:
+        var(--kbq-icon-button-size-small-vertical-padding, map-get($tokens, icon-button-size-small-vertical-padding))
+        var(
+            --kbq-icon-button-size-small-horizontal-padding,
+            map-get($tokens, icon-button-size-small-horizontal-padding)
+        );
+
+    &.kbq-icon-button_small {
+        padding:
+            var(
+                --kbq-icon-button-size-normal-vertical-padding,
+                map-get($tokens, icon-button-size-normal-vertical-padding)
+            )
+            var(
+                --kbq-icon-button-size-normal-horizontal-padding,
+                map-get($tokens, icon-button-size-normal-horizontal-padding)
+            );
+    }
+}

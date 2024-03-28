@@ -1,0 +1,108 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-radio-state($state) {
+    & .kbq-radio-button__outer-circle {
+        border-color: map.get($state, outer-circle-border);
+        background: map.get($state, outer-circle-background);
+        box-shadow: map.get($state, outer-circle-shadow);
+    }
+
+    & .kbq-radio-button__inner-circle {
+        background: map.get($state, inner-circle-background);
+    }
+}
+
+@mixin kbq-radio-color($radio) {
+    $default: map.get($radio, default);
+    @include kbq-radio-state($default);
+
+    & .kbq-hint .kbq-hint__text {
+        color: map.get($default, caption);
+    }
+
+    &:hover {
+        $hover: map.get($radio, hover);
+        @include kbq-radio-state($hover);
+    }
+
+    &.cdk-keyboard-focused {
+        $focused: map.get($radio, focused);
+        @include kbq-radio-state($focused);
+    }
+
+    &.kbq-selected:not(.kbq-disabled) {
+        $selected: map.get($radio, checked);
+        @include kbq-radio-state($selected);
+    }
+
+    &.kbq-selected.kbq-disabled {
+        $selected-disabled: map.get($radio, checked-disabled);
+        @include kbq-radio-state($selected-disabled);
+    }
+
+    &.kbq-disabled {
+        $disabled: map.get($radio, disabled);
+        @include kbq-radio-state($disabled);
+
+        & .kbq-radio-label {
+            cursor: default;
+        }
+
+        & .kbq-hint .kbq-hint__text {
+            color: map.get($default, caption);
+        }
+    }
+}
+
+@mixin kbq-radio-theme($theme) {
+    $foreground: map.get($theme, foreground);
+
+    $radio: map.get(map.get($theme, components), radio);
+
+    $radio-theme: map.get($radio, theme);
+    $radio-error: map.get($radio, error);
+
+    .kbq-radio-group {
+
+    }
+
+    .kbq-radio-button {
+        & .kbq-radio-button__inner-circle {
+            border-width: 0 !important;
+        }
+
+        @include kbq-radio-color($radio-theme);
+
+        color: map.get($foreground, contrast);
+
+        &.kbq-error {
+            @include kbq-radio-color($radio-error);
+
+            color: map.get($foreground, contrast);
+        }
+    }
+}
+
+@mixin kbq-radio-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-radio-button {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-label));
+
+        & .kbq-hint .kbq-hint__text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-caption));
+        }
+    }
+
+    .kbq-radio-button.kbq-radio-button_big {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-label));
+
+        & .kbq-hint .kbq-hint__text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-caption));
+        }
+    }
+}

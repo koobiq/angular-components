@@ -1,0 +1,65 @@
+<h1>Progress Spinner</h1>
+<div>
+    Mode:
+    <select [(ngModel)]="mode">
+        <option [ngValue]="'determinate'">Determinate</option>
+        <option [ngValue]="'indeterminate'">Indeterminate</option>
+    </select>
+</div>
+<div class="container">
+    <div class="percent">{{ mode === 'indeterminate' ? '--' : percent }}%</div>
+    <div>
+        <ul class="spinners">
+            <li class="spinner-container">
+                <kbq-progress-spinner [value]="percent" [mode]="mode"></kbq-progress-spinner>
+            </li>
+
+            <li class="spinner-container">
+                <kbq-progress-spinner
+                    [value]="percent"
+                    [mode]="mode">
+                    <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
+                </kbq-progress-spinner>
+            </li>
+
+            <li class="spinner-container">
+                <kbq-progress-spinner
+                    [value]="percent"
+                    [mode]="mode">
+                    <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
+                    <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>
+                </kbq-progress-spinner>
+            </li>
+        </ul>
+        <ul class="spinners">
+            <li class="spinner-container">
+                <kbq-progress-spinner [size]="'big'" [value]="percent" [mode]="mode"></kbq-progress-spinner>
+            </li>
+
+            <li class="spinner-container">
+                <kbq-progress-spinner
+                    [size]="'big'"
+                    [value]="percent"
+                    [mode]="mode">
+                    <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
+                </kbq-progress-spinner>
+            </li>
+
+            <li class="spinner-container">
+                <kbq-progress-spinner
+                    [size]="'big'"
+                    [value]="percent"
+                    [mode]="mode">
+                    <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
+                    <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>
+                </kbq-progress-spinner>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container">
+    <span class="percent">100%</span> <kbq-progress-spinner [value]="100" [size]="'big'"></kbq-progress-spinner>
+</div>
+<div class="container">
+    <span class="percent">0%</span> <kbq-progress-spinner [value]="0" [size]="'big'"></kbq-progress-spinner>
+</div>

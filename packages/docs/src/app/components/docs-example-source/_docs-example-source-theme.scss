@@ -1,0 +1,26 @@
+@use '../dist/components/core/styles/theming';
+@use '../dist/components/core/styles/typography';
+
+
+@mixin kbq-docs-example-source-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+
+    .docs-example-source__code {
+        background: theming.kbq-color($background, background-less-contrast);
+    }
+
+    .docs-example-source__numbers {
+        background: theming.kbq-color($background, background-less-contrast);
+        color: theming.kbq-color($foreground, text-disabled);
+    }
+}
+
+@mixin kbq-docs-example-source-typography($config) {
+    .docs-example-source__code,
+    .docs-example-source__numbers {
+        @include typography.kbq-typography-level-to-styles($config, body-mono);
+
+        font-size: 14px;
+    }
+}

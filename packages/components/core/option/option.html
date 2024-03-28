@@ -1,0 +1,9 @@
+<kbq-pseudo-checkbox
+    *ngIf="showCheckbox"
+    [state]="selected ? 'checked' : 'unchecked'"
+    [disabled]="disabled">
+</kbq-pseudo-checkbox>
+
+<span #kbqTitleText class="kbq-option-text">
+    <ng-content></ng-content>
+</span>

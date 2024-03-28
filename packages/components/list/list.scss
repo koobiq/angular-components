@@ -1,0 +1,39 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/list';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-list,
+.kbq-list-selection {
+    display: block;
+
+    outline: none;
+}
+
+.kbq-list-item,
+.kbq-list-option {
+    @include list.kbq-no-select;
+
+    @include list.kbq-list-item-base();
+
+    &:not(.kbq-disabled) {
+        cursor: pointer;
+    }
+
+    & .kbq-option-action {
+        display: none;
+    }
+
+    &:not(.kbq-disabled):hover,
+    &:not(.kbq-disabled).kbq-focused,
+    &:not(.kbq-disabled).kbq-action-button-focused {
+        & .kbq-option-action {
+            display: flex;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tree-node-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    height: 100%;
+
+    padding-left: var(--kbq-tree-size-toggle-padding, map.get($tokens, tree-size-toggle-padding));
+    padding-right: var(--kbq-tree-size-toggle-padding, map.get($tokens, tree-size-toggle-padding));
+
+    cursor: pointer;
+
+    & .kbq-icon {
+        transform: rotate(-90deg);
+    }
+
+    &.kbq-expanded {
+        & .kbq-icon {
+            transform: rotate(0);
+        }
+    }
+
+    &[disabled] {
+        cursor: default;
+    }
+}

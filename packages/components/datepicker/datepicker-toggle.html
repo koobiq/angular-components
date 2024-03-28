@@ -1,0 +1,16 @@
+<!--todo need simplify this-->
+<button
+    #button
+    kbq-button
+    type="button"
+    class="kbq-datepicker-toggle__button"
+    aria-haspopup="true"
+    [attr.aria-label]="intl.openCalendarLabel"
+    [tabIndex]="tabIndex"
+    [disabled]="disabled"
+    (click)="open($event)">
+
+    <i *ngIf="!customIcon" kbq-icon="mc-calendar_16" class="kbq-datepicker-toggle__default-icon"></i>
+
+    <ng-content select="[kbqDatepickerToggleIcon]"></ng-content>
+</button>

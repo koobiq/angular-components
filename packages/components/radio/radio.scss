@@ -1,0 +1,156 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+
+    &.kbq-radio-group_normal {
+        gap: var(--kbq-radio-size-normal-vertical-gap, map.get($tokens, radio-size-normal-vertical-gap));;
+    }
+
+    &.kbq-radio-group_big {
+        gap: var(--kbq-radio-size-big-vertical-gap, map.get($tokens, radio-size-big-vertical-gap));;
+    }
+}
+
+// Top-level host container.
+.kbq-radio-button {
+    display: inline-block;
+}
+
+.kbq-radio-label {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+    // for maximum clickable area.
+    width: 100%;
+}
+
+.kbq-radio-label-content {
+    display: inline-block;
+
+    position: relative;
+
+    order: 0;
+    line-height: inherit;
+
+    padding-left: calc(
+        var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) +
+        var(
+            --kbq-radio-size-normal-horizontal-content-padding,
+            map.get($tokens, radio-size-normal-horizontal-content-padding)
+        )
+    );
+    padding-right: 0;
+
+    .kbq-radio-button__outer-circle,
+    .kbq-radio-button__inner-circle {
+        box-sizing: content-box;
+        position: absolute;
+        display: flex;
+
+        content: '';
+
+        border: {
+            style: solid;
+            radius: 50%;
+        }
+    }
+
+    .kbq-radio-button__outer-circle {
+        border: {
+            width: 1px;
+        }
+
+        left: 0;
+
+        width: var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size));
+        height: var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size));
+    }
+
+    .kbq-radio-button__inner-circle {
+        position: relative;
+        margin: auto;
+
+        width: var(--kbq-radio-size-normal-inner-size, map.get($tokens, radio-size-normal-inner-size));
+        height: var(--kbq-radio-size-normal-inner-size, map.get($tokens, radio-size-normal-inner-size));
+    }
+
+    .kbq-radio__text-container {
+        display: flex;
+        flex-direction: column;
+
+        & .kbq-radio__text {
+
+        }
+    }
+
+    & .kbq-hint {
+        margin-top: var(
+            --kbq-radio-size-normal-vertical-content-padding,
+            map.get($tokens, radio-size-normal-vertical-content-padding)
+        );
+    }
+
+    [dir='rtl'] & {
+        padding-right: var(
+            --kbq-radio-size-normal-horizontal-content-padding,
+            map.get($tokens, radio-size-normal-horizontal-content-padding)
+        );
+        padding-left: 0;
+    }
+}
+
+.kbq-radio-input {
+    position: absolute;
+    outline: none;
+    opacity: 0;
+}
+
+.kbq-radio-button.kbq-radio-button_big {
+    .kbq-radio-label-content {
+        padding-left: calc(
+            var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) +
+            var(
+                --kbq-radio-size-big-horizontal-content-padding,
+                map.get($tokens, radio-size-big-horizontal-content-padding)
+            )
+        );
+
+        .kbq-radio-button__outer-circle {
+            top: 2px;
+
+            width: var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size));
+            height: var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size));
+        }
+
+        .kbq-radio-button__inner-circle {
+            width: var(--kbq-radio-size-big-inner-size, map.get($tokens, radio-size-big-inner-size));
+            height: var(--kbq-radio-size-big-inner-size, map.get($tokens, radio-size-big-inner-size));
+        }
+
+        & .kbq-hint {
+            margin-top: var(
+                --kbq-radio-size-big-vertical-content-padding,
+                map.get($tokens, radio-size-big-vertical-content-padding)
+            );
+        }
+
+        [dir='rtl'] & {
+            padding-right: var(
+                --kbq-radio-size-big-horizontal-content-padding,
+                map.get($tokens, radio-size-big-horizontal-content-padding)
+            );
+        }
+    }
+}

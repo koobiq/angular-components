@@ -1,0 +1,25 @@
+.example-controls {
+    display: flex;
+    flex-direction: row;
+}
+
+.block {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.kbq-radio-group {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 32px;
+
+}
+
+.kbq-radio-button {
+    margin-bottom: 8px;
+}
+
+.container {
+    height: 120px;
+}

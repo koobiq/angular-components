@@ -1,0 +1,65 @@
+{% import "macros.html" as macros %}
+
+<div class="kbq-markdown__h6">
+    {%- if method.isDeprecated -%}
+    <div class="docs-api__deprecated-marker" {$ macros.deprecationTitle(method) $}>Deprecated</div>
+    {%- endif -%}
+    {$ method.name $}
+</div>
+
+{%- if method.description -%}
+<div class="kbq-markdown__p docs-api__method-description-cell">
+    {$ method.description | safe $}
+</div>
+{%- endif -%}
+
+{%- if method.params.length -%}
+<table class="kbq-docs-table kbq-table kbq-table_bordered layout-fill">
+    <thead><tr>
+        <th class="kbq-docs-table__name">Parameters</th>
+        <th class="kbq-docs-table__description">Description</th>
+    </tr></thead>
+
+    <tbody>
+        {% for parameter in method.params %}
+        <tr>
+            <td>
+                <span class="kbq-markdown__code">
+                    {$ parameter.name $}
+                    {%- if parameter.isOptional -%}
+                    <span>?</span>
+                    {%- endif -%}
+                    :
+                </span>
+
+                <span class="kbq-markdown__code">{$ parameter.type $}</span>
+            </td>
+
+            <td>
+                <span>{$ parameter.description | safe $}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{%- endif -%}
+
+{%- if method.type and method.type !== "void" -%}
+<table class="kbq-docs-table kbq-table kbq-table_bordered layout-fill">
+    <thead><tr>
+        <th class="kbq-docs-table__name">Returns</th>
+        <th class="kbq-docs-table__description">Description</th></tr></thead>
+
+    <tbody>
+        <tr>
+            <td>
+                <span class="kbq-markdown__code">{$ method.type $}</span>
+            </td>
+
+            <td>
+                <span class="kbq-markdown__code">{$ method.returns.description | safe $}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{%- endif -%}

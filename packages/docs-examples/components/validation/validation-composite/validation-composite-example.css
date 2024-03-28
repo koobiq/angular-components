@@ -1,0 +1,8 @@
+.docs-width {
+    width: 400px;
+}
+
+.validation-error {
+    background-color: #FCEFEC;
+    border-radius: 4px;
+}

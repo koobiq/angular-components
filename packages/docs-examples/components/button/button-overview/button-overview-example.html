@@ -1,0 +1,9 @@
+<button class="overview__example-button"
+        kbq-button
+        [color]="colors.Contrast"
+        [class.kbq-progress]="hasProgress"
+        [disabled]="isDisabled"
+>Кнопка</button>
+<br/>
+<kbq-checkbox [(ngModel)]="isDisabled">disabled</kbq-checkbox>
+<kbq-checkbox [(ngModel)]="hasProgress">progress</kbq-checkbox>

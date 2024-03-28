@@ -1,0 +1,18 @@
+<div class="docs-component-header">
+    <div class="docs-component-name kbq-display-3" docs-header>{{ docItem.name }}</div>
+    <nav *ngIf="!docItem.isGuide" class="docs-component-navbar layout-padding-top-s" kbq-tab-nav-bar>
+        <a kbq-tab-link [routerLink]="'overview'" routerLinkActive="kbq-selected">Обзор</a>
+        <a kbq-tab-link [routerLink]="'api'"
+           *ngIf="docItem.hasApi"
+           routerLinkActive="kbq-selected">API
+        </a>
+        <a kbq-tab-link
+           [routerLink]="'examples'"
+           *ngIf="docItem.hasExamples"
+           routerLinkActive="kbq-selected">
+            Примеры
+        </a>
+    </nav>
+</div>
+
+<router-outlet></router-outlet>

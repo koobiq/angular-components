@@ -1,0 +1,142 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-markdown-theme($theme) {
+    $tokens: map.get($theme, tokens);
+
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
+
+    $markdown: map.get(map.get($theme, components), markdown);
+
+    .kbq-markdown {
+        color: map.get($foreground, contrast);
+        background: map.get($background, bg);
+
+        // h1, h2, h3, h4, h5, h6
+        @for $i from 1 through 6 {
+            .kbq-markdown__h#{$i} {
+                color: map.get($markdown, h#{$i}-color);
+            }
+        }
+
+        .kbq-markdown__p {
+            color: map.get($markdown, p-color);
+        }
+
+        .kbq-markdown__ul,
+        .kbq-markdown__ol {
+            color: map.get($markdown, list-color);
+        }
+
+        .kbq-markdown__blockquote {
+            color: map.get($markdown, blockquote-text);
+            background: map.get($markdown, blockquote-background);
+            border-color: map.get($markdown, blockquote-border);
+            border-left-color: map.get($markdown, blockquote-line);
+        }
+
+        .kbq-markdown__pre,
+        .kbq-markdown__p > .kbq-markdown__code {
+            color: map.get($markdown, code-text);
+            background-color: map.get($markdown, code-background);
+            border-color: map.get($markdown, code-border);
+        }
+
+        .kbq-markdown__a {
+            color: map.get($markdown, link-text);
+            border-bottom-color: map.get($markdown, link-border-bottom);
+
+            &:visited {
+                color: map.get($markdown, link-state-visited-text);
+                border-bottom-color: map.get($markdown, link-state-visited-border-bottom);
+            }
+
+            &:hover {
+                color: map.get($markdown, link-state-hover-text);
+                transition: color 0ms;
+                border-bottom-color: map.get($markdown, link-state-hover-border-bottom);
+            }
+
+            &:active {
+                color: map.get($markdown, link-state-active-text);
+            }
+
+            &:focus {
+                outline:
+                    map.get($markdown, link-state-focused-outline)
+                    solid
+                    map.get($tokens, markdown-link-size-state-focused-outline-width);
+
+                outline-offset: map.get($tokens, markdown-link-size-state-focused-outline-offset);
+            }
+        }
+
+        .kbq-markdown__img + em {
+            color: map.get($markdown, image-caption-text);
+        }
+
+        .kbq-markdown__hr {
+            border-bottom-color: map.get($markdown, hr-color);
+        }
+
+        .kbq-markdown__table > .kbq-markdown__thead {
+            color: map.get($markdown, table-header);
+            border-bottom-color: map.get($markdown, table-border);
+        }
+
+        .kbq-markdown__table > .kbq-markdown__tbody {
+            color: map.get($markdown, table-body);
+        }
+    }
+}
+
+@mixin kbq-markdown-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-markdown {
+        // h1, h2, h3, h4, h5, h6
+        @for $i from 1 through 6 {
+            .kbq-markdown__h#{$i} {
+                @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-h#{$i}-font-default));
+            }
+        }
+
+        .kbq-markdown__p {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-p-font-default));
+        }
+
+        .kbq-markdown__ul,
+        .kbq-markdown__ol {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-list-font-default));
+        }
+
+        .kbq-markdown__blockquote > .kbq-markdown__p {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-blockquote-font-default));
+        }
+
+        .kbq-markdown__code {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-code-font-default));
+        }
+
+        .kbq-markdown__a {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-link-font-default));
+        }
+
+        .kbq-markdown__img + em {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-image-font-caption));
+        }
+
+        .kbq-markdown__table > .kbq-markdown__thead {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-table-font-header));
+        }
+
+        .kbq-markdown__table > .kbq-markdown__tbody {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-table-font-body));
+        }
+    }
+}

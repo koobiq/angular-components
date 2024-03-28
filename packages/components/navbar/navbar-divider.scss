@@ -1,0 +1,18 @@
+.kbq-navbar-divider {
+    display: block;
+}
+
+.kbq-navbar-divider.kbq-vertical {
+    height: 1px;
+
+    margin: 8px 12px;
+}
+
+.kbq-navbar-divider.kbq-horizontal {
+    width: 1px;
+
+    height: 28px;
+
+    margin-left: 8px;
+    margin-right: 8px;
+}

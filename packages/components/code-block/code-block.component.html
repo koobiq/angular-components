@@ -1,0 +1,51 @@
+<kbq-tab-group (selectedTabChange)="onSelectTab($event)">
+    <kbq-tab
+        *ngFor="let codeFile of codeFiles; let i = index"
+        [disabled]="singleFile">
+
+        <ng-template kbq-tab-label>{{ codeFile.filename }}</ng-template>
+
+        <pre class="kbq-code-block__code kbq-scrollbar"
+             #codeContent
+             [style.max-height]="getMaxHeight()"
+             [class.kbq-code-block__code_soft-wrap]="softWrap"
+             [class.kbq-code-block__code_view-all]="viewAll"
+             (scroll)="checkOverflow(codeContent)"
+            ><code class="hljs"
+               [id]="codeFile.filename + '_' + i"
+               [class.hljs-line-numbers]="lineNumbers"
+               [highlight]="codeFiles[i].content"
+               [lineNumbers]="true"
+               (highlighted)="onHighlighted()">
+            </code><kbq-actionbar-block
+                [class.kbq-actionbar-block_floating]="noHeader"
+                [config]="config"
+                [codeFiles]="codeFiles"
+                [selectedTabIndex]="selectedTabIndex"
+                [lessContrast]="filled"
+                [multiLine]="multiLine"
+                [softWrap]="softWrap"
+                (toggleSoftWrap)="toggleSoftWrap()"
+                (downloadCode)="downloadCode()"
+                (copyCode)="copyCode()"
+                (openExternalSystem)="openExternalSystem()">
+            </kbq-actionbar-block></pre>
+
+        <div class="kbq-code-block__show-more"
+             *ngIf="maxHeight"
+             [class.kbq-code-block__show-more_expanded]="viewAll"
+             [class.kbq-code-block__show-more_collapsed]="!viewAll">
+            <span class="bg-wrapper">
+                <button
+                    [color]="'theme'"
+                    [kbqStyle]="'transparent'"
+                    kbq-button
+                    (click)="onShowMoreClick(codeContent)">
+                <i kbq-icon="mc-angle-down-L_16" *ngIf="!viewAll"></i>
+                <i kbq-icon="mc-angle-up-L_16" *ngIf="viewAll"></i>
+                    {{ viewAll ? config.viewLessText : config.viewAllText}}
+            </button>
+            </span>
+        </div>
+    </kbq-tab>
+</kbq-tab-group>

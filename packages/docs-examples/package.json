@@ -1,0 +1,28 @@
+{
+    "name": "@koobiq/docs-examples",
+    "version": "{{VERSION}}",
+    "description": "Koobiq Examples",
+    "keywords": [
+        "angular",
+        "koobiq",
+        "components"
+    ],
+    "license": "MIT",
+    "peerDependencies": {
+        "@angular/cdk": "{{NG_VERSION}}",
+        "@angular/core": "{{NG_VERSION}}",
+        "@angular/common": "{{NG_VERSION}}",
+        "@koobiq/cdk": "{{VERSION}}",
+        "@koobiq/components": "{{VERSION}}",
+        "@koobiq/angular-moment-adapter": "{{VERSION}}",
+        "@koobiq/angular-luxon-adapter": "{{VERSION}}"
+    },
+    "dependencies": {
+        "tslib": "^2.6.2"
+    },
+    "exports": {
+        "./fesm2022": {
+            "default": "./fesm2022"
+        }
+    }
+}

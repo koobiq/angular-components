@@ -1,0 +1,454 @@
+<br><br>
+
+<div class="dev-container">
+    <kbq-select
+        #select="kbqSelect"
+        [(value)]="singleSelectedWithSearch">
+
+        <button class="layout-padding-right-xs" kbq-button kbq-select-matcher>
+            {{ select.triggerValue }}
+
+            <i class="layout-padding-left-3xs" kbq-icon="mc-angle-down-S_16"></i>
+        </button>
+
+        <kbq-option *ngFor="let option of filteredOptions | async"
+                   [value]="option">
+            <span [innerHTML]="option | mcHighlight : searchCtrl.value"></span>
+        </kbq-option>
+
+        <div kbq-select-footer class="custom-footer">Custom footer</div>
+    </kbq-select>
+
+    <br><br><br>
+
+    <kbq-form-field>
+        <kbq-select (openedChange)="openedChange($event)">
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <cdk-virtual-scroll-viewport
+                [itemSize]="32"
+                [minBufferPx]="100"
+                [maxBufferPx]="400">
+
+                <kbq-option
+                    *cdkVirtualFor="let option of options; templateCacheSize: 0"
+                    [value]="option">
+                    {{ option }}
+                </kbq-option>
+            </cdk-virtual-scroll-viewport>
+        </kbq-select>
+        <kbq-hint>select with cdk-virtual-scroll</kbq-hint>
+    </kbq-form-field>
+
+    <button (click)="selectToggle.toggle()">toogle</button>
+    <button (click)="selectToggle.open()">open</button>
+    <button (click)="selectToggle.close()">close</button>
+
+    <kbq-form-field>
+        <kbq-select #selectToggle
+            [(value)]="singleSelectedWithSearch"
+            (openedChange)="openedChange($event)"
+            (opened)="opened($event)"
+            (closed)="closed($event)">
+            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <input kbqInput [formControl]="searchCtrl" type="text" placeholder="Search"/>
+                <kbq-cleaner></kbq-cleaner>
+            </kbq-form-field>
+
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+            <kbq-option *ngFor="let option of filteredOptions | async"
+                        [value]="option">
+                <span [innerHTML]="option | mcHighlight : searchCtrl.value"></span>
+            </kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <kbq-form-field>
+        <kbq-select [multiple]="true" (openedChange)="openedChange($event)">
+            <cdk-virtual-scroll-viewport
+                [itemSize]="32"
+                [minBufferPx]="100"
+                [maxBufferPx]="400">
+
+                <kbq-option *cdkVirtualFor="let option of filteredOptions | async; templateCacheSize: 0"
+                           [value]="option">
+                    <span [innerHTML]="option | mcHighlight : searchCtrl.value"></span>
+                </kbq-option>
+            </cdk-virtual-scroll-viewport>
+
+            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <input kbqInput [formControl]="searchCtrl" type="text" placeholder="Search"/>
+                <kbq-cleaner></kbq-cleaner>
+            </kbq-form-field>
+
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <div kbq-select-search-empty-result>Ничего не найдено</div>
+        </kbq-select>
+        <kbq-hint>select with cdk-virtual-scroll</kbq-hint>
+    </kbq-form-field>
+
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [compareWith]="compareWithById" [(value)]="selectedOptionsAsObject" (openedChange)="openedChange($event)">
+            <cdk-virtual-scroll-viewport
+                [itemSize]="32"
+                [minBufferPx]="100"
+                [maxBufferPx]="400"
+                appendOnly
+            >
+
+                <kbq-option *cdkVirtualFor="let option of optionsObj; templateCacheSize: 0"
+                           [value]="option">
+                    <span [innerHTML]="option.name"></span>
+                </kbq-option>
+            </cdk-virtual-scroll-viewport>
+            <ng-template #kbqSelectTagContent let-option let-select="select">
+                <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    {{ option.value.name }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                        *ngIf="!option.disabled && !select.disabled"
+                        (click)="select.onRemoveMatcherItem(option, $event)"
+                    >
+                    </i>
+                </kbq-tag>
+            </ng-template>
+
+            <kbq-cleaner></kbq-cleaner>
+        </kbq-select>
+        <kbq-hint>multiple select with cdk-virtual-scroll, option as object</kbq-hint>
+    </kbq-form-field>
+
+    <br><br>
+
+    {{singleSelectedWithSearch}}
+
+    <kbq-form-field>
+        <kbq-select
+            [(value)]="singleSelectedWithSearch"
+            (openedChange)="openedChange($event)"
+            (opened)="opened($event)"
+            (closed)="closed($event)">
+            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <input kbqInput [formControl]="searchCtrl" type="text" placeholder="Search"/>
+                <kbq-cleaner></kbq-cleaner>
+            </kbq-form-field>
+
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+            <kbq-option *ngFor="let option of filteredOptions | async"
+                       [value]="option">
+                <span [innerHTML]="option | mcHighlight : searchCtrl.value"></span>
+            </kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <br><br>
+
+    <button kbq-button (click)="optionCounter = optionCounter + 1;options.push(optionCounter.toString())">add option</button>
+
+    <br><br>
+
+    {{multipleSelectedWithSearch}}
+
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelectedWithSearch">
+            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <input kbqInput [formControl]="multipleSearchCtrl" type="text" placeholder="Search" />
+                <kbq-cleaner></kbq-cleaner>
+            </kbq-form-field>
+
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+            <kbq-option [showCheckbox]="false"
+                       *ngFor="let option of filteredMultipleOptions | async"
+                       [value]="option">
+                <span [innerHTML]="option | mcHighlight : multipleSearchCtrl.value"></span>
+            </kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+
+<br>
+
+<div class="dev-container">
+
+    <kbq-form-field>
+        <kbq-select [(value)]="singleSelected" [placeholder]="'placeholder'">
+            <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Focused'">Focused</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected2'">Selected2</kbq-option>
+            <kbq-option [value]="'Selected3'">Selected3</kbq-option>
+            <kbq-option [value]="'Selected4'">Selected4</kbq-option>
+            <kbq-option [value]="'Selected5'">Selected5</kbq-option>
+            <kbq-option [value]="'Selected6'">Selected6</kbq-option>
+            <kbq-option [value]="'Selected7'">Selected7</kbq-option>
+            <kbq-option [value]="'Selected8'">Selected8</kbq-option>
+            <kbq-option [value]="'Selected9'">Selected9</kbq-option>
+            <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <br><br>
+
+    <kbq-form-field>
+        <kbq-select [formControl]="singleSelectFormControl"
+                    [multiple]="true"
+                    placeholder="placeholder for multiple select">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <br><br>
+
+    <kbq-form-field>
+        <kbq-select [formControl]="singleSelectFormControl" #selectWithFormControl="kbqSelect">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'newValue'">newValue</kbq-option>
+        </kbq-select>
+        <kbq-hint>connected formControl value: {{ singleSelectFormControl.value }} </kbq-hint>
+        <kbq-hint>select.value: {{ selectWithFormControl.value }}</kbq-hint>
+    </kbq-form-field>
+    <button kbq-button (click)="singleSelectFormControl.setValue('newValue')">Update connected form control value</button>
+
+    <br><br>
+
+    <kbq-form-field>
+        <kbq-select [(value)]="singleSelected" [disabled]="true">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+
+<br>
+
+<div style="height: 20px">{{ multipleSelected }}</div>
+<div class="dev-container" style="width: 25%;">
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelected">
+            <!--<kbq-select-trigger>custom trigger <span>{{ select.triggerValue }}</span></kbq-select-trigger>-->
+            <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'FocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocused'">
+                FocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocused
+            </kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected2'">Selected2</kbq-option>
+            <kbq-option [value]="'Selected3'">Selected3</kbq-option>
+            <kbq-option [value]="'Selected4'">Selected4</kbq-option>
+            <kbq-option [value]="'Selected5'">Selected5</kbq-option>
+            <kbq-option [value]="'Selected6'">Selected6</kbq-option>
+            <kbq-option [value]="'Selected7'">Selected7</kbq-option>
+            <kbq-option [value]="'Selected8'">Selected8</kbq-option>
+            <kbq-option [value]="'Selected9'">Selected9</kbq-option>
+            <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+            <kbq-option [value]="'Selected11'">Общие сведения и очень-очень-очень-очень-очень-очень-очень-очень-очень длинный текст</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <br><br>
+
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [formControl]="multiSelectSelectFormControl">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+
+    <br><br>
+
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelected" [disabled]="true">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+
+<br><br>
+
+<div class="dev-container" style="width: 25%;">
+    <h4 class="kbq-subheading">Custom tag content</h4>
+    <h5 class="kbq-body">Const text instead of tag text</h5>
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelectedForCustomTagText">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+
+            <ng-template #kbqSelectTagContent let-option let-select="select">
+                <kbq-tag [selectable]="false"
+                        [class.kbq-error]="select.errorState">
+                    CONST VALUE
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove
+                       *ngIf="!option.disabled && !select.disabled"
+                       (click)="select.onRemoveMatcherItem(option, $event)">
+                    </i>
+                </kbq-tag>
+            </ng-template>
+        </kbq-select>
+    </kbq-form-field>
+
+
+    <br><br>
+
+    <h5 class="kbq-body">Custom tag text with context value</h5>
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelectedForCustomTagText">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <ng-template #kbqSelectTagContent let-option let-select="select">
+                <kbq-tag [selectable]="false"
+                        [class.kbq-error]="select.errorState">
+                    Tag text: {{ option.viewValue }}
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove
+                       *ngIf="!option.disabled && !select.disabled"
+                       (click)="select.onRemoveMatcherItem(option, $event)">
+                    </i>
+                </kbq-tag>
+            </ng-template>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+
+<div class="dev-container">
+    <h4 class="kbq-subheading">Custom footer</h4>
+    <h5 class="kbq-body">With icon button in footer</h5>
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelectedForCustomTagText">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+
+            <ng-template #kbqSelectTagContent let-option let-select="select">
+                <kbq-tag [selectable]="false"
+                        [class.kbq-error]="select.errorState">
+                    CONST VALUE
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove
+                       *ngIf="!option.disabled && !select.disabled"
+                       (click)="select.onRemoveMatcherItem(option, $event)">
+                    </i>
+                </kbq-tag>
+            </ng-template>
+
+            <kbq-select-footer class="kbq-select__footer_icon">
+                <div><i kbq-icon="mc-close-S_16"></i>test</div>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
+
+    <h5 class="kbq-body">Without icon in footer</h5>
+    <kbq-form-field>
+        <kbq-select [multiple]="true" [(value)]="multipleSelectedForCustomTagText">
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+
+            <ng-template #kbqSelectTagContent let-option let-select="select">
+                <kbq-tag [selectable]="false"
+                        [class.kbq-error]="select.errorState">
+                    CONST VALUE
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove
+                       *ngIf="!option.disabled && !select.disabled"
+                       (click)="select.onRemoveMatcherItem(option, $event)">
+                    </i>
+                </kbq-tag>
+            </ng-template>
+
+            <kbq-select-footer>
+                <div>test</div>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+
+<div class="dev-container">
+    <kbq-form-field>
+        <kbq-select [(value)]="selected" [multiple]="true">
+            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+
+            <cdk-virtual-scroll-viewport
+                [itemSize]="32"
+                [minBufferPx]="100"
+                [maxBufferPx]="400">
+
+                <kbq-option
+                    *cdkVirtualFor="let option of options; templateCacheSize: 0"
+                    [value]="option">
+                    {{ option }}
+                </kbq-option>
+            </cdk-virtual-scroll-viewport>
+        </kbq-select>
+        <kbq-hint>select with cdk-virtual-scroll</kbq-hint>
+    </kbq-form-field>
+</div>
+
+<div class="kbq-body">
+    <form class="kbq-form-horizontal" novalidate>
+        <div class="kbq-form__row">
+            <label class="kbq-form__label" for="select-test">Подпись поля</label>
+            <kbq-form-field class="kbq-form__control flex-80">
+                <kbq-select [(value)]="selected" [id]="'select-test'">
+                    <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+                    <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
+                    <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+    </form>
+</div>

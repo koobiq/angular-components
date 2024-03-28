@@ -1,0 +1,32 @@
+<div class="layout-margin docs-width">
+    <form class="kbq-form-vertical"
+          [formGroup]="smallForm"
+          novalidate>
+
+        <div class="kbq-form__fieldset">
+            <div class="kbq-form__row">
+                <div class="kbq-form__label">Имя</div>
+                <kbq-form-field class="kbq-form__control">
+                    <input kbqInput formControlName="firstName">
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <div class="kbq-form__label">Фамилия</div>
+                <kbq-form-field class="kbq-form__control">
+                    <input kbqInput formControlName="lastName">
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <button class="flex-40"
+                        kbq-button
+                        [color]="'contrast'"
+                        type="submit"
+                        [disabled]="smallForm.errors?.empty">
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

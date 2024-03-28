@@ -1,0 +1,17 @@
+<kbq-form-field
+    (click)="picker.toggle()"
+    [kbqWarningTooltip]="'Только цифры'"
+    #tooltip="kbqWarningTooltip">
+
+    <input
+        [formControl]="selectedDate"
+        [kbqDatepicker]="picker"
+        [kbqValidationTooltip]="tooltip"/>
+    <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+    <kbq-datepicker #picker></kbq-datepicker>
+</kbq-form-field>
+
+<div>
+    <h3>selected date:</h3>
+    <p>{{ selectedDate.value }}</p>
+</div>

@@ -1,0 +1,124 @@
+<div class="kbq-file-upload"
+     kbqFileDrop
+     [class.kbq-disabled]="disabled"
+     [class.selected]="files && files.length"
+     [ngClass]="size"
+     (filesDropped)="onFileDropped($event)">
+
+    <ng-container *ngIf="!files.length; else fileOutput">
+        <div class="dropzone">
+            <ng-container  *ngIf="size === 'default' else compactCaption">
+                <i kbq-icon="mc-upload-to-cloud_32"></i>
+                <div class="dropzone__text">
+                    <span class="multiple__header">{{ config.title }}</span>
+                    <div>
+                        <span class="multiple__caption">
+                            {{ config.captionText }}
+                            <label class="kbq-link"
+                                   [class.kbq-focused]="hasFocus"
+                                   [for]="inputId">
+                            {{ config.browseLink }}
+                        </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+
+    <input #input
+           type="file"
+           class="cdk-visually-hidden"
+           multiple
+           [id]="inputId"
+           [accept]="acceptedFiles"
+           [disabled]="disabled"
+           (change)="onFileSelectedViaClick($event)">
+</div>
+
+<div class="kbq-file-upload__info-section">
+    <kbq-hint class="kbq-file-upload__hint">
+        <ng-content select="[hint]"></ng-content>
+    </kbq-hint>
+
+    <ng-container *ngIf="hasErrors">
+        <kbq-hint class="kbq-file-upload__hint kbq-error"
+                 *ngFor="let error of errors">
+                {{ error }}
+        </kbq-hint>
+    </ng-container>
+</div>
+
+<ng-template #fileOutput>
+    <div class="file-upload__dropzone">
+        <div class="kbq-file-upload__grid">
+            <div class="kbq-file-multiple-uploaded__header">
+                <div class="kbq-file-multiple-uploaded__header-inner">
+                    <div [class]="'kbq-file-upload__' + column.cssClass" *ngFor="let column of columnDefs">
+                        {{ column.header }}
+                    </div>
+                </div>
+            </div>
+
+            <kbq-list-selection [autoSelect]="false" [disabled]="disabled">
+                <kbq-list-option
+                    class="multiple__uploaded-item"
+                    [value]="file.file.name"
+                    (keydown.delete)="deleteFile(index)"
+                    (keydown.backspace)="deleteFile(index)"
+                    *ngFor="let file of files; let index = index;">
+                    <div class="kbq-file-upload__row" [class.error]="file.hasError">
+                        <div class="kbq-file-upload__file">
+                            <ng-container *ngIf="{ loading: file.loading | async, progress: file.progress | async } as asyncData">
+                                <ng-container *ngIf="!asyncData.loading"
+                                              [ngTemplateOutlet]="$any(customFileIcon)"
+                                              [ngTemplateOutletContext]="{ $implicit: file }">
+                                </ng-container>
+
+                                <kbq-progress-spinner
+                                    class="pt-nat-file-upload-name-cell__icon"
+                                    [value]="asyncData.progress || 0"
+                                    *ngIf="asyncData.loading"
+                                ></kbq-progress-spinner>
+                            </ng-container>
+
+                            <span class="file-item__text" [mcEllipsisCenter]="file.file.name" [minVisibleLength]="10"></span>
+                        </div>
+                        <div class="kbq-file-upload__size">
+                            {{ file.file.size | mcDataSize }}
+                        </div>
+                        <div class="kbq-file-upload__action">
+                            <i kbq-icon-button="mc-close-circle_16" (click)="deleteFile(index, $event)"></i>
+                        </div>
+                    </div>
+                </kbq-list-option>
+            </kbq-list-selection>
+        </div>
+
+        <div class="btn-upload">
+            <div class="dropzone">
+                <i kbq-icon="mc-upload-to-cloud_24"></i>
+                <span class="dropzone__text multiple__caption">
+                    {{ config.captionTextWhenSelected }}
+                    <label class="kbq-link"
+                           [class.kbq-focused]="hasFocus"
+                           [for]="inputId">
+                        {{ config.browseLink }}
+                    </label>
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #compactCaption>
+    <i kbq-icon="mc-upload-to-cloud_24"></i>
+    <span class="dropzone__text multiple__caption">
+        {{ config.captionText }}
+        <label class="kbq-link"
+               [class.kbq-focused]="hasFocus"
+               [for]="inputId">
+        {{ config.browseLink }}
+    </label>
+    </span>
+</ng-template>

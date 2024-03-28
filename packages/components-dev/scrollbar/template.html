@@ -1,0 +1,60 @@
+<div class="dev-container kbq-body">
+    <div class="layout-row layout-align-space-between">
+        <div>
+            <h2>Simple Scrollbar Component</h2>
+
+            <h4>Simple example</h4>
+            <div
+                kbq-scrollbar
+                [options]="options"
+                [events]="events"
+                (onScroll)="onScroll($event)"
+                style="height: 300px; max-width: 200px"
+            >
+                <div style="width: 400px">{{ longText }}</div>
+            </div>
+
+            <div> Scrolls count:  {{ scrollCounter }} </div>
+
+            <div style="position: relative">
+                <div
+                    #scrollbarRef="kbqScrollbar"
+                    kbq-scrollbar
+                    (onScroll)="cdr.markForCheck()"
+                    style="height: 300px; max-width: 400px"
+                >
+                    <div style="width: 400px">{{ longText }}</div>
+                </div>
+                <button
+                    kbq-button
+                    class="button_scroll-top"
+                    (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth'})"
+                    *ngIf="scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0"
+                >
+                    Scroll To Top
+                </button>
+            </div>
+
+            <div dir="rtl">
+                <h4>Bidi support</h4>
+                <div
+                    kbq-scrollbar
+                    style="height: 300px; max-width: 400px"
+                >
+                    <div style="width: 400px">{{ longText }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <h2>Scrollbar Via CSS</h2>
+
+            <h3>Horizontal</h3>
+            <textarea class="kbq-scrollbar with-horizontal" style="height: 300px; width: 400px; overflow-y: auto; resize: none;">{{ longText }}</textarea>
+
+            <h3>Buttons & Resize corner</h3>
+            <textarea class="kbq-scrollbar with-buttons" style="height: 300px; width: 400px; overflow-y: auto;">{{ longText }}</textarea>
+        </div>
+    </div>
+</div>

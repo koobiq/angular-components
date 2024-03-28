@@ -1,0 +1,11 @@
+@use 'sass:map';
+
+
+@mixin popup-params($theme) {
+    $popup: map.get(map.get($theme, components), popup);
+
+    box-shadow: map.get($popup, shadow);
+    border-color: map.get($popup, border);
+
+    background-color: map.get($popup, background);
+}

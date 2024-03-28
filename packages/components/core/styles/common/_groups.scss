@@ -1,0 +1,119 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+@mixin border-top-radius($radius) {
+    border-top: {
+        right-radius: $radius;
+        left-radius: $radius;
+    }
+}
+
+@mixin border-bottom-radius($radius) {
+    border-bottom: {
+        right-radius: $radius;
+        left-radius: $radius;
+    }
+}
+
+@mixin border-right-radius($radius) {
+    border: {
+        bottom-right-radius: $radius;
+        top-right-radius: $radius;
+    }
+}
+
+@mixin border-left-radius($radius) {
+    border: {
+        bottom-left-radius: $radius;
+        top-left-radius: $radius;
+    }
+}
+
+.kbq-group {
+    display: flex;
+    flex-direction: row;
+
+    .kbq-group_justified {
+        > .kbq-group-item {
+            width: 100%;
+        }
+    }
+
+    .kbq-group-item + .kbq-group-item {
+        margin-left: calc(-1 * var(--kbq-button-size-border-width, #{map.get($tokens, button-size-border-width)}));
+    }
+
+    & > .kbq-group-item:first-child:not(:last-child) {
+        @include border-right-radius(0);
+
+        > .kbq-form-field__container {
+            @include border-right-radius(0);
+        }
+    }
+
+    & > .kbq-group-item:last-child:not(:first-child) {
+        @include border-left-radius(0);
+
+        > .kbq-form-field__container {
+            @include border-left-radius(0);
+        }
+    }
+
+    & > .kbq-group-item:not(:first-child):not(:last-child) {
+        border-radius: 0;
+
+        > .kbq-form-field__container {
+            border-radius: 0;
+        }
+    }
+}
+
+.kbq-vertical-group {
+    display: flex;
+    flex-direction: column;
+
+    /* stylelint-disable no-descending-specificity */
+    > .kbq-group-item {
+        &:first-child:not(:last-child) {
+            @include border-bottom-radius(0);
+
+            border-top-right-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
+
+            > .kbq-form-field__container {
+                @include border-bottom-radius(0);
+            }
+        }
+
+        &:last-child:not(:first-child) {
+            @include border-top-radius(0);
+
+            border-bottom-left-radius: var(
+                --kbq-button-size-border-radius,
+                map.get($tokens, button-size-border-radius)
+            );
+
+            > .kbq-form-field__container {
+                @include border-top-radius(0);
+            }
+        }
+
+        &:not(:first-child):not(:last-child) {
+            border-radius: 0;
+
+            > .kbq-form-field__container {
+                border-radius: 0;
+            }
+        }
+    }
+
+    .kbq-group-item + .kbq-group-item {
+        margin-top: calc(-1 * var(--kbq-button-size-border-width, #{map.get($tokens, button-size-border-width)}));
+    }
+    /* stylelint-enable no-descending-specificity */
+}
+

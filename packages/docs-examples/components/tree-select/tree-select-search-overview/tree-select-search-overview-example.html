@@ -1,0 +1,32 @@
+<kbq-form-field>
+    <kbq-tree-select
+        [multiple]="true"
+        [(ngModel)]="selected">
+
+        <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+            <i kbqPrefix kbq-icon="mc-search_16"></i>
+            <input kbqInput [formControl]="searchControl" type="text"/>
+            <kbq-cleaner></kbq-cleaner>
+        </kbq-form-field>
+
+        <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <i kbq-icon="mc-angle-down-S_16"
+                   [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                   kbqTreeNodeToggle>
+                </i>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+    </kbq-tree-select>
+</kbq-form-field>

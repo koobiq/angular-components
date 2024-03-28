@@ -1,0 +1,11 @@
+.demo-vertical-navbar {
+    display: flex;
+
+    margin-bottom: 10px;
+
+    height: 700px;
+}
+
+.kbq-vertical-navbar {
+    z-index: 0;
+}

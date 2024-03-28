@@ -1,0 +1,8 @@
+<div class="kbq-tags-list__list-container">
+    <ng-content></ng-content>
+</div>
+
+<div class="kbq-tags-list__cleaner"
+     *ngIf="canShowCleaner">
+    <ng-content select="kbq-cleaner"></ng-content>
+</div>

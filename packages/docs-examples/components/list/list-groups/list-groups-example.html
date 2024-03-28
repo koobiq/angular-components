@@ -1,0 +1,8 @@
+<kbq-list-selection>
+    <kbq-optgroup *ngFor="let group of pokemonTypes" [label]="group.name" [disabled]="group.disabled">
+        <kbq-list-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
+            {{ pokemon.viewValue }}
+        </kbq-list-option>
+    </kbq-optgroup>
+    <kbq-list-option [value]="'mime-11'">Mr. Mime</kbq-list-option>
+</kbq-list-selection>

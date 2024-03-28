@@ -1,0 +1,104 @@
+.tooltip-example__visual-box {
+    position: relative;
+
+    margin: 130px auto;
+    height: 90px;
+    width: 90px;
+
+    border: 1px solid #B3B3B2;
+    border-radius: 8px;
+}
+
+.tooltip-example__trigger {
+    position: absolute;
+    cursor: pointer;
+}
+
+.tooltip-example__trigger:after {
+    display: block;
+
+    position: relative;
+    height: 16px;
+    width: 16px;
+
+    content: '';
+
+    background: #338FCB;
+}
+
+.tooltip-example__trigger.kbq-tooltip_open:after {
+    background: #CB3C33;
+}
+
+.tooltip-example__trigger_topLeft {
+    top: -8px;
+    left: 2px;
+}
+
+.tooltip-example__trigger_topLeft:after {
+    left: 12px;
+}
+
+
+.tooltip-example__trigger_topRight {
+    top: -8px;
+    right: 2px;
+}
+
+.tooltip-example__trigger_topRight:after {
+    right: 12px;
+}
+
+.tooltip-example__trigger_leftTop {
+    left: -8px;
+    top: 2px;
+}
+
+.tooltip-example__trigger_leftTop:after {
+    top: 12px;
+}
+
+.tooltip-example__trigger_leftBottom {
+    bottom: 2px;
+    left: -8px;
+}
+
+.tooltip-example__trigger_leftBottom:after {
+    bottom: 12px;
+}
+
+.tooltip-example__trigger_bottomRight {
+    bottom: -8px;
+    right: 2px;
+}
+
+.tooltip-example__trigger_bottomRight:after {
+    right: 12px;
+}
+
+.tooltip-example__trigger_bottomLeft {
+    bottom: -8px;
+    left: 2px;
+}
+
+.tooltip-example__trigger_bottomLeft:after {
+    left: 12px;
+}
+
+.tooltip-example__trigger_rightBottom {
+    right: -8px;
+    bottom: 2px;
+}
+
+.tooltip-example__trigger_rightBottom:after {
+    bottom: 12px;
+}
+
+.tooltip-example__trigger_rightTop {
+    right: -8px;
+    top: 2px;
+}
+
+.tooltip-example__trigger_rightTop:after {
+    top: 12px;
+}

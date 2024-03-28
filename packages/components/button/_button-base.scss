@@ -1,0 +1,69 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/button';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+%kbq-button-base {
+    @include button.kbq-button-reset();
+
+    position: relative;
+
+    box-sizing: border-box;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0; /* Safari */
+
+    height: var(--kbq-button-size-height, map.get($tokens, button-size-height));
+    min-height: var(--kbq-button-size-height, map.get($tokens, button-size-height));
+
+    white-space: nowrap;
+
+    text-decoration: none;
+    text-align: center;
+
+    vertical-align: baseline;
+
+    border: var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width)) solid transparent;
+    border-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
+
+    &::-moz-focus-inner {
+        border: 0;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &.kbq-disabled {
+        cursor: default;
+    }
+
+    &.cdk-focused {
+        z-index: 1;
+    }
+
+    & .kbq-button-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    & .kbq-icon_left {
+        margin-right: var(
+            --kbq-button-size-content-padding, map.get($tokens, button-size-content-padding)
+        );
+    }
+
+    & .kbq-icon_right {
+        margin-left: var(
+            --kbq-button-size-content-padding, map.get($tokens, button-size-content-padding)
+        );
+    }
+}

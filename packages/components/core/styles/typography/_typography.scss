@@ -1,0 +1,366 @@
+@use 'sass:map';
+
+@use 'typography-utils' as *;
+
+
+@function kbq-typography-config($tokens) {
+    $font-family: map.get($tokens, font-family-base);
+    $typography: map.get(map.get($tokens, koobiq), typography);
+
+    $config: (
+        //legacy will be deleted
+        display-1:              map.get($typography, display-1),
+        display-2:              map.get($typography, display-2),
+        display-3:              map.get($typography, display-3),
+
+        headline:               map.get($typography, headline),
+        subheading:             map.get($typography, subheading),
+        title:                  map.get($typography, title),
+
+        body:                   map.get($typography, body),
+        body-strong:            map.get($typography, body-strong),
+        body-caps:              map.get($typography, body-caps),
+        body-mono:              map.get($typography, body-mono),
+        body-mono-strong:       map.get($typography, body-mono-strong),
+        body-tabular:           map.get($typography, body-tabular),
+
+        caption:                map.get($typography, caption),
+        caption-strong:         map.get($typography, caption-strong),
+        caption-caps:           map.get($typography, caption-caps),
+        caption-mono:           map.get($typography, caption-mono),
+        caption-mono-strong:    map.get($typography, caption-mono-strong),
+        caption-tabular:        map.get($typography, caption-tabular),
+
+        //small-text:             map.get($typography, small-text),
+        extra-small-text:       map.get($typography, extra-small-text),
+        extra-small-text-caps:  map.get($typography, extra-small-text-caps),
+        extra-small-text-mono:  map.get($typography, extra-small-text-mono),
+        extra-small-text-strong:  map.get($typography, extra-small-text-strong),
+
+        //new
+        display-big:             map.get($typography, display-big),
+        display-normal:          map.get($typography, display-normal),
+        display-compact:         map.get($typography, display-compact),
+        text-big:                map.get($typography, text-big),
+        text-big-strong:         map.get($typography, text-big-strong),
+        text-normal:             map.get($typography, text-normal),
+        text-normal-strong:      map.get($typography, text-normal-strong),
+        text-compact:            map.get($typography, text-compact),
+        text-compact-strong:     map.get($typography, text-compact-strong),
+        caps-big:                map.get($typography, caps-big),
+        caps-big-strong:         map.get($typography, caps-big-strong),
+        caps-normal:             map.get($typography, caps-normal),
+        caps-normal-strong:      map.get($typography, caps-normal-strong),
+        caps-compact:            map.get($typography, caps-compact),
+        caps-compact-strong:     map.get($typography, caps-compact-strong),
+        mono-big:                map.get($typography, mono-big),
+        mono-big-strong:         map.get($typography, mono-big-strong),
+        mono-normal:             map.get($typography, mono-normal),
+        mono-normal-strong:      map.get($typography, mono-normal-strong),
+        mono-compact:            map.get($typography, mono-compact),
+        mono-compact-strong:     map.get($typography, mono-compact-strong),
+        tabular-big:             map.get($typography, tabular-big),
+        tabular-big-strong:      map.get($typography, tabular-big-strong),
+        tabular-normal:          map.get($typography, tabular-normal),
+        tabular-normal-strong:   map.get($typography, tabular-normal-strong),
+        tabular-compact:         map.get($typography, tabular-compact),
+        tabular-compact-strong:  map.get($typography, tabular-compact-strong),
+        italic-big:              map.get($typography, italic-big),
+        italic-big-strong:       map.get($typography, italic-big-strong),
+        italic-normal:           map.get($typography, italic-normal),
+        italic-normal-strong:    map.get($typography, italic-normal-strong),
+        italic-compact:          map.get($typography, italic-compact),
+        italic-compact-strong:   map.get($typography, italic-compact-strong),
+        mono-codeblock:          map.get($typography, mono-codeblock)
+    );
+
+    @each $key, $level in $config {
+        @if map.get($level, font-family) == null {
+            $new-level: map.merge($level, (font-family: $font-family));
+            $config: map.merge($config, ($key: $new-level));
+        }
+    }
+
+    // Add the base font family to the config.
+    @return map.merge($config, (font-family: $font-family, tokens: $tokens));
+}
+
+@function kbq-markdown-typography-config($tokens) {
+    $font-family: map.get($tokens, font-family-base);
+    $md-typography: map.get(map.get($tokens, md-typography), md-typography);
+
+    $config: (
+        md-h1:              map.get($md-typography, md-h1),
+        md-h2:              map.get($md-typography, md-h2),
+        md-h3:              map.get($md-typography, md-h3),
+        md-h4:              map.get($md-typography, md-h4),
+        md-h5:              map.get($md-typography, md-h5),
+        md-h6:              map.get($md-typography, md-h6),
+
+        md-body:            map.get($md-typography, md-body),
+        md-body-mono:       map.get($md-typography, md-body-mono),
+        md-caption:         map.get($md-typography, md-caption),
+        md-table-cell:      map.get($md-typography, md-table-cell),
+        md-table-header:    map.get($md-typography, md-table-header),
+    );
+
+    @each $key, $level in $config {
+        @if map.get($level, font-family) == null {
+            $new-level: map.merge($level, (font-family: $font-family));
+            $config: map.merge($config, ($key: $new-level));
+        }
+    }
+
+    // Add the base font family to the config.
+    @return map.merge($config, (font-family: $font-family, tokens: $tokens));
+}
+
+
+@mixin kbq-base-typography($config) {
+    //legacy will be deleted
+    .kbq-display-1 {
+        @include kbq-typography-level-to-styles($config, display-1);
+    }
+
+    .kbq-display-2 {
+        @include kbq-typography-level-to-styles($config, display-2);
+    }
+
+    .kbq-display-3 {
+        @include kbq-typography-level-to-styles($config, display-3);
+    }
+
+    .kbq-headline {
+        @include kbq-typography-level-to-styles($config, headline);
+    }
+
+    .kbq-subheading {
+        @include kbq-typography-level-to-styles($config, subheading);
+    }
+
+    .kbq-title {
+        @include kbq-typography-level-to-styles($config, title);
+    }
+
+    .kbq-body {
+        @include kbq-typography-level-to-styles($config, body);
+    }
+
+    .kbq-body_tabular {
+        @include kbq-typography-level-to-styles($config, body-tabular);
+    }
+
+    .kbq-body_strong {
+        @include kbq-typography-level-to-styles($config, body-strong);
+    }
+
+    .kbq-body_caps {
+        @include kbq-typography-level-to-styles($config, body-caps);
+    }
+
+    .kbq-body_mono {
+        @include kbq-typography-level-to-styles($config, body-mono);
+    }
+
+    .kbq-body_mono_strong {
+        @include kbq-typography-level-to-styles($config, body-mono-strong);
+    }
+
+    .kbq-caption {
+        @include kbq-typography-level-to-styles($config, caption);
+    }
+
+    .kbq-caption_tabular {
+        @include kbq-typography-level-to-styles($config, caption-tabular);
+    }
+
+    .kbq-caption_strong {
+        @include kbq-typography-level-to-styles($config, caption-strong);
+    }
+
+    .kbq-caption_caps {
+        @include kbq-typography-level-to-styles($config, caption-caps);
+    }
+
+    .kbq-caption_mono {
+        @include kbq-typography-level-to-styles($config, caption-mono);
+    }
+
+    .kbq-caption_mono_strong {
+        @include kbq-typography-level-to-styles($config, caption-mono-strong);
+    }
+
+    //.kbq-small-text {
+    //    @include kbq-typography-level-to-styles($config, small-text);
+    //}
+
+    .kbq-extra-small-text {
+        @include kbq-typography-level-to-styles($config, extra-small-text);
+    }
+
+    .kbq-extra-small-text-strong {
+        @include kbq-typography-level-to-styles($config, extra-small-text-strong);
+    }
+
+    // new
+    .kbq-display-big {
+        @include kbq-typography-level-to-styles($config, display-big);
+    }
+
+    .kbq-display-normal {
+        @include kbq-typography-level-to-styles($config, display-normal);
+    }
+
+    .kbq-display-compact {
+        @include kbq-typography-level-to-styles($config, display-compact);
+    }
+
+    .kbq-text-big {
+        @include kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .kbq-text-big-strong {
+        @include kbq-typography-level-to-styles($config, text-big-strong);
+    }
+
+    .kbq-text-normal {
+        @include kbq-typography-level-to-styles($config, text-normal);
+    }
+
+    .kbq-text-normal-strong {
+        @include kbq-typography-level-to-styles($config, text-normal-strong);
+    }
+
+    .kbq-text-compact {
+        @include kbq-typography-level-to-styles($config, text-compact);
+    }
+
+    .kbq-text-compact-strong {
+        @include kbq-typography-level-to-styles($config, text-compact-strong);
+    }
+
+    .kbq-caps-big {
+        @include kbq-typography-level-to-styles($config, caps-big);
+    }
+
+    .kbq-caps-big-strong {
+        @include kbq-typography-level-to-styles($config, caps-big-strong);
+    }
+
+    .kbq-caps-normal {
+        @include kbq-typography-level-to-styles($config, caps-normal);
+    }
+
+    .kbq-caps-normal-strong {
+        @include kbq-typography-level-to-styles($config, caps-normal-strong);
+    }
+
+    .kbq-caps-compact {
+        @include kbq-typography-level-to-styles($config, caps-compact);
+    }
+
+    .kbq-caps-compact-strong {
+        @include kbq-typography-level-to-styles($config, caps-compact-strong);
+    }
+
+    .kbq-mono-big {
+        @include kbq-typography-level-to-styles($config, mono-big);
+    }
+
+    .kbq-mono-big-strong {
+        @include kbq-typography-level-to-styles($config, mono-big-strong);
+    }
+
+    .kbq-mono-normal {
+        @include kbq-typography-level-to-styles($config, mono-normal);
+    }
+
+    .kbq-mono-normal-strong {
+        @include kbq-typography-level-to-styles($config, mono-normal-strong);
+    }
+
+    .kbq-mono-compact {
+        @include kbq-typography-level-to-styles($config, mono-compact);
+    }
+
+    .kbq-mono-compact-strong {
+        @include kbq-typography-level-to-styles($config, mono-compact-strong);
+    }
+
+    .kbq-tabular-big {
+        @include kbq-typography-level-to-styles($config, tabular-big);
+    }
+
+    .kbq-tabular-big-strong {
+        @include kbq-typography-level-to-styles($config, tabular-big-strong);
+    }
+
+    .kbq-tabular-normal {
+        @include kbq-typography-level-to-styles($config, tabular-normal);
+    }
+
+    .kbq-tabular-normal-strong {
+        @include kbq-typography-level-to-styles($config, tabular-normal-strong);
+    }
+
+    .kbq-tabular-compact {
+        @include kbq-typography-level-to-styles($config, tabular-compact);
+    }
+
+    .kbq-tabular-compact-strong {
+        @include kbq-typography-level-to-styles($config, tabular-compact-strong);
+    }
+
+    .kbq-italic-big {
+        @include kbq-typography-level-to-styles($config, italic-big);
+    }
+
+    .kbq-italic-big-strong {
+        @include kbq-typography-level-to-styles($config, italic-big-strong);
+    }
+
+    .kbq-italic-normal {
+        @include kbq-typography-level-to-styles($config, italic-normal);
+    }
+
+    .kbq-italic-normal-strong {
+        @include kbq-typography-level-to-styles($config, italic-normal-strong);
+    }
+
+    .kbq-italic-compact {
+        @include kbq-typography-level-to-styles($config, italic-compact);
+    }
+
+    .kbq-italic-compact-strong {
+        @include kbq-typography-level-to-styles($config, italic-compact-strong);
+    }
+}
+
+@mixin kbq-markdown-base-typography($config) {
+    // h1, h2, h3, h4, h5, h6
+    @for $i from 1 through 6 {
+        .md-h#{$i} {
+            @include kbq-typography-level-to-styles($config, md-h#{$i});
+        }
+    }
+
+    .md-body {
+        @include kbq-typography-level-to-styles($config, md-body);
+    }
+
+    .md-body-mono {
+        @include kbq-typography-level-to-styles($config, md-body-mono);
+    }
+
+    .md-caption {
+        @include kbq-typography-level-to-styles($config, md-caption);
+    }
+
+    .md-table-cell {
+        @include kbq-typography-level-to-styles($config, md-table-cell);
+    }
+
+    .md-table-header {
+        @include kbq-typography-level-to-styles($config, md-table-header);
+    }
+}

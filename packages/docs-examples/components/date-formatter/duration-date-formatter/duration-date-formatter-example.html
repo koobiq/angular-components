@@ -1,0 +1,196 @@
+<div class="kbq-body">
+    <h3>The shortest format</h3>
+    <div>
+        <div class="layout-row row-border">
+            <div class="flex light-text-secondary">Name</div>
+            <div class="flex light-text-secondary">Seconds</div>
+            <div class="flex light-text-secondary">Only minutes</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Seconds</div>
+            <div class="flex">{{ formats.duration.shortest.withSeconds.seconds }}</div>
+            <div class="flex">{{ formats.duration.shortest.onlyMinutes.seconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Seconds and milliseconds</div>
+            <div class="flex">{{ formats.duration.shortest.withSeconds.withMilliseconds }}</div>
+            <div class="flex">{{ formats.duration.shortest.onlyMinutes.withMilliseconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes and seconds</div>
+            <div class="flex">{{ formats.duration.shortest.withSeconds.minutesSeconds }}</div>
+            <div class="flex">{{ formats.duration.shortest.onlyMinutes.minutesSeconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours, minutes and seconds</div>
+            <div class="flex">{{ formats.duration.shortest.withSeconds.hoursMinutesSeconds }}</div>
+            <div class="flex">{{ formats.duration.shortest.onlyMinutes.hoursMinutesSeconds }}</div>
+        </div>
+    </div>
+
+    <h3>Long format</h3>
+    <div>
+        <div class="layout-row row-border">
+            <div class="flex light-text-secondary">Name</div>
+            <div class="flex light-text-secondary">Value</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Seconds</div>
+            <div class="flex">{{ formats.duration.long.seconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes and seconds</div>
+            <div class="flex">{{ formats.duration.long.minutesSeconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes</div>
+            <div class="flex">{{ formats.duration.long.minutes }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes (more than hour)</div>
+            <div class="flex">{{ formats.duration.long.minutesMoreThanHour }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours and minutes</div>
+            <div class="flex">{{ formats.duration.long.hoursMinutes }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours and minutes (more than day)</div>
+            <div class="flex">{{ formats.duration.long.hoursMinutesMoreThanDay }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours</div>
+            <div class="flex">{{ formats.duration.long.hours }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days and hours</div>
+            <div class="flex">{{ formats.duration.long.daysHours }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days</div>
+            <div class="flex">{{ formats.duration.long.days }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days (more then week)</div>
+            <div class="flex">{{ formats.duration.long.daysMoreThanWeek }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Weeks and days</div>
+            <div class="flex">{{ formats.duration.long.weeksDays }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Weeks</div>
+            <div class="flex">{{ formats.duration.long.weeks }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months and weeks</div>
+            <div class="flex">{{ formats.duration.long.monthsWeeks }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months</div>
+            <div class="flex">{{ formats.duration.long.months }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months with fraction</div>
+            <div class="flex">{{ formats.duration.long.monthsWithFract }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years and months</div>
+            <div class="flex">{{ formats.duration.long.yearsMonth }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years</div>
+            <div class="flex">{{ formats.duration.long.years }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years with fraction</div>
+            <div class="flex">{{ formats.duration.long.yearsWithFract }}</div>
+        </div>
+
+    </div>
+
+    <h3>Short format</h3>
+    <div>
+        <div class="layout-row row-border">
+            <div class="flex light-text-secondary">Name</div>
+            <div class="flex light-text-secondary">Value</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Seconds and milliseconds</div>
+            <div class="flex">{{ formats.duration.short.secondsMilliseconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Seconds</div>
+            <div class="flex">{{ formats.duration.short.seconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes and seconds</div>
+            <div class="flex">{{ formats.duration.short.minutesSeconds }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes</div>
+            <div class="flex">{{ formats.duration.short.minutes }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Minutes (more than hour)</div>
+            <div class="flex">{{ formats.duration.short.minutesMoreThanHour }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours and minutes</div>
+            <div class="flex">{{ formats.duration.short.hoursMinutes }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours and minutes (more than day)</div>
+            <div class="flex">{{ formats.duration.short.hoursMinutesMoreThanDay }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Hours</div>
+            <div class="flex">{{ formats.duration.short.hours }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days and hours</div>
+            <div class="flex">{{ formats.duration.short.daysHours }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days</div>
+            <div class="flex">{{ formats.duration.short.days }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Days (more then week)</div>
+            <div class="flex">{{ formats.duration.short.daysMoreThanWeek }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Weeks and days</div>
+            <div class="flex">{{ formats.duration.short.weeksDays }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Weeks</div>
+            <div class="flex">{{ formats.duration.short.weeks }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months and weeks</div>
+            <div class="flex">{{ formats.duration.short.monthsWeeks }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months</div>
+            <div class="flex">{{ formats.duration.short.months }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Months with fraction</div>
+            <div class="flex">{{ formats.duration.short.monthsWithFract }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years and months</div>
+            <div class="flex">{{ formats.duration.short.yearsMonth }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years</div>
+            <div class="flex">{{ formats.duration.short.years }}</div>
+        </div>
+        <div class="layout-row row-border">
+            <div class="flex">Years with fraction</div>
+            <div class="flex">{{ formats.duration.short.yearsWithFract }}</div>
+        </div>
+
+    </div>
+</div>

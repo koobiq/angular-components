@@ -1,0 +1,32 @@
+<ng-template #toastSingleActonContentTemplate>
+    Политика <span class="kbq-body_strong">Почтовые серверы Windows</span> удалена
+</ng-template>
+
+<ng-template #toastSingleActonActionsTemplate>
+    <a kbq-link pseudo>Восстановить</a>
+</ng-template>
+
+<ng-template #toastTwoActonActionsTemplate let-toast>
+    <a class="layout-margin-right-m" kbq-link pseudo>Посмотреть</a><a kbq-link pseudo (click)="toast.close()">Отклонить</a>
+</ng-template>
+
+<ng-template #toastManyActonActionsTemplate>
+    <a kbq-link pseudo>Восстановить</a> <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
+</ng-template>
+
+<kbq-dropdown #dropdown="kbqDropdown">
+    <button kbq-dropdown-item>Второстепенное действие 1</button>
+    <button kbq-dropdown-item>Второстепенное действие 2</button>
+    <button kbq-dropdown-item>Второстепенное действие 3</button>
+</kbq-dropdown>
+
+<div class="demo-block">
+    <button
+        class="example-button"
+        kbq-button
+        (click)="showSingleActonToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)">
+        Single Action
+    </button>
+    <button class="example-button" kbq-button  (click)="showTwoActonToast(toastTwoActonActionsTemplate)">Two Actions</button>
+    <button class="example-button" kbq-button  (click)="showManyActonToast(toastManyActonActionsTemplate)">Many Actions</button>
+</div>

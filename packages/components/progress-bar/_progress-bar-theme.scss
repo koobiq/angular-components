@@ -1,0 +1,41 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-progress-bar-theme($theme) {
+    $progress-bar: map.get(map.get($theme, components), progress-bar);
+
+    .kbq-progress-bar.kbq-theme {
+        $bar: map.get($progress-bar, bar);
+
+        .kbq-progress-bar__inner {
+            background-color: map.get($bar, background);
+        }
+
+        .kbq-progress-bar__line {
+            background-color: map.get($bar, foreground);
+        }
+    }
+
+    .kbq-progress-bar-text {
+        color: map.get($progress-bar, text);
+    }
+
+    .kbq-progress-bar-caption {
+        color: map.get($progress-bar, caption);
+    }
+}
+
+@mixin kbq-progress-bar-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-progress-bar-text {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-label));
+    }
+
+    .kbq-progress-bar-caption {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-caption));
+    }
+}

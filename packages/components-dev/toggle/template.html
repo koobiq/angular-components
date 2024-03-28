@@ -1,0 +1,144 @@
+<div class="container">
+    <h1>Toggles</h1>
+    <kbq-toggle [formControl]="toggleControl"></kbq-toggle>
+    <pre>value = {{toggleControl.value | json}}</pre>
+
+    <div class="control-buttons-container">
+        <button
+            kbq-button
+            class="kbq-button_filled kbq-button_contrast"
+            (click)="disabled = false">
+            Set Enabled
+        </button>
+    </div>
+    <div class="control-buttons-container">
+        <button
+            kbq-button
+            class="kbq-button_filled kbq-button_contrast"
+            (click)="disabled = true">
+            Set Disabled
+        </button>
+    </div>
+
+    <div class="layout-row flex-100 toggles-container">
+        <div class="flex-50 layout-padding-right-m">
+            <h3>Normal</h3>
+            <div class="layout-row flex-100 toggle-demo-container">
+                <div class="flex-33">
+                    <kbq-toggle [(ngModel)]="valueSmallOn" [big]="true"></kbq-toggle>
+                </div>
+                <div class="flex-33">
+                    <kbq-toggle
+                        [color]="themePalette.Error"
+                        [(ngModel)]="valueSmallOn"
+                        [disabled]="disabled">
+                    </kbq-toggle>
+                </div>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle [(ngModel)]="valueSmallOn" [disabled]="disabled">
+                    <span style="white-space: normal">
+                        Quack like a duck Quack like a duck Quack like a duck Quack like a duck Quack like a duck
+                    </span>
+                </kbq-toggle>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle
+                    [(ngModel)]="valueSmallOff"
+                    [disabled]="disabled">
+                    Quack like a duck
+                </kbq-toggle>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle
+                    [labelPosition]="'left'"
+                    [(ngModel)]="valueSmallOff"
+                    [disabled]="disabled">
+                    Quack like a duck
+                </kbq-toggle>
+            </div>
+
+            <br>
+
+            <div class="toggle-bordered-demo-container">
+                <div class="toggle-demo-container">
+                    <kbq-toggle
+                        [labelPosition]="'left'"
+                        [(ngModel)]="valueSmallOff"
+                        [disabled]="disabled">
+                        Quack like a duck
+                    </kbq-toggle>
+                </div>
+                <div class="toggle-demo-fixed">
+                    <kbq-toggle
+                        [labelPosition]="'left'"
+                        [(ngModel)]="valueSmallOff"
+                        [disabled]="disabled">
+                        fixed width: 200px; fixed width: 200px;
+                    </kbq-toggle>
+                </div>
+                <div class="toggle-demo-fill">
+                    <kbq-toggle
+                        class="layout-fill"
+                        [labelPosition]="'left'"
+                        [(ngModel)]="valueSmallOff"
+                        [disabled]="disabled">
+                        fill
+                        <kbq-hint>kbq-hint</kbq-hint>
+                    </kbq-toggle>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-50">
+            <h3>Big Toggles</h3>
+            <div class="layout-row flex-100 toggle-demo-container">
+                <div class="flex-33">
+                    <kbq-toggle [(ngModel)]="valueBigOn" [big]="true" [disabled]="disabled"></kbq-toggle>
+                </div>
+                <div class="flex-33">
+                    <kbq-toggle [color]="themePalette.Error" [big]="true" [(ngModel)]="valueBigOn" [disabled]="disabled">
+                    </kbq-toggle>
+                </div>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle [(ngModel)]="valueSmallOn" [big]="true" [disabled]="disabled">
+                    <span style="white-space: normal">
+                        Quack like a duck Quack like a duck Quack like a duck Quack like a duck Quack like a duck
+                    </span>
+                </kbq-toggle>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle [(ngModel)]="valueBigOff" [big]="true" [disabled]="disabled">
+                    Quack like a duck
+                </kbq-toggle>
+            </div>
+            <div class="toggle-demo-container">
+                <kbq-toggle [labelPosition]="'left'" [big]="true" [(ngModel)]="valueBigOff" [disabled]="disabled">
+                    Quack like a duck
+                </kbq-toggle>
+            </div>
+
+            <br>
+
+            <div class="toggle-bordered-demo-container">
+                <div class="toggle-demo-container">
+                    <kbq-toggle [labelPosition]="'left'" [big]="true" [(ngModel)]="valueBigOff" [disabled]="disabled">
+                        default
+                    </kbq-toggle>
+                </div>
+                <div class="toggle-demo-fixed">
+                    <kbq-toggle [labelPosition]="'left'" [big]="true" [(ngModel)]="valueBigOff" [disabled]="disabled">
+                        fixed width: 200px; fixed width: 200px;
+                    </kbq-toggle>
+                </div>
+                <div class="toggle-demo-fill">
+                    <kbq-toggle class="layout-fill" [labelPosition]="'left'" [big]="true" [(ngModel)]="valueBigOff" [disabled]="disabled">
+                        fill
+                        <kbq-hint>kbq-hint</kbq-hint>
+                    </kbq-toggle>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

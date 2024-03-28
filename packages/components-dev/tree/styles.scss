@@ -1,0 +1,15 @@
+@use '../main';
+
+
+kbq-tree-selection {
+    overflow-y: scroll;
+    height: 328px;
+}
+
+.highlight-content {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

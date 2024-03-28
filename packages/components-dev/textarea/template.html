@@ -1,0 +1,47 @@
+<div class="container">
+
+    <kbq-form-field class="kbq-focused">
+        <textarea kbqTextarea [(ngModel)]="value" rows="4" placeholder="Placeholder"></textarea>
+    </kbq-form-field>
+
+    <br>
+    <br>
+
+    <header>Resizable:</header>
+
+    <kbq-form-field>
+        <textarea kbqTextarea [(ngModel)]="value" [canGrow]="false" rows="4" placeholder="Placeholder"></textarea>
+    </kbq-form-field>
+
+    <br>
+    <br>
+
+    <header>Without placeholder:</header>
+    <kbq-form-field>
+        <textarea kbqTextarea [(ngModel)]="value"></textarea>
+    </kbq-form-field>
+
+    <br><br>
+
+    <header>With placeholder:</header>
+
+    <kbq-form-field>
+        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder"></textarea>
+    </kbq-form-field>
+
+    <br><br>
+
+    <header>With placeholder and disabled:</header>
+
+    <kbq-form-field>
+        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder" [disabled]="true"></textarea>
+    </kbq-form-field>
+
+    <br><br>
+
+    <header>Invalid:</header>
+
+    <kbq-form-field>
+        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder" [required]="true"></textarea>
+    </kbq-form-field>
+</div>

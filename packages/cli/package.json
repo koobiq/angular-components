@@ -1,0 +1,32 @@
+{
+    "name": "@koobiq/cli",
+    "version": "{{VERSION}}",
+    "description": "Koobiq Terminal Interface",
+    "license": "MIT",
+    "bin": {
+        "koobiq-cli": "./bin/cli"
+    },
+    "main": "./dist/cli.js",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=8",
+        "yarn": ">=1.22"
+    },
+    "keywords": [
+        "development",
+        "release",
+        "koobiq"
+    ],
+    "dependencies": {
+        "commander": "^9.4.1",
+        "chalk": "^4.0.0",
+        "inquirer": "^7.3.3",
+        "merge2": "^1.4.1",
+        "conventional-changelog": "^3.1.1",
+        "conventional-changelog-angular": "^5.0.13",
+        "conventional-changelog-writer": "^5.0.1",
+        "dotenv": "^10.0.0",
+        "@octokit/rest": "^18.9.1",
+        "glob": "^7.1.3"
+    }
+}

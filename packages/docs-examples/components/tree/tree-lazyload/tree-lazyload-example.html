@@ -1,0 +1,21 @@
+<kbq-tree-selection
+    [(ngModel)]="modelValue"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl">
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node"
+        kbqTreeNodePadding>
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+    </kbq-tree-option>
+
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node; when: hasChild"
+        kbqTreeNodePadding>
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-progress-spinner *ngIf="node.loading"
+                             mode="indeterminate">
+        </kbq-progress-spinner>
+
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+    </kbq-tree-option>
+</kbq-tree-selection>

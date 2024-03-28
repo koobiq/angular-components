@@ -1,0 +1,25 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../styles/typography/typography-utils' as *;
+
+
+@mixin kbq-optgroup-theme($theme) {
+    $foreground: map.get($theme, foreground);
+
+    .kbq-optgroup-label {
+        color: map.get($foreground, contrast);
+    }
+
+    .kbq-disabled .kbq-optgroup-label {
+        color: map.get($foreground, text-disabled);
+    }
+}
+
+@mixin kbq-optgroup-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-optgroup-label {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, optgroup-font-default));
+    }
+}

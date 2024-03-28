@@ -1,0 +1,559 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+$tokens: meta.module-variables(tokens) !default;
+
+/* stylelint-disable no-descending-specificity */
+.kbq-scrollbar-component {
+    $scrollbar-size-thumb-width: var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width));
+    $padding-vertical: var(
+        --kbq-scrollbar-size-track-padding-vertical,
+        map.get($tokens, scrollbar-size-track-padding-vertical)
+    );
+    $padding-horizontal: var(
+        --kbq-scrollbar-size-track-padding-horizontal,
+        map.get($tokens, scrollbar-size-track-padding-horizontal)
+    );
+    $kbq-scrollbar-track-width: var(
+        --kbq-scrollbar-size-track-width,
+        map.get($tokens, scrollbar-size-track-width)
+    );
+    $thumb-min-height: var(--kbq-scrollbar-size-thumb-min-height, map.get($tokens, scrollbar-size-thumb-min-height));
+    $border-width: calc(($kbq-scrollbar-track-width - $scrollbar-size-thumb-width) / 4);
+
+    .os-scrollbar-vertical {
+        padding: $padding-vertical $padding-horizontal;
+        bottom: $kbq-scrollbar-track-width;
+        width: $kbq-scrollbar-track-width;
+
+        .os-scrollbar-handle {
+            transition: opacity 0.15s, background-color 0.15s, border-color 0.15s, width 0.15s;
+            border: $padding-horizontal solid;
+            width: 100%;
+            min-height: $thumb-min-height;
+        }
+
+        &:hover .os-scrollbar-handle,
+        &:active .os-scrollbar-handle {
+            width: 100%;
+        }
+    }
+
+    .os-scrollbar-horizontal {
+        padding: $padding-horizontal $padding-vertical;
+        right: $kbq-scrollbar-track-width;
+        height: $kbq-scrollbar-track-width;
+
+        .os-scrollbar-handle {
+            transition: opacity 0.15s, background-color 0.15s, border-color 0.15s, height 0.15s;
+            border: $padding-horizontal solid;
+            height: 100%;
+            min-width: $thumb-min-height;
+        }
+
+        &:hover .os-scrollbar-handle,
+        &:active .os-scrollbar-handle {
+            height: 100%;
+        }
+    }
+
+    .os-scrollbar {
+        .os-scrollbar-handle, .os-scrollbar-handle::before, .os-scrollbar-track {
+            box-sizing: border-box;
+            border-radius: var(
+                --kbq-scrollbar-size-thumb-inset-border-radius,
+                map.get($tokens, scrollbar-size-thumb-border-radius)
+            );
+        }
+
+        .os-scrollbar-track {
+            border-width: $border-width !important;
+            transition: opacity 0.15s, background-color 0.15s, border-color 0.15s;
+        }
+    }
+}
+
+
+// core
+.os-size-observer,
+.os-size-observer-listener {
+    scroll-behavior: auto !important;
+    direction: inherit;
+    pointer-events: none;
+    overflow: hidden;
+    visibility: hidden;
+    box-sizing: border-box;
+}
+
+.os-size-observer,
+.os-size-observer-listener,
+.os-size-observer-listener-item,
+.os-size-observer-listener-item-final {
+    writing-mode: horizontal-tb;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.os-size-observer {
+    z-index: -1;
+    contain: strict;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: inherit;
+    border: inherit;
+    box-sizing: inherit;
+    margin: -133px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: scale(0.1);
+}
+
+.os-size-observer::before {
+    content: "";
+    flex: none;
+    box-sizing: inherit;
+    padding: 10px;
+    width: 10px;
+    height: 10px;
+}
+
+.os-size-observer-appear {
+    animation: os-size-observer-appear-animation 1ms forwards;
+}
+
+.os-size-observer-listener {
+    box-sizing: border-box;
+    position: relative;
+    flex: auto;
+    padding: inherit;
+    border: inherit;
+    margin: -133px;
+    transform: scale(calc(1 / 0.1));
+}
+
+.os-size-observer-listener.ltr {
+    margin-right: -266px;
+    margin-left: 0;
+}
+
+.os-size-observer-listener.rtl {
+    margin-left: -266px;
+    margin-right: 0;
+}
+
+.os-size-observer-listener:empty::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+}
+
+.os-size-observer-listener:empty::before, .os-size-observer-listener > .os-size-observer-listener-item {
+    display: block;
+    position: relative;
+    padding: inherit;
+    border: inherit;
+    box-sizing: content-box;
+    flex: auto;
+}
+
+.os-size-observer-listener-scroll {
+    box-sizing: border-box;
+    display: flex;
+}
+
+.os-size-observer-listener-item {
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    direction: ltr;
+    flex: none;
+}
+
+.os-size-observer-listener-item-final {
+    transition: none;
+}
+
+@keyframes os-size-observer-appear-animation {
+    from {
+        cursor: auto;
+    }
+
+    to {
+        cursor: none;
+    }
+}
+
+.os-trinsic-observer {
+    flex: none;
+    box-sizing: border-box;
+    position: relative;
+    max-width: 0;
+    max-height: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+    z-index: -1;
+    height: 0;
+    top: calc(100% + 1px);
+    contain: strict;
+}
+
+.os-trinsic-observer:not(:empty) {
+    height: calc(100% + 1px);
+    top: -1px;
+}
+
+.os-trinsic-observer:not(:empty) > .os-size-observer {
+    width: 1000%;
+    height: 1000%;
+    min-height: 1px;
+    min-width: 1px;
+}
+
+/**
+ * environment setup
+ */
+.os-environment {
+    scroll-behavior: auto !important;
+    position: fixed;
+    opacity: 0;
+    visibility: hidden;
+    overflow: scroll;
+    height: 200px;
+    width: 200px;
+    z-index: -1;
+}
+
+.os-environment div {
+    width: 200%;
+    height: 200%;
+    margin: 10px 0;
+}
+
+.os-environment.os-environment-flexbox-glue {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: auto;
+    width: auto;
+    min-height: 200px;
+    min-width: 200px;
+}
+
+.os-environment.os-environment-flexbox-glue div {
+    flex: auto;
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.os-environment.os-environment-flexbox-glue-max {
+    max-height: 200px;
+}
+
+.os-environment.os-environment-flexbox-glue-max div {
+    overflow: visible;
+}
+
+.os-environment.os-environment-flexbox-glue-max div::before {
+    content: "";
+    display: block;
+    height: 999px;
+    width: 999px;
+}
+
+/**
+ * hide native scrollbars
+ */
+.os-environment,
+[data-overlayscrollbars-viewport] {
+    -ms-overflow-style: scrollbar !important;
+}
+
+[data-overlayscrollbars-initialize],
+[data-overlayscrollbars~=scrollbarHidden],
+[data-overlayscrollbars-viewport~=scrollbarHidden],
+.os-environment-scrollbar-hidden {
+    scrollbar-width: none !important;
+}
+
+[data-overlayscrollbars-initialize]::-webkit-scrollbar,
+[data-overlayscrollbars-initialize]::-webkit-scrollbar-corner,
+[data-overlayscrollbars~=scrollbarHidden]::-webkit-scrollbar,
+[data-overlayscrollbars~=scrollbarHidden]::-webkit-scrollbar-corner,
+[data-overlayscrollbars-viewport~=scrollbarHidden]::-webkit-scrollbar,
+[data-overlayscrollbars-viewport~=scrollbarHidden]::-webkit-scrollbar-corner,
+.os-environment-scrollbar-hidden::-webkit-scrollbar,
+.os-environment-scrollbar-hidden::-webkit-scrollbar-corner {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/**
+ * elements wont suddenly crop after initialization is done
+ */
+[data-overlayscrollbars-initialize]:not([data-overlayscrollbars]):not(html):not(body) {
+    overflow: auto;
+}
+
+/**
+ * applied to body
+ */
+html[data-overlayscrollbars] {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+html[data-overlayscrollbars~=body],
+html[data-overlayscrollbars~=body] > body {
+    width: 100%;
+    height: 100%;
+}
+
+html[data-overlayscrollbars~=viewport] > body {
+    overflow: visible;
+}
+
+/**
+ * structure setup
+ */
+[data-overlayscrollbars~=host],
+[data-overlayscrollbars-padding] {
+    display: flex;
+    align-items: stretch !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
+[data-overlayscrollbars-viewport][data-overlayscrollbars-viewport~=arrange]::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    min-width: 1px;
+    min-height: 1px;
+    width: 0;
+    height: 0;
+}
+
+[data-overlayscrollbars-padding],
+[data-overlayscrollbars-viewport] {
+    box-sizing: inherit;
+    position: relative;
+    flex: auto !important;
+    height: auto;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+[data-overlayscrollbars~=host],
+[data-overlayscrollbars~=viewport] {
+    position: relative;
+    overflow: hidden;
+}
+
+[data-overlayscrollbars~=overflowVisible],
+[data-overlayscrollbars-padding~=overflowVisible],
+[data-overlayscrollbars-viewport~=overflowVisible] {
+    overflow: visible;
+}
+
+[data-overlayscrollbars-overflow-x=hidden] {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+[data-overlayscrollbars-overflow-x=scroll] {
+    overflow-x: scroll;
+}
+
+[data-overlayscrollbars-overflow-y=scroll] {
+    overflow-y: scroll;
+}
+
+[data-overlayscrollbars~=scrollbarPressed],
+[data-overlayscrollbars~=scrollbarPressed] [data-overlayscrollbars-viewport] {
+    scroll-behavior: auto !important;
+}
+
+[data-overlayscrollbars-content] {
+    box-sizing: inherit;
+}
+
+/**
+ * Display contents to bridge any flickering during deferred initialization.
+ */
+[data-overlayscrollbars-contents]:not(
+[data-overlayscrollbars-padding]
+):not(
+[data-overlayscrollbars-viewport]
+):not(
+[data-overlayscrollbars-content]
+) {
+    display: contents;
+}
+
+/**
+ * optional & experimental grid mode
+ */
+[data-overlayscrollbars-grid],
+[data-overlayscrollbars-grid] [data-overlayscrollbars-padding] {
+    display: grid;
+    grid-template: 1fr/1fr;
+}
+
+[data-overlayscrollbars-grid] > [data-overlayscrollbars-padding],
+[data-overlayscrollbars-grid] > [data-overlayscrollbars-viewport],
+[data-overlayscrollbars-grid] > [data-overlayscrollbars-padding] > [data-overlayscrollbars-viewport] {
+    height: auto !important;
+    width: auto !important;
+}
+
+.os-scrollbar {
+    box-sizing: border-box;
+    contain: size layout;
+    contain: size layout style;
+    transition: opacity 0.15s, visibility 0.15s, top 0.15s, right 0.15s, bottom 0.15s, left 0.15s;
+    pointer-events: none;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+}
+
+body > .os-scrollbar {
+    position: fixed;
+    z-index: 99999;
+}
+
+.os-scrollbar-transitionless {
+    transition: none;
+}
+
+.os-scrollbar-track {
+    position: relative;
+    direction: ltr !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.os-scrollbar-handle {
+    position: absolute;
+}
+
+.os-scrollbar-track,
+.os-scrollbar-handle {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+.os-scrollbar.os-scrollbar-track-interactive .os-scrollbar-track,
+.os-scrollbar.os-scrollbar-handle-interactive .os-scrollbar-handle {
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.os-scrollbar-horizontal {
+    bottom: 0;
+    left: 0;
+}
+
+.os-scrollbar-vertical {
+    top: 0;
+    right: 0;
+}
+
+.os-scrollbar-rtl.os-scrollbar-horizontal {
+    right: 0;
+}
+
+.os-scrollbar-rtl.os-scrollbar-vertical {
+    right: auto;
+    left: 0;
+}
+
+.os-scrollbar-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.os-scrollbar-auto-hide.os-scrollbar-auto-hide-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.os-scrollbar-interaction.os-scrollbar-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.os-scrollbar-unusable,
+.os-scrollbar-unusable *,
+.os-scrollbar-wheel,
+.os-scrollbar-wheel * {
+    pointer-events: none !important;
+}
+
+.os-scrollbar-unusable .os-scrollbar-handle {
+    opacity: 0 !important;
+    transition: none !important;
+}
+
+.os-scrollbar-horizontal .os-scrollbar-handle {
+    bottom: 0;
+}
+
+.os-scrollbar-vertical .os-scrollbar-handle {
+    right: 0;
+}
+
+.os-scrollbar-rtl.os-scrollbar-vertical .os-scrollbar-handle {
+    right: auto;
+    left: 0;
+}
+
+.os-scrollbar.os-scrollbar-horizontal.os-scrollbar-cornerless,
+.os-scrollbar.os-scrollbar-horizontal.os-scrollbar-cornerless.os-scrollbar-rtl {
+    left: 0;
+    right: 0;
+}
+
+.os-scrollbar.os-scrollbar-vertical.os-scrollbar-cornerless,
+.os-scrollbar.os-scrollbar-vertical.os-scrollbar-cornerless.os-scrollbar-rtl {
+    top: 0;
+    bottom: 0;
+}
+
+.os-scrollbar .os-scrollbar-handle:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: block;
+}
+
+/* NONE THEME: */
+[data-overlayscrollbars~=updating] > .os-scrollbar,
+.os-theme-none.os-scrollbar {
+    display: none !important;
+}
+

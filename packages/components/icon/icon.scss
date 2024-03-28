@@ -1,0 +1,32 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-icon-rotate_90 {
+    transform: rotate(90deg);
+}
+
+.kbq-icon-rotate_180 {
+    transform: rotate(180deg);
+}
+
+.kbq-icon-rotate_270 {
+    transform: rotate(270deg);
+}
+
+.kbq-icon-flip-h {
+    transform: scaleY(-1);
+}
+
+.kbq-icon-flip-v {
+    transform: scaleX(-1);
+}
+
+.kbq-icon-flip-vh {
+    transform: scale(-1);
+}

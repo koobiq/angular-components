@@ -1,0 +1,24 @@
+.dev-container {
+    padding: 24px;
+}
+
+textarea {
+    margin:10px;
+    display: block;
+}
+
+.with-horizontal {
+    white-space: nowrap;
+    overflow-x: visible;
+}
+
+.with-buttons {
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.kbq-button.button_scroll-top {
+    position: absolute;
+    bottom: 5px;
+    right: 24px;
+}

@@ -1,0 +1,52 @@
+@use 'sass:map';
+
+@mixin kbq-scrollbar-component-theme($theme) {
+    $scrollbar: map.get(map.get($theme, components), scrollbar);
+
+    .kbq-scrollbar-component {
+        .os-scrollbar {
+            .os-scrollbar-handle {
+                &::before {
+                    border-color: map.get($scrollbar, default);
+                    background-color: map.get($scrollbar, default);
+                }
+
+                &:hover {
+                    &::before {
+                        border-color: map.get($scrollbar, hover);
+                        background-color: map.get($scrollbar, hover);
+                    }
+                }
+
+                &:active {
+                    &::before {
+                        border-color: map.get($scrollbar, active);
+                        background-color: map.get($scrollbar, active);
+                    }
+                }
+            }
+
+            /* stylelint-disable no-descending-specificity */
+            .os-scrollbar-track, .os-scrollbar-handle {
+                $track: map.get($scrollbar, track);
+                $default: map.get($track, default);
+
+                border-style: solid;
+                border-color: $default !important;
+                background-color: $default;
+
+                &:hover {
+                    $hover: map.get($track, hover);
+                    border-color: $hover;
+                    background: $hover;
+                }
+
+                &:active {
+                    $active: map.get($track, active);
+                    border-color: $active;
+                    background: $active;
+                }
+            }
+        }
+    }
+}

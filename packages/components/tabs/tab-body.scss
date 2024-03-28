@@ -1,0 +1,8 @@
+.kbq-tab-body__content {
+    height: 100%;
+    overflow: auto;
+
+    .kbq-tab-group_dynamic-height {
+        overflow: hidden;
+    }
+}

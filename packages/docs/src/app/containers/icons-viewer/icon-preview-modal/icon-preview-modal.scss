@@ -1,0 +1,68 @@
+@use '../../../../styles/koobiq/default-theme/variables' as *;
+
+
+.icon-preview-modal .kbq-modal-body {
+    display: flex;
+    flex-direction: column;
+
+    max-height: unset;
+
+    padding: 0;
+}
+
+.icon-preview-modal__preview-area {
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    text-align: center;
+}
+
+.icon-preview-modal__content {
+    padding: 24px;
+}
+
+.icon-preview-modal__buttons {
+    display: flex;
+    flex-direction: row;
+
+    column-gap: 16px;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    > button {
+        flex: 1;
+    }
+}
+
+.icon-preview-modal__description {
+    .icon-unicode {
+        font-family: 'PT Mosaic Icons';
+    }
+
+    .kbq-tag {
+        margin-right: 4px;
+        margin-bottom: 4px;
+        cursor: pointer;
+    }
+
+    .kbq-dd:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+.icon-preview-modal__select-option {
+    margin-right: 6px;
+}
+
+.icon-preview-modal__key-words {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-top: $size-xxs;
+    gap: $size-xxs;
+
+    .kbq-badge {
+        cursor: pointer;
+    }
+}

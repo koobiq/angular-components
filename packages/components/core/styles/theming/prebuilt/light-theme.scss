@@ -1,0 +1,20 @@
+@use 'sass:meta';
+
+// this file used only for generate .css bundle
+@use '../../tokens.kbq.import' as tokens;
+
+$tokens: meta.module-variables(tokens);
+
+@use '../../core';
+@use '../theming';
+@use '../../koobiq-theme' as koobiq-theme;
+
+
+@include core.kbq-core();
+
+// Include all theme styles for the components.
+$theme: theming.kbq-light-theme($tokens);
+@include koobiq-theme.koobiq-theme($theme);
+
+// Include all typography for the components.
+@include koobiq-theme.koobiq-typography($tokens);

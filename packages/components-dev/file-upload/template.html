@@ -1,0 +1,39 @@
+<div class="dev-container">
+    <div class="kbq-subheading">Single file upload</div><br>
+    <kbq-single-file-upload [disabled]="disabled"
+                           [errors]="errorMessagesForSingle"
+                           (fileQueueChanged)="addFile($event)">
+        <i kbq-icon="mc-info_16"></i>
+        <span hint>test</span>
+    </kbq-single-file-upload>
+</div>
+
+<div class="dev-container">
+    <div class="kbq-subheading">Multiple file upload</div><br>
+    <kbq-multiple-file-upload [disabled]="disabled"
+                             [errors]="errorMessagesForMultiple"
+                             [files]="files"
+                             (fileQueueChanged)="addFileMultiple($event)">
+        <ng-template #kbqFileIcon>
+            <i kbq-icon="mc-file-empty_16"></i>
+        </ng-template>
+        <span hint>Ctest</span>
+    </kbq-multiple-file-upload>
+</div>
+
+<div class="dev-container">
+    <div class="kbq-subheading">Multiple file upload compact</div><br>
+    <file-upload-compact
+        [disabled]="disabled"
+        [errorMessagesForMultiple]="errorMessagesForMultiple"
+        [files]="files"
+        (addedFile)="addFileMultiple($event)"
+        >
+    </file-upload-compact>
+</div>
+
+<button kbq-button (click)="disabled = !disabled">Toggle Disabled</button>
+
+<button kbq-button (click)="startLoading()">Loading imitation for single and multiple</button>
+
+<button kbq-button (click)="checkValidation()">Call validation from outside</button>

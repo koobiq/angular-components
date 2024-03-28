@@ -1,0 +1,19 @@
+<ng-template #toastStickyContentTemplate let-toast>
+    <kbq-progress-bar
+        class="layout-margin-top-m layout-margin-bottom-m"
+        [mode]="'indeterminate'">
+    </kbq-progress-bar>
+</ng-template>
+
+<ng-template #toastStickyActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()">Отмена</a>
+</ng-template>
+
+<div class="demo-block">
+    <button
+        class="example-button"
+        kbq-button
+        (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">
+        Тост с прогресс-баром, кнопкой Отмена и без крестика
+    </button>
+</div>

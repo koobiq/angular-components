@@ -1,0 +1,24 @@
+<kbq-form-field>
+    <kbq-tag-list #tagList>
+        <kbq-tag *ngFor="let tag of selectedTags" [value]="tag" (removed)="onRemove(tag)">
+            {{ tag }}
+            <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+        </kbq-tag>
+        <input placeholder="Placeholder"
+               #tagInput
+               [distinct]="true"
+               [formControl]="control"
+               [kbqAutocomplete]="autocomplete"
+               [kbqTagInputFor]="tagList"
+               (kbqTagInputTokenEnd)="onCreate($event)"
+               [kbqTagInputAddOnBlur]="false"
+               (blur)="addOnBlurFunc($event)">
+    </kbq-tag-list>
+    <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
+        <kbq-option *ngIf="canCreate" [value]="{ new: true, value: tagInput.value }">
+            Создать: {{ tagInput.value }}
+        </kbq-option>
+        <kbq-option *ngIf="hasDuplicates" [disabled]="true">Ничего не найдено</kbq-option>
+        <kbq-option *ngFor="let tag of filteredTags | async" [value]="tag">{{ tag }}</kbq-option>
+    </kbq-autocomplete>
+</kbq-form-field>

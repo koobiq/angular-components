@@ -1,0 +1,40 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/layout';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-card {
+    position: relative;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+
+    border-left: {
+        width: var(--kbq-card-size-vertical-line, map.get($tokens, card-size-vertical-line));
+        style: solid;
+        color: transparent;
+    };
+
+    & .kbq-card__overlay {
+        @include layout.kbq-fill;
+        pointer-events: none;
+
+        background: transparent;
+    }
+
+    &.kbq-card_readonly {
+        cursor: auto;
+    }
+}

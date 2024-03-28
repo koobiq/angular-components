@@ -1,0 +1,10 @@
+<div style="height: 20px">{{ formControl.value }}</div>
+
+<div class="dev-container">
+    <kbq-form-field>
+        <input type="text" kbqInput [kbqAutocomplete]="auto" [formControl]="formControl"/>
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option *ngFor="let option of filteredOptions | async" [value]="option">{{ option }}</kbq-option>
+        </kbq-autocomplete>
+    </kbq-form-field>
+</div>

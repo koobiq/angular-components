@@ -1,0 +1,22 @@
+@use '../dist/components/core/styles/theming';
+@use '../dist/components/core/styles/typography';
+
+
+@mixin kbq-docs-navbar-theme($theme) {
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    .docs-navbar {
+        background: map-get($background, bg);
+
+        .docs-navbar__github-icon svg {
+            fill: map-get($foreground, contrast);
+        }
+    }
+}
+
+@mixin kbq-docs-navbar-typography($config) {
+    .docs-sidenav {
+        @include typography.kbq-typography-level-to-styles($config, subheading);
+    }
+}

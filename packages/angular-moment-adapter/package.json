@@ -1,0 +1,20 @@
+{
+    "name": "@koobiq/angular-moment-adapter",
+    "version": "{{VERSION}}",
+    "description": "Koobiq Moment Adapter",
+    "keywords": [
+        "moment",
+        "component",
+        "development",
+        "kit",
+        "mosaic"
+    ],
+    "license": "MIT",
+    "peerDependencies": {
+        "@mosaic-design/moment-date-adapter": "^2.1.1",
+        "@koobiq/components": "{{VERSION}}"
+    },
+    "dependencies": {
+        "tslib": "^2.6.2"
+    }
+}

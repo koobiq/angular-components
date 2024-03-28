@@ -1,0 +1,65 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-table-theme($theme) {
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
+
+    .kbq-table {
+        & > thead {
+            color: map.get($foreground, text-less-contrast);
+
+            & > tr > th {
+                border-color: map.get($foreground, divider);
+            }
+        }
+
+        & > tbody {
+            & > tr {
+                &:hover {
+                    background-color: map.get($background, overlay-hover);
+                }
+
+                & > th,
+                & > td {
+                    color: map.get($foreground, contrast);
+                }
+            }
+        }
+
+        &.kbq-table_bordered {
+            & > tbody > tr {
+                & th,
+                & td {
+                    border-bottom-color: map.get($foreground, divider);
+                }
+            }
+        }
+    }
+}
+
+@mixin kbq-table-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-table {
+        & > thead {
+            & > tr > th {
+                font-weight: normal;
+            }
+
+            @include kbq-typography-level-to-styles($config, map.get($tokens, table-font-header));
+        }
+
+        & > tbody {
+            & > tr > th {
+                font-weight: normal;
+            }
+
+            @include kbq-typography-level-to-styles($config, map.get($tokens, table-font-body));
+        }
+    }
+}
+

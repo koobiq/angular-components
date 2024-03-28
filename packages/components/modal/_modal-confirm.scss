@@ -1,0 +1,21 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-confirm {
+    .kbq-modal-close {
+        display: none;
+    }
+
+    .kbq-confirm-footer {
+        display: flex;
+
+        gap: var(
+            --kbq-modal-size-footer-content-gap-horizontal, map.get($tokens, modal-size-footer-content-gap-horizontal)
+        );
+    }
+}

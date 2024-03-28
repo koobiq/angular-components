@@ -1,0 +1,83 @@
+<kbq-modal-title>
+    {{ iconItem.name }}
+    <button kbq-button
+            [color]="'contrast'"
+            (click)="modal.close()"
+            class="kbq-modal-close kbq-button_transparent">
+        <i kbq-icon="mc-close-L_16" [color]="componentColors.Contrast"></i>
+    </button>
+</kbq-modal-title>
+
+<kbq-modal-body>
+    <div class="icon-preview-modal__preview-area">
+        <i #iconPreview kbq-icon
+            [ngClass]="iconItem.cssClass"
+            [color]="selectedColorTheme">
+        </i>
+    </div>
+    <div class="icon-preview-modal__content">
+        <kbq-form-field>
+            <kbq-select [(value)]="selectedColorTheme" [placeholder]="'Цвет'">
+                <kbq-select-trigger>
+                    <i kbq-icon="mc-circle-8_16"
+                       class="icon-preview-modal__palette-icon"
+                       [color]="selectedColorTheme">
+                    </i>
+                    {{ selectedColorTheme | titlecase }}
+                </kbq-select-trigger>
+
+                <kbq-option *ngFor="let paletteName of themePalettes"
+                           class="icon-preview-modal__select-option"
+                           [value]="paletteName">
+                    <i kbq-icon="mc-circle-8_16"
+                       class="icon-preview-modal__palette-icon"
+                       [color]="paletteName">
+                    </i>
+                    {{ paletteName | titlecase }}
+                </kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+
+        <div class="icon-preview-modal__buttons">
+            <a href="{{ SVGLink }}" download kbq-button>
+                <i kbq-icon="mc-download_16"></i>Скачать SVG
+            </a>
+
+            <button kbq-button (click)="copySVG()">
+                <i kbq-icon="mc-copy-o_16"></i>Скопировать SVG
+            </button>
+        </div>
+
+        <kbq-dl [vertical]="true" class="icon-preview-modal__description">
+            <kbq-dt>Размер</kbq-dt>
+            <kbq-dd>{{ iconItem.size }}px</kbq-dd>
+
+            <kbq-dt>HTML</kbq-dt>
+            <kbq-dd kbqTooltip="Скопировать" (click)="copyCodeExample()">
+                <code [innerText]="getCodeExampleText()"></code>
+            </kbq-dd>
+
+            <kbq-dt>Для MS Word</kbq-dt>
+            <kbq-dd>
+                <span kbqTooltip="Скопировать"
+                      (click)="copyWordExample()"
+                      #wordExample>[#{{getHexColor()}}]<span class="icon-unicode" [innerHtml]="getUnicode()"></span>
+                </span>
+            </kbq-dd>
+
+            <kbq-dt>Описание</kbq-dt>
+            <kbq-dd>{{ iconItem.description }}</kbq-dd>
+
+            <kbq-dt>Ключевые слова</kbq-dt>
+            <kbq-dd class="icon-preview-modal__key-words">
+                <kbq-badge *ngFor="let tag of iconItem.tags"
+                        [tabindex]="0"
+                        [badgeColor]="'fade-theme'"
+                        (click)="onTagSelect(tag)"
+                        (keydown.enter)="onTagSelect(tag)">
+                    {{ tag }}
+                </kbq-badge>
+            </kbq-dd>
+        </kbq-dl>
+    </div>
+</kbq-modal-body>

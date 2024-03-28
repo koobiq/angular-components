@@ -1,0 +1,11 @@
+<div *ngFor="let anchor of anchors"
+     class="docs-anchors__element docs-anchors__element_{{ anchor.level }}"
+     [ngClass]="{'docs-anchors__element_active' : anchor.active }">
+
+    <a class="docs-anchors__link"
+       [routerLink]="this.pathName"
+       [fragment]="anchor.href"
+       (click)="scrollIntoView(anchor)">
+        {{ anchor.name }}
+    </a>
+</div>

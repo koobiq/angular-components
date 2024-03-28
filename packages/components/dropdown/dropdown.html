@@ -1,0 +1,17 @@
+<ng-template>
+    <div class="kbq-dropdown__panel"
+         [ngClass]="classList"
+         [class.kbq-dropdown__panel_nested]="parent"
+         [style.min-width]="triggerWidth"
+         (keydown)="handleKeydown($event)"
+         (click)="close()"
+         [@transformDropdown]="panelAnimationState"
+         (@transformDropdown.start)="onAnimationStart($event)"
+         (@transformDropdown.done)="onAnimationDone($event)"
+         tabindex="-1">
+
+        <div class="kbq-dropdown__content">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</ng-template>

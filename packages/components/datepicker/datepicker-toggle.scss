@@ -1,0 +1,41 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-datepicker-toggle:focus {
+    outline: 0;
+}
+
+.kbq-datepicker-toggle__button.kbq-button-icon {
+    width: var(--kbq-datepicker-toggle-size-width, map.get($tokens, datepicker-toggle-size-width));
+    height: var(--kbq-datepicker-toggle-size-height, map.get($tokens, datepicker-toggle-size-height));
+    margin-left: 2px;
+}
+
+.kbq-form-field-appearance-legacy {
+    .kbq-form-field-prefix,
+    .kbq-form-field-suffix {
+        .kbq-datepicker-toggle__default-icon {
+            width: 1em;
+        }
+    }
+}
+
+.kbq-form-field:not(.kbq-form-field-appearance-legacy) {
+    .kbq-form-field-prefix,
+    .kbq-form-field-suffix {
+        .kbq-datepicker-toggle__default-icon {
+            display: block;
+            width: 1.5em;
+            height: 1.5em;
+        }
+
+        .kbq-button-icon .kbq-datepicker-toggle__default-icon {
+            margin: auto;
+        }
+    }
+}

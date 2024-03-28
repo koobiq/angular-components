@@ -1,0 +1,50 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/input';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-input {
+    @include input.kbq-reset-input();
+
+    display: inline-block;
+    box-sizing: border-box;
+
+    text-overflow: ellipsis;
+
+    width: 100%;
+    min-height: calc(
+        var(--kbq-form-field-size-height, map.get($tokens, form-field-size-height)) -
+        (var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width)) * 2)
+    );
+
+    padding:
+        calc(
+            var(--kbq-input-size-padding-vertical, map.get($tokens, input-size-padding-vertical)) -
+            var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width))
+        )
+        var(--kbq-input-size-padding-horizontal, map.get($tokens, input-size-padding-horizontal));
+}
+
+input.kbq-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input.kbq-input[type="number"]::-webkit-inner-spin-button,
+input.kbq-input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* remove default red border for HTML5 validation invalid fields in Firefox */
+input.kbq-input:invalid {
+    box-shadow: unset;
+}
+
+/* overwrite default placeholder opacity in Firefox */
+input.kbq-input::placeholder {
+    opacity: 1;
+}

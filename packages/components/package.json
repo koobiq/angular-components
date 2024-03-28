@@ -1,0 +1,53 @@
+{
+    "name": "@koobiq/components",
+    "version": "{{VERSION}}",
+    "description": "koobiq",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/koobiq/angular-components.git"
+    },
+    "keywords": [
+        "angular",
+        "koobiq",
+        "components"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/koobiq/angular-components/issues"
+    },
+    "homepage": "https://github.com/koobiq/angular-components/blob/master/README.md",
+    "peerDependencies": {
+        "@angular/cdk": "{{NG_VERSION}}",
+        "@angular/forms": "{{NG_VERSION}}",
+        "@koobiq/cdk": "{{VERSION}}",
+        "@koobiq/angular-moment-adapter": "{{VERSION}}",
+        "@koobiq/angular-luxon-adapter": "{{VERSION}}",
+        "@mosaic-design/date-formatter": "^2.1.1",
+        "@koobiq/icons": "^7.1.0",
+        "@koobiq/tokens-builder": "^3.0.0-beta.27",
+        "@koobiq/design-tokens": "^3.0.0-beta.27",
+        "marked": "^4.0.18"
+    },
+    "dependencies": {
+        "tslib": "^2.6.2"
+    },
+    "ng-update": {
+        "packageGroup": [
+            "@koobiq/components"
+        ]
+    },
+    "exports": {
+        ".": {
+            "sass": "./_index.scss"
+        },
+        "./prebuilt-themes/light-theme.css": {
+            "style": "./prebuilt-themes/light-theme.css"
+        },
+        "./prebuilt-themes/dark-theme.css": {
+            "style": "./prebuilt-themes/dark-theme.css"
+        },
+        "./prebuilt-visual/default-visual.css": {
+            "style": "./prebuilt-visual/default-visual.css"
+        }
+    }
+}

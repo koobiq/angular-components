@@ -1,0 +1,51 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-calendar-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding-right: var(
+        --kbq-datepicker-size-header-padding-horizontal, map.get($tokens, datepicker-size-header-padding-horizontal)
+    );
+
+    padding-left: var(
+        --kbq-datepicker-size-header-padding-horizontal, map.get($tokens, datepicker-size-header-padding-horizontal)
+    );
+
+    margin-bottom: var(
+        --kbq-datepicker-size-header-margin-bottom, map.get($tokens, datepicker-size-header-margin-bottom)
+    );
+}
+
+.kbq-calendar-header__select {
+    width: auto !important;
+}
+
+.kbq-calendar-header__button-group,
+.kbq-calendar-header__select-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.kbq-calendar-select-panel {
+    margin-top: 2px;
+
+    min-width: 98% !important;
+
+    & .kbq-select__content {
+        max-height: 12 * 32px;
+        overflow-x: hidden;
+        scrollbar-gutter: auto;
+
+        .kbq-option {
+            min-width: 65px;
+        }
+    }
+}

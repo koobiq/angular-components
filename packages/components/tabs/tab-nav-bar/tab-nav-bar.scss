@@ -1,0 +1,47 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../tabs-common';
+
+@use '../../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-tab-link {
+    vertical-align: top;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    @include tabs-common.tab-label;
+
+    & .kbq-tab-group_stretch-labels & {
+        flex-basis: 0;
+        flex-grow: 1;
+    }
+}
+
+.kbq-tab-nav-bar {
+    display: flex;
+    flex-grow: 1;
+
+    position: relative;
+
+    & .kbq-tab-group_align-labels-center {
+        justify-content: center;
+    }
+
+    & .kbq-tab-group_align-labels-end {
+        justify-content: flex-end;
+    }
+
+    &.kbq-tab-group_vertical {
+        flex-direction: column;
+        flex-grow: 0;
+
+        gap: var(
+            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
+            map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
+        ) 0;
+    }
+}

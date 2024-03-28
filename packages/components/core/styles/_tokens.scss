@@ -1,0 +1,6 @@
+@use 'sass:color' as *;
+
+@forward '@koobiq/design-tokens/web/variables';
+@forward '@koobiq/design-tokens/web/palette';
+@forward '@koobiq/design-tokens/web/typography';
+@forward '@koobiq/design-tokens/web/md-typography';

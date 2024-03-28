@@ -1,0 +1,4 @@
+.code-block-with-overflow .kbq-code-block__code,
+.code-block-with-overflow .kbq-code-block__code.kbq-code-block__code_view-all {
+    max-height: 200px;
+}

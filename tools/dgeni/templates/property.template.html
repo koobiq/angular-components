@@ -1,0 +1,30 @@
+{% import "macros.html" as macros %}
+
+<tr>
+    <td>
+        {%- if property.isDirectiveInput -%}
+        <div class="docs-api__input-marker">
+            {%- if property.directiveInputAlias -%}
+            @Input(<span class="docs-api__input-alias">{$ property.directiveInputAlias $}</span>)
+            {% else %}
+            @Input()
+            {%- endif -%}
+        </div>
+        {%- endif -%}
+        {%- if property.isDirectiveOutput -%}
+        <div class="docs-api__output-marker">
+            {%- if property.directiveOutputAlias -%}
+            @Output(<span class="docs-api__output-alias">{$ property.directiveOutputAlias $}</span>)
+            {% else %}
+            @Output()
+            {%- endif -%}
+        </div>
+        {%- endif -%}
+        {%- if property.isDeprecated -%}
+        <div class="docs-api__deprecated-marker" {$ macros.deprecationTitle(property) $}>Deprecated</div>
+        {%- endif -%}
+
+        <span class="kbq-markdown__code">{$ property.name $}: {$ property.type $}</span>
+    </td>
+    <td>{$ property.description | safe $}</td>
+</tr>

@@ -1,0 +1,697 @@
+{
+    'code-block': {
+        'light-color-scheme': {
+            background: { value: '{light-color-scheme.background.background}' },
+            border: { value: '{light-color-scheme.foreground.divider}' },
+            color: { value: '{light-color-scheme.foreground.text}' },
+            actionbar: {
+                // comment: 'floating AB bg',
+                background: { value: 'rgba(white, 0.5)' },
+                border: { value: null }
+            },
+            'line-numbers': {
+                background: { value: null },
+                border: { value: null },
+                color: { value: '{palette.grey.300}' }
+            },
+            decoration: {
+                'less-contrast': {
+                    background: { value: '{light-color-scheme.background.background-less-contrast}' },
+                    border: { value: '{light-color-scheme.foreground.divider}' },
+                    actionbar: {
+                        background: { value: '{light-color-scheme.background.background-less-contrast}' },
+                        border: { value: null }
+                    }
+                }
+            },
+            hljs: {
+                addition: {
+                    background: { value: '{palette.green.60}' },
+                    color: { value: '{palette.green.800}' }
+                },
+                attr: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                attribute: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                built_in: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                bullet: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'char.escape': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                class: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                code: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                comment: {
+                    background: { value: null },
+                    color: { value: '{palette.grey.500}' }
+                },
+                deletion: {
+                    background: { value: '{palette.red.60}' },
+                    color: { value: '{palette.red.800}' }
+                },
+                doctag: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                emphasis: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                formula: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                function: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                keyword: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                link: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                literal: {
+                    background: { value: null },
+                    color: { value: '{palette.purple.560}' }
+                },
+                meta: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.560}' }
+                },
+                'meta keyword': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'meta string': {
+                    background: { value: null },
+                    color: { value: '{palette.blue.500}' }
+                },
+                'meta.prompt': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                name: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.560}' }
+                },
+                number: {
+                    background: { value: null },
+                    color: { value: '{palette.purple.560}' }
+                },
+                operator: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                params: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                property: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                punctuation: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                quote: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                regexp: {
+                    background: { value: null },
+                    color: { value: '{palette.green.500}' }
+                },
+                section: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-attr': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-class': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-id': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-pseudo': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-tag': {
+                    background: { value: null },
+                    color: { value: '{palette.blue.560}' }
+                },
+                string: {
+                    background: { value: null },
+                    color: { value: '{palette.green.500}' }
+                },
+                strong: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                subst: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                symbol: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.560}' }
+                },
+                tag: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'template-tag': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'template-variable': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                title: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.560}' }
+                },
+                'title.class': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.class.inherited': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.function': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.function.invoke': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                type: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                variable: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'variable-constant': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'variable-language': {
+                    background: { value: null },
+                    color: { value: null }
+                }
+            }
+        },
+        'dark-color-scheme': {
+            background: { value: '{dark-color-scheme.background.background}' },
+            border: { value: '{dark-color-scheme.foreground.divider}' },
+            color: { value: '{dark-color-scheme.foreground.text}' },
+            actionbar: {
+                background: { value: '{dark-color-scheme.background.background}' },
+                border: { value: null }
+            },
+            'line-numbers': {
+                background: { value: null },
+                border: { value: null },
+                color: { value: '{palette.grey.500}' }
+            },
+            decoration: {
+                'less-contrast': {
+                    background: { value: '{dark-color-scheme.background.background-less-contrast}' },
+                    border: { value: '{dark-color-scheme.foreground.divider}' },
+                    actionbar: {
+                        background: { value: '{dark-color-scheme.background.background-less-contrast}' },
+                        border: { value: null }
+                    }
+                }
+            },
+            hljs: {
+                addition: {
+                    background: { value: '{palette.green.800}' },
+                    color: { value: '{palette.green.200}' }
+                },
+                attr: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                attribute: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                built_in: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                bullet: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'char.escape': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                class: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                code: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                comment: {
+                    background: { value: null },
+                    color: { value: '{palette.grey.500}' }
+                },
+                deletion: {
+                    background: { value: '{palette.red.800}' },
+                    color: { value: '{palette.red.200}' }
+                },
+                doctag: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                emphasis: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                formula: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                function: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                keyword: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                link: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                literal: {
+                    background: { value: null },
+                    color: { value: '{palette.purple.300}' }
+                },
+                meta: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.300}' }
+                },
+                'meta keyword': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'meta string': {
+                    background: { value: null },
+                    color: { value: '{palette.green.300}' }
+                },
+                'meta.prompt': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                name: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.300}' }
+                },
+                number: {
+                    background: { value: null },
+                    color: { value: '{palette.purple.300}' }
+                },
+                operator: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                params: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                property: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                punctuation: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                quote: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                regexp: {
+                    background: { value: null },
+                    color: { value: '{palette.green.300}' }
+                },
+                section: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-attr': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-class': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-id': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-pseudo': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'selector-tag': {
+                    background: { value: null },
+                    color: { value: '{palette.blue.300}' }
+                },
+                string: {
+                    background: { value: null },
+                    color: { value: '{palette.green.300}' }
+                },
+                strong: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                subst: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                symbol: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.300}' }
+                },
+                tag: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'template-tag': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'template-variable': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                title: {
+                    background: { value: null },
+                    color: { value: '{palette.blue.300}' }
+                },
+                'title.class': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.class.inherited': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.function': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'title.function.invoke': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                type: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                variable: {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'variable-constant': {
+                    background: { value: null },
+                    color: { value: null }
+                },
+                'variable-language': {
+                    background: { value: null },
+                    color: { value: null }
+                }
+            }
+       },
+        size: {
+            'border-radius': { value: '{size.border-radius}' },
+            // comment: 'textarea paddings'
+            padding: { value: '{size.m}' },
+            actionbar: {
+                // comment: 'actionbar wrapper radius'
+                'border-radius': { value: '{size.border-radius}' },
+                // comment: 'space between actionbar buttons'
+                gap: { value: 0 },
+                // comment: 'space between tabs and actionbar'
+                'header-gap': { value: '{size.s}' },
+                // comment: 'sticky actionbar margin'
+                'margin-top': { value: '{size.xs}' },
+                'margin-right': { value: '{size.xs}' },
+                padding: { value: '{size.s}' }
+            },
+            'line-numbers': {
+                padding: { value: '{size.3xs} {size.m} 0 0 ' },
+                // comment: 'right border'
+                'border-width': { value: 0 }
+            }
+       },
+        font: {
+            default: { value: 'body-mono' },
+
+            hljs: {
+                addition: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                attr: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                attribute: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                built_in: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                bullet: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'char.escape': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                class: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                code: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                comment: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                deletion: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                doctag: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                emphasis: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                formula: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                function: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                keyword: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                link: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                literal: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                meta: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'meta keyword': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'meta string': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'meta.prompt': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                name: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                number: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                operator: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                params: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                property: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                punctuation: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                quote: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                regexp: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                section: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'selector-attr': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'selector-class': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'selector-id': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'selector-pseudo': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'selector-tag': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                string: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                strong: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                subst: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                symbol: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                tag: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'template-tag': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'template-variable': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                title: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'title.class': {
+                  'font-style': { value: 'normal' },
+                  'font-weight': { value: 500 }
+                },
+                'title.class.inherited': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'title.function': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'title.function.invoke': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                type: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                variable: {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'variable.constant': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                },
+                'variable.language': {
+                    'font-style': { value: null },
+                    'font-weight': { value: null }
+                }
+            }
+        }
+    }
+}

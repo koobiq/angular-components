@@ -1,0 +1,81 @@
+<kbq-checkbox [checked]="disabled" (change)="toggleDisabled()">toggle disabled state</kbq-checkbox>
+<br><br>
+<kbq-checkbox [checked]="openByArrowDown" (change)="toggleOpenByArrowDown()">toggleOpenByArrowDown</kbq-checkbox>
+
+<br><br>
+
+<button kbq-button
+        [kbqDropdownTriggerFor]="appDropdown"
+        [openByArrowDown]="openByArrowDown"
+        [disabled]="disabled">
+    dropdown <i kbq-icon="mc-angle-down-S_16"></i>
+</button>
+
+<kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'">
+
+    <button kbq-dropdown-item>Общие сведения</button>
+
+    <button kbq-dropdown-item><i kbq-icon="mc-info-o_16"></i>Общие сведения</button>
+
+    <button kbq-dropdown-item>
+        Общие сведения
+        <div class="kbq-dropdown-item__caption">Общие сведения</div>
+    </button>
+
+    <button kbq-dropdown-item>
+        <i kbq-icon="mc-info-o_16"></i>Общие сведения
+        <div class="kbq-dropdown-item__caption">Общие сведения</div>
+    </button>
+
+    <button kbq-dropdown-item>
+        <i kbq-icon="mc-circle-8_16"></i>Общие сведения
+    </button>
+
+    <button kbq-dropdown-item kbq-title>Общие сведения и очень длинный текст</button>
+
+    <div class="kbq-dropdown__divider"></div>
+
+    <div class="kbq-dropdown__group-header">Additional info</div>
+
+    <button kbq-dropdown-item disabled>Disabled</button>
+
+    <div class="kbq-dropdown__divider"></div>
+
+    <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Additional info</div>
+
+    <button kbq-dropdown-item disabled>Disabled</button>
+
+    <div class="kbq-dropdown__divider"></div>
+
+    <button kbq-dropdown-item>Point 2</button>
+
+    <button kbq-dropdown-item>Point 3</button>
+
+    <button kbq-dropdown-item>Link</button>
+</kbq-dropdown>
+
+<br><br><br>
+
+<kbq-form-field class="max-width">
+    <input kbqInput type="text" [(ngModel)]="someValue">
+</kbq-form-field>
+
+<br><br>
+
+<button kbq-button
+        [kbqDropdownTriggerFor]="appDropdownLazy"
+        [kbqDropdownTriggerData]="{ someValue: someValue }"
+        [disabled]="disabled">
+
+    dropdown lazy <i kbq-icon="mc-angle-down-S_16"></i>
+</button>
+
+<kbq-dropdown #appDropdownLazy="kbqDropdown">
+    <ng-template kbqDropdownContent let-someValue="someValue">
+        <button kbq-dropdown-item [disabled]="disabled">dropdown</button>
+        <button kbq-dropdown-item>
+            Point 1 <span class="kbq-dropdown-item__caption">Some info</span>
+        </button>
+        <button kbq-dropdown-item>Value: {{someValue}}</button>
+    </ng-template>
+</kbq-dropdown>

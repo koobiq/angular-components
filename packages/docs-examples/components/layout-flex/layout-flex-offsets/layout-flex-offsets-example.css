@@ -1,0 +1,24 @@
+.example-controls {
+    display: flex;
+    flex-direction: row;
+}
+
+.kbq-form-field {
+    max-width: 20%;
+
+    margin-left: 32px;
+}
+
+.block {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.kbq-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.kbq-radio-button {
+    margin-bottom: 8px;
+}

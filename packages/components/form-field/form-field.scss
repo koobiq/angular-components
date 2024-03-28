@@ -1,0 +1,154 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/forms/forms';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+/* stylelint-disable no-descending-specificity */
+
+.kbq-form-field {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+
+    .kbq-form-field__container {
+        box-sizing: border-box;
+    }
+
+    .kbq-form-field:not(.kbq-form-field-type-textarea) {
+        height: var(--kbq-form-field-size-height, map.get($tokens, form-field-size-height));
+    }
+
+    &,
+    .kbq-input,
+    .kbq-textarea {
+        border-radius: var(--kbq-form-field-size-border-radius, map.get($tokens, form-field-size-border-radius));
+    }
+
+    &:hover {
+        z-index: 1;
+    }
+
+    &.kbq-focused {
+        z-index: 2;
+    }
+
+    &.kbq-form-field_without-borders .kbq-form-field__container {
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    &.kbq-form-field_has-prefix {
+        .kbq-input {
+            padding-left: calc(
+                var(--kbq-form-field-size-icon-size, map.get($tokens, form-field-size-icon-size)) +
+                var(--kbq-form-field-size-icon-margin-left, map.get($tokens, form-field-size-icon-margin-left)) +
+                var(--kbq-form-field-size-icon-margin-right, map.get($tokens, form-field-size-icon-margin-right))
+            );
+        }
+    }
+
+    &.kbq-form-field_has-password-toggle,
+    &.kbq-form-field_has-cleaner,
+    &.kbq-form-field_has-stepper,
+    &.kbq-form-field_has-suffix {
+        .kbq-input {
+            padding-right: calc(
+                var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size)) +
+                var(
+                    --kbq-form-field-size-icon-button-margin-left,
+                    map.get($tokens, form-field-size-icon-button-margin-left)
+                ) +
+                var(
+                    --kbq-form-field-size-icon-button-margin-right,
+                    map.get($tokens, form-field-size-icon-button-margin-right)
+                )
+            );
+        }
+    }
+
+    & + .kbq-password-hint {
+        margin-top: var(--kbq-size-m, map.get($tokens, size-m));
+    }
+}
+
+.kbq-form-field__container {
+    position: relative;
+
+    border-width: var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width));
+    border-style: solid;
+    border-color: transparent;
+    border-radius: var(--kbq-form-field-size-border-radius, map.get($tokens, form-field-size-border-radius));
+}
+
+.kbq-form-field__prefix,
+.kbq-form-field__suffix {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.kbq-form-field__prefix {
+    left: 0;
+}
+
+.kbq-form-field__suffix {
+    right: 0;
+}
+
+.kbq-form-field__cleaner,
+.kbq-password-toggle,
+.kbq-stepper {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.kbq-stepper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: var(--kbq-form-field-size-button-width, map.get($tokens, form-field-size-button-width));
+
+    .kbq-stepper-step-up,
+    .kbq-stepper-step-down {
+        cursor: pointer;
+        width: var(--kbq-form-field-size-button-width, map.get($tokens, form-field-size-button-width));
+        text-align: center;
+    }
+
+    .kbq-stepper-step-up {
+        transform: scaleY(-1);
+    }
+}
+
+.kbq-form-field__hint {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+
+    & .kbq-password-hint:first-child {
+        margin-top: var(--kbq-size-s, map.get($tokens, size-s));
+    }
+}
+
+.kbq-password-hint {
+    margin-top: var(--kbq-form-field-hint-size-gap, map.get($tokens, form-field-hint-size-gap));
+}
+
+
+/* stylelint-enable no-descending-specificity */

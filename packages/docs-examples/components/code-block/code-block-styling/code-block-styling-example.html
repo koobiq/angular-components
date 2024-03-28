@@ -1,0 +1,10 @@
+<kbq-toggle class="kbq-toggle_small layout-padding-top-m layout-padding-bottom-m"
+           [(ngModel)]="lessContrast">
+    Контрастный фон
+</kbq-toggle>
+<kbq-code-block
+    [maxHeight]="286"
+    [lineNumbers]="true"
+    [filled]="lessContrast"
+    [codeFiles]="files">
+</kbq-code-block>

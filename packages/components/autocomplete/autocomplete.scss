@@ -1,0 +1,55 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-autocomplete-panel {
+    visibility: hidden;
+
+    position: relative;
+
+    overflow: hidden auto;
+    -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
+
+    margin-top: -1px;
+
+    min-width: 100%;
+    width: 100%;
+    max-width: none;
+
+    max-height: var(--kbq-autocomplete-size-panel-max-height, map.get($tokens, autocomplete-size-panel-max-height));
+
+    border-bottom-left-radius: var(
+        --kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius)
+    );
+    border-bottom-right-radius: var(
+        --kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius)
+    );
+
+    padding: var(--kbq-autocomplete-size-panel-padding, map.get($tokens, autocomplete-size-panel-padding));
+
+    &.kbq-autocomplete_visible {
+        visibility: visible;
+    }
+
+    &.kbq-autocomplete_hidden {
+        visibility: hidden;
+    }
+
+    .kbq-autocomplete-panel-above & {
+        border-radius:
+            var(--kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius))
+            var(--kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius))
+            0 0;
+    }
+
+    // We need to offset horizontal dividers by their height, because
+    // they throw off the keyboard navigation inside the panel.
+    .kbq-divider-horizontal {
+        margin-top: -1px;
+    }
+}

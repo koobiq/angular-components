@@ -1,0 +1,23 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-hint {
+    display: flex;
+
+    & .kbq-icon {
+        margin-right: var(--kbq-hint-size-normal-content-padding, map-get($tokens, hint-size-normal-content-padding));
+    }
+
+    &.kbq-hint_compact {
+        & .kbq-icon {
+            margin-right: var(
+                --kbq-hint-size-compact-content-padding, map-get($tokens, hint-size-compact-content-padding)
+            );
+        }
+    }
+}

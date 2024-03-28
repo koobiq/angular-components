@@ -1,0 +1,40 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+$kbq-datepicker-non-touch-calendar-cell-size: 40px;
+
+$kbq-datepicker-non-touch-calendar-width:
+    $kbq-datepicker-non-touch-calendar-cell-size * 7 +
+    map.get($tokens, datepicker-size-grid-padding-horizontal) * 2;
+// Based on the natural height of the calendar in a month with 6 rows of dates
+// (largest the calendar will get).
+$kbq-datepicker-non-touch-calendar-height: 270px;
+
+.kbq-datepicker__content {
+    display: block;
+
+    border-radius: var(
+        --kbq-datepicker-size-container-border-radius,
+        map.get($tokens, datepicker-size-container-border-radius)
+    );
+
+    .kbq-calendar {
+        width: $kbq-datepicker-non-touch-calendar-width;
+        height: $kbq-datepicker-non-touch-calendar-height;
+
+        padding-top: var(
+            --kbq-datepicker-size-container-padding-vertical,
+            map.get($tokens, datepicker-size-container-padding-vertical)
+        );
+
+        padding-bottom: var(
+            --kbq-datepicker-size-container-padding-vertical,
+            map.get($tokens, datepicker-size-container-padding-vertical)
+        );
+    }
+}

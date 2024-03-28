@@ -1,0 +1,15 @@
+.kbq-button-toggle-group_stretched {
+    width: 100%;
+}
+
+.kbq-button-toggle-group_stretched .kbq-button-toggle {
+    flex: 1;
+}
+
+.kbq-button-toggle-group_stretched > .kbq-button-toggle > .kbq-button {
+    flex: 1;
+}
+
+.kbq-button-toggle-group:not(:last-of-type) {
+    margin-bottom: 16px;
+}

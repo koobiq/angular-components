@@ -1,0 +1,66 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-loader-overlay-theme($theme) {
+    $loader-overlay: map.get(map.get($theme, components), loader-overlay);
+
+    .kbq-loader-overlay_filled {
+        $filled: map.get($loader-overlay, filled);
+
+        &.kbq-loader-overlay {
+            background: map.get($filled, background);
+        }
+
+        & .kbq-loader-overlay-text {
+            color: map.get($filled, text);
+        }
+
+        & .kbq-loader-overlay-caption {
+            color: map.get($filled, caption);
+        }
+    }
+
+    .kbq-loader-overlay_transparent {
+        $transparent: map.get($loader-overlay, transparent);
+
+        &.kbq-loader-overlay {
+            background: map.get($transparent, background);
+        }
+
+        & .kbq-loader-overlay-text {
+            color: map.get($transparent, text);
+        }
+
+        & .kbq-loader-overlay-caption {
+            color: map.get($transparent, caption);
+        }
+    }
+}
+
+@mixin kbq-loader-overlay-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-loader-overlay_big {
+        & .kbq-loader-overlay-text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-big-text));
+        }
+
+        & .kbq-loader-overlay-caption {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-big-caption));
+        }
+    }
+
+    .kbq-loader-overlay_compact {
+        & .kbq-loader-overlay-text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-compact-text));
+        }
+
+        & .kbq-loader-overlay-caption {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-compact-caption));
+        }
+    }
+}
+

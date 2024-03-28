@@ -1,0 +1,11 @@
+@use '../main';
+
+
+.kbq-body {
+    margin: 150px 100px 0;
+}
+
+.kbq-code-block .kbq-code-block__code,
+.kbq-code-block .kbq-code-block__code.kbq-code-block__code_view-all {
+    max-height: 200px;
+}

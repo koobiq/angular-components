@@ -1,0 +1,21 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "types": [
+            "node",
+            "jasmine"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "angularCompilerOptions": {
+        "annotateForClosureCompiler": true,
+        "strictTemplates": true,
+        "strictMetadataEmit": true,
+        "flatModuleId": "@koobiq/cdk",
+        "skipTemplateCodegen": true,
+        "fullTemplateTypeCheck": true,
+        "compilationMode": "partial"
+    }
+}

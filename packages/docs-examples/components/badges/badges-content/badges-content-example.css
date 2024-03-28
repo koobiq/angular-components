@@ -1,0 +1,16 @@
+.content__example-badge-group {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 32px;
+    flex-wrap: wrap;
+    max-width: 504px;
+}
+
+.content__example-badge-group .example-label {
+    color: #73738C;
+    margin-bottom: 12px;
+}
+
+.content__example-badge-group .example-badge {
+    width: 96px;
+}

@@ -1,0 +1,21 @@
+<kbq-form-field>
+    <textarea kbqTextarea [placeholder]="placeholder"></textarea>
+</kbq-form-field>
+
+<br><br>
+
+<kbq-form-field>
+    <textarea kbqTextarea [disabled]="disabled" [placeholder]="placeholder"></textarea>
+</kbq-form-field>
+
+<br><br>
+
+<kbq-form-field>
+    <textarea kbqTextarea [placeholder]="placeholder" [required]="required" [(ngModel)]="value"></textarea>
+</kbq-form-field>
+
+<br><br>
+
+<kbq-form-field kbqFormFieldWithoutBorders>
+    <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder"></textarea>
+</kbq-form-field>

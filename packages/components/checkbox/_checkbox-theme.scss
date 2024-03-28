@@ -1,0 +1,131 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+/* stylelint-disable no-descending-specificity */
+@mixin kbq-checkbox-state($state) {
+    .kbq-checkbox__frame {
+        border-color: map.get($state, border);
+
+        background-color: map.get($state, background);
+    }
+}
+
+@mixin kbq-checkbox-color($checkbox) {
+    $default: map.get($checkbox, default);
+
+    @include kbq-checkbox-state($default);
+
+    .kbq-checkbox-label {
+        color: map.get($default, text);
+    }
+
+    .kbq-checkbox__frame {
+        & .kbq-checkbox-checkmark,
+        & .kbq-checkbox-mixedmark {
+            color: map.get($default, color);
+        }
+    }
+
+    & .kbq-hint .kbq-hint__text {
+        color: map.get($default, caption);
+    }
+
+    &:hover,
+    &.kbq-hover {
+        @include kbq-checkbox-state(map.get($checkbox, hover));
+    }
+
+    &.kbq-checked,
+    &.kbq-indeterminate {
+        @include kbq-checkbox-state(map.get($checkbox, checked));
+    }
+
+    &.kbq-checked:not(.kbq-disabled),
+    &.kbq-indeterminate:not(.kbq-disabled) {
+        &:hover,
+        &.kbq-hover {
+            @include kbq-checkbox-state(map.get($checkbox, checked-hover));
+        }
+
+        & .kbq-checkbox-input.cdk-keyboard-focused {
+            + .kbq-checkbox__frame {
+                $checked-focused: map.get($checkbox, checked-focused);
+
+                border-color: map.get($checked-focused, border);
+                background-color: map.get($checked-focused, background);
+                outline: map.get($checked-focused, outline);
+            }
+        }
+    }
+
+    & .kbq-checkbox-input.cdk-keyboard-focused {
+        + .kbq-checkbox__frame {
+            $focused: map.get($checkbox, focused);
+
+            border-color: map.get($focused, border);
+            background-color: map.get($focused, background);
+            outline: map.get($focused, outline);
+        }
+    }
+
+    &.kbq-disabled {
+        $disabled: map.get($checkbox, disabled);
+
+        .kbq-checkbox__frame {
+            border-color: map.get($disabled, border);
+            background-color: map.get($disabled, background);
+
+            & .kbq-checkbox-checkmark,
+            & .kbq-checkbox-mixedmark {
+                color: map.get($disabled, color);
+            }
+        }
+
+        & .kbq-hint .kbq-hint__text {
+            color: map.get($disabled, caption);
+        }
+
+        .kbq-checkbox-label {
+            color: map.get($disabled, text);
+        }
+    }
+}
+/* stylelint-enable no-descending-specificity */
+
+@mixin kbq-checkbox-theme($theme) {
+    $checkbox: map.get(map.get($theme, components), checkbox);
+
+    $checkbox-theme: map.get($checkbox, theme);
+    $checkbox-error: map.get($checkbox, error);
+
+    .kbq-checkbox {
+        @include kbq-checkbox-color($checkbox-theme);
+
+        &.kbq-error {
+            @include kbq-checkbox-color($checkbox-error);
+        }
+    }
+}
+
+@mixin kbq-checkbox-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-checkbox {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-normal-label));
+
+        & .kbq-hint .kbq-hint__text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-normal-caption));
+        }
+    }
+
+    .kbq-checkbox.kbq-checkbox_big {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-big-label));
+
+        & .kbq-hint .kbq-hint__text {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-big-caption));
+        }
+    }
+}

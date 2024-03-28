@@ -1,0 +1,11 @@
+@use '../main';
+
+
+.loader-overlay-container {
+    display: flex;
+
+    width: 500px;
+    height: 500px;
+
+    border: 1px solid red;
+}

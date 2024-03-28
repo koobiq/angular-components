@@ -1,0 +1,35 @@
+@use '../../styles/common/size';
+
+
+@mixin body-html() {
+
+    // HTML & Body reset
+    html,
+    body {
+        @include size.square(100%);
+    }
+
+    html {
+        // Prevent adjustments of font size after orientation changes in IE on Windows Phone and in iOS.
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+
+        // Setting @viewport causes scrollbars to overlap content in Edge, so
+        // we force a non-overlapping, non-auto-hiding scrollbar to counteract.
+        -ms-overflow-style: scrollbar;
+
+        -moz-osx-font-smoothing: grayscale;
+
+        // Helps fonts on OSX looks more consistent with other systems
+        // Isn't currently in button styles due to performance concerns
+        -webkit-font-smoothing: antialiased;
+        // Change the default tap highlight to be completely transparent in iOS.
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0); // 4
+        -webkit-touch-callout: none;
+    }
+
+    body {
+        // remove the margin in all browsers.
+        margin: 0;
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "rootDir": ".",
+        "target": "esnext",
+        "module": "commonjs",
+        "strictNullChecks": false,
+        "types": [
+            "node",
+            "jasmine"
+        ],
+        "paths": {}
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

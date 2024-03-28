@@ -1,0 +1,14 @@
+@use 'sass:map';
+
+@use '../core/styles/common/popup';
+@use '../core/styles/theming/theming';
+
+
+@mixin kbq-autocomplete-theme($theme) {
+    $select-panel: map.get(map.get($theme, components), select-panel);
+
+    .kbq-autocomplete-panel {
+        box-shadow: map.get($select-panel, shadow);
+        background: map.get($select-panel, background);
+    }
+}

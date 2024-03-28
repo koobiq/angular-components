@@ -1,0 +1,166 @@
+@use 'sass:map';
+
+@use 'theming/theming' as *;
+@use 'typography/typography' as *;
+
+@use 'theming/scrollbar-theme' as *;
+
+@use '../selection/pseudo-checkbox/pseudo-checkbox-theme' as *;
+@use '../../alert/alert-theme' as *;
+@use '../../autocomplete/autocomplete-theme' as *;
+@use '../../badge/badge-theme' as *;
+@use '../../button/button-theme' as *;
+@use '../../button-toggle/button-toggle-theme' as *;
+@use '../../card/card-theme' as *;
+@use '../../checkbox/checkbox-theme' as *;
+@use '../../code-block/code-block-theme' as *;
+@use '../../datepicker/datepicker-theme' as *;
+@use '../../divider/divider-theme' as *;
+@use '../../dropdown/dropdown-theme' as *;
+@use '../../file-upload/file-upload-theme' as *;
+@use '../../form-field/form-field-theme' as *;
+@use '../../form-field/hint-theme' as *;
+@use '../../icon/icon-theme' as *;
+@use '../../icon/icon-item-theme' as *;
+@use '../../icon/icon-button-theme' as *;
+@use '../../input/input-theme' as *;
+@use '../../link/link-theme' as *;
+@use '../../list/list-theme' as *;
+@use '../../loader-overlay/loader-overlay-theme' as *;
+@use '../../modal/modal-theme' as *;
+@use '../../markdown/markdown-theme' as *;
+@use '../../navbar/navbar-theme' as *;
+@use '../../popover/popover-theme' as *;
+@use '../../progress-bar/progress-bar-theme' as *;
+@use '../../progress-spinner/progress-spinner-theme' as *;
+@use '../../radio/radio-theme' as *;
+@use '../../risk-level/risk-level-theme' as *;
+@use '../../select/select-theme' as *;
+@use '../../sidepanel/sidepanel-theme' as *;
+@use '../../scrollbar/scrollbar-component-theme' as *;
+@use '../../splitter/splitter-theme' as *;
+@use '../../tabs/tabs-theme' as *;
+@use '../../tags/tag-theme' as *;
+@use '../../textarea/textarea-theme' as *;
+@use '../../timezone/timezone-option-theme' as *;
+@use '../../toast/toast-theme' as *;
+@use '../../toggle/toggle-theme' as *;
+@use '../../tooltip/tooltip-theme' as *;
+@use '../../tree-select/tree-select-theme' as *;
+@use '../../tree/tree-theme' as *;
+@use '../../table/table-theme' as *;
+@use '../forms/forms-theme' as *;
+@use '../option/option-theme' as *;
+@use '../option/optgroup-theme' as *;
+@use '../option/option-action-theme' as *;
+@use '../highlight/highlight-theme' as *;
+@use '../../dl/dl-theme' as *;
+
+
+@mixin koobiq-theme($theme) {
+    @include kbq-core-theme($theme);
+
+    @include kbq-alert-theme($theme);
+    @include kbq-autocomplete-theme($theme);
+    @include kbq-badge-theme($theme);
+    @include kbq-button-theme($theme);
+    @include kbq-button-toggle-theme($theme);
+    @include kbq-card-theme($theme);
+    @include kbq-checkbox-theme($theme);
+    @include kbq-code-block-theme($theme);
+    @include kbq-datepicker-theme($theme);
+    @include kbq-dl-theme($theme);
+    @include kbq-divider-theme($theme);
+    @include kbq-dropdown-theme($theme);
+    @include kbq-form-field-theme($theme);
+    @include kbq-file-upload-theme($theme);
+    @include kbq-hint-theme($theme);
+    @include kbq-forms-theme($theme);
+    @include kbq-highlight-theme($theme);
+    @include kbq-icon-theme($theme);
+    @include kbq-icon-item-theme($theme);
+    @include kbq-icon-button-theme($theme);
+    @include kbq-link-theme($theme);
+    @include kbq-list-theme($theme);
+    @include kbq-loader-overlay-theme($theme);
+    @include kbq-modal-theme($theme);
+    @include kbq-markdown-theme($theme);
+    @include kbq-navbar-theme($theme);
+    @include kbq-option-theme($theme);
+    @include kbq-optgroup-theme($theme);
+    @include kbq-option-action-theme($theme);
+    @include kbq-popover-theme($theme);
+    @include kbq-progress-bar-theme($theme);
+    @include kbq-progress-spinner-theme($theme);
+    @include kbq-pseudo-checkbox-theme($theme);
+    @include kbq-radio-theme($theme);
+    @include kbq-risk-level-theme($theme);
+    @include kbq-scrollbar-theme($theme);
+    @include kbq-scrollbar-component-theme($theme);
+    @include kbq-select-theme($theme);
+    @include kbq-sidepanel-theme($theme);
+    @include kbq-splitter-theme($theme);
+    @include kbq-tabs-theme($theme);
+    @include kbq-tag-theme($theme);
+    @include kbq-timezone-option-theme($theme);
+    @include kbq-toast-theme($theme);
+    @include kbq-toggle-theme($theme);
+    @include kbq-tooltip-theme($theme);
+    @include kbq-tree-select-theme($theme);
+    @include kbq-tree-theme($theme);
+    @include kbq-table-theme($theme);
+}
+
+@mixin koobiq-typography($tokens, $config: null, $md-config: null) {
+    @if $config == null {
+        $config: kbq-typography-config($tokens);
+    }
+
+    @if $md-config == null {
+        $md-config: kbq-markdown-typography-config($tokens);
+    }
+
+    @include kbq-base-typography($config);
+    @include kbq-markdown-base-typography($md-config);
+
+    @include kbq-alert-typography($config);
+    @include kbq-badge-typography($config);
+    @include kbq-button-typography($config);
+    @include kbq-button-toggle-typography($config);
+    @include kbq-checkbox-typography($config);
+    @include kbq-code-block-typography($config);
+    @include kbq-datepicker-typography($config);
+    @include kbq-dropdown-typography($config);
+    @include kbq-dl-typography($config);
+    @include kbq-form-field-typography($config);
+    @include kbq-hint-typography($config);
+    @include kbq-file-upload-typography($config);
+    @include kbq-forms-typography($config);
+    @include kbq-input-typography($config);
+    @include kbq-link-typography($config);
+    @include kbq-list-typography($config);
+    @include kbq-loader-overlay-typography($config);
+    @include kbq-modal-typography($config);
+    @include kbq-navbar-typography($config);
+    @include kbq-option-typography($config);
+    @include kbq-optgroup-typography($config);
+    @include kbq-popover-typography($config);
+    @include kbq-progress-bar-typography($config);
+    @include kbq-progress-spinner-typography($config);
+    @include kbq-radio-typography($config);
+    @include kbq-risk-level-typography($config);
+    @include kbq-select-typography($config);
+    @include kbq-sidepanel-typography($config);
+    @include kbq-tabs-typography($config);
+    @include kbq-tag-typography($config);
+    @include kbq-textarea-typography($config);
+    @include kbq-timezone-option-typography($config);
+    @include kbq-toast-typography($config);
+    @include kbq-toggle-typography($config);
+    @include kbq-tooltip-typography($config);
+    @include kbq-tree-select-typography($config);
+    @include kbq-tree-typography($config);
+    @include kbq-table-typography($config);
+
+    @include kbq-markdown-typography($md-config);
+}

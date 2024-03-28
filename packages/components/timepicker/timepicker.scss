@@ -1,0 +1,18 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-timepicker {
+    padding-right: calc(
+        var(--kbq-timepicker-size-padding-right, #{map.get($tokens, timepicker-size-padding-right)}) -
+        var(--kbq-form-field-size-border-width, #{map.get($tokens, form-field-size-border-width)})
+    );
+}
+
+.kbq-form-field-type-timepicker {
+    width: auto;
+}

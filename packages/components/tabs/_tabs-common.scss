@@ -1,0 +1,78 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+@mixin tab-label {
+    position: relative;
+
+    box-sizing: border-box;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    $padding-vertical: map.get($tokens, tabs-size-tab-item-padding-vertical);
+    $padding-horizontal: map.get($tokens, tabs-size-tab-item-padding-horizontal);
+    $border-width: map.get($tokens, tabs-size-tab-item-focus-outline-width);
+
+    padding:
+        calc(
+            var(--kbq-tabs-size-tab-item-padding-vertical, $padding-vertical) -
+            var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width)
+        )
+        calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal, $padding-horizontal) -
+            var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width)
+        );
+
+    border: {
+        width: var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width);
+        style: solid;
+        color: transparent;
+        radius: var(
+            --kbq-tabs-size-tab-item-border-radius, map.get($tokens, tabs-size-tab-item-border-radius)
+        );
+    }
+
+    outline: none;
+
+    &.kbq-selected {
+        cursor: default;
+    }
+
+    &.cdk-keyboard-focused {
+        z-index: 1;
+    }
+
+    &.kbq-disabled {
+        pointer-events: none;
+    }
+
+    & .kbq-tab-label__content {
+        display: flex;
+
+        gap: var(
+            --kbq-tabs-size-tab-item-content-gap-horizontal, map.get($tokens, tabs-size-tab-item-content-gap-horizontal)
+        );
+    }
+
+    &.kbq-tab-label_vertical {
+        justify-content: flex-start;
+
+        & .kbq-tab-label__content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}

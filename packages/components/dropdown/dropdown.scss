@@ -1,0 +1,56 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-dropdown-trigger.kbq-button-icon_right.kbq-button-icon_left {
+    & .kbq-icon_left {
+        margin-right: 2px;
+    }
+
+    & .kbq-icon_right {
+        margin-left: 2px;
+    }
+}
+
+.kbq-dropdown-trigger__icon {
+    margin-left: auto;
+}
+
+.kbq-dropdown__panel {
+    margin-top: 2px;
+
+    min-width: var(--kbq-dropdown-size-container-width-min, map.get($tokens, dropdown-size-container-width-min));
+    max-width: var(--kbq-dropdown-size-container-width-max, map.get($tokens, dropdown-size-container-width-max));
+
+    border-radius: var(
+        --kbq-dropdown-size-container-border-radius, map.get($tokens, dropdown-size-container-border-radius)
+    );
+
+    padding-top: var(
+        --kbq-dropdown-size-container-padding-vertical, map.get($tokens, dropdown-size-container-padding-vertical)
+    );
+
+    padding-bottom: var(
+        --kbq-dropdown-size-container-padding-vertical, map.get($tokens, dropdown-size-container-padding-vertical)
+    );
+
+    // Prevent users from interacting with the panel while it's animating. Note that
+    // people won't be able to click through it, because the overlay pane will catch the click.
+    // This fixes the following issues:
+    //  * Users accidentally opening sub-menus when the `overlapTrigger` option is enabled.
+    //  * Users accidentally tapping on content inside the sub-menu on touch devices, if the
+    //    sub-menu overlaps the trigger. The issue is due to touch devices emulating the
+    //    `mouseenter` event by dispatching it on tap.
+    &.ng-animating {
+        pointer-events: none;
+    }
+}
+
+.kbq-dropdown__content {
+    display: flex;
+    flex-direction: column;
+}

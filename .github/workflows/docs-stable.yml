@@ -1,0 +1,41 @@
+name: Deploy Stable Docs
+
+on:
+  push:
+    tags:
+      - 17.*.*
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'koobiq' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+      - name: Install
+        run: yarn install --immutable
+      - name: Build packages
+        run: |
+          yarn run build:cdk
+          yarn run build:components
+          yarn run build:angular-luxon-adapter
+          yarn run build:angular-moment-adapter
+          yarn run styles:built-all
+      - name: Build Docs
+        run: |
+          yarn run build:docs-examples-module
+          yarn run build:docs-examples
+          yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+          yarn run docs:prod-build:aot
+      - name: Deploy
+        run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}

@@ -1,0 +1,22 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-cleaner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size));
+    margin-right: var(
+        --kbq-form-field-size-icon-button-margin-right,
+        map.get($tokens, form-field-size-icon-button-margin-right)
+    );
+    height: 100%;
+
+    cursor: pointer;
+}

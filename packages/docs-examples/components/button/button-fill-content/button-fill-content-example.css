@@ -1,0 +1,14 @@
+.fill-content__example-button {
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.fill-content__example-button .kbq-button-wrapper {
+    display: inline-block;
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

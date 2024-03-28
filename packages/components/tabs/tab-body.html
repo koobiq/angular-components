@@ -1,0 +1,11 @@
+<div class="kbq-tab-body__content kbq-scrollbar"
+     #content
+     [@translateTab]="{
+        value: bodyPosition,
+        params: {animationDuration: animationDuration}
+     }"
+     (@translateTab.start)="onTranslateTabStarted($event)"
+     (@translateTab.done)="onTranslateTabComplete($event)"
+     cdk-scrollable>
+    <ng-template kbqTabBodyHost></ng-template>
+</div>

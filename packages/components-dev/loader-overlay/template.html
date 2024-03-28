@@ -1,0 +1,75 @@
+<button kbq-button (click)="loading = !loading">toggleLoading</button>
+
+<br><br><br>
+
+<div class="loader-overlay-container">
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    <kbq-loader-overlay
+        *ngIf="loading"
+        [text]="'Создание отчета'"
+        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
+    </kbq-loader-overlay>
+</div>
+
+<br><br><br>
+
+transparent
+<div class="loader-overlay-container">
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    <kbq-loader-overlay
+        [transparent]="true"
+        *ngIf="loading"
+        [text]="'Создание отчета'"
+        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
+    </kbq-loader-overlay>
+</div>
+
+<br><br><br>
+
+compact
+<div class="loader-overlay-container">
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    <kbq-loader-overlay
+        *ngIf="loading"
+        [compact]="true"
+        [text]="'Создание отчета'"
+        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
+    </kbq-loader-overlay>
+</div>
+
+<br><br><br>
+
+custom
+<div class="loader-overlay-container">
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    text text text text text text text text text text text text text text text text text text text text
+    <kbq-loader-overlay *ngIf="loading" [text]="text" [caption]="caption" fixed-top>
+        <kbq-progress-spinner
+            kbq-loader-overlay-indicator
+            [mode]="'indeterminate'"
+            [color]="themePalette.Error">
+        </kbq-progress-spinner>
+
+        <div kbq-loader-overlay-text>Создание отчета</div>
+        <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
+    </kbq-loader-overlay>
+</div>

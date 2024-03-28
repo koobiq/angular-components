@@ -1,0 +1,63 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+.kbq-calendar {
+    display: block;
+}
+
+.kbq-calendar__content {
+    padding-right: var(
+        --kbq-datepicker-size-grid-padding-horizontal,
+        map.get($tokens, datepicker-size-grid-padding-horizontal)
+    );
+
+    padding-left: var(
+        --kbq-datepicker-size-grid-padding-horizontal,
+        map.get($tokens, datepicker-size-grid-padding-horizontal)
+    );
+
+    outline: none;
+}
+
+.kbq-calendar__table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.kbq-calendar__table-header th {
+    text-align: center;
+    height: 30px;
+
+    &.kbq-calendar__table-header-divider {
+        position: relative;
+
+        box-sizing: border-box;
+        height: var(
+            --kbq-datepicker-size-grid-content-gap-vertical,
+            map.get($tokens, datepicker-size-grid-content-gap-vertical)
+        );;
+
+        $horizontal-padding: map.get($tokens, datepicker-size-grid-padding-horizontal);
+        // We use an absolutely positioned pseudo-element as the divider line for the table header so we
+        // can extend it all the way to the edge of the calendar.
+        &::after {
+            content: '';
+
+            position: absolute;
+            top: 0;
+            left: calc(-1 * var(--kbq-datepicker-size-grid-padding-horizontal, #{$horizontal-padding}));
+            right: calc(-1 * var(--kbq-datepicker-size-grid-padding-horizontal, #{$horizontal-padding}));
+
+            height: var(
+                --kbq-datepicker-size-grid-divider-height,
+                map.get($tokens, datepicker-size-grid-divider-height)
+            );
+        }
+    }
+}

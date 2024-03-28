@@ -1,0 +1,7 @@
+@mixin kbq-docs-page-not-found-theme($theme) {
+    $background: map-get($theme, background);
+
+    .page-not-found {
+        background: map-get($background, background-under);
+    }
+}

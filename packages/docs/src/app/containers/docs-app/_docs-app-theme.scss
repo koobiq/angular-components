@@ -1,0 +1,20 @@
+@mixin kbq-docs-app-theme($theme) {
+    $background: map-get($theme, background);
+
+    .docs-overlay {
+        background: map-get($background, overlay);
+    }
+
+    .kbq-markdown__code,
+    .kbq-markdown__pre {
+        background: map-get($background, bg-secondary) !important;
+    }
+
+    .docs-top-overflown {
+        box-shadow: 0 9px 8px -12px #6C739480;
+    }
+
+    .docs-bottom-overflown {
+
+    }
+}

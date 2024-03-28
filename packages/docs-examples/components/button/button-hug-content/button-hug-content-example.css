@@ -1,0 +1,7 @@
+.hug-content__example-button {
+    margin-bottom: 16px;
+}
+
+.hug-content__example-button:last-of-type {
+    margin-bottom: 0;
+}

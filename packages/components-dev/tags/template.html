@@ -1,0 +1,147 @@
+<div class="example-container">
+    <br><br><br>
+
+    <h4 class="kbq-title">Tags list</h4>
+        <kbq-tag-list>
+            <kbq-tag value="Test" [selectable]="false" (removed)="onRemoveTag('Test')" >Test</kbq-tag>
+            <kbq-tag>
+                name
+                <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            </kbq-tag>
+        </kbq-tag-list>
+
+    <br><br><br>
+    <h4 class="mc-title">Tags list, selectable=false</h4>
+
+    <kbq-tag-list [selectable]="false">
+        <kbq-tag *ngFor="let tag of simpleTags" [value]="tag" (removed)="onRemoveTag(tag)">
+            {{ tag }}
+            <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+        </kbq-tag>
+    </kbq-tag-list>
+
+    <br><br><br>
+    <h4 class="kbq-title">Tags with icons</h4>
+        <kbq-tag-list>
+            <kbq-tag *ngFor="let tag of simpleTags" [value]="tag" (removed)="onRemoveTag(tag)">
+                <i kbq-icon="mc-search_16"></i>
+                {{ tag }}
+                <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            </kbq-tag>
+        </kbq-tag-list>
+    <br><br><br>
+
+    <h4 class="kbq-title">Without remove</h4>
+        <kbq-tag-list>
+            <kbq-tag *ngFor="let tag of simpleTags" [value]="tag" (removed)="onRemoveTag(tag)">
+                {{ tag }}
+            </kbq-tag>
+            <kbq-tag *ngFor="let tag of simpleTags" [value]="tag" (removed)="onRemoveTag(tag)">
+                <i kbq-icon="mc-search_16"></i>
+                {{ tag }}
+            </kbq-tag>
+        </kbq-tag-list>
+
+    <br><br><br>
+
+
+    <h4 class="kbq-title">Tags with input</h4>
+    <kbq-form-field>
+        <kbq-tag-list #inputTagList>
+            <kbq-tag *ngFor="let tag of inputTags" [value]="tag" (removed)="inputOnRemoveTag(tag)">
+                {{ tag }}
+                <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            </kbq-tag>
+
+            <input placeholder="New tag..."
+                   kbqInput
+                   #inputTagInput
+                   [formControl]="tagCtrl"
+                   [kbqTagInputFor]="inputTagList"
+                   [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [distinct]="true"
+                   (kbqTagInputTokenEnd)="inputOnCreate($event)">
+            <kbq-cleaner #kbqTagListCleaner (click)="onClear()"></kbq-cleaner>
+        </kbq-tag-list>
+    </kbq-form-field>
+
+    <br><br><br>
+
+    <h4 class="kbq-title">Tags with autocomplete</h4>
+    <kbq-form-field>
+        <kbq-tag-list #autocompleteTagList>
+            <kbq-tag *ngFor="let tag of autocompleteSelectedTags" [value]="tag" (removed)="autocompleteOnRemove(tag)">
+                {{ tag }}
+                <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            </kbq-tag>
+            <input placeholder="Новый тег..."
+                   #autocompleteTagInput
+                   [distinct]="true"
+                   [formControl]="tagCtrl"
+                   [kbqAutocomplete]="autocomplete"
+                   [kbqTagInputAddOnBlur]="false"
+                   [kbqTagInputFor]="autocompleteTagList"
+                   (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
+                   (blur)="addOnBlurFunc($event)">
+        </kbq-tag-list>
+        <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
+            <kbq-option *ngIf="canCreate" [value]="{ new: true, value: autocompleteTagInput.value }">
+                Создать: {{ autocompleteTagInput.value }}
+            </kbq-option>
+            <kbq-option *ngIf="hasDuplicates" [disabled]="true">Ничего не найдено</kbq-option>
+            <kbq-option *ngFor="let tag of autocompleteFilteredTags | async" [value]="tag">{{ tag }}</kbq-option>
+        </kbq-autocomplete>
+    </kbq-form-field>
+
+    <br><br><br>
+
+    <h4 class="kbq-title">Tags with tag adding on blur disabled</h4>
+    <kbq-form-field>
+        <kbq-tag-list #enterInputTagList>
+            <kbq-tag *ngFor="let tag of enterTags" [value]="tag" (removed)="enterOnRemoveTag(tag)">
+                {{ tag }}
+                <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            </kbq-tag>
+            <input placeholder="New tag..."
+                   #enterTagInput
+                   [formControl]="tagCtrl"
+                   [kbqTagInputFor]="enterInputTagList"
+                   [kbqTagInputAddOnBlur]="addOnBlur"
+                   [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (kbqTagInputTokenEnd)="enterOnCreate($event)">
+        </kbq-tag-list>
+    </kbq-form-field>
+
+    <br><br><br>
+
+    <h4 class="kbq-title">simple Tags</h4>
+
+    <br>
+
+    <div class="layout-column">
+        <div class="simple-tags-example-row">
+            <kbq-tag [tabindex]="0">Normal <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [tabindex]="0" class="kbq-hovered">Hovered <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [tabindex]="0" class="kbq-focused">Focused <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [tabindex]="0" [disabled]="true">Disabled <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+        </div>
+
+        <br>
+
+        <div class="simple-tags-example-row">
+            <kbq-tag [color]="colors.Contrast">Normal <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Contrast" class="kbq-hovered">Hovered <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Contrast" class="kbq-focused">Focused <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Contrast" [disabled]="true">Disabled <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+        </div>
+
+        <br>
+
+        <div class="simple-tags-example-row">
+            <kbq-tag [color]="colors.Error">Normal <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Error" class="kbq-hovered">Hovered <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Error" class="kbq-focused">Focused <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+            <kbq-tag [color]="colors.Error" [disabled]="true">Disabled <i kbq-icon="mc-close-S_16" kbqTagRemove></i></kbq-tag>
+        </div>
+    </div>
+</div>

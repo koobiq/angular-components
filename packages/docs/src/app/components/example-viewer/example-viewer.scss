@@ -1,0 +1,8 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-example-viewer__example {
+    padding: 16px;
+
+    overflow: auto;
+}

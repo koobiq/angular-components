@@ -1,0 +1,39 @@
+<kbq-tree-selection
+    [(ngModel)]="modelValue"
+    [autoSelect]="false"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl"
+    (onSelectAll)="onSelectAll($event)">
+
+    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
+        <i kbq-icon="mc-info-o_16"></i>
+
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-tree-option>
+
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+        <i kbq-icon="mc-info-o_16"></i>
+
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+
+        <kbq-option-action
+            [kbqTooltip]="'Tooltip text'"
+            [kbqPlacement]="popUpPlacements.Right"
+            [kbqDropdownTriggerFor]="dropdown">
+        </kbq-option-action>
+    </kbq-tree-option>
+</kbq-tree-selection>
+
+<kbq-dropdown #dropdown>
+    <button kbq-dropdown-item>action 1</button>
+    <button kbq-dropdown-item>action 2</button>
+    <button kbq-dropdown-item>action 3</button>
+</kbq-dropdown>

@@ -1,0 +1,9 @@
+<div class="docs-row">
+    <kbq-form-field
+        [kbqWarningTooltip]="'Только цифры'"
+        #tooltip="kbqWarningTooltip">
+
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [(ngModel)]="time" [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip">
+    </kbq-form-field>
+</div>

@@ -1,0 +1,104 @@
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ContentChild,
+    Directive,
+    ElementRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    ViewEncapsulation
+} from '@angular/core';
+
+
+const mcLoaderOverlayParent = 'kbq-loader-overlay_parent';
+
+
+@Directive({
+    selector: '[kbq-loader-overlay-indicator]',
+    host: {
+        class: 'kbq-loader-overlay-indicator'
+    }
+})
+export class KbqLoaderOverlayIndicator {}
+
+
+@Directive({
+    selector: '[kbq-loader-overlay-text]',
+    host: {
+        class: 'kbq-loader-overlay-text'
+    }
+})
+export class KbqLoaderOverlayText {}
+
+
+@Directive({
+    selector: '[kbq-loader-overlay-caption]',
+    host: {
+        class: 'kbq-loader-overlay-caption'
+    }
+})
+export class KbqLoaderOverlayCaption {}
+
+
+@Component({
+    selector: 'kbq-loader-overlay',
+    templateUrl: './loader-overlay.component.html',
+    styleUrls: ['./loader-overlay.scss'],
+    host: {
+        class: 'kbq-loader-overlay',
+        '[class.kbq-loader-overlay_empty]': 'isEmpty',
+        '[class.kbq-loader-overlay_transparent]': 'transparent',
+        '[class.kbq-loader-overlay_filled]': '!transparent',
+        '[class.kbq-loader-overlay_big]': '!compact',
+        '[class.kbq-loader-overlay_compact]': 'compact'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
+})
+export class KbqLoaderOverlay implements OnInit, OnDestroy {
+    @Input() text: string;
+
+    @Input() caption: string;
+    @Input() compact: boolean = false;
+    @Input() transparent: boolean = false;
+
+    get isExternalIndicator(): boolean {
+        return !!this.externalIndicator;
+    }
+
+    get isExternalText(): boolean {
+        return !!this.externalText;
+    }
+
+    get isExternalCaption(): boolean {
+        return !!this.externalCaption;
+    }
+
+    get isEmpty(): boolean {
+        return !(!!this.text || this.isExternalText || !!this.caption || this.isExternalCaption);
+    }
+
+    get spinnerSize(): string {
+        return this.compact ? 'compact' : 'big';
+    }
+
+    @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
+    @ContentChild(KbqLoaderOverlayText) externalText: KbqLoaderOverlayText | null;
+    @ContentChild(KbqLoaderOverlayCaption) externalCaption: KbqLoaderOverlayCaption | null;
+
+    constructor(
+        private elementRef: ElementRef,
+        private renderer: Renderer2
+    ) {}
+
+    ngOnInit(): void {
+        this.renderer.addClass(this.elementRef.nativeElement.parentElement, mcLoaderOverlayParent);
+    }
+
+    ngOnDestroy(): void {
+        this.renderer.removeClass(this.elementRef.nativeElement.parentElement, mcLoaderOverlayParent);
+    }
+}
+

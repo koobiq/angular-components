@@ -1,0 +1,17 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.page-not-found {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    margin-top: 48px;
+    padding-top: 164px;
+
+    align-items: center;
+
+    & .kbq-icon {
+        margin-bottom: -40px;
+    }
+}

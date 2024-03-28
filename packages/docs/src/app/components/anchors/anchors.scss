@@ -1,0 +1,33 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-anchors {
+    position: sticky;
+
+    top: $size-7xl;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 300px;
+    width: 300px;
+}
+
+.docs-anchors__element {
+    list-style-type: none;
+    padding: 6px 16px;
+}
+
+.docs-anchors__element_1 {
+    padding-left: 32px;
+}
+
+.docs-anchors__element_2 {
+    padding-left: 56px;
+}
+
+@media (769px <= width <= 1200px) {
+    .docs-anchors {
+        width: unset;
+    }
+}

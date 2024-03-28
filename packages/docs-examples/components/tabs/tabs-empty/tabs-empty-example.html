@@ -1,0 +1,23 @@
+<br><br><br>
+
+<kbq-tab-group>
+    <kbq-tab [label]="'First'">
+        Contents for First tab
+    </kbq-tab>
+
+    <kbq-tab [label]="'Second'">
+        Contents for Second tab
+    </kbq-tab>
+
+    <kbq-tab [label]="'Комментарии'" [empty]="true" [tooltipTitle]="'Text for empty tab'">
+        <div class="empty-tab-content">
+            Комментариев нет
+            <br>
+            Все заметки будут храниться здесь
+        </div>
+    </kbq-tab>
+
+    <kbq-tab [label]="'Third'">
+        Contents for Third tab
+    </kbq-tab>
+</kbq-tab-group>

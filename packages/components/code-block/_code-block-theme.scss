@@ -1,0 +1,371 @@
+@use 'sass:meta';
+@use 'sass:map';
+@use 'sass:list';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-code-block-style($style) {
+    $header: map.get($style, header);
+    $container: map.get($style, container);
+    $actionbar: map.get($style, actionbar);
+    $collapse: map.get($style, collapse);
+
+    border-color: map.get($container, border);
+    background: map.get($container, background);
+
+    & .kbq-tab-header {
+        $header: map.get($style, header);
+        background: map.get($header, background) !important;
+    }
+
+    & .kbq-code-block-actionbar {
+        background: map.get($actionbar, background);
+    }
+
+    &.kbq-code-block_header-with-shadow {
+        & .kbq-tab-header {
+            box-shadow: map.get($header, shadow);
+        }
+    }
+
+    &.kbq-code-block_no-header {
+        & .kbq-code-block__fade-gradient {
+            display: block;
+
+            background: map.get($actionbar, fade-gradient)
+        }
+    }
+
+    .kbq-code-block__show-more {
+        .bg-wrapper {
+            background: map.get($collapse, button-expand-background);
+            opacity: 90%;
+        }
+    }
+
+    & .kbq-code-block__show-more_expanded {
+        background: map.get($collapse, expanded-background);
+    }
+
+    & .kbq-code-block__show-more_collapsed {
+        background: map.get($collapse, collapsed-background);
+    }
+}
+
+@mixin kbq-code-block-theme($theme) {
+    $code-block: map.get(map.get($theme, components), code-block);
+
+    .kbq-code-block {
+        .hljs {
+            $hljs: map.get($code-block, hljs);
+
+            display: block;
+            overflow-x: auto;
+
+            &-addition {
+                background-color: map.get($hljs, addition-background);
+                color: map.get($hljs, addition-color);
+            }
+
+            &-attr {
+                background-color: map.get($hljs, attr-background);
+                color: map.get($hljs, attr-color);
+            }
+
+            &-attribute {
+                background-color: map.get($hljs, attribute-background);
+                color: map.get($hljs, attribute-color);
+            }
+
+            &-built_in {
+                background-color: map.get($hljs, built_in-background);
+                color: map.get($hljs, built_in-color);
+            }
+
+            &-bullet {
+                background-color: map.get($hljs, bullet-background);
+                color: map.get($hljs, bullet-color);
+            }
+
+            &-char-escape {
+                background-color: map.get($hljs, char-escape-background);
+                color: map.get($hljs, char-escape-color);
+            }
+
+            &-class {
+                background-color: map.get($hljs, class-background);
+                color: map.get($hljs, class-color);
+            }
+
+            &-code {
+                background-color: map.get($hljs, code-background);
+                color: map.get($hljs, code-color);
+            }
+
+            &-comment {
+                background-color: map.get($hljs, comment-background);
+                color: map.get($hljs, comment-color);
+            }
+
+            &-deletion {
+                background-color: map.get($hljs, deletion-background);
+                color: map.get($hljs, deletion-color);
+            }
+
+            &-doctag {
+                background-color: map.get($hljs, doctag-background);
+                color: map.get($hljs, doctag-color);
+            }
+
+            &-emphasis {
+                background-color: map.get($hljs, emphasis-background);
+                color: map.get($hljs, emphasis-color);
+            }
+
+            &-formula {
+                background-color: map.get($hljs, formula-background);
+                color: map.get($hljs, formula-color);
+            }
+
+            &-function {
+                background-color: map.get($hljs, function-background);
+                color: map.get($hljs, function-color);
+            }
+
+            &-keyword {
+                background-color: map.get($hljs, keyword-background);
+                color: map.get($hljs, keyword-color);
+            }
+
+            &-link {
+                background-color: map.get($hljs, link-background);
+                color: map.get($hljs, link-color);
+            }
+
+            &-literal {
+                background-color: map.get($hljs, literal-background);
+                color: map.get($hljs, literal-color);
+            }
+
+            &-meta {
+                background-color: map.get($hljs, meta-background);
+                color: map.get($hljs, meta-color);
+            }
+
+            &-meta-keyword {
+                background-color: map.get($hljs, meta-keyword-background);
+                color: map.get($hljs, meta-keyword-color);
+            }
+
+            &-meta-string {
+                background-color: map.get($hljs, meta-string-background);
+                color: map.get($hljs, meta-string-color);
+            }
+
+            &-meta-prompt {
+                background-color: map.get($hljs, meta-prompt-background);
+                color: map.get($hljs, meta-prompt-color);
+            }
+
+            &-name {
+                background-color: map.get($hljs, name-background);
+                color: map.get($hljs, name-color);
+            }
+
+            &-number {
+                background-color: map.get($hljs, number-background);
+                color: map.get($hljs, number-color);
+            }
+
+            &-operator {
+                background-color: map.get($hljs, operator-background);
+                color: map.get($hljs, operator-color);
+            }
+
+            &-params {
+                background-color: map.get($hljs, params-background);
+                color: map.get($hljs, params-color);
+            }
+
+            &-property {
+                background-color: map.get($hljs, property-background);
+                color: map.get($hljs, property-color);
+            }
+
+            &-punctuation {
+                background-color: map.get($hljs, punctuation-background);
+                color: map.get($hljs, punctuation-color);
+            }
+
+            &-quote {
+                background-color: map.get($hljs, quote-background);
+                color: map.get($hljs, quote-color);
+            }
+
+            &-regexp {
+                background-color: map.get($hljs, regexp-background);
+                color: map.get($hljs, regexp-color);
+            }
+
+            &-section {
+                background-color: map.get($hljs, section-background);
+                color: map.get($hljs, section-color);
+            }
+
+            &-selector-attr {
+                background-color: map.get($hljs, selector-attr-background);
+                color: map.get($hljs, selector-attr-color);
+            }
+
+            &-selector-class {
+                background-color: map.get($hljs, selector-class-background);
+                color: map.get($hljs, selector-class-color);
+            }
+
+            &-selector-id {
+                background-color: map.get($hljs, selector-id-background);
+                color: map.get($hljs, selector-id-color);
+            }
+
+            &-selector-pseudo {
+                background-color: map.get($hljs, selector-pseudo-background);
+                color: map.get($hljs, selector-pseudo-color);
+            }
+
+            &-selector-tag {
+                background-color: map.get($hljs, selector-tag-background);
+                color: map.get($hljs, selector-tag-color);
+            }
+
+            &-string {
+                background-color: map.get($hljs, string-background);
+                color: map.get($hljs, string-color);
+            }
+
+            &-strong {
+                background-color: map.get($hljs, strong-background);
+                color: map.get($hljs, strong-color);
+            }
+
+            &-subst {
+                background-color: map.get($hljs, subst-background);
+                color: map.get($hljs, subst-color);
+            }
+
+            &-symbol {
+                background-color: map.get($hljs, symbol-background);
+                color: map.get($hljs, symbol-color);
+            }
+
+            &-tag {
+                background-color: map.get($hljs, tag-background);
+                color: map.get($hljs, tag-color);
+            }
+
+            &-template-tag {
+                background-color: map.get($hljs, template-tag-background);
+                color: map.get($hljs, template-tag-color);
+            }
+
+            &-template-variable {
+                background-color: map.get($hljs, template-variable-background);
+                color: map.get($hljs, template-variable-color);
+            }
+
+            &-title {
+                background-color: map.get($hljs, title-background);
+                color: map.get($hljs, title-color);
+            }
+
+            &-title-class {
+                background-color: map.get($hljs, title-class-background);
+                color: map.get($hljs, title-class-color);
+            }
+
+            &-title-class-inherited {
+                background-color: map.get($hljs, title-class-inherited-background);
+                color: map.get($hljs, title-class-inherited-color);
+            }
+
+            &-title-function {
+                background-color: map.get($hljs, title-function-background);
+                color: map.get($hljs, title-function-color);
+            }
+
+            &-title-function-invoke {
+                background-color: map.get($hljs, title-function-invoke-background);
+                color: map.get($hljs, title-function-invoke-color);
+            }
+
+            &-type {
+                background-color: map.get($hljs, type-background);
+                color: map.get($hljs, type-color);
+            }
+
+            &-variable {
+                background-color: map.get($hljs, variable-background);
+                color: map.get($hljs, variable-color);
+            }
+
+            &-variable-constant {
+                background-color: map.get($hljs, variable-constant-background);
+                color: map.get($hljs, variable-constant-color);
+            }
+
+            &-variable-language {
+                background-color: map.get($hljs, variable-language-background);
+                color: map.get($hljs, variable-language-color);
+            }
+
+            &-ln-n {
+                color: map.get($hljs, line-numbers-color);
+            }
+
+            &-line-numbers {
+                color: map.get($code-block, main-code-color);
+            }
+        }
+
+        &.kbq-code-block_outline {
+            @include kbq-code-block-style(map.get($code-block, outline));
+        }
+
+        &.kbq-code-block_filled {
+            @include kbq-code-block-style(map.get($code-block, filled));
+        }
+
+        .kbq-tab-header {
+            & .kbq-tab-label.kbq-tab-label_horizontal,
+            & .kbq-tab-header__pagination {
+                border-bottom-color: transparent;
+            }
+        }
+    }
+
+    .kbq-code-block-actionbar {
+        .kbq-code-block-actionbar_less-contrast {
+            background-color: map-get($code-block, actionbar, bg-less-contrast);
+        }
+
+        &.kbq-actionbar-block_floating {
+            background-color: map-get($code-block, actionbar, bg);
+        }
+    }
+}
+
+@mixin kbq-code-block-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-code-block {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, code-block-font-default));
+
+        & .kbq-code-block__code {
+            font: inherit;
+
+            > code {
+                font: inherit;
+            }
+        }
+    }
+}

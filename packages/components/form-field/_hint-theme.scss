@@ -1,0 +1,71 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-hint-color($hint) {
+    color: map.get($hint, text);
+
+    & .kbq-icon {
+        color: map.get($hint, icon) !important;
+    }
+}
+
+
+@mixin kbq-hint-theme($theme) {
+    $hint: map.get(map.get($theme, components), hint);
+
+    .kbq-hint {
+        $fill-text-on: map.get($hint, fill-text-on);
+
+        &.kbq-contrast-fade {
+            @include kbq-hint-color(map.get($fill-text-on, fade-contrast));
+        }
+
+        &.kbq-success {
+            @include kbq-hint-color(map.get($fill-text-on, success));
+        }
+
+        &.kbq-warning {
+            @include kbq-hint-color(map.get($fill-text-on, warning));
+        }
+
+        &.kbq-error {
+            @include kbq-hint-color(map.get($fill-text-on, error));
+        }
+    }
+
+    .kbq-hint.kbq-hint_fill-text-off {
+        $fill-text-off: map.get($hint, fill-text-off);
+
+        &.kbq-contrast-fade {
+            @include kbq-hint-color(map.get($fill-text-off, fade-contrast));
+        }
+
+        &.kbq-success {
+            @include kbq-hint-color(map.get($fill-text-off, success));
+        }
+
+        &.kbq-warning {
+            @include kbq-hint-color(map.get($fill-text-off, warning));
+        }
+
+        &.kbq-error {
+            @include kbq-hint-color(map.get($fill-text-off, error));
+        }
+    }
+}
+
+@mixin kbq-hint-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-hint .kbq-hint__text {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, hint-font-normal-text));
+    }
+
+    .kbq-hint.kbq-hint_compact .kbq-hint__text {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, hint-font-compact-text));
+    }
+}

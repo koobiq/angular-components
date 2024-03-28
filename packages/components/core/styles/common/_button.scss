@@ -1,0 +1,10 @@
+@use 'vendor-prefixes';
+
+
+@mixin kbq-button-reset {
+    @include vendor-prefixes.user-select(none);
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+

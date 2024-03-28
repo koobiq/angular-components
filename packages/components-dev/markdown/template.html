@@ -1,0 +1,147 @@
+<div class="container">
+    <h4>Through attribute</h4>
+    <kbq-markdown [markdownText]="markdownText"></kbq-markdown>
+
+    <h4>Through content</h4>
+    <kbq-markdown ngPreserveWhitespaces>
+# H1 Basic Syntax
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+**bold text**
+
+*italicized text*
+
+> blockquote
+
+1. First item
+
+2. *italicized text*
+
+3. ## H2
+4. > blockquote
+3. Third item
+1. First item
+2. Second item
+3. Third item
+1. First item
+2. Second item
+3. Third item
+1. First item
+2. Second item
+3. Third item
+
+
+- First item
+- Second item
+- Third item
+
+`inline code`
+
+---
+
+[title](https://www.example.com)
+
+![alt text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+
+![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+*Image caption text*
+
+# Extended Syntax
+
+### Table
+
+| Syntax | Description | Left-aligned | Center-aligned | Right-aligned |
+| ----------- | ----------- | :---         |     :---:      |          ---: |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+| Header | Title | git status   | git status     | git status    |
+| Paragraph | Text | git diff     | git diff       | git diff      |
+
+```css
+
+.kbq-markdown__img &#123;
+  max-width: var(--kbq-markdown-image-size-max-width, map.get($tokens, markdown-image-size-max-width));
+  margin-top: var(--kbq-markdown-image-size-margin-top, map.get($tokens, markdown-image-size-margin-top));
+  margin-bottom: var(
+      --kbq-markdown-image-size-margin-bottom, map.get($tokens, markdown-image-size-margin-bottom)
+  );
+
+  + em &#123;
+      display: block;
+      margin-top: var(
+          --kbq-markdown-image-size-caption-margin-top, map.get($tokens, markdown-image-size-caption-margin-top)
+      );
+      margin-bottom: var(
+          --kbq-markdown-image-size-caption-margin-bottom,
+          map.get($tokens, markdown-image-size-caption-margin-bottom)
+      );
+    &#125;
+&#125;
+
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+
+```
+
+**NOT WORK**
+
+Here's a sentence with a footnote. [^1]
+
+[^1]: This is the footnote.
+
+[currently, footnotes are not supported by markedjs](https://github.com/markedjs/marked/issues/714)
+
+**NOT WORK**
+
+# Custom ID heading {{'{#custom-id}'}}
+
+**NOT WORK**
+
+### Definition list
+
+term
+: definition
+
+~~The world is flat.~~
+
+**NOT WORK**
+
+### Task Lists
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+**NOT WORK**
+
+### emoji
+
+That is so funny! :joy:
+
+**NOT WORK**
+
+I need to highlight these ==very important words==.
+
+H~2~O
+
+X^2^
+    </kbq-markdown>
+
+    <h4>Through service</h4>
+    <div class="kbq-markdown" [innerHTML]="parsedByService"></div>
+</div>
+

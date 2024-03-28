@@ -1,0 +1,37 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-sidepanel-theme($theme) {
+    $sidepanel: map.get(map.get($theme, components), sidepanel);
+
+    .kbq-sidepanel-title {
+        color: map.get($sidepanel, header-text);
+    }
+
+    .kbq-sidepanel-content {
+        background-color: map.get($sidepanel, background);
+        color: map.get($sidepanel, content-text);
+    }
+
+    .kbq-sidepanel-container_shadowed {
+        .kbq-sidepanel-content {
+            box-shadow: map.get($sidepanel, box-shadow);
+        }
+    }
+}
+
+@mixin kbq-sidepanel-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-sidepanel-title {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, sidepanel-font-header));
+    }
+
+    .kbq-sidepanel-container,
+    .kbq-sidepanel-footer {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, sidepanel-font-content));
+    }
+}

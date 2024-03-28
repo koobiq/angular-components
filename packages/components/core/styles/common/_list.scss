@@ -1,0 +1,169 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../tokens';
+
+
+// This mixin will ensure that lines that overflow the container will hide the overflow and
+// truncate neatly with an ellipsis.
+@mixin kbq-truncate-line() {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// This mixin normalizes default element styles, e.g. font weight for heading text.
+@mixin kbq-normalize-text() {
+    & > * {
+        margin: 0;
+        padding: 0;
+        font-weight: normal;
+        font-size: inherit;
+    }
+}
+
+// This mixin provides base styles for the wrapper around kbq-line elements in a list.
+@mixin kbq-line-wrapper-base() {
+    @include kbq-normalize-text();
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    // Must remove wrapper when lines are empty or it takes up horizontal
+    // space and pushes other elements to the right.
+    &:empty {
+        display: none;
+    }
+}
+
+@mixin kbq-no-select() {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+@mixin kbq-list-text() {
+    $tokens: meta.module-variables(tokens) !default;
+
+    @include kbq-line-wrapper-base();
+    display: inline-block;
+
+    @include kbq-truncate-line();
+
+    padding-top: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+    padding-bottom: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+}
+
+// This mixin provides all list-item styles, changing font size and height based on whether the list is in dense mode.
+@mixin kbq-list-item-base() {
+    $tokens: meta.module-variables(tokens) !default;
+
+    $outline-width: map.get($tokens, list-size-container-focus-outline-width);
+
+    $padding-vertical: map.get($tokens, list-size-container-padding-vertical);
+    $padding-left: map.get($tokens, list-size-container-padding-left);
+    $padding-right: map.get($tokens, list-size-container-padding-right);
+
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    min-height: 32px;
+
+    gap: var(
+        --kbq-list-size-container-content-gap-horizontal, map.get($tokens, list-size-container-content-gap-horizontal)
+    );
+
+    border-width: var(--kbq-list-size-container-focus-outline-width, $outline-width);
+    border-style: solid;
+    border-color: transparent;
+
+    padding:
+        calc(
+            var(--kbq-list-size-container-padding-vertical, $padding-vertical) -
+            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+        )
+        calc(
+            var(--kbq-list-size-container-padding-right, $padding-right) -
+            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+        )
+        calc(
+            var(--kbq-list-size-container-padding-vertical, $padding-vertical) -
+            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+        )
+        calc(
+            var(--kbq-list-size-container-padding-left, $padding-left) -
+            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+        );
+
+    .kbq-list-text {
+        @include kbq-list-text();
+    }
+
+    .kbq-list-option-caption {
+        padding-top: var(
+            --kbq-list-size-container-content-gap-vertical,
+            map.get($tokens, list-size-container-content-gap-vertical)
+        );
+    }
+}
+
+@mixin kbq-list-header-base() {
+    $tokens: meta.module-variables(tokens) !default;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    min-height: 32px;
+
+    padding:
+        var(--kbq-list-size-header-padding-top, map.get($tokens, list-size-header-padding-top))
+        var(--kbq-list-size-header-padding-horizontal, map.get($tokens, list-size-header-padding-horizontal))
+        var(--kbq-list-size-header-padding-bottom, map.get($tokens, list-size-header-padding-bottom))
+        var(--kbq-list-size-header-padding-horizontal, map.get($tokens, list-size-header-padding-horizontal));
+
+    .kbq-list-text {
+        @include kbq-list-text();
+    }
+}
+
+@mixin kbq-list-subheading-base() {
+    $tokens: meta.module-variables(tokens) !default;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    min-height: 32px;
+
+    padding:
+        var(--kbq-list-size-subheading-padding-top, map.get($tokens, list-size-subheading-padding-top))
+        var(--kbq-list-size-subheading-padding-horizontal, map.get($tokens, list-size-subheading-padding-horizontal))
+        var(--kbq-list-size-subheading-padding-bottom, map.get($tokens, list-size-subheading-padding-bottom))
+        var(--kbq-list-size-subheading-padding-horizontal, map.get($tokens, list-size-subheading-padding-horizontal));
+
+    .kbq-list-text {
+        @include kbq-list-text();
+    }
+}
+
+.kbq-no-select {
+    @include kbq-no-select;
+}

@@ -1,0 +1,16 @@
+<kbq-form-field>
+    <kbq-tag-list #tagList>
+        <kbq-tag *ngFor="let tag of tags" [value]="tag" (removed)="onRemoveTag(tag)">
+            {{ tag }}
+            <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+        </kbq-tag>
+
+        <input placeholder="New tag..."
+               [formControl]="control"
+               [kbqTagInputFor]="tagList"
+               [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+               (kbqTagInputTokenEnd)="onCreate($event)">
+
+        <kbq-cleaner (click)="onClear()"></kbq-cleaner>
+    </kbq-tag-list>
+</kbq-form-field>

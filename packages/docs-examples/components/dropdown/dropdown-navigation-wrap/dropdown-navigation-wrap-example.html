@@ -1,0 +1,48 @@
+<button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+    dropdown <i kbq-icon="mc-angle-down-S_16"></i>
+</button>
+
+<kbq-dropdown #appDropdown="kbqDropdown"
+             [navigationWithWrap]="true"
+             [class]="'max-width'">
+
+    <button kbq-dropdown-item>Общие сведения</button>
+
+    <button kbq-dropdown-item><i kbq-icon="mc-info-o_16"></i>Общие сведения</button>
+
+    <button kbq-dropdown-item>
+        Общие сведения
+        <div class="kbq-dropdown-item__caption">Общие сведения</div>
+    </button>
+
+    <button kbq-dropdown-item>
+        <i kbq-icon="mc-info-o_16"></i>Общие сведения
+        <div class="kbq-dropdown-item__caption">Общие сведения</div>
+    </button>
+
+    <button kbq-dropdown-item>
+        <i kbq-icon="mc-circle-8_16"></i>Общие сведения
+    </button>
+
+    <button kbq-dropdown-item kbq-title>Общие сведения и очень длинный текст</button>
+
+    <kbq-divider></kbq-divider>
+
+    <div class="kbq-dropdown__group-header">Additional info</div>
+
+    <button kbq-dropdown-item disabled>Disabled</button>
+
+    <kbq-divider></kbq-divider>
+
+    <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Additional info</div>
+
+    <button kbq-dropdown-item disabled>Disabled</button>
+
+    <kbq-divider></kbq-divider>
+
+    <button kbq-dropdown-item>Point 2</button>
+
+    <button kbq-dropdown-item>Point 3</button>
+
+    <button kbq-dropdown-item>Link</button>
+</kbq-dropdown>

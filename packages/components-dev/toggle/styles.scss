@@ -1,0 +1,35 @@
+@use '../main';
+
+
+.container {
+    margin-top: 32px;
+    margin-left: 16px;
+}
+
+.toggle-demo-container {
+    margin-bottom: 8px;
+}
+
+.toggle-demo-fixed {
+    width: 200px;
+
+    margin-bottom: 8px;
+}
+
+.toggle-demo-fill {}
+
+.control-buttons-container {
+    display: inline-block;
+    margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+.toggles-container {
+    max-width: 50%;
+}
+
+.toggle-bordered-demo-container {
+    border: 1px solid red;
+
+    overflow: hidden;
+}

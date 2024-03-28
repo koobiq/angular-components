@@ -1,0 +1,76 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/typography/typography-utils' as *;
+
+
+@mixin kbq-tag-state($state) {
+    background: map.get($state, background);
+
+    & .kbq-icon {
+        color: map.get($state, icon);
+    }
+
+    & .kbq-tag__text {
+        color: map.get($state, text);
+    }
+}
+
+@mixin kbq-tag-color($tag) {
+    $default: map.get($tag, default);
+
+    @include kbq-tag-state($default);
+
+    &:hover,
+    &.kbq-hovered {
+        $hover: map.get($tag, hover);
+
+        @include kbq-tag-state($hover);
+    }
+
+    &.kbq-focused {
+        $focus: map.get($tag, focus);
+
+        @include kbq-tag-state($focus);
+
+        box-shadow: inset 0 0 0 1px map.get($focus, outline), 0 0 0 1px map.get($focus, outline);
+    }
+
+    &.kbq-disabled {
+        $disabled: map.get($tag, disabled);
+
+        @include kbq-tag-state($disabled);
+    }
+}
+
+@mixin kbq-tag-theme($theme) {
+    $tag: map.get(map.get($theme, components), tag);
+
+    .kbq-tag {
+        &.kbq-theme {
+            @include kbq-tag-color(map.get($tag, theme-fade-on));
+        }
+
+        &.kbq-contrast-fade {
+            @include kbq-tag-color(map.get($tag, contrast-fade-on));
+        }
+
+        &.kbq-error {
+            @include kbq-tag-color(map.get($tag, error-fade-on));
+        }
+    }
+}
+
+@mixin kbq-tag-typography($config) {
+    $tokens: map.get($config, tokens);
+
+    .kbq-tag {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, tag-font-default));
+    }
+
+    .kbq-tag-input {
+        @include kbq-typography-level-to-styles($config, map.get($tokens, tag-input-font-default));
+    }
+}
+

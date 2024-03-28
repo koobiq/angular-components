@@ -1,0 +1,103 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.kbq-docs-pre {
+    position: relative;
+}
+
+.docs-component-navbar {
+    margin-right: 369px;
+}
+
+.docs-component-name {
+    padding: 8px 0 12px;
+}
+
+.component-overview {
+    display: flex;
+    flex-direction: row;
+}
+
+.docs-component-viewer {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    height: 100%;
+
+    overflow-y: auto;
+
+    scroll-behavior: smooth;
+}
+
+.doc-viewer {
+    max-width: 650px;
+    min-width: 0;
+
+    margin-bottom: $size-7xl;
+}
+
+@media (width <= 768px) {
+    .docs-component-viewer {
+        padding: $size-l;
+
+        padding-bottom: $size-3xl;
+    }
+
+    .component-overview {
+        flex-direction: column-reverse;
+
+        .sticky-wrapper {
+            margin-top: $size-xxl;
+        }
+    }
+}
+
+@media (769px <= width <= 1200px) {
+    .docs-component-header {
+        padding-left: $size-xxl;
+        padding-right: $size-xxl;
+    }
+
+    .component-overview {
+        flex-direction: column-reverse !important;
+
+        padding-left: $size-xxl;
+        padding-right: $size-xxl;
+
+        & .sticky-wrapper {
+            margin-top: $size-3xl;
+            margin-bottom: $size-s;
+        }
+    }
+}
+
+@media (1201px <= width <= 1920px) {
+    .docs-component-header {
+        padding-left: $size-7xl;
+    }
+
+    .component-overview {
+        padding-left: $size-7xl;
+
+        & .doc-viewer {
+            width: 650px;
+            margin-right: $size-7xl;
+        }
+    }
+}
+
+@media (width >= 1920px) {
+    .docs-component-header {
+        padding-left: 160px;
+    }
+
+    .component-overview {
+        padding-left: 160px;
+
+        & .doc-viewer {
+            width: 650px;
+            margin-right: $size-7xl;
+        }
+    }
+}

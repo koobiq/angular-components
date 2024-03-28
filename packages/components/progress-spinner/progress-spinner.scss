@@ -1,0 +1,77 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/functions/timing';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+@keyframes kbq-progress-spinner-indeterminate {
+    100% {
+        transform: rotateZ(270deg);
+    }
+}
+
+.kbq-progress-spinner {
+    display: flex;
+    flex-direction: row;
+
+    gap: var(
+        --kbq-progress-spinner-size-compact-content-gap-horizontal,
+        map.get($tokens, progress-spinner-size-compact-content-gap-horizontal)
+    );
+}
+
+.kbq-progress-spinner__circle {
+    fill: none;
+    stroke: black;
+    stroke-dasharray: 295%;
+    stroke-width: 13%;
+    transition: stroke-dashoffset 0.3s;
+    transform-origin: center center;
+}
+
+.kbq-progress-spinner__inner {
+    width: var(--kbq-progress-spinner-size-compact-size, map.get($tokens, progress-spinner-size-compact-size));
+    height: var(--kbq-progress-spinner-size-compact-size, map.get($tokens, progress-spinner-size-compact-size));
+
+    transform: rotateZ(-90deg);
+
+    font-size: 0;
+}
+
+.kbq-progress-spinner__content {
+    .kbq-progress-spinner-text {
+        margin-bottom: var(
+            --kbq-progress-spinner-size-compact-content-gap-vertical,
+            map.get($tokens, progress-spinner-size-compact-content-gap-vertical)
+        );
+    }
+}
+
+.kbq-progress-spinner_big {
+    gap: var(
+        --kbq-progress-spinner-size-big-content-gap-horizontal,
+        map.get($tokens, progress-spinner-size-big-content-gap-horizontal)
+    );
+
+    & .kbq-progress-spinner__inner {
+        width: var(--kbq-progress-spinner-size-big-size, map.get($tokens, progress-spinner-size-big-size));
+        height: var(--kbq-progress-spinner-size-big-size, map.get($tokens, progress-spinner-size-big-size));
+    }
+
+    & .kbq-progress-spinner__circle {
+        stroke-width: 6%;
+    }
+}
+
+.kbq-progress-spinner_indeterminate .kbq-progress-spinner__inner {
+    animation: kbq-progress-spinner-indeterminate 1.5s timing.$ease-in-out-quad infinite;
+
+    // TODO: rework this place
+    .kbq-progress-spinner__circle {
+        stroke-dashoffset: 80%;
+    }
+}

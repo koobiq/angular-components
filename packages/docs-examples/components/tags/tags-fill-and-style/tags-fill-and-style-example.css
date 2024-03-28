@@ -1,0 +1,14 @@
+.fill-and-style__example-tags-group {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 504px;
+}
+
+.fill-and-style__example-tags-group .example-tag {
+    width: 96px;
+}
+
+.fill-and-style__example-tags-group .fill-and-style__example-tag-row {
+    gap: 24px;
+}

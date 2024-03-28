@@ -1,0 +1,10 @@
+.demo-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 0;
+}
+
+.example-button {
+    margin-bottom: 12px !important;
+}
