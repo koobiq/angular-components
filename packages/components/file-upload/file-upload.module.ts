@@ -12,6 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqFileDropDirective } from './file-drop';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqListModule,
         KbqFormFieldModule,
         KbqEllipsisCenterModule,
-        KbqDataSizeModule
+        KbqDataSizeModule,
+        KbqLinkModule
     ],
     declarations: [
         KbqFileDropDirective,

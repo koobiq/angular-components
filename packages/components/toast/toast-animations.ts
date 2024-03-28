@@ -8,7 +8,7 @@ import {
 } from '@angular/animations';
 
 
-export const mcToastAnimations: {
+export const kbqToastAnimations: {
     readonly toastState: AnimationTriggerMetadata;
 } = {
     toastState: trigger('state', [
@@ -24,4 +24,4 @@ export const mcToastAnimations: {
     ])
 };
 
-export const toastState = mcToastAnimations.toastState;
+export const toastState = kbqToastAnimations.toastState;

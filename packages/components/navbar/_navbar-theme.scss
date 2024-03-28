@@ -4,89 +4,96 @@
 @use '../core/styles/typography/typography-utils' as *;
 
 
+@mixin kbq-navbar-item($state) {
+    &:not(.kbq-navbar-item_has-nested) {
+        &:after {
+            display: block;
+            background: map.get($state, background);
+        }
+    }
+
+    .kbq-navbar-title {
+        color: map.get($state, text);
+    }
+
+    & > .kbq-icon {
+        color: map.get($state, icon-left) !important;
+    }
+
+    .kbq-navbar-item__arrow-icon {
+        color: map.get($state, icon-right) !important;
+    }
+}
+
+
 @mixin kbq-navbar-theme($theme) {
-    $background: map.get($theme, background);
+    $line: map.get($theme, line);
+    $states-line: map.get(map.get($theme, states), line);
 
     $navbar: map.get(map.get($theme, components), navbar);
-    $navbar-item: map.get(map.get($theme, components), navbar-item);
+    $item: map.get($navbar, item);
+
 
     .kbq-navbar,
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
         background-color: map.get($navbar, background);
     }
 
-    .kbq-navbar-brand.kbq-hovered:not(.kbq-collapsed) {
-        background-color: map.get($navbar-item, state-hover);
-    }
-
-    .kbq-navbar-brand.kbq-vertical.kbq-collapsed {
-        & .kbq-navbar-logo:hover {
-            background-color: map.get($navbar-item, state-hover);
-        }
-    }
-
-    .kbq-navbar-title {
-        color: map.get($navbar-item, color);
+    .kbq-vertical-navbar .kbq-vertical-navbar__container {
+        border-right: 1px solid map.get($navbar, border);
     }
 
     .kbq-navbar-item,
     .kbq-navbar-brand,
     .kbq-navbar-toggle {
-        color: map.get($navbar-item, color);
+        cursor: pointer;
 
-        &.kbq-horizontal, &.kbq-vertical {
-            & > .kbq-icon {
-                color: map.get($navbar-item, icon-color);
-            }
+        @include kbq-navbar-item(map.get($item, default));
+
+        &:hover:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
+            @include kbq-navbar-item(map.get($item, hover));
         }
 
-        & .kbq-icon.kbq-navbar-item__arrow-icon {
-            color: map.get($navbar-item, color);
+        &.cdk-focused.cdk-keyboard-focused {
+            outline: none;
+
+            &:after {
+                display: block;
+                box-shadow: inset 0 0 0 2px map.get($states-line, focus-theme)
+            };
         }
 
-        &.kbq-active {
-            background: map.get($navbar-item, state-selected);
+        &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
+        &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
+            @include kbq-navbar-item(map.get($item, selected));
         }
 
-        &:hover:not(.kbq-navbar-item_has-nested, .kbq-navbar-item_form-field) {
-            cursor: pointer;
-
-            & .kbq-navbar-item__overlay {
-                background-color: map.get($navbar-item, state-hover);
-            }
-        }
-
-        &:active:not(.kbq-navbar-item_has-nested, .kbq-navbar-item_form-field) {
-            & .kbq-navbar-item__overlay {
-                background: map.get($navbar-item, state-active);
-            }
+        &.kbq-navbar-focusable-item {
+            outline: none;
         }
 
         &.kbq-disabled {
+            @include kbq-navbar-item(map.get($item, disabled));
+
             pointer-events: none;
             cursor: default;
-
-            .kbq-navbar-item__title,
-            .kbq-icon {
-                opacity: map.get($navbar-item, state-disabled-opacity);
-            }
         }
     }
 
-    .kbq-navbar-focusable-item {
-        outline: none;
-
-        /* stylelint-disable no-descending-specificity */
-        &.cdk-keyboard-focused .kbq-navbar-item__overlay {
-            box-shadow:
-                inset 0 0 0 2px map.get(map.get($theme, states), focused-color),
-                inset 0 0 0 3px map.get($background, bg);
+    .kbq-navbar-brand.kbq-vertical:hover {
+        .kbq-navbar-logo {
+            transform: scale(1.06);
         }
-        /* stylelint-enable no-descending-specificity */
+    }
+
+    .kbq-navbar-brand.kbq-horizontal:hover {
+        .kbq-navbar-logo {
+            z-index: 1;
+        }
     }
 
     .kbq-navbar-divider {
-        background-color: map.get($navbar, divider-background);
+        background: map.get($line, contrast-fade);
     }
 }
 
@@ -103,22 +110,12 @@ button {
     $tokens: map.get($config, tokens);
 
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, navbar-font-title));
-    }
-
-    .kbq-navbar-subtitle {
-        @include kbq-typography-level-to-styles($config, extra-small-text);
+        @include kbq-typography-level-to-styles($config, 'text-normal-strong');
     }
 
     .kbq-navbar-brand {
         .kbq-navbar-title {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, navbar-brand-font-title));
-
-            &.kbq-navbar-title_small {
-                @include kbq-typography-level-to-styles($config, subheading);
-
-                white-space: unset;
-            }
+            @include kbq-typography-level-to-styles($config, map.get($tokens, navbar-font-title));
         }
     }
 }

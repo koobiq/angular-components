@@ -2207,8 +2207,10 @@ describe('Date formatter', () => {
                 it('seconds and milliseconds', () => {
                     const startDate = endDate.minus({second, millisecond});
 
+                    const millisecondsViewValue = millisecond < 100 ? `0${millisecond.toString()}` : millisecond;
+
                     expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds']))
-                        .toBe(`${second}.${millisecond} ${plurals.second[pr.select(second)]}`);
+                        .toBe(`${second}.${millisecondsViewValue} ${plurals.second[pr.select(second)]}`);
                 });
 
                 testTextFormat('en-US', 'durationShort', plurals, separator);

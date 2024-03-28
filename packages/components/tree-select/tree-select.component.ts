@@ -619,7 +619,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     @Input()
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
-        return `${hiddenItemsText} ${hiddenItems}`;
+        return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
     }
 
     clearValue($event): void {

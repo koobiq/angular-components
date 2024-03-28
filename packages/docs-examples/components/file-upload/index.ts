@@ -8,6 +8,8 @@ import { FileUploadMultipleDefaultOverviewExample } from './file-upload-multiple
 import { FileUploadMultipleErrorOverviewExample } from './file-upload-multiple-error-overview/file-upload-multiple-error-overview-example';
 import { FileUploadSingleErrorOverviewExample } from './file-upload-single-error-overview/file-upload-single-error-overview-example';
 import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
+import { FileUploadMultipleCustomTextOverviewExample } from './file-upload-multiple-custom-text-overview/file-upload-multiple-custom-text-overview-example';
+import { FileUploadIndeterminateLoadingOverviewExample } from './file-upload-indeterminate-loading-overview/file-upload-indeterminate-loading-overview-example';
 
 
 export {
@@ -15,7 +17,9 @@ export {
     FileUploadSingleOverviewExample,
     FileUploadSingleErrorOverviewExample,
     FileUploadMultipleErrorOverviewExample,
-    FileUploadMultipleCompactOverviewExample
+    FileUploadMultipleCompactOverviewExample,
+    FileUploadMultipleCustomTextOverviewExample,
+    FileUploadIndeterminateLoadingOverviewExample
 };
 
 const EXAMPLES = [
@@ -23,7 +27,9 @@ const EXAMPLES = [
     FileUploadSingleOverviewExample,
     FileUploadSingleErrorOverviewExample,
     FileUploadMultipleErrorOverviewExample,
-    FileUploadMultipleCompactOverviewExample
+    FileUploadMultipleCompactOverviewExample,
+    FileUploadMultipleCustomTextOverviewExample,
+    FileUploadIndeterminateLoadingOverviewExample
 ];
 
 @NgModule({

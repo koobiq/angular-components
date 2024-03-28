@@ -5,13 +5,13 @@
     </span>
 </div>
 
-<doc-viewer
+<docs-live-example
     *ngIf="!documentLost"
     [documentUrl]="docItemUrl"
     (contentRendered)="scrollToSelectedContentSection()"
     (contentRenderFailed)="showDocumentLostAlert()">
-</doc-viewer>
+</docs-live-example>
 
 <div class="sticky-wrapper">
-    <docs-anchors #toc [headerSelectors]="'.docs-header-link'"></docs-anchors>
+    <docs-anchors [headerSelectors]="'.docs-header-link'"></docs-anchors>
 </div>

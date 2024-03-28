@@ -2,6 +2,6 @@
     $background: map-get($theme, background);
 
     .page-not-found {
-        background: map-get($background, background-under);
+        background: map-get($background, bg);
     }
 }

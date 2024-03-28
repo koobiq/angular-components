@@ -1,8 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/variables' as *;
-
 @use '../core/styles/tokens';
 
 
@@ -11,8 +9,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-toast {
     display: flex;
     box-sizing: border-box;
-
-    z-index: $z-index-toast;
 
     min-width: var(--kbq-toast-size-container-min-width, map.get($tokens, toast-size-container-min-width));
     max-width: 480px;

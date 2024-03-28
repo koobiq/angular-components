@@ -10,7 +10,7 @@
 @use './styles/markdown';
 
 
-.kbq {
+.docs {
     @include theme-kbq.docs-typography(
         tokens.$tokens,
         tokens.$typography-config,

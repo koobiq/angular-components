@@ -25,13 +25,13 @@ $fonts: (
     base: (
         font-family: #{Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif}
     ),
-    monospace: (
+    mono: (
         font-family: #{'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace}
     )
 );
 
 $font-family:   map-get(map-get($fonts, base), font-family);
-$font-family-mono:   map-get(map-get($fonts, monospace), font-family);
+$font-family-mono:   map-get(map-get($fonts, mono), font-family);
 
 $typography: kbq-typography-config(
     $font-family,

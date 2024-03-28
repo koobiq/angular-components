@@ -60,7 +60,7 @@ const kbq = 'koobiq';
 
 const themesConfig = [];
 
-const themeColorNames = ['default-theme', 'green-theme', 'red-theme', 'yellow-theme']
+const themeColorNames = ['default-theme']
 
 for (const skin of [kbq]) {
     const koobiqTokensProps = `@koobiq/design-tokens/web/tokens/properties/**/*.json5`;

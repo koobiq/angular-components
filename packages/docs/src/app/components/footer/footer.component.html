@@ -9,7 +9,7 @@
             <i kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
         </div>
 
-        <kbq-dropdown #languageDropdown="kbqDropdown">
+        <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
                 <span class="kbq-caps-compact-strong">ЯЗЫК</span>
             </div>
@@ -26,7 +26,7 @@
         </kbq-dropdown>
     </div>
 
-    <kbq-dropdown #docsLanguageDropdown="kbqDropdown">
+    <kbq-dropdown #docsLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
         <button kbq-dropdown-item *ngFor="let language of docsLanguageSwitch.data; let i = index"
                 [class.kbq-selected]="language.selected"
                 [disabled]="language.id !== 'ru-RU'"
@@ -49,7 +49,7 @@
             {{ version }}<span *ngIf="versionPicker.isNext">.next</span>
             <i kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
 
-            <kbq-dropdown #versionDropdown="kbqDropdown">
+            <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
                     <div class="kbq-caps-compact-strong">ВЕРСИЯ</div>
                 </div>
@@ -62,7 +62,7 @@
                 </button>
             </kbq-dropdown>
 
-            <kbq-dropdown #examplesLanguageDropdown="kbqDropdown">
+            <kbq-dropdown #examplesLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <button kbq-dropdown-item *ngFor="let language of examplesLanguageSwitch.data; let i = index"
                         [class.kbq-selected]="language.selected"
                         (click)="setLanguage(i)">

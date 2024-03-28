@@ -3,15 +3,19 @@ import { NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component, EventEmitter,
+    Component,
+    Directive,
+    EventEmitter,
     Input,
-    NgModule, Output,
+    NgModule,
+    Output,
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -39,12 +43,14 @@ const maxFileExceeded = (file: File): string | null => {
 @Component({
     selector: 'file-upload-compact',
     template: `
-        <kbq-multiple-file-upload size="compact"
-                                 [disabled]="disabled"
-                                 [inputId]="'test-compact'"
-                                 [errors]="errorMessagesForMultiple"
-                                 [files]="files"
-                                 (fileQueueChanged)="addedFiles($event)">
+        <kbq-multiple-file-upload
+            size="compact"
+            [disabled]="disabled"
+            [inputId]="'test-compact'"
+            [errors]="errorMessagesForMultiple"
+            [files]="files"
+            (fileQueueChanged)="addedFiles($event)">
+
             <ng-template #kbqFileIcon>
                 <i kbq-icon="mc-file-empty_16"></i>
             </ng-template>
@@ -82,25 +88,21 @@ export class MultipleFileUploadCompactComponent {
 })
 export class DemoComponent {
     disabled = false;
-    validation: KbqFileValidatorFn[] =  [
-       maxFileExceeded
-    ];
+    validation: KbqFileValidatorFn[] = [maxFileExceeded];
 
     file: KbqFileItem | null;
     files: KbqFileItem[] = [];
     errorMessagesForSingle: string[] = [];
     errorMessagesForMultiple: string[] = [];
+    accept = ['.pdf', '.png'];
 
-    constructor(private cdr: ChangeDetectorRef) {
-    }
+    constructor(private cdr: ChangeDetectorRef) {}
 
     addFile(file: KbqFileItem | null) {
         this.file = file;
 
         if (file) {
-            this.errorMessagesForSingle = [
-                maxFileExceeded(file.file) || ''
-            ].filter(Boolean);
+            this.errorMessagesForSingle = [maxFileExceeded(file.file) || ''].filter(Boolean);
         }
     }
 
@@ -125,6 +127,7 @@ export class DemoComponent {
                 hasError: errorsPerFile.length > 0
             };
         });
+
         this.cdr.markForCheck();
     }
 
@@ -133,28 +136,61 @@ export class DemoComponent {
         const loadingOffset  = 100;
 
         this.file?.loading?.next(true);
-        interval(loadingOffset).pipe(takeWhile((value) => value <= maxPercent))
-            .subscribe((value) => {
-                this.file?.progress?.next(value);
-            });
+
+        interval(loadingOffset)
+            .pipe(takeWhile((value) => value <= maxPercent))
+            .subscribe((value) => this.file?.progress?.next(value));
 
         this.files.forEach((file, index) => {
             file.loading?.next(true);
+
             timer(loadingOffset * (index), loadingOffset * index)
                 .pipe(takeWhile((value) => value <= maxPercent))
-                .subscribe((value) => {
-                    file.progress?.next(value);
-                });
+                .subscribe((value) => file.progress?.next(value));
         });
+    }
+
+    startIndeterminateLoading() {
+        this.files.forEach((file) => timer(300)
+            .subscribe(() => file.loading?.next(true))
+        );
+
+        timer(5000).subscribe(() => this.files
+            .forEach((file) => file.loading?.next(false))
+        );
     }
 }
 
 
+@Directive({
+    selector: '[custom-text]',
+    providers: [{
+        provide: KBQ_FILE_UPLOAD_CONFIGURATION, useValue: {
+            captionText: 'Перетащите сюда или ',
+            captionTextWhenSelected: 'Перетащите еще или ',
+            captionTextForCompactSize: 'Перетащите файлы или ',
+            browseLink: 'выберите',
+            title: 'Загрузите фотографии',
+            gridHeaders: {
+                file: 'Файл',
+                size: 'Размер'
+            }
+        }
+    }]
+})
+export class CustomTextDirective {}
+
+
 @NgModule({
-    declarations: [DemoComponent, MultipleFileUploadCompactComponent],
+    declarations: [
+        DemoComponent,
+        CustomTextDirective,
+        MultipleFileUploadCompactComponent
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        KbqLocaleServiceModule,
         KbqFileUploadModule,
         KbqButtonModule,
         FormsModule,

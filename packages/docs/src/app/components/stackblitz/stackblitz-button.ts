@@ -1,8 +1,10 @@
-import { Component, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
+import { KbqLink } from '../../../../../components/link';
 
 import { StackblitzWriter } from './stackblitz-writer';
 
@@ -10,12 +12,14 @@ import { StackblitzWriter } from './stackblitz-writer';
 @Component({
     selector: 'docs-stackblitz-button',
     templateUrl: './stackblitz-button.html',
+    styleUrls: ['./stackblitz-button.scss'],
     host: {
-        class: 'docs-stackblitz-button'
+        class: 'docs-stackblitz-button',
+        '(click)': 'openStackBlitz()'
     },
     encapsulation: ViewEncapsulation.None
 })
-export class StackblitzButton {
+export class StackblitzButton extends KbqLink {
     @Input()
     set exampleId(value: string | undefined) {
         if (value) {
@@ -27,11 +31,23 @@ export class StackblitzButton {
         }
     }
 
+    get hasIcon() {
+        return true;
+    };
+
     exampleData: ExampleData | undefined;
 
     private openStackBlitzFn: (() => void) | null = null;
 
-    constructor(private stackBlitzWriter: StackblitzWriter, private ngZone: NgZone) {}
+    constructor(
+        elementRef: ElementRef,
+        focusMonitor: FocusMonitor,
+        changeDetector: ChangeDetectorRef,
+        private stackBlitzWriter: StackblitzWriter,
+        private ngZone: NgZone
+    ) {
+        super(elementRef, focusMonitor, changeDetector);
+    }
 
     openStackBlitz(): void {
         if (this.openStackBlitzFn) {

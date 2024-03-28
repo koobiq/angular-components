@@ -321,6 +321,11 @@
                 text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-active-text'),
                 icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-active-icon')
             ),
+            selected-disabled: (
+                background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-disabled-background'),
+                text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-disabled-text'),
+                icon: map-get($tokens, 'button-toggle-#{$scheme}-item-states-selected-disabled-icon')
+            ),
             disabled: (
                 background: map-get($tokens, 'button-toggle-#{$scheme}-item-states-disabled-background'),
                 text: map-get($tokens, 'button-toggle-#{$scheme}-item-states-disabled-text'),
@@ -1016,19 +1021,40 @@
 
     $navbar: (
         background: map-get($tokens, 'navbar-#{$scheme}-background'),
+        border: map-get($tokens, 'navbar-#{$scheme}-border'),
 
-        divider-background: map-get($tokens, 'navbar-#{$scheme}-divider-background')
-    );
-
-    $navbar-item: (
-        color: map-get($tokens, 'navbar-item-#{$scheme}-text'),
-        icon-color: map-get($tokens, 'navbar-item-#{$scheme}-icon'),
-
-        state-active: map-get($tokens, 'navbar-item-#{$scheme}-states-active'),
-        state-selected: map-get($tokens, 'navbar-item-#{$scheme}-states-selected'),
-        state-hover: map-get($tokens, 'navbar-item-#{$scheme}-states-hover'),
-        state-progress: map-get($tokens, 'navbar-item-#{$scheme}-states-progress'),
-        state-disabled-opacity: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-opacity'),
+        item: (
+            default: (
+                background: map-get($tokens, 'navbar-item-#{$scheme}-default-content-background'),
+                text: map-get($tokens, 'navbar-item-#{$scheme}-default-content-text'),
+                icon-left: map-get($tokens, 'navbar-item-#{$scheme}-default-content-icon-left'),
+                icon-right: map-get($tokens, 'navbar-item-#{$scheme}-default-content-icon-right')
+            ),
+            hover: (
+                background: map-get($tokens, 'navbar-item-#{$scheme}-states-hover-content-background'),
+                text: map-get($tokens, 'navbar-item-#{$scheme}-states-hover-content-text'),
+                icon-left: map-get($tokens, 'navbar-item-#{$scheme}-states-hover-content-icon-left'),
+                icon-right: map-get($tokens, 'navbar-item-#{$scheme}-states-hover-content-icon-right')
+            ),
+            selected: (
+                background: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-content-background'),
+                text: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-content-text'),
+                icon-left: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-content-icon-left'),
+                icon-right: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-content-icon-right')
+            ),
+            selected-hover: (
+                background: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-background'),
+                text: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-text'),
+                icon-left: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-icon-left'),
+                icon-right: map-get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-icon-right')
+            ),
+            disabled: (
+                background: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-background'),
+                text: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-text'),
+                icon-left: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-icon-left'),
+                icon-right: map-get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-icon-right')
+            )
+        )
     );
 
     $popover: (
@@ -1826,7 +1852,6 @@
         modal: $modal,
         markdown: $markdown,
         navbar: $navbar,
-        navbar-item: $navbar-item,
         popover: $popover,
         progress-bar: $progress-bar,
         progress-spinner: $progress-spinner,

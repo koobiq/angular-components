@@ -2,7 +2,6 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
-@use '../core/styles/variables';
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -31,7 +30,8 @@ $tokens: meta.module-variables(tokens) !default;
     bottom: 0;
     left: 0;
 
-    z-index: variables.$z-index-loader-overlay;
+    // todo
+    z-index: 10;
 
     & .kbq-loader-overlay__container {
         display: flex;

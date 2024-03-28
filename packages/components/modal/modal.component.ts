@@ -79,7 +79,6 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
 
     @Output() kbqVisibleChange = new EventEmitter<boolean>();
 
-    @Input() kbqZIndex: number = 1000;
     @Input() kbqWidth: number | string;
     @Input() kbqSize: ModalSize = ModalSize.Medium;
     @Input() kbqWrapClassName: string;

@@ -72,7 +72,7 @@ export class StackblitzWriter {
 
     /**
      * The stackblitz template assets contain placeholder names for the examples:
-     * "<koobiq-docs-example>" and "MosaicDocsExample".
+     * "<koobiq-docs-example>" and "KoobiqDocsExample".
      * This will replace those placeholders with the names from the example metadata,
      * e.g. "<basic-button-example>" and "BasicButtonExample"
      */
@@ -95,29 +95,29 @@ export class StackblitzWriter {
         } else if (fileName === 'src/app/app.module.ts') {
             const joinedComponentNames = data.componentNames.join(', ');
             // Replace the component name in `main.ts`.
-            // Replace `import {MosaicDocsExample} from 'koobiq-docs-example'`
+            // Replace `import {KoobiqDocsExample} from 'koobiq-docs-example'`
             // will be replaced as `import {ButtonDemo} from './button-demo'`
-            fileContent = fileContent.replace(/{ MosaicDocsExample }/g, `{${joinedComponentNames}}`);
+            fileContent = fileContent.replace(/{ KoobiqDocsExample }/g, `{${joinedComponentNames}}`);
 
-            // Replace `declarations: [MosaicDocsExample]`
+            // Replace `declarations: [KoobiqDocsExample]`
             // will be replaced as `declarations: [ButtonDemo]`
             fileContent = fileContent.replace(
-                /declarations: \[MosaicDocsExample\]/g,
+                /declarations: \[KoobiqDocsExample\]/g,
                 `declarations: [${joinedComponentNames}]`
             );
 
-            // Replace `entryComponents: [MosaicDocsExample]`
+            // Replace `entryComponents: [KoobiqDocsExample]`
             // will be replaced as `entryComponents: [DialogContent]`
             fileContent = fileContent.replace(
-                /entryComponents: \[MosaicDocsExample\]/g,
+                /entryComponents: \[KoobiqDocsExample\]/g,
                 `entryComponents: [${joinedComponentNames}]`
             );
 
-            // Replace `bootstrap: [MosaicDocsExample]`
+            // Replace `bootstrap: [KoobiqDocsExample]`
             // will be replaced as `bootstrap: [ButtonDemo]`
             // This assumes the first component listed in the main component
             fileContent = fileContent.
-            replace(/bootstrap: \[MosaicDocsExample]/g,
+            replace(/bootstrap: \[KoobiqDocsExample]/g,
                     `bootstrap: [${data.componentNames[0]}]`);
 
             const dotIndex = data.indexFilename.lastIndexOf('.');

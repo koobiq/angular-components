@@ -71,7 +71,9 @@
         italic-normal-strong:    map.get($typography, italic-normal-strong),
         italic-compact:          map.get($typography, italic-compact),
         italic-compact-strong:   map.get($typography, italic-compact-strong),
-        mono-codeblock:          map.get($typography, mono-codeblock)
+        mono-codeblock:          map.get($typography, mono-codeblock),
+
+        navbar-title:          map.get($typography, navbar-title)
     );
 
     @each $key, $level in $config {

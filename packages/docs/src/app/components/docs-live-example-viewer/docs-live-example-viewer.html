@@ -1,0 +1,40 @@
+<div class="docs-live-example__container">
+    <div class="docs-live-example__example" *ngIf="exampleData">
+        <ng-template *ngIf="exampleComponentType && exampleModuleFactory"
+                     [ngComponentOutlet]="exampleComponentType"
+                     [ngComponentOutletNgModuleFactory]="exampleModuleFactory">
+        </ng-template>
+    </div>
+
+    <div class="docs-live-example__footer">
+        <span kbq-link
+              pseudo
+              (click)="toggleSourceView()"
+              (keydown.enter)="toggleSourceView()"
+              [ngSwitch]="isSourceShown">
+
+            {{ isSourceShown ? 'Скрыть пример кода' : 'Показать пример кода' }}
+        </span>
+
+        <docs-stackblitz-button [exampleId]="exampleId"></docs-stackblitz-button>
+    </div>
+</div>
+
+<ng-container *ngIf="exampleData; else lostExample">
+    <kbq-code-block
+        *ngIf="isSourceShown"
+        [lineNumbers]="true"
+        [filled]="true"
+        [codeFiles]="this.files"
+        [maxHeight]="318">
+    </kbq-code-block>
+</ng-container>
+
+<ng-template #lostExample>
+    <div class="kbq-alert kbq-alert_error kbq-alert_dismissible kbq-markdown">
+        <span>Oops, this code example is lost... But you can help us find it!
+            Just send a Pull Request to this repository:
+            <a class="kbq-markdown__a" href="#"> Koobiq</a>
+        </span>
+    </div>
+</ng-template>

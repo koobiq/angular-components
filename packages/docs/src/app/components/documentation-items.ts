@@ -40,7 +40,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
             items: [
                 {
                     id: 'installation',
-                    name: 'Installation',
+                    name: 'Установка',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
@@ -48,7 +48,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'versioning',
-                    name: 'Versioning',
+                    name: 'Версионирование',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
@@ -56,7 +56,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'directory-structure',
-                    name: 'Directory structure',
+                    name: 'Структура каталогов',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
@@ -64,7 +64,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'component-health',
-                    name: 'Component health',
+                    name: 'Статус компонент',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
@@ -80,7 +80,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'typography',
-                    name: 'Typography',
+                    name: 'Типографика',
                     hasApi: false,
                     hasExamples: false,
                     examples: ['typography-types']
@@ -97,6 +97,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     id: 'alerts',
                     name: 'Alerts',
                     hasApi: true,
+                    apiId: 'alert',
                     hasExamples: false,
                     examples: ['alerts-types']
                 },
@@ -112,6 +113,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     id: 'badges',
                     name: 'Badges',
                     hasApi: true,
+                    apiId: 'badge',
                     hasExamples: false,
                     examples: ['badges-types']
                 },
@@ -120,7 +122,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     name: 'Button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: true,
+                    hasExamples: false,
                     summary: 'An interactive button with a range of presentation options.',
                     examples: ['button-types']
                 },
@@ -472,7 +474,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     name: 'File upload',
                     hasApi: true,
                     apiId: 'file-upload',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['file-upload-types']
                 },
                 {

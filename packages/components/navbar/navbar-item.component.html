@@ -3,14 +3,11 @@
 <div class="kbq-navbar-item__container" *ngIf="title">
     <div class="kbq-navbar-item__title">
         <ng-content select="kbq-navbar-title, [kbq-navbar-title]"></ng-content>
-        <ng-content select="kbq-navbar-subtitle, [kbq-navbar-subtitle]"></ng-content>
     </div>
 
-    <i class="kbq-navbar-item__arrow-icon" kbq-icon="mc-angle-right-M_24" *ngIf="showVerticalDropDownAngle"></i>
+    <i class="kbq-navbar-item__arrow-icon" kbq-icon="mc-angle-right-M_16" *ngIf="showVerticalDropDownAngle"></i>
     <i class="kbq-navbar-item__arrow-icon" kbq-icon="mc-angle-down-S_16" *ngIf="showHorizontalDropDownAngle"></i>
 
 </div>
 
 <ng-content></ng-content>
-
-<div class="kbq-navbar-item__overlay"></div>

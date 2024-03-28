@@ -6,7 +6,7 @@
 
 @mixin kbq-scrollbar($tokens) {
     $border-width: calc(
-        (var(--kbq-scrollbar-size-track-width, map.get($tokens, scrollbar-size-track-width)) -
+        (var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) -
         var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width))) / 2
     );
 
@@ -19,9 +19,17 @@
     &::-webkit-scrollbar,
     ::-webkit-scrollbar {
         cursor: default;
-        width: var(--kbq-scrollbar-size-track-width, map.get($tokens, scrollbar-size-track-width));
+
+        &:vertical {
+            width: var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension));
+        }
+
+        &:horizontal {
+            height: var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension));
+        }
     }
 
+    /* stylelint-disable no-descending-specificity */
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
         width: var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width));
@@ -32,7 +40,15 @@
             --kbq-scrollbar-size-thumb-inset-border-radius,
             map.get($tokens, scrollbar-size-thumb-border-radius)
         );
-        min-height: var(--kbq-scrollbar-size-thumb-min-height, map.get($tokens, scrollbar-size-thumb-min-height));
+
+        // these props are used to set the user-friendly thumb for long content.
+        &:vertical {
+            min-height: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
+        }
+
+        &:horizontal {
+            min-width: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
+        }
     }
 
     &::-webkit-scrollbar-button,

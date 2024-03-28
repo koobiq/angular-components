@@ -12,15 +12,15 @@ import {
 } from '@koobiq/cdk/testing';
 
 import { createFile } from './file-drop.spec';
-import { KbqFileItem } from './file-upload';
+import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 
-export function dispatchDropEvent(component: any, fixture: ComponentFixture<any>) {
+export function dispatchDropEvent(component: any, fixture: ComponentFixture<any>, fileName = 'test.file', type?: string) {
     const fakeDropEvent = createFakeEvent('drop');
-    const fakeItem = createFile('test.file');
+    const fakeItem = createFile(fileName, type);
     (fakeDropEvent as any).dataTransfer = { items: [fakeItem] };
 
     dispatchEvent(component.elementRef.nativeElement.querySelector('.kbq-file-upload'), fakeDropEvent);
@@ -33,6 +33,17 @@ const fileItemRowCssClass = 'multiple__uploaded-item';
 
 const fileItemCssClass = 'file-item';
 const fileItemTextCssClass = 'file-item__text';
+
+const maxFileExceeded = (file: File): string | null => {
+    const kilo = 1024;
+    const mega = kilo * kilo;
+    const maxMbytes = 5;
+    const maxSize = maxMbytes * mega;
+
+    return maxSize !== undefined && (file?.size ?? 0) > maxSize
+        ? `Exceeded with (${ maxSize / mega } Mb)`
+        : null;
+};
 
 describe('MultipleFileUploadComponent', () => {
     let component: BasicMultipleFileUpload;
@@ -62,14 +73,14 @@ describe('MultipleFileUploadComponent', () => {
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
-            expect(label.classList.contains('kbq-focused')).toBeTrue();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeTrue();
 
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.blur();
             fixture.detectChanges();
             flush();
 
-            expect(label.classList.contains('kbq-focused')).toBeFalse();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeFalse();
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
@@ -85,7 +96,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
-            expect(label.classList.contains('kbq-focused')).toBeFalse();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeFalse();
         }));
 
         it('should remove file via button keydown.delete in a row', () => {
@@ -210,6 +221,26 @@ describe('MultipleFileUploadComponent', () => {
             subscription.unsubscribe();
         });
     });
+
+    describe('with custom validation', () => {
+        it('should mark added file with error', () => {
+            expect(component.files).toBeFalsy();
+            // max file === 5e6
+            component.validation = [maxFileExceeded];
+            fixture.detectChanges();
+
+            const event = createFakeEvent('change');
+
+            const fakeFile: Partial<File> = { name: 'test.file', type: 'test', size: 6e6 };
+            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
+
+            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            fixture.detectChanges();
+
+            expect(component.files.length).toBeTruthy();
+            expect(component.files[0].hasError).toBeTruthy();
+        });
+    });
 });
 
 describe('SingleFileUploadComponent', () => {
@@ -239,14 +270,14 @@ describe('SingleFileUploadComponent', () => {
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
-            expect(label.classList.contains('kbq-focused')).toBeTrue();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeTrue();
 
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.blur();
             fixture.detectChanges();
             flush();
 
-            expect(label.classList.contains('kbq-focused')).toBeFalse();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeFalse();
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
@@ -262,7 +293,7 @@ describe('SingleFileUploadComponent', () => {
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
-            expect(label.classList.contains('kbq-focused')).toBeFalse();
+            expect(label.classList.contains('cdk-keyboard-focused')).toBeFalse();
         }));
 
         it('should remove file via button keydown.delete', () => {
@@ -274,7 +305,7 @@ describe('SingleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChanged
+            const subscription = component.fileUpload.fileQueueChange
                 .subscribe((value) => {
                     expect(value).toBeFalsy();
                 });
@@ -303,7 +334,7 @@ describe('SingleFileUploadComponent', () => {
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalled();
-            const subscription = component.fileUpload.fileQueueChanged
+            const subscription = component.fileUpload.fileQueueChange
                 .subscribe((value) => {
                     expect(value).toBeTruthy();
                 });
@@ -334,7 +365,7 @@ describe('SingleFileUploadComponent', () => {
             flush();
 
             expect(component.onChange).toHaveBeenCalled();
-            const subscription = component.fileUpload.fileQueueChanged
+            const subscription = component.fileUpload.fileQueueChange
                 .subscribe((value) => {
                     expect(value).toBeTruthy();
                 });
@@ -365,7 +396,7 @@ describe('SingleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChanged
+            const subscription = component.fileUpload.fileQueueChange
                 .subscribe((value) => {
                     expect(value).toBeFalsy();
                 });
@@ -395,6 +426,68 @@ describe('SingleFileUploadComponent', () => {
             expect(tooltipInstance).toBeTruthy();
         }));
     });
+
+    describe('with custom validation', () => {
+        it('should mark added file with error', () => {
+            expect(component.file).toBeFalsy();
+            // max file === 5e6
+            component.validation = [maxFileExceeded];
+            fixture.detectChanges();
+
+            const event = createFakeEvent('change');
+
+            const fakeFile: Partial<File> = { name: 'test.file', type: 'test', size: 6e6 };
+            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
+
+            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            fixture.detectChanges();
+
+            expect(component.file).toBeTruthy();
+            expect(component.file?.hasError).toBeTruthy();
+        });
+    });
+
+    // TODO: real-life scenario & test results with the same data are different
+    xdescribe('with accepted files list', () => {
+        it('should filter files via drag-n-drop with extensions', fakeAsync(() => {
+            spyOn(component, 'onChange');
+            component.disabled = false;
+            component.accept = ['.pdf', '.png'];
+            fixture.detectChanges();
+
+            dispatchDropEvent(component, fixture, 'test.test');
+            fixture.detectChanges();
+            flush();
+
+            dispatchDropEvent(component, fixture, 'test.pdf');
+            fixture.detectChanges();
+            flush();
+
+            dispatchDropEvent(component, fixture, 'test.png');
+            fixture.detectChanges();
+            flush();
+
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+        }));
+
+        it('should filter files via drag-n-drop with mimeType', fakeAsync(() => {
+            spyOn(component, 'onChange');
+            component.disabled = false;
+            component.accept = ['application/pdf'];
+            fixture.detectChanges();
+
+            dispatchDropEvent(component, fixture, 'test.test');
+            fixture.detectChanges();
+            flush();
+
+            // in file system file type will be automatically provided
+            dispatchDropEvent(component, fixture, 'test.pdf', 'application/pdf');
+            fixture.detectChanges();
+            flush();
+
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+        }));
+    })
 });
 
 
@@ -403,8 +496,10 @@ describe('SingleFileUploadComponent', () => {
     template: `
         <div style="max-width: 350px;">
             <kbq-single-file-upload #fileUpload
-                                   [disabled]="disabled"
-                                   (fileQueueChanged)="onChange($event)">
+                                    [accept]="accept"
+                                    [customValidation]="validation"
+                                    [disabled]="disabled"
+                                    (fileQueueChange)="onChange($event)">
             </kbq-single-file-upload>
         </div>
     `
@@ -413,6 +508,8 @@ class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
     disabled: boolean;
     file: KbqFileItem | null;
+    accept: string[] = [];
+    validation: KbqFileValidatorFn[] = [];
 
     constructor(public elementRef: ElementRef) {}
 
@@ -426,8 +523,9 @@ class BasicSingleFileUpload {
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload #fileUpload
-                                   [disabled]="disabled"
-                                   (fileQueueChanged)="onChange($event)">
+                                      [disabled]="disabled"
+                                      [customValidation]="validation"
+                                      (fileQueueChanged)="onChange($event)">
             </kbq-multiple-file-upload>
         </div>
     `
@@ -436,6 +534,7 @@ class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
     disabled: boolean;
     files: KbqFileItem[];
+    validation: KbqFileValidatorFn[] = [];
 
     constructor(public elementRef: ElementRef) {}
 

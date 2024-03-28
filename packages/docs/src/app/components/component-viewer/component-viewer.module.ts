@@ -7,10 +7,12 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { CopyButtonModule } from 'src/app/components/copy-button/copy-button';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqButtonModule } from '../../../../../components/button';
 
 import { AnchorsModule } from '../anchors/anchors.module';
 import { DocExampleViewerModule } from '../doc-example-viewer/doc-example-viewer-module';
-import { DocViewerModule } from '../doc-viewer/doc-viewer-module';
+import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
 import { DocumentationItems } from '../documentation-items';
 import { FooterModule } from '../footer/footer.module';
 import { NavbarModule } from '../navbar';
@@ -34,13 +36,16 @@ import {
         KbqMarkdownModule,
         KbqDropdownModule,
         KbqIconModule,
+        KbqButtonModule,
         CopyButtonModule,
         RouterModule,
-        DocViewerModule,
+        DocsLiveExampleModule,
         DocExampleViewerModule,
         CommonModule,
         SidenavModule,
-        NavbarModule
+        NavbarModule,
+        KbqIconModule,
+        KbqLinkModule
     ],
     declarations: [
         ComponentViewerComponent,

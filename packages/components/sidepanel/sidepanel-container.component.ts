@@ -16,9 +16,9 @@ import {
 } from '@angular/core';
 
 import {
-    mcSidepanelAnimations,
+    kbqSidepanelAnimations,
     KbqSidepanelAnimationState,
-    mcSidepanelTransformAnimation
+    kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
 import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
 
@@ -33,7 +33,7 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
     styleUrls: ['./sidepanel.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    animations: [mcSidepanelAnimations.sidepanelState],
+    animations: [kbqSidepanelAnimations.sidepanelState],
     host: {
         class: 'kbq-sidepanel-container',
         '[class]': 'size',
@@ -127,8 +127,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         const position: KbqSidepanelPosition = this.sidepanelConfig.position!;
 
         this.animationTransform = {
-            transformIn: mcSidepanelTransformAnimation[position].in,
-            transformOut: mcSidepanelTransformAnimation[position].out
+            transformIn: kbqSidepanelTransformAnimation[position].in,
+            transformOut: kbqSidepanelTransformAnimation[position].out
         };
     }
 

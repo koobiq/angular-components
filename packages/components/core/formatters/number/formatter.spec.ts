@@ -8,7 +8,7 @@ import {
 
 
 // tslint:disable:no-magic-numbers
-describe('McRoundDecimalPipe', () => {
+describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
     let localeService: KbqLocaleService;
     beforeEach(waitForAsync(() => {

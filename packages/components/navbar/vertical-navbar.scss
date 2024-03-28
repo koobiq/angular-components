@@ -9,15 +9,16 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-vertical-navbar {
     position: relative;
 
-    min-width: var(
-        --kbq-vertical-navbar-size-states-collapsed-width,
-        map.get($tokens, vertical-navbar-size-states-collapsed-width)
-    );
+    min-width: 48px;
     height: 100%;
 
     & .kbq-navbar-container {
         flex-direction: column;
         align-items: unset;
+    }
+
+    & .kbq-navbar-container + .kbq-navbar-container {
+        padding-top: map.get($tokens, size-xxl);
     }
 
     & .kbq-vertical-navbar__container {
@@ -27,20 +28,12 @@ $tokens: meta.module-variables(tokens) !default;
         position: absolute;
         z-index: 998;
 
-        height: 100%;
-
         &.kbq-collapsed {
-            width: var(
-                --kbq-vertical-navbar-size-states-collapsed-width,
-                map.get($tokens, vertical-navbar-size-states-collapsed-width)
-            );
+            width: map.get($tokens, size-5xl);
         }
 
         &.kbq-expanded {
-            width: var(
-                --kbq-vertical-navbar-size-states-expanded-width,
-                map.get($tokens, vertical-navbar-size-states-expanded-width)
-            );
+            width: 240px;
         }
     }
 }

@@ -1,7 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/variables' as *;
 @use '../core/pop-up/pop-up';
 
 @use '../core/styles/tokens';
@@ -21,8 +20,6 @@ $trigger-margin: 8px;
     box-sizing: border-box;
 
     border-radius: var(--kbq-tooltip-size-border-radius, map.get($tokens, tooltip-size-border-radius));
-
-    z-index: $z-index-tooltip;
 
     white-space: pre-line;
 

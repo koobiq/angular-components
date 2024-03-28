@@ -1,5 +1,5 @@
 <div class="docs-icons-viewer__header">
-    <span class="docs-icons-viewer__header-text" docs-header>Иконки</span>
+    <span class="docs-icons-viewer__header-text docs-component-name" docs-header>Иконки</span>
 
     <kbq-form-field>
         <i kbqPrefix kbq-icon="mc-search_16" [color]="themePalette.Secondary"></i>
@@ -12,7 +12,7 @@
     <ng-container *ngIf="filteredIcons | async as icons">
         <ng-container *ngFor="let size of availableSizes">
             <div *ngIf="filterBySize(icons, size).length" class="layout-column">
-                <div class="docs-icons-viewer__table-row-header kbq-title">{{size}}px</div>
+                <div class="docs-icons-viewer__table-row-header">{{size}}px</div>
 
                 <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{size}}">
                     <div *ngFor="let icon of filterBySize(icons, size)"

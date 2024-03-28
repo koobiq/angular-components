@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DateTimeOptions } from '@mosaic-design/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 
 import { DateAdapter } from '../../datetime';
 

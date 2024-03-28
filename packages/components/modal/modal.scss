@@ -1,8 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/variables' as *;
-
 @use '../core/styles/tokens';
 
 @use './modal-confirm';
@@ -63,7 +61,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-modal-wrap {
     position: fixed;
 
-    z-index: $z-index-modal;
     top: 0;
     right: 0;
     bottom: 0;
@@ -142,8 +139,6 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-modal-mask {
     position: fixed;
-
-    z-index: $z-index-modal-mask;
 
     top: 0;
     right: 0;

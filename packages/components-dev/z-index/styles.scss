@@ -1,0 +1,17 @@
+@import '@koobiq/design-tokens/web/variables';
+
+
+.demo-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 0;
+
+    & .example-button {
+        margin-bottom: $size-m;
+    }
+}
+
+.kbq-app-background {
+    margin: 0;
+}

@@ -1,6 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -9,7 +7,6 @@ import {
     EventEmitter,
     Inject,
     Input,
-    OnDestroy,
     Optional,
     Output,
     Renderer2,
@@ -17,19 +14,28 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { CanDisable } from '@koobiq/components/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+    CanDisable,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { BehaviorSubject } from 'rxjs';
 
 import {
-    KBQ_FILE_UPLOAD_CONFIGURATION, KbqFile,
+    KBQ_FILE_UPLOAD_CONFIGURATION,
+    KbqFile,
     KbqFileItem,
     KbqFileValidatorFn,
     KbqInputFile,
-    KbqInputFileLabel
+    KbqInputFileLabel,
+    isCorrectExtension
 } from './file-upload';
+import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 
 
 let nextMultipleFileUploadUniqueId = 0;
+
 export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
@@ -41,21 +47,12 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 }
 
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel = {
-    captionText: 'Перетащите сюда или',
-    captionTextWhenSelected: 'Перетащите еще или',
-    captionTextForCompactSize: 'Перетащите файлы или',
-    browseLink: 'выберите',
-    title: 'Загрузите файлы',
-    gridHeaders: {
-        file: 'Файл',
-        size: 'Размер'
-    }
-};
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
+    ruRULocaleData.fileUpload.multiple;
 
 
 @Component({
-    selector: 'kbq-multiple-file-upload',
+    selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './multiple-file-upload.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +61,11 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
         class: 'kbq-multiple-file-upload'
     }
 })
-export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable {
+export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable {
+    /**
+     * A value responsible for progress spinner type.
+     * Loading logic depends on selected mode */
+    @Input() progressMode: ProgressSpinnerMode = 'determinate';
     @Input() accept?: string[];
     @Input() disabled: boolean;
     @Input() errors: string[] = [];
@@ -81,10 +82,14 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     hasFocus = false;
     columnDefs: { header: string; cssClass: string }[];
 
-    private focusMonitorSubscription = Subscription.EMPTY;
+    config: KbqInputFileMultipleLabel;
+
+    separatedCaptionText: string[];
+    separatedCaptionTextWhenSelected: string[];
+    separatedCaptionTextForCompactSize: string[];
 
     get acceptedFiles(): string {
-        return this.accept && this.accept.length > 0 ? this.accept.map((ext: string) => `.${ext}`).join(',') : '*/*';
+        return this.accept?.join(',') || '*/*';
     }
 
     get hasErrors(): boolean {
@@ -92,30 +97,22 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     }
 
     constructor(
-        private focusMonitor: FocusMonitor,
         private cdr: ChangeDetectorRef,
         private renderer: Renderer2,
-        @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public config: KbqInputFileMultipleLabel
+        @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileMultipleLabel,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
-        this.config = config || KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
-        this.columnDefs = [
-            { header: this.config.gridHeaders.file, cssClass: 'file' },
-            { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
-        ];
-    }
+        this.localeService?.changes
+            .subscribe(this.updateLocaleParams);
 
-    ngAfterViewInit(): void {
-        this.focusMonitorSubscription = this.focusMonitor.monitor(this.input)
-            .subscribe((origin) => this.onFocus(origin === 'keyboard'));
-    }
-
-    ngOnDestroy(): void {
-        this.focusMonitorSubscription.unsubscribe();
+        if (!localeService) {
+            this.initDefaultParams();
+        }
     }
 
     onFileSelectedViaClick({ target }: Event) {
         if (this.disabled) { return; }
+
         this.files = [
             ...this.files,
             ...this.mapToFileItem((target as HTMLInputElement).files)
@@ -128,17 +125,17 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
 
     onFileDropped(files: FileList | KbqFile[]) {
         if (this.disabled) { return; }
-        this.files = [...this.files, ...this.mapToFileItem(files)];
 
+        this.files = [...this.files, ...this.mapToFileItem(files)];
         this.onFileListChange();
     }
 
     deleteFile(index: number, event?: MouseEvent) {
         if (this.disabled) { return; }
+
         event?.stopPropagation();
         this.files.splice(index, 1);
         this.files = [...this.files];
-
         this.onFileListChange();
     }
 
@@ -146,9 +143,17 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
         this.fileQueueChanged.emit(this.files);
     }
 
-    onFocus(focusState: boolean) {
-        if (this.disabled) { return; }
-        this.hasFocus = focusState;
+    private updateLocaleParams = () => {
+        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+
+        this.columnDefs = [
+            { header: this.config.gridHeaders.file, cssClass: 'file' },
+            { header: this.config.gridHeaders.size, cssClass: 'size' },
+            { header: '', cssClass: 'action' }
+        ];
+
+        this.getCaptionText();
+
         this.cdr.markForCheck();
     }
 
@@ -156,7 +161,7 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
         if (!files) { return []; }
 
         return Array.from(files)
-            .filter((file) => this.isCorrectExtension(file))
+            .filter((file) => isCorrectExtension(file, this.accept))
             .map((file: File) => ({
                 file,
                 hasError: this.validateFile(file),
@@ -166,27 +171,40 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     }
 
     private validateFile(file: File): boolean | undefined {
-        if (this.customValidation && this.customValidation.length) {
-            const errorsPerFile = this.customValidation.reduce(
-                (errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                    errors.push(validatorFn(file));
+        if (!this.customValidation?.length) { return; }
 
-                    return errors;
-                },
-                []).filter(Boolean) as string[];
+        const errorsPerFile = this.customValidation.reduce(
+            (errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
+                errors.push(validatorFn(file));
 
-            this.errors = [
-                ...this.errors,
-                ...errorsPerFile
-            ];
+                return errors;
+            },
+            []).filter(Boolean) as string[];
 
-            return !!errorsPerFile.length;
-        }
+        this.errors = [
+            ...this.errors,
+            ...errorsPerFile
+        ];
+
+        return !!errorsPerFile.length;
     }
 
-    private isCorrectExtension(file: File): boolean {
-        const fileExt: string = file.name.split('.').pop() || '';
+    private initDefaultParams() {
+        this.config = KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
 
-        return this.acceptedFiles !== '*/*' && this.acceptedFiles.length > 0 ? this.acceptedFiles.includes(fileExt) : true;
+        this.columnDefs = [
+            { header: this.config.gridHeaders.file, cssClass: 'file' },
+            { header: this.config.gridHeaders.size, cssClass: 'size' },
+            { header: '', cssClass: 'action' }
+        ];
+
+        this.getCaptionText();
+    }
+
+    private getCaptionText() {
+        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
+        this.separatedCaptionTextWhenSelected = this.config.captionTextWhenSelected.split('{{ browseLink }}');
+        this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize
+            .split('{{ browseLink }}');
     }
 }

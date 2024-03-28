@@ -23,7 +23,7 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
         TestBed.configureTestingModule({
            imports: [ MomentDateModule ],
            providers: [
-               { provide: KBQ_DATE_LOCALE, useValue: 'ja-JP' },
+               { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
                { provide: KBQ_LOCALE_SERVICE, useValue: null }
            ]
         }).compileComponents();
@@ -34,7 +34,7 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
     }));
 
     it('should take the default locale id from the KBQ_DATE_LOCALE injection token', () => {
-        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2017年1月2日');
+        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('Jan 2, 2017');
     });
 });
 
@@ -45,7 +45,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
         TestBed.configureTestingModule({
            imports: [MomentDateModule],
            providers: [
-               { provide: LOCALE_ID, useValue: 'fr' },
+               { provide: LOCALE_ID, useValue: 'en-US' },
                { provide: KBQ_LOCALE_SERVICE, useValue: null }
            ]
         }).compileComponents();
@@ -56,7 +56,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
     }));
 
     it('should cascade locale id from the LOCALE_ID injection token to KBQ_DATE_LOCALE', () => {
-        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2 janv. 2017');
+        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('Jan 2, 2017');
     });
 });
 

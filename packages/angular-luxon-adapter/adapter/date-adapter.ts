@@ -1,7 +1,7 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { KbqLocaleService, KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@mosaic-design/luxon-date-adapter';
+import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
 import { Info } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
 

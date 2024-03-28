@@ -1,7 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/variables';
 @use '../core/pop-up/pop-up';
 @use '../core/styles/common';
 
@@ -24,10 +23,10 @@ $trigger-margin: 9px;
 
     box-sizing: border-box;
 
-    z-index: variables.$z-index-popover;
-
     list-style: none;
     white-space: pre-line;
+
+    z-index: 1;
 
     &.kbq-popover_small {
         max-width: var(--kbq-popover-size-container-width-small, map.get($tokens, popover-size-container-width-small));
@@ -69,17 +68,13 @@ $trigger-margin: 9px;
 
     &.kbq-popover__container_with-header {
         .kbq-popover__content {
-            padding-top: var(
-                --kbq-popover-size-content-padding-vertical, map.get($tokens, popover-size-content-padding-vertical)
-            );
+            padding-top: map.get($tokens, size-s);
         }
     }
 
     &.kbq-popover__container_with-footer {
         .kbq-popover__content {
-            padding-bottom: var(
-                --kbq-popover-size-content-padding-vertical, map.get($tokens, popover-size-content-padding-vertical)
-            );
+            padding-bottom: map.get($tokens, size-s);
         }
     }
 }

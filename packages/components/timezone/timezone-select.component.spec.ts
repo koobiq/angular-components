@@ -633,6 +633,7 @@ describe('KbqTimezoneSelect', () => {
             inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
             fixture.detectChanges();
             flush();
+            tick(1);
 
             const options = fixture.debugElement.queryAll(By.css('.kbq-timezone-option__offset-wrapper'));
 

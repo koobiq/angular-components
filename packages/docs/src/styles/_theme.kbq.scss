@@ -14,8 +14,7 @@
 @use '../app/components/navbar/navbar-theme';
 @use '../app/components/welcome/welcome-theme';
 
-@use '../app/components/stackblitz/stackblitz-button-theme';
-@use '../app/components/example-viewer/example-viewer-theme';
+@use '../app/components/docs-live-example-viewer/docs-live-example-viewer-theme';
 @use '../app/components/docs-example-source/docs-example-source-theme';
 @use '../app/components/page-not-found/page-not-found-theme';
 
@@ -34,6 +33,7 @@
 
     @include koobiq-typography($tokens, $config, $md-config);
 
+    @include component-viewer-theme.kbq-docs-component-viewer-typography($config);
     @include footer-theme.kbq-docs-footer-typography($config);
     @include anchors-theme.kbq-docs-anchors-typography($config);
     @include sidenav-theme.kbq-docs-sidenav-typography($config);
@@ -41,6 +41,7 @@
     @include docs-example-source-theme.kbq-docs-example-source-typography($config);
     @include icons-viewer-theme.kbq-docs-icons-viewer-typography($config);
     @include welcome-theme.kbq-docs-welcome-typography($config);
+    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-typography($config);
 }
 
 // Include all theme styles for the components.
@@ -52,8 +53,7 @@
     @include sidenav-theme.kbq-docs-sidenav-theme($theme);
     @include navbar-theme.kbq-docs-navbar-theme($theme);
     @include icons-viewer-theme.kbq-docs-icons-viewer-theme($theme);
-    @include stackblitz-button-theme.kbq-docs-stackblitz-theme($theme);
-    @include example-viewer-theme.kbq-docs-example-viewer-theme($theme);
+    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-theme($theme);
     @include docs-example-source-theme.kbq-docs-example-source-theme($theme);
     @include hot-keys.hot-key-button-theme($theme);
     @include page-not-found-theme.kbq-docs-page-not-found-theme($theme);

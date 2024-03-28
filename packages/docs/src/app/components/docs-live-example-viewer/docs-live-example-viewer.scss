@@ -1,0 +1,29 @@
+@use '../../../styles/koobiq/default-theme/variables' as *;
+
+
+.docs-live-example__example {
+    padding: $size-xl;
+
+    overflow: auto;
+}
+
+.docs-live-example-viewer {
+    margin-bottom: $size-xxl;
+
+    & > .kbq-code-block {
+        margin-top: $size-l;
+    }
+}
+
+.docs-live-example__container {
+    border-radius: $size-m;
+}
+
+.docs-live-example__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: $size-m $size-xl;
+}
+

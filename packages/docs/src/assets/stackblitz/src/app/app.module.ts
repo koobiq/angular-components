@@ -9,7 +9,7 @@ import { DemoMosaicModule } from '../koobiq.module';
 // tslint:disable-next-line:no-import-side-effect
 import '../polyfills';
 
-import { MosaicDocsExample } from './koobiq-docs-example';
+import { KoobiqDocsExample } from './koobiq-docs-example';
 
 
 @NgModule({
@@ -22,9 +22,8 @@ import { MosaicDocsExample } from './koobiq-docs-example';
         ReactiveFormsModule,
         ScrollingModule
     ],
-    declarations: [MosaicDocsExample],
-    bootstrap: [MosaicDocsExample],
-    providers: []
+    declarations: [KoobiqDocsExample],
+    bootstrap: [KoobiqDocsExample]
 })
 export class AppModule {
 }

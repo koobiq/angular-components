@@ -1,0 +1,21 @@
+@use '../dist/components/core/styles/typography';
+
+
+@mixin kbq-docs-live-example-viewer-theme($theme) {
+    $background: map-get($theme, background);
+
+    .docs-live-example__container {
+        border: 1px solid map-get($background, contrast-fade);
+    }
+
+    .docs-live-example__footer {
+        border-top: 1px solid map-get($background, contrast-fade);
+    }
+}
+
+@mixin kbq-docs-live-example-viewer-typography($config) {
+    .docs-live-example__footer,
+    .docs-live-example__footer .kbq-link {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+}

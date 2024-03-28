@@ -1,16 +1,7 @@
 <kbq-form-field>
     <kbq-select [(value)]="selected">
-        <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
-        <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-        <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-        <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-        <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-        <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-        <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-        <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-        <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-        <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-        <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-        <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+        <kbq-option *ngFor="let option of options" [value]="option">
+            <span [innerHTML]="option"></span>
+        </kbq-option>
     </kbq-select>
 </kbq-form-field>

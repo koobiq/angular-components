@@ -33,20 +33,22 @@
 
 @mixin kbq-docs-sidenav-typography($config) {
     .docs-sidenav {
-        @include typography.kbq-typography-level-to-styles($config, text-normal);
+        .docs-sidenav__item > .kbq-option-text {
+            @include typography.kbq-typography-level-to-styles($config, text-big);
+        }
 
         .docs-sidenav__category-text {
             @include typography.kbq-typography-level-to-styles($config, subheading);
         }
     }
 
+    .docs-navbar__anchor .kbq-button {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
     @media (width <= 768px) {
         .docs-sidenav__category {
             @include typography.kbq-typography-level-to-styles($config, title);
-        }
-
-        .docs-sidenav__item {
-            @include typography.kbq-typography-level-to-styles($config, text-big);
         }
     }
 }

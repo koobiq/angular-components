@@ -1,5 +1,10 @@
 import { AnimationEvent } from '@angular/animations';
-import { GlobalPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import {
+    GlobalPositionStrategy,
+    Overlay,
+    OverlayContainer,
+    OverlayRef
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
     Injectable,
@@ -59,6 +64,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     constructor(
         private overlay: Overlay,
         private injector: Injector,
+        private overlayContainer: OverlayContainer,
         @Inject(KBQ_TOAST_FACTORY) private toastFactory: any,
         @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig
     ) {
@@ -168,6 +174,16 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
 
         if (!this.overlayRef.hasAttached()) {
             this.containerInstance = this.overlayRef.attach(this.portal).instance;
+        }
+
+        this.toTop();
+    }
+
+    private toTop() {
+        const overlays = this.overlayContainer.getContainerElement().childNodes;
+
+        if (overlays.length > 1) {
+            overlays[overlays.length - 1].after(this.overlayRef.hostElement);
         }
     }
 

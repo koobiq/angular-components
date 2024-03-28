@@ -20,7 +20,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
 
-import { ExampleViewer } from '../example-viewer/example-viewer';
+import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
 
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +50,7 @@ export class DocExampleFetcher {
         </ng-template>
     `,
     host: {
-        class: 'doc-viewer'
+        class: 'docs-live-example'
     }
 })
 export class DocExampleViewer implements OnDestroy {
@@ -122,7 +122,7 @@ export class DocExampleViewer implements OnDestroy {
         this.nativeElement.innerHTML = rawDocument;
         this.textContent = this.nativeElement.textContent;
 
-        this.loadComponents('koobiq-docs-example', ExampleViewer);
+        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
 
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
@@ -154,7 +154,7 @@ export class DocExampleViewer implements OnDestroy {
                 const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
                 const exampleViewer = portalHost.attach(examplePortal);
                 // todo проверить, что достается из атрибута ?
-                (exampleViewer.instance as ExampleViewer).example = element.getAttribute(componentName);
+                (exampleViewer.instance as DocsLiveExampleViewer).example = element.getAttribute(componentName);
 
                 this.portalHosts.push(portalHost);
             });

@@ -5,7 +5,7 @@ import { formatDataSize } from './size';
 
 
 @Pipe({
-    name: 'mcDataSize'
+    name: 'kbqDataSize'
 })
 export class KbqDataSizePipe implements PipeTransform {
     transform(

@@ -12,24 +12,24 @@ export enum KbqSidepanelAnimationState {
 
 // TODO Find a way to use dynamic keys and avoid error "Expression form not supported."
 // tslint:disable-next-line
-export const mcSidepanelTransformAnimation: Record<KbqSidepanelPosition, { in: string; out: string }> = {
+export const kbqSidepanelTransformAnimation: Record<KbqSidepanelPosition, { in: string; out: string }> = {
     right: { in: 'translateX(100%)', out: 'translateX(0%)' },
     left: { in: 'translateX(-100%)', out: 'translateX(0%)' },
     top: { in: 'translateY(-100%)', out: 'translateY(0%)' },
     bottom: { in: 'translateY(100%)', out: 'translateY(0%)' }
 };
 
-export const mcSidepanelAnimations: { readonly sidepanelState: AnimationTriggerMetadata } = {
+export const kbqSidepanelAnimations: { readonly sidepanelState: AnimationTriggerMetadata } = {
     sidepanelState: trigger('state', [
         state(
             'hidden',
             style({ transform: '{{transformIn}}' }),
-            { params: { transformIn: mcSidepanelTransformAnimation[KbqSidepanelPosition.Right].in }}
+            { params: { transformIn: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].in }}
         ),
         state(
             'visible',
             style({ transform: '{{transformOut}}' }),
-            { params: { transformOut: mcSidepanelTransformAnimation[KbqSidepanelPosition.Right].out }}
+            { params: { transformOut: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].out }}
         ),
         transition(
             'visible => void, visible => hidden',

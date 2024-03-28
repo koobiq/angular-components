@@ -20,7 +20,6 @@ export enum ModalSize {
 export interface ModalOptions<T = any, R = any> {
     kbqModalType?: ModalType;
     kbqVisible?: boolean;
-    kbqZIndex?: number;
     kbqWidth?: number | string;
     kbqSize?: ModalSize;
     kbqWrapClassName?: string;

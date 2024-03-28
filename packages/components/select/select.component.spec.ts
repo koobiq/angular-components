@@ -1155,7 +1155,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
 
-                <ng-template #mcSelectTagContent let-option let-select="select">
+                <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.value.name }}
                         <i
@@ -2930,6 +2930,7 @@ describe('KbqSelect', () => {
             inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
             fixture.detectChanges();
             flush();
+            tick(1);
 
             const optionsTexts = fixture.debugElement.queryAll(By.css('kbq-option'))
                 .map((el) => el.nativeElement.innerText);
@@ -4921,6 +4922,7 @@ describe('KbqSelect', () => {
 
             testInstance.foods.push({ value: 'cake-8', viewValue: 'Cake' });
             fixture.detectChanges();
+            tick(1);
 
             expect(testInstance.options.toArray().every((option) => !!option.multiple))
                 .withContext('Expected `multiple` to have been set on dynamically-added option.')
@@ -5350,6 +5352,7 @@ describe('KbqSelect', () => {
             testInstance.options = testInstance.options.filter((option) => option !== selectedOptions[2]);
             fixture.autoDetectChanges();
             flush();
+            tick(1);
         }));
 
         it ('should render tags for non-rendered KbqOptions/values', fakeAsync(() => {
@@ -5430,7 +5433,7 @@ describe('KbqSelect', () => {
             testInstance.viewport.setRenderedRange({start: options.length + 1, end: options.length * 2 + 1 });
             // finishInit(fixture);
             fixture.autoDetectChanges();
-            tick();
+            tick(1);
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             options.forEach((option) => {

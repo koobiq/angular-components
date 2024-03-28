@@ -1,32 +1,30 @@
 
 
-export const znCNLocaleData = {
-    'zh-CN': {
-        select: { hiddenItemsText: '更多的'},
-        datepicker: {
-            placeholder: '年/月/日'
+export const zhCNLocaleData = {
+    select: { hiddenItemsText: '另外 {{ number }} 个'},
+    datepicker: {
+        placeholder: '年/月/日'
+    },
+    timepicker: {
+        placeholder: {
+            full: '时:分:秒',
+            short: '时:分'
+        }
+    },
+    fileUpload: {
+        single: {
+            captionText: '将文件拖到此处或{{ browseLink }}',
+            browseLink: '选择'
         },
-        timepicker: {
-            placeholder: {
-                full: '时:分:秒',
-                short: '时:分'
-            }
-        },
-        formatters: {
-            number: {
-                rounding: {
-                    separator: ' ',
-                    groupSeparator: '.',
-                    tenThousand: '万',
-                    oneHundredMillions: '亿',
-                    trillion: '兆'
-                }
-            }
-        },
-        input: {
-            number: {
-                groupSeparator: [','],
-                fractionSeparator: '.'
+        multiple: {
+            captionText: '拖到此处或{{ browseLink }}',
+            captionTextWhenSelected: '拖动更多文件或{{ browseLink }}',
+            captionTextForCompactSize: '拖动文件或{{ browseLink }}',
+            browseLink: '选择',
+            title: '上传文件',
+            gridHeaders: {
+                file: '文件',
+                size: '大小'
             }
         }
     }

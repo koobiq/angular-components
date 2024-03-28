@@ -19,7 +19,7 @@ import { debounceTime } from 'rxjs/operators';
 const MIN_VISIBLE_LENGTH = 50;
 
 @Directive({
-    selector: '[mcEllipsisCenter]',
+    selector: '[kbqEllipsisCenter]',
     host: {
         class: 'kbq-ellipsis-center',
         '(window:resize)': 'resizeStream.next($event)'
@@ -27,15 +27,15 @@ const MIN_VISIBLE_LENGTH = 50;
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
     implements OnInit, AfterViewInit, OnDestroy {
-    @Input() set mcEllipsisCenter(value: string) {
-        this._mcEllipsisCenter = value;
+    @Input() set kbqEllipsisCenter(value: string) {
+        this._kbqEllipsisCenter = value;
         this.refresh();
     }
     @Input() minVisibleLength: number = MIN_VISIBLE_LENGTH;
 
     readonly resizeStream = new Subject<Event>();
 
-    private _mcEllipsisCenter: string;
+    private _kbqEllipsisCenter: string;
 
     private resizeSubscription = Subscription.EMPTY;
 
@@ -56,7 +56,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
 
     override ngOnInit(): void {
         super.ngOnInit();
-        this.content = this._mcEllipsisCenter;
+        this.content = this._kbqEllipsisCenter;
         this.refresh();
     }
 
@@ -75,7 +75,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
         let start = '';
         let end = '';
         const dataTextStartLength = 0.75;
-        this.content = this._mcEllipsisCenter;
+        this.content = this._kbqEllipsisCenter;
 
         const [dataTextStart, dataTextEnd] = ['data-text-start', 'data-text-end'].map((querySelector) => {
             const element = this.elementRef.nativeElement.querySelector(`.${querySelector}`);
@@ -88,18 +88,18 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
             return newElement;
         });
 
-        this.renderer.appendChild(dataTextStart, this.renderer.createText(this._mcEllipsisCenter));
+        this.renderer.appendChild(dataTextStart, this.renderer.createText(this._kbqEllipsisCenter));
         this.renderer.appendChild(dataTextEnd, this.renderer.createText(end));
         setTimeout(() => {
             this.disabled = this.elementRef.nativeElement.clientWidth > dataTextStart.scrollWidth;
             if (this.disabled) {
                 start = '';
-                end = this._mcEllipsisCenter;
+                end = this._kbqEllipsisCenter;
             } else {
-                const sliceIndex: number = Math.round(this._mcEllipsisCenter.length * dataTextStartLength);
+                const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length * dataTextStartLength);
 
-                start = this._mcEllipsisCenter.slice(0, sliceIndex);
-                end = this._mcEllipsisCenter.slice(sliceIndex);
+                start = this._kbqEllipsisCenter.slice(0, sliceIndex);
+                end = this._kbqEllipsisCenter.slice(sliceIndex);
             }
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;

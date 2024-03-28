@@ -1,5 +1,5 @@
 import { inject, InjectionToken, LOCALE_ID } from '@angular/core';
-import { DateAdapter as BaseDateAdapter } from '@mosaic-design/date-adapter';
+import { DateAdapter as BaseDateAdapter } from '@koobiq/date-adapter';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 

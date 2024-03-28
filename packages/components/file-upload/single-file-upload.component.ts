@@ -1,6 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,34 +6,38 @@ import {
     EventEmitter,
     Inject,
     Input,
-    OnDestroy,
     Optional,
     Output,
     Renderer2,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { CanDisable } from '@koobiq/components/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+    CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { BehaviorSubject } from 'rxjs';
 
 import {
-    KBQ_FILE_UPLOAD_CONFIGURATION, KbqFile,
+    isCorrectExtension,
+    KBQ_FILE_UPLOAD_CONFIGURATION,
+    KbqFile,
     KbqFileItem,
     KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
+import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = {
-    captionText: 'Перетащите файл или',
-    browseLink: 'выберите'
-};
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel =
+    ruRULocaleData.fileUpload.single;
+
 
 @Component({
-    selector: 'kbq-single-file-upload',
+    selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './single-file-upload.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,41 +46,41 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = {
         class: 'kbq-single-file-upload'
     }
 })
-export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable {
-    @Input() accept: string[];
+export class KbqSingleFileUploadComponent implements KbqInputFile, CanDisable {
+    /**
+     * A value responsible for progress spinner type.
+     * Loading logic depends on selected mode */
+    @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    @Input() accept?: string[];
     @Input() disabled: boolean = false;
     @Input() errors: string[] = [];
-    @Input() files: KbqFileItem[] = [];
+    @Input() file: KbqFileItem | null = null;
     @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
     @Input() customValidation?: KbqFileValidatorFn[];
-    @Output() fileQueueChanged: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
+    @Output() fileQueueChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
 
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
-    hasFocus = false;
+    config: KbqInputFileLabel;
 
-    private focusMonitorSubscription = Subscription.EMPTY;
+    separatedCaptionText: string[];
 
     get acceptedFiles(): string {
-        return this.accept && this.accept.length > 0 ? this.accept.map((ext: string) => `.${ext}`).join(',') : '*/*';
+        return this.accept?.join(',') || '*/*';
     }
 
     constructor(
-        private focusMonitor: FocusMonitor,
         private cdr: ChangeDetectorRef,
         private renderer: Renderer2,
-        @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public config: KbqInputFileLabel
+        @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileLabel,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
-        this.config = config || KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
-    }
+        this.localeService?.changes
+            .subscribe(this.updateLocaleParams);
 
-    ngAfterViewInit(): void {
-        this.focusMonitorSubscription = this.focusMonitor.monitor(this.input)
-            .subscribe((origin) => this.onFocus(origin === 'keyboard'));
-    }
-
-    ngOnDestroy(): void {
-        this.focusMonitorSubscription.unsubscribe();
+        if (!localeService) {
+            this.initDefaultParams();
+        }
     }
 
     onFileSelectedViaClick({ target }: Event): void {
@@ -86,8 +88,8 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
 
         const files: FileList | null = (target as HTMLInputElement).files;
         if (files?.length) {
-            this.files = [this.mapToFileItem(files[0])];
-            this.fileQueueChanged.emit(this.files[0]);
+            this.file = this.mapToFileItem(files[0]);
+            this.fileQueueChange.emit(this.file);
         }
         /* even if the user selects the same file,
          the onchange event will be triggered every time user clicks on the control.*/
@@ -98,52 +100,61 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
         if (this.disabled) { return; }
 
         event?.stopPropagation();
-        this.files = [];
+        this.file = null;
+        this.fileQueueChange.emit(this.file);
         this.errors = [];
-        this.fileQueueChanged.emit(null);
     }
 
     onFileDropped(files: FileList | KbqFile[]): void {
         if (this.disabled) { return; }
 
-        if (this.isCorrectExtension(files[0])) {
-            this.files = Array.from(files)
-                .map((file) => this.mapToFileItem(file));
-            this.fileQueueChanged.emit(this.files[0]);
+        if (isCorrectExtension(files[0], this.accept)) {
+            this.file = this.mapToFileItem(files[0]);
+            this.fileQueueChange.emit(this.file);
         }
     }
 
-    onFocus(focusState: boolean) {
-        if (this.disabled) { return; }
-        this.hasFocus = focusState;
+    private updateLocaleParams = () => {
+        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+
+        this.getCaptionText();
+
         this.cdr.markForCheck();
     }
 
     private mapToFileItem(file: File): KbqFileItem {
-        this.validateFile(file);
-
         return {
             file,
+            hasError: this.validateFile(file),
             progress: new BehaviorSubject<number>(0),
             loading: new BehaviorSubject<boolean>(false)
         };
     }
 
-    private validateFile(file: File): void {
-        if (this.customValidation && this.customValidation.length) {
-            this.errors = this.customValidation.reduce(
+    private validateFile(file: File): boolean | undefined {
+        if (!this.customValidation?.length) { return; }
+
+        this.errors = this.customValidation
+            .reduce(
                 (errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
                     errors.push(validatorFn(file));
 
                     return errors;
                 },
-                []).filter(Boolean) as string[];
-        }
+                []
+            )
+            .filter(Boolean) as string[];
+
+        return !!this.errors.length;
     }
 
-    private isCorrectExtension(file: File): boolean {
-        const fileExt: string = file.name.split('.').pop() || '';
+    private initDefaultParams() {
+        this.config = KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
 
-        return this.acceptedFiles !== '*/*' && this.acceptedFiles.length > 0 ? this.acceptedFiles.includes(fileExt) : true;
+        this.getCaptionText();
+    }
+
+    private getCaptionText() {
+        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
     }
 }

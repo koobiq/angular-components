@@ -15,7 +15,7 @@ import { ThemePalette } from '@koobiq/components/core';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { mcToastAnimations } from './toast-animations';
+import { kbqToastAnimations } from './toast-animations';
 import { KbqToastService } from './toast.service';
 import { KbqToastData, KbqToastStyle } from './toast.type';
 
@@ -47,7 +47,7 @@ let id = 0;
 
         '(keydown.esc)': 'close()'
     },
-    animations: [mcToastAnimations.toastState],
+    animations: [kbqToastAnimations.toastState],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

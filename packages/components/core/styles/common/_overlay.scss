@@ -41,6 +41,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
             // include overlays that have been detached, rather than disposed.
             display: none;
         }
+
+        &.cdk-overlay-container_dropdown {
+            z-index: calc($overlay-container-z-index - 1);
+        }
     }
 
     // We use an extra wrapper element in order to use make the overlay itself a flex item.

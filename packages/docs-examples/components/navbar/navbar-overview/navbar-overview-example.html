@@ -1,84 +1,107 @@
 <kbq-dropdown
-    #horizontalNavbarDropdown_1="kbqDropdown">
+    #horizontalNavbarDropdownApps="kbqDropdown">
 
-    <button kbq-dropdown-item>Point 1</button>
-    <button kbq-dropdown-item>Point 2</button>
-    <button kbq-dropdown-item>Point 3</button>
+    <button kbq-dropdown-item>User Management</button>
+    <button kbq-dropdown-item>Knowledge Hub</button>
+    <button kbq-dropdown-item>Secret Notes</button>
 </kbq-dropdown>
 
 <kbq-dropdown
-    #horizontalNavbarDropdown_2="kbqDropdown">
+    #horizontalNavbarTasks="kbqDropdown">
 
-    <button kbq-dropdown-item>Point 1</button>
-    <button kbq-dropdown-item>Point 2</button>
-    <button kbq-dropdown-item>Point 3</button>
+    <button kbq-dropdown-item>Открытые</button>
+    <button kbq-dropdown-item>В работе</button>
+    <button kbq-dropdown-item>Выполненные</button>
+    <button kbq-dropdown-item>Отмененные</button>
 </kbq-dropdown>
 
 <kbq-dropdown
-    #horizontalNavbarDropdown_3="kbqDropdown">
+    #horizontalNavbarProjects="kbqDropdown">
 
-    <button kbq-dropdown-item>Point 1</button>
-    <button kbq-dropdown-item>Point 2</button>
-    <button kbq-dropdown-item>Point 3</button>
+    <button kbq-dropdown-item>Открытые</button>
+    <button kbq-dropdown-item>В работе</button>
+    <button kbq-dropdown-item>Выполненные</button>
+    <button kbq-dropdown-item>Отмененные</button>
+</kbq-dropdown>
+
+<kbq-dropdown
+    #horizontalNavbarOneMore="kbqDropdown">
+
+    <button kbq-dropdown-item>Шаблоны</button>
+    <button kbq-dropdown-item>Платежи</button>
+    <button kbq-dropdown-item>Учет времени</button>
+    <button kbq-dropdown-item>Управление доступом</button>
+</kbq-dropdown>
+
+<kbq-dropdown
+    #horizontalNavbarProfile="kbqDropdown">
+
+    <button kbq-dropdown-item>Настройки</button>
+    <kbq-divider></kbq-divider>
+    <button kbq-dropdown-item>Администрирование</button>
+    <button kbq-dropdown-item>Пользователи</button>
+    <kbq-divider></kbq-divider>
+    <button kbq-dropdown-item>Скачать приложение</button>
+    <kbq-divider></kbq-divider>
+    <kbq-divider></kbq-divider>
+    <button kbq-dropdown-item>Сменить тенант</button>
+    <button kbq-dropdown-item>Выход</button>
 </kbq-dropdown>
 
 <div class="demo-container">
     <kbq-navbar>
         <kbq-navbar-container>
             <kbq-navbar-item
-                #horizontalNavbarDropdownTrigger_1="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="horizontalNavbarDropdown_1"
-                [class.kbq-active]="horizontalNavbarDropdownTrigger_1.opened">
+                [kbqTooltip]="'Приложения'"
+                [kbqTrigger]="'hover'"
+                [kbqPlacement]="popUpPlacements.BottomLeft"
+                bento
+                #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
+                [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened">
 
                 <i kbq-icon="mc-bento_16"></i>
             </kbq-navbar-item>
 
             <a href="#" kbq-navbar-brand>
                 <kbq-navbar-logo>
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 25c0 2.63 0 4.09.955 5.045C2.909 31 4.37 31 7 31h18c2.63 0 4.09 0 5.045-.955C31 29.091 31 27.63 31 25V7c0-2.63 0-4.09-.955-5.045C29.091 1 27.63 1 25 1H7c-2.63 0-4.09 0-5.045.955C1 2.909 1 4.37 1 7v18Z" fill="red"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.376 13.314v3.057c0 1.456.625 2.02 2.017 2.02h2.071v2.462h-2.572c-2.82 0-4.165-1.466-4.165-4.168V7h2.65v3.851h4.087v2.463h-4.088Zm-9.247 5.272c-1.444 0-2.48-1.15-2.48-2.734s1.036-2.734 2.48-2.734c1.454 0 2.509 1.15 2.509 2.734s-1.055 2.734-2.51 2.734Zm.576-7.93c-1.13 0-2.163.414-2.826 1.157h-.23v-.962H7v13.853h2.65V19.89h.229c.614.67 1.61 1.158 2.826 1.158 2.724 0 4.583-2.191 4.583-5.197 0-3.006-1.859-5.197-4.583-5.197Z" fill="#fff"/></svg>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000"/>
+                        <path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/>
+                    </svg>
+
                 </kbq-navbar-logo>
-                <kbq-navbar-title>Incident Processing Center</kbq-navbar-title>
+                <kbq-navbar-title>App name</kbq-navbar-title>
             </a>
 
-            <button kbq-navbar-item>
+            <button kbq-navbar-item
+                    [kbqTooltip]="'Панели мониторинга'"
+                    [kbqPlacement]="popUpPlacements.Bottom">
                 <i kbq-icon="mc-folder-closed_16"></i>
             </button>
 
-            <kbq-navbar-divider></kbq-navbar-divider>
+            <kbq-navbar-item
+                #horizontalNavbarTasksDropdownTrigger="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="horizontalNavbarTasks"
+                [class.kbq-active]="horizontalNavbarTasksDropdownTrigger.opened"
+                [collapsable]="false">
 
-            <kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
-                <kbq-navbar-title>Запросы</kbq-navbar-title>
-            </kbq-navbar-item>
-
-            <kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
                 <kbq-navbar-title>Задачи</kbq-navbar-title>
             </kbq-navbar-item>
 
-            <kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
-                <kbq-navbar-title>Инциденты</kbq-navbar-title>
-            </kbq-navbar-item>
-
-            <kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
-                <kbq-navbar-title>Участники</kbq-navbar-title>
-            </kbq-navbar-item>
-
             <kbq-navbar-item
-                #horizontalNavbarDropdownTrigger_2="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="horizontalNavbarDropdown_2"
-                [class.kbq-active]="horizontalNavbarDropdownTrigger_2.opened"
+                #horizontalNavbarProjectsDropdownTrigger="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="horizontalNavbarProjects"
+                [class.kbq-active]="horizontalNavbarProjectsDropdownTrigger.opened"
                 [collapsable]="false">
 
-                <kbq-navbar-title>База знаний</kbq-navbar-title>
+                <kbq-navbar-title>Проекты</kbq-navbar-title>
             </kbq-navbar-item>
 
             <kbq-navbar-item
-                #horizontalNavbarDropdownTrigger_3="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="horizontalNavbarDropdown_3"
-                [class.kbq-active]="horizontalNavbarDropdownTrigger_3.opened"
+                #horizontalNavbarOneMoreDropdownTrigger="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="horizontalNavbarOneMore"
+                [class.kbq-active]="horizontalNavbarOneMoreDropdownTrigger.opened"
                 [collapsable]="false">
 
                 <kbq-navbar-title>Еще</kbq-navbar-title>
@@ -86,32 +109,41 @@
 
             <kbq-navbar-item>
                 <button kbq-button [color]="'contrast'">
-                    <i kbq-icon="mc-info-o_16"></i>
-                    <span>Новый запрос</span>
+                    <span>Новая задача</span>
                 </button>
             </kbq-navbar-item>
         </kbq-navbar-container>
 
         <kbq-navbar-container>
-            <kbq-navbar-item >
+            <kbq-navbar-item
+                [kbqTooltip]="'Уведомления'"
+                [kbqPlacement]="popUpPlacements.Bottom">
+                <i kbq-icon="mc-bell_16"></i>
+                <kbq-badge [compact]="true" [badgeColor]="'error'">5</kbq-badge>
+            </kbq-navbar-item>
+
+            <kbq-navbar-item
+                [kbqTooltip]="'Администрирование'"
+                [kbqPlacement]="popUpPlacements.Bottom">
+                <i kbq-icon="mc-gear_16"></i>
+            </kbq-navbar-item>
+
+            <kbq-navbar-divider></kbq-navbar-divider>
+
+            <kbq-navbar-item
+                [kbqTooltip]="'Справка'"
+                [kbqPlacement]="popUpPlacements.Bottom">
                 <i kbq-icon="mc-search_16"></i>
             </kbq-navbar-item>
 
             <kbq-navbar-item
-                #popover="kbqPopover"
-                [class.kbq-active]="popover.isOpen"
-                kbqPopover
-                [kbqPopoverPlacement]="popUpPlacements.BottomRight"
-                [kbqPopoverHeader]="'Центр уведомлений'"
-                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '">
-                <i kbq-icon="mc-bell-o_16"></i><span class="kbq-badge kbq-badge_mini kbq-badge_solid kbq-badge_error">5</span>
-            </kbq-navbar-item>
+                [kbqTooltip]="'Профиль'"
+                [kbqTrigger]="'hover'"
+                [kbqPlacement]="popUpPlacements.BottomRight"
 
-            <kbq-navbar-item>
-                <i kbq-icon="mc-info_16"></i>
-            </kbq-navbar-item>
-
-            <kbq-navbar-item>
+                #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
+                [kbqDropdownTriggerFor]="horizontalNavbarProfile"
+                [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened">
                 <i kbq-icon="mc-user_16"></i>
             </kbq-navbar-item>
         </kbq-navbar-container>

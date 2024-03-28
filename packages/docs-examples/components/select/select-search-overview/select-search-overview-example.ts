@@ -1,28 +1,25 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { enUSLocaleDataSet } from '../en-US';
+import { esLALocaleDataSet } from '../es-LA';
+import { faIRLocaleDataSet } from '../fa-IR';
+import { ptBRLocaleDataSet } from '../pt-BR';
+import { ruRULocaleDataSet } from '../ru-RU';
+import { zhCNLocaleDataSet } from '../zh-CN';
 
-export const OPTIONS = [
-    'Abakan', 'Almetyevsk', 'Anadyr', 'Anapa', 'Arkhangelsk', 'Astrakhan', 'Barnaul', 'Belgorod', 'Beslan', 'Biysk',
-    'Birobidzhan', 'Blagoveshchensk', 'Bologoye', 'Bryansk', 'Veliky Novgorod', 'Veliky Ustyug', 'Vladivostok',
-    'Vladikavkaz', 'Vladimir', 'Volgograd', 'Vologda', 'Vorkuta', 'Voronezh', 'Gatchina', 'Gdov', 'Gelendzhik',
-    'Gorno-Altaysk', 'Grozny', 'Gudermes', 'Gus-Khrustalny', 'Dzerzhinsk', 'Dmitrov', 'Dubna', 'Yeysk', 'Yekaterinburg',
-    'Yelabuga', 'Yelets', 'Yessentuki', 'Zlatoust', 'Ivanovo', 'Izhevsk', 'Irkutsk', 'Yoshkar-Ola', 'Kazan',
-    'Kaliningrad', 'Kaluga', 'Kemerovo', 'Kislovodsk', 'Komsomolsk-on-Amur', 'Kotlas', 'Krasnodar', 'Krasnoyarsk',
-    'Kurgan', 'Kursk', 'Kyzyl', 'Leninogorsk', 'Lensk', 'Lipetsk', 'Luga', 'Lyuban', 'Lyubertsy', 'Magadan', 'Maykop',
-    'Makhachkala', 'Miass', 'Mineralnye Vody', 'Mirny', 'Moscow', 'Murmansk', 'Murom', 'Mytishchi',
-    'Naberezhnye Chelny', 'Nadym', 'Nalchik', 'Nazran', 'Naryan-Mar', 'Nakhodka', 'Nizhnevartovsk', 'Nizhnekamsk',
-    'Nizhny Novgorod', 'Nizhny Tagil', 'Novokuznetsk', 'Novosibirsk', 'Novy Urengoy', 'Norilsk', 'Obninsk',
-    'Oktyabrsky', 'Omsk', 'Orenburg', 'Orekhovo-Zuyevo', 'Oryol', 'Penza', 'Perm', 'Petrozavodsk',
-    'Petropavlovsk-Kamchatsky', 'Podolsk', 'Pskov', 'Pyatigorsk', 'Rostov-on-Don', 'Rybinsk', 'Ryazan', 'Salekhard',
-    'Samara', 'Saint Petersburg', 'Saransk', 'Saratov', 'Severodvinsk', 'Smolensk', 'Sol-Iletsk', 'Sochi', 'Stavropol',
-    'Surgut', 'Syktyvkar', 'Tambov', 'Tver', 'Tobolsk', 'Tolyatti', 'Tomsk', 'Tuapse', 'Tula', 'Tynda', 'Tyumen',
-    'Ulan-Ude', 'Ulyanovsk', 'Ufa', 'Khabarovsk', 'Khanty-Mansiysk', 'Chebarkul', 'Cheboksary', 'Chelyabinsk',
-    'Cherepovets', 'Cherkessk', 'Chistopol', 'Chita', 'Shadrinsk', 'Shatura', 'Shuya', 'Elista', 'Engels',
-    'Yuzhno-Sakhalinsk', 'Yakutsk', 'Yaroslavl'
-];
+
+const localeDataSet = {
+    'en-US': enUSLocaleDataSet,
+    'zh-CN': zhCNLocaleDataSet,
+    'es-LA': esLALocaleDataSet,
+    'pt-BR': ptBRLocaleDataSet,
+    'ru-RU': ruRULocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
+};
 
 /**
  * @title Basic Select
@@ -33,17 +30,29 @@ export const OPTIONS = [
     styleUrls: ['select-search-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class SelectSearchOverviewExample implements OnInit {
+export class SelectSearchOverviewExample {
+    options: string[] = [];
     selected = [];
 
     searchControl: FormControl = new FormControl();
-    options: string[] = OPTIONS.sort();
-
     filteredOptions: Observable<string[]>;
 
-    ngOnInit(): void {
+
+    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
+        this.localeService.changes
+            .subscribe(this.update)
+    }
+
+    update = (locale: string) => {
+        this.options = localeDataSet[locale].items;
+        this.selected = [];
+
+        this.init();
+    }
+
+    init(): void {
         this.filteredOptions = merge(
-            of(OPTIONS),
+            of(this.options),
             this.searchControl.valueChanges
                 .pipe(map((value) => this.getFilteredOptions(value)))
         );

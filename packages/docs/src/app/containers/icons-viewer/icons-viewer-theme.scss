@@ -46,12 +46,25 @@
 }
 
 @mixin kbq-docs-icons-viewer-typography($config) {
-    .docs-icons-viewer__table-cell-name {
-        @include typography.kbq-typography-level-to-styles($config, caption);
+    .icon-preview-modal .kbq-modal-header.kbq-modal-title {
+        @include typography.kbq-typography-level-to-styles($config, title);
     }
 
-    .docs-icons-viewer__table-empty-results,
-    .docs-icons-viewer__header-text {
+    .docs-icons-viewer__header .kbq-input,
+    .docs-icons-viewer__table-cell-name,
+    .icon-preview-modal__content .kbq-select,
+    .icon-preview-modal__buttons .kbq-button,
+    .kbq-select-overlay .icon-preview-modal__select-option,
+    .icon-preview-modal__description .kbq-dd,
+    .icon-preview-modal__description .kbq-badge {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .docs-icons-viewer__table-empty-results {
         @include typography.kbq-typography-level-to-styles($config, display-3);
+    }
+
+    .kbq-modal icon-preview-modal {
+
     }
 }

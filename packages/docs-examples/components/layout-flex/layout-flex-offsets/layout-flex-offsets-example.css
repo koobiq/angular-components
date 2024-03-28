@@ -3,7 +3,7 @@
     flex-direction: row;
 }
 
-.kbq-form-field {
+.docs-layout-flex-offsets .kbq-form-field {
     max-width: 20%;
 
     margin-left: 32px;

@@ -304,7 +304,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private eventFromInput(event: KeyboardEvent): boolean {
-        return !!(event.target as HTMLElement).attributes.getNamedItem('mcinput');
+        return !!(event.target as HTMLElement).attributes.getNamedItem('kbqinput');
     }
 
     private cursorOnFirstPosition(event: KeyboardEvent): boolean {

@@ -2,8 +2,10 @@ import { Component, NgModule, ViewChild, ViewEncapsulation } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -79,7 +81,9 @@ export class NavbarDemoComponent {
         KbqLinkModule,
         KbqPopoverModule,
         KbqToolTipModule,
-        KbqModalModule
+        KbqModalModule,
+        KbqBadgeModule,
+        KbqDividerModule
     ],
     bootstrap: [NavbarDemoComponent]
 })

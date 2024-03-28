@@ -3,7 +3,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
     AfterContentInit,
@@ -97,7 +97,8 @@ import {
     tap,
     take,
     takeUntil,
-    distinctUntilChanged
+    distinctUntilChanged,
+    delay
 } from 'rxjs/operators';
 
 
@@ -335,7 +336,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
-    @Input() hiddenItemsText: string = 'еще';
+    @Input() hiddenItemsText: string = 'еще {{ number }}';
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
@@ -573,6 +574,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
         private readonly _renderer: Renderer2,
         defaultErrorStateMatcher: ErrorStateMatcher,
         elementRef: ElementRef,
+        private overlayContainer: OverlayContainer,
         @Optional() private readonly _dir: Directionality,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
@@ -676,7 +678,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     @Input()
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
-        return `${hiddenItemsText} ${hiddenItems}`;
+        return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
     }
 
     clearValue($event): void {
@@ -739,6 +741,12 @@ export class KbqSelect extends KbqSelectMixinBase implements
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
+
+                const overlayContainer = this.overlayContainer.getContainerElement();
+
+                if (overlayContainer.childNodes.length === 1) {
+                    this._renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+                }
             });
     }
 
@@ -753,6 +761,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
         this._changeDetectorRef.markForCheck();
         this.onTouched();
+
+        this._renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
     }
 
     /**
@@ -857,6 +867,10 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
                 this.updateScrollSize();
             });
+
+        this.options.changes
+            .pipe(delay(1))
+            .subscribe(() => this.setOverlayPosition());
 
         this.closeSubscription = this.closingActions()
             .subscribe(() => this.close());

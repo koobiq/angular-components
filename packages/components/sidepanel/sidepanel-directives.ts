@@ -17,7 +17,7 @@ import { KbqSidepanelService } from './sidepanel.service';
  * Button that will close the current sidepanel.
  */
 @Directive({
-    selector: 'button[kbq-sidepanel-close], button[mcSidepanelClose]',
+    selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
         '(click)': 'sidepanelRef.close(sidepanelResult)',
         class: 'kbq-sidepanel-close'
@@ -26,7 +26,7 @@ import { KbqSidepanelService } from './sidepanel.service';
 export class KbqSidepanelClose implements OnInit, OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
 
-    @Input('mcSidepanelClose') mcSidepanelClose: any;
+    @Input('kbqSidepanelClose') kbqSidepanelClose: any;
 
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
@@ -49,7 +49,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const proxiedChange = changes.mcSidepanelClose || changes.sidepanelResult;
+        const proxiedChange = changes.kbqSidepanelClose || changes.sidepanelResult;
 
         if (proxiedChange) {
             this.sidepanelResult = proxiedChange.currentValue;
@@ -87,7 +87,7 @@ export class KbqSidepanelHeader {
  * Scrollable content container of a sidepanel.
  */
 @Directive({
-    selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], mcSidepanelBody',
+    selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody',
     host: {
         class: 'kbq-sidepanel-body kbq-scrollbar'
     }
@@ -98,7 +98,7 @@ export class KbqSidepanelBody {}
  * Footer of a sidepanel.
  */
 @Directive({
-    selector: 'kbq-sidepanel-footer, [kbq-sidepanel-footer], mcSidepanelFooter',
+    selector: 'kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter',
     host: {
         class: 'kbq-sidepanel-footer'
     }
@@ -109,7 +109,7 @@ export class KbqSidepanelFooter {}
  * Actions block of a sidepanel footer.
  */
 @Directive({
-    selector: 'kbq-sidepanel-actions, [kbq-sidepanel-actions], mcSidepanelActions',
+    selector: 'kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions',
     host: {
         class: 'kbq-sidepanel-actions'
     }

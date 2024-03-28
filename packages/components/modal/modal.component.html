@@ -8,13 +8,11 @@
          class="kbq-modal-mask"
          [ngClass]="maskAnimationClassMap"
          [class.kbq-modal-mask-hidden]="hidden"
-         [ngStyle]="kbqMaskStyle"
-         [style.zIndex]="kbqZIndex">
+         [ngStyle]="kbqMaskStyle">
     </div>
 
     <div (mousedown)="onClickMask($event)"
          class="kbq-modal-wrap {{ kbqWrapClassName }}"
-         [style.zIndex]="kbqZIndex"
          [style.display]="hidden ? 'none' : ''"
          tabindex="-1">
 

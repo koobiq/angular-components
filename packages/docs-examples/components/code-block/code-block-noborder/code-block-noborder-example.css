@@ -1,3 +1,16 @@
 .code-block_no-border {
     border: none;
 }
+
+.kbq-code-block.code-block_no-border,
+.kbq-code-block.code-block_no-border .kbq-tab-body__wrapper,
+.kbq-code-block.code-block_no-border .kbq-tab-body,
+.kbq-code-block.code-block_no-border .kbq-tab-body__content,
+.kbq-code-block.code-block_no-border .kbq-code-block__code,
+.kbq-code-block.code-block_no-border .kbq-code-block__code > code.hljs.hljs-line-numbers {
+    overflow: visible;
+}
+
+.kbq-code-block.code-block_no-border .kbq-code-block__code > code {
+    width: 100%;
+}

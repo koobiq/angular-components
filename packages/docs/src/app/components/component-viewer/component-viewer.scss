@@ -1,21 +1,135 @@
 @use '../../../styles/koobiq/default-theme/variables' as *;
 
-
+/* stylelint-disable no-descending-specificity */
 .kbq-docs-pre {
     position: relative;
 }
 
 .docs-component-navbar {
-    margin-right: 369px;
+    & .docs-component-navbar__links {
+        display: flex;
+        align-items: center;
+
+        & .kbq-link {
+            padding: $size-s $size-m;
+        }
+    }
 }
 
-.docs-component-name {
-    padding: 8px 0 12px;
+.docs-api_method-name {
+    margin-bottom: $size-xxs;
+}
+
+.docs-api__section {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: $size-m;
+
+    padding: $size-xxs $size-xl $size-xl;
+    margin-bottom: $size-l;
+
+    & .docs-api__property-header,
+    & .docs-api__method-header {
+        margin: $size-m 0;
+    }
+
+    & .kbq-docs-table {
+        padding-bottom: $size-m;
+
+        & .kbq-docs-table__name,
+        & .kbq-docs-table__description {
+            padding: $size-s 0;
+        }
+
+        & > tbody > tr td {
+            padding: $size-s 0;
+        }
+
+        & > tbody > tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    & .kbq-docs-table + .docs-api_method-name {
+        margin-top: $size-xl;
+    }
+
+    & .docs-api_method-name + .docs-api_method-name {
+        margin-top: $size-xxl;
+    }
+
+    & .kbq-markdown__pre {
+        margin-bottom: $size-m;
+    }
+
+    &.docs-api__section_method > .docs-api_method-name {
+        padding-top: $size-m;
+    }
+}
+
+.docs-api__class-selector-name,
+.docs-api__class-export-name {
+    padding: $size-xxs $size-s;
+    border-radius: $size-s;
+}
+
+.docs-api__class-name {
+    margin-top: $size-m;
+    margin-bottom: $size-m;
 }
 
 .component-overview {
     display: flex;
     flex-direction: row;
+
+    // paragraph
+    & .kbq-markdown__p {
+        margin-top: 0 !important;
+        max-width: unset;
+    }
+
+    // first level
+    .docs-header-link.kbq-markdown__h3 {
+        margin-top: $size-m;
+        margin-bottom: $size-m;
+    }
+
+    // second level
+    .docs-header-link.kbq-markdown__h4 {
+        margin-top: $size-m;
+        margin-bottom: $size-m;
+    }
+
+    // third level
+    .docs-header-link.kbq-markdown__h5 {
+        margin-top: $size-m;
+        margin-bottom: $size-m;
+    }
+
+    & div[koobiq-docs-example] + .docs-header-link {
+        margin-top: $size-3xl;
+    }
+
+    & .docs-api__section + .docs-header-link,
+    & .kbq-markdown__table + .docs-header-link,
+    & .kbq-markdown__ul + .docs-header-link,
+    & .kbq-markdown__p + .docs-header-link {
+        margin-top: $size-xxl;
+    }
+
+    & .docs-header-link:first-child:not(div[class*='docs-api__']) {
+        margin-top: 0;
+    }
+
+    & .docs-import {
+        margin-top: 0;
+    }
+
+    & .docs-api__section_method .docs-api_method-name {
+        padding: 0;
+        margin-top: $size-m;
+        margin-bottom: $size-m;
+    }
 }
 
 .docs-component-viewer {
@@ -30,25 +144,40 @@
     scroll-behavior: smooth;
 }
 
-.doc-viewer {
-    max-width: 650px;
+
+.docs-live-example {
     min-width: 0;
 
     margin-bottom: $size-7xl;
 }
 
-@media (width <= 768px) {
-    .docs-component-viewer {
-        padding: $size-l;
+.docs-component-header {
+    padding-top: $size-s;
 
-        padding-bottom: $size-3xl;
+    // header
+    .docs-component-name {
+        margin-bottom: $size-m;
+    }
+
+    & .docs-component-navbar {
+        margin-bottom: $size-3xl;
+    }
+}
+
+@media (width <= 768px) {
+    .docs-component-header {
+        padding-top: $size-l;
+    }
+
+    .docs-component-viewer {
+        padding: 0 $size-l $size-3xl;
     }
 
     .component-overview {
         flex-direction: column-reverse;
 
         .sticky-wrapper {
-            margin-top: $size-xxl;
+            display: none;
         }
     }
 }
@@ -66,8 +195,7 @@
         padding-right: $size-xxl;
 
         & .sticky-wrapper {
-            margin-top: $size-3xl;
-            margin-bottom: $size-s;
+            margin-bottom: $size-xxl;
         }
     }
 }
@@ -75,12 +203,15 @@
 @media (1201px <= width <= 1920px) {
     .docs-component-header {
         padding-left: $size-7xl;
+
+        width: 650px;
+        margin-right: $size-7xl;
     }
 
     .component-overview {
         padding-left: $size-7xl;
 
-        & .doc-viewer {
+        & .docs-live-example {
             width: 650px;
             margin-right: $size-7xl;
         }
@@ -95,9 +226,11 @@
     .component-overview {
         padding-left: 160px;
 
-        & .doc-viewer {
-            width: 650px;
+        & .docs-live-example {
+            width: 900px;
             margin-right: $size-7xl;
         }
     }
 }
+
+/* stylelint-enable no-descending-specificity */

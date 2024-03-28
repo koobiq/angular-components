@@ -14,7 +14,6 @@ import {
     KbqNavbarTitle,
     KbqNavbarRectangleElement,
     KbqNavbarToggle,
-    KbqNavbarSubTitle,
     KbqNavbarBento
 } from './navbar-item.component';
 import { KbqNavbar, KbqNavbarContainer } from './navbar.component';
@@ -41,7 +40,6 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarSubTitle,
         KbqNavbarBento
     ],
     declarations: [
@@ -56,7 +54,6 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarSubTitle,
         KbqNavbarBento
     ]
 })

@@ -27,7 +27,6 @@ import {
     KbqNavbarRectangleElement
 } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
-import { toggleVerticalNavbarAnimation } from './vertical-navbar.animation';
 
 
 @Component({
@@ -35,8 +34,6 @@ import { toggleVerticalNavbarAnimation } from './vertical-navbar.animation';
     exportAs: 'KbqVerticalNavbar',
     template: `
         <div class="kbq-vertical-navbar__container"
-             [@toggle]="expanded"
-             (@toggle.done)="animationDone.next()"
              [class.kbq-collapsed]="!expanded"
              [class.kbq-expanded]="expanded">
 
@@ -59,7 +56,6 @@ import { toggleVerticalNavbarAnimation } from './vertical-navbar.animation';
 
         '(keydown)': 'onKeyDown($event)'
     },
-    animations: [toggleVerticalNavbarAnimation()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

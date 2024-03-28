@@ -96,7 +96,7 @@ describe('KbqNavbar', () => {
 
 @Component({
     selector: 'test-app',
-    templateUrl: './navbar.component.spec.html'
+    templateUrl: './navbar.component.html'
 })
 class TestApp {
     counter: number = 0;

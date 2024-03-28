@@ -8,18 +8,22 @@ import { KbqFileDropDirective } from './file-drop';
 import { KbqFile } from './file-upload';
 
 
-export const createFile = (name: string): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry>} => ({
+export const createFile = (name: string, type?: string): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry>} => ({
     kind: 'file',
-    webkitGetAsEntry: () => createFSFile(name)
+    webkitGetAsEntry: () => createFSFile(name, type)
 });
 
-const createFSFile = (name: string) => ({
-    name,
-    fullPath: name,
-    isDirectory: false,
-    isFile: true,
-    file: (successCb) => successCb(new File(['test'], name))
-});
+const createFSFile = (name: string, type = '') => {
+    const file: Partial<File> = { name, type };
+
+    return {
+        name,
+        fullPath: name,
+        isDirectory: false,
+        isFile: true,
+        file: (successCb) => successCb(file)
+    }
+};
 
 describe('FileDropDirective', () => {
     let component: SimpleDNDComponent;

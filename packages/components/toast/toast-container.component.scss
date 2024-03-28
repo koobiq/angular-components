@@ -2,7 +2,6 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
-@use '../core/styles/variables';
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -13,12 +12,5 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: column;
     align-items: flex-end;
 
-    gap: 12px;
-}
-
-.cdk-overlay-container {
-    .kbq-toast-overlay,
-    .kbq-toast-overlay ~ *:not(.kbq-modal-overlay, .kbq-sidepanel-overlay, .cdk-overlay-backdrop) {
-        z-index: variables.$z-index-notification;
-    }
+    gap: map.get($tokens, size-m);
 }

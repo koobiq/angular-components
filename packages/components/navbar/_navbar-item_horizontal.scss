@@ -1,0 +1,97 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/list';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-navbar-item.kbq-horizontal {
+    position: relative;
+
+    flex-direction: row;
+
+    box-sizing: border-box;
+
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    min-height: map.get($tokens, size-5xl);
+    min-width: map.get($tokens, size-5xl);
+
+    padding: map.get($tokens, size-s);
+
+    justify-content: center;
+
+    &:after {
+        top: map.get($tokens, size-s);
+        right: map.get($tokens, size-s);
+        bottom: map.get($tokens, size-s);
+        left: map.get($tokens, size-s);
+    }
+
+    & .kbq-navbar-item__title {
+        padding-left: map.get($tokens, size-xxs);
+        padding-right: map.get($tokens, size-xxs);
+    }
+
+    & .kbq-navbar-item__arrow-icon {
+        padding-left: map.get($tokens, size-xxs);
+    }
+
+    &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
+        padding: map.get($tokens, size-l) map.get($tokens, size-m);
+
+        &:after {
+            top: map.get($tokens, size-s);
+            right: 0;
+            bottom: map.get($tokens, size-s);
+            left: 0;
+        }
+
+        & > .kbq-icon {
+            padding-right: map.get($tokens, size-xxs);
+        }
+    }
+
+    &.kbq-navbar-bento {
+        min-width: 44px;
+
+        justify-content: center;
+
+        padding-right: map.get($tokens, size-xxs);
+
+        &:after {
+            top: map.get($tokens, size-s);
+            right: map.get($tokens, size-xxs);
+            bottom: map.get($tokens, size-s);
+            left: map.get($tokens, size-s);
+        }
+    }
+
+    &.kbq-navbar-item_collapsed {
+        justify-content: center;
+
+        padding: map.get($tokens, size-s);
+
+        & .kbq-navbar-item__container {
+            display: none;
+        }
+    }
+
+    .kbq-badge {
+        position: absolute;
+
+        z-index: 1;
+
+        top: map.get($tokens, size-xs);
+        right: map.get($tokens, size-xs);
+    }
+
+    &.kbq-navbar-item_has-nested {
+        padding: 0 map.get($tokens, size-m);
+    }
+}

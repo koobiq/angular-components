@@ -12,20 +12,20 @@
 
 @mixin kbq-docs-footer-typography($config) {
     .docs-footer__label {
-        @include typography.kbq-typography-level-to-styles($config, text-compact);
-    }
-
-    .docs-footer__control {
         @include typography.kbq-typography-level-to-styles($config, text-normal);
     }
 
-    @media (width <= 768px) {
-        .docs-footer__label {
-            @include typography.kbq-typography-level-to-styles($config, text-normal);
+    .docs-footer__control {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .docs-dropdown {
+        .kbq-dropdown-item__text {
+            @include typography.kbq-typography-level-to-styles($config, text-big);
         }
 
-        .docs-footer__control {
-            @include typography.kbq-typography-level-to-styles($config, text-big);
+        .kbq-dropdown-item__caption {
+            @include typography.kbq-typography-level-to-styles($config, text-normal);
         }
     }
 }

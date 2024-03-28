@@ -597,6 +597,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-code-block"
     }
   },
+  "code-block-tabs-with-overflow": {
+    "packagePath": "components/code-block/code-block-tabs-with-overflow",
+    "title": "Basic code-block-tabs",
+    "componentName": "CodeBlockTabsWithOverflowExample",
+    "files": [
+      "code-block-tabs-with-overflow-example.ts",
+      "code-block-tabs-with-overflow-example.html",
+      "code-block-tabs-with-overflow-example.css"
+    ],
+    "selector": "code-block-tabs-with-overflow-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-tabs-with-overflow-example.ts",
+    "module": {
+      "name": "CodeBlockExamplesModule",
+      "importSpecifier": "components/code-block",
+      "importPath": "koobiq-docs-examples-components-code-block"
+    }
+  },
   "code-block-tabs": {
     "packagePath": "components/code-block/code-block-tabs",
     "title": "Basic code-block-tabs",
@@ -933,6 +951,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-compact-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-compact-overview-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/file-upload",
+      "importPath": "koobiq-docs-examples-components-file-upload"
+    }
+  },
+  "file-upload-multiple-custom-text-overview": {
+    "packagePath": "components/file-upload/file-upload-multiple-custom-text-overview",
+    "title": "file upload multiple custom text",
+    "componentName": "FileUploadMultipleCustomTextOverviewExample",
+    "files": [
+      "file-upload-multiple-custom-text-overview-example.ts",
+      "file-upload-multiple-custom-text-overview-example.html",
+      "file-upload-multiple-custom-text-overview-example.css"
+    ],
+    "selector": "file-upload-multiple-custom-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-custom-text-overview-example.ts",
     "module": {
       "name": "FileUploadExamplesModule",
       "importSpecifier": "components/file-upload",
@@ -1986,6 +2022,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-radio"
     }
   },
+  "scrollbar-overview": {
+    "packagePath": "components/scrollbar/scrollbar-overview",
+    "title": "Basic Scrollbar",
+    "componentName": "ScrollbarOverviewExample",
+    "files": [
+      "scrollbar-overview-example.ts",
+      "scrollbar-overview-example.html",
+      "scrollbar-overview-example.css"
+    ],
+    "selector": "scrollbar-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-overview-example.ts",
+    "module": {
+      "name": "ScrollbarExamplesModule",
+      "importSpecifier": "components/scrollbar",
+      "importPath": "koobiq-docs-examples-components-scrollbar"
+    }
+  },
+  "scrollbar-scroll-to-top": {
+    "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
+    "title": "Scrollbar Scroll To Top",
+    "componentName": "ScrollbarScrollToTopExample",
+    "files": [
+      "scrollbar-scroll-to-top-example.ts",
+      "scrollbar-scroll-to-top-example.html",
+      "scrollbar-scroll-to-top-example.css"
+    ],
+    "selector": "scrollbar-scroll-to-top-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-scroll-to-top-example.ts",
+    "module": {
+      "name": "ScrollbarExamplesModule",
+      "importSpecifier": "components/scrollbar",
+      "importPath": "koobiq-docs-examples-components-scrollbar"
+    }
+  },
   "select-footer": {
     "packagePath": "components/select/select-footer",
     "title": "Basic Select",
@@ -2400,6 +2472,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tags-autocomplete-option-operations": {
+    "packagePath": "components/tags/tags-autocomplete-option-operations",
+    "title": "Tags Autocomplete Option Operations",
+    "componentName": "TagsAutocompleteOptionOperationsExample",
+    "files": [
+      "tags-autocomplete-option-operations-example.ts",
+      "tags-autocomplete-option-operations-example.html",
+      "tags-autocomplete-option-operations-example.css"
+    ],
+    "selector": "tags-autocomplete-option-operations-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-autocomplete-option-operations-example.ts",
+    "module": {
+      "name": "TagsExamplesModule",
+      "importSpecifier": "components/tags",
+      "importPath": "koobiq-docs-examples-components-tags"
+    }
+  },
   "tags-autocomplete": {
     "packagePath": "components/tags/tags-autocomplete",
     "title": "Basic tags autocomplete",
@@ -2412,6 +2502,60 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tags-autocomplete-example",
     "additionalComponents": [],
     "primaryFile": "tags-autocomplete-example.ts",
+    "module": {
+      "name": "TagsExamplesModule",
+      "importSpecifier": "components/tags",
+      "importPath": "koobiq-docs-examples-components-tags"
+    }
+  },
+  "tags-content": {
+    "packagePath": "components/tags/tags-content",
+    "title": "Content",
+    "componentName": "TagsContentExample",
+    "files": [
+      "tags-content-example.ts",
+      "tags-content-example.html",
+      "tags-content-example.css"
+    ],
+    "selector": "tags-content-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-content-example.ts",
+    "module": {
+      "name": "TagsExamplesModule",
+      "importSpecifier": "components/tags",
+      "importPath": "koobiq-docs-examples-components-tags"
+    }
+  },
+  "tags-fill-and-style": {
+    "packagePath": "components/tags/tags-fill-and-style",
+    "title": "Fill and Style",
+    "componentName": "TagsFillAndStyleExample",
+    "files": [
+      "tags-fill-and-style-example.ts",
+      "tags-fill-and-style-example.html",
+      "tags-fill-and-style-example.css"
+    ],
+    "selector": "tags-fill-and-style-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-fill-and-style-example.ts",
+    "module": {
+      "name": "TagsExamplesModule",
+      "importSpecifier": "components/tags",
+      "importPath": "koobiq-docs-examples-components-tags"
+    }
+  },
+  "tags-hug-content": {
+    "packagePath": "components/tags/tags-hug-content",
+    "title": "Corner Cases",
+    "componentName": "TagsHugContentExample",
+    "files": [
+      "tags-hug-content-example.ts",
+      "tags-hug-content-example.html",
+      "tags-hug-content-example.css"
+    ],
+    "selector": "tags-hug-content-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-hug-content-example.ts",
     "module": {
       "name": "TagsExamplesModule",
       "importSpecifier": "components/tags",
@@ -2970,6 +3114,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-action-button-example",
     "additionalComponents": [],
     "primaryFile": "tree-action-button-example.ts",
+    "module": {
+      "name": "TreeExamplesModule",
+      "importSpecifier": "components/tree",
+      "importPath": "koobiq-docs-examples-components-tree"
+    }
+  },
+  "tree-checked-filtering": {
+    "packagePath": "components/tree/tree-checked-filtering",
+    "title": "Basic tree",
+    "componentName": "TreeCheckedFilteringExample",
+    "files": [
+      "tree-checked-filtering-example.ts",
+      "tree-checked-filtering-example.html",
+      "tree-checked-filtering-example.css"
+    ],
+    "selector": "tree-checked-filtering-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-checked-filtering-example.ts",
+    "module": {
+      "name": "TreeExamplesModule",
+      "importSpecifier": "components/tree",
+      "importPath": "koobiq-docs-examples-components-tree"
+    }
+  },
+  "tree-custom-filtering": {
+    "packagePath": "components/tree/tree-custom-filtering",
+    "title": "Basic tree",
+    "componentName": "TreeCustomFilteringExample",
+    "files": [
+      "tree-custom-filtering-example.ts",
+      "tree-custom-filtering-example.html",
+      "tree-custom-filtering-example.css"
+    ],
+    "selector": "tree-custom-filtering-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-custom-filtering-example.ts",
     "module": {
       "name": "TreeExamplesModule",
       "importSpecifier": "components/tree",

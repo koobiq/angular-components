@@ -1,0 +1,9 @@
+<kbq-file-upload progressMode="indeterminate" (fileQueueChange)="onFileChange($event)">
+    <i kbq-icon="mc-file-empty_16"></i>
+</kbq-file-upload>
+
+<kbq-file-upload progressMode="indeterminate" (fileQueueChanged)="onFilesChange($event)" multiple>
+    <i kbq-icon="mc-file-empty_16"></i>
+</kbq-file-upload>
+
+<p class="kbq-body" *ngIf="isLoading">Immediately load to backend...</p>

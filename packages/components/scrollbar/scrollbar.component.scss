@@ -17,10 +17,10 @@ $tokens: meta.module-variables(tokens) !default;
         map.get($tokens, scrollbar-size-track-padding-horizontal)
     );
     $kbq-scrollbar-track-width: var(
-        --kbq-scrollbar-size-track-width,
-        map.get($tokens, scrollbar-size-track-width)
+        --kbq-scrollbar-size-track-dimension,
+        map.get($tokens, scrollbar-size-track-dimension)
     );
-    $thumb-min-height: var(--kbq-scrollbar-size-thumb-min-height, map.get($tokens, scrollbar-size-thumb-min-height));
+    $thumb-min-height: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
     $border-width: calc(($kbq-scrollbar-track-width - $scrollbar-size-thumb-width) / 4);
 
     .os-scrollbar-vertical {

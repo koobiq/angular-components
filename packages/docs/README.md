@@ -17,7 +17,7 @@ yarn run styles:built-all
 
 3. generate `docs-content` folder (dgeni)
 ```bash
-yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+yarn run build:docs-content && yarn run build:package-docs-content
 ```
 
 4. build
@@ -33,7 +33,7 @@ yarn run build:cdk && yarn run build:components && yarn run build:angular-luxon-
 ```
 Generate `docs-content` folder (dgeni)
 ```bash
-yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+yarn run build:docs-content && yarn run build:package-docs-content
 ```
 
 Generate basic module

@@ -1,7 +1,7 @@
 <div class="kbq-file-upload"
      kbqFileDrop
      [class.kbq-disabled]="disabled"
-     [class.selected]="files && files.length"
+     [class.selected]="files?.length"
      [ngClass]="size"
      (filesDropped)="onFileDropped($event)">
 
@@ -13,27 +13,13 @@
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
                         <span class="multiple__caption">
-                            {{ config.captionText }}
-                            <label class="kbq-link"
-                                   [class.kbq-focused]="hasFocus"
-                                   [for]="inputId">
-                            {{ config.browseLink }}
-                        </label>
+                            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate"></ng-container></label>{{ separatedCaptionText[1] }}
                         </span>
                     </div>
                 </div>
             </ng-container>
         </div>
     </ng-container>
-
-    <input #input
-           type="file"
-           class="cdk-visually-hidden"
-           multiple
-           [id]="inputId"
-           [accept]="acceptedFiles"
-           [disabled]="disabled"
-           (change)="onFileSelectedViaClick($event)">
 </div>
 
 <div class="kbq-file-upload__info-section">
@@ -76,16 +62,17 @@
                                 </ng-container>
 
                                 <kbq-progress-spinner
-                                    class="pt-nat-file-upload-name-cell__icon"
+                                    class="kbq-file-upload-name-cell__icon"
+                                    [mode]="progressMode"
                                     [value]="asyncData.progress || 0"
                                     *ngIf="asyncData.loading"
                                 ></kbq-progress-spinner>
                             </ng-container>
 
-                            <span class="file-item__text" [mcEllipsisCenter]="file.file.name" [minVisibleLength]="10"></span>
+                            <span class="file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></span>
                         </div>
                         <div class="kbq-file-upload__size">
-                            {{ file.file.size | mcDataSize }}
+                            {{ file.file.size | kbqDataSize }}
                         </div>
                         <div class="kbq-file-upload__action">
                             <i kbq-icon-button="mc-close-circle_16" (click)="deleteFile(index, $event)"></i>
@@ -99,12 +86,7 @@
             <div class="dropzone">
                 <i kbq-icon="mc-upload-to-cloud_24"></i>
                 <span class="dropzone__text multiple__caption">
-                    {{ config.captionTextWhenSelected }}
-                    <label class="kbq-link"
-                           [class.kbq-focused]="hasFocus"
-                           [for]="inputId">
-                        {{ config.browseLink }}
-                    </label>
+                    {{ separatedCaptionTextWhenSelected[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate"></ng-container></label>{{ separatedCaptionTextWhenSelected[1] }}
                 </span>
             </div>
         </div>
@@ -114,11 +96,17 @@
 <ng-template #compactCaption>
     <i kbq-icon="mc-upload-to-cloud_24"></i>
     <span class="dropzone__text multiple__caption">
-        {{ config.captionText }}
-        <label class="kbq-link"
-               [class.kbq-focused]="hasFocus"
-               [for]="inputId">
-        {{ config.browseLink }}
-    </label>
+        {{ separatedCaptionTextForCompactSize[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate"></ng-container></label>{{ separatedCaptionTextForCompactSize[1] }}
     </span>
+</ng-template>
+
+<ng-template #inputTemplate>
+    <input #input
+           type="file"
+           class="cdk-visually-hidden"
+           multiple
+           [id]="inputId"
+           [accept]="acceptedFiles"
+           [disabled]="disabled"
+           (change)="onFileSelectedViaClick($event)">
 </ng-template>

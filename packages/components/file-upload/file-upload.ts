@@ -16,7 +16,6 @@ export interface KbqFileItem {
 
 export interface KbqInputFile {
     disabled: boolean;
-    files: KbqFileItem[] | KbqFileItem | null;
     accept?: string[];
     onFileSelectedViaClick(event: Event): void;
     onFileDropped(files: FileList | KbqFile[]): void;
@@ -36,3 +35,18 @@ export type KbqFileValidatorFn = (file: File) => string | null;
 /* Object for labels customization inside file upload component */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<KbqInputFileLabel>('KbqFileUploadConfiguration');
 
+export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
+    if (!accept?.length) { return true; }
+
+    const { name, type } = file;
+    const fileExt: string = name.split('.').pop() || '';
+
+    for (const acceptedExtensionOrMimeType of accept) {
+        const typeAsRegExp = new RegExp(acceptedExtensionOrMimeType);
+        if (typeAsRegExp.test(fileExt) || typeAsRegExp.test(type)) {
+            return true;
+        }
+    }
+
+    return false;
+}

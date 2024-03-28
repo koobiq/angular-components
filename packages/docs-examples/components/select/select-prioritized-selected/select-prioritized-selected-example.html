@@ -1,11 +1,13 @@
 <kbq-form-field>
-    <kbq-select [multiple]="true" [(value)]="selected" (openedChange)="openedChange($event)">
-        <kbq-option
-            *ngFor="let option of options"
-            [value]="option"
-        >
+    <kbq-select
+        [multiple]="true"
+        [(value)]="selected"
+        (openedChange)="openedChange($event)">
+
+        <kbq-option *ngFor="let option of options" [value]="option">
             <span [innerHTML]="option"></span>
         </kbq-option>
+
         <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
     </kbq-select>
 </kbq-form-field>

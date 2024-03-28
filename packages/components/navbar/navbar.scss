@@ -1,5 +1,13 @@
-.kbq-navbar {
+@use 'sass:meta';
+@use 'sass:map';
 
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-navbar {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,4 +25,8 @@
     align-items: center;
 
     position: relative;
+}
+
+.kbq-navbar .kbq-navbar-container + .kbq-navbar-container {
+    margin-left: map.get($tokens, size-xxl);
 }

@@ -14,7 +14,20 @@ $tokens: meta.module-variables(tokens) !default;
     position: relative;
 
     display: flex;
-    align-items: center;
+
+    border-radius: map.get($tokens, size-s);
+
+    &:after {
+        position: absolute;
+        content: '';
+
+        display: none;
+
+        border-radius: var(
+            --kbq-navbar-item-size-content-border-radius,
+            map.get($tokens, navbar-item-size-content-border-radius)
+        );
+    }
 
     & .kbq-navbar-title {
         cursor: pointer;
@@ -26,45 +39,92 @@ a.kbq-navbar-brand {
 }
 
 .kbq-navbar-brand.kbq-horizontal {
-    height: var(--kbq-navbar-item-size-height, map.get($tokens, navbar-item-size-height));
+    padding: map.get($tokens, size-s) map.get($tokens, size-xs) map.get($tokens, size-s) map.get($tokens, size-xxs);
 
-    padding-right: var(--kbq-navbar-brand-size-margin-right, map.get($tokens, navbar-brand-size-margin-right));
+    align-items: center;
+
+    gap: map.get($tokens, size-s);
+
+    &:after {
+        top: map.get($tokens, size-xxs);
+        right: map.get($tokens, size-xxs);
+        bottom: map.get($tokens, size-xxs);
+        left: 0;
+    }
 
     & .kbq-navbar-title {
-        padding-left: var(--kbq-navbar-brand-size-padding, map.get($tokens, navbar-brand-size-padding));
-        padding-right: 0;
+        padding-right: map.get($tokens, size-m);
     }
 }
 
 .kbq-navbar-brand.kbq-vertical {
     & .kbq-navbar-logo {
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-
-        min-height: var(--kbq-navbar-item-size-height-vertical, map.get($tokens, navbar-item-size-height-vertical));
-        min-width: var(
-            --kbq-vertical-navbar-size-states-collapsed-width,
-            map.get($tokens, vertical-navbar-size-states-collapsed-width)
-        );
     }
 
     & .kbq-navbar-title {
-        display: flex;
+        display: block;
         align-items: center;
 
-        height: var(--kbq-navbar-item-size-height-vertical, map.get($tokens, navbar-item-size-height-vertical));
+        padding-top: map.get($tokens, size-xxs);
+        padding-bottom: map.get($tokens, size-xxs);
+
+        height: map.get($tokens, size-3xl);
 
         padding-left: 0;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     &.kbq-expanded {
-        align-items: unset;
+        position: relative;
+
+        height: map.get($tokens, size-4xl);
+        width: map.get($tokens, size-4xl);
+
+        margin: map.get($tokens, size-l) map.get($tokens, size-l) map.get($tokens, size-4xl);
+
+        flex-direction: column;
+
+        &:after {
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        & .kbq-navbar-logo {
+            min-height: map.get($tokens, size-4xl);
+
+            justify-content: center;
+        }
+
+        & .kbq-navbar-title {
+            position: absolute;
+
+            left: map.get($tokens, size-xxs);
+            bottom: - map.get($tokens, size-4xl);
+            max-width: 200px;
+        }
     }
 
     &.kbq-collapsed {
+        height: map.get($tokens, size-5xl);
+        width: map.get($tokens, size-5xl);
+
+        &:after {
+            top: map.get($tokens, size-xxs);
+            right: map.get($tokens, size-xxs);
+            bottom: map.get($tokens, size-xxs);
+            left: map.get($tokens, size-xxs);
+        }
+
         & .kbq-navbar-title {
             display: none;
         }
+
+        justify-content: center;
     }
 }

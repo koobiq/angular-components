@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { DateFormats } from '@mosaic-design/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
 
 
 export const KBQ_DATE_FORMATS = new InjectionToken<DateFormats>('kbq-date-formats');

@@ -1,6 +1,6 @@
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { KbqLocaleService, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@mosaic-design/moment-date-adapter';
+import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
 import { Observable, Subject } from 'rxjs';
 
 

@@ -1,11 +1,117 @@
 @use '../dist/components/core/styles/theming';
+@use '../dist/components/core/styles/typography';
 
 
+/* stylelint-disable no-descending-specificity */
 @mixin kbq-docs-component-viewer-theme($theme) {
-    $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
 
     .docs-component-header {
         background: map-get($background, bg);
     }
+
+    .docs-api__section {
+        border-color: map-get($background, contrast-fade);
+    }
+
+    .docs-api__section_directive .docs-api_method-name {
+        color: map-get(map-get($theme, line), warning) !important;
+    }
+
+    .docs-api__input-marker {
+        color: map-get(map-get($theme, line), success) !important;
+    }
+
+    .kbq-docs-table {
+        & .kbq-markdown__code {
+            background: transparent !important;
+        }
+
+        &.kbq-table > tbody > tr:hover {
+            background: none;
+        }
+    }
 }
+
+@mixin kbq-docs-component-viewer-typography($config) {
+    // header
+    .docs-component-name {
+        font-family: Inter;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: normal;
+        font-weight: 700;
+        text-transform: none;
+        font-feature-settings: "ss01" on, "ss04" on;
+    }
+
+    .docs-api__class-name {
+        font-family: JetBrains Mono;
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: normal;
+        font-weight: 700;
+        text-transform: none;
+        font-feature-settings: initial;
+    }
+
+    .docs-icons-viewer,
+    .component-overview {
+        // first level
+        & .docs-header-link.kbq-markdown__h3 {
+            font-family: Inter;
+            font-size: 24px;
+            line-height: 32px;
+            letter-spacing: normal;
+            font-weight: 700;
+            text-transform: none;
+            font-feature-settings: "ss01" on, "ss04" on;
+        }
+
+        // second level
+        & .docs-icons-viewer__table-row-header,
+        & .docs-api__section_method .docs-api_method-name,
+        & .docs-header-link.kbq-markdown__h4 {
+            font-family: Inter;
+            font-size: 20px;
+            line-height: 28px;
+            letter-spacing: normal;
+            font-weight: 600;
+            text-transform: none;
+            font-feature-settings: "ss01" on, "ss04" on;
+        }
+
+        // third level
+        & .docs-header-link.kbq-markdown__h5 {
+            font-family: Inter;
+            font-size: 17px;
+            line-height: 20px;
+            letter-spacing: normal;
+            font-weight: 600;
+            text-transform: none;
+            font-feature-settings: "ss01" on, "ss04" on;
+        }
+    }
+
+    .docs-component-navbar .kbq-tab-link {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .docs-api__class-selector-name,
+    .docs-api__input-marker,
+    .docs-api_property-name {
+        @include typography.kbq-typography-level-to-styles($config, mono-big);
+    }
+
+    .docs-api_method-name {
+        @include typography.kbq-typography-level-to-styles($config, mono-big-strong);
+    }
+
+    .docs-api {
+        .kbq-markdown__code {
+            @include typography.kbq-typography-level-to-styles($config, mono-big);
+        }
+    }
+}
+
+/* stylelint-enable no-descending-specificity */

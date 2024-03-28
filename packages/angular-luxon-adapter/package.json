@@ -11,7 +11,7 @@
     ],
     "license": "MIT",
     "peerDependencies": {
-        "@mosaic-design/luxon-date-adapter": "^2.1.1",
+        "@koobiq/luxon-date-adapter": "^3.0.2",
         "@koobiq/components": "{{VERSION}}"
     },
     "dependencies": {

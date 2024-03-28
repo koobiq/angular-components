@@ -1,0 +1,98 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+.kbq-navbar-item.kbq-vertical {
+    align-items: flex-start;
+
+    & .kbq-navbar-item__container {
+        gap: map.get($tokens, size-m);;
+    }
+
+    &.kbq-expanded {
+        height: map.get($tokens, size-5xl);
+
+        padding: map.get($tokens, size-l) map.get($tokens, size-xl);
+
+        gap: map.get($tokens, size-m);
+
+        &:after {
+            top: map.get($tokens, size-xxs);
+            right: map.get($tokens, size-s);
+            bottom: map.get($tokens, size-xxs);
+            left: map.get($tokens, size-s);
+        }
+
+        &.kbq-navbar-bento {
+            position: absolute;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            top: map.get($tokens, size-xxs);
+            right: map.get($tokens, size-xxs);
+
+            z-index: 1;
+
+            padding: map.get($tokens, size-s);
+
+            height: map.get($tokens, size-5xl);
+            width: map.get($tokens, size-5xl);
+
+            &:after {
+                top: map.get($tokens, size-s);
+                right: map.get($tokens, size-s);
+                bottom: map.get($tokens, size-s);
+                left: map.get($tokens, size-s);
+            }
+        }
+
+        &.kbq-navbar-item_has-nested {
+            align-items: center;
+
+            padding: 0 map.get($tokens, size-m);
+        }
+    }
+
+    &.kbq-collapsed {
+        height: map.get($tokens, size-5xl);
+        width: map.get($tokens, size-5xl);
+
+        padding: map.get($tokens, size-l);
+
+        justify-content: center;
+
+        &:after {
+            top: map.get($tokens, size-s);
+            right: map.get($tokens, size-s);
+            bottom: map.get($tokens, size-s);
+            left: map.get($tokens, size-s);
+        }
+
+        & .kbq-badge {
+            position: absolute;
+
+            z-index: 1;
+
+            top: map.get($tokens, size-xs);
+            right: map.get($tokens, size-xs);
+        }
+
+        & .kbq-navbar-item__container {
+            display: none;
+        }
+    }
+
+    & > .kbq-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
