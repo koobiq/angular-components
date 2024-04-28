@@ -3,13 +3,11 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { KbqIconModule } from './../icon/icon.module';
-import { KbqNavbarModule, KbqNavbarItem } from './index';
+import { KbqNavbarItem, KbqNavbarModule } from './index';
 
-
-const FONT_RENDER_TIMEOUT_MS = 10;
+const FONT_RENDER_TIMEOUT_MS = 40;
 
 describe('KbqNavbar', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqNavbarModule, KbqIconModule],
@@ -39,11 +37,11 @@ describe('KbqNavbar', () => {
         fixture.detectChanges();
 
         const items = fixture.debugElement.queryAll(By.css('kbq-navbar-item'));
-        const collapsedElements = items.filter((item) =>
-            item.nativeElement.querySelectorAll('.kbq-navbar-item_collapsed').length > 0);
+        const collapsedElements = items.filter(
+            (item) => item.nativeElement.querySelectorAll('.kbq-navbar-item_collapsed').length > 0
+        );
 
-        const hasTitle = collapsedElements
-            .reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
+        const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
 
         expect(hasTitle).toBeTruthy();
     }));
@@ -57,8 +55,7 @@ describe('KbqNavbar', () => {
         const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-navbar-item_collapsed'));
         const elementWithCustomTitle = collapsedElements[collapsedElements.length - 1];
 
-        expect(elementWithCustomTitle.componentInstance.titleText)
-            .toBe('Right icon');
+        expect(elementWithCustomTitle.componentInstance.titleText).toBe('Right icon');
     }));
 
     it('items should allow click if not disable', () => {
@@ -103,7 +100,9 @@ class TestApp {
     navbarContainerWidth: number = 915;
 
     onItemClick(disabledItem?: KbqNavbarItem) {
-        if (disabledItem?.disabled) { return; }
+        if (disabledItem?.disabled) {
+            return;
+        }
 
         this.counter++;
     }

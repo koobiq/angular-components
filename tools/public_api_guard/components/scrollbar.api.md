@@ -41,6 +41,7 @@ export const KBQ_SCROLLBAR_CONFIG: InjectionToken<{
         visibility?: ScrollbarsVisibilityBehavior | undefined;
         autoHide?: ScrollbarsAutoHideBehavior | undefined;
         autoHideDelay?: number | undefined;
+        autoHideSuspend?: boolean | undefined;
         dragScroll?: boolean | undefined;
         clickScroll?: boolean | undefined;
         pointers?: string[] | null | undefined;
@@ -103,6 +104,7 @@ export class KbqScrollbarDirective implements OnDestroy {
             visibility?: ScrollbarsVisibilityBehavior | undefined;
             autoHide?: ScrollbarsAutoHideBehavior | undefined;
             autoHideDelay?: number | undefined;
+            autoHideSuspend?: boolean | undefined;
             dragScroll?: boolean | undefined;
             clickScroll?: boolean | undefined;
             pointers?: string[] | null | undefined;

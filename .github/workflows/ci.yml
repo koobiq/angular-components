@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  general_checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,56 +28,6 @@ jobs:
           yarn run build:angular-moment-adapter
           yarn run styles:built-all
           yarn run build:cli
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.sha }}
-          path: dist
-          compression-level: 9
-
-  check-api:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
-      - name: Install
-        run: yarn install --immutable
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.sha }}
-          path: dist
-      - name: Check API
-        run: yarn run check-api
-
-  unit:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
-      - name: Install
-        run: yarn install --immutable
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.sha }}
-          path: dist
       - name: Unit
         run: |
           yarn run unit:cdk
