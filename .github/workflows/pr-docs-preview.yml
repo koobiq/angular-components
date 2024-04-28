@@ -53,4 +53,4 @@ jobs:
           expires: 5d
           channelId: prs-${{ env.GITHUB_SHORT_SHA }}
           projectId: koobiq
-          args: deploy --only next
+          target: next
