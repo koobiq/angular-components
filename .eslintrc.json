@@ -1,40 +1,31 @@
 {
     "root": true,
+    "ignorePatterns": ["**/*"],
+    "plugins": ["@nx"],
     "overrides": [
         {
-            "files": ["*.ts"],
-            "parser": "@typescript-eslint/parser",
-            "parserOptions": {
-                "createDefaultProgram": true,
-                "project": "./tsconfig.json"
-            },
-            "extends": [
-                "eslint:recommended",
-                "plugin:@typescript-eslint/recommended",
-                "plugin:@angular-eslint/recommended",
-                "plugin:@angular-eslint/template/process-inline-templates"
-            ],
-            "rules": {
-                "@typescript-eslint/no-explicit-any": "off",
-                "@typescript-eslint/no-unused-vars": "off",
-                "@angular-eslint/component-class-suffix": "off",
-                "@angular-eslint/directive-class-suffix": "off",
-                "@angular-eslint/no-host-metadata-property": "off",
-                "@typescript-eslint/ban-types": "off",
-                "@typescript-eslint/ban-ts-comment": "off",
-                "no-console": [
-                    "error",
-                    {
-                        "allow": [
-                            "error"
-                        ]
-                    }
-                ]
-            }
+            "files": "*.json",
+            "parser": "jsonc-eslint-parser",
+            "rules": {}
         },
         {
-            "files": ["*.html"],
-            "extends": ["plugin:@angular-eslint/template/recommended"],
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"]
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": ["plugin:@nx/typescript"],
+            "rules": {}
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "extends": ["plugin:@nx/javascript"],
+            "rules": {}
+        },
+        {
+            "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+            "env": {
+                "jest": true
+            },
             "rules": {}
         }
     ]
