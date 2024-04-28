@@ -1,6 +1,6 @@
 ### Требования
 
-- [Angular 16](https://angular.io/)
+- [Angular](https://angular.io/)
 
 
 ### Установка пакетов
