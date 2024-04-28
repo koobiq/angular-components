@@ -1,10 +1,12 @@
 const getBaseKarmaConfig = require('../../karma.conf');
 
-
-module.exports = function(config) {
-
+module.exports = function (config) {
     const baseConfig = getBaseKarmaConfig();
-    config.set({
-        ...baseConfig
+    return config.set({
+        ...baseConfig,
+
+        coverageReporter: {
+            dir: '../../dist/coverage/angular-moment-adapter'
+        }
     });
 };

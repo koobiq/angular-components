@@ -1,9 +1,9 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
+
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 
-import { koobiqVersion } from '../../version';
+import { koobiqVersion, koobiqVersionFull } from '../../version';
 import { NavbarProperty, NavbarPropertyParameters } from '../navbar/navbar-property';
-
 
 @Component({
     selector: 'docs-footer',
@@ -56,13 +56,13 @@ export class FooterComponent {
     };
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.examplesLanguageProperty.data
-            .push(
-                ...localeService.locales.items
-                    // exclude fa-IR (DS-2219)
-                    .filter((item) => item.id !== 'fa-IR')
-                    .map((item) => ({ id: item.id, value: item.name, selected: false }))
-            );
+        console.debug(koobiqVersionFull);
+        this.examplesLanguageProperty.data.push(
+            ...localeService.locales.items
+                // exclude fa-IR (DS-2219)
+                .filter((item) => item.id !== 'fa-IR')
+                .map((item) => ({ id: item.id, value: item.name, selected: false }))
+        );
 
         this.docsLanguageSwitch = new NavbarProperty(this.docsLanguageProperty);
         this.examplesLanguageSwitch = new NavbarProperty(this.examplesLanguageProperty);

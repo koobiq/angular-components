@@ -939,6 +939,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-dropdown"
     }
   },
+  "file-upload-indeterminate-loading-overview": {
+    "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
+    "title": "Button's colors",
+    "componentName": "FileUploadIndeterminateLoadingOverviewExample",
+    "files": [
+      "file-upload-indeterminate-loading-overview-example.ts",
+      "file-upload-indeterminate-loading-overview-example.html",
+      "file-upload-indeterminate-loading-overview-example.css"
+    ],
+    "selector": "file-upload-indeterminate-loading-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/file-upload",
+      "importPath": "koobiq-docs-examples-components-file-upload"
+    }
+  },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
     "title": "Progress button",
