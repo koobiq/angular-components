@@ -1,4 +1,4 @@
-name: PR Docs
+name: Deploy to Hosting on PR
 
 on:
   pull_request_target:
@@ -20,6 +20,9 @@ jobs:
       - name: Setup Yarn
         uses: ./.github/workflows/actions/setup-yarn
 
+      - name: Get Short GitHub SHA and Save in Environment Variable
+        run: echo "GITHUB_SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Build packages
         run: |
           yarn run build:cdk
@@ -32,7 +35,7 @@ jobs:
         run: |
           yarn run build:docs-examples-module
           yarn run build:docs-examples
-          yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+          yarn run build:docs-content && yarn run build:package-docs-content
           yarn run docs:prod-build:aot
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -41,5 +44,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
           expires: 5d
           only: next
-          projectId: koobiq
-          channelId: prs-${{ github.event.workflow_run.head_sha }}
+          channelId: prs-${{ env.GITHUB_SHORT_SHA }}
+          projectId: next
