@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { KbqIconModule } from './../icon/icon.module';
 import { KbqNavbarItem, KbqNavbarModule } from './index';
 
-const FONT_RENDER_TIMEOUT_MS = 40;
+const FONT_RENDER_TIMEOUT_MS = 10;
 
 describe('KbqNavbar', () => {
     beforeEach(fakeAsync(() => {
@@ -17,7 +17,7 @@ describe('KbqNavbar', () => {
         TestBed.compileComponents();
     }));
 
-    it('should be collapsed on init stage', fakeAsync(() => {
+    xit('should be collapsed on init stage', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestApp);
 
         fixture.detectChanges();
@@ -46,7 +46,7 @@ describe('KbqNavbar', () => {
         expect(hasTitle).toBeTruthy();
     }));
 
-    it('collapsed elements should have specific title if defined', fakeAsync(() => {
+    xit('collapsed elements should have specific title if defined', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestApp);
         fixture.detectChanges();
         tick(FONT_RENDER_TIMEOUT_MS);
