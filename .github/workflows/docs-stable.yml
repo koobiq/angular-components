@@ -35,7 +35,7 @@ jobs:
         run: |
           yarn run build:docs-examples-module
           yarn run build:docs-examples
-          yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+          yarn run build:docs-content && yarn run build:package-docs-content
           yarn run docs:prod-build:aot
       - name: Deploy
         run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
