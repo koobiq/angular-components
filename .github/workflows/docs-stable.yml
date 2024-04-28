@@ -15,15 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
-      - name: Install
-        run: yarn install --immutable
+
+      - name: Setup Yarn
+        uses: ./.github/actions/setup-yarn
+
       - name: Build packages
         run: |
           yarn run build:cdk
@@ -31,11 +26,13 @@ jobs:
           yarn run build:angular-luxon-adapter
           yarn run build:angular-moment-adapter
           yarn run styles:built-all
+
       - name: Build Docs
         run: |
           yarn run build:docs-examples-module
           yarn run build:docs-examples
           yarn run build:docs-content && yarn run build:package-docs-content
           yarn run docs:prod-build:aot
+
       - name: Deploy
         run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
