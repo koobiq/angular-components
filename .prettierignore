@@ -1,7 +1,9 @@
+# Add files here to ignore them from prettier formatting
+.angular/
+.nx/
+node_modules/
+
 /dist
-/coverage
-.angular
-.prettierignore
+/CHANGELOG.md
+/CODE_OF_CONDUCT.md
 /tmp
-/node_modules
-yarn.lock
