@@ -2,7 +2,11 @@ name: PR Docs
 
 on:
   pull_request_target:
-    types: [opened]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
 
 jobs:
   build:
@@ -12,15 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
-      - name: Install
-        run: yarn install --immutable
+
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
 
       - name: Build packages
         run: |
