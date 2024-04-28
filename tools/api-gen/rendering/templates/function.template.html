@@ -1,0 +1,24 @@
+{% import "macros.html" as macros %}
+
+<div id="{$ item.name $}" class="docs-header-link kbq-markdown__h4 docs-api__function-name">
+    <span header-link="{$ item.name $}"></span>
+    <span>{$ item.name $}</span>
+</div>
+
+{%- if item.isDeprecated -%}
+<div class="docs-api__function-deprecated-marker" {$ macros.deprecationTitle(function) $}>
+    Deprecated
+</div>
+{%- endif -%}
+
+{%- if item.description -%}
+<p class="kbq-markdown__p">{$ item.description | safe $}</p>
+{%- endif -%}
+
+<div class="kbq-markdown">
+    <pre class="kbq-markdown__pre docs-import">
+        {%- highlight "typescript" -%}
+          const {$ item.name | safe $}: {$ item.type | safe $};
+            {%- end_highlight -%}
+    </pre>
+</div>

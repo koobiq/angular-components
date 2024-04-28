@@ -2,6 +2,7 @@ import { src } from 'gulp';
 import { join } from 'path';
 
 import { buildConfig } from '../build-config';
+import { exit } from 'process';
 
 
 /* tslint:disable:no-var-requires */
@@ -16,6 +17,9 @@ const sassIncludePaths = [
 
 export function buildScssPipeline(sourceDir: string, minifyOutput = false) {
     return src(join(sourceDir, '**/*.scss'))
-        .pipe(gulpSass({ includePaths: sassIncludePaths }).on('error', gulpSass.logError))
+        .pipe(gulpSass({ includePaths: sassIncludePaths }).on('error', (err: any) => {
+            gulpSass.logError(err);
+            exit();
+        }))
         .pipe(gulpIf(minifyOutput, gulpCleanCss()));
 }

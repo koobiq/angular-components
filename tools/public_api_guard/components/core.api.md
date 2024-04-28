@@ -14,10 +14,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
-import { DateAdapter as DateAdapter_2 } from '@mosaic-design/date-adapter';
-import { DateFormats } from '@mosaic-design/date-adapter';
-import { DateFormatter as DateFormatter_2 } from '@mosaic-design/date-formatter';
-import { DateTimeOptions } from '@mosaic-design/date-formatter';
+import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
+import { DateFormats } from '@koobiq/date-adapter';
+import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
+import { DateTimeOptions } from '@koobiq/date-formatter';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -168,6 +168,62 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
     static ɵprov: i0.ɵɵInjectableDeclaration<DateFormatter<any>>;
 }
 
+// @public (undocumented)
+export const enUSFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+};
+
+// @public (undocumented)
+export const enUSLocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+        dateInput: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
+
 // @public
 export class ErrorStateMatcher {
     // (undocumented)
@@ -182,10 +238,121 @@ export class ErrorStateMatcher {
 export function escapeRegExp(value: string): string;
 
 // @public (undocumented)
+export const esLAFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+};
+
+// @public (undocumented)
+export const esLALocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
+
+// @public (undocumented)
 export const EXTENDED_OVERLAY_POSITIONS: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const fadeAnimation: AnimationTriggerMetadata;
+
+// @public (undocumented)
+export const faIRFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+                rtl: boolean;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+};
+
+// @public (undocumented)
+export const faIRLocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
 
 // @public
 export type FloatLabelType = 'always' | 'never' | 'auto';
@@ -247,12 +414,35 @@ export function KBQ_DATE_LOCALE_FACTORY(): string;
 
 // @public (undocumented)
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
-    'zh-CN': {
+    items: {
+        id: string;
+        name: string;
+    }[];
+    'en-US': {
+        formatters: {
+            number: {
+                rounding: {
+                    separator: string;
+                    groupSeparator: string;
+                    thousand: string;
+                    million: string;
+                    billion: string;
+                    trillion: string;
+                };
+            };
+        };
+        input: {
+            number: {
+                groupSeparator: string[];
+                fractionSeparator: string;
+            };
+        };
         select: {
             hiddenItemsText: string;
         };
         datepicker: {
             placeholder: string;
+            dateInput: string;
         };
         timepicker: {
             placeholder: {
@@ -260,6 +450,25 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 short: string;
             };
         };
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
+            };
+        };
+    };
+    'zh-CN': {
         formatters: {
             number: {
                 rounding: {
@@ -277,8 +486,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 fractionSeparator: string;
             };
         };
-    };
-    'pt-BR': {
         select: {
             hiddenItemsText: string;
         };
@@ -291,59 +498,43 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 short: string;
             };
         };
-        formatters: {
-            number: {
-                rounding: {
-                    separator: string;
-                    groupSeparator: string;
-                    thousand: string;
-                    million: string;
-                    billion: string;
-                    trillion: string;
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
                 };
-            };
-        };
-        input: {
-            number: {
-                groupSeparator: string[];
-                fractionSeparator: string;
-            };
-        };
-    };
-    'fa-IR': {
-        select: {
-            hiddenItemsText: string;
-        };
-        datepicker: {
-            placeholder: string;
-        };
-        timepicker: {
-            placeholder: {
-                full: string;
-                short: string;
-            };
-        };
-        formatters: {
-            number: {
-                rounding: {
-                    separator: string;
-                    groupSeparator: string;
-                    thousand: string;
-                    million: string;
-                    billion: string;
-                    trillion: string;
-                    rtl: boolean;
-                };
-            };
-        };
-        input: {
-            number: {
-                groupSeparator: string[];
-                fractionSeparator: string;
             };
         };
     };
     'es-LA': {
+        formatters: {
+            number: {
+                rounding: {
+                    separator: string;
+                    groupSeparator: string;
+                    thousand: string;
+                    million: string;
+                    billion: string;
+                    trillion: string;
+                };
+            };
+        };
+        input: {
+            number: {
+                groupSeparator: string[];
+                fractionSeparator: string;
+            };
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -356,6 +547,25 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 short: string;
             };
         };
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
+            };
+        };
+    };
+    'pt-BR': {
         formatters: {
             number: {
                 rounding: {
@@ -374,42 +584,37 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 fractionSeparator: string;
             };
         };
-    };
-    'en-US': {
         select: {
             hiddenItemsText: string;
         };
         datepicker: {
             placeholder: string;
-            dateInput: string;
         };
-        formatters: {
-            number: {
-                rounding: {
-                    separator: string;
-                    groupSeparator: string;
-                    thousand: string;
-                    million: string;
-                    billion: string;
-                    trillion: string;
-                };
+        timepicker: {
+            placeholder: {
+                full: string;
+                short: string;
             };
         };
-        input: {
-            number: {
-                groupSeparator: string[];
-                fractionSeparator: string;
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
             };
         };
     };
     'ru-RU': {
-        select: {
-            hiddenItemsText: string;
-        };
-        datepicker: {
-            placeholder: string;
-            dateInput: string;
-        };
         formatters: {
             number: {
                 rounding: {
@@ -429,11 +634,87 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 startFormattingFrom: number;
             };
         };
+        select: {
+            hiddenItemsText: string;
+        };
+        datepicker: {
+            placeholder: string;
+            dateInput: string;
+        };
+        timepicker: {
+            placeholder: {
+                full: string;
+                short: string;
+            };
+        };
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
+            };
+        };
     };
-    items: {
-        id: string;
-        name: string;
-    }[];
+    'fa-IR': {
+        formatters: {
+            number: {
+                rounding: {
+                    separator: string;
+                    groupSeparator: string;
+                    thousand: string;
+                    million: string;
+                    billion: string;
+                    trillion: string;
+                    rtl: boolean;
+                };
+            };
+        };
+        input: {
+            number: {
+                groupSeparator: string[];
+                fractionSeparator: string;
+            };
+        };
+        select: {
+            hiddenItemsText: string;
+        };
+        datepicker: {
+            placeholder: string;
+        };
+        timepicker: {
+            placeholder: {
+                full: string;
+                short: string;
+            };
+        };
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -540,7 +821,7 @@ export class KbqDataSizePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "mcDataSize", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "kbqDataSize", false>;
 }
 
 // @public (undocumented)
@@ -1323,6 +1604,61 @@ export const POSITION_TO_CSS_MAP: {
 };
 
 // @public (undocumented)
+export const ptBRFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+};
+
+// @public (undocumented)
+export const ptBRLocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
+
+// @public (undocumented)
 export class RangeDateFormatterPipe<D> implements PipeTransform {
     constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
     // (undocumented)
@@ -1429,6 +1765,63 @@ export const RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
+
+// @public (undocumented)
+export const ruRUFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+            startFormattingFrom: number;
+        };
+    };
+};
+
+// @public (undocumented)
+export const ruRULocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+        dateInput: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
 
 // @public
 export const SELECT_PANEL_INDENT_PADDING_X: number;
@@ -1538,6 +1931,60 @@ export const validationTooltipShowDelay = 10;
 
 // @public (undocumented)
 export const VERSION: Version;
+
+// @public (undocumented)
+export const zhCNFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                tenThousand: string;
+                oneHundredMillions: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+};
+
+// @public (undocumented)
+export const zhCNLocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+};
 
 // (No @packageDocumentation comment for this package)
 

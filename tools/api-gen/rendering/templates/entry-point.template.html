@@ -1,0 +1,129 @@
+{# Defines macros for reusable templates. #}
+{% macro method(method) -%}
+  {% include 'method.template.html' %}
+{% endmacro %}
+
+{% macro function(item) -%}
+  {% include 'function.template.html' %}
+{% endmacro %}
+
+{% macro property(property) -%}
+  {% include 'property.template.html' %}
+{% endmacro %}
+
+{% macro methodList(methodList) -%}
+  {% include 'method-list.template.html' %}
+{% endmacro %}
+
+{% macro propertyList(propertyList) -%}
+  {% include 'property-list.template.html' %}
+{% endmacro %}
+
+{% macro class(class) -%}
+  {% include 'class.template.html' %}
+{% endmacro %}
+
+{% macro interface(interface) -%}
+  {% include 'interface.template.html' %}
+{% endmacro %}
+
+{% macro typeAlias(alias) -%}
+  {% include 'type-alias.template.html' %}
+{% endmacro %}
+
+{% macro constant(constant) -%}
+  {% include 'constant.template.html' %}
+{% endmacro %}
+
+<div class="kbq-markdown docs-api">
+<!--    <header class="kbq-markdown__h3">-->
+<!--        API reference for {$ doc.packageDisplayName $} {$ doc.displayName $}-->
+<!--    </header>-->
+
+    <pre class="kbq-markdown__pre docs-import">import { {$ doc.primaryExportName $} } from '{$ doc.moduleImportPath $}';</pre>
+
+    {%- if doc.services.length -%}
+    <div id="services" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="services"></span>
+        Services
+    </div>
+    {% for service in doc.services %}
+        <div class="docs-api__section docs-api__section_service">
+            {$ class(service) $}
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+
+    {%- if doc.directives.length -%}
+    <div id="directives" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="directives"></span>
+        Directives
+    </div>
+    {% for directive in doc.directives %}
+        <div class="docs-api__section docs-api__section_directive">
+            {$ class(directive) $}
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+    {%- if doc.classes.length -%}
+    <div id="classes" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="classes"></span>
+        Classes
+    </div>
+    {% for other in doc.classes %}
+        <div class="docs-api__section docs-api__section_other">
+            {$ class(other) $}
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+    {%- if doc.interfaces.length -%}
+    <div id="interfaces" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="interfaces"></span>
+        Interfaces
+    </div>
+    {% for item in doc.interfaces %}
+    <div class="docs-api__section docs-api__section_interface">
+        {$ interface(item) $}
+    </div>
+    {% endfor %}
+    {%- endif -%}
+
+    {%- if doc.functions.length -%}
+    <div id="functions" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="functions"></span>
+        Functions
+    </div>
+    {% for item in doc.functions %}
+        <div class="docs-api__section docs-api__section_function">
+            {$ function(item) $}
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+    {%- if doc.typeAliases.length -%}
+    <div id="type_aliases" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="type_aliases"></span>
+        Type aliases
+    </div>
+    {% for item in doc.typeAliases %}
+        <div class="docs-api__section docs-api__section_type-alias">
+            {$ typeAlias(item) $}
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+    {%- if doc.constants.length -%}
+    <div id="constants" class="kbq-markdown__h3 docs-header-link">
+        <span header-link="constants"></span>
+        Constants
+    </div>
+    {% for item in doc.constants %}
+    <div class="docs-api__section docs-api__section_constant">
+        {$ constant(item) $}
+    </div>
+    {% endfor %}
+    {%- endif -%}
+</div>

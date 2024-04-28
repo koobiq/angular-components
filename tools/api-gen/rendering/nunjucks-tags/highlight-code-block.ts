@@ -1,6 +1,6 @@
 // These type lacks type definitions.
 // tslint:disable-next-line:no-var-requires
-const highlightJs = require('highlight.js');
+import hljs from 'highlight.js';
 
 /**
  * Transforms a given code block into its corresponding HTML output. We do this using
@@ -8,7 +8,7 @@ const highlightJs = require('highlight.js');
  */
 export function highlightCodeBlock(code: string, language: string) {
     if (language) {
-        return highlightJs.highlight(code, {
+        return hljs.highlight(code, {
             // highlight.js expects "typescript" written out, while Github supports "ts".
             language: language.toLowerCase() === 'ts' ? 'typescript' : language
         }).value;

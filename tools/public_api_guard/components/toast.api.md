@@ -23,6 +23,7 @@ import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
@@ -179,7 +180,7 @@ export enum KbqToastPosition {
 
 // @public (undocumented)
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
-    constructor(overlay: Overlay, injector: Injector, toastFactory: any, toastConfig: KbqToastConfig);
+    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
     // (undocumented)
@@ -205,7 +206,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqToastService<any>>;
 }

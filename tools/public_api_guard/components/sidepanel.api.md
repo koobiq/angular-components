@@ -50,7 +50,7 @@ export const KBQ_SIDEPANEL_WITH_SHADOW: InjectionToken<boolean>;
 // @public
 export class KbqSidepanelActions {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelActions, "kbq-sidepanel-actions, [kbq-sidepanel-actions], mcSidepanelActions", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelActions, "kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelActions, never>;
 }
@@ -58,7 +58,7 @@ export class KbqSidepanelActions {
 // @public
 export class KbqSidepanelBody {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], mcSidepanelBody", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelBody, never>;
 }
@@ -67,7 +67,7 @@ export class KbqSidepanelBody {
 export class KbqSidepanelClose implements OnInit, OnChanges {
     constructor(sidepanelRef: KbqSidepanelRef, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
     // (undocumented)
-    mcSidepanelClose: any;
+    kbqSidepanelClose: any;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -77,7 +77,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[mcSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "mcSidepanelClose": { "alias": "mcSidepanelClose"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelClose, [{ optional: true; }, null, null]>;
 }
@@ -136,7 +136,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 // @public
 export class KbqSidepanelFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelFooter, "kbq-sidepanel-footer, [kbq-sidepanel-footer], mcSidepanelFooter", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelFooter, "kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelFooter, never>;
 }

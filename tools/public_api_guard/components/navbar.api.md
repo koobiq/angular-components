@@ -234,10 +234,6 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     // (undocumented)
     get showVerticalDropDownAngle(): boolean;
     // (undocumented)
-    subTitle: KbqNavbarSubTitle;
-    // (undocumented)
-    get subTitleText(): string | null;
-    // (undocumented)
     title: KbqNavbarTitle;
     // (undocumented)
     get titleText(): string | null;
@@ -247,7 +243,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     // (undocumented)
     updateTooltip(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "subTitle", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "kbq-navbar-subtitle, [kbq-navbar-subtitle]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, [null, null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
@@ -273,7 +269,7 @@ export class KbqNavbarModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarSubTitle, typeof i2.KbqNavbarBento], [typeof i4.CommonModule, typeof i5.A11yModule, typeof i6.PlatformModule, typeof i7.KbqIconModule, typeof i8.KbqToolTipModule], [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarSubTitle, typeof i2.KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento], [typeof i4.CommonModule, typeof i5.A11yModule, typeof i6.PlatformModule, typeof i7.KbqIconModule, typeof i8.KbqToolTipModule], [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento]>;
 }
 
 // @public (undocumented)
@@ -300,27 +296,6 @@ export class KbqNavbarRectangleElement {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarRectangleElement, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]", never, {}, {}, ["button"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarRectangleElement, never>;
-}
-
-// @public (undocumented)
-export class KbqNavbarSubTitle implements AfterContentInit {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    getOuterElementWidth(): number;
-    // (undocumented)
-    readonly hovered: Subject<boolean>;
-    // (undocumented)
-    get isOverflown(): boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    outerElementWidth: number;
-    // (undocumented)
-    get text(): string;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarSubTitle, "kbq-navbar-subtitle, [kbq-navbar-subtitle]", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarSubTitle, never>;
 }
 
 // @public (undocumented)

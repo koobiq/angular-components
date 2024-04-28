@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "module": "CommonJS",
+        "target": "ES2022",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "strict": true,
+        "sourceMap": false,
+        "composite": true,
+        "lib": ["ES2021.String"],
+        "outDir": "./dist",
+        "types": [
+            "node",
+            "jasmine"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

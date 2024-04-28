@@ -51,6 +51,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
@@ -90,7 +91,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 //
 // @public (undocumented)
 export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, KbqFormFieldControl<any>, CanUpdateErrorState {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     backdropClass: string;
     // (undocumented)
@@ -227,7 +228,7 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "kbq-select-matcher, [kbq-select-matcher]", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
 
 // @public

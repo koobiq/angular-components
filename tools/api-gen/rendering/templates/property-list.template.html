@@ -1,0 +1,16 @@
+{%- if propertyList.length -%}
+    <div class="kbq-markdown__h5 docs-api__property-header">Properties</div>
+
+    <table class="kbq-docs-table kbq-table kbq-table_bordered layout-fill">
+        <thead><tr>
+            <th class="kbq-docs-table__name">Name</th>
+            <th class="kbq-docs-table__description">Description</th>
+        </tr></thead>
+
+        <tbody>
+            {% for p in propertyList %}
+                {$ property(p) $}
+            {% endfor %}
+        </tbody>
+    </table>
+{%- endif -%}
