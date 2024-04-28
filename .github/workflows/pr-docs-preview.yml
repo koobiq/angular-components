@@ -1,26 +1,31 @@
-name: PR Docs
+name: Deploy to Hosting on PR
 
 on:
   pull_request_target:
-    types: [opened]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
 
 jobs:
-  build:
-    name: Build
+  deploy_live:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'koobiq' }}
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'yarn'
-          cache-dependency-path: '**/yarn.lock'
-      - name: Install
-        run: yarn install --immutable
+
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
+
+      - name: Get Short GitHub SHA and Save in Environment Variable
+        run: echo "GITHUB_SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build packages
         run: |
@@ -34,8 +39,13 @@ jobs:
         run: |
           yarn run build:docs-examples-module
           yarn run build:docs-examples
-          yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
+          yarn run build:docs-content && yarn run build:package-docs-content
           yarn run docs:prod-build:aot
 
-      - name: Deploy
-        run: npx firebase deploy --only hosting:next --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
+          expires: 5d
+          channelId: prs-${{ env.GITHUB_SHORT_SHA }}
+          projectId: koobiq

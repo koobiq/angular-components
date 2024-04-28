@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Yarn
-        uses: ./.github/actions/setup-yarn
+        uses: ./.github/workflows/actions/setup-yarn
 
       - name: Build packages
         run: |
