@@ -11,6 +11,5 @@ helping to build efficient and consistent products.
 We're excited to see the community adopt, raise issues, and provide feedback.
 Whether it's a feature request, bug report, or a project to showcase, please get involved!
 
-
 - [Join our Discord](https://discord.gg/6ESnDuzW)
 - [GitHub Discussions](https://github.com/koobiq/angular-components/discussions)
