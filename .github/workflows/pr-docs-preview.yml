@@ -35,5 +35,11 @@ jobs:
           yarn run build:docs-content && yarn run build:highlight && yarn run build:package-docs-content
           yarn run docs:prod-build:aot
 
-      - name: Deploy
-        run: npx firebase deploy --only hosting:next --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
+          expires: 5d
+          only: next
+          projectId: koobiq
+          channelId: prs-${{ github.event.workflow_run.head_sha }}
