@@ -1,0 +1,45 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+      # - '*@*.*.*' for NX integration
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write # needed for provenance data generation
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build
+        run: |
+          yarn run build:cdk
+          yarn run build:components
+          yarn run build:angular-luxon-adapter
+          yarn run build:angular-moment-adapter
+          yarn run styles:built-all
+          yarn run build:cli
+
+      - name: Publish package
+        run: |
+          rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc
+          npm run release:publish:ci-github
+        env:
+          NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
