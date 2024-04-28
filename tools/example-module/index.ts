@@ -1,15 +1,11 @@
-import { sync as glob } from 'glob';
 import * as path from 'path';
 
-import { buildConfig } from '../gulp/build-config';
+import { sync as glob } from 'glob';
 
 import { generateExampleModule } from './generate-example-module';
 
-
-const {packagesDir} = buildConfig;
-
 /** Path to find the examples */
-const examplesPath = path.join(packagesDir, 'docs-examples');
+const examplesPath = path.join('packages', 'docs-examples');
 
 /** Output path of the module that is being created */
 const outputModuleFilename = path.join(examplesPath, 'example-module.ts');
