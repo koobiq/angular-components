@@ -25,6 +25,19 @@ Before you submit your pull request (PR) consider the following guidelines:
 
 ## Commit message guidelines
 
+```
+<type>(<scope>): <short summary>
+  │       │             │
+  │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+  │       │
+  │       └─⫸ Commit Scope: animations|common|compiler-cli|core|
+  │                          elements|forms|http|language-service|localize|platform-browser|
+  │                          platform-browser-dynamic|platform-server|router|service-worker|
+  │                          upgrade|zone.js|packaging|changelog|dev-infra|docs-infra|migrations|
+  │                          
+  │
+  └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
+```
 Each commit message consists of a `type`, `scope` and `subject` (message).  
 The `type` and `subject` are mandatory, the `scope` is optional in some specific
 cases. Format: `<type>(<scope>): <subject>`
