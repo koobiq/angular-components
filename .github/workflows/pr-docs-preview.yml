@@ -8,10 +8,13 @@ on:
       - synchronize
       - labeled
 
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
+
 jobs:
   deploy_live:
-    permissions:
-      pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'koobiq' }}
 
