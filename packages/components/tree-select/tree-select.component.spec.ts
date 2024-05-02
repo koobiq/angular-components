@@ -2586,12 +2586,12 @@ describe('KbqTreeSelect', () => {
                 tick(10);
             }));
 
-            it('should not focus the first option if no option is selected', fakeAsync(() => {
+            it('should focus the first option if no option is selected', fakeAsync(() => {
                 trigger.click();
                 fixture.detectChanges();
                 flush();
 
-                expect(fixture.componentInstance.select.tree.keyManager.activeItemIndex).toEqual(-1);
+                expect(fixture.componentInstance.select.tree.keyManager.activeItemIndex).toEqual(0);
             }));
 
             it('should select an option when it is clicked', fakeAsync(() => {
@@ -3566,9 +3566,9 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const input = fixture.debugElement.query(By.css('input')).nativeElement;
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
 
-            expect(input).toBe(document.activeElement);
+            expect(document.activeElement).toBe(options[0]);
         }));
 
         it('should show empty message', fakeAsync(() => {
@@ -4426,9 +4426,7 @@ describe('KbqTreeSelect', () => {
 
             const select = fixture.debugElement.nativeElement.querySelector('kbq-tree-select');
 
-            expect(document.activeElement)
-                .withContext('Expected trigger to be focused.')
-                .toBe(select);
+            expect(document.activeElement).toBe(select);
         }));
 
         it('should not restore focus to the host element when clicking outside', fakeAsync(() => {
@@ -4440,18 +4438,17 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
             flush();
 
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
             expect(document.activeElement)
-                .withContext('Expected trigger to be focused.')
-                .toBe(select);
+                .toBe(options[0]);
 
             select.blur(); // Blur manually since the programmatic click might not do it.
             document.body.click();
             fixture.detectChanges();
             flush();
 
-            expect(document.activeElement)
-                .withContext('Expected trigger not to be focused.')
-                .not.toBe(select);
+            expect(document.activeElement).not.toBe(select);
         }));
 
         it('should update the data binding before emitting the change event', fakeAsync(() => {
@@ -5221,7 +5218,7 @@ describe('KbqTreeSelect', () => {
             tick();
             flush();
 
-            expect(fixture.componentInstance.select.tree.keyManager.activeItemIndex).toBe(-1);
+            expect(fixture.componentInstance.select.tree.keyManager.activeItemIndex).toBe(0);
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
 
