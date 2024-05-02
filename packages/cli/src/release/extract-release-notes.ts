@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 
-
 /** Extracts the release notes for a specific release from a given changelog file. */
 export function extractReleaseNotes(changelogPath: string, versionName: string): any {
     const changelogContent = readFileSync(changelogPath, 'utf8');
@@ -11,13 +10,14 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
     // section of a version by starting with the release header which can either use the markdown
     // "h1" or "h2" syntax. The end of the section will be matched by just looking for the first
     // subsequent release header.
-    const releaseNotesRegex = new RegExp(
-        `##? (${escapedVersion} "?.*?"?.\\(.*?\\))(.*?)##? \\d+\\.\\d+`, 's');
+    const releaseNotesRegex = new RegExp(`##? (${escapedVersion} "?.*?"?.\\(.*?\\))(.*?)##? \\d+\\.\\d+`, 's');
     const matches = releaseNotesRegex.exec(changelogContent);
 
-    return matches ? {
-        // tslint:disable:no-magic-numbers
-        releaseTitle: matches[1],
-        releaseNotes: matches[2].trim()
-    } : null;
+    return matches
+        ? {
+              // tslint:disable:no-magic-numbers
+              releaseTitle: matches[1],
+              releaseNotes: matches[2].trim()
+          }
+        : null;
 }
