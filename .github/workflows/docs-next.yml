@@ -37,13 +37,14 @@ jobs:
       - name: Deploy
         run: npx firebase deploy --only hosting:next --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
 
-      - name: Notification
-        uses: mattermost/action-mattermost-notify@master
-        with:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          PAYLOAD: |-
-            {
-              "text": "What a message from ${{ github.repository }}",
-              "channel": "${{ secrets.MM_CHANNGEL_NAME }}",
-              "name": "${{ secrets.MM_BOT_NAME }}"
-            }
+# TODO: setup it for release notification
+#      - name: Notification
+#        uses: mattermost/action-mattermost-notify@master
+#        with:
+#          MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
+#          PAYLOAD: |-
+#            {
+#              "text": "What a message from ${{ github.repository }}",
+#              "channel": "${{ secrets.MM_CHANNGEL_NAME }}",
+#              "name": "${{ secrets.MM_BOT_NAME }}"
+#            }
