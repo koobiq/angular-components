@@ -12,6 +12,17 @@
             ],
             "headers": [
                 {
+                    "source": "**/!(*.*)",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // The `index.html` file (or when loaded as SPA), should never be cached. Older
+                            // JavaScript sources and assets would be loaded that might no longer be available.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/**",
                     "headers": [
                         {
