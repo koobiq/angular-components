@@ -556,6 +556,11 @@ export class KbqSelect extends KbqSelectMixinBase implements
         return !this.selectionModel || this.selectionModel.isEmpty();
     }
 
+    get firstSelected(): KbqOptionBase | null {
+        return this.selectionModel.selected
+            .filter((option) => !option.disabled)[0] || null;
+    }
+
     private closeSubscription = Subscription.EMPTY;
 
     /** The scroll position of the overlay panel, calculated to center the selected option. */
@@ -1284,10 +1289,10 @@ export class KbqSelect extends KbqSelectMixinBase implements
      */
     private highlightCorrectOption(): void {
         if (this.keyManager) {
-            if (this.empty) {
+            if (this.empty || !this.firstSelected) {
                 this.keyManager.setFirstItemActive();
             } else {
-                this.keyManager.setActiveItem(this.selectionModel.selected[0] as KbqOption);
+                this.keyManager.setActiveItem(this.firstSelected as KbqOption);
             }
         }
     }

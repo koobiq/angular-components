@@ -30,7 +30,8 @@ import {
     QueryList,
     Renderer2,
     Self,
-    SimpleChanges, TemplateRef,
+    SimpleChanges,
+    TemplateRef,
     ViewChild,
     ViewChildren,
     ViewEncapsulation
@@ -556,6 +557,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             .subscribe((event) => {
                 if (!this.multiple && this.panelOpen && event.isUserInput) {
                     this.close();
+
+                    Promise.resolve().then(() => this.focus());
                 }
             });
 
@@ -756,6 +759,11 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     isRtl(): boolean {
         return this.dir ? this.dir.value === 'rtl' : false;
+    }
+
+    get firstSelected() {
+        return this.selectionModel.selected
+            .filter((node) => !this.tree.treeControl.isDisabled(node))[0];
     }
 
     handleKeydown(event: KeyboardEvent) {
@@ -1116,15 +1124,21 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
      * the first item instead.
      */
     private highlightCorrectOption() {
-        if (this.empty || !this.tree.keyManager) { return; }
+        if (!this.tree.keyManager) { return; }
 
-        const firstSelectedValue = this.multiple ? this.selectedValues[0] : this.selectedValues;
+        const selectedOption = this.options
+            .find((option) => option.data as any === this.firstSelected);
 
-        const selectedOption = this.options.find((option) => option.value === firstSelectedValue);
+        this.tree.keyManager.setFocusOrigin('keyboard');
 
         if (selectedOption) {
-            this.tree.keyManager.setFocusOrigin('keyboard');
             this.tree.keyManager.setActiveItem(selectedOption);
+        } else {
+            this.tree.keyManager.setFirstItemActive();
+
+            if (this.tree.keyManager.activeItem?.disabled) {
+                this.tree.keyManager.setActiveItem(-1);
+            }
         }
     }
 
