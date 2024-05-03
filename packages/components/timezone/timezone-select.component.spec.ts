@@ -395,6 +395,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     document.body.click();
+                    tick(1);
                     fixture.detectChanges();
                     flush();
 

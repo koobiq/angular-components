@@ -4,8 +4,6 @@
 //@use '../components/core/styles/theming/prebuilt/dark-theme';
 
 @use '../components/core/styles/visual/layout';
-@use '../components/core';
 
-@include core.kbq-core();
 @include layout.layouts-for-breakpoint();
 
