@@ -78,7 +78,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         if (_items instanceof QueryList) {
 
             _items.changes.subscribe((newItems: QueryList<T>) => {
-
                 if (this._activeItem) {
                     const itemArray = newItems.toArray();
                     const newIndex = itemArray.indexOf(this._activeItem);

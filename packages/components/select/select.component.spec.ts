@@ -1914,6 +1914,8 @@ describe('KbqSelect', () => {
                 flush();
 
                 document.body.click();
+                tick(1);
+
                 fixture.detectChanges();
                 flush();
 
@@ -2546,6 +2548,7 @@ describe('KbqSelect', () => {
                     .toEqual(false);
 
                 document.body.click();
+                tick(1);
                 dispatchFakeEvent(trigger, 'blur');
                 fixture.detectChanges();
                 flush();
@@ -2853,6 +2856,8 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalled();
 
                 document.body.click();
+                tick(1);
+
                 fixture.detectChanges();
                 flush();
 
@@ -2879,6 +2884,8 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.closedListener).not.toHaveBeenCalled();
 
                 document.body.click();
+                tick(1);
+
                 fixture.detectChanges();
                 flush();
 
@@ -3132,6 +3139,7 @@ describe('KbqSelect', () => {
                 .not.toEqual(options[1].id);
 
             document.body.click();
+            tick(1);
             fixture.detectChanges();
             flush();
 

@@ -94,7 +94,6 @@ import {
     map,
     startWith,
     switchMap,
-    tap,
     take,
     takeUntil,
     distinctUntilChanged,
@@ -955,11 +954,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
     private closingActions() {
         return merge(
             this.overlayDir.overlayRef!.outsidePointerEvents()
-                .pipe(
-                    filter((event) => !this.elementRef.nativeElement.contains(event.target)),
-                    // used for calling toggle on select from outside of component
-                    tap((event) => event.stopPropagation())
-                ),
+                // used for calling toggle on select from outside of component
+                .pipe(delay(0)),
             this.overlayDir.overlayRef!.detachments()
         );
     }
