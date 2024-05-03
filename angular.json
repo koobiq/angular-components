@@ -60,11 +60,9 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["packages"]
                         },
-                        "styles": [
-                            {
-                                "input": "packages/docs/src/main.scss"
-                            }
-                        ],
+                        "styles": [{
+                            "input": "packages/docs/src/main.scss"
+                        }],
                         "scripts": [],
                         "vendorChunk": true,
                         "extractLicenses": false,
@@ -97,14 +95,18 @@
                                     "with": "packages/docs/src/environments/environment.prod.ts"
                                 }
                             ],
-                            "commonChunk": false,
-                            "optimization": true,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": true,
+                                "fonts": false
+                            },
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
+                            "aot": true,
                             "budgets": [
                                 {
                                     "type": "initial",
@@ -195,7 +197,10 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["packages/cdk/**/*.ts", "packages/cdk/**/*.html"]
+                        "lintFilePatterns": [
+                            "packages/cdk/**/*.ts",
+                            "packages/cdk/**/*.html"
+                        ]
                     }
                 }
             }
@@ -232,7 +237,10 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["packages/components/**/*.ts", "packages/components/**/*.html"]
+                        "lintFilePatterns": [
+                            "packages/components/**/*.ts",
+                            "packages/components/**/*.html"
+                        ]
                     }
                 }
             }
