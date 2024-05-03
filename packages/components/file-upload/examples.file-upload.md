@@ -5,3 +5,7 @@
 Пример загрузки файлов с неопределенным по завершенности прогрессом:
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
+
+Пример использования с Control Value Accessor:
+
+<!-- example(file-upload-cva-overview) -->
