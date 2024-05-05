@@ -177,7 +177,7 @@
         "linter:styles:json": "stylelint './packages/**/*.+(css|scss)' --config .stylelintrc -f json --output-file ./dist/reports/stylelint.json",
         "linter:yaml": "yamllint **/*.yml --ignore=node_modules/**/*.yml",
         "format:check": "prettier --check packages/**/** --cache",
-        "format:check:changed-files": "pretty-quick --staged",
+        "format:check:changed-files": "pretty-quick --staged --check",
         "format:write": "prettier --write packages/**/** --cache",
         "release:extract-changelog": "ts-node --project tools/extract-release-notes/tsconfig.json tools/extract-release-notes",
         "release:stage": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage",

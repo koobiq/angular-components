@@ -3,6 +3,8 @@
 .nx/
 node_modules/
 
+*.yml
+
 /dist
 /CHANGELOG.md
 /CODE_OF_CONDUCT.md
