@@ -1,35 +1,35 @@
 name: CI
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-    general_checks:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  general_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Setup Yarn
-              uses: ./.github/workflows/actions/setup-yarn
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
 
-            - name: Build
-              run: |
-                  yarn run build:cdk
-                  yarn run build:components
-                  yarn run build:angular-luxon-adapter
-                  yarn run build:angular-moment-adapter
-                  yarn run styles:built-all
-                  yarn run build:cli
+      - name: Build
+        run: |
+          yarn run build:cdk
+          yarn run build:components
+          yarn run build:angular-luxon-adapter
+          yarn run build:angular-moment-adapter
+          yarn run styles:built-all
+          yarn run build:cli
 
-            - name: Unit
-              run: |
-                  yarn run unit:cdk
-                  yarn run unit:components
-                  yarn run unit:angular-moment-adapter
-                  yarn run unit:angular-luxon-adapter
+      - name: Unit
+        run: |
+          yarn run unit:cdk
+          yarn run unit:components
+          yarn run unit:angular-moment-adapter
+          yarn run unit:angular-luxon-adapter
 
-            - name: License validation
-              run: yarn run validate:license
+      - name: License validation
+        run: yarn run validate:license
