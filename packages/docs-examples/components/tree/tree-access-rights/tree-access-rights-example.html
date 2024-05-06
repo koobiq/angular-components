@@ -1,0 +1,20 @@
+<kbq-tree-selection
+    multiple="checkbox"
+    [autoSelect]="false"
+    [ngModel]="modelValue"
+    (ngModelChange)="onModelChange($event)"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl">
+
+    <kbq-tree-option *kbqTreeNodeDef="let node"
+                     kbqTreeNodePadding>
+        <span>{{ treeControl.getViewValue(node) }}</span>
+    </kbq-tree-option>
+
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild"
+                     kbqTreeNodePadding>
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span>{{ treeControl.getViewValue(node) }}</span>
+    </kbq-tree-option>
+</kbq-tree-selection>
