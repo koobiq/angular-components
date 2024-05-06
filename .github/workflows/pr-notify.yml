@@ -19,6 +19,7 @@ jobs:
           USER: ${{ github.actor }}
           TITLE: ${{ github.event.pull_request.title }}
           MM_CHANNEL_NAME: ${{ secrets.MM_CHANNGEL_NAME }}
+          BOT_NAME: ${{ secrets.MM_BOT_NAME }}
         run: |
           jq --null-input \
                 --arg number "$NUMBER" \
@@ -27,9 +28,10 @@ jobs:
                 --arg user "$USER" \
                 --arg title "$TITLE" \
                 --arg channel "$MM_CHANNEL_NAME" \
-          '{"channel": "\($channel)", "text": "[\($repo)] | [\($title) #\($number)](\($pr_url)) was created by \($user)" }' > mattermost.json
+                --arg name "$BOT_NAME" \
+          '{"name": "\($name)", "channel": "\($channel)", "text": "[\($repo)] | [\($title) #\($number)](\($pr_url)) was created by \($user)" }' > mattermost.json
 
-      - uses: mattermost/action-mattermost-notify@master
-        env:
+      - name: Notification
+        uses: mattermost/action-mattermost-notify@master
+        with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME}}
