@@ -1,0 +1,31 @@
+<kbq-checkbox class="layout-margin-bottom-s"
+              [checked]="control.disabled"
+              (change)="control.disabled ? control.enable() : control.disable()">
+    disable first control
+</kbq-checkbox>
+
+<div class="kbq-form-horizontal">
+    <div class="kbq-form__row layout-margin-bottom-m">
+        <label class="kbq-form__label flex-20">Single file-upload with formControl</label>
+        <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
+            <i kbq-icon="mc-file-empty_16"></i>
+        </kbq-file-upload>
+    </div>
+    <div class="kbq-form__row layout-margin-bottom-m">
+        <label class="kbq-form__label flex-20">control that depends on first control value</label>
+        <kbq-file-upload class="kbq-form__control flex-80" [formControl]="secondControl">
+            <i kbq-icon="mc-file-empty_16"></i>
+        </kbq-file-upload>
+    </div>
+    <div class="kbq-form__row layout-margin-bottom-m">
+        <label class="kbq-form__label flex-20">Multiple file-upload with formControl</label>
+        <kbq-file-upload class="kbq-form__control flex-80" [formControl]="multipleFileUploadControl" multiple>
+            <ng-template #kbqFileIcon>
+                <i kbq-icon="mc-file-empty_16"></i>
+            </ng-template>
+        </kbq-file-upload>
+    </div>
+</div>
+
+
+

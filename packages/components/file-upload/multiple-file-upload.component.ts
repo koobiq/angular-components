@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -6,10 +7,10 @@ import {
     ElementRef,
     EventEmitter,
     Inject,
-    Input,
+    Input, OnDestroy,
     Optional,
     Output,
-    Renderer2,
+    Renderer2, Self,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -20,7 +21,7 @@ import {
     KbqLocaleService,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -32,6 +33,7 @@ import {
     isCorrectExtension
 } from './file-upload';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 
 let nextMultipleFileUploadUniqueId = 0;
@@ -61,7 +63,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
         class: 'kbq-multiple-file-upload'
     }
 })
-export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable {
+export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor {
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
@@ -69,10 +71,27 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
     @Input() accept?: string[];
     @Input() disabled: boolean;
     @Input() errors: string[] = [];
-    @Input() files: KbqFileItem[] = [];
     @Input() size: 'compact' | 'default' = 'default';
     @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
+    /**
+     * Alternative for FormControl's validation
+     */
     @Input() customValidation?: KbqFileValidatorFn[];
+
+    private _files: KbqFileItem[] = [];
+
+    get files(): KbqFileItem[] {
+        return this._files;
+    }
+
+    @Input()
+    set files(currentFileList: KbqFileItem[]) {
+        this._files = currentFileList;
+        this.cvaOnChange(this._files);
+        this.fileQueueChanged.emit(this._files);
+        this.cdr.markForCheck();
+    }
+
     @Output() fileQueueChanged: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
 
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef }) customFileIcon: TemplateRef<HTMLElement>;
@@ -88,6 +107,17 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
     separatedCaptionTextWhenSelected: string[];
     separatedCaptionTextForCompactSize: string[];
 
+    statusChangeSubscription?: Subscription = Subscription.EMPTY;
+
+    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+    cvaOnChange = (_: KbqFileItem[]) => {};
+
+    /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onTouched =  () => {};
+
+
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
     }
@@ -100,7 +130,8 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
         private cdr: ChangeDetectorRef,
         private renderer: Renderer2,
         @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileMultipleLabel,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
+        @Optional() @Self() public ngControl?: NgControl
     ) {
         this.localeService?.changes
             .subscribe(this.updateLocaleParams);
@@ -108,6 +139,52 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
         if (!localeService) {
             this.initDefaultParams();
         }
+
+        if (this.ngControl) {
+            // Note: we provide the value accessor through here, instead of
+            // the `providers` to avoid running into a circular import.
+            this.ngControl.valueAccessor = this;
+        }
+    }
+
+    ngAfterViewInit() {
+        // FormControl specific errors update
+        this.statusChangeSubscription = this.ngControl?.statusChanges?.subscribe(() => {
+            this.errors = Object.values(this.ngControl?.errors || {});
+            this.cdr.markForCheck();
+        });
+    }
+
+    ngOnDestroy() {
+        this.statusChangeSubscription?.unsubscribe();
+    }
+
+    /** Implemented as part of ControlValueAccessor.
+     * @docs-private */
+    writeValue(files: FileList | KbqFileItem[] | null): void {
+        if (files instanceof FileList || !files) {
+            this.files = this.mapToFileItem(files);
+        } else {
+            this.files = files;
+        }
+    }
+
+    /** Implemented as part of ControlValueAccessor.
+     * @docs-private */
+    registerOnChange(fn: any): void { this.cvaOnChange = fn; }
+
+    /** Implemented as part of ControlValueAccessor.
+     * @docs-private */
+    registerOnTouched(fn: any): void { this.onTouched = fn; }
+
+    /**
+     * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
+     * @param isDisabled Whether the control should be disabled.
+     * @docs-private
+     */
+    setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     onFileSelectedViaClick({ target }: Event) {
@@ -117,17 +194,17 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
             ...this.files,
             ...this.mapToFileItem((target as HTMLInputElement).files)
         ];
+        this.onTouched();
         /* even if the user selects the same file,
                  the onchange event will be triggered every time user clicks on the control.*/
         this.renderer.setProperty(this.input.nativeElement, 'value', null);
-        this.onFileListChange();
     }
 
     onFileDropped(files: FileList | KbqFile[]) {
         if (this.disabled) { return; }
 
         this.files = [...this.files, ...this.mapToFileItem(files)];
-        this.onFileListChange();
+        this.onTouched();
     }
 
     deleteFile(index: number, event?: MouseEvent) {
@@ -136,7 +213,7 @@ export class KbqMultipleFileUploadComponent implements KbqInputFile, CanDisable 
         event?.stopPropagation();
         this.files.splice(index, 1);
         this.files = [...this.files];
-        this.onFileListChange();
+        this.onTouched();
     }
 
     onFileListChange(): void {

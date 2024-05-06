@@ -11,7 +11,14 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    ValidationErrors
+} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -27,6 +34,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { interval, takeWhile, timer } from 'rxjs';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 
 const maxFileExceeded = (file: File): string | null => {
@@ -37,6 +45,39 @@ const maxFileExceeded = (file: File): string | null => {
 
     return maxSize !== undefined && (file?.size ?? 0) > maxSize
         ? `Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`
+        : null;
+};
+
+const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null => {
+    const kilo = 1024;
+    const mega = kilo * kilo;
+    const maxMbytes = 5;
+    const maxSize = maxMbytes * mega;
+
+    return maxSize !== undefined && ((control.value as KbqFileItem)?.file?.size ?? 0) > maxSize
+        ? { maxFileExceeded: `Размер файла превышает максимально допустимый (${ maxSize / mega } МБ)` }
+        : null;
+};
+
+const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors | null => {
+    const kilo = 1024;
+    const mega = kilo * kilo;
+    const maxMbytes = 5;
+    const maxSize = maxMbytes * mega;
+
+    const value: KbqFileItem[] = control.value;
+
+    const errors = value.reduce<ValidationErrors>((res, current) => {
+        // validation check & hasError set to represent error state
+        if (maxSize !== undefined && (current?.file?.size ?? 0) > maxSize) {
+            current.hasError = true;
+            res[current.file.name] = `${current.file.name} — Размер файла превышает максимально допустимый (${ maxSize / mega } МБ)`;
+        }
+        return res;
+    }, {})
+
+    return maxSize !== undefined && !!Object.values(errors).length
+        ? errors
         : null;
 };
 
@@ -96,14 +137,30 @@ export class DemoComponent {
     errorMessagesForMultiple: string[] = [];
     accept = ['.pdf', '.png'];
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    control = new FormControl<KbqFileItem | null>(null, maxFileExceededFn);
+
+    form = new FormGroup({
+        'file-upload': new FormControl<KbqFileItem | null>(null, maxFileExceededFn)
+    }, { updateOn: 'submit'});
+
+    formMultiple = new FormGroup({
+        'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn)
+    }, { updateOn: 'submit'});
+
+    secondControl = new FormControl<File | KbqFileItem | null>(null);
+    multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn);
+
+    constructor(private cdr: ChangeDetectorRef) {
+        this.control.valueChanges.subscribe((value: KbqFileItem | null) => {
+            // can be used mapped file item
+            // this.secondControl.setValue(value);
+            // or even JS file object
+            this.secondControl.setValue(value?.file || null);
+        });
+    }
 
     addFile(file: KbqFileItem | null) {
         this.file = file;
-
-        if (file) {
-            this.errorMessagesForSingle = [maxFileExceeded(file.file) || ''].filter(Boolean);
-        }
     }
 
     addFileMultiple(files: KbqFileItem[]) {
@@ -112,10 +169,16 @@ export class DemoComponent {
     }
 
     checkValidation() {
+        this.errorMessagesForSingle = [];
         this.errorMessagesForMultiple = [];
+        if (this.file) {
+            this.errorMessagesForSingle = this.validation.map((fn) => fn(this.file!.file) || '')
+                .filter(Boolean);
+        }
 
         this.files = this.files.map((file) => {
-            const errorsPerFile: string[] = [maxFileExceeded(file.file) || ''].filter(Boolean);
+            const errorsPerFile: string[] = this.validation.map((fn) => fn(file!.file) || '')
+                .filter(Boolean);
 
             this.errorMessagesForMultiple = [
                 ...this.errorMessagesForMultiple,
@@ -129,6 +192,16 @@ export class DemoComponent {
         });
 
         this.cdr.markForCheck();
+    }
+
+    onSubmit() {
+        console.log(this.form.get('first')?.errors?.maxFileExceeded);
+    }
+
+    toggleDisabled() {
+        this.disabled = !this.disabled;
+        [this.control, this.secondControl, this.form, this.formMultiple, this.multipleFileUploadControl]
+            .forEach((control) => control.enabled ? control.disable() : control.enable())
     }
 
     startLoading(): void {
@@ -190,14 +263,16 @@ export class CustomTextDirective {}
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
         KbqLocaleServiceModule,
         KbqFileUploadModule,
         KbqButtonModule,
-        FormsModule,
         KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
-        NgIf
+        NgIf,
+        KbqCheckboxModule
     ],
     bootstrap: [DemoComponent]
 })

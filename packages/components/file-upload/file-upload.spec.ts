@@ -16,6 +16,7 @@ import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 export function dispatchDropEvent(component: any, fixture: ComponentFixture<any>, fileName = 'test.file', type?: string) {
@@ -46,13 +47,13 @@ const maxFileExceeded = (file: File): string | null => {
 };
 
 describe('MultipleFileUploadComponent', () => {
-    let component: BasicMultipleFileUpload;
-    let fixture: ComponentFixture<BasicMultipleFileUpload>;
+    let component: any;
+    let fixture: ComponentFixture<any>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFileUploadModule],
-            declarations: [BasicMultipleFileUpload]
+            imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+            declarations: [BasicMultipleFileUpload, ControlValueAccessorMultipleFileUpload]
         })
             .compileComponents();
 
@@ -241,15 +242,76 @@ describe('MultipleFileUploadComponent', () => {
             expect(component.files[0].hasError).toBeTruthy();
         });
     });
+
+    describe('with ControlValueAccessor', () => {
+        beforeEach( () => {
+            fixture = TestBed.createComponent(ControlValueAccessorMultipleFileUpload);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should toggle the disabled state', () => {
+            expect(component.fileUpload.disabled).toBe(false);
+
+            component.control.disable();
+            fixture.detectChanges();
+
+            expect(component.fileUpload.disabled).toBe(true);
+
+            component.control.enable();
+            fixture.detectChanges();
+
+            expect(component.fileUpload.disabled).toBe(false);
+        });
+
+        it('should update file value with setValue', () => {
+            expect(component.fileUpload.files.length).toBeFalsy();
+
+            const fakeFile: Partial<File> = new File(['test'], 'test');
+            const dt = new DataTransfer();
+            dt.items.add(fakeFile as File);
+
+            component.control.setValue(dt.files);
+
+            expect(component.fileUpload.files.length).toBeTruthy();
+            expect(component.files.length).toBeTruthy();
+        });
+
+        it('should update form control touched on file dropped', fakeAsync(() => {
+            expect(component.control.touched).toBeFalse();
+
+            dispatchDropEvent(component, fixture);
+            fixture.detectChanges();
+            flush();
+
+            expect(component.control.touched).toBeTrue();
+        }));
+
+        it('should update form control touched on file added via click', () => {
+            expect(component.control.touched).toBeFalse();
+
+            const event = createFakeEvent('change');
+
+            const fakeFile = new File(['test'], 'test.file');
+            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
+            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            fixture.detectChanges();
+
+            expect(component.control.touched).toBeTrue();
+        });
+    })
 });
 
 describe('SingleFileUploadComponent', () => {
-    let component: BasicSingleFileUpload;
-    let fixture: ComponentFixture<BasicSingleFileUpload>;
+    let component: any;
+    let fixture: ComponentFixture<any>;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFileUploadModule],
-            declarations: [BasicSingleFileUpload]
+            imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
+            declarations: [
+                BasicSingleFileUpload,
+                ControlValueAccessorSingleFileUpload
+            ]
         })
             .compileComponents();
 
@@ -447,6 +509,62 @@ describe('SingleFileUploadComponent', () => {
         });
     });
 
+    describe('with ControlValueAccessor', () => {
+        beforeEach( () => {
+            fixture = TestBed.createComponent(ControlValueAccessorSingleFileUpload);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should toggle the disabled state', () => {
+            expect(component.fileUpload.disabled).toBe(false);
+
+            component.control.disable();
+            fixture.detectChanges();
+
+            expect(component.fileUpload.disabled).toBe(true);
+
+            component.control.enable();
+            fixture.detectChanges();
+
+            expect(component.fileUpload.disabled).toBe(false);
+        });
+
+        it('should update file value with setValue', () => {
+            expect(component.fileUpload.file).toBeFalsy();
+
+            const fakeFile = new File(['test'], 'test.file');
+            component.control.setValue(fakeFile);
+
+            expect(component.fileUpload.file).toBeTruthy();
+            expect(component.file).toBeTruthy();
+        });
+
+        it('should update form control touched on file dropped', fakeAsync(() => {
+            expect(component.control.touched).toBeFalse();
+
+            dispatchDropEvent(component, fixture);
+            fixture.detectChanges();
+            flush();
+
+            expect(component.control.touched).toBeTrue();
+        }));
+
+        it('should update form control touched on file added via click', () => {
+            expect(component.control.touched).toBeFalse();
+
+            const event = createFakeEvent('change');
+
+            const fakeFile = new File(['test'], 'test.file');
+            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
+
+            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            fixture.detectChanges();
+
+            expect(component.control.touched).toBeTrue();
+        });
+    })
+
     // TODO: real-life scenario & test results with the same data are different
     xdescribe('with accepted files list', () => {
         it('should filter files via drag-n-drop with extensions', fakeAsync(() => {
@@ -522,6 +640,34 @@ class BasicSingleFileUpload {
     selector: '',
     template: `
         <div style="max-width: 350px;">
+            <kbq-file-upload #fileUpload
+                                    [formControl]="control"
+                                    [accept]="accept"
+                                    [customValidation]="validation"
+                                    (fileQueueChange)="onChange($event)">
+            </kbq-file-upload>
+        </div>
+    `
+})
+class ControlValueAccessorSingleFileUpload {
+    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    file: KbqFileItem | null;
+    accept: string[] = [];
+    validation: KbqFileValidatorFn[] = [];
+    control = new FormControl();
+
+    constructor(public elementRef: ElementRef) {}
+
+    onChange(event: KbqFileItem | null) {
+        this.file = event;
+    }
+}
+
+
+@Component({
+    selector: '',
+    template: `
+        <div style="max-width: 350px;">
             <kbq-multiple-file-upload #fileUpload
                                       [disabled]="disabled"
                                       [customValidation]="validation"
@@ -535,6 +681,33 @@ class BasicMultipleFileUpload {
     disabled: boolean;
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
+
+    constructor(public elementRef: ElementRef) {}
+
+    onChange(event: KbqFileItem[]) {
+        this.files = event;
+    }
+}
+
+@Component({
+    selector: '',
+    template: `
+        <div style="max-width: 350px;">
+            <kbq-multiple-file-upload #fileUpload
+                                    [formControl]="control"
+                                    [accept]="accept"
+                                    [customValidation]="validation"
+                                    (fileQueueChanged)="onChange($event)">
+            </kbq-multiple-file-upload>
+        </div>
+    `
+})
+class ControlValueAccessorMultipleFileUpload {
+    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    files: KbqFileItem[];
+    accept: string[] = [];
+    validation: KbqFileValidatorFn[] = [];
+    control = new FormControl();
 
     constructor(public elementRef: ElementRef) {}
 
