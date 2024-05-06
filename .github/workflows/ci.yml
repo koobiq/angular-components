@@ -23,9 +23,13 @@ jobs:
           yarn run build:angular-moment-adapter
           yarn run styles:built-all
           yarn run build:cli
+
       - name: Unit
         run: |
           yarn run unit:cdk
           yarn run unit:components
           yarn run unit:angular-moment-adapter
           yarn run unit:angular-luxon-adapter
+
+      - name: License validation
+        run: yarn run validate:license
