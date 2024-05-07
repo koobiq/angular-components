@@ -20,12 +20,7 @@ jobs:
         uses: ./.github/workflows/actions/setup-yarn
 
       - name: Build packages
-        run: |
-          yarn run build:cdk
-          yarn run build:components
-          yarn run build:angular-luxon-adapter
-          yarn run build:angular-moment-adapter
-          yarn run styles:built-all
+        uses: ./.github/workflows/actions/build-packages
 
       - name: Build Docs
         run: |
