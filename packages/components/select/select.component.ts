@@ -55,7 +55,9 @@ import {
     TAB,
     ESCAPE,
     PAGE_UP,
-    PAGE_DOWN
+    PAGE_DOWN,
+    BACKSPACE,
+    DELETE
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
@@ -558,6 +560,11 @@ export class KbqSelect extends KbqSelectMixinBase implements
     get firstSelected(): KbqOptionBase | null {
         return this.selectionModel.selected
             .filter((option) => !option.disabled)[0] || null;
+    }
+
+    get firstFiltered(): boolean {
+        return !this.options
+            .find((option: KbqOption) => option === this.firstSelected);
     }
 
     private closeSubscription = Subscription.EMPTY;
@@ -1070,6 +1077,10 @@ export class KbqSelect extends KbqSelectMixinBase implements
             if (this.search) {
                 this.search.focus();
             }
+
+            if (this.search && (this.keyManager.isTyping() || [BACKSPACE, DELETE].includes(keyCode))) {
+                setTimeout(() => this.highlightCorrectOption());
+            }
         }
     }
 
@@ -1285,7 +1296,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
      */
     private highlightCorrectOption(): void {
         if (this.keyManager) {
-            if (this.empty || !this.firstSelected) {
+            if (this.empty || !this.firstSelected || this.firstFiltered) {
                 this.keyManager.setFirstItemActive();
             } else {
                 this.keyManager.setActiveItem(this.firstSelected as KbqOption);
