@@ -15,7 +15,7 @@ import { DocsNavbarState, DocStates } from '../../components/doс-states';
     animations: [
         trigger('openCloseSidenav', [
             state('open', style({ right: '0' })),
-            state('closed', style({ right: '-100%' })),
+            state('closed', style({ right: '-100%', display: 'none' })),
             transition('open => closed', [
                 animate('300ms ease-out')
             ]),
