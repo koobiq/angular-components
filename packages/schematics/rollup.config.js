@@ -38,6 +38,8 @@ module.exports = [
                 'VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER': version(pkg.version),
                 'VERSIONS.KOOBIQ_DATE_FORMATTER': version(pkg.dependencies['@koobiq/date-formatter']),
                 'VERSIONS.KOOBIQ_DATE_ADAPTER': version(pkg.dependencies['@koobiq/date-adapter']),
+                'VERSIONS.KOOBIQ_TOKENS_BUILDER': version(pkg.devDependencies['@koobiq/tokens-builder']),
+                'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
