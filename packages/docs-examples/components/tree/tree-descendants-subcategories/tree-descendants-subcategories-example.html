@@ -1,0 +1,22 @@
+<kbq-tree-selection
+    multiple="checkbox"
+    [autoSelect]="false"
+    [(ngModel)]="modelValue"
+    (selectionChange)="onSelectionChange($event)"
+    [dataSource]="dataSource"
+    [treeControl]="treeControl">
+
+    <kbq-tree-option *kbqTreeNodeDef="let node"
+                     [checkboxThirdState]="true"
+                     kbqTreeNodePadding>
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+    </kbq-tree-option>
+
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild"
+                     [checkboxThirdState]="true"
+                     kbqTreeNodePadding>
+        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+
+        <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+    </kbq-tree-option>
+</kbq-tree-selection>

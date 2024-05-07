@@ -24,6 +24,8 @@ import {
 } from './tree-multiple-checklist/tree-multiple-checklist-example';
 import { TreeMultipleKeyboardExample } from './tree-multiple-keyboard/tree-multiple-keyboard-example';
 import { TreeOverviewExample } from './tree-overview/tree-overview-example';
+import { TreeDescendantsSubcategoriesExample } from './tree-descendants-subcategories/tree-descendants-subcategories-example';
+import { TreeAccessRightsExample } from './tree-access-rights/tree-access-rights-example';
 
 
 export {
@@ -35,7 +37,9 @@ export {
     TreeFilteringExample,
     TreeCustomFilteringExample,
     TreeCheckedFilteringExample,
-    TreeLazyloadExample
+    TreeLazyloadExample,
+    TreeDescendantsSubcategoriesExample,
+    TreeAccessRightsExample
 };
 
 const EXAMPLES = [
@@ -47,7 +51,9 @@ const EXAMPLES = [
     TreeFilteringExample,
     TreeCustomFilteringExample,
     TreeCheckedFilteringExample,
-    TreeLazyloadExample
+    TreeLazyloadExample,
+    TreeDescendantsSubcategoriesExample,
+    TreeAccessRightsExample
 ];
 
 @NgModule({
