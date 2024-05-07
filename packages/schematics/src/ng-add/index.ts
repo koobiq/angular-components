@@ -1,5 +1,4 @@
-import { Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
-import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
+import { Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 
 import { addPackageToPackageJson } from '../utils/package-config';
@@ -27,7 +26,7 @@ const VERSIONS = {
  * It installs all dependencies in the 'package.json' and runs 'ng-add-setup-project' schematic.
  */
 export default function ngAdd(options: Schema): Rule {
-    return async (tree: Tree, context: SchematicContext) => {
+    return async (tree: Tree) => {
         const { project } = options;
         if (project) {
             const workspace = await readWorkspace(tree);
@@ -52,9 +51,5 @@ export default function ngAdd(options: Schema): Rule {
         addPackageToPackageJson(tree, 'marked', VERSIONS.MARKED);
         addPackageToPackageJson(tree, 'overlayscrollbars', VERSIONS.OVERLAYSCROLLBARS);
         addPackageToPackageJson(tree, 'ngx-highlightjs', VERSIONS.NGX_HIGHLIGHTJS);
-
-        context.addTask(new RunSchematicTask('ng-add-setup-project', options), [
-            context.addTask(new NodePackageInstallTask())
-        ]);
     };
 }

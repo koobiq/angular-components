@@ -156,7 +156,7 @@
         "build:docs-content": "ts-node --project ./tools/markdown-to-html/tsconfig.json ./tools/markdown-to-html/transform-markdown.ts && yarn run docs:api-gen",
         "build:package-docs-content": "ts-node --project ./tools/package-docs-content/tsconfig.json ./tools/package-docs-content/package-docs-content.ts",
         "styles:built-all": "ts-node --project tools/scss-compiler/tsconfig.json tools/scss-compiler/scss-bundle.ts",
-        "build:schematics": "rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.mjs",
+        "build:schematics": "rimraf packages/schematics/dist && rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.mjs",
         "unit:cdk": "ng test cdk",
         "unit:components": "ng test components",
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
