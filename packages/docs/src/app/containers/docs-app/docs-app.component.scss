@@ -54,10 +54,9 @@
         z-index: 10;
     }
 
-    .docs-sidenav.docs-sidenav_opened {
-
+    .docs-sidenav.docs-sidenav_closed:not(.ng-animating) {
+        display: none;
     }
-
 }
 
 @media (width >= 768px) {
