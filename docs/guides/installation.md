@@ -1,19 +1,23 @@
-### Требования
-
-- [Angular](https://angular.io/)
-
-
-### Установка пакетов
-
-Чтобы использовать Koobiq, установите следующие пакеты:
-
-**NPM**
+Установите с помощью Angular CLI:
 
 ```bash
-npm install --save @koobiq/cdk @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon @messageformat/core
+ng add @koobiq/components
 ```
 
-**Yarn**
+#### Руководство по ручной установке
+
+Если вы предпочитаете не использовать **Schematic** или хотите добавить `@koobiq/components` в старый проект,
+вам необходимо добавить следующие зависимости:
+
 ```bash
-yarn add @koobiq/cdk @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon @messageformat/core
+npm install
+    @koobiq/cdk
+    @koobiq/components
+    @koobiq/icons
+    @koobiq/design-tokens
+    @koobiq/angular-luxon-adapter
+    @koobiq/date-adapter
+    @koobiq/date-formatter
+    luxon
+    @messageformat/core
 ```
