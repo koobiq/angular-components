@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { KbqCodeFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
@@ -99,7 +99,7 @@ export class DocsLiveExampleViewer {
             const importPath = `${docsContentPath}/${fileName}`;
             return this.fetchCode(importPath).pipe(
                 map((content) => ({
-                    filename: fileName.split('.').pop().toUpperCase(),
+                    filename: this.determineLanguage(fileName),
                     content: content,
                     language: this.determineLanguage(fileName)
                 }))
