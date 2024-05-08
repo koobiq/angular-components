@@ -939,6 +939,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-dropdown"
     }
   },
+  "file-upload-cva-overview": {
+    "packagePath": "components/file-upload/file-upload-cva-overview",
+    "title": "File upload with Control Value Accessor",
+    "componentName": "FileUploadCvaOverviewExample",
+    "files": [
+      "file-upload-cva-overview-example.ts",
+      "file-upload-cva-overview-example.html",
+      "file-upload-cva-overview-example.css"
+    ],
+    "selector": "file-upload-cva-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-cva-overview-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/file-upload",
+      "importPath": "koobiq-docs-examples-components-file-upload"
+    }
+  },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
     "title": "Button's colors",
@@ -3120,6 +3138,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tree-select"
     }
   },
+  "tree-access-rights": {
+    "packagePath": "components/tree/tree-access-rights",
+    "title": "Tree Descendants Subcategories",
+    "componentName": "TreeAccessRightsExample",
+    "files": [
+      "tree-access-rights-example.ts",
+      "tree-access-rights-example.html",
+      "tree-access-rights-example.css"
+    ],
+    "selector": "tree-access-rights-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-access-rights-example.ts",
+    "module": {
+      "name": "TreeExamplesModule",
+      "importSpecifier": "components/tree",
+      "importPath": "koobiq-docs-examples-components-tree"
+    }
+  },
   "tree-action-button": {
     "packagePath": "components/tree/tree-action-button",
     "title": "Basic tree",
@@ -3168,6 +3204,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-custom-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-custom-filtering-example.ts",
+    "module": {
+      "name": "TreeExamplesModule",
+      "importSpecifier": "components/tree",
+      "importPath": "koobiq-docs-examples-components-tree"
+    }
+  },
+  "tree-descendants-subcategories": {
+    "packagePath": "components/tree/tree-descendants-subcategories",
+    "title": "Tree Descendants Subcategories",
+    "componentName": "TreeDescendantsSubcategoriesExample",
+    "files": [
+      "tree-descendants-subcategories-example.ts",
+      "tree-descendants-subcategories-example.html",
+      "tree-descendants-subcategories-example.css"
+    ],
+    "selector": "tree-descendants-subcategories-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-descendants-subcategories-example.ts",
     "module": {
       "name": "TreeExamplesModule",
       "importSpecifier": "components/tree",

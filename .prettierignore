@@ -12,3 +12,6 @@ node_modules/
 
 # ignore build tokens
 /packages/docs/src/styles/koobiq/default-theme/
+
+# ignore auto-generated module
+/packages/docs-examples/example-module.ts
