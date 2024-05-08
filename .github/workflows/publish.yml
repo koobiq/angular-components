@@ -33,10 +33,12 @@ jobs:
         env:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
+      # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
       - name: Extract current changelog
+        id: extract-changelog
         run: |
           yarn run release:extract-changelog
-          echo "CHANGELOG=$(cat ./CHANGELOG_CURRENT.md)" >> $GITHUB_ENV
+          echo "CHANGELOG=$(cat ./CHANGELOG_CURRENT.md)" >> $GITHUB_OUTPUT
 
       - name: Notification
         uses: mattermost/action-mattermost-notify@master
@@ -44,7 +46,7 @@ jobs:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
           PAYLOAD: |-
             {
-              "text": "${{ env.CHANGELOG }}",
+              "text": "${{ steps.extract-changelog.outputs.CHANGELOG }}",
               "channel": "${{ secrets.MM_CHANNGEL_NAME }}",
               "name": "${{ secrets.MM_BOT_NAME }}"
             }
