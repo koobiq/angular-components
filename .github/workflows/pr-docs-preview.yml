@@ -1,14 +1,12 @@
 name: Deploy to Hosting on PR
 
 on:
-  push
-#on:
-#  pull_request_target:
-#    types:
-#      - opened
-#      - reopened
-#      - synchronize
-#      - labeled
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
 
 permissions:
   checks: write
@@ -26,12 +24,6 @@ jobs:
       - name: Setup Yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Get Short GitHub SHA and Save in Environment Variable
-        id: vars
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "short_sha=$calculatedSha" >> $GITHUB_OUTPUT
-
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
@@ -47,6 +39,6 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
           expires: 5d
-          channelId: prs-${{ steps.vars.outputs.short_sha }}
+          channelId: prs-${{ github.event.number }}
           projectId: koobiq
           target: next
