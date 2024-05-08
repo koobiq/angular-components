@@ -163,9 +163,7 @@
         error-fade-hover: map.get($tokens, '#{$scheme}-states-background-error-fade-hover'),
         error-fade-active: map.get($tokens, '#{$scheme}-states-background-error-fade-active'),
         // будет удалено, после удаления из компонентов ↓
-        error-less: map.get($tokens, '#{$scheme}-states-background-error-less'),
-        ghost-hover: map.get($tokens, '#{$scheme}-states-background-ghost-hover'),
-        ghost-active: map.get($tokens, '#{$scheme}-states-background-ghost-active')
+        error-less: map.get($tokens, '#{$scheme}-states-background-error-less')
     );
 }
 
