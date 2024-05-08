@@ -24,9 +24,6 @@ jobs:
       - name: Setup Yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Get Short GitHub SHA and Save in Environment Variable
-        run: echo "GITHUB_SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
@@ -42,6 +39,6 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
           expires: 5d
-          channelId: prs-${{ env.GITHUB_SHORT_SHA }}
+          channelId: prs-${{ github.event.number }}
           projectId: koobiq
           target: next
