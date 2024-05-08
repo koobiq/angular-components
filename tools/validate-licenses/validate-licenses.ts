@@ -3,9 +3,11 @@ import * as path from 'node:path';
 import checker from 'license-checker';
 import spdxSatisfies from 'spdx-satisfies';
 
-/* tslint:disable:object-literal-key-quotes */
-/* tslint:disable:no-console */
-const licensesWhitelist = [
+type License = string;
+type PackageID = string;
+
+// List of licenses considered valid and acceptable for use.
+const licensesWhitelist: License[] = [
     // Regular valid open source licenses.
     'MIT',
     'ISC',
@@ -31,7 +33,7 @@ const licensesWhitelist = [
 
 // Name variations of SPDX licenses that some packages have.
 // Licenses not included in SPDX but accepted will be converted to MIT.
-const licenseReplacements: { [key: string]: string } = {
+const licenseReplacements: { [key: string]: License } = {
     // Official SPDX identifier has a dash
     'Apache 2.0': 'Apache-2.0',
 
@@ -39,19 +41,34 @@ const licenseReplacements: { [key: string]: string } = {
     BSD: 'BSD-2-Clause'
 };
 
-const ignoredPackages = [
+// Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
+const ignoredPackages: PackageID[] = [
     // Custom
     'deep-freeze@0.0.1',
 
     // ISC License https://github.com/eemeli/make-plural/blob/main/LICENSE
-    'make-plural@7.3.0'
+    'make-plural@7.3.0',
+
+    // https://github.com/soldair/node-gitconfiglocal?tab=BSD-3-Clause-1-ov-file
+    'gitconfiglocal@1.0.0'
 ];
 
-// Check if a license is accepted by an array of accepted licenses
-function passesSpdx(licenses: string[], accepted: string[]) {
+// Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
+function normalizeLicense(license: string | undefined): License[] {
+    if (typeof license === 'string') {
+        let normalized = licenseReplacements[license] || license.replace(/\*$/, '');
+        return [normalized];
+    }
+    return [];
+}
+
+// Checks if the license string satisfies one of the accepted licenses using the SPDX specification.
+function isLicenseValid(licenses: License[]): boolean {
+    const licenseExpression = licenses.join(' AND ');
     try {
-        return spdxSatisfies(licenses.join(' AND '), accepted.join(' OR '));
-    } catch (_) {
+        return spdxSatisfies(licenseExpression, licensesWhitelist.join(' OR '));
+    } catch (error) {
+        console.error(`Error validating licenses '${licenseExpression}': ${error}`);
         return false;
     }
 }
@@ -59,56 +76,50 @@ function passesSpdx(licenses: string[], accepted: string[]) {
 const enum ReturnCode {
     Success = 0,
     Error = 1,
-    INVALID_LIC = 2
+    InvalidLicense = 2
 }
 
-export function validateLicense(): Promise<number> {
-    return new Promise<number>((resolve) => {
-        checker.init(
-            { start: path.join(__dirname, '../../'), excludePrivatePackages: true },
-            (err: Error, json: any) => {
-                if (err) {
-                    console.error(`Something happened:\n${err.message}`);
-                    resolve(ReturnCode.Error);
-                    process.exit(ReturnCode.Error);
-                } else {
-                    console.log(`Testing ${Object.keys(json).length} packages.\n`);
+// Main function that initializes the license checker and processes the results.
+async function validateLicense(): Promise<ReturnCode> {
+    try {
+        const json = await new Promise<any>((resolve, reject) => {
+            checker.init({ start: path.join(__dirname, '../../'), excludePrivatePackages: true }, (err, result) =>
+                err ? reject(err) : resolve(result)
+            );
+        });
 
-                    const badLicensePackages = Object.keys(json)
-                        .map((key) => ({
-                            id: key,
-                            licenses: ([] as string[])
-                                /* tslint:disable:no-non-null-assertion */
-                                .concat(json[key].licenses as string[])
-                                // `*` is used when the license is guessed.
-                                .map((x) => x.replace(/\*$/, ''))
-                                .map((x) => (x in licenseReplacements ? licenseReplacements[x] : x))
-                        }))
-                        .filter((pkg) => !passesSpdx(pkg.licenses, licensesWhitelist))
-                        .filter((pkg) => !ignoredPackages.find((ignored) => ignored === pkg.id));
+        const packages = Object.keys(json);
+        console.log(`Testing ${packages.length} packages.\n`);
 
-                    // Report packages with bad licenses
-                    if (badLicensePackages.length > 0) {
-                        console.error('Invalid package licences found: \n');
+        // Filters out packages with invalid or unaccepted licenses.
+        const badLicensePackages = packages
+            .map((key) => ({
+                id: key,
+                licenses: Array.isArray(json[key].licenses)
+                    ? json[key].licenses.map(normalizeLicense)
+                    : [normalizeLicense(json[key].licenses)]
+            }))
+            .filter((pkg) => !ignoredPackages.includes(pkg.id))
+            .filter((pkg) => !isLicenseValid(pkg.licenses));
 
-                        badLicensePackages.forEach((pkg) => {
-                            console.error(`▪ ${pkg.id}: ${JSON.stringify(pkg.licenses)}`);
-                        });
+        if (badLicensePackages.length > 0) {
+            console.error('Invalid package licences found:\n');
+            badLicensePackages.forEach((pkg) => {
+                console.error(`▪ ${pkg.id}: ${JSON.stringify(pkg.licenses)}`);
+            });
 
-                        console.error(`\n${badLicensePackages.length} total packages with invalid licenses.`);
-                        resolve(ReturnCode.INVALID_LIC);
-                        process.exit(ReturnCode.INVALID_LIC);
-                    } else {
-                        console.log('All package licenses are valid.');
-                        resolve(ReturnCode.Success);
-                        process.exit(ReturnCode.Success);
-                    }
-                }
-            }
-        );
-    });
+            console.error(`\n${badLicensePackages.length} total packages with invalid licenses.`);
+            return ReturnCode.InvalidLicense;
+        }
+
+        console.log('All package licenses are valid.');
+        return ReturnCode.Success;
+    } catch (error) {
+        console.error(`Something happened:\n${error.message}`);
+        return ReturnCode.Error;
+    }
 }
 
 if (require.main === module) {
-    validateLicense();
+    validateLicense().then((code) => process.exit(code));
 }
