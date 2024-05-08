@@ -120,7 +120,7 @@ TypeScript type declarations are also published.
 import {
     VerticalNavbarSizeStatesCollapsedWidth as closedWidth,
     VerticalNavbarSizeStatesExpandedWidth as openedWidth
-} from '@koobiq/design-tokens/web';
+} from '@koobiq/design-tokens';
 
 
 ```

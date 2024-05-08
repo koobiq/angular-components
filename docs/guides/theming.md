@@ -329,7 +329,7 @@ export class AppComponent implements OnInit, OnDestroy {
 Импортируйте его как обычную зависимость для использования. Как пример, представлено использование предустановленных размеров в Koobiq.
 
 ```ts
-import { Size3xs, SizeL, SizeM, SizeXs, SizeXxs } from '@koobiq/design-tokens/web';
+import { Size3xs, SizeL, SizeM, SizeXs, SizeXxs } from '@koobiq/design-tokens';
 ```
 
 ##### Использование CSS-переменных
