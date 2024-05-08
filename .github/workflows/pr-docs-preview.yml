@@ -28,12 +28,7 @@ jobs:
         run: echo "GITHUB_SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build packages
-        run: |
-          yarn run build:cdk
-          yarn run build:components
-          yarn run build:angular-luxon-adapter
-          yarn run build:angular-moment-adapter
-          yarn run styles:built-all
+        uses: ./.github/workflows/actions/build-packages
 
       - name: Build Docs
         run: |

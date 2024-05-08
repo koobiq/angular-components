@@ -1,0 +1,11 @@
+{
+    "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "ng-add": {
+            "description": "Adds @koobiq/components library to the project and installs dependencies",
+            "factory": "./ng-add/index",
+            "schema": "./ng-add/schema.json",
+            "aliases": ["install"]
+        }
+    }
+}

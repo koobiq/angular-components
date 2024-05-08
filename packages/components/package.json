@@ -51,5 +51,6 @@
         "./prebuilt-visual/default-visual.css": {
             "style": "./prebuilt-visual/default-visual.css"
         }
-    }
+    },
+    "schematics": "./schematics/collection.json"
 }
