@@ -9,3 +9,6 @@ node_modules/
 /CHANGELOG.md
 /CODE_OF_CONDUCT.md
 /tmp
+
+# ignore build tokens
+/packages/docs/src/styles/koobiq/default-theme/
