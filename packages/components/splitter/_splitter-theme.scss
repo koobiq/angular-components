@@ -11,7 +11,7 @@
 
         &:hover,
         &.kbq-gutter_dragged {
-            background-color: map.get($background, ghost-hover);
+            background-color: rgba(106, 115, 150, 0.08);
         }
 
         &.kbq-gutter_vertical {
@@ -27,6 +27,6 @@
     }
 
     .kbq-gutter-ghost {
-        background: kbq-color($background, ghost-active);
+        background: rgba(106, 115, 150, 0.16);
     }
 }
