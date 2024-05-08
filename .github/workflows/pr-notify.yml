@@ -20,4 +20,4 @@ jobs:
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
           MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
           TEXT: |
-            [${{ github.repository }}] | [${{ github.event.pull_request.title }} #${{ github.event.number }}](${{ env.PR_URL }} was created by ${{ github.actor }}
+            [${{ github.repository }}] | [${{ github.event.pull_request.title }} #${{ github.event.number }}](${{ env.PR_URL }}) was created by ${{ github.actor }}
