@@ -1,13 +1,12 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
+
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
-import { KbqLink } from '../../../../../components/link';
 
 import { StackblitzWriter } from './stackblitz-writer';
-
 
 @Component({
     selector: 'docs-stackblitz-button',
@@ -33,7 +32,7 @@ export class StackblitzButton extends KbqLink {
 
     get hasIcon() {
         return true;
-    };
+    }
 
     exampleData: ExampleData | undefined;
 

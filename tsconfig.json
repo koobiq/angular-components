@@ -4,10 +4,7 @@
         "rootDir": ".",
         "module": "esnext",
         "target": "ES2022",
-        "lib": [
-            "es2020",
-            "dom"
-        ],
+        "lib": ["es2020", "dom"],
         "moduleResolution": "node",
         "declaration": true,
         "emitDecoratorMetadata": true,
@@ -21,9 +18,7 @@
         "strictFunctionTypes": true,
         "stripInternal": false,
         "esModuleInterop": true,
-        "typeRoots": [
-            "node_modules/@types"
-        ],
+        "typeRoots": ["node_modules/@types"],
         "paths": {
             "@koobiq/cdk/a11y": ["packages/cdk/a11y/index.ts"],
             "@koobiq/cdk/datetime": ["packages/cdk/datetime/index.ts"],
@@ -59,6 +54,7 @@
             "@koobiq/components/select": ["packages/components/select/index.ts"],
             "@koobiq/components/sidebar": ["packages/components/sidebar/index.ts"],
             "@koobiq/components/sidepanel": ["packages/components/sidepanel/index.ts"],
+            "@koobiq/components/scrollbar": ["packages/components/scrollbar/index.ts"],
             "@koobiq/components/splitter": ["packages/components/splitter/index.ts"],
             "@koobiq/components/table": ["packages/components/table/index.ts"],
             "@koobiq/components/tabs": ["packages/components/tabs/index.ts"],
@@ -82,8 +78,5 @@
         },
         "useDefineForClassFields": false
     },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "exclude": ["node_modules", "dist"]
 }

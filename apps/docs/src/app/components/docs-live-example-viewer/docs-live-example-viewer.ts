@@ -38,6 +38,8 @@ export class DocsLiveExampleViewer {
 
     files: KbqCodeFile[] = [];
 
+    @Input() fileOrder = ['HTML', 'TS', 'CSS'];
+
     /** Data for the currently selected example. */
     exampleData: LiveExample;
 
