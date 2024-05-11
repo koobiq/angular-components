@@ -1,11 +1,10 @@
-`<kbq-divider>` is a component that allows for koobiq styling of a line separator with various orientation options.
+`<kbq-divider>` — это компонент, который используется для разделительной линии с различными вариантами ориентации.
 
 <!-- example(divider-overview) -->
 
-
 ### Simple divider
 
-A `<kbq-divider>` element can be used on its own to create a horizontal or vertical line styled with a koobiq theme
+Элемент `<kbq-divider>` может использоваться самостоятельно для создания горизонтальной или вертикальной линии.
 
 ```html
 <kbq-divider></kbq-divider>
@@ -13,7 +12,7 @@ A `<kbq-divider>` element can be used on its own to create a horizontal or verti
 
 ### Inset divider
 
-Add the `inset` attribute in order to set whether or not the divider is an inset divider.
+Добавьте атрибут `inset`, чтобы указать, является ли разделитель вставным.
 
 ```html
 <kbq-divider [inset]="true"></kbq-divider>
@@ -21,33 +20,34 @@ Add the `inset` attribute in order to set whether or not the divider is an inset
 
 ### Vertical divider
 
-Add the `vertical` attribute in order to set whether or not the divider is vertically-oriented.
+Добавьте атрибут `vertical`, чтобы указать, ориентирован ли разделитель вертикально.
 
 <!-- example(divider-vertical) -->
 
-
 ### Lists with inset dividers
 
-Dividers can be added to lists as a means of separating content into distinct sections.
-Inset dividers can also be added to provide the appearance of distinct elements in a list without cluttering content
-like avatar images or icons. Make sure to avoid adding an inset divider to the last element
-in a list, because it will overlap with the section divider.
+Разделители можно добавлять в списки для разделения контента на отдельные секции.
+`Inset` разделители также можно добавлять, чтобы создать вид отдельных элементов в списке,
+не загромождая контент, например, изображениями аватаров или иконками.
+
+Убедитесь, что вы не добавляете `inset` разделитель к последнему элементу в списке,
+поскольку он будет перекрывать разделитель секции.
 
 ```html
 <kbq-list>
-   <h3>Folders</h3>
-   <kbq-list-item *ngFor="let folder of folders; last as last">
-      <kbq-icon kbq-list-icon>folder</kbq-icon>
-      <h4 kbq-line>{{folder.name}}</h4>
-      <p kbq-line class="demo-2"> {{folder.updated}} </p>
-      <kbq-divider [inset]="true" *ngIf="!last"></kbq-divider>
-   </kbq-list-item>
-   <kbq-divider></kbq-divider>
-   <h3>Notes</h3>
-   <kbq-list-item *ngFor="let note of notes">
-      <kbq-icon kbq-list-icon>note</kbq-icon>
-      <h4 kbq-line>{{note.name}}</h4>
-      <p kbq-line class="demo-2"> {{note.updated}} </p>
-   </kbq-list-item>
+    <h3>Folders</h3>
+    <kbq-list-item *ngFor="let folder of folders; last as last">
+        <kbq-icon kbq-list-icon>folder</kbq-icon>
+        <h4 kbq-line>{{folder.name}}</h4>
+        <p kbq-line class="demo-2">{{folder.updated}}</p>
+        <kbq-divider [inset]="true" *ngIf="!last"></kbq-divider>
+    </kbq-list-item>
+    <kbq-divider></kbq-divider>
+    <h3>Notes</h3>
+    <kbq-list-item *ngFor="let note of notes">
+        <kbq-icon kbq-list-icon>note</kbq-icon>
+        <h4 kbq-line>{{note.name}}</h4>
+        <p kbq-line class="demo-2">{{note.updated}}</p>
+    </kbq-list-item>
 </kbq-list>
 ```
