@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
+
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCardModule } from '@koobiq/components/card';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqFormattersModule } from '@koobiq/components/core';
+import { KbqFormattersModule, KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -41,10 +43,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
-
 const KBQ_COMPONENTS = [
     KbqAlertModule,
     KbqAutocompleteModule,
+    KbqBadgeModule,
     KbqButtonModule,
     KbqButtonToggleModule,
     KbqCardModule,
@@ -85,17 +87,9 @@ const KBQ_COMPONENTS = [
     KbqCodeBlockModule
 ];
 
-const KBQ_CORE = [
-    KbqHighlightModule,
-    KbqPseudoCheckboxModule,
-    KbqFormattersModule
-];
-
+const KBQ_CORE = [KbqHighlightModule, KbqPseudoCheckboxModule, KbqFormattersModule];
 
 @NgModule({
-    exports: [
-        ...KBQ_COMPONENTS,
-        ...KBQ_CORE
-    ]
+    exports: [...KBQ_COMPONENTS, ...KBQ_CORE]
 })
 export class DemoMosaicModule {}
