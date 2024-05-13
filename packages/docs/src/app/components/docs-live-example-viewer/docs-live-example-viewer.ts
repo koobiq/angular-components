@@ -5,14 +5,24 @@ import {
     ElementRef,
     Input,
     NgModuleFactory,
+    ɵNgModuleFactory,
     Type,
-    ViewEncapsulation,
-    ɵNgModuleFactory
+    ViewEncapsulation
 } from '@angular/core';
-import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
-import { shareReplay } from 'rxjs/operators';
-import { KbqCodeFile } from '../../../../../components/code-block';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { KbqCodeFile } from '@koobiq/components/code-block';
+import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
+
+/** Preferred order for files of an example displayed in the viewer. */
+const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
+
+interface ExampleFileData {
+    filename: string;
+    content: string;
+    language: string;
+}
 
 @Component({
     selector: 'docs-live-example-viewer',
@@ -27,11 +37,6 @@ export class DocsLiveExampleViewer {
     isSourceShown: boolean = false;
 
     files: KbqCodeFile[] = [];
-
-    fileExtensionRegex = /(.*)\.(\w+)/;
-
-    @Input() fileOrder = ['HTML', 'TS', 'CSS'];
-
 
     /** Data for the currently selected example. */
     exampleData: LiveExample;
@@ -58,8 +63,9 @@ export class DocsLiveExampleViewer {
         if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
             this._example = exampleName;
             this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-            this.loadExampleComponent()
-                .catch((error) => console.error(`Could not load example '${exampleName}': ${error}`));
+            this.loadExampleComponent().catch((error) =>
+                console.error(`Could not load example '${exampleName}': ${error}`)
+            );
             this.generateExampleTabs();
         } else {
             console.error(`Could not find example: ${exampleName}`);
@@ -77,35 +83,70 @@ export class DocsLiveExampleViewer {
         this.isSourceShown = !this.isSourceShown;
     }
 
-    getExampleTabNames() {
-        // return new Set([...this.fileOrder, ...Object.keys(this.exampleTabs)]);
-    }
-
+    /**
+     * Initiates the fetching of all files listed in exampleData.files, processes them,
+     * and then orders them by specified languages before pushing to the 'files' array.
+     * Utilizes RxJS forkJoin to handle parallel HTTP requests.
+     */
     private generateExampleTabs() {
-        if (!this.exampleData) { return; }
+        if (!this.exampleData) {
+            return;
+        }
 
         const docsContentPath = `docs-content/examples-source/${this.exampleData.packagePath}`;
 
-        for (const fileName of this.exampleData.files) {
+        const observables = this.exampleData.files.map((fileName) => {
             const importPath = `${docsContentPath}/${fileName}`;
+            return this.fetchCode(importPath).pipe(
+                map((content) => ({
+                    filename: this.determineLanguage(fileName),
+                    content: content,
+                    language: this.determineLanguage(fileName)
+                }))
+            );
+        });
 
-            if (fileName === `${this.exampleData.selector}.ts`) {
-                this.fetchCode(importPath, 'TS', 'ts');
-            } else if (fileName === `${this.exampleData.selector}.css`) {
-                this.fetchCode(importPath, 'CSS', 'css');
-            } else if (fileName === `${this.exampleData.selector}.html`) {
-                this.fetchCode(importPath, 'HTML', 'html');
-            } else {
-                console.error(`Unknown file: ${importPath}`);
+        forkJoin(observables).subscribe({
+            next: (results: ExampleFileData[]) => {
+                // Sorts the files according to the predefined preferredExampleFileOrder by language
+                results.sort(
+                    (a, b) =>
+                        preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
+                );
+                this.files.push(...results);
+            },
+            error: (error) => {
+                console.error('Error fetching the files', error);
             }
+        });
+    }
+
+    /**
+     * Determines the programming language from the file extension.
+     * @param fileName The name of the file, including its extension.
+     * @returns The uppercase string representing the programming language.
+     */
+    private determineLanguage(fileName: string): string {
+        const extension = fileName.split('.').pop();
+        switch (extension) {
+            case 'ts':
+                return 'TS';
+            case 'html':
+                return 'HTML';
+            case 'css':
+                return 'CSS';
+            default:
+                return 'Unknown';
         }
     }
 
-    private fetchCode(importPath: string, filename: string, language: string) {
-        this.http
-            .get(importPath, { responseType: 'text' })
-            .pipe(shareReplay(1))
-            .subscribe((content) => this.files.push({ filename, content, language }));
+    /**
+     * Fetches file content from a specified path using an HTTP GET request.
+     * @param importPath The path from which to fetch the file content.
+     * @returns Observable emitting the text content of the file.
+     */
+    private fetchCode(importPath: string): Observable<string> {
+        return this.http.get(importPath, { responseType: 'text' });
     }
 
     private async loadExampleComponent() {
@@ -121,7 +162,8 @@ export class DocsLiveExampleViewer {
             // @ts-ignore
             const moduleExports: any = await import(
                 /* webpackExclude: /\.map$/ */
-            `@koobiq/docs-examples/fesm2022/${module.importPath}`);
+                `@koobiq/docs-examples/fesm2022/${module.importPath}`
+            );
             this.exampleComponentType = moduleExports[componentName];
             // The components examples package is built with Ivy. This means that no factory files are
             // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
