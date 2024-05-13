@@ -1,9 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../functions/string' as *;
-
-
 @mixin kbq-scrollbar($tokens) {
     $border-width: calc(
         (var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) -

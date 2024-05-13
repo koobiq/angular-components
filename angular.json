@@ -58,7 +58,7 @@
                             "apps/docs/src/sitemap.xml"
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["packages"]
+                            "includePaths": ["./packages"]
                         },
                         "styles": [
                             {

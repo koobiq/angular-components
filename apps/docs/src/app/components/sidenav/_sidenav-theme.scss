@@ -1,5 +1,5 @@
-@use '../dist/components/core/styles/theming';
-@use '../dist/components/core/styles/typography';
+@use 'components/core/styles/theming';
+@use 'components/core/styles/typography';
 
 
 @mixin kbq-docs-sidenav-theme($theme) {
