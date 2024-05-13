@@ -10,8 +10,8 @@
                     "style": "scss"
                 }
             },
-            "root": "",
-            "sourceRoot": "",
+            "root": "apps/docs",
+            "sourceRoot": "apps/docs",
             "prefix": "app",
             "architect": {
                 "build": {
@@ -19,10 +19,10 @@
                     "options": {
                         "sourceMap": true,
                         "outputPath": "./dist/releases/koobiq-docs",
-                        "index": "packages/docs/src/index.html",
-                        "main": "packages/docs/src/main.ts",
-                        "polyfills": "packages/docs/src/polyfills.ts",
-                        "tsConfig": "packages/docs/tsconfig.app.json",
+                        "index": "apps/docs/src/index.html",
+                        "main": "apps/docs/src/main.ts",
+                        "polyfills": "apps/docs/src/polyfills.ts",
+                        "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
                             {
                                 "glob": "**/*",
@@ -36,7 +36,7 @@
                             },
                             {
                                 "glob": "**/*",
-                                "input": "packages/docs/src/assets",
+                                "input": "apps/docs/src/assets",
                                 "output": "/assets"
                             },
                             {
@@ -46,37 +46,40 @@
                             },
                             {
                                 "glob": "favicon.ico",
-                                "input": "packages/docs/src",
+                                "input": "apps/docs/src",
                                 "output": "/"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "packages/docs/src/styles",
+                                "input": "apps/docs/src/styles",
                                 "output": "/tokens"
                             },
-                            "src/robots.txt",
-                            "src/sitemap.xml"
+                            "apps/docs/src/robots.txt",
+                            "apps/docs/src/sitemap.xml"
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["packages"]
                         },
-                        "styles": [{
-                            "input": "packages/docs/src/main.scss"
-                        }],
+                        "styles": [
+                            {
+                                "input": "apps/docs/src/main.scss"
+                            }
+                        ],
                         "scripts": [],
                         "vendorChunk": true,
                         "extractLicenses": false,
                         "buildOptimizer": false,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "allowedCommonJsDependencies": ["highlight.js", "@messageformat/core"]
                     },
                     "configurations": {
                         "development": {
-                            "tsConfig": "packages/docs/tsconfig.dev.json",
+                            "tsConfig": "apps/docs/tsconfig.dev.json",
                             "fileReplacements": [
                                 {
-                                    "replace": "packages/docs/src/environments/environment.ts",
-                                    "with": "packages/docs/src/environments/environment.prod.ts"
+                                    "replace": "apps/docs/src/environments/environment.ts",
+                                    "with": "apps/docs/src/environments/environment.prod.ts"
                                 }
                             ],
                             "budgets": [
@@ -88,11 +91,11 @@
                             ]
                         },
                         "production": {
-                            "tsConfig": "packages/docs/tsconfig.aot.json",
+                            "tsConfig": "apps/docs/tsconfig.aot.json",
                             "fileReplacements": [
                                 {
-                                    "replace": "packages/docs/src/environments/environment.ts",
-                                    "with": "packages/docs/src/environments/environment.prod.ts"
+                                    "replace": "apps/docs/src/environments/environment.ts",
+                                    "with": "apps/docs/src/environments/environment.prod.ts"
                                 }
                             ],
                             "optimization": {
@@ -125,42 +128,42 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "koobiq-docs:build"
+                        "buildTarget": "koobiq-docs:build"
                     },
                     "configurations": {
                         "development": {
-                          "buildTarget": "koobiq-docs:build:development"
+                            "buildTarget": "koobiq-docs:build:development"
                         },
                         "production": {
-                          "buildTarget": "koobiq-docs:build:production"
+                            "buildTarget": "koobiq-docs:build:production"
                         }
                     }
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "packages/docs/src/test.ts",
-                        "polyfills": "packages/docs/src/polyfills.ts",
-                        "tsConfig": "packages/docs/tsconfig.spec.json",
-                        "karmaConfig": "packages/docs/karma.conf.js",
+                        "main": "apps/docs/src/test.ts",
+                        "polyfills": "apps/docs/src/polyfills.ts",
+                        "tsConfig": "apps/docs/tsconfig.spec.json",
+                        "karmaConfig": "apps/docs/karma.conf.js",
+                        "codeCoverage": true,
                         "assets": [
                             {
                                 "glob": "**/*",
-                                "input": "packages/docs/src/assets",
+                                "input": "apps/docs/src/assets",
                                 "output": "/assets"
                             },
                             {
                                 "glob": "favicon.ico",
-                                "input": "packages/docs/src",
+                                "input": "apps/docs/src",
                                 "output": "/"
                             }
                         ],
                         "styles": [
                             {
-                                "input": "packages/docs/src/main.scss"
+                                "input": "apps/docs/src/main.scss"
                             }
-                        ],
-                        "scripts": []
+                        ]
                     }
                 }
             }
@@ -197,10 +200,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "packages/cdk/**/*.ts",
-                            "packages/cdk/**/*.html"
-                        ]
+                        "lintFilePatterns": ["packages/cdk/**/*.ts", "packages/cdk/**/*.html"]
                     }
                 }
             }
@@ -237,10 +237,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "packages/components/**/*.ts",
-                            "packages/components/**/*.html"
-                        ]
+                        "lintFilePatterns": ["packages/components/**/*.ts", "packages/components/**/*.html"]
                     }
                 }
             }
@@ -393,7 +390,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-alert:build"
+                        "buildTarget": "dev-alert:build"
                     }
                 }
             }
@@ -422,7 +419,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-all:build"
+                        "buildTarget": "dev-all:build"
                     }
                 }
             }
@@ -451,7 +448,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-autocomplete:build"
+                        "buildTarget": "dev-autocomplete:build"
                     }
                 }
             }
@@ -480,7 +477,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-badge:build"
+                        "buildTarget": "dev-badge:build"
                     }
                 }
             }
@@ -509,7 +506,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-button:build"
+                        "buildTarget": "dev-button:build"
                     }
                 }
             }
@@ -538,7 +535,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-button-toggle:build"
+                        "buildTarget": "dev-button-toggle:build"
                     }
                 }
             }
@@ -567,7 +564,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-card:build"
+                        "buildTarget": "dev-card:build"
                     }
                 }
             }
@@ -596,7 +593,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-checkbox:build"
+                        "buildTarget": "dev-checkbox:build"
                     }
                 }
             }
@@ -625,7 +622,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-code-block:build"
+                        "buildTarget": "dev-code-block:build"
                     }
                 }
             }
@@ -654,7 +651,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-date-formatter:build"
+                        "buildTarget": "dev-date-formatter:build"
                     }
                 }
             }
@@ -683,7 +680,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-date-pipes:build"
+                        "buildTarget": "dev-date-pipes:build"
                     }
                 }
             }
@@ -712,7 +709,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-datepicker:build"
+                        "buildTarget": "dev-datepicker:build"
                     }
                 }
             }
@@ -741,7 +738,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-divider:build"
+                        "buildTarget": "dev-divider:build"
                     }
                 }
             }
@@ -770,7 +767,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-dl:build"
+                        "buildTarget": "dev-dl:build"
                     }
                 }
             }
@@ -799,7 +796,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-dropdown:build"
+                        "buildTarget": "dev-dropdown:build"
                     }
                 }
             }
@@ -828,7 +825,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-form-field:build"
+                        "buildTarget": "dev-form-field:build"
                     }
                 }
             }
@@ -857,7 +854,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-forms:build"
+                        "buildTarget": "dev-forms:build"
                     }
                 }
             }
@@ -886,7 +883,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-flex-layout:build"
+                        "buildTarget": "dev-flex-layout:build"
                     }
                 }
             }
@@ -915,7 +912,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-file-upload:build"
+                        "buildTarget": "dev-file-upload:build"
                     }
                 }
             }
@@ -944,7 +941,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-icon:build"
+                        "buildTarget": "dev-icon:build"
                     }
                 }
             }
@@ -973,7 +970,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-hint:build"
+                        "buildTarget": "dev-hint:build"
                     }
                 }
             }
@@ -1002,7 +999,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-input:build"
+                        "buildTarget": "dev-input:build"
                     }
                 }
             }
@@ -1031,7 +1028,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-link:build"
+                        "buildTarget": "dev-link:build"
                     }
                 }
             }
@@ -1060,7 +1057,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-list:build"
+                        "buildTarget": "dev-list:build"
                     }
                 }
             }
@@ -1089,7 +1086,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-loader-overlay:build"
+                        "buildTarget": "dev-loader-overlay:build"
                     }
                 }
             }
@@ -1118,7 +1115,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-locale:build"
+                        "buildTarget": "dev-locale:build"
                     }
                 }
             }
@@ -1147,7 +1144,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-markdown:build"
+                        "buildTarget": "dev-markdown:build"
                     }
                 }
             }
@@ -1176,7 +1173,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-modal:build"
+                        "buildTarget": "dev-modal:build"
                     }
                 }
             }
@@ -1205,7 +1202,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-navbar:build"
+                        "buildTarget": "dev-navbar:build"
                     }
                 }
             }
@@ -1234,7 +1231,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-number-formatter:build"
+                        "buildTarget": "dev-number-formatter:build"
                     }
                 }
             }
@@ -1263,7 +1260,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-panel:build"
+                        "buildTarget": "dev-panel:build"
                     }
                 }
             }
@@ -1292,7 +1289,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-popover:build"
+                        "buildTarget": "dev-popover:build"
                     }
                 }
             }
@@ -1321,7 +1318,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-progress-bar:build"
+                        "buildTarget": "dev-progress-bar:build"
                     }
                 }
             }
@@ -1350,7 +1347,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-progress-spinner:build"
+                        "buildTarget": "dev-progress-spinner:build"
                     }
                 }
             }
@@ -1379,7 +1376,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-radio:build"
+                        "buildTarget": "dev-radio:build"
                     }
                 }
             }
@@ -1408,7 +1405,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-risk-level:build"
+                        "buildTarget": "dev-risk-level:build"
                     }
                 }
             }
@@ -1437,7 +1434,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-scrollbar:build"
+                        "buildTarget": "dev-scrollbar:build"
                     }
                 }
             }
@@ -1466,7 +1463,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-select:build"
+                        "buildTarget": "dev-select:build"
                     }
                 }
             }
@@ -1495,7 +1492,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-sidebar:build"
+                        "buildTarget": "dev-sidebar:build"
                     }
                 }
             }
@@ -1524,7 +1521,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-sidepanel:build"
+                        "buildTarget": "dev-sidepanel:build"
                     }
                 }
             }
@@ -1553,7 +1550,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-splitter:build"
+                        "buildTarget": "dev-splitter:build"
                     }
                 }
             }
@@ -1582,7 +1579,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-table:build"
+                        "buildTarget": "dev-table:build"
                     }
                 }
             }
@@ -1611,7 +1608,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-tabs:build"
+                        "buildTarget": "dev-tabs:build"
                     }
                 }
             }
@@ -1640,7 +1637,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-tags:build"
+                        "buildTarget": "dev-tags:build"
                     }
                 }
             }
@@ -1669,7 +1666,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-textarea:build"
+                        "buildTarget": "dev-textarea:build"
                     }
                 }
             }
@@ -1698,7 +1695,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-timepicker:build"
+                        "buildTarget": "dev-timepicker:build"
                     }
                 }
             }
@@ -1727,7 +1724,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-timezone:build"
+                        "buildTarget": "dev-timezone:build"
                     }
                 }
             }
@@ -1756,7 +1753,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-toast:build"
+                        "buildTarget": "dev-toast:build"
                     }
                 }
             }
@@ -1785,7 +1782,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-toggle:build"
+                        "buildTarget": "dev-toggle:build"
                     }
                 }
             }
@@ -1814,7 +1811,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-tooltip:build"
+                        "buildTarget": "dev-tooltip:build"
                     }
                 }
             }
@@ -1843,7 +1840,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-tree:build"
+                        "buildTarget": "dev-tree:build"
                     }
                 }
             }
@@ -1872,7 +1869,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-tree-select:build"
+                        "buildTarget": "dev-tree-select:build"
                     }
                 }
             }
@@ -1901,7 +1898,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-typography:build"
+                        "buildTarget": "dev-typography:build"
                     }
                 }
             }
@@ -1930,7 +1927,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-title:build"
+                        "buildTarget": "dev-title:build"
                     }
                 }
             }
@@ -1959,7 +1956,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "dev-validation:build"
+                        "buildTarget": "dev-validation:build"
                     }
                 }
             }
