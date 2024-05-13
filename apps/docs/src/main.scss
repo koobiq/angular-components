@@ -7,8 +7,6 @@
 
 @use 'styles/koobiq' as tokens;
 
-@use './styles/markdown';
-
 
 .docs {
     @include theme-kbq.docs-typography(

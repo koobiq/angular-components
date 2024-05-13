@@ -19,7 +19,7 @@
 @use '../app/components/page-not-found/page-not-found-theme';
 
 @use '../styles/hot-keys';
-
+@use '../styles/markdown';
 
 @include components.kbq-core();
 
