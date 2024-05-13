@@ -1,4 +1,4 @@
-@use '../dist/components/core/styles/theming';
+@use 'components/core/styles/theming';
 
 
 @mixin hot-key-button-theme($theme) {

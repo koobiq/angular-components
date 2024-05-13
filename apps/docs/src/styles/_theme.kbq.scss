@@ -1,9 +1,9 @@
-@use '../dist/components';
+@use 'components';
 
-@use '../dist/components/core/styles/visual';
-@use '../dist/components/core/styles/typography';
+@use 'components/core/styles/visual';
+@use 'components/core/styles/typography';
 
-@use '../dist/components/core/styles/koobiq-theme' as *;
+@use 'components/core/styles/koobiq-theme' as *;
 
 @use '../app/containers/docs-app/docs-app-theme';
 @use '../app/containers/icons-viewer/icons-viewer-theme';

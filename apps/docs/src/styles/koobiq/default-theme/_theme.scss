@@ -1,6 +1,6 @@
 @use 'sass:meta';
 
-@use '../dist/components/core/styles/theming/theming';
+@use 'components/core/styles/theming/theming';
 @use 'tokens';
 
 $tokens: meta.module-variables(tokens);
