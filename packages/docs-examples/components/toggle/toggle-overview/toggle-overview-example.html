@@ -18,18 +18,18 @@
 <br><br><br>
 
 <h3>Big Toggles</h3>
-<kbq-toggle [(ngModel)]="value"></kbq-toggle>
-<kbq-toggle [(ngModel)]="value"></kbq-toggle>
-<kbq-toggle [color]="themePalette.Error" [(ngModel)]="value"></kbq-toggle>
+<kbq-toggle [big]="true" [(ngModel)]="value"></kbq-toggle>
+<kbq-toggle [big]="true" [(ngModel)]="value"></kbq-toggle>
+<kbq-toggle [big]="true" [color]="themePalette.Error" [(ngModel)]="value"></kbq-toggle>
 
 <br><br>
 
-<kbq-toggle [(ngModel)]="value">
+<kbq-toggle [big]="true" [(ngModel)]="value">
     right label
 </kbq-toggle>
 
 <br><br>
 
-<kbq-toggle labelPosition="left" [(ngModel)]="value">
+<kbq-toggle [big]="true" labelPosition="left" [(ngModel)]="value">
     left label
 </kbq-toggle>
