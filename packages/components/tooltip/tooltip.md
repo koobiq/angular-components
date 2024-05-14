@@ -51,7 +51,7 @@
 Не используйте интерактивные элементы (кнопки, ссылки и пр.) в сложном тултипе, пользоваться ими, как правило, просто невозможно. Если нужно использовать интерактивные элементы, возьмите [поповер](/components/popover).
 
 <div style="margin-top: 5px;">
-    <img src="./assets/images/tooltip/tooltip-hard__structure.jpg" alt="tooltip hard structure" style="max-width: 704px"/>
+    <img src="./assets/images/tooltip/tooltip-hard__structure.jpg" alt="tooltip hard structure"/>
 </div>
 
 
