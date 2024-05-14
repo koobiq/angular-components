@@ -11,3 +11,7 @@
     (contentRendered)="scrollToSelectedContentSection()"
     (contentRenderFailed)="showDocumentLostAlert()">
 </doc-example-viewer>
+
+<div class="sticky-wrapper">
+    <docs-anchors [headerSelectors]="'.docs-header-link'"></docs-anchors>
+</div>
