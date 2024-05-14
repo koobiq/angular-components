@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDataSizeModule } from '@koobiq/components/core';
+import { KbqDataSizePipe } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -28,7 +28,7 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqListModule,
         KbqFormFieldModule,
         KbqEllipsisCenterModule,
-        KbqDataSizeModule,
+        KbqDataSizePipe,
         KbqLinkModule
     ],
     declarations: [

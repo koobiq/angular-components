@@ -1,19 +1,17 @@
-import { MeasurementSystem, sizeUnitsConfig } from './config';
-
-
 export const formatDataSize = (
     value: number,
-    systemCode: MeasurementSystem = sizeUnitsConfig.defaultUnitSystem,
-    precision: number = sizeUnitsConfig.defaultPrecision
+    precision: number,
+    system
 ): { value: string; unit: string } => {
-    const system = sizeUnitsConfig.unitSystems[systemCode];
-    const { result, unit } = getHumanizedBytes(value, systemCode);
+    const { result, unit } = getHumanizedBytes(value, system);
     let volume: string;
 
     if (system.abbreviations[0] === unit) {
         volume = result.toString();
     } else {
-        volume = result.toFixed(precision).replace(/\./g, ',');
+        volume = result
+            .toFixed(precision)
+            .replace(/\./g, ',');
     }
 
     return {
@@ -26,25 +24,19 @@ export const formatDataSize = (
  * Переводит байты в Кб, Мб, Гб
  *
  * @param value количество байт
- * @param systemCode система измерения
+ * @param system система измерения
  * @param threshold нижний порог подсчета
  */
 export const getHumanizedBytes = (
     value: number,
-    systemCode: MeasurementSystem = sizeUnitsConfig.defaultUnitSystem,
+    system,
     threshold?: number
 ): { result: number; unit: string } => {
-    const system = sizeUnitsConfig.unitSystems[systemCode];
-
-    if (!system) {
-        throw new Error(`Unit system "${systemCode}" not configured!`);
-    }
-
     if (!Number.isFinite(value)) {
         throw new Error('Argument "value" must be number!');
     }
 
-    const caculatedThreshold = Number.isFinite(threshold)
+    const calculatedThreshold = Number.isFinite(threshold)
         ? threshold : Math.pow(system.base, system.power);
     const orderOfMagnitude: number = Math.pow(system.base, system.power);
 
@@ -53,7 +45,7 @@ export const getHumanizedBytes = (
     const len: number = system.abbreviations.length - 1;
 
     while (step < len) {
-        if (caculatedThreshold !== undefined && result < caculatedThreshold) {
+        if (calculatedThreshold !== undefined && result < calculatedThreshold) {
             break;
         }
 

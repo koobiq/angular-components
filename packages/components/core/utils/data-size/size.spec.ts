@@ -1,4 +1,4 @@
-import { MeasurementSystem } from './config';
+import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, MeasurementSystem } from './config';
 import { getHumanizedBytes, formatDataSize } from './size';
 
 
@@ -8,7 +8,10 @@ describe('Format utils', () => {
         const expectedResult = 1;
         const expectedUnit = 'MB';
 
-        const { result, unit } = getHumanizedBytes(raw, MeasurementSystem.SI);
+        const { result, unit } = getHumanizedBytes(
+            raw,
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.SI]
+        );
 
         expect(result).toBe(expectedResult);
         expect(unit).toBe(expectedUnit);
@@ -19,7 +22,10 @@ describe('Format utils', () => {
         const expectedResult = 1;
         const expectedUnit = 'MiB';
 
-        const { result, unit } = getHumanizedBytes(raw, MeasurementSystem.IEC);
+        const { result, unit } = getHumanizedBytes(
+            raw,
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC]
+        );
 
         expect(result).toBe(expectedResult);
         expect(unit).toBe(expectedUnit);
@@ -31,7 +37,11 @@ describe('Format utils', () => {
         const threshold = 10000; // 1024 KiB
         const expectedUnit = 'KiB';
 
-        const { result, unit } = getHumanizedBytes(raw, MeasurementSystem.IEC, threshold);
+        const { result, unit } = getHumanizedBytes(
+            raw,
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC],
+            threshold
+        );
 
         expect(result).toBe(expectedResult);
         expect(unit).toBe(expectedUnit);
@@ -42,7 +52,11 @@ describe('Format utils', () => {
         const precision = 2;
         const expected = '50,63';
 
-        const { value } = formatDataSize(raw, MeasurementSystem.IEC, precision);
+        const { value } = formatDataSize(
+            raw,
+            precision,
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC]
+        );
 
         expect(value).toBe(expected);
     });
