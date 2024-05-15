@@ -67,7 +67,7 @@ export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaB
         '[attr.placeholder]': 'placeholder',
         '[attr.aria-invalid]': 'errorState',
         '[attr.disabled]': 'disabled || null',
-        '[attr.required]': 'required',
+        '[attr.required]': 'required || null',
 
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)'
