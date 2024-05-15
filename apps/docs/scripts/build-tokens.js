@@ -72,10 +72,10 @@ for (const skin of [kbq]) {
             name: theme,
             buildPath: [
                 koobiqTokensProps,
-                `packages/docs/src/styles/${skin}/${theme}/properties/**/*.json5`,
+                `apps/docs/src/styles/${skin}/${theme}/properties/**/*.json5`,
                 koobiqTokensComponents
             ],
-            outputPath: `packages/docs/src/styles/${skin}/${theme}/`
+            outputPath: `apps/docs/src/styles/${skin}/${theme}/`
         });
     }
 }

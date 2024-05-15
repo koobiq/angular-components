@@ -13,6 +13,10 @@
         display-2:              map.get($typography, display-2),
         display-3:              map.get($typography, display-3),
 
+        display-1-strong:       map.get($typography, display-1-strong),
+        display-2-strong:       map.get($typography, display-2-strong),
+        display-3-strong:       map.get($typography, display-3-strong),
+
         headline:               map.get($typography, headline),
         subheading:             map.get($typography, subheading),
         title:                  map.get($typography, title),
@@ -35,12 +39,17 @@
         extra-small-text:       map.get($typography, extra-small-text),
         extra-small-text-caps:  map.get($typography, extra-small-text-caps),
         extra-small-text-mono:  map.get($typography, extra-small-text-mono),
-        extra-small-text-strong:  map.get($typography, extra-small-text-strong),
+        extra-small-text-strong:map.get($typography, extra-small-text-strong),
 
         //new
         display-big:             map.get($typography, display-big),
         display-normal:          map.get($typography, display-normal),
         display-compact:         map.get($typography, display-compact),
+
+        display-big-strong:      map.get($typography, display-big-strong),
+        display-normal-strong:   map.get($typography, display-normal-strong),
+        display-compact-strong:  map.get($typography, display-compact-strong),
+
         text-big:                map.get($typography, text-big),
         text-big-strong:         map.get($typography, text-big-strong),
         text-normal:             map.get($typography, text-normal),
@@ -73,7 +82,7 @@
         italic-compact-strong:   map.get($typography, italic-compact-strong),
         mono-codeblock:          map.get($typography, mono-codeblock),
 
-        navbar-title:          map.get($typography, navbar-title)
+        navbar-title:            map.get($typography, navbar-title)
     );
 
     @each $key, $level in $config {
@@ -130,6 +139,18 @@
 
     .kbq-display-3 {
         @include kbq-typography-level-to-styles($config, display-3);
+    }
+
+    .kbq-display-1-strong {
+        @include kbq-typography-level-to-styles($config, display-1-strong);
+    }
+
+    .kbq-display-2-strong {
+        @include kbq-typography-level-to-styles($config, display-2-strong);
+    }
+
+    .kbq-display-3-strong {
+        @include kbq-typography-level-to-styles($config, display-3-strong);
     }
 
     .kbq-headline {
@@ -209,12 +230,24 @@
         @include kbq-typography-level-to-styles($config, display-big);
     }
 
+    .kbq-display-big-strong {
+        @include kbq-typography-level-to-styles($config, display-big-strong);
+    }
+
     .kbq-display-normal {
         @include kbq-typography-level-to-styles($config, display-normal);
     }
 
+    .kbq-display-normal-strong {
+        @include kbq-typography-level-to-styles($config, display-normal-strong);
+    }
+
     .kbq-display-compact {
         @include kbq-typography-level-to-styles($config, display-compact);
+    }
+
+    .kbq-display-compact-strong {
+        @include kbq-typography-level-to-styles($config, display-compact-strong);
     }
 
     .kbq-text-big {
