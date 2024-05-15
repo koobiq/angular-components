@@ -2,10 +2,10 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqAlertModule } from '@koobiq/components/alert';
+import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-import { KbqButtonStyles, KbqButtonModule } from '../../components/button';
+import { KbqButtonModule, KbqButtonStyles } from '../../components/button';
 import { KbqIconModule } from '../../components/icon';
 import { KbqLinkModule } from '../../components/link';
 
@@ -18,6 +18,8 @@ import { KbqLinkModule } from '../../components/link';
 })
 export class DemoComponent {
     colors = KbqComponentColors;
+    alertColors = KbqAlertColors;
+    alertStyles = KbqAlertStyles;
     style = KbqButtonStyles;
 }
 

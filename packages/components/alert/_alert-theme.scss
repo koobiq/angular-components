@@ -4,46 +4,81 @@
 @use '../core/styles/typography/typography-utils' as *;
 
 
-@mixin kbq-alert-theme($alert) {
-    background-color: map.get($alert, background);
-    border-color: map.get($alert, border);
+@mixin kbq-alert-default($style) {
+    background: map.get($style, background);
 
-    .kbq-icon.kbq-alert__icon {
-        color: map.get($alert, icon);
+    .kbq-alert__title {
+        color: map.get($style, title);
+    }
+
+    .kbq-alert__text {
+        color: map.get($style, text);
+    }
+}
+
+@mixin kbq-alert-colored($style) {
+    background: map.get($style, background);
+
+    .kbq-alert__title {
+        color: map.get($style, title);
+    }
+
+    .kbq-alert__text {
+        color: map.get($style, text);
     }
 }
 
 @mixin kbq-alert-theme($theme) {
     $alert: map.get(map.get($theme, components), alert);
 
-    $alert-contrast: map.get($alert, contrast);
-    $alert-error: map.get($alert, error);
+    $default: map.get($alert, default);
+    $colored: map.get($alert, colored);
 
     .kbq-alert__close:focus {
         outline: none;
     }
 
-    .kbq-alert {
-        background: map.get($alert-contrast, background);
-
-        & .kbq-alert__title {
-            color: map.get($alert-contrast, title);
+    .kbq-alert.kbq-alert_default {
+        &.kbq-alert_contrast {
+            @include kbq-alert-default(map.get($default, contrast));
         }
 
-        & .kbq-alert__text {
-            color: map.get($alert-contrast, text);
+        &.kbq-alert_error {
+            @include kbq-alert-default(map.get($default, error));
+        }
+
+        &.kbq-alert_warning {
+            @include kbq-alert-default(map.get($default, warning));
+        }
+
+        &.kbq-alert_success {
+            @include kbq-alert-default(map.get($default, success));
+        }
+
+        &.kbq-alert_theme {
+            @include kbq-alert-default(map.get($default, theme));
         }
     }
 
-    .kbq-alert.kbq-alert_error {
-        background: map.get($alert-error, background);
-
-        & .kbq-alert__title {
-            color: map.get($alert-error, title);
+    .kbq-alert.kbq-alert_colored {
+        &.kbq-alert_contrast {
+            @include kbq-alert-colored(map.get($colored, contrast));
         }
 
-        & .kbq-alert__text {
-            color: map.get($alert-error, text);
+        &.kbq-alert_error {
+            @include kbq-alert-colored(map.get($colored, error));
+        }
+
+        &.kbq-alert_warning {
+            @include kbq-alert-colored(map.get($colored, warning));
+        }
+
+        &.kbq-alert_success {
+            @include kbq-alert-colored(map.get($colored, success));
+        }
+
+        &.kbq-alert_theme {
+            @include kbq-alert-colored(map.get($colored, theme));
         }
     }
 }
@@ -56,6 +91,10 @@
 
         .kbq-alert__title {
             @include kbq-typography-level-to-styles($config, map.get($tokens, alert-font-title));
+        }
+
+        &.kbq-alert_compact .kbq-alert__title {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, alert-font-title-compact));
         }
     }
 }

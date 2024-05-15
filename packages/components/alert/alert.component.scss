@@ -9,53 +9,10 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-alert {
     display: flex;
 
-    border-radius: var(--kbq-alert-size-container-border-radius, map.get($tokens, alert-size-container-border-radius));
+    width: 492px;
 
-    min-width: var(--kbq-alert-size-container-min-width, map.get($tokens, alert-size-container-min-width));
-    min-height: calc(
-        var(--kbq-alert-size-container-min-height, map.get($tokens, alert-size-container-min-height)) -
-        (var(--kbq-alert-size-container-padding-vertical, map.get($tokens, alert-size-container-padding-vertical)) * 2)
-    );
-
-    padding:
-        var(--kbq-alert-size-container-padding-vertical, map.get($tokens, alert-size-container-padding-vertical))
-        var(--kbq-alert-size-container-padding-horizontal, map.get($tokens, alert-size-container-padding-horizontal));
-}
-
-.kbq-alert__icon {
-    margin-right: var(
-        --kbq-alert-size-container-content-gap-horizontal,
-        map.get($tokens, alert-size-container-content-gap-horizontal)
-    );
-}
-
-.kbq-alert__title {
-    margin-bottom: var(
-        --kbq-alert-size-container-content-gap-vertical,
-        map.get($tokens, alert-size-container-content-gap-vertical)
-    );
-}
-
-.kbq-alert__controls {
-    margin-top: var(
-        --kbq-alert-size-container-content-gap-vertical,
-        map.get($tokens, alert-size-container-content-gap-vertical)
-    );
-
-    padding-top: var(
-        --kbq-alert-size-button-stack-content-padding-top,
-        map.get($tokens, alert-size-button-stack-padding-top)
-    );
-
-    & .kbq-button {
-        margin-right: var(
-            --kbq-alert-size-button-stack-content-content-gap-horizontal,
-            map.get($tokens, alert-size-button-stack-content-gap-horizontal)
-        );
-    }
-
-    & .kbq-link {
-        margin-right: 16px;
+    & .kbq-alert__content_title {
+        margin-bottom: map.get($tokens, size-xxs);
     }
 }
 
@@ -67,15 +24,183 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: center;
 }
 
-.kbq-alert__close-button {
-    margin-left: var(
-        --kbq-alert-size-container-content-gap-horizontal,
-        map.get($tokens, alert-size-container-content-gap-horizontal)
+.kbq-alert.kbq-alert_normal {
+    border-radius: var(
+        --kbq-alert-size-normal-container-border-radius,
+        map.get($tokens, alert-size-normal-container-border-radius)
     );
+
+    padding:
+        var(
+            --kbq-alert-size-normal-container-padding-top,
+            map.get($tokens, alert-size-normal-container-padding-top)
+        )
+        var(
+            --kbq-alert-size-normal-container-padding-right,
+            map.get($tokens, alert-size-normal-container-padding-right)
+        )
+        var(
+            --kbq-alert-size-normal-container-padding-bottom,
+            map.get($tokens, alert-size-normal-container-padding-bottom)
+        )
+        var(
+            --kbq-alert-size-normal-container-padding-left,
+            map.get($tokens, alert-size-normal-container-padding-left)
+        );
+
+    & .kbq-alert__icon {
+        margin:
+            var(--kbq-alert-size-normal-icon-margin-top, map.get($tokens, alert-size-normal-icon-margin-top))
+            var(--kbq-alert-size-normal-icon-margin-right, map.get($tokens, alert-size-normal-icon-margin-right))
+            var(--kbq-alert-size-normal-icon-margin-bottom, map.get($tokens, alert-size-normal-icon-margin-bottom))
+            var(--kbq-alert-size-normal-icon-margin-left, map.get($tokens, alert-size-normal-icon-margin-left));
+
+        &.kbq-alert__icon_title .kbq-icon {
+            margin-top: var(
+                --kbq-alert-size-normal-icon-margin-addon-title,
+                map.get($tokens, alert-size-normal-icon-margin-addon-title)
+            );
+        }
+    }
+
+    & .kbq-alert__content {
+        padding:
+            var(
+                --kbq-alert-size-normal-content-padding-top,
+                map.get($tokens, alert-size-normal-content-padding-top)
+            )
+            var(
+                --kbq-alert-size-normal-content-padding-right,
+                map.get($tokens, alert-size-normal-content-padding-right)
+            )
+            var(
+                --kbq-alert-size-normal-content-padding-bottom,
+                map.get($tokens, alert-size-normal-content-padding-bottom)
+            )
+            var(
+                --kbq-alert-size-normal-content-padding-left,
+                map.get($tokens, alert-size-normal-content-padding-left)
+            );
+    }
+
+    & .kbq-alert__title {
+        margin-bottom: var(
+            --kbq-alert-size-normal-title-margin-bottom,
+            map.get($tokens, alert-size-normal-title-margin-bottom)
+        );
+    }
+
+    & .kbq-alert__button-stack {
+        padding-top: var(
+            --kbq-alert-size-normal-button-stack-padding-top,
+            map.get($tokens, alert-size-normal-button-stack-padding-top)
+        );
+
+        padding-bottom: var(
+            --kbq-alert-size-normal-button-stack-padding-bottom,
+            map.get($tokens, alert-size-normal-button-stack-padding-bottom)
+        );
+    }
+
+    & .kbq-alert__close-button {
+        margin-top: var(
+            --kbq-alert-size-normal-close-button-margin-top,
+            map.get($tokens, alert-size-normal-close-button-margin-top)
+        );
+
+        margin-left: var(
+            --kbq-alert-size-normal-close-button-margin-left,
+            map.get($tokens, alert-size-normal-close-button-margin-left)
+        );
+    }
 }
 
-.kbq-alert_dismissible .kbq-alert__close-button {
-    margin-top: var(--kbq-alert-size-close-button-margin-top, map.get($tokens, alert-size-close-button-margin-top));
-    margin-right:
-        var(--kbq-alert-size-close-button-margin-right, map.get($tokens, alert-size-close-button-margin-right));
+.kbq-alert.kbq-alert_compact {
+    border-radius: var(
+        --kbq-alert-size-compact-container-border-radius,
+        map.get($tokens, alert-size-compact-container-border-radius)
+    );
+
+    padding:
+        var(
+            --kbq-alert-size-compact-container-padding-top,
+            map.get($tokens, alert-size-compact-container-padding-top)
+        )
+        var(
+            --kbq-alert-size-compact-container-padding-right,
+            map.get($tokens, alert-size-compact-container-padding-right)
+        )
+        var(
+            --kbq-alert-size-compact-container-padding-bottom,
+            map.get($tokens, alert-size-compact-container-padding-bottom)
+        )
+        var(
+            --kbq-alert-size-compact-container-padding-left,
+            map.get($tokens, alert-size-compact-container-padding-left)
+        );
+
+    & .kbq-alert__icon {
+        margin-top: var(--kbq-alert-size-compact-icon-margin-top, map.get($tokens, alert-size-compact-icon-margin-top));
+
+        margin-right:
+            var(--kbq-alert-size-compact-icon-margin-right, map.get($tokens, alert-size-compact-icon-margin-right));
+
+        &.kbq-alert__icon_title .kbq-icon {
+            margin-top: var(
+                --kbq-alert-size-compact-icon-margin-addon-title,
+                map.get($tokens, alert-size-compact-icon-margin-addon-title)
+            );
+        }
+    }
+
+    & .kbq-alert__content {
+        padding:
+            var(
+                --kbq-alert-size-compact-content-padding-top,
+                map.get($tokens, alert-size-compact-content-padding-top)
+            )
+            var(
+                --kbq-alert-size-compact-content-padding-right,
+                map.get($tokens, alert-size-compact-content-padding-right)
+            )
+            var(
+                --kbq-alert-size-compact-content-padding-bottom,
+                map.get($tokens, alert-size-compact-content-padding-bottom)
+            )
+            var(
+                --kbq-alert-size-compact-content-padding-left,
+                map.get($tokens, alert-size-compact-content-padding-left)
+            );
+    }
+
+    & .kbq-alert__title {
+        margin-bottom: var(
+            --kbq-alert-size-compact-title-margin-bottom,
+            map.get($tokens, alert-size-compact-title-margin-bottom)
+        );
+    }
+
+    & .kbq-alert__button-stack {
+        padding-top: var(
+            --kbq-alert-size-compact-button-stack-padding-top,
+            map.get($tokens, alert-size-compact-button-stack-padding-top)
+        );
+
+        padding-bottom: var(
+            --kbq-alert-size-compact-button-stack-padding-bottom,
+            map.get($tokens, alert-size-compact-button-stack-padding-bottom)
+        );
+    }
+
+    & .kbq-alert__close-button {
+        margin-top: var(
+            --kbq-alert-size-compact-close-button-margin-top,
+            map.get($tokens, alert-size-compact-close-button-margin-top)
+        );
+
+        margin-left: var(
+            --kbq-alert-size-compact-close-button-margin-left,
+            map.get($tokens, alert-size-compact-close-button-margin-left)
+        );
+    }
 }

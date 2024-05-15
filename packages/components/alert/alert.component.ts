@@ -1,12 +1,27 @@
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
     Directive,
+    Input,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqIconItem } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
+
+export enum KbqAlertStyles {
+    Default = 'default',
+    Colored = 'colored'
+}
+
+export enum KbqAlertColors {
+    Contrast = 'contrast',
+    Error = 'error',
+    Warning = 'warning',
+    Success = 'success',
+    Theme = 'theme'
+}
 
 @Directive({
     selector: '[kbq-alert-title]',
@@ -40,12 +55,45 @@ export class KbqAlertControl {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-alert',
+        '[class]': 'alertColor',
+        '[class.kbq-alert_normal]': '!compact',
+        '[class.kbq-alert_compact]': 'compact',
+        '[class.kbq-alert_default]': '!isColored',
+        '[class.kbq-alert_colored]': 'isColored',
         '[class.kbq-alert_dismissible]': 'closeButton'
     }
 })
-export class KbqAlert {
+export class KbqAlert implements AfterContentInit {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;
+    @ContentChild(KbqIcon) icon: KbqIcon;
     @ContentChild(KbqAlertTitle) title: KbqAlertTitle;
     @ContentChild(KbqAlertControl) control: KbqAlertControl;
     @ContentChild(KbqAlertCloseButton) closeButton: KbqAlertCloseButton;
+
+    @Input() compact: boolean = false;
+    @Input() alertStyle: KbqAlertStyles | string = KbqAlertStyles.Default;
+
+    @Input()
+    get alertColor(): string {
+        return `kbq-alert_${this._alertColor}`;
+    }
+
+    set alertColor(value: string | KbqAlertColors) {
+        this._alertColor = value || KbqAlertColors.Contrast;
+    }
+
+    private _alertColor: string | KbqAlertColors = KbqAlertColors.Contrast;
+
+    get isColored(): boolean {
+        return this.alertStyle === KbqAlertStyles.Colored
+    }
+
+    ngAfterContentInit(): void {
+        const icon = this.icon || this.iconItem;
+
+        if (icon) {
+            icon.color = this._alertColor;
+        }
+    }
 }
+

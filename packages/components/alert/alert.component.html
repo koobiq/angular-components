@@ -1,15 +1,15 @@
-<div class="kbq-alert__icon" *ngIf="iconItem">
-    <ng-content select="[kbq-icon-item]"></ng-content>
+<div class="kbq-alert__icon" [class.kbq-alert__icon_title]="title" *ngIf="iconItem || icon">
+    <ng-content select="[kbq-icon-item],[kbq-icon]"></ng-content>
 </div>
 
-<div class="kbq-alert__content">
+<div class="kbq-alert__content" [class.kbq-alert__content_title]="title">
     <ng-content select="[kbq-alert-title]"></ng-content>
 
     <div class="kbq-alert__text">
         <ng-content></ng-content>
     </div>
 
-    <div class="kbq-alert__controls" *ngIf="control">
+    <div class="kbq-alert__button-stack" *ngIf="control">
         <ng-content select="[kbq-alert-control]"></ng-content>
     </div>
 </div>
