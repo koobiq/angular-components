@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Inject, Optional, Pipe, PipeTransform } from '@angular/core';
+import { Inject, Optional, Pipe, PipeTransform } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
 
 import {
-    KBQ_DATA_SIZE_CONFIG,
+    KBQ_SIZE_UNITS_CONFIG,
     KBQ_SIZE_UNITS_DEFAULT_CONFIG,
     SizeUnitsConfig
 } from './config';
@@ -10,14 +10,14 @@ import { formatDataSize } from './size';
 
 @Pipe({
     name: 'kbqDataSize',
-    standalone: true
+    standalone: true,
+    pure: false
 })
 export class KbqDataSizePipe implements PipeTransform {
     private config: SizeUnitsConfig;
 
     constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(KBQ_DATA_SIZE_CONFIG) public readonly externalConfig: SizeUnitsConfig,
+        @Optional() @Inject(KBQ_SIZE_UNITS_CONFIG) public readonly externalConfig: SizeUnitsConfig,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         this.localeService?.changes
@@ -46,7 +46,5 @@ export class KbqDataSizePipe implements PipeTransform {
 
     private updateLocaleParams = () => {
         this.config = this.externalConfig || this.localeService?.getParams('sizeUnits');
-
-        this.changeDetectorRef.markForCheck();
     }
 }

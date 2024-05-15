@@ -6,6 +6,7 @@ import {
     Component,
     Directive,
     EventEmitter,
+    Inject,
     Input,
     NgModule,
     Output,
@@ -22,7 +23,7 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLocaleServiceModule } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -33,6 +34,7 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
@@ -150,13 +152,32 @@ export class DemoComponent {
     secondControl = new FormControl<File | KbqFileItem | null>(null);
     multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn);
 
-    constructor(private cdr: ChangeDetectorRef) {
+    languageList = [
+        { id: 'ru-RU' },
+        { id: 'en-US' },
+        { id: 'pt-BR' },
+        { id: 'es-LA' },
+        { id: 'zh-CN' },
+        { id: 'fa-IR' }
+    ];
+    selectedLanguage: any = this.languageList[0];
+
+    constructor(
+        private cdr: ChangeDetectorRef,
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+    ) {
         this.control.valueChanges.subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
             // this.secondControl.setValue(value);
             // or even JS file object
             this.secondControl.setValue(value?.file || null);
         });
+    }
+
+    setFormat($event: KbqRadioChange): void {
+        this.selectedLanguage = this.languageList.find(({ id }) => id === $event.value.id);
+
+        this.localeService.setLocale($event.value.id);
     }
 
     addFile(file: KbqFileItem | null) {
@@ -272,7 +293,9 @@ export class CustomTextDirective {}
         KbqInputModule,
         KbqIconModule,
         NgIf,
-        KbqCheckboxModule
+        KbqCheckboxModule,
+        KbqRadioModule,
+        KbqDataSizePipe
     ],
     bootstrap: [DemoComponent]
 })

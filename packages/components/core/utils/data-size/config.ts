@@ -26,4 +26,4 @@ export interface SizeUnitsConfig {
 
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG = enUSFormattersData.sizeUnits;
 
-export const KBQ_DATA_SIZE_CONFIG = new InjectionToken<SizeUnitsConfig>('KbqDataSizeConfiguration');
+export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<SizeUnitsConfig>('KbqSizeUnitsConfig');
