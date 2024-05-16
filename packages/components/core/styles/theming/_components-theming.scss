@@ -1,15 +1,60 @@
 @function kbq-components-theme($tokens, $scheme) {
     $alert: (
-        contrast: (
-            background: map-get($tokens, 'alert-#{$scheme}-contrast-container-background'),
-            title: map-get($tokens, 'alert-#{$scheme}-contrast-container-title'),
-            text: map-get($tokens, 'alert-#{$scheme}-contrast-container-text')
+        default: (
+            contrast: (
+                background: map-get($tokens, 'alert-#{$scheme}-default-contrast-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-default-contrast-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-default-contrast-container-text')
+            ),
+            error: (
+                background: map-get($tokens, 'alert-#{$scheme}-default-error-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-default-error-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-default-error-container-text')
+            ),
+            warning: (
+                background: map-get($tokens, 'alert-#{$scheme}-default-warning-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-default-warning-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-default-warning-container-text')
+            ),
+            success: (
+                background: map-get($tokens, 'alert-#{$scheme}-default-success-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-default-success-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-default-success-container-text')
+            ),
+            theme: (
+                background: map-get($tokens, 'alert-#{$scheme}-default-theme-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-default-theme-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-default-theme-container-text')
+            )
         ),
-        error: (
-            background: map-get($tokens, 'alert-#{$scheme}-error-container-background'),
-            title: map-get($tokens, 'alert-#{$scheme}-error-container-title'),
-            text: map-get($tokens, 'alert-#{$scheme}-error-container-text')
+        colored: (
+            contrast: (
+                background: map-get($tokens, 'alert-#{$scheme}-colored-contrast-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-colored-contrast-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-colored-contrast-container-text')
+            ),
+            error: (
+                background: map-get($tokens, 'alert-#{$scheme}-colored-error-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-colored-error-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-colored-error-container-text')
+            ),
+            warning: (
+                background: map-get($tokens, 'alert-#{$scheme}-colored-warning-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-colored-warning-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-colored-warning-container-text')
+            ),
+            success: (
+                background: map-get($tokens, 'alert-#{$scheme}-colored-success-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-colored-success-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-colored-success-container-text')
+            ),
+            theme: (
+                background: map-get($tokens, 'alert-#{$scheme}-colored-theme-container-background'),
+                title: map-get($tokens, 'alert-#{$scheme}-colored-theme-container-title'),
+                text: map-get($tokens, 'alert-#{$scheme}-colored-theme-container-text')
+            )
         )
+
     );
 
     $popup: (

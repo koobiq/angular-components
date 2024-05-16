@@ -1,14 +1,10 @@
-<div class="kbq-column-container">
-    <h1>Alerts</h1>
-</div>
-
 <div class="layout-row flex-100">
     <div class="flex-33 kbq-column-container">
         <h3>Colors</h3>
 
-        <kbq-alert class="kbq-alert_error">
-            <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
-            <div kbq-alert-title>kbq-alert-title</div>
+        <kbq-alert [alertColor]="alertColors.Contrast">
+            <i kbq-icon-item="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Contrast</div>
             Alert text
             <i kbq-icon-button="mc-close-M_16"
                [color]="colors.ContrastFade"
@@ -16,8 +12,91 @@
             </i>
         </kbq-alert>
 
-        <kbq-alert class="">
-            <i kbq-icon-item="mc-info_16" [color]="colors.Error"></i>
+        <kbq-alert [alertColor]="alertColors.Error">
+            <i kbq-icon-item="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Error</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Warning">
+            <i kbq-icon-item="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Warning</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Success">
+            <i kbq-icon-item="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Success</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Theme">
+            <i kbq-icon-item="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Theme</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <h3>compact</h3>
+
+        <kbq-alert [compact]="true" [alertColor]="alertColors.Contrast" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Contrast</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [compact]="true" [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Error</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [compact]="true" [alertColor]="alertColors.Warning" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Warning</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [compact]="true" [alertColor]="alertColors.Success" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Success</div>
+            Alert text
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <kbq-alert [compact]="true" [alertColor]="alertColors.Theme" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>kbq-alert-title: Theme</div>
             Alert text
             <i kbq-icon-button="mc-close-M_16"
                [color]="colors.ContrastFade"
@@ -84,10 +163,21 @@
 
 <div class="layout-row flex-100">
     <div class="flex-50 kbq-column-container">
-        <h3>Normal composition</h3>
+        <h3>normal</h3>
 
-        <kbq-alert class="">
+        <kbq-alert>
             <i kbq-icon-item="mc-info_16" [color]="colors.Contrast"></i>
+            <div kbq-alert-title>Header</div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis risus ac varius ultricies. Aenean maximus ex at ornare tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque sit amet ipsum id augue porta dignissim tristique at nibh. Nullam interdum libero in laoreet pretium. Maecenas et placerat sem. Donec fringilla viverra nunc in vestibulum. Pellentesque suscipit odio ut erat ullamcorper pellentesque eget ac elit. Quisque eleifend orci sit amet erat bibendum sollicitudin. Donec elementum facilisis dui, at volutpat purus. Aliquam posuere non lacus sollicitudin aliquam. Donec nec semper diam, eget imperdiet dui. Integer ornare quam magna, a pretium metus iaculis non. Ut fermentum risus vel sem accumsan, ac egestas nulla sollicitudin. Vivamus nec mi mauris.
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button>
+            </i>
+        </kbq-alert>
+
+        <h3>compact</h3>
+        <kbq-alert [compact]="true">
+            <i kbq-icon="mc-info_16" [color]="colors.Contrast"></i>
             <div kbq-alert-title>Header</div>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis risus ac varius ultricies. Aenean maximus ex at ornare tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque sit amet ipsum id augue porta dignissim tristique at nibh. Nullam interdum libero in laoreet pretium. Maecenas et placerat sem. Donec fringilla viverra nunc in vestibulum. Pellentesque suscipit odio ut erat ullamcorper pellentesque eget ac elit. Quisque eleifend orci sit amet erat bibendum sollicitudin. Donec elementum facilisis dui, at volutpat purus. Aliquam posuere non lacus sollicitudin aliquam. Donec nec semper diam, eget imperdiet dui. Integer ornare quam magna, a pretium metus iaculis non. Ut fermentum risus vel sem accumsan, ac egestas nulla sollicitudin. Vivamus nec mi mauris.
             <i kbq-icon-button="mc-close-M_16"
