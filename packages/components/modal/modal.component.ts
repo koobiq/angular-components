@@ -269,26 +269,27 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
 
     open() {
         this.focusedElementBeforeOpen = this.document.activeElement;
+        this.previouslyFocusedElementOrigin = this.focusMonitor['_lastFocusOrigin'];
+
         this.focusMonitor.monitor(this.modalContainer, true)
             .pipe(take(1))
-            .subscribe((origin) => {
-                this.previouslyFocusedElementOrigin = origin;
-                this.focusMonitor.stopMonitoring(this.modalContainer);
-            });
+            .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer));
 
         this.changeVisibleFromInside(true);
     }
 
     close(result?: R) {
-        this.changeVisibleFromInside(false, result).then(() => {
-            if (this.kbqRestoreFocus && this.focusedElementBeforeOpen) {
-                this.focusMonitor.focusVia(
-                    this.focusedElementBeforeOpen as HTMLElement,
-                    this.previouslyFocusedElementOrigin
-                );
-                this.focusedElementBeforeOpen = null;
-            }
-        });
+        this.changeVisibleFromInside(false, result)
+            .then(() => {
+                if (this.kbqRestoreFocus && this.focusedElementBeforeOpen) {
+                    this.focusMonitor.focusVia(
+                        this.focusedElementBeforeOpen as HTMLElement,
+                        this.previouslyFocusedElementOrigin
+                    );
+
+                    this.focusedElementBeforeOpen = null;
+                }
+            });
     }
 
     // Destroy equals Close

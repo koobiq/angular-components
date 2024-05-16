@@ -6,6 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 
 // tslint:disable:no-console
@@ -278,7 +279,8 @@ export class KbqModalFullCustomComponent {
         KbqButtonModule,
         KbqIconModule,
         KbqModalModule,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqToolTipModule
     ],
     bootstrap: [ModalDemoComponent]
 })

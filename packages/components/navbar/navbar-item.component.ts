@@ -470,11 +470,12 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
+        focusMonitor: FocusMonitor,
         @Optional() direction: Directionality,
         @Optional() private dropdownTrigger: KbqDropdownTrigger,
         @Optional() private bento: KbqNavbarBento
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
 
         if (this.hasDropDownTrigger) {
             this.dropdownTrigger.openByArrowDown = false;
@@ -598,10 +599,11 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
+        focusMonitor: FocusMonitor,
         @Optional() direction: Directionality,
         @Optional() @Inject(DOCUMENT) private document: any
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
 
         this.placement = PopUpPlacements.Right;
 

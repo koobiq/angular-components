@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
@@ -75,11 +76,12 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
+        focusMonitor: FocusMonitor,
         @Optional() direction: Directionality,
         @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: KbqFormFieldRef,
         private changeDetector: ChangeDetectorRef
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
 
         this.trigger = `${PopUpTriggers.Hover}`;
     }

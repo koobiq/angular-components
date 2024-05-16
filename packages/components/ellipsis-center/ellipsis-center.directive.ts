@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
@@ -25,12 +26,12 @@ const MIN_VISIBLE_LENGTH = 50;
         '(window:resize)': 'resizeStream.next($event)'
     }
 })
-export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
-    implements OnInit, AfterViewInit, OnDestroy {
+export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     @Input() set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
     }
+
     @Input() minVisibleLength: number = MIN_VISIBLE_LENGTH;
 
     readonly resizeStream = new Subject<Event>();
@@ -49,9 +50,10 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
         @Optional() direction: Directionality,
+        focusMonitor: FocusMonitor,
         private renderer: Renderer2
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
 
     override ngOnInit(): void {
