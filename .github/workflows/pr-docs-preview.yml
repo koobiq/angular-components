@@ -28,9 +28,11 @@ jobs:
       - name: Setup Yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - uses: ./.github/workflows/actions/build-packages
+      - name: Build Packages
+        uses: ./.github/workflows/actions/build-packages
 
-      - uses: ./.github/workflows/actions/build-docs
+      - name: Build Documentation
+        uses: ./.github/workflows/actions/build-docs
 
       - name: Deploy Documentation
         uses: FirebaseExtended/action-hosting-deploy@v0
