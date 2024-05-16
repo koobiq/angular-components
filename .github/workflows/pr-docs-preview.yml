@@ -2,11 +2,13 @@ name: Deploy to Hosting on PR
 
 on:
   pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - labeled
+    branches:
+      - main
+#    types:
+#      - opened
+#      - reopened
+#      - synchronize
+#      - labeled
 
 permissions:
   checks: write
@@ -17,15 +19,23 @@ jobs:
   deploy_live:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-      - uses: ./.github/workflows/actions/setup-yarn
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
 
-      - uses: ./.github/workflows/actions/build-packages
+      - name: Build Packages
+        uses: ./.github/workflows/actions/build-packages
 
-      - uses: ./.github/workflows/actions/build-docs
+      - name: Build Documentation
+        uses: ./.github/workflows/actions/build-docs
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy Documentation
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
