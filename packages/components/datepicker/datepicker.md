@@ -178,3 +178,17 @@
 Ширина поля — 136px.
 
 Размер виджета — w:296px; h:348px
+
+### Дополнительно
+
+#### Использование Datepicker и Timepicker вместе
+
+Это пример совместного использования Datepicker и [Timepicker](/components/timepicker/overview) для выбора определенной даты и времени. Этот подход удобен в тех случаях, когда требуется задать точное время события или дедлайна. 
+
+<div style="margin-top: 15px;">
+    <img src="./assets/images/timepicker/timepicker-with-datepicker.png" alt="Using timepicker with datepicker" width="100%"/>
+</div>
+
+Пользователь может выбрать дату через Datepicker, а затем указать конкретное время через Timepicker.
+
+<!-- Example from DS-2490 -->

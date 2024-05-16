@@ -99,3 +99,17 @@
 <div style="margin-top: 15px;">
 <img src="./assets/images/timepicker/timepicker-design.jpg" alt="timepicker" width="262"/>
 </div>
+
+### Дополнительно
+
+#### Использование Datepicker и Timepicker вместе
+
+Это пример совместного использования [Datepicker](/components/datepicker/overview) и Timepicker для выбора определенной даты и времени. Этот подход удобен в тех случаях, когда требуется задать точное время события или дедлайна. 
+
+<div style="margin-top: 15px;">
+    <img src="./assets/images/timepicker/timepicker-with-datepicker.png" alt="Using timepicker with datepicker" width="100%"/>
+</div>
+
+Пользователь может выбрать дату через Datepicker, а затем указать конкретное время через Timepicker.
+
+<!-- Example from DS-2491 -->
