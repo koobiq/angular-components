@@ -9,7 +9,7 @@ import {
     Optional,
     Renderer2
 } from '@angular/core';
-import { TreeSizeIndentLevel } from '@koobiq/design-tokens/web';
+import { TreeSizeIndentLevel } from '@koobiq/design-tokens';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

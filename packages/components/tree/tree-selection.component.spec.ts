@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { C } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { SizeS } from '@koobiq/design-tokens/web';
+import { SizeS } from '@koobiq/design-tokens';
 // tslint:disable-next-line:rxjs-no-internal
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';

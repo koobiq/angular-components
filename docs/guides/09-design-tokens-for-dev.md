@@ -52,8 +52,8 @@ For example, to the default-theme folder
 const buildTokens = require('@koobiq/tokens-builder/build');
 
 
-const koobiqTokensProps = '../node_modules/@koobiq/design-tokens/web/tokens/properties/**/*.json5';
-const koobiqTokensComponents = '../node_modules/@koobiq/design-tokens/web/tokens/components/**/*.json5';
+const koobiqTokensProps = '../node_modules/@koobiq/design-tokens/web/properties/**/*.json5';
+const koobiqTokensComponents = '../node_modules/@koobiq/design-tokens/web/components/**/*.json5';
 
 buildTokens([
     {
@@ -120,7 +120,7 @@ TypeScript type declarations are also published.
 import {
     VerticalNavbarSizeStatesCollapsedWidth as closedWidth,
     VerticalNavbarSizeStatesExpandedWidth as openedWidth
-} from '@koobiq/design-tokens/web';
+} from '@koobiq/design-tokens';
 
 
 ```
