@@ -16,23 +16,14 @@ permissions:
 jobs:
   deploy_live:
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'koobiq' }}
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Yarn
-        uses: ./.github/workflows/actions/setup-yarn
+      - uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Build packages
-        uses: ./.github/workflows/actions/build-packages
+      - uses: ./.github/workflows/actions/build-packages
 
-      - name: Build Docs
-        run: |
-          yarn run build:docs-examples-module
-          yarn run build:docs-examples
-          yarn run build:docs-content && yarn run build:package-docs-content
-          yarn run docs:prod-build:aot
+      - uses: ./.github/workflows/actions/build-docs
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

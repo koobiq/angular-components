@@ -1,0 +1,13 @@
+name: Build Documentation
+description: Common setup steps used by our workflows
+runs:
+  using: composite
+  steps:
+
+    - name: Build Documentation
+      shell: bash
+      run: |
+        yarn run build:docs-examples-module
+        yarn run build:docs-examples
+        yarn run build:docs-content && yarn run build:package-docs-content
+        yarn run docs:prod-build:aot
