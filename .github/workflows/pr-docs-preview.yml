@@ -2,11 +2,13 @@ name: Deploy to Hosting on PR
 
 on:
   pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - labeled
+    branches:
+      - main
+#    types:
+#      - opened
+#      - reopened
+#      - synchronize
+#      - labeled
 
 permissions:
   checks: write
@@ -18,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - uses: ./.github/workflows/actions/setup-yarn
 
