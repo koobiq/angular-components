@@ -5,6 +5,23 @@
 
 <button kbq-button (click)="checkValidation()">Call validation from outside</button>
 
+<br><br>
+
+<kbq-radio-group
+    class="example-radio-group"
+    (change)="setFormat($event)">
+    <kbq-radio-button
+        *ngFor="let language of languageList"
+        [value]="language"
+        [checked]="language.id === selectedLanguage.id"
+        class="example-radio-button">
+        {{ language.id }}
+    </kbq-radio-button>
+    <br>
+</kbq-radio-group>
+
+<br><br>
+
 <div class="layout-row layout-align-space-between">
     <div>
         <div class="dev-container">

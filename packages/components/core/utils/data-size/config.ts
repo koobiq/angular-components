@@ -1,21 +1,29 @@
+import { InjectionToken } from '@angular/core';
+import { enUSFormattersData } from '../../locales';
+
+
 export enum MeasurementSystem {
     SI = 'SI',
     IEC = 'IEC'
 }
 
-export const sizeUnitsConfig = {
-    defaultUnitSystem: MeasurementSystem.SI,
-    defaultPrecision: 2,
+export interface SizeUnitsConfig {
+    defaultUnitSystem: string,
+    defaultPrecision: number,
     unitSystems: {
         [MeasurementSystem.SI]: {
-            abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
-            base: 10,
-            power: 3
+            abbreviations: string[],
+            base: number,
+            power: number
         },
         [MeasurementSystem.IEC]: {
-            abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
-            base: 2,
-            power: 10
+            abbreviations: string[],
+            base: number,
+            power: number
         }
     }
-};
+}
+
+export const KBQ_SIZE_UNITS_DEFAULT_CONFIG = enUSFormattersData.sizeUnits;
+
+export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<SizeUnitsConfig>('KbqSizeUnitsConfig');

@@ -16,6 +16,22 @@ export const enUSFormattersData = {
             groupSeparator: [','],
             fractionSeparator: '.'
         }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
+                base: 2,
+                power: 10
+            }
+        }
     }
 };
 
@@ -39,6 +55,22 @@ export const esLAFormattersData = {
             groupSeparator: [' ', ' '],
             fractionSeparator: ','
         }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                base: 2,
+                power: 10
+            }
+        }
     }
 };
 
@@ -61,6 +93,22 @@ export const faIRFormattersData = {
             groupSeparator: ['\u066C'],
             fractionSeparator: '\u066B'
         }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                base: 2,
+                power: 10
+            }
+        }
     }
 };
 
@@ -81,6 +129,22 @@ export const ptBRFormattersData = {
         number: {
             groupSeparator: ['.'],
             fractionSeparator: ','
+        }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                base: 2,
+                power: 10
+            }
         }
     }
 };
@@ -106,6 +170,22 @@ export const ruRUFormattersData = {
             fractionSeparator: ',',
             startFormattingFrom: 4
         }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                base: 2,
+                power: 10
+            }
+        }
     }
 };
 
@@ -125,6 +205,22 @@ export const zhCNFormattersData = {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
+        }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                base: 2,
+                power: 10
+            }
         }
     }
 };
