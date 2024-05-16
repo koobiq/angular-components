@@ -2,42 +2,63 @@ $typography-display-1-font-size: 57px;
 $typography-display-1-line-height: 64px;
 $typography-display-1-letter-spacing: normal;
 $typography-display-1-font-weight: 400;
-$typography-display-1-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-1-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-1-text-transform: null;
 $typography-display-1-font-feature-settings: initial;
 $typography-display-2-font-size: 45px;
 $typography-display-2-line-height: 52px;
 $typography-display-2-letter-spacing: normal;
 $typography-display-2-font-weight: 400;
-$typography-display-2-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-2-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-2-text-transform: null;
 $typography-display-2-font-feature-settings: initial;
 $typography-display-3-font-size: 36px;
 $typography-display-3-line-height: 44px;
 $typography-display-3-letter-spacing: normal;
 $typography-display-3-font-weight: 400;
-$typography-display-3-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-3-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-3-text-transform: null;
 $typography-display-3-font-feature-settings: initial;
+$typography-display-1-strong-font-size: 57px;
+$typography-display-1-strong-line-height: 64px;
+$typography-display-1-strong-letter-spacing: normal;
+$typography-display-1-strong-font-weight: 700;
+$typography-display-1-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-1-strong-text-transform: null;
+$typography-display-1-strong-font-feature-settings: initial;
+$typography-display-2-strong-font-size: 45px;
+$typography-display-2-strong-line-height: 52px;
+$typography-display-2-strong-letter-spacing: normal;
+$typography-display-2-strong-font-weight: 700;
+$typography-display-2-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-2-strong-text-transform: null;
+$typography-display-2-strong-font-feature-settings: initial;
+$typography-display-3-strong-font-size: 36px;
+$typography-display-3-strong-line-height: 44px;
+$typography-display-3-strong-letter-spacing: normal;
+$typography-display-3-strong-font-weight: 700;
+$typography-display-3-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-3-strong-text-transform: null;
+$typography-display-3-strong-font-feature-settings: initial;
 $typography-headline-font-size: 28px;
 $typography-headline-line-height: 32px;
 $typography-headline-letter-spacing: normal;
 $typography-headline-font-weight: 700;
-$typography-headline-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-headline-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-headline-text-transform: null;
 $typography-headline-font-feature-settings: initial;
 $typography-title-font-size: 20px;
 $typography-title-line-height: 28px;
 $typography-title-letter-spacing: normal;
 $typography-title-font-weight: 700;
-$typography-title-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-title-text-transform: null;
 $typography-title-font-feature-settings: initial;
 $typography-subheading-font-size: 17px;
 $typography-subheading-line-height: 20px;
 $typography-subheading-letter-spacing: normal;
 $typography-subheading-font-weight: 600;
-$typography-subheading-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-subheading-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-subheading-text-transform: null;
 $typography-subheading-font-feature-settings: "ss01" on, "ss04" on;
 $typography-body-font-size: 15px;
@@ -156,23 +177,44 @@ $typography-display-big-font-size: 57px;
 $typography-display-big-line-height: 64px;
 $typography-display-big-letter-spacing: normal;
 $typography-display-big-font-weight: 400;
-$typography-display-big-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-big-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-big-text-transform: null;
 $typography-display-big-font-feature-settings: initial;
 $typography-display-normal-font-size: 45px;
 $typography-display-normal-line-height: 52px;
 $typography-display-normal-letter-spacing: normal;
 $typography-display-normal-font-weight: 400;
-$typography-display-normal-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-normal-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-normal-text-transform: null;
 $typography-display-normal-font-feature-settings: initial;
 $typography-display-compact-font-size: 36px;
 $typography-display-compact-line-height: 44px;
 $typography-display-compact-letter-spacing: normal;
 $typography-display-compact-font-weight: 400;
-$typography-display-compact-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-compact-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-display-compact-text-transform: null;
 $typography-display-compact-font-feature-settings: initial;
+$typography-display-big-strong-font-size: 57px;
+$typography-display-big-strong-line-height: 64px;
+$typography-display-big-strong-letter-spacing: normal;
+$typography-display-big-strong-font-weight: 700;
+$typography-display-big-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-big-strong-text-transform: null;
+$typography-display-big-strong-font-feature-settings: initial;
+$typography-display-normal-strong-font-size: 45px;
+$typography-display-normal-strong-line-height: 52px;
+$typography-display-normal-strong-letter-spacing: normal;
+$typography-display-normal-strong-font-weight: 700;
+$typography-display-normal-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-normal-strong-text-transform: null;
+$typography-display-normal-strong-font-feature-settings: initial;
+$typography-display-compact-strong-font-size: 36px;
+$typography-display-compact-strong-line-height: 44px;
+$typography-display-compact-strong-letter-spacing: normal;
+$typography-display-compact-strong-font-weight: 700;
+$typography-display-compact-strong-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-display-compact-strong-text-transform: null;
+$typography-display-compact-strong-font-feature-settings: initial;
 $typography-text-big-font-size: 15px;
 $typography-text-big-line-height: 20px;
 $typography-text-big-letter-spacing: normal;
@@ -400,7 +442,7 @@ $typography-navbar-title-font-size: 18px;
 $typography-navbar-title-line-height: 28px;
 $typography-navbar-title-letter-spacing: normal;
 $typography-navbar-title-font-weight: 700;
-$typography-navbar-title-font-family: 'TT-Positive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-navbar-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-navbar-title-text-transform: null;
 $typography-navbar-title-font-feature-settings: initial;
 
@@ -432,6 +474,33 @@ $koobiq: (
       'font-family': $typography-display-3-font-family,
       'text-transform': $typography-display-3-text-transform,
       'font-feature-settings': $typography-display-3-font-feature-settings
+    ),
+    'display-1-strong': (
+      'font-size': $typography-display-1-strong-font-size,
+      'line-height': $typography-display-1-strong-line-height,
+      'letter-spacing': $typography-display-1-strong-letter-spacing,
+      'font-weight': $typography-display-1-strong-font-weight,
+      'font-family': $typography-display-1-strong-font-family,
+      'text-transform': $typography-display-1-strong-text-transform,
+      'font-feature-settings': $typography-display-1-strong-font-feature-settings
+    ),
+    'display-2-strong': (
+      'font-size': $typography-display-2-strong-font-size,
+      'line-height': $typography-display-2-strong-line-height,
+      'letter-spacing': $typography-display-2-strong-letter-spacing,
+      'font-weight': $typography-display-2-strong-font-weight,
+      'font-family': $typography-display-2-strong-font-family,
+      'text-transform': $typography-display-2-strong-text-transform,
+      'font-feature-settings': $typography-display-2-strong-font-feature-settings
+    ),
+    'display-3-strong': (
+      'font-size': $typography-display-3-strong-font-size,
+      'line-height': $typography-display-3-strong-line-height,
+      'letter-spacing': $typography-display-3-strong-letter-spacing,
+      'font-weight': $typography-display-3-strong-font-weight,
+      'font-family': $typography-display-3-strong-font-family,
+      'text-transform': $typography-display-3-strong-text-transform,
+      'font-feature-settings': $typography-display-3-strong-font-feature-settings
     ),
     'headline': (
       'font-size': $typography-headline-font-size,
@@ -630,6 +699,33 @@ $koobiq: (
       'font-family': $typography-display-compact-font-family,
       'text-transform': $typography-display-compact-text-transform,
       'font-feature-settings': $typography-display-compact-font-feature-settings
+    ),
+    'display-big-strong': (
+      'font-size': $typography-display-big-strong-font-size,
+      'line-height': $typography-display-big-strong-line-height,
+      'letter-spacing': $typography-display-big-strong-letter-spacing,
+      'font-weight': $typography-display-big-strong-font-weight,
+      'font-family': $typography-display-big-strong-font-family,
+      'text-transform': $typography-display-big-strong-text-transform,
+      'font-feature-settings': $typography-display-big-strong-font-feature-settings
+    ),
+    'display-normal-strong': (
+      'font-size': $typography-display-normal-strong-font-size,
+      'line-height': $typography-display-normal-strong-line-height,
+      'letter-spacing': $typography-display-normal-strong-letter-spacing,
+      'font-weight': $typography-display-normal-strong-font-weight,
+      'font-family': $typography-display-normal-strong-font-family,
+      'text-transform': $typography-display-normal-strong-text-transform,
+      'font-feature-settings': $typography-display-normal-strong-font-feature-settings
+    ),
+    'display-compact-strong': (
+      'font-size': $typography-display-compact-strong-font-size,
+      'line-height': $typography-display-compact-strong-line-height,
+      'letter-spacing': $typography-display-compact-strong-letter-spacing,
+      'font-weight': $typography-display-compact-strong-font-weight,
+      'font-family': $typography-display-compact-strong-font-family,
+      'text-transform': $typography-display-compact-strong-text-transform,
+      'font-feature-settings': $typography-display-compact-strong-font-feature-settings
     ),
     'text-big': (
       'font-size': $typography-text-big-font-size,
