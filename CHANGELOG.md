@@ -1,3 +1,19 @@
+# 17.0.0-rc.3 (2024-05-17)
+
+### Koobiq
+
+ * bug fix  **docs,toggle:** example for "big toggles" ([#DS-2479](https://github.com/koobiq/angular-components/issues/issue/DS-2479)) ([#22](https://github.com/koobiq/angular-components/issues/22)) ([9ac0a28](https://github.com/koobiq/angular-components/commit/9ac0a2837f8229f6ff1cc027d27e379211baeec7))
+ * bug fix  **docs:** aligned img content to layout ([#DS-2407](https://github.com/koobiq/angular-components/issues/issue/DS-2407)) ([#25](https://github.com/koobiq/angular-components/issues/25)) ([b9b4a28](https://github.com/koobiq/angular-components/commit/b9b4a289d361ea74a993ed5e2abb47376b7ae481))
+ * bug fix  **select, tree-select, dropdown:** Выпадашка открывается с тормозами ([#DS-2394](https://github.com/koobiq/angular-components/issues/issue/DS-2394)) ([#18](https://github.com/koobiq/angular-components/issues/18)) ([bcf52a6](https://github.com/koobiq/angular-components/commit/bcf52a6f97e44e182f21bf42249c6d6bcc03b990))
+ * bug fix  **textarea:** title & required attributes behavior ([#DS-2449](https://github.com/koobiq/angular-components/issues/issue/DS-2449)) ([#28](https://github.com/koobiq/angular-components/issues/28)) ([55b88d6](https://github.com/koobiq/angular-components/commit/55b88d6aff60c7cb675581590795ccaf52315cb4))
+ * bug fix  **tokens:** changes according to new tokens structure ([#DS-2306](https://github.com/koobiq/angular-components/issues/issue/DS-2306)) ([#20](https://github.com/koobiq/angular-components/issues/20)) ([0c4428c](https://github.com/koobiq/angular-components/commit/0c4428c7cbe6340d1caff95ccd9b83332aa67dc6))
+ * bug fix  **tooltip:** consider focus origin when show ([#DS-2406](https://github.com/koobiq/angular-components/issues/issue/DS-2406)) ([#33](https://github.com/koobiq/angular-components/issues/33)) ([7679ea6](https://github.com/koobiq/angular-components/commit/7679ea63e95c73e17163d13fca13395d0303f80c))
+ * feature  **alert:** alert 2.0 ([#DS-2342](https://github.com/koobiq/angular-components/issues/issue/DS-2342)) ([#30](https://github.com/koobiq/angular-components/issues/30)) ([31146d9](https://github.com/koobiq/angular-components/commit/31146d9e90e9169c028f74803eab6e4c5eaf114e))
+ * feature  **core:** Implement localization in DataSizePipe ([#DS-2431](https://github.com/koobiq/angular-components/issues/issue/DS-2431)) ([#26](https://github.com/koobiq/angular-components/issues/26)) ([8aecb01](https://github.com/koobiq/angular-components/commit/8aecb01586420c758fd18a7ed9922334be42b5f3))
+ * feature  **docs:** added ToC to examples ([#DS-2449](https://github.com/koobiq/angular-components/issues/issue/DS-2449)) ([#27](https://github.com/koobiq/angular-components/issues/27)) ([d66682e](https://github.com/koobiq/angular-components/commit/d66682eac759bc518bf51d375ad25a50ce928697))
+ * feature  **docs:** changing the order of tabs in the example code block ([#DS-2477](https://github.com/koobiq/angular-components/issues/issue/DS-2477)) ([#19](https://github.com/koobiq/angular-components/issues/19)) ([c626a34](https://github.com/koobiq/angular-components/commit/c626a3494035039935138c35373d49dcfacab95f))
+ * feature  **styles:** added strong ([#DS-2485](https://github.com/koobiq/angular-components/issues/issue/DS-2485)) ([#29](https://github.com/koobiq/angular-components/issues/29)) ([5236932](https://github.com/koobiq/angular-components/commit/523693215e4137ed94535ab77b3f5579ecd464ad))
+
 # 17.0.0-rc.2 "Casual Quacha" (2024-05-08)
 
 ### Koobiq
