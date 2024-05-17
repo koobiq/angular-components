@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  push
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'koobiq' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
+
+      # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
+      - name: Extract current changelog
+        id: generate-changelog
+        run: |
+          yarn run release:extract-changelog
+          changelog=$(cat ./CHANGELOG_CURRENT.md)
+
+          # Output multiline strings: https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "changelog<<$EOF" >> $GITHUB_OUTPUT
+          echo "$changelog" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+
+      - name: Show result
+        shell: bash
+        run: |
+          echo "$CHANGELOG"
+        env:
+          CHANGELOG: ${{ steps.generate-changelog.outputs.changelog }}
