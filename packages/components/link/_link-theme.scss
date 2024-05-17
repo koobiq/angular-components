@@ -117,7 +117,8 @@
             @include kbq-link-state($hover);
         }
 
-        &:active {
+        &:active,
+        &.kbq-active {
             $active: map.get($link, active);
             @include kbq-link-state($active);
         }
@@ -131,7 +132,8 @@
                 @include kbq-link-state($visited-hover);
             }
 
-            &:active {
+            &:active,
+            &.kbq-active {
                 $visited-active: map.get($link, visited-active);
                 @include kbq-link-state($visited-active);
             }
