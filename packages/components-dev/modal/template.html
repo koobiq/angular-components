@@ -12,8 +12,8 @@
 </kbq-dropdown>
 
 
-<button #confirmButton kbq-button (click)="showConfirm()" style="margin-right: 16px;">Confirm</button>
-<button #deleteButton kbq-button (click)="showDeleteConfirm()">Delete</button>
+<button #confirmButton [kbqTooltip]="'Tooltip text'" kbq-button (click)="showConfirm()" style="margin-right: 16px;">Confirm</button>
+<button #deleteButton [kbqTooltip]="'Tooltip text'" kbq-button (click)="showDeleteConfirm()">Delete</button>
 
 
 <p class="kbq-headline">Modal from service</p>

@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
@@ -43,9 +44,10 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality
+        @Optional() direction: Directionality,
+        focusMonitor: FocusMonitor
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
 
     ngAfterViewInit() {

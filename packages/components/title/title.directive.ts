@@ -64,12 +64,12 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         ngZone: NgZone,
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
-        private focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
         @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
 
     ngAfterViewInit() {

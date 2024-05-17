@@ -68,11 +68,12 @@ export abstract class KbqPopUpTrigger<T> {
     protected portal: ComponentPortal<T>;
     protected instance: any | null;
 
-    protected listeners = new Map<string, EventListenerOrEventListenerObject>();
+    protected listeners = new Map<string, EventListener>();
     protected closingActionsSubscription: Subscription;
 
     protected readonly availablePositions: { [key: string]: ConnectionPositionPair };
     protected readonly destroyed = new Subject<void>();
+    protected triggerName: string;
 
     protected constructor(
         protected overlay: Overlay,
@@ -269,22 +270,19 @@ export abstract class KbqPopUpTrigger<T> {
 
         if (this.trigger.includes(PopUpTriggers.Click)) {
             this.listeners
-                .set('click', () => this.show())
-                .forEach(this.addEventListener);
+                .set(...this.createListener('click', this.show));
         }
 
         if (this.trigger.includes(PopUpTriggers.Hover)) {
             this.listeners
-                .set('mouseenter', () => this.show())
-                .set('mouseleave', () => this.hide())
-                .forEach(this.addEventListener);
+                .set(...this.createListener('mouseenter', this.show))
+                .set(...this.createListener('mouseleave', this.hide));
         }
 
         if (this.trigger.includes(PopUpTriggers.Focus)) {
             this.listeners
-                .set('focus', () => this.show())
-                .set('blur', () => this.hide())
-                .forEach(this.addEventListener);
+                .set(...this.createListener('focus', this.show))
+                .set(...this.createListener('blur', this.hide));
         }
 
         if (this.trigger.includes(PopUpTriggers.Keydown)) {
@@ -294,8 +292,10 @@ export abstract class KbqPopUpTrigger<T> {
                         this.show();
                     }
                 })
-                .forEach(this.addEventListener);
         }
+
+        this.listeners
+            .forEach(this.addEventListener);
     }
 
     /** Updates the position of the current popover. */
@@ -344,11 +344,22 @@ export abstract class KbqPopUpTrigger<T> {
         this.listeners.clear();
     }
 
-    private addEventListener = (listener: EventListener | EventListenerObject, event: string) => {
+    private createListener(name: string, listener: () => void): [string, () => void] {
+        return [
+            name,
+            () => {
+                this.triggerName = name;
+
+                return listener.call(this);
+            }
+        ];
+    }
+
+    private addEventListener = (listener: EventListener, event: string) => {
         this.elementRef.nativeElement.addEventListener(event, listener);
     }
 
-    private removeEventListener = (listener: EventListener | EventListenerObject, event: string) => {
+    private removeEventListener = (listener: EventListener, event: string) => {
         this.elementRef.nativeElement.removeEventListener(event, listener);
     }
 

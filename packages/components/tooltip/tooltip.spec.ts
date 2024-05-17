@@ -1,8 +1,9 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { fakeAsync, inject, tick, TestBed } from '@angular/core/testing';
+import { fakeAsync, inject, tick, TestBed, flush } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { TAB } from '@koobiq/cdk/keycodes';
+import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
@@ -85,8 +86,10 @@ describe('KbqTooltip', () => {
         it('should show/hide tooltip by focus', fakeAsync(() => {
             const featureKey = 'FOCUS';
             const triggerElement = component.focusTrigger.nativeElement;
+            dispatchKeyboardEvent(document, 'keydown', TAB);
             dispatchMouseEvent(triggerElement, 'focus');
             fixture.detectChanges();
+            flush();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             dispatchMouseEvent(triggerElement, 'blur');
             tick(100); // tslint:disable-line
@@ -162,58 +165,68 @@ describe('KbqTooltip', () => {
 @Component({
     selector: 'kbq-tooltip-test-new',
     template: `
-    <a #titleString
-       kbqTooltip="title-string"
-       kbqTrigger="hover"
-       kbqPlacement="top">Show</a>
-    <a #titleTemplate kbqTooltip="template">Show</a>
-    <ng-template #template>
-      title-template
-    </ng-template>
+        <ng-template #template>
+            title-template
+        </ng-template>
+
+        <a #titleString
+           [kbqTooltip]="'title-string'"
+           [kbqTrigger]="'hover'"
+           [kbqPlacement]="'top'">Show</a>
+        <a #titleTemplate [kbqTooltip]="template">Show</a>
   `
 })
 class KbqTooltipTestNewComponent {
-    @ViewChild('titleString', {static: false}) titleString: ElementRef;
-    @ViewChild('titleString', { read: KbqTooltipTrigger, static: false}) titleStringKbqTooltipDirective: KbqTooltipTrigger;
-    @ViewChild('titleTemplate', {static: false}) titleTemplate: ElementRef;
-    @ViewChild('titleTemplate', { read: KbqTooltipTrigger, static: false}) titleTemplateKbqTooltipDirective: KbqTooltipTrigger;
+    @ViewChild('titleString', { static: false }) titleString: ElementRef;
+    @ViewChild('titleString', {
+        read: KbqTooltipTrigger,
+        static: false
+    }) titleStringKbqTooltipDirective: KbqTooltipTrigger;
+    @ViewChild('titleTemplate', { static: false }) titleTemplate: ElementRef;
+    @ViewChild('titleTemplate', {
+        read: KbqTooltipTrigger,
+        static: false
+    }) titleTemplateKbqTooltipDirective: KbqTooltipTrigger;
 }
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     template: `
-        <a #mostSimpleTrigger kbqTooltip="MOST-SIMPLE">Show</a>
+        <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
         <span #normalTrigger
-              kbqTooltip="NORMAL"
-              kbqTrigger="hover"
-              kbqPlacement="right">
-        Show
-    </span>
+              [kbqTooltip]="'NORMAL'"
+              [kbqTrigger]="'hover'"
+              [kbqPlacement]="'right'">
+            Show
+        </span>
 
-        <span #focusTrigger kbqTooltip="FOCUS" kbqTrigger="focus">Show</span>
-        <span #visibleTrigger  kbqTooltip="VISIBLE" visible="visible">Show</span>
+        <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
+        <span #visibleTrigger  [kbqTooltip]="'VISIBLE'" [visible]="visible">Show</span>
     `
 })
 class KbqTooltipTestWrapperComponent {
-    @ViewChild('normalTrigger', {static: false}) normalTrigger: ElementRef;
+    @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;
     @ViewChild('normalTrigger', { read: KbqTooltipTrigger, static: false }) normalDirective: KbqTooltipTrigger;
-    @ViewChild('focusTrigger', {static: false}) focusTrigger: ElementRef;
-    visible: boolean;
-    @ViewChild('visibleTrigger', {static: false}) visibleTrigger: ElementRef;
-    @ViewChild('mostSimpleTrigger', {static: false}) mostSimpleTrigger: ElementRef;
+    @ViewChild('focusTrigger', { static: false }) focusTrigger: ElementRef;
+    @ViewChild('visibleTrigger', { static: false }) visibleTrigger: ElementRef;
+    @ViewChild('mostSimpleTrigger', { static: false }) mostSimpleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { read: KbqTooltipTrigger, static: false }) mostSimpleDirective: KbqTooltipTrigger;
+
+    visible: boolean;
 }
 
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
-    template: `<span #disabledAttribute
-                     kbqTooltip="DISABLED"
-                     kbqTrigger="manual"
-                     kbqTooltipDisabled="true">
+    template: `
+        <span #disabledAttribute
+              [kbqTooltip]="'DISABLED'"
+              [kbqTrigger]="'manual'"
+              [kbqTooltipDisabled]="true">
         Disabled
-    </span>`
+        </span>
+    `
 })
 class KbqTooltipDisabledComponent {
-    @ViewChild('disabledAttribute', {static: false}) disabledTrigger: ElementRef;
+    @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;
     @ViewChild('disabledAttribute', { read: KbqTooltipTrigger, static: false }) disabledDirective: KbqTooltipTrigger;
 }
