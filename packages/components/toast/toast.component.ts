@@ -87,7 +87,7 @@ export class KbqToastComponent implements OnDestroy {
 
         this.data.style = this.data.style || KbqToastStyle.Contrast;
         this.data.icon = this.data.icon !== undefined ? this.data.icon : true;
-        this.data.iconClass = this.data.iconClass || 'mc-bell_16';
+        this.data.iconClass = this.data.iconClass || undefined;
         this.data.closeButton = this.data.closeButton !== undefined ? this.data.closeButton : true;
 
         this.animationState = 'visible';

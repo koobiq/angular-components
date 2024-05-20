@@ -62,7 +62,7 @@ export class MyToastComponent extends KbqToastComponent {
 })
 export class ToastDemoComponent {
     themePalette = ThemePalette;
-    
+
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
 
     modalState: boolean = false;
@@ -142,7 +142,7 @@ export class ToastDemoComponent {
         this.toastService.show({ caption });
     }
 
-    showToast(style: KbqToastStyle) {
+    showToast(style: KbqToastStyle | string) {
         this.toastService.show({ style, title: style, caption: 'Message Content' });
     }
 

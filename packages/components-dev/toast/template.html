@@ -60,7 +60,7 @@
 </ng-template>
 
 <ng-template #toastSingleActonContentTemplate let-toast>
-    Политика&nbsp;<a kbq-link pseudo> Почтовые серверы Windows</a>&nbsp;удалена
+    Политика&nbsp;<a kbq-link pseudo> Почтовые серверы</a>&nbsp;удалена
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
@@ -92,8 +92,10 @@
 </ng-template>
 
 <div class="demo-block">
-    <button class="example-button" kbq-button  (click)="showInfoToast(toastInfoActionsTemplate)">Default (contrast)</button>
-    <button class="example-button" kbq-button  (click)="showErrorToast(toastErrorActionsTemplate)">Error</button>
+    <button class="example-button" kbq-button  (click)="showToast('contrast')">contrast</button>
+    <button class="example-button" kbq-button  (click)="showToast('success')">success</button>
+    <button class="example-button" kbq-button  (click)="showToast('warning')">warning</button>
+    <button class="example-button" kbq-button  (click)="showToast('error')">error</button>
     <button class="example-button" kbq-button  (click)="showErrorCustomIconToast(toastErrorActionsTemplate)">Error (custom icon)</button>
     <button class="example-button" kbq-button  (click)="showIconAndCaption()">showIconAndCaption</button>
     <button class="example-button" kbq-button  (click)="showOnlyCaption()">showOnlyCaption</button>

@@ -1,12 +1,20 @@
-<div *ngIf="data.icon">
+<div class="kbq-toast__icon-container" *ngIf="data.icon">
     <ng-container *ngIf="data.icon === true">
         <ng-container [ngSwitch]="data.style">
             <ng-container *ngSwitchCase="'contrast'">
-                <i kbq-icon-item [ngClass]="data.iconClass" class="kbq-toast__icon"></i>
+                <i kbq-icon="mc-info_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'success'">
+                <i kbq-icon="mc-success_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'warning'">
+                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'error'">
-                <i kbq-icon-item [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="'error'"></i>
+                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
         </ng-container>
     </ng-container>

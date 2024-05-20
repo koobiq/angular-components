@@ -3,6 +3,8 @@ import { TemplateRef, InjectionToken } from '@angular/core';
 
 export enum KbqToastStyle {
     Contrast = 'contrast',
+    Success = 'success',
+    Warning = 'warning',
     Error = 'error'
 }
 

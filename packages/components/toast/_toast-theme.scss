@@ -22,16 +22,21 @@
 @mixin kbq-toast-theme($theme) {
     $toast: map.get(map.get($theme, components), toast);
 
-    $contrast: map.get($toast, contrast);
-    $error: map.get($toast, error);
-
     .kbq-toast {
         &.kbq-toast_contrast {
-            @include kbq-toast($contrast);
+            @include kbq-toast(map.get($toast, contrast));
+        }
+
+        &.kbq-toast_success {
+            @include kbq-toast(map.get($toast, success));
+        }
+
+        &.kbq-toast_warning {
+            @include kbq-toast(map.get($toast, success));
         }
 
         &.kbq-toast_error {
-            @include kbq-toast($error);
+            @include kbq-toast(map.get($toast, error));
         }
     }
 }

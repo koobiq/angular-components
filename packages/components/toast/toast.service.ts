@@ -34,7 +34,7 @@ export const defaultToastConfig: KbqToastConfig = {
 };
 
 
-const INDENT_SIZE = 16;
+const INDENT_SIZE = 0;
 const CHECK_INTERVAL = 500;
 
 let templateId = 0;
