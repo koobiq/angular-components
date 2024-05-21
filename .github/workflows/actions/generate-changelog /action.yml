@@ -1,0 +1,31 @@
+name: Generate Changelog
+description: ""
+
+outputs:
+  changelog:
+    description: ""
+    value: ${{ steps.generate-changelog.outputs.changelog }}
+
+runs:
+  using: composite
+  steps:
+      # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
+      - name: Extract current changelog
+        id: generate-changelog
+        shell: bash
+        run: |
+          yarn run release:extract-changelog
+          changelog=$(cat ./CHANGELOG_CURRENT.md)
+
+          # Output multiline strings: https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "changelog<<$EOF" >> $GITHUB_OUTPUT
+          echo "$changelog" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+
+      - name: Show result
+        shell: bash
+        run: |
+          echo "$CHANGELOG"
+        env:
+          CHANGELOG: ${{ steps.generate-changelog.outputs.changelog }}
