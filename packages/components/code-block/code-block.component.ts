@@ -60,6 +60,11 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
 
 const actionBarBlockLeftMargin = 24;
 
+const hasScroll = (element: HTMLElement) => {
+    const { scrollHeight, scrollWidth, clientHeight, clientWidth} = element;
+    return scrollHeight > clientHeight || scrollWidth > clientWidth;
+}
+
 @Component({
     selector: 'kbq-code-block',
     exportAs: 'kbqCodeBlock',
@@ -195,6 +200,15 @@ export class KbqCodeBlockComponent implements OnDestroy {
         }
     }
 
+    // TODO: replace with property to reduce calculations
+    canShowFocus(currentCodeContent: HTMLPreElement): boolean {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const currentCodeBlock = currentCodeContent.querySelector('code')!;
+
+        return (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock))
+            && (!!this.maxHeight && this.viewAll || !this.maxHeight);
+    }
+
     private updateMultiline = () => {
         this.multiLine = this.elementRef.nativeElement
             .querySelectorAll('.hljs-ln-numbers').length > 1;
@@ -209,5 +223,15 @@ export class KbqCodeBlockComponent implements OnDestroy {
         const extension = LANGUAGES_EXTENSIONS[codeFile.language] || DEFAULT_EXTENSION;
 
         return `${fileName}.${extension}`;
+    }
+
+    onEnter(currentCodeBlock: HTMLPreElement) {
+        // defer execution after toggle view mode
+        setTimeout(() => {
+            if (this.canShowFocus(currentCodeBlock)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                currentCodeBlock.querySelector('code')!.focus();
+            }
+        }, 0);
     }
 }
