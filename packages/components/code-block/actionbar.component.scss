@@ -16,7 +16,7 @@ $tokens: meta.module-variables(tokens) !default;
     top: -1px;
     right: 0;
 
-    padding:
+    margin:
         var(
             --kbq-code-block-size-actionbar-padding-vertical,
             map.get($tokens, code-block-size-actionbar-padding-vertical)

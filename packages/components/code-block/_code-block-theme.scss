@@ -11,12 +11,22 @@
     $actionbar: map.get($style, actionbar);
     $collapse: map.get($style, collapse);
 
-    border-color: map.get($container, border);
     background: map.get($container, background);
 
     & .kbq-tab-header {
         $header: map.get($style, header);
         background: map.get($header, background) !important;
+        border-color: map.get($container, border);
+    }
+
+    .kbq-tab-body__wrapper {
+        border-color: map.get($container, border);
+    }
+
+    &:not(.kbq-code-block_no-header) {
+        .kbq-tab-body__wrapper {
+            border-top-color: transparent;
+        }
     }
 
     & .kbq-code-block-actionbar {
@@ -333,6 +343,13 @@
 
         &.kbq-code-block_filled {
             @include kbq-code-block-style(map.get($code-block, filled));
+        }
+
+        .kbq-tab-group.kbq-focused {
+            .kbq-tab-body__wrapper {
+                border-width: 2px;
+                border-color: map.get(map.get($theme, states), focused-color);
+            }
         }
 
         .kbq-tab-header {

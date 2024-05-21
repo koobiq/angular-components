@@ -1,4 +1,6 @@
-<kbq-tab-group (selectedTabChange)="onSelectTab($event)">
+<kbq-tab-group
+    [class.kbq-focused]="hasFocus"
+    (selectedTabChange)="onSelectTab($event)">
     <kbq-tab
         *ngFor="let codeFile of codeFiles; let i = index"
         [disabled]="singleFile">
@@ -29,7 +31,8 @@
                [highlight]="codeFiles[i].content"
                [lineNumbers]="true"
                [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
-               (highlighted)="onHighlighted()">
+               (highlighted)="onHighlighted()"
+               (blur)="hasFocus = false">
             </code></pre>
 
         <div class="kbq-code-block__show-more"
