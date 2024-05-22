@@ -1,11 +1,14 @@
 @use 'sass:meta';
 @use 'sass:map';
 
+@use '../core/styles/common/tokens' as *;
 @use '../core/styles/typography/typography-utils' as *;
 
 
-@mixin kbq-alert-default($style) {
-    background: map.get($style, background);
+@mixin kbq-alert-default($type, $style-name) {
+    $style: map.get($type, $style-name);
+
+    background: cssVar('alert-light-color-scheme-default-#{$style-name}-container-background');
 
     .kbq-alert__title {
         color: map.get($style, title);
@@ -40,23 +43,23 @@
 
     .kbq-alert.kbq-alert_default {
         &.kbq-alert_contrast {
-            @include kbq-alert-default(map.get($default, contrast));
+            @include kbq-alert-default($default, contrast);
         }
 
         &.kbq-alert_error {
-            @include kbq-alert-default(map.get($default, error));
+            @include kbq-alert-default($default, error);
         }
 
         &.kbq-alert_warning {
-            @include kbq-alert-default(map.get($default, warning));
+            @include kbq-alert-default($default, warning);
         }
 
         &.kbq-alert_success {
-            @include kbq-alert-default(map.get($default, success));
+            @include kbq-alert-default($default, success);
         }
 
         &.kbq-alert_theme {
-            @include kbq-alert-default(map.get($default, theme));
+            @include kbq-alert-default($default, theme);
         }
     }
 

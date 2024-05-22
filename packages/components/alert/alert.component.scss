@@ -1,7 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -12,7 +12,7 @@ $tokens: meta.module-variables(tokens) !default;
     width: 492px;
 
     & .kbq-alert__content_title {
-        margin-bottom: map.get($tokens, size-xxs);
+        margin-bottom: cssVar(size-xxs);
     }
 }
 
@@ -25,182 +25,90 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-alert.kbq-alert_normal {
-    border-radius: var(
-        --kbq-alert-size-normal-container-border-radius,
-        map.get($tokens, alert-size-normal-container-border-radius)
-    );
+    border-radius: cssVar(alert-size-normal-container-border-radius);
 
     padding:
-        var(
-            --kbq-alert-size-normal-container-padding-top,
-            map.get($tokens, alert-size-normal-container-padding-top)
-        )
-        var(
-            --kbq-alert-size-normal-container-padding-right,
-            map.get($tokens, alert-size-normal-container-padding-right)
-        )
-        var(
-            --kbq-alert-size-normal-container-padding-bottom,
-            map.get($tokens, alert-size-normal-container-padding-bottom)
-        )
-        var(
-            --kbq-alert-size-normal-container-padding-left,
-            map.get($tokens, alert-size-normal-container-padding-left)
-        );
+        cssVar(alert-size-normal-container-padding-top)
+        cssVar(alert-size-normal-container-padding-right)
+        cssVar(alert-size-normal-container-padding-bottom)
+        cssVar(alert-size-normal-container-padding-left);
 
     & .kbq-alert__icon {
         margin:
-            var(--kbq-alert-size-normal-icon-margin-top, map.get($tokens, alert-size-normal-icon-margin-top))
-            var(--kbq-alert-size-normal-icon-margin-right, map.get($tokens, alert-size-normal-icon-margin-right))
-            var(--kbq-alert-size-normal-icon-margin-bottom, map.get($tokens, alert-size-normal-icon-margin-bottom))
-            var(--kbq-alert-size-normal-icon-margin-left, map.get($tokens, alert-size-normal-icon-margin-left));
+            cssVar(alert-size-normal-icon-margin-top)
+            cssVar(alert-size-normal-icon-margin-right)
+            cssVar(alert-size-normal-icon-margin-bottom)
+            cssVar(alert-size-normal-icon-margin-left);
 
         &.kbq-alert__icon_title .kbq-icon {
-            margin-top: var(
-                --kbq-alert-size-normal-icon-margin-addon-title,
-                map.get($tokens, alert-size-normal-icon-margin-addon-title)
-            );
+            margin-top: cssVar(alert-size-normal-icon-margin-addon-title);
         }
     }
 
     & .kbq-alert__content {
         padding:
-            var(
-                --kbq-alert-size-normal-content-padding-top,
-                map.get($tokens, alert-size-normal-content-padding-top)
-            )
-            var(
-                --kbq-alert-size-normal-content-padding-right,
-                map.get($tokens, alert-size-normal-content-padding-right)
-            )
-            var(
-                --kbq-alert-size-normal-content-padding-bottom,
-                map.get($tokens, alert-size-normal-content-padding-bottom)
-            )
-            var(
-                --kbq-alert-size-normal-content-padding-left,
-                map.get($tokens, alert-size-normal-content-padding-left)
-            );
+            cssVar(alert-size-normal-content-padding-top)
+            cssVar(alert-size-normal-content-padding-right)
+            cssVar(alert-size-normal-content-padding-bottom)
+            cssVar(alert-size-normal-content-padding-left);
     }
 
     & .kbq-alert__title {
-        margin-bottom: var(
-            --kbq-alert-size-normal-title-margin-bottom,
-            map.get($tokens, alert-size-normal-title-margin-bottom)
-        );
+        margin-bottom: cssVar(alert-size-normal-title-margin-bottom);
     }
 
     & .kbq-alert__button-stack {
-        padding-top: var(
-            --kbq-alert-size-normal-button-stack-padding-top,
-            map.get($tokens, alert-size-normal-button-stack-padding-top)
-        );
+        padding-top: cssVar(alert-size-normal-button-stack-padding-top);
 
-        padding-bottom: var(
-            --kbq-alert-size-normal-button-stack-padding-bottom,
-            map.get($tokens, alert-size-normal-button-stack-padding-bottom)
-        );
+        padding-bottom: cssVar(alert-size-normal-button-stack-padding-bottom);
     }
 
     & .kbq-alert__close-button {
-        margin-top: var(
-            --kbq-alert-size-normal-close-button-margin-top,
-            map.get($tokens, alert-size-normal-close-button-margin-top)
-        );
-
-        margin-left: var(
-            --kbq-alert-size-normal-close-button-margin-left,
-            map.get($tokens, alert-size-normal-close-button-margin-left)
-        );
+        margin-top: cssVar(alert-size-normal-close-button-margin-top);
+        margin-left: cssVar(alert-size-normal-close-button-margin-left);
     }
 }
 
 .kbq-alert.kbq-alert_compact {
-    border-radius: var(
-        --kbq-alert-size-compact-container-border-radius,
-        map.get($tokens, alert-size-compact-container-border-radius)
-    );
+    border-radius: cssVar(alert-size-compact-container-border-radius);
 
     padding:
-        var(
-            --kbq-alert-size-compact-container-padding-top,
-            map.get($tokens, alert-size-compact-container-padding-top)
-        )
-        var(
-            --kbq-alert-size-compact-container-padding-right,
-            map.get($tokens, alert-size-compact-container-padding-right)
-        )
-        var(
-            --kbq-alert-size-compact-container-padding-bottom,
-            map.get($tokens, alert-size-compact-container-padding-bottom)
-        )
-        var(
-            --kbq-alert-size-compact-container-padding-left,
-            map.get($tokens, alert-size-compact-container-padding-left)
-        );
+        cssVar(alert-size-compact-container-padding-top)
+        cssVar(alert-size-compact-container-padding-right)
+        cssVar(alert-size-compact-container-padding-bottom)
+        cssVar(alert-size-compact-container-padding-left);
 
     & .kbq-alert__icon {
-        margin-top: var(--kbq-alert-size-compact-icon-margin-top, map.get($tokens, alert-size-compact-icon-margin-top));
+        margin-top: cssVar(alert-size-compact-icon-margin-top);
 
-        margin-right:
-            var(--kbq-alert-size-compact-icon-margin-right, map.get($tokens, alert-size-compact-icon-margin-right));
+        margin-right: cssVar(alert-size-compact-icon-margin-right);
 
         &.kbq-alert__icon_title .kbq-icon {
-            margin-top: var(
-                --kbq-alert-size-compact-icon-margin-addon-title,
-                map.get($tokens, alert-size-compact-icon-margin-addon-title)
-            );
+            margin-top: cssVar(alert-size-compact-icon-margin-addon-title);
         }
     }
 
     & .kbq-alert__content {
         padding:
-            var(
-                --kbq-alert-size-compact-content-padding-top,
-                map.get($tokens, alert-size-compact-content-padding-top)
-            )
-            var(
-                --kbq-alert-size-compact-content-padding-right,
-                map.get($tokens, alert-size-compact-content-padding-right)
-            )
-            var(
-                --kbq-alert-size-compact-content-padding-bottom,
-                map.get($tokens, alert-size-compact-content-padding-bottom)
-            )
-            var(
-                --kbq-alert-size-compact-content-padding-left,
-                map.get($tokens, alert-size-compact-content-padding-left)
-            );
+            cssVar(alert-size-compact-content-padding-top)
+            cssVar(alert-size-compact-content-padding-right)
+            cssVar(alert-size-compact-content-padding-bottom)
+            cssVar(alert-size-compact-content-padding-left);
     }
 
     & .kbq-alert__title {
-        margin-bottom: var(
-            --kbq-alert-size-compact-title-margin-bottom,
-            map.get($tokens, alert-size-compact-title-margin-bottom)
-        );
+        margin-bottom: cssVar(alert-size-compact-title-margin-bottom);
     }
 
     & .kbq-alert__button-stack {
-        padding-top: var(
-            --kbq-alert-size-compact-button-stack-padding-top,
-            map.get($tokens, alert-size-compact-button-stack-padding-top)
-        );
+        padding-top: cssVar(alert-size-compact-button-stack-padding-top);
 
-        padding-bottom: var(
-            --kbq-alert-size-compact-button-stack-padding-bottom,
-            map.get($tokens, alert-size-compact-button-stack-padding-bottom)
-        );
+        padding-bottom: cssVar(alert-size-compact-button-stack-padding-bottom);
     }
 
     & .kbq-alert__close-button {
-        margin-top: var(
-            --kbq-alert-size-compact-close-button-margin-top,
-            map.get($tokens, alert-size-compact-close-button-margin-top)
-        );
+        margin-top: cssVar(alert-size-compact-close-button-margin-top);
 
-        margin-left: var(
-            --kbq-alert-size-compact-close-button-margin-left,
-            map.get($tokens, alert-size-compact-close-button-margin-left)
-        );
+        margin-left: cssVar(alert-size-compact-close-button-margin-left);
     }
 }

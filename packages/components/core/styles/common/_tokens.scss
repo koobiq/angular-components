@@ -1,0 +1,28 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:list';
+
+@use '../tokens';
+
+
+$tokens: meta.module-variables(tokens) !default;
+
+
+@function cssVar($name) {
+    @if string.index($name, light-color-scheme) {
+        $short-name: '';
+
+        @each $part in string.split($name, '-light-color-scheme') {
+            $short-name: $short-name + $part;
+        }
+
+        @return var(--kbq-#{$short-name}, map.get($tokens, $name));
+    } @else {
+        @return var(--kbq-#{$name}, map.get($tokens, $name));
+    }
+}
+
+@function getToken($name) {
+    @return map.get($tokens, $name);
+}
