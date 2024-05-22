@@ -48,8 +48,7 @@ $border-width: var(
                 map.get($tokens, code-block-size-header-padding-left)
             );
 
-        border-width: $border-width;
-        border-bottom-width: 0;
+        border-width: $border-width $border-width 0 $border-width;
         border-style: solid;
         border-radius: $border-radius $border-radius 0 0;
     }
@@ -101,6 +100,12 @@ $border-width: var(
             &:hover {
                 background: transparent !important;
             }
+        }
+    }
+
+    &:not(.kbq-code-block_no-header) {
+        .kbq-tab-body__wrapper {
+            border-top-width: 0;
         }
     }
 

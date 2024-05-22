@@ -346,9 +346,14 @@
         }
 
         .kbq-tab-group.kbq-focused {
+            // paint focus border from the top since because of border constraints
+            .kbq-tab-header {
+                box-shadow: 0 3px 0 -1px map.get(map.get($theme, states), focused-color);
+            }
+
             .kbq-tab-body__wrapper {
-                border-width: 2px;
                 border-color: map.get(map.get($theme, states), focused-color);
+                box-shadow: inset 0 0 0 1px map.get(map.get($theme, states), focused-color);
             }
         }
 

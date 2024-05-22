@@ -38,7 +38,7 @@ $tokens: meta.module-variables(tokens) !default;
             --kbq-code-block-size-actionbar-fade-gradient-width,
             map.get($tokens, code-block-size-actionbar-fade-gradient-width)
         );
-        height: 40px;
+        height: 32px;
 
         margin-top: calc(
             var(
