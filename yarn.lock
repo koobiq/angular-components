@@ -3472,9 +3472,9 @@ __metadata:
   linkType: hard
 
 "@koobiq/icons@npm:^7.1.1":
-  version: 7.1.1
-  resolution: "@koobiq/icons@npm:7.1.1"
-  checksum: 10c0/8424f8c08caa81becd08b73b182c875414f9aeac5f4d42a7d2407c3e0afdabd365a815f29686df164cc31417bcdcd3d9c2012a1d5196e847037a2e4d84d5295a
+  version: 7.1.2
+  resolution: "@koobiq/icons@npm:7.1.2"
+  checksum: 10c0/c371ea6956e044dc19be14654c7eccee76f210d984badbc3dd167f7466e6ffc65395d3bb84e0ef3835baa7911cb7f77ca2dbf84b8177157dff7e01bbfe0dc97b
   languageName: node
   linkType: hard
 

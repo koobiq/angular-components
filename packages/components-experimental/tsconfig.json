@@ -1,0 +1,25 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "target": "es2022",
+        "useDefineForClassFields": false,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "types": ["node", "jasmine"]
+    },
+    "include": ["**/*.ts"],
+    "angularCompilerOptions": {
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "annotateForClosureCompiler": true,
+        "strictTemplates": true,
+        "strictMetadataEmit": true,
+        "skipTemplateCodegen": true,
+        "fullTemplateTypeCheck": true,
+        "compilationMode": "partial"
+    }
+}

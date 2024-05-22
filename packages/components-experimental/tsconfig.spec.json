@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../dist/out-tsc/ng-icons-spec",
+        "paths": {
+            "@koobiq/ng-icons/*": ["./dist/ng-icons/*"]
+        }
+    },
+    "files": ["test.ts"],
+    "include": ["**/*.spec.ts", "./*/index.ts"]
+}
