@@ -1,4 +1,4 @@
-import { DocEntry, JsDocTagEntry } from '../rendering/entities.js';
+import { DocEntry, JsDocTagEntry } from '../rendering/entities.ts';
 
 /* Add mapping to use nunjucks rendering */
 

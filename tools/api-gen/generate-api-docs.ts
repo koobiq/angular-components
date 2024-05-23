@@ -1,9 +1,6 @@
-// @ts-ignore
-import { extractApiToJson } from './extraction/index.js';
-// @ts-ignore
-import { generateApiToHtml } from './rendering/index.js';
-// @ts-ignore
-import { generateManifest } from './manifest/index.js';
+import { extractApiToJson } from './extraction/index.ts';
+import { generateApiToHtml } from './rendering/index.ts';
+import { generateManifest } from './manifest/index.ts';
 
 export const generateApiDocs = () => {
     const data = extractApiToJson();

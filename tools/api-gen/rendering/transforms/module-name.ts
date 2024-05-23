@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DocEntry} from '../entities.js';
+import {DocEntry} from '../entities.ts';
 
-import {HasModuleName} from '../entities/traits.js';
+import {HasModuleName} from '../entities/traits.ts';
 
 export function addModuleName<T extends DocEntry>(entry: T, moduleName: string): T & HasModuleName {
   return {

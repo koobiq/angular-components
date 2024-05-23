@@ -1,4 +1,4 @@
-import { highlightCodeBlock } from './highlight-code-block.js';
+import { highlightCodeBlock } from './highlight-code-block.ts';
 
 /**
  * Nunjucks extension that supports rendering highlighted content. Content that is placed in

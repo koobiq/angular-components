@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import { MemberEntry, MemberTags, MemberType } from '../entities.js';
+import { MemberEntry, MemberTags, MemberType } from '../entities.ts';
 
-import { isClassMethodEntry } from '../entities/categorization.js';
-import { MemberEntryRenderable } from '../entities/renderables.js';
-import { HasMembers, HasRenderableMembers, HasRenderableMembersGroups } from '../entities/traits.js';
+import { isClassMethodEntry } from '../entities/categorization.ts';
+import { MemberEntryRenderable } from '../entities/renderables.ts';
+import { HasMembers, HasRenderableMembers, HasRenderableMembersGroups } from '../entities/traits.ts';
 
-import { addHtmlDescription, addHtmlJsDocTagComments, setEntryFlags } from './jsdoc-transforms.js';
-import { sortCategorizedMethodMembers, sortCategorizedPropertyMembers } from '../../utils.js';
+import { addHtmlDescription, addHtmlJsDocTagComments, setEntryFlags } from './jsdoc-transforms.ts';
+import { sortCategorizedMethodMembers, sortCategorizedPropertyMembers } from '../../utils.ts';
 // import { MethodEntry } from '@angular/compiler-cli';
 
 const lifecycleMethods = [

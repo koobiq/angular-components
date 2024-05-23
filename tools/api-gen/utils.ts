@@ -1,22 +1,22 @@
-import pkg from 'glob';
+import glob from 'glob';
 import { access, mkdir } from 'fs/promises';
-const { GlobSync } = pkg;
 import ts from 'typescript';
+
 import {
     MemberEntryRenderable,
     PropertyEntryRenderable
-} from './rendering/entities/renderables.js';
+} from './rendering/entities/renderables.ts';
 
 export const src = (path: string | string[]): string[] => {
     let res: string[];
     if (Array.isArray(path)) {
         res = path.reduce((result: string[], curPath) => {
-            const files: string[] = new GlobSync(curPath).found;
+            const files: string[] = new glob.GlobSync(curPath).found;
             result.push(...files);
             return result;
         }, []);
     } else {
-        res = new GlobSync(path).found;
+        res = new glob.GlobSync(path).found;
     }
 
     return res;
@@ -46,7 +46,6 @@ export function getDirectiveMetadata(classPath: ts.SourceFile): Map<string, any>
     // TODO: update with new interface
     const declaration: ts.Node = classPath;
 
-    // @ts-ignore
     const decorators = declaration && ts.isClassDeclaration(declaration) ? ts.getDecorators(declaration) : null;
 
     if (!decorators?.length) { return null; }

@@ -8,11 +8,7 @@ import {
     MemberEntry,
     ParameterEntry,
     TypeAliasEntry,
-} from '../entities.js';
-
-//@ts-ignore
-// import {HasRenderableToc} from './traits.ts';
-// import { InitializerApiFunctionEntry } from '../entities';
+} from '../entities.ts';
 
 /** JsDoc tag info augmented with transformed content for rendering. */
 export interface JsDocTagRenderable extends JsDocTagEntry {

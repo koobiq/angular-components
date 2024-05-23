@@ -1,6 +1,6 @@
-import { ClassEntryRenderable, DocEntryRenderable } from './entities/renderables.js';
-import { isClassEntry, isDeprecatedEntry } from './entities/categorization.js';
-import { EntryType } from './entities.js';
+import { ClassEntryRenderable, DocEntryRenderable } from './entities/renderables.ts';
+import { isClassEntry, isDeprecatedEntry } from './entities/categorization.ts';
+import { EntryType } from './entities.ts';
 
 export const isClass = (renderable: DocEntryRenderable) => {
     return isClassEntry(renderable) && renderable.entryType === EntryType.UndecoratedClass

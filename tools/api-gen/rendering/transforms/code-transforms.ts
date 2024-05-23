@@ -4,11 +4,10 @@ import {
   MemberEntry,
   MemberTags,
   ParameterEntry,
-  PropertyEntry,// @ts-ignore
-} from '../entities.js';
+  PropertyEntry,
+} from '../entities.ts';
 import highlightJs from 'highlight.js';
 
-// @ts-ignore
 import {
   isClassEntry,
   isClassMethodEntry,
@@ -20,14 +19,11 @@ import {
   // isInitializerApiFunctionEntry,
   isInterfaceEntry,
   isSetterEntry,
-  isTypeAliasEntry,// @ts-ignore
-} from '../entities/categorization.js';
-// @ts-ignore
-import {CodeLineRenderable} from '../entities/renderables.js';
-// @ts-ignore
-import {HasModuleName, HasRenderableToc} from '../entities/traits.js';
-// @ts-ignore
-import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms.js';
+  isTypeAliasEntry
+} from '../entities/categorization.ts';
+import {CodeLineRenderable} from '../entities/renderables.ts';
+import {HasModuleName, HasRenderableToc} from '../entities/traits.ts';
+import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms.ts';
 
 // Allows to generate links for code lines.
 interface CodeTableOfContentsData {
@@ -71,7 +67,6 @@ export function addRenderableCodeToc<T extends DocEntry & HasModuleName>(
   const groups = groupCodeLines(lines, metadata);
 
   return {
-      // @ts-ignore
     ...entry,
     codeLinesGroups: groups,
   };
@@ -296,6 +291,7 @@ function getNumberOfLinesOfCode(contents: string): number {
 }
 
 /** Prints an initializer function signature into a single line. */
+/*
 export function printInitializerFunctionSignatureLine(
   name: string,
   signature: FunctionEntry,
@@ -337,6 +333,7 @@ export function printInitializerFunctionSignatureLine(
   res += ';';
   return res;
 }
+*/
 
 function appendPrefixAndSuffix(entry: DocEntry, codeTocData: CodeTableOfContentsData): void {
   const appendFirstAndLastLines = (

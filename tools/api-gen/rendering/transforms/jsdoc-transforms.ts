@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-//@ts-ignore
-import {JsDocTagEntry} from '../entities.js';
+import {JsDocTagEntry} from '../entities.ts';
 import {marked} from 'marked';
 
 // import {rewriteLinks} from '../backwards-compatibility/links-mapper';
-import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization.js';
-import {LinkEntryRenderable} from '../entities/renderables.js';
+import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization.ts';
+import {LinkEntryRenderable} from '../entities/renderables.ts';
 import {
   HasAdditionalLinks,
   HasDeprecatedFlag,
@@ -23,9 +22,9 @@ import {
   HasJsDocTags,
   HasModuleName,
   HasRenderableJsDocTags,
-} from '../entities/traits.js';
+} from '../entities/traits.ts';
 
-import {getLinkToModule} from './url-transforms.js';
+import {getLinkToModule} from './url-transforms.ts';
 
 export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
 export const JS_DOC_SEE_TAG = 'see';

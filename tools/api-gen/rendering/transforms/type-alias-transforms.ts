@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {TypeAliasEntry} from '../entities.js';
-import {TypeAliasEntryRenderable} from '../entities/renderables.js';
-import {addRenderableCodeToc} from './code-transforms.js';
+import {TypeAliasEntry} from '../entities.ts';
+import {TypeAliasEntryRenderable} from '../entities/renderables.ts';
+import {addRenderableCodeToc} from './code-transforms.ts';
 import {
   addHtmlAdditionalLinks,
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
   setEntryFlags,
-} from './jsdoc-transforms.js';
-import {addModuleName} from './module-name.js';
+} from './jsdoc-transforms.ts';
+import {addModuleName} from './module-name.ts';
 
 /** Given an unprocessed type alias entry, get the fully renderable type alias entry. */
 export function getTypeAliasRenderable(

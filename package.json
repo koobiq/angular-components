@@ -168,7 +168,7 @@
         "docs:prod-build": "ng build koobiq-docs",
         "docs:prod-build:aot": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
-        "docs:api-gen": "ts-node --esm --project tools/api-gen/tsconfig.json tools/api-gen/generate-api-docs.ts",
+        "docs:api-gen": "TS_NODE_PROJECT=tools/api-gen/tsconfig.json node --loader ts-node/esm tools/api-gen/generate-api-docs.ts",
         "preinstall": "node tools/npm/check-npm.js",
         "prepare": "husky",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
