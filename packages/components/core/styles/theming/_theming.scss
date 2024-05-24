@@ -248,7 +248,7 @@
 }
 
 @function kbq-light-theme($tokens) {
-    $scheme: 'light-color-scheme';
+    $scheme: 'light';
 
     @return (
         is-dark: false,
@@ -281,7 +281,7 @@
 }
 
 @function kbq-dark-theme($tokens) {
-    $scheme: 'dark-color-scheme';
+    $scheme: 'dark';
 
     @return (
         is-dark: true,

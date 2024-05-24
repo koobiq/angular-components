@@ -18,7 +18,7 @@
   --kbq-alert-size-normal-icon-margin-left: 12px;
   --kbq-alert-size-normal-icon-margin-addon-title: 2px;
   --kbq-alert-size-normal-title-margin-bottom: 4px;
-  --kbq-alert-size-normal-close-button-margin-top: 4px;
+  --kbq-alert-size-normal-close-button-margin-top: 8px;
   --kbq-alert-size-normal-close-button-margin-left: 2px;
   --kbq-alert-size-normal-button-stack-padding-top: 6px;
   --kbq-alert-size-normal-button-stack-padding-bottom: 2px;
@@ -35,9 +35,9 @@
   --kbq-alert-size-compact-icon-margin-right: 8px;
   --kbq-alert-size-compact-icon-margin-addon-title: 2px;
   --kbq-alert-size-compact-title-margin-bottom: 2px;
-  --kbq-alert-size-compact-close-button-margin-top: 4px;
+  --kbq-alert-size-compact-close-button-margin-top: 8px;
   --kbq-alert-size-compact-close-button-margin-left: 2px;
-  --kbq-alert-size-compact-button-stack-padding-top: 6px;
+  --kbq-alert-size-compact-button-stack-padding-top: 8px;
   --kbq-alert-size-compact-button-stack-padding-bottom: 2px;
   --kbq-autocomplete-size-panel-padding: 4px 0;
   --kbq-autocomplete-size-panel-max-height: 256px;
