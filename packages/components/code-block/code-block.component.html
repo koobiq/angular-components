@@ -1,4 +1,6 @@
-<kbq-tab-group (selectedTabChange)="onSelectTab($event)">
+<kbq-tab-group
+    [class.kbq-focused]="hasFocus"
+    (selectedTabChange)="onSelectTab($event)">
     <kbq-tab
         *ngFor="let codeFile of codeFiles; let i = index"
         [disabled]="singleFile">
@@ -11,25 +13,27 @@
              [class.kbq-code-block__code_soft-wrap]="softWrap"
              [class.kbq-code-block__code_view-all]="viewAll"
              (scroll)="checkOverflow(codeContent)"
-            ><code class="hljs"
+            ><kbq-actionbar-block
+            [class.kbq-actionbar-block_floating]="noHeader"
+            [config]="config"
+            [codeFiles]="codeFiles"
+            [selectedTabIndex]="selectedTabIndex"
+            [lessContrast]="filled"
+            [multiLine]="multiLine"
+            [softWrap]="softWrap"
+            (toggleSoftWrap)="toggleSoftWrap()"
+            (downloadCode)="downloadCode()"
+            (copyCode)="copyCode()"
+            (openExternalSystem)="openExternalSystem()">
+            </kbq-actionbar-block><code class="hljs"
                [id]="codeFile.filename + '_' + i"
                [class.hljs-line-numbers]="lineNumbers"
                [highlight]="codeFiles[i].content"
                [lineNumbers]="true"
-               (highlighted)="onHighlighted()">
-            </code><kbq-actionbar-block
-                [class.kbq-actionbar-block_floating]="noHeader"
-                [config]="config"
-                [codeFiles]="codeFiles"
-                [selectedTabIndex]="selectedTabIndex"
-                [lessContrast]="filled"
-                [multiLine]="multiLine"
-                [softWrap]="softWrap"
-                (toggleSoftWrap)="toggleSoftWrap()"
-                (downloadCode)="downloadCode()"
-                (copyCode)="copyCode()"
-                (openExternalSystem)="openExternalSystem()">
-            </kbq-actionbar-block></pre>
+               [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
+               (highlighted)="onHighlighted()"
+               (blur)="hasFocus = false">
+            </code></pre>
 
         <div class="kbq-code-block__show-more"
              *ngIf="maxHeight"
@@ -40,6 +44,7 @@
                     [color]="'theme'"
                     [kbqStyle]="'transparent'"
                     kbq-button
+                    (keydown.enter)="onEnter(codeContent)"
                     (click)="onShowMoreClick(codeContent)">
                 <i kbq-icon="mc-angle-down-L_16" *ngIf="!viewAll"></i>
                 <i kbq-icon="mc-angle-up-L_16" *ngIf="viewAll"></i>

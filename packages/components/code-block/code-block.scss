@@ -4,6 +4,12 @@
 
 $tokens: meta.module-variables(tokens) !default;
 
+$border-radius: var(
+    --kbq-code-block-size-container-border-radius, map.get($tokens, code-block-size-container-border-radius)
+);
+$border-width: var(
+        --kbq-code-block-size-container-border-width, map.get($tokens, code-block-size-container-border-width)
+);
 
 /* stylelint-disable no-descending-specificity */
 .kbq-code-block {
@@ -18,13 +24,8 @@ $tokens: meta.module-variables(tokens) !default;
     -moz-hyphens: none;
     -webkit-hyphens: none;
 
-    border-width: var(
-        --kbq-code-block-size-container-border-width, map.get($tokens, code-block-size-container-border-width)
-    );
-    border-style: solid;
-    border-radius: var(
-        --kbq-code-block-size-container-border-radius, map.get($tokens, code-block-size-container-border-radius)
-    );
+    border-radius: $border-radius;
+    border-width: 0;
 
     .kbq-tab-header {
         // 4 buttons + margin
@@ -46,6 +47,10 @@ $tokens: meta.module-variables(tokens) !default;
                 --kbq-code-block-size-header-padding-left,
                 map.get($tokens, code-block-size-header-padding-left)
             );
+
+        border-width: $border-width $border-width 0 $border-width;
+        border-style: solid;
+        border-radius: $border-radius $border-radius 0 0;
     }
 
     .kbq-code-block__code {
@@ -66,6 +71,12 @@ $tokens: meta.module-variables(tokens) !default;
                     --kbq-code-block-size-with-header-content-padding-horizontal,
                     map.get($tokens, code-block-size-with-header-content-padding-horizontal)
                 );
+
+            border-radius: $border-radius;
+
+            &:focus-visible {
+                outline: none;
+            }
         }
 
         .hljs-ln-numbers {
@@ -92,9 +103,20 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 
+    &:not(.kbq-code-block_no-header) {
+        .kbq-tab-body__wrapper {
+            border-top-width: 0;
+        }
+    }
+
     &.kbq-code-block_no-header {
         .kbq-tab-header {
             display: none;
+        }
+
+        .kbq-tab-body__wrapper {
+            border-width: $border-width;
+            border-radius: $border-radius;
         }
 
         .kbq-code-block__code {
@@ -134,6 +156,10 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-tab-body__wrapper {
         flex-direction: column;
         position: unset;
+
+        border-width: $border-width;
+        border-style: solid;
+        border-radius: 0 0 $border-radius $border-radius;
     }
 
     .kbq-tab-body.kbq-tab-body__active {
@@ -176,10 +202,11 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: center;
     overflow: hidden;
 
-    width: 100%;
+    width: calc(100% - $border-width * 2);
 
     position: absolute;
-    bottom: 0;
+    bottom: $border-width;
+    border-radius: $border-radius;
 
     &.kbq-code-block__show-more_collapsed {
         padding-top: var(

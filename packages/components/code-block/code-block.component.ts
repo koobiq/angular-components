@@ -11,16 +11,18 @@ import {
     ChangeDetectorRef,
     OnDestroy,
     ViewChild,
-    Renderer2
+    Renderer2,
+    AfterViewInit
 } from '@angular/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { pairwise, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 
 import {
     KbqCodeBlockConfiguration,
     KbqCodeFile
 } from './code-block.types';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
@@ -60,6 +62,11 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
 
 const actionBarBlockLeftMargin = 24;
 
+const hasScroll = (element: HTMLElement) => {
+    const { scrollHeight, scrollWidth, clientHeight, clientWidth} = element;
+    return scrollHeight > clientHeight || scrollWidth > clientWidth;
+}
+
 @Component({
     selector: 'kbq-code-block',
     exportAs: 'kbqCodeBlock',
@@ -78,7 +85,7 @@ const actionBarBlockLeftMargin = 24;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqCodeBlockComponent implements OnDestroy {
+export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
 
     @Input() lineNumbers = true;
@@ -100,17 +107,21 @@ export class KbqCodeBlockComponent implements OnDestroy {
     viewAll: boolean = false;
     multiLine: boolean = false;
     isTopOverflow: boolean = false;
+    hasFocus: boolean = false;
 
     readonly resizeStream = new Subject<Event>();
+    readonly currentCodeBlock = new Subject<HTMLElement>();
 
     private readonly resizeDebounceInterval: number = 100;
     private resizeSubscription = Subscription.EMPTY;
+    private codeBlockSubscription = Subscription.EMPTY;
 
     constructor(
         private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private clipboard: Clipboard,
         private renderer: Renderer2,
+        private focusMonitor: FocusMonitor,
         @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) public config: KbqCodeBlockConfiguration
     ) {
         this.config = config || KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
@@ -120,8 +131,30 @@ export class KbqCodeBlockComponent implements OnDestroy {
             .subscribe(this.updateHeader);
     }
 
+    ngAfterViewInit() {
+        // render focus border if origin is keyboard
+        this.codeBlockSubscription = this.currentCodeBlock.pipe(
+            startWith(null),
+            pairwise(),
+            switchMap(([prev, current]) => {
+                if (prev) { this.focusMonitor.stopMonitoring(prev); }
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                return this.focusMonitor.monitor(current!).pipe(
+                    filter((origin: FocusOrigin) => origin === 'keyboard')
+                );
+            })
+        ).subscribe(() => {
+            this.hasFocus = true;
+            this.changeDetectorRef.markForCheck();
+        });
+        this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code'));
+    }
+
+
     ngOnDestroy(): void {
         this.resizeSubscription.unsubscribe();
+        this.codeBlockSubscription.unsubscribe();
     }
 
     updateHeader = () => {
@@ -179,6 +212,9 @@ export class KbqCodeBlockComponent implements OnDestroy {
         this.isTopOverflow = false;
 
         setTimeout(this.updateHeader);
+        setTimeout(() => this.currentCodeBlock.next(
+            this.elementRef.nativeElement.querySelector('code')
+        ));
     }
 
     checkOverflow(currentCodeContentElement: HTMLElement) {
@@ -195,6 +231,15 @@ export class KbqCodeBlockComponent implements OnDestroy {
         }
     }
 
+    // TODO: replace with property to reduce calculations
+    canShowFocus(currentCodeContent: HTMLPreElement): boolean {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const currentCodeBlock = currentCodeContent.querySelector('code')!;
+
+        return (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock))
+            && (!!this.maxHeight && this.viewAll || !this.maxHeight);
+    }
+
     private updateMultiline = () => {
         this.multiLine = this.elementRef.nativeElement
             .querySelectorAll('.hljs-ln-numbers').length > 1;
@@ -209,5 +254,19 @@ export class KbqCodeBlockComponent implements OnDestroy {
         const extension = LANGUAGES_EXTENSIONS[codeFile.language] || DEFAULT_EXTENSION;
 
         return `${fileName}.${extension}`;
+    }
+
+    onEnter(currentCodeBlock: HTMLPreElement) {
+        // defer execution after toggle view mode
+        setTimeout(() => {
+            if (this.canShowFocus(currentCodeBlock)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.focusMonitor.focusVia(
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    currentCodeBlock.querySelector('code')!,
+                    'keyboard'
+                );
+            }
+        }, 0);
     }
 }
