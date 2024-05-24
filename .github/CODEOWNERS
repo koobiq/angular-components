@@ -1,0 +1,14 @@
+# Components
+/packages/components/*                                      @lskramarov
+
+# Tools
+/tools/api-extractor/*                                      @NikGurev
+/tools/api-gen/*                                            @NikGurev
+/tools/scss-compiler/*                                      @pimenovoleg
+/tools/validate-licenses/*                                  @pimenovoleg
+
+# Misc
+/.github/**                                                 @pimenovoleg
+/.husky/**                                                  @pimenovoleg
+/.github/CODEOWNERS                                         @pimenovoleg @lskramarov
+/.github/ISSUE_TEMPLATE/**                                  @pimenovoleg
