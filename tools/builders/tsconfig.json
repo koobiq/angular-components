@@ -6,21 +6,10 @@
         "rootDir": ".",
         "module": "commonjs",
         "target": "es5",
-        "types": [
-            "node"
-        ],
-        "lib": [
-            "es2017"
-        ],
+        "types": ["node"],
+        "lib": ["es2017"],
         "downlevelIteration": true
     },
-    "include": [
-        "**/*.ts",
-        "**/*.json"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "tsconfig.json"
-    ]
+    "include": ["**/*.ts", "**/*.json"],
+    "exclude": ["node_modules", "dist", "tsconfig.json"]
 }

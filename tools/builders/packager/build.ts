@@ -1,21 +1,16 @@
-import {
-    BuilderContext,
-    BuilderOutput,
-    Target
-} from '@angular-devkit/architect';
-import { Schema } from '@angular/cli/lib/config/workspace-schema';
-import { green } from 'chalk';
 import { execSync } from 'child_process';
 import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 
-import { IPackagerOptions } from './schema';
+import { Schema } from '@angular/cli/lib/config/workspace-schema';
 
+import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
+import { green } from 'chalk';
+
+import { IPackagerOptions } from './schema';
 
 const packageVersionFilePath = './packages/components/core/version.ts';
 
-
-// tslint:disable-next-line:max-func-body-length
 export async function packager(options: IPackagerOptions, context: BuilderContext): Promise<BuilderOutput> {
     const project = context.target !== undefined ? context.target.project : '';
     context.logger.info(`📦 Packaging ${project}...`);
@@ -27,15 +22,14 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
     await fillKoobiqVersion(project);
 
-    let ngPackagrBuilderOptions;
+    let ngPackagrBuilderOptions: { project: string };
 
     try {
-        ngPackagrBuilderOptions = ((await context.getTargetOptions(target)) as unknown) as any;
+        ngPackagrBuilderOptions = (await context.getTargetOptions(target)) as unknown as any;
 
         if (ngPackagrBuilderOptions.project === undefined) {
             throw new Error('❌ Build target does not exist in angular.json');
         }
-
     } catch (err) {
         context.logger.error(err);
 
@@ -47,20 +41,13 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
     try {
         context.logger.info('📖 angular.json file...');
-        const angularJson = await tryJsonParse<Schema>(
-            join(context.workspaceRoot, 'angular.json')
-        );
+        const angularJson = await tryJsonParse<Schema>(join(context.workspaceRoot, 'angular.json'));
 
         // get the package json
         context.logger.info('📖 package.json file...');
-        const packageJson = await tryJsonParse<IPackageJson>(
-            join(context.workspaceRoot, 'package.json')
-        );
+        const packageJson = await tryJsonParse<IPackageJson>(join(context.workspaceRoot, 'package.json'));
 
-        const projectRoot =
-            angularJson.projects &&
-            angularJson.projects[project] &&
-            angularJson.projects[project].root;
+        const projectRoot = angularJson.projects && angularJson.projects[project] && angularJson.projects[project].root;
 
         if (!projectRoot) {
             context.logger.error(
@@ -70,53 +57,38 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             return { success: false };
         }
 
-        const ngPackagrConfigPath = join(
-            context.workspaceRoot,
-            ngPackagrBuilderOptions.project
-        );
+        const ngPackagrConfigPath = join(context.workspaceRoot, ngPackagrBuilderOptions.project);
 
         const ngPackagrConfig = await tryJsonParse<INgPackagerJson>(ngPackagrConfigPath);
 
-        const libraryDestination = resolve(
-            dirname(ngPackagrConfigPath),
-            ngPackagrConfig.dest
-        );
+        const libraryDestination = resolve(dirname(ngPackagrConfigPath), ngPackagrConfig.dest);
 
         const build = await context.scheduleTarget(target);
 
         const buildResult = await build.result;
 
+        if (buildResult.error) {
+            console.error(buildResult.error);
+        }
+
         const releasePackageJsonPath = join(libraryDestination, 'package.json');
         let releasePackageJson = await tryJsonParse<IPackageJson>(releasePackageJsonPath);
 
-        context.logger.info('Syncing koobiq components version for releasing...');
-        releasePackageJson = syncComponentsVersion(
-            releasePackageJson,
-            packageJson,
-            options.versionPlaceholder
-        );
+        context.logger.info('Syncing Koobiq components version for releasing...');
+        releasePackageJson = syncComponentsVersion(releasePackageJson, packageJson, options.versionPlaceholder);
 
         context.logger.info('Syncing Angular dependency versions for releasing...');
-        releasePackageJson = syncNgVersion(
-            releasePackageJson,
-            packageJson,
-            options.ngVersionPlaceholder
-        );
+        releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder);
 
-        writeFileSync(
-            join(libraryDestination, 'package.json'),
-            // tslint:disable-next-line:no-magic-numbers
-            JSON.stringify(releasePackageJson, null, 4),
-            { encoding: 'utf-8' }
-        );
+        writeFileSync(join(libraryDestination, 'package.json'), JSON.stringify(releasePackageJson, null, 4), {
+            encoding: 'utf-8'
+        });
+        context.logger.info(green('Replaced all version placeholders in package.json file!'));
 
         for (const additionalTargetName of options.additionalTargets) {
-
             context.logger.info(`Running additional target: ${additionalTargetName}`);
 
-            const additionalTargetBuild = await context.scheduleTarget(
-                parseAdditionalTargets(additionalTargetName)
-            );
+            const additionalTargetBuild = await context.scheduleTarget(parseAdditionalTargets(additionalTargetName));
 
             const additionalTargetBuildResult = await additionalTargetBuild.result;
 
@@ -125,9 +97,8 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             }
         }
 
-        if (buildResult.error) { throw buildResult.error; }
-
-        context.logger.info(green(' ✔ Packaging done!'));
+        context.logger.info(green('------------------------------------------------------------------------------'));
+        context.logger.info(green('Packaging done!'));
 
         return { success: buildResult.success };
     } catch (error) {
@@ -154,19 +125,14 @@ interface IPackageJson {
     };
 }
 
-
 function syncComponentsVersion(
     releaseJson: IPackageJson,
     rootPackageJson: IPackageJson,
     placeholder: string
 ): IPackageJson {
-
     const newPackageJson = { ...releaseJson };
 
-    if (
-        rootPackageJson.version &&
-        (!newPackageJson.version || newPackageJson.version.trim() === placeholder)
-    ) {
+    if (rootPackageJson.version && (!newPackageJson.version || newPackageJson.version.trim() === placeholder)) {
         newPackageJson.version = rootPackageJson.version;
 
         for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
@@ -179,12 +145,7 @@ function syncComponentsVersion(
     return newPackageJson;
 }
 
-
-function syncNgVersion(
-    releaseJson: IPackageJson,
-    rootPackageJson: IPackageJson,
-    placeholder: string
-): IPackageJson {
+function syncNgVersion(releaseJson: IPackageJson, rootPackageJson: IPackageJson, placeholder: string): IPackageJson {
     const updatedJson = { ...releaseJson };
 
     for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
@@ -211,15 +172,16 @@ function parseAdditionalTargets(targetRef: string): { target: string; project: s
 }
 
 async function fillKoobiqVersion(project: string) {
-    if (project !== 'components') { return; }
+    if (project !== 'components') {
+        return;
+    }
 
     const commit = execSync('git rev-parse --short HEAD').toString().trim();
 
     const packageJson = await tryJsonParse<IPackageJson>('package.json');
 
     const versionFile = await fs.readFile(packageVersionFilePath, { encoding: 'utf-8' });
-    const result = versionFile
-        .replace(/{{VERSION}}/g, `${packageJson.version}+sha-${commit}`);
+    const result = versionFile.replace(/{{VERSION}}/g, `${packageJson.version}+sha-${commit}`);
 
-    fs.writeFile(packageVersionFilePath, result, 'utf8');
+    await fs.writeFile(packageVersionFilePath, result, 'utf8');
 }

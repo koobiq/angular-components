@@ -1,14 +1,13 @@
-import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
-import { JsonObject } from '@angular-devkit/core';
-import { ExecOptions, exec } from 'child_process';
+import { exec, ExecOptions } from 'child_process';
 import { statSync } from 'fs';
 import { join } from 'path';
 
+import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
+import { JsonObject } from '@angular-devkit/core';
+
 import { ITypescriptBuilderOptions } from './schema';
 
-
 export async function executeCommand(command: string, cwd?: string): Promise<string> {
-    // tslint:disable-next-line:no-magic-numbers
     const maxBuffer = 1024 * 1024 * 10;
 
     const options: ExecOptions = {
@@ -37,9 +36,7 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
     }
 
     if (!statSync(configFile).isFile()) {
-        context.logger.error(
-            'No tsconfig.json file found for compiling. Please provide it via the tsConfig option.'
-        );
+        context.logger.error('No tsconfig.json file found for compiling. Please provide it via the tsConfig option.');
 
         return {
             success: false
@@ -47,9 +44,7 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
     }
 
     try {
-        const logOutput = await executeCommand(
-            `node_modules/.bin/tsc -p ${configFile}${outDirArgument}`
-        );
+        const logOutput = await executeCommand(`node_modules/.bin/tsc -p ${configFile}${outDirArgument}`);
 
         if (logOutput) {
             context.logger.info(logOutput);
@@ -67,5 +62,4 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
     };
 }
 
-// tslint:disable-next-line:no-default-export
 export default createBuilder<ITypescriptBuilderOptions & JsonObject>(run);

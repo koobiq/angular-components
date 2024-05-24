@@ -28,9 +28,7 @@
         }
     },
     "additionalProperties": false,
-    "required": [
-        "buildTarget"
-    ],
+    "required": ["buildTarget"],
     "definitions": {
         "assetPattern": {
             "type": "object",
@@ -49,11 +47,7 @@
                 }
             },
             "additionalProperties": false,
-            "required": [
-                "glob",
-                "input",
-                "output"
-            ]
+            "required": ["glob", "input", "output"]
         }
     }
 }
