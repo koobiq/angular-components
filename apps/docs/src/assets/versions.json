@@ -1,13 +1,13 @@
 {
-    "17": {
-        "version": "17.0.0",
-        "date": "2023-06-27T15:14:48.639Z",
-        "url": "https://koobiq.io/"
-    },
     "16": {
-        "version": "16.0.0",
-        "date": "2023-06-27T15:14:48.639Z",
+        "version": "16.0.0-beta.18",
+        "date": "2024-03-01T05:21:48.677Z",
         "url": "https://v16.koobiq.io/"
+    },
+    "17": {
+        "version": "17.0.0-rc.3",
+        "date": "2024-05-17T08:48:51.998Z",
+        "url": "https://v17.koobiq.io/"
     },
     "next": {
         "version": "Next",
