@@ -1,6 +1,6 @@
-import { EntryCollection, ManifestEntry, PackageApiInfo } from '../types/types.js';
-import { DocEntry } from '../rendering/entities.js';
-import { computeApiDocumentUrl, getApiLookupKey, isPublic } from './helpers.js';
+import { EntryCollection, ManifestEntry, PackageApiInfo } from '../types/types.ts';
+import { DocEntry } from '../rendering/entities.ts';
+import { computeApiDocumentUrl, getApiLookupKey, isPublic } from './helpers.ts';
 
 export function generateManifest(apiCollections: EntryCollection[]): EntryCollection<ManifestEntry>[] {
     // Filter out repeated entries for function overloads, but also keep track of

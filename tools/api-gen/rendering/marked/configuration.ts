@@ -1,6 +1,5 @@
 import {marked} from 'marked';
-//@ts-ignore
-import {renderer} from './renderer.js';
+import {renderer} from './renderer.ts';
 
 /** Globally configures marked for rendering JsDoc content to HTML. */
 export function configureMarkedGlobally() {

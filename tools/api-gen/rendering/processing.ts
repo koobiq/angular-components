@@ -1,29 +1,28 @@
-//@ts-ignore
-import { DocEntryRenderable } from './entities/renderables.js';
+import { DocEntryRenderable } from './entities/renderables.ts';
 import {
     isClassEntry,
     isConstantEntry,
     isEnumEntry,
     isFunctionEntry,
-    isInterfaceEntry, isTypeAliasEntry//@ts-ignore
-} from './entities/categorization.js';//@ts-ignore
-import { getClassRenderable } from './transforms/class-transforms.js';
-import { getConstantRenderable } from './transforms/constant-transforms.js';
-import { getEnumRenderable } from './transforms/enum-transforms.js';
-import { getInterfaceRenderable } from './transforms/interface-transforms.js';
-import { getFunctionRenderable } from './transforms/function-transforms.js';
-import { getTypeAliasRenderable } from './transforms/type-alias-transforms.js';
+    isInterfaceEntry,
+    isTypeAliasEntry
+} from './entities/categorization.ts';
+
+import { getClassRenderable } from './transforms/class-transforms.ts';
+import { getConstantRenderable } from './transforms/constant-transforms.ts';
+import { getEnumRenderable } from './transforms/enum-transforms.ts';
+import { getInterfaceRenderable } from './transforms/interface-transforms.ts';
+import { getFunctionRenderable } from './transforms/function-transforms.ts';
+import { getTypeAliasRenderable } from './transforms/type-alias-transforms.ts';
 
 import {
     addHtmlAdditionalLinks,
     addHtmlDescription, addHtmlJsDocTagComments,
     addHtmlUsageNotes,
-    setEntryFlags//@ts-ignore
-} from './transforms/jsdoc-transforms.js';
-//@ts-ignore
-import { addModuleName } from './transforms/module-name.js';
-//@ts-ignore
-import { DocEntry } from './entities.js';
+    setEntryFlags
+} from './transforms/jsdoc-transforms.ts';
+import { addModuleName } from './transforms/module-name.ts';
+import { DocEntry } from './entities.ts';
 
 export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRenderable {
     if (isClassEntry(entry)) {

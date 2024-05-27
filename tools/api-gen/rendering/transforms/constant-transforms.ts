@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ConstantEntry} from '../entities.js';
-import {ConstantEntryRenderable} from '../entities/renderables.js';
-import {addRenderableCodeToc} from './code-transforms.js';
+import {ConstantEntry} from '../entities.ts';
+import {ConstantEntryRenderable} from '../entities/renderables.ts';
+import {addRenderableCodeToc} from './code-transforms.ts';
 import {
   addHtmlAdditionalLinks,
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
   setEntryFlags,
-} from './jsdoc-transforms.js';
-import {addModuleName} from './module-name.js';
+} from './jsdoc-transforms.ts';
+import {addModuleName} from './module-name.ts';
 
 /** Given an unprocessed constant entry, get the fully renderable constant entry. */
 export function getConstantRenderable(

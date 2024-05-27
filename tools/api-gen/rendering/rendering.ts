@@ -1,8 +1,9 @@
 import nunjucks from 'nunjucks';
-import { HighlightNunjucksExtension } from './nunjucks-tags/highlight.js';
-import path from 'node:path';
+import { join } from 'path';
 
-const TEMPLATE_DIR = path.join(process.cwd(), 'tools', 'api-gen', 'rendering', 'templates');
+import { HighlightNunjucksExtension } from './nunjucks-tags/highlight.ts';
+
+const TEMPLATE_DIR = join(process.cwd(), 'tools', 'api-gen', 'rendering', 'templates');
 const env = nunjucks.configure(TEMPLATE_DIR, {
     autoescape: false,
     tags: {

@@ -8,23 +8,12 @@
 
 import highlightJs from 'highlight.js';
 import { Renderer as MarkedRenderer } from 'marked';
-// @ts-ignore
-// import { splitLines } from '../transforms/code-transforms.ts';
+import { splitLines } from '../transforms/code-transforms.ts';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
  * files that can be used in the Angular docs.
  */
-/** Split generated code with syntax highlighting into single lines */
-
-// TODO: temporarily added here
-export function splitLines(text: string): string[] {
-    if (text.length === 0) {
-        return [];
-    }
-    return text.split(/\r\n|\r|\n/g);
-}
-
 export const renderer: Partial<MarkedRenderer> = {
     code(code: string, language: string): string {
         let highlightResult: HighlightResult;

@@ -10,26 +10,14 @@ import {
     MemberType,
     MethodEntry,
     PropertyEntry,
-    TypeAliasEntry,//@ts-ignore
-} from '../entities.js';
+    TypeAliasEntry
+} from '../entities.ts';
 
-/*import {
-  ClassEntryRenderable,
-  ConstantEntryRenderable,
-  DocEntryRenderable,
-  EnumEntryRenderable,
-  FunctionEntryRenderable,
-  InterfaceEntryRenderable,
-  MemberEntryRenderable,
-  MethodEntryRenderable,
-  TypeAliasEntryRenderable,//@ts-ignore
-} from './renderables.ts';*///@ts-ignore
-import {HasJsDocTags} from './traits.js';
-import { ClassEntryRenderable, DocEntryRenderable, InterfaceEntryRenderable } from './renderables.js';
+import {HasJsDocTags} from './traits.ts';
+import { ClassEntryRenderable, DocEntryRenderable, InterfaceEntryRenderable } from './renderables.ts';
 
 
 /** Gets whether the given entry represents a class */
-// @ts-ignore
 export function isClassEntry(entry: DocEntryRenderable): entry is ClassEntryRenderable;
 export function isClassEntry(entry: DocEntry): entry is ClassEntry;
 export function isClassEntry(entry: DocEntry): entry is ClassEntry {
@@ -67,7 +55,6 @@ export function isEnumEntry(entry: DocEntry): entry is EnumEntry {
 }
 
 /** Gets whether the given entry represents an interface. */
-//@ts-ignore
 export function isInterfaceEntry(entry: DocEntryRenderable): entry is InterfaceEntryRenderable;
 export function isInterfaceEntry(entry: DocEntry): entry is InterfaceEntry;
 export function isInterfaceEntry(entry: DocEntry): entry is InterfaceEntry {

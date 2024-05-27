@@ -1,10 +1,10 @@
-import { ClassEntry, DocEntry, MemberEntry, MemberTags } from '../rendering/entities.js';
-import { isClassEntry } from '../rendering/entities/categorization.js';
+import { ClassEntry, DocEntry, MemberEntry, MemberTags } from '../rendering/entities.ts';
+import { isClassEntry } from '../rendering/entities/categorization.ts';
 import fs from 'fs';
 import ts from 'typescript';
-import { ClassEntryMetadata, PackageMetadata } from '../types/types.js';
+import { ClassEntryMetadata, PackageMetadata } from '../types/types.ts';
 import { relative } from 'path';
-import { isPublic } from '../manifest/helpers.js';
+import { isPublic } from '../manifest/helpers.ts';
 
 type FunctionProps = keyof Function | string;
 const fProps: FunctionProps[] = ['call', 'caller', 'apply', '[Symbol.hasInstance]', 'toString', 'arguments', 'bind', '[Symbol.metadata]', 'name', 'length'];
@@ -52,7 +52,7 @@ export function entryHandler(entrySrc: string) {
     sourceFile.forEachChild((node) => {
         if (!node || !ts.isClassDeclaration(node)) { return; }
 
-        let baseClass = null;
+        let baseClass: string | null = null;
         if (node.heritageClauses) {
             for (let clause of node.heritageClauses) {
                 if (clause.token === ts.SyntaxKind.ExtendsKeyword) {

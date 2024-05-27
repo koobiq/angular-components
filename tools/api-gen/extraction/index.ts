@@ -2,11 +2,9 @@ import { basename, join } from 'path';
 import ts from 'typescript';
 import { NgtscProgram } from '@angular/compiler-cli';
 
-// @ts-ignore
-import { src } from '../utils.js';
-// @ts-ignore
-import { PackageMetadata, EntryCollection, ClassEntryMetadata } from '../types/types.js';
-import { entryHandler, updateEntries, prepareMergedMetadata } from './helpers.js';
+import { src } from '../utils.ts';
+import { PackageMetadata, EntryCollection, ClassEntryMetadata } from '../types/types.ts';
+import { entryHandler, updateEntries, prepareMergedMetadata } from './helpers.ts';
 
 
 const getMetadataFrom = (moduleName: string, packageName: string): PackageMetadata => {

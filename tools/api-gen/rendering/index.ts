@@ -1,16 +1,11 @@
-// import nunjucks from 'nunjucks';
-
-//@ts-ignore
-import { EntryCollection, ManifestEntry, PackageApiInfo } from '../types/types.js';
-//@ts-ignore
-import { configureMarkedGlobally } from './marked/configuration.js';
-//@ts-ignore
-import { getRenderable } from './processing.js';
-//@ts-ignore
-import { renderEntry } from './rendering.js';
 import { writeFileSync } from 'fs';
-import { createDirIfNotExists } from '../utils.js';
-import { entryPointGrouper } from './helpers.js';
+
+import { configureMarkedGlobally } from './marked/configuration.ts';
+import { getRenderable } from './processing.ts';
+import { renderEntry } from './rendering.ts';
+import { createDirIfNotExists } from '../utils.ts';
+import { EntryCollection, ManifestEntry, PackageApiInfo } from '../types/types.ts';
+import { entryPointGrouper } from './helpers.ts';
 
 export function generateApiToHtml(entryCollections: EntryCollection<ManifestEntry>[]) {
     configureMarkedGlobally();

@@ -6,18 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ClassEntry} from '../entities.js';
-import {ClassEntryRenderable} from '../entities/renderables.js';
-import {addRenderableCodeToc} from './code-transforms.js';
+import {ClassEntry} from '../entities.ts';
+import {ClassEntryRenderable} from '../entities/renderables.ts';
+import {addRenderableCodeToc} from './code-transforms.ts';
 import {
   addHtmlAdditionalLinks,
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
   setEntryFlags,
-} from './jsdoc-transforms.js';
-import {addRenderableGroupMembers} from './member-transforms.js';
-import {addModuleName} from './module-name.js';
+} from './jsdoc-transforms.ts';
+import {addRenderableGroupMembers} from './member-transforms.ts';
+import {addModuleName} from './module-name.ts';
 
 /** Given an unprocessed class entry, get the fully renderable class entry. */
 export function getClassRenderable(

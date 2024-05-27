@@ -1,4 +1,4 @@
-import { JsDocTagEntry, MemberEntry, ParameterEntry } from '../entities.js';
+import { JsDocTagEntry, MemberEntry, ParameterEntry } from '../entities.ts';
 
 import {
     CodeLineRenderable,
@@ -7,7 +7,7 @@ import {
     MemberEntryRenderable,
     ParameterEntryRenderable,
     PropertyEntryRenderable,
-} from './renderables.js';
+} from './renderables.ts';
 
 /** A doc entry that has jsdoc tags. */
 export interface HasJsDocTags {

@@ -6,18 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EnumEntry} from '../entities.js';
-import {EnumEntryRenderable} from '../entities/renderables.js';
-import {addRenderableCodeToc} from './code-transforms.js';
+import {EnumEntry} from '../entities.ts';
+import {EnumEntryRenderable} from '../entities/renderables.ts';
+import {addRenderableCodeToc} from './code-transforms.ts';
 import {
   addHtmlAdditionalLinks,
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
   setEntryFlags,
-} from './jsdoc-transforms.js';
-import {addRenderableMembers} from './member-transforms.js';
-import {addModuleName} from './module-name.js';
+} from './jsdoc-transforms.ts';
+import {addRenderableMembers} from './member-transforms.ts';
+import {addModuleName} from './module-name.ts';
 
 /** Given an unprocessed enum entry, get the fully renderable enum entry. */
 export function getEnumRenderable(classEntry: EnumEntry, moduleName: string): EnumEntryRenderable {

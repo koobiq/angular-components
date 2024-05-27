@@ -1,4 +1,4 @@
-import { DocEntry, MemberEntry } from '../rendering/entities.js';
+import { DocEntry, MemberEntry } from '../rendering/entities.ts';
 
 export type PackageMetadata = { resolvedPath: string, tsCompilerPath: string, packageName: string };
 

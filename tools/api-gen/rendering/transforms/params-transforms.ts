@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {HasParams, HasRenderableParams} from '../entities/traits.js';
-import {addHtmlDescription} from './jsdoc-transforms.js';
-import { ParameterEntry } from '../entities.js';
+import {HasParams, HasRenderableParams} from '../entities/traits.ts';
+import {addHtmlDescription} from './jsdoc-transforms.ts';
+import { ParameterEntry } from '../entities.ts';
 
 export function addRenderableFunctionParams<T extends HasParams>(
   entry: T,
