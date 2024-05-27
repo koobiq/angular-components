@@ -62,7 +62,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
 
     @Input() caption: string;
     @Input() compact: boolean = false;
-    @Input() transparent: boolean = false;
+    @Input() transparent: boolean = true;
 
     get isExternalIndicator(): boolean {
         return !!this.externalIndicator;

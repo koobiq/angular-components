@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
-import { KbqLoaderOverlayCaption, KbqLoaderOverlayIndicator, KbqLoaderOverlayModule, KbqLoaderOverlayText } from './index';
+import {
+    KbqLoaderOverlay,
+    KbqLoaderOverlayCaption,
+    KbqLoaderOverlayIndicator,
+    KbqLoaderOverlayModule,
+    KbqLoaderOverlayText
+} from './index';
 
 
 describe('KbqLoaderOverlay', () => {
@@ -23,6 +29,13 @@ describe('KbqLoaderOverlay', () => {
 
         TestBed.compileComponents();
     }));
+
+    it('should be transparent by default', () => {
+        const fixture = TestBed.createComponent(OverlayWithParams);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.overlay.transparent).toBeTrue();
+    });
 
     it('should render params', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
@@ -79,7 +92,9 @@ describe('KbqLoaderOverlay', () => {
             </kbq-loader-overlay>
         </div>`
 })
-class OverlayWithParams {}
+class OverlayWithParams {
+    @ViewChild(KbqLoaderOverlay) overlay: KbqLoaderOverlay;
+}
 
 @Component({
     selector: 'overlay-no-params',
