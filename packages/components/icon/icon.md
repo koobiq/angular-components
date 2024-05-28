@@ -11,9 +11,9 @@ npm install @koobiq/icons --save
 yarn add @koobiq/icons
 ```
 
-Затем вы должны импортировть стили:
+Затем вы должны импортировать стили:
 ```
-@use '@koobiq/icons/dist/styles/kbq-icons.css';
+@use '@koobiq/icons/dist/fonts/kbq-icons.css';
 ```
 
 И импортируйте KbqIconModule в ваш модуль.

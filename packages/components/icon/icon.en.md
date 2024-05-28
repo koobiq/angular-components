@@ -8,7 +8,7 @@ Note that koobiq Icons is optional package and it should be installed manually.
 
 Then you should add icons styles:
 
-`@use '@koobiq/icons/dist/styles/kbq-icons.css';`
+`@use '@koobiq/icons/dist/fonts/kbq-icons.css';`
 
 And finally import KbqIconModule to your component module.
 
