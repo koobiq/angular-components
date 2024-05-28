@@ -45,11 +45,13 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-toast__title {
-    padding-bottom: var(--kbq-toast-size-caption-padding-bottom, map.get($tokens, toast-size-caption-padding-bottom));
-
     & > p {
         margin: 0;
     }
+}
+
+.kbq-toast__title_with-content {
+    padding-bottom: var(--kbq-toast-size-caption-padding-bottom, map.get($tokens, toast-size-caption-padding-bottom));
 }
 
 .kbq-toast__text {

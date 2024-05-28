@@ -26,9 +26,10 @@ import {
     KbqToastPosition,
     KbqToastComponent
 } from '@koobiq/components/toast';
+import { ThemePalette } from '@koobiq/components/core';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 
 import { KbqButtonModule } from '../../components/button';
-import { ThemePalette } from '@koobiq/components/core';
 
 
 @Component({
@@ -190,7 +191,8 @@ export class ToastDemoComponent {
         KbqProgressBarModule,
         KbqDropdownModule,
         KbqModalModule,
-        KbqSidepanelModule
+        KbqSidepanelModule,
+        KbqScrollbarModule
     ],
     bootstrap: [ToastDemoComponent],
     providers: [
