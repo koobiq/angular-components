@@ -9,7 +9,7 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-alert {
     display: flex;
 
-    width: 492px;
+    box-sizing: border-box;
 
     & .kbq-alert__content_title {
         margin-bottom: map.get($tokens, size-xxs);
