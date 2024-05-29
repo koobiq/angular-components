@@ -1,4 +1,4 @@
-$light-color-scheme-theme-palette: (
+$light-theme-palette: (
 0: hsla(216, 100%, 0%, 100%),
 1: hsla(216, 100%, 1%, 100%),
 2: hsla(216, 100%, 2%, 100%),
@@ -108,7 +108,7 @@ A32: hsla(216, 100%, 5%, 32%),
 
 );
 
-$light-color-scheme-success-palette: (
+$light-success-palette: (
 0: hsla(104, 64%, 0%, 100%),
 1: hsla(104, 64%, 1%, 100%),
 2: hsla(104, 64%, 2%, 100%),
@@ -215,7 +215,7 @@ A32: rgba(7, 97, 50, 0.32),
 
 );
 
-$light-color-scheme-warning-palette: (
+$light-warning-palette: (
 0: hsla(38, 100%, 1%, 100%),
 1: hsla(38, 100%, 2%, 100%),
 2: hsla(38, 100%, 3%, 100%),
@@ -322,7 +322,7 @@ A32: rgba(245, 155, 0, 0.32),
 
 );
 
-$light-color-scheme-error-palette: (
+$light-error-palette: (
 0: hsla(7, 97%, 0%, 100%),
 1: hsla(7, 97%, 1%, 100%),
 2: hsla(7, 97%, 2%, 100%),
@@ -434,7 +434,7 @@ A48: rgba(240, 10, 25, 0.48),
 
 );
 
-$light-color-scheme-contrast-palette: (
+$light-contrast-palette: (
 0: hsla(229, 15%, 0%, 100%),
 1: hsla(229, 15%, 1%, 100%),
 2: hsla(229, 15%, 2%, 100%),
@@ -550,19 +550,19 @@ A80L12: hsla(229, 15%, 12%, 80%),
 
 );
 
-$light-color-scheme-white-palette: (
+$light-white-palette: (
 default: hsla(0, 0%, 100%, 100%),
 A72: hsla(0, 0%, 100%, 72%),
 
 );
 
-$light-color-scheme-black-palette: (
+$light-black-palette: (
 default: hsla(0, 0%, 0%, 100%),
 A50: rgba(0, 0, 0, 0.50),
 
 );
 
-$light-color-scheme-brand-palette: (
+$light-brand-palette: (
 0: hsla(7, 97%, 0%, 100%),
 1: hsla(7, 97%, 1%, 100%),
 2: hsla(7, 97%, 2%, 100%),
@@ -674,7 +674,7 @@ A48: rgba(240, 10, 25, 0.48),
 
 );
 
-$light-color-scheme-purple-palette: (
+$light-purple-palette: (
 0: hsla(277, 72%, 0%, 100%),
 1: hsla(277, 72%, 1%, 100%),
 2: hsla(277, 72%, 2%, 100%),
@@ -781,7 +781,7 @@ A32: rgba(149, 36, 219, 0.32),
 
 );
 
-$light-color-scheme-secondary-palette: (
+$light-secondary-palette: (
 0: hsla(229, 15%, 0%, 100%),
 1: hsla(229, 15%, 1%, 100%),
 2: hsla(229, 15%, 2%, 100%),
@@ -897,7 +897,7 @@ A80L12: hsla(229, 15%, 12%, 80%),
 
 );
 
-$light-color-scheme-info-palette: (
+$light-info-palette: (
 0: hsla(180, 55%, 0%, 100%),
 1: hsla(180, 55%, 1%, 100%),
 2: hsla(180, 55%, 2%, 100%),
@@ -1004,7 +1004,7 @@ A16: rgba(57, 198, 198, 0.16),
 
 );
 
-$dark-color-scheme-theme-palette: (
+$dark-theme-palette: (
 0: hsla(216, 100%, 0%, 100%),
 1: hsla(216, 100%, 1%, 100%),
 2: hsla(216, 100%, 2%, 100%),
@@ -1114,7 +1114,7 @@ A32: hsla(216, 100%, 5%, 32%),
 
 );
 
-$dark-color-scheme-success-palette: (
+$dark-success-palette: (
 0: hsla(104, 64%, 0%, 100%),
 1: hsla(104, 64%, 1%, 100%),
 2: hsla(104, 64%, 2%, 100%),
@@ -1221,7 +1221,7 @@ A32: rgba(7, 97, 50, 0.32),
 
 );
 
-$dark-color-scheme-warning-palette: (
+$dark-warning-palette: (
 0: hsla(38, 100%, 1%, 100%),
 1: hsla(38, 100%, 2%, 100%),
 2: hsla(38, 100%, 3%, 100%),
@@ -1328,7 +1328,7 @@ A32: rgba(245, 155, 0, 0.32),
 
 );
 
-$dark-color-scheme-error-palette: (
+$dark-error-palette: (
 0: hsla(7, 97%, 0%, 100%),
 1: hsla(7, 97%, 1%, 100%),
 2: hsla(7, 97%, 2%, 100%),
@@ -1440,7 +1440,7 @@ A48: rgba(240, 10, 25, 0.48),
 
 );
 
-$dark-color-scheme-contrast-palette: (
+$dark-contrast-palette: (
 0: hsla(229, 15%, 0%, 100%),
 1: hsla(229, 15%, 1%, 100%),
 2: hsla(229, 15%, 2%, 100%),
@@ -1556,19 +1556,19 @@ A80L12: hsla(229, 15%, 12%, 80%),
 
 );
 
-$dark-color-scheme-white-palette: (
+$dark-white-palette: (
 default: hsla(0, 0%, 100%, 100%),
 A72: hsla(0, 0%, 100%, 72%),
 
 );
 
-$dark-color-scheme-black-palette: (
+$dark-black-palette: (
 default: hsla(0, 0%, 0%, 100%),
 A50: rgba(0, 0, 0, 0.50),
 
 );
 
-$dark-color-scheme-brand-palette: (
+$dark-brand-palette: (
 0: hsla(7, 97%, 0%, 100%),
 1: hsla(7, 97%, 1%, 100%),
 2: hsla(7, 97%, 2%, 100%),
@@ -1680,7 +1680,7 @@ A48: rgba(240, 10, 25, 0.48),
 
 );
 
-$dark-color-scheme-purple-palette: (
+$dark-purple-palette: (
 0: hsla(277, 72%, 0%, 100%),
 1: hsla(277, 72%, 1%, 100%),
 2: hsla(277, 72%, 2%, 100%),
@@ -1787,7 +1787,7 @@ A32: rgba(149, 36, 219, 0.32),
 
 );
 
-$dark-color-scheme-secondary-palette: (
+$dark-secondary-palette: (
 0: hsla(229, 15%, 0%, 100%),
 1: hsla(229, 15%, 1%, 100%),
 2: hsla(229, 15%, 2%, 100%),
@@ -1903,7 +1903,7 @@ A80L12: hsla(229, 15%, 12%, 80%),
 
 );
 
-$dark-color-scheme-info-palette: (
+$dark-info-palette: (
 0: hsla(180, 55%, 0%, 100%),
 1: hsla(180, 55%, 1%, 100%),
 2: hsla(180, 55%, 2%, 100%),
