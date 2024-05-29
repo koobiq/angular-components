@@ -1,11 +1,15 @@
 import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChildren,
     Directive,
     ElementRef,
     EventEmitter,
+    forwardRef,
+    Inject,
     Input,
     NgZone,
     OnDestroy,
@@ -17,6 +21,7 @@ import {
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 
 interface IArea {
@@ -214,7 +219,6 @@ export class KbqGutterGhostDirective {
     }
 }
 
-
 @Component({
     selector: 'kbq-splitter',
     exportAs: 'kbqSplitter',
@@ -230,10 +234,12 @@ export class KbqGutterGhostDirective {
 export class KbqSplitterComponent implements OnInit {
     @Output() gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
 
-    readonly areas: IArea[] = [];
+    areas: IArea[] = [];
 
     @ViewChildren(KbqGutterDirective) gutters: QueryList<KbqGutterDirective>;
     @ViewChild(KbqGutterGhostDirective) ghost: KbqGutterGhostDirective;
+
+    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
 
     get isDragging(): boolean {
         return this._isDragging;
@@ -242,6 +248,8 @@ export class KbqSplitterComponent implements OnInit {
 
     private readonly areaPositionDivider: number = 2;
     private readonly listeners: (() => void)[] = [];
+
+    private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
 
     @Input()
@@ -317,18 +325,10 @@ export class KbqSplitterComponent implements OnInit {
     ) {}
 
     addArea(area: KbqSplitterAreaDirective): void {
-        const index: number = this.areas.length;
-        const order: number = index * this.areaPositionDivider;
-        const size: number = area.getSize();
-
-        area.setOrder(order);
-
-        this.areas.push({
-            area,
-            index,
-            order,
-            initialSize: size
-        });
+        this.areas.push(
+            this.mapAndOrderArea(area, this.areas.length)
+        );
+        this.changeDetectorRef.detectChanges();
     }
 
     ngOnInit(): void {
@@ -337,6 +337,18 @@ export class KbqSplitterComponent implements OnInit {
         }
 
         this.setStyle(StyleProperty.FlexDirection, this.isVertical() ? 'column' : 'row');
+    }
+
+    ngAfterContentInit() {
+        this.areasChangeSubscription = this.areaRefs.changes
+            .subscribe((data: QueryList<KbqSplitterAreaDirective>) => {
+                this.areas = data.map(this.mapAndOrderArea);
+                this.changeDetectorRef.markForCheck();
+            });
+    }
+
+    ngOnDestroy() {
+        this.areasChangeSubscription.unsubscribe();
     }
 
     onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number) {
@@ -425,6 +437,18 @@ export class KbqSplitterComponent implements OnInit {
     isVertical(): boolean {
         return this.direction === Direction.Vertical;
     }
+
+    private mapAndOrderArea = (area: KbqSplitterAreaDirective, index: number): IArea => {
+        const order = index * this.areaPositionDivider;
+        area.setOrder(order);
+
+        return {
+            area,
+            index,
+            order,
+            initialSize: area.getSize()
+        };
+    };
 
     private updateGutter(): void {
         this.gutters.forEach((gutter) => {
@@ -537,13 +561,13 @@ export class KbqSplitterComponent implements OnInit {
         '[class.kbq-splitter-area_resizing]': 'isResizing()'
     }
 })
-export class KbqSplitterAreaDirective implements OnInit, OnDestroy {
+export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     @Output() sizeChange: EventEmitter<number> = new EventEmitter<number>();
 
     constructor(
         private elementRef: ElementRef,
         private renderer: Renderer2,
-        private splitter: KbqSplitterComponent
+        @Inject(forwardRef(() => KbqSplitterComponent)) private splitter: KbqSplitterComponent
     ) {}
 
     isResizing(): boolean {
@@ -554,7 +578,7 @@ export class KbqSplitterAreaDirective implements OnInit, OnDestroy {
         this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
     }
 
-    ngOnInit(): void {
+    ngAfterViewInit() {
         this.splitter.addArea(this);
 
         this.removeStyle(StyleProperty.MaxWidth);
@@ -636,3 +660,4 @@ export class KbqSplitterAreaDirective implements OnInit, OnDestroy {
         this.sizeChange.emit(this.getSize());
     }
 }
+
