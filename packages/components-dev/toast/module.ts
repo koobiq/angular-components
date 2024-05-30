@@ -26,9 +26,10 @@ import {
     KbqToastPosition,
     KbqToastComponent
 } from '@koobiq/components/toast';
+import { ThemePalette } from '@koobiq/components/core';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 
 import { KbqButtonModule } from '../../components/button';
-import { ThemePalette } from '@koobiq/components/core';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class MyToastComponent extends KbqToastComponent {
 })
 export class ToastDemoComponent {
     themePalette = ThemePalette;
-    
+
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
 
     modalState: boolean = false;
@@ -142,7 +143,7 @@ export class ToastDemoComponent {
         this.toastService.show({ caption });
     }
 
-    showToast(style: KbqToastStyle) {
+    showToast(style: KbqToastStyle | string) {
         this.toastService.show({ style, title: style, caption: 'Message Content' });
     }
 
@@ -190,7 +191,8 @@ export class ToastDemoComponent {
         KbqProgressBarModule,
         KbqDropdownModule,
         KbqModalModule,
-        KbqSidepanelModule
+        KbqSidepanelModule,
+        KbqScrollbarModule
     ],
     bootstrap: [ToastDemoComponent],
     providers: [

@@ -1,17 +1,18 @@
 <ng-template #toastSingleActonContentTemplate>
-    Политика <span class="kbq-body_strong">Почтовые серверы Windows</span> удалена
+    Политика <span class="kbq-body_strong">Почтовые серверы</span> удалена
 </ng-template>
 
-<ng-template #toastSingleActonActionsTemplate>
-    <a kbq-link pseudo>Восстановить</a>
+<ng-template #toastSingleActonActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a>
 </ng-template>
 
 <ng-template #toastTwoActonActionsTemplate let-toast>
-    <a class="layout-margin-right-m" kbq-link pseudo>Посмотреть</a><a kbq-link pseudo (click)="toast.close()">Отклонить</a>
+    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Посмотреть</a>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отклонить</a>
 </ng-template>
 
-<ng-template #toastManyActonActionsTemplate>
-    <a kbq-link pseudo>Восстановить</a> <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
+<ng-template #toastManyActonActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a> <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
 </ng-template>
 
 <kbq-dropdown #dropdown="kbqDropdown">

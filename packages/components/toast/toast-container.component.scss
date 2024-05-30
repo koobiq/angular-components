@@ -12,5 +12,8 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: column;
     align-items: flex-end;
 
-    gap: map.get($tokens, size-m);
+    margin-top: var(--kbq-toast-stack-size-margin-top, map.get($tokens, toast-stack-size-margin-top));
+    margin-right: var(--kbq-toast-stack-size-margin-right, map.get($tokens, toast-stack-size-margin-right));
+
+    gap: var(--kbq-toast-stack-size-gap, map.get($tokens, toast-stack-size-gap));
 }

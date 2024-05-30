@@ -1,12 +1,20 @@
-<div *ngIf="data.icon">
+<div class="kbq-toast__icon-container layout-row layout-align-start-start" *ngIf="data.icon">
     <ng-container *ngIf="data.icon === true">
         <ng-container [ngSwitch]="data.style">
             <ng-container *ngSwitchCase="'contrast'">
-                <i kbq-icon-item [ngClass]="data.iconClass" class="kbq-toast__icon"></i>
+                <i kbq-icon="mc-info_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'success'">
+                <i kbq-icon="mc-success_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'warning'">
+                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'error'">
-                <i kbq-icon-item [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="'error'"></i>
+                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
         </ng-container>
     </ng-container>
@@ -18,7 +26,10 @@
 </div>
 
 <div class="kbq-toast__container">
-    <div *ngIf="data.title" class="kbq-toast__title">
+    <div *ngIf="data.title"
+         class="kbq-toast__title"
+         [class.kbq-toast__title_with-content]="data.caption || data.content"
+    >
         <ng-container *ngIf="isTemplateRef(data.title)"
                       [ngTemplateOutlet]="$any(data.title)"
                       [ngTemplateOutletContext]="{ $implicit }">
@@ -29,7 +40,9 @@
         </ng-container>
     </div>
 
-    <div *ngIf="data.caption" class="kbq-toast__text">
+    <div *ngIf="data.caption"
+         [class.kbq-toast__text]="data.title"
+         [class.kbq-toast__title]="!data.title">
         <ng-container *ngIf="isTemplateRef(data.caption)"
                       [ngTemplateOutlet]="$any(data.caption)"
                       [ngTemplateOutletContext]="{ $implicit }">
@@ -58,7 +71,7 @@
 </div>
 
 <div *ngIf="data.closeButton">
-    <i kbq-icon-button="mc-close-L_16"
+    <i kbq-icon-button="mc-close-M_16"
        kbq-toast-close-button
        *ngIf="data.closeButton === true"
        (click)="close()">

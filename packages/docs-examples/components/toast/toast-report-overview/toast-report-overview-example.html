@@ -1,9 +1,9 @@
 <ng-template #toastSingleActonContentTemplate let-toast>
-    Отчет <span class="kbq-body_strong">Название отчета</span> удален.
+    Отчет&nbsp;<span class="kbq-body_strong">Название отчета</span>&nbsp;удален.
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
-    <a kbq-link pseudo>Отмена</a>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
 </ng-template>
 
 <div class="demo-block">

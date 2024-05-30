@@ -1,5 +1,28 @@
 @import '@koobiq/design-tokens/web/variables';
 
+body {
+    overflow: hidden;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+.body-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.scroll-container {
+    height: 100%;
+    width: 100%;
+}
 
 .demo-block {
     display: flex;

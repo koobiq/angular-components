@@ -10,21 +10,27 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     box-sizing: border-box;
 
-    min-width: var(--kbq-toast-size-container-min-width, map.get($tokens, toast-size-container-min-width));
-    max-width: 480px;
+    width: var(--kbq-toast-size-container-width, map.get($tokens, toast-size-container-width));
 
     height: auto;
 
     border-radius: var(--kbq-toast-size-container-border-radius, map.get($tokens, toast-size-container-border-radius));
 
-    padding:
-        var(--kbq-toast-size-container-padding-vertical, map.get($tokens, toast-size-container-padding-vertical))
-        var(--kbq-toast-size-container-padding-horizontal, map.get($tokens, toast-size-container-padding-horizontal));
+    padding-left: var(--kbq-toast-size-container-padding-left, map.get($tokens, toast-size-container-padding-left));
+    padding-right: var(--kbq-toast-size-container-padding-right, map.get($tokens, toast-size-container-padding-right));
+}
 
-    gap: var(
-        --kbq-toast-size-container-content-gap-horizontal,
-        map.get($tokens, toast-size-container-content-gap-horizontal)
-    );
+.kbq-toast__icon-container {
+    width: var(--kbq-toast-size-icon-width, map.get($tokens, toast-size-icon-width));
+    max-width: var(--kbq-toast-size-icon-width, map.get($tokens, toast-size-icon-width));
+    height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
+    max-height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
+
+    border-radius: var(--kbq-toast-size-border-raius, map.get($tokens, toast-size-border-raius));
+
+    margin-right: var(--kbq-toast-size-icon-margin-right, map.get($tokens, toast-size-icon-margin-right));
+
+    padding-top: var(--kbq-toast-size-content-padding-top, map.get($tokens, toast-size-content-padding-top));
 }
 
 .kbq-toast__container {
@@ -33,16 +39,19 @@ $tokens: meta.module-variables(tokens) !default;
 
     flex: 1;
 
-    gap: var(
-        --kbq-toast-size-container-content-gap-vertical,
-        map.get($tokens, toast-size-container-content-gap-vertical)
-    )
+    padding-top: var(--kbq-toast-size-content-padding-top, map.get($tokens, toast-size-content-padding-top));
+    padding-right: map.get($tokens, size-s);
+    padding-bottom: var(--kbq-toast-size-content-padding-bottom, map.get($tokens, toast-size-content-padding-bottom));
 }
 
 .kbq-toast__title {
     & > p {
         margin: 0;
     }
+}
+
+.kbq-toast__title_with-content {
+    padding-bottom: var(--kbq-toast-size-caption-padding-bottom, map.get($tokens, toast-size-caption-padding-bottom));
 }
 
 .kbq-toast__text {
@@ -65,10 +74,6 @@ $tokens: meta.module-variables(tokens) !default;
         --kbq-toast-size-button-stack-content-gap-horizontal,
         map.get($tokens, toast-size-button-stack-content-gap-horizontal)
     );
-
-    & * + .kbq-link {
-        margin-left: 12px;
-    }
 }
 
 .kbq-toast__close-button {

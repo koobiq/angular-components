@@ -1784,13 +1784,25 @@
             background: map-get($tokens, 'toast-#{$scheme}-contrast-container-background'),
             title: map-get($tokens, 'toast-#{$scheme}-contrast-container-title'),
             text: map-get($tokens, 'toast-#{$scheme}-contrast-container-text'),
-            box-shadow: map-get($tokens, 'toast-#{$scheme}-contrast-container-box-shadow')
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-contrast-container-shadow')
+        ),
+        success: (
+            background: map-get($tokens, 'toast-#{$scheme}-success-container-background'),
+            title: map-get($tokens, 'toast-#{$scheme}-success-container-title'),
+            text: map-get($tokens, 'toast-#{$scheme}-success-container-text'),
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-success-container-shadow')
+        ),
+        warning: (
+            background: map-get($tokens, 'toast-#{$scheme}-warning-container-background'),
+            title: map-get($tokens, 'toast-#{$scheme}-warning-container-title'),
+            text: map-get($tokens, 'toast-#{$scheme}-warning-container-text'),
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-warning-container-shadow')
         ),
         error: (
             background: map-get($tokens, 'toast-#{$scheme}-error-container-background'),
             title: map-get($tokens, 'toast-#{$scheme}-error-container-title'),
             text: map-get($tokens, 'toast-#{$scheme}-error-container-text'),
-            box-shadow: map-get($tokens, 'toast-#{$scheme}-error-container-box-shadow')
+            box-shadow: map-get($tokens, 'toast-#{$scheme}-error-container-shadow')
         )
     );
 
