@@ -9,3 +9,6 @@
 
 ### Nested
 <!-- example(splitter-nested) -->
+
+### With *ngIf
+<!-- example(splitter-dynamic-data) -->
