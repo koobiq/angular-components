@@ -114,6 +114,24 @@ class KbqSplitterGhost {
     @ViewChild('areaB', { static: false, read: KbqSplitterAreaDirective }) areaB: KbqSplitterAreaDirective;
 }
 
+@Component({
+    selector: 'kbq-demo-spllitter',
+    template: `
+        <kbq-splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
+            <div #areaA kbq-splitter-area style="flex: 1" *ngIf="isFirstRendered">first</div>
+            <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
+        </kbq-splitter>
+    `
+})
+class DynamicData {
+    direction: Direction = Direction.Horizontal;
+    isFirstRendered = true;
+    @ViewChild(KbqSplitterComponent, { static: false }) splitter: KbqSplitterComponent;
+    @ViewChild('areaA', { static: false, read: KbqSplitterAreaDirective }) areaA: KbqSplitterAreaDirective;
+    @ViewChild('areaB', { static: false, read: KbqSplitterAreaDirective }) areaB: KbqSplitterAreaDirective;
+}
+
+
 
 describe('KbqSplitter', () => {
     describe('direction', () => {
@@ -248,7 +266,7 @@ describe('KbqSplitter', () => {
 
             const areaAInitialSize: number = fixture.componentInstance.areaA.getSize();
             const areaBInitialSize: number = fixture.componentInstance.areaB.getSize();
-            const mouseOffset: number = -10;
+            const mouseOffset = -10;
 
             const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
             gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
@@ -298,4 +316,27 @@ describe('KbqSplitter', () => {
             expect(fixture.componentInstance.areaB.getSize()).toBe(areaBMinimalSize);
         }));
     });
+
+    describe('dynamic data', () => {
+        it('should work with dynamic areas', fakeAsync(() => {
+            const update = () => {
+                fixture.detectChanges();
+                tick();
+            }
+
+            const fixture = createTestComponent(DynamicData);
+            const componentInstance = fixture.componentInstance;
+            update();
+
+            expect(componentInstance.areaA).toBeTruthy();
+            expect(+(componentInstance.areaA as any).elementRef.nativeElement.style.order).toBe(0);
+            const areaBInitialOrder = +(componentInstance.areaB as any).elementRef.nativeElement.style.order;
+
+            componentInstance.isFirstRendered = false;
+            update();
+
+            expect(componentInstance.areaA).toBeFalsy();
+            expect(+(componentInstance.areaB as any).elementRef.nativeElement.style.order).not.toEqual(areaBInitialOrder);
+        }));
+    })
 });
