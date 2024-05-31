@@ -3464,10 +3464,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:3.0.0-rc.4":
-  version: 3.0.0-rc.4
-  resolution: "@koobiq/design-tokens@npm:3.0.0-rc.4"
-  checksum: 10c0/8e5ebe875b65c0e539ea5e9e9181e91c2e540ea1b8cd48f628260b7e78d7a3e8a0f9f2221bde93cf8ed268b7f3b5dba0717cbcb6ff69e50c588923883a39bf25
+"@koobiq/design-tokens@npm:3.0.0-rc.5":
+  version: 3.0.0-rc.5
+  resolution: "@koobiq/design-tokens@npm:3.0.0-rc.5"
+  checksum: 10c0/2f5575a4aa551a5462c380b5a5c0e05a62ed266b6b1d1d9a76497b4875a1348c2a8af8719ed3bca7721fe0ae9fb009088cc153c060ba85b4464743b521f81b07
   languageName: node
   linkType: hard
 
@@ -12889,7 +12889,7 @@ __metadata:
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.2.1"
     "@koobiq/date-adapter": "npm:^3.0.2"
     "@koobiq/date-formatter": "npm:^3.0.2"
-    "@koobiq/design-tokens": "npm:3.0.0-rc.4"
+    "@koobiq/design-tokens": "npm:3.0.0-rc.5"
     "@koobiq/icons": "npm:^7.1.1"
     "@koobiq/luxon-date-adapter": "npm:^3.0.2"
     "@koobiq/moment-date-adapter": "npm:^3.0.2"
