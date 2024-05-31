@@ -42,5 +42,12 @@ jobs:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
           MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
-          TEXT: |
-            ${{ steps.generate-changelog.outputs.changelog }}
+          PAYLOAD: |-
+            {
+              "attachments": [{
+                "color": "#FF8000",
+                "text": "${{ steps.generate-changelog.outputs.changelog }}"
+              }]
+            }
+#          TEXT: |
+#            ${{ steps.generate-changelog.outputs.changelog }}
