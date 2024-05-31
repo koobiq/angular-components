@@ -1,3 +1,21 @@
+# 17.0.0-rc.4 "Ziggy Ones" (2024-05-31)
+
+### Koobiq
+
+ * bug fix  **alert:** removed fixed size ([#DS-2507](https://github.com/koobiq/angular-components/issues/issue/DS-2507)) ([#52](https://github.com/koobiq/angular-components/issues/52)) ([deec313](https://github.com/koobiq/angular-components/commit/deec313433a795ddecac1f45a107327ac467c3db))
+ * bug fix  **chore:** removed trailing whitespace in generate-changelog folder ([#43](https://github.com/koobiq/angular-components/issues/43)) ([1ab320a](https://github.com/koobiq/angular-components/commit/1ab320a1190c486f159a01601473af65636cc028))
+ * bug fix  **code-block:** scroll with keyboard ([#DS-2336](https://github.com/koobiq/angular-components/issues/issue/DS-2336)) ([#40](https://github.com/koobiq/angular-components/issues/40)) ([78389ed](https://github.com/koobiq/angular-components/commit/78389ed5d42fcb18ee2f365b7dc11104737b1c76))
+ * bug fix  **docs,chore:** removed dependency from nodeJS version ([#DS-2476](https://github.com/koobiq/angular-components/issues/issue/DS-2476)) ([#44](https://github.com/koobiq/angular-components/issues/44)) ([741c1a4](https://github.com/koobiq/angular-components/commit/741c1a41fd0675844d87b66d560e86d74b165ea4))
+ * bug fix  **docs:** layout styles override ([#DS-2460](https://github.com/koobiq/angular-components/issues/issue/DS-2460)) ([#50](https://github.com/koobiq/angular-components/issues/50)) ([4428101](https://github.com/koobiq/angular-components/commit/44281019efd7291c145dda28388206f54f7f4ad4))
+ * bug fix  **docs:** updated icons path ([#DS-2498](https://github.com/koobiq/angular-components/issues/issue/DS-2498)) ([#51](https://github.com/koobiq/angular-components/issues/51)) ([eb0b03a](https://github.com/koobiq/angular-components/commit/eb0b03ab84095c8992d44d1e7cb3acc452952de5))
+ * bug fix  **splitter:** Splitter isn't working with dynamic data ([#DS-2487](https://github.com/koobiq/angular-components/issues/issue/DS-2487)) ([#53](https://github.com/koobiq/angular-components/issues/53)) ([800ffce](https://github.com/koobiq/angular-components/commit/800ffcee54ed076a9e5d29c7a868727734c51c80))
+ * bug fix  **textarea:** canGrow properties initialization ([#DS-2452](https://github.com/koobiq/angular-components/issues/issue/DS-2452)) ([#38](https://github.com/koobiq/angular-components/issues/38)) ([7a19c73](https://github.com/koobiq/angular-components/commit/7a19c7313e64c6a4f2a9d0f6ab56d419ba6e0d72))
+ * feature  css-variables for colors ([#DS-2338](https://github.com/koobiq/angular-components/issues/issue/DS-2338)) WIP ([#41](https://github.com/koobiq/angular-components/issues/41)) ([dfc7580](https://github.com/koobiq/angular-components/commit/dfc7580d915d8c83cf3a4d567dead7fd9c378cb2))
+ * feature  **docs:** Updating Docs for Datepicker & Timepicker ([#DS-2398](https://github.com/koobiq/angular-components/issues/issue/DS-2398)) ([#36](https://github.com/koobiq/angular-components/issues/36)) ([6cd7bce](https://github.com/koobiq/angular-components/commit/6cd7bceb713713b582d220cdb8a4fb40719672a0))
+ * feature  **link:** added css-class for active state ([#DS-2436](https://github.com/koobiq/angular-components/issues/issue/DS-2436)) ([#34](https://github.com/koobiq/angular-components/issues/34)) ([68b2110](https://github.com/koobiq/angular-components/commit/68b2110f063b1f625746842a8cde4fd30b3f9684))
+ * feature  **loader-overlay:** switched default filled to transparent ([#DS-2024](https://github.com/koobiq/angular-components/issues/issue/DS-2024)) ([#48](https://github.com/koobiq/angular-components/issues/48)) ([8c002a7](https://github.com/koobiq/angular-components/commit/8c002a76f6b81b102a5ebc1802a6bd53e480f1a5))
+ * feature  **toast:** toast 2.0 ([#DS-2360](https://github.com/koobiq/angular-components/issues/issue/DS-2360)) ([#39](https://github.com/koobiq/angular-components/issues/39)) ([6eeab98](https://github.com/koobiq/angular-components/commit/6eeab988f65967c3efb03bdd41e63b58e90829ec))
+
 # 17.0.0-rc.3 (2024-05-17)
 
 ### Koobiq
