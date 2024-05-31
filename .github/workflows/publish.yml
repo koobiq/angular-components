@@ -2,10 +2,9 @@ name: Publish
 
 on:
   push:
-    tags:
-      - '*.*.*'
-      # - '[0-9]+.[0-9]+.[0-9]+'
-      # - '*@*.*.*' for NX integration
+    branches:
+      - main
+  pull_request:
 
 permissions:
   contents: read
@@ -41,9 +40,9 @@ jobs:
         uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
+          MATTERMOST_CHANNEL: "test_bot"
+          MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
           PAYLOAD: |-
             {
               "text": "${{ steps.generate-changelog.outputs.changelog }}",
-              "channel": "${{ secrets.MM_CHANNGEL_NAME }}",
-              "name": "${{ secrets.MM_BOT_NAME }}"
             }
