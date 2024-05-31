@@ -42,7 +42,7 @@ jobs:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: "test_bot"
           MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
-          PAYLOAD: |-
-            {
-              "text": "${{ steps.generate-changelog.outputs.changelog }}",
-            }
+          TEXT: |
+            New version: ${{ github.event.release.tag_name }}.
+
+            ${{ steps.generate-changelog.outputs.changelog }}
