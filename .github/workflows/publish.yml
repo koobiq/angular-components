@@ -40,9 +40,7 @@ jobs:
         uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          MATTERMOST_CHANNEL: "test_bot"
+          MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
           MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
           TEXT: |
-            New version: ${{ github.event.release.tag_name }}.
-
             ${{ steps.generate-changelog.outputs.changelog }}
