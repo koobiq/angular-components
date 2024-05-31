@@ -41,9 +41,7 @@ jobs:
         uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          PAYLOAD: |-
-            {
-              "text": "${{ steps.generate-changelog.outputs.changelog }}",
-              "channel": "${{ secrets.MM_CHANNGEL_NAME }}",
-              "name": "${{ secrets.MM_BOT_NAME }}"
-            }
+          MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
+          MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
+          TEXT: |
+            ${{ steps.generate-changelog.outputs.changelog }}
