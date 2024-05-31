@@ -43,6 +43,9 @@ $tokens: meta.module-variables(tokens) !default;
         &.kbq-alert__icon_title .kbq-icon {
             margin-top: cssVar(alert-size-normal-icon-margin-addon-title);
         }
+
+        display: inline-flex;
+        align-self: flex-start;
     }
 
     & .kbq-alert__content {
@@ -86,6 +89,9 @@ $tokens: meta.module-variables(tokens) !default;
         &.kbq-alert__icon_title .kbq-icon {
             margin-top: cssVar(alert-size-compact-icon-margin-addon-title);
         }
+
+        display: inline-flex;
+        align-self: flex-start;
     }
 
     & .kbq-alert__content {
