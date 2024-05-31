@@ -10,6 +10,7 @@
     $contrast: map.get($icon-item, contrast);
     $fade-contrast: map.get($icon-item, fade-contrast);
     $error: map.get($icon-item, error);
+    $warning: map.get($icon-item, warning);
     $success: map.get($icon-item, success);
 
     .kbq-icon-item {
@@ -31,6 +32,11 @@
         &.kbq-error {
             color: map.get($error, color);
             background: map.get($error, background);
+        }
+
+        &.kbq-warning {
+            color: map.get($warning, color);
+            background: map.get($warning, background);
         }
 
         &.kbq-success {

@@ -8,9 +8,7 @@
     $foreground: map.get($theme, foreground);
     $background: map.get($theme, background);
 
-    $secondary: map.get($theme, secondary);
-
-    $is-dark: map.get($theme, is-dark);
+    $states: map.get($theme, states);
 
     .kbq-option-action {
         &.cdk-keyboard-focused {
@@ -20,22 +18,22 @@
         &:active,
         &.kbq-pressed {
             & .kbq-icon {
-                color: kbq-color($secondary, if($is-dark, 70, 30));
+                color: map.get(map.get($states, icon), contrast-fade);
             }
 
-            background-color: kbq-color($secondary, A16);
+            background-color: map.get($background, transparent);
         }
 
         &:hover .kbq-icon {
-            color: kbq-color($secondary, if($is-dark, 70, 30));
+            color: map.get(map.get($states, icon), contrast-fade-hover);
         }
 
         &.kbq-disabled {
             & .kbq-icon {
-                color: kbq-color($secondary, if($is-dark, 30, 70));
+                color: map.get(map.get($states, icon), disabled);
             }
 
-            background-color: transparent;
+            background-color: map.get($background, transparent);
         }
     }
 }

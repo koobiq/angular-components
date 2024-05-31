@@ -94,8 +94,6 @@
         error-less: map.get($tokens, '#{$scheme}-background-error-less'),
         success: map.get($tokens, '#{$scheme}-background-success'),
         success-fade: map.get($tokens, '#{$scheme}-background-success-fade'),
-        // surfacce — удалить после удаления из компонентов
-        surface: map.get($tokens, '#{$scheme}-background-surface'),
         theme: map.get($tokens, '#{$scheme}-background-theme'),
         theme-fade: map.get($tokens, '#{$scheme}-background-theme-fade'),
         warning: map.get($tokens, '#{$scheme}-background-warning'),
@@ -122,6 +120,7 @@
         theme: map.get($tokens, '#{$scheme}-icon-theme'),
         contrast: map.get($tokens, '#{$scheme}-icon-contrast'),
         contrast-fade: map.get($tokens, '#{$scheme}-icon-contrast-fade'),
+        contrast-fade-hover: map.get($tokens, '#{$scheme}-icon-contrast-fade-hover'),
         success: map.get($tokens, '#{$scheme}-icon-success'),
         warning: map.get($tokens, '#{$scheme}-icon-warning'),
         error: map.get($tokens, '#{$scheme}-icon-error'),
@@ -271,7 +270,6 @@
         purple: _theme_palette($tokens, $scheme, purple),
 
         // будет удалено, после удаления из компонентов ↓
-        secondary: _theme_palette($tokens, $scheme, secondary),
         info: _theme_palette($tokens, $scheme, info),
         // будет удалено, после удаления из компонентов ↑
 
@@ -304,7 +302,6 @@
         purple: _theme_palette($tokens, $scheme, purple),
 
         // будет удалено, после удаления из компонентов ↓
-        secondary: _theme_palette($tokens, $scheme, secondary),
         info: _theme_palette($tokens, $scheme, info),
         // будет удалено, после удаления из компонентов ↑
 
