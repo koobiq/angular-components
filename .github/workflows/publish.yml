@@ -22,15 +22,15 @@ jobs:
       - name: Setup Yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Build packages
-        uses: ./.github/workflows/actions/build-packages
+#      - name: Build packages
+#        uses: ./.github/workflows/actions/build-packages
 
-      - name: Publish package
-        run: |
-          rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc
-          npm run release:publish:ci-github
-        env:
-          NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
+#      - name: Publish package
+#        run: |
+#          rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc
+#          npm run release:publish:ci-github
+#        env:
+#          NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: Generate Changelog
         id: generate-changelog
