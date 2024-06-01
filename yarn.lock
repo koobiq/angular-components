@@ -3498,10 +3498,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:3.0.0-rc.2":
-  version: 3.0.0-rc.2
-  resolution: "@koobiq/tokens-builder@npm:3.0.0-rc.2"
-  checksum: 10c0/c6797ea604811a1e8bb46c4291a8f6f178b97f2d5c5297e47ba47cd48fa76583d6e66ceeb8a3aaef6c76620ffac2b12172963cc6edd81eefc1afa7bec1d525bb
+"@koobiq/tokens-builder@npm:3.0.0-rc.4":
+  version: 3.0.0-rc.4
+  resolution: "@koobiq/tokens-builder@npm:3.0.0-rc.4"
+  checksum: 10c0/ab5f8194c5fbdeed5a9bd1efb166848c630f3af2cdacb81ffb67a068c779cb587db93d543b0e0b50d02e4deb3c805812d1c33486dfba4d782a5ee6d22ca65614
   languageName: node
   linkType: hard
 
@@ -12893,7 +12893,7 @@ __metadata:
     "@koobiq/icons": "npm:^7.1.1"
     "@koobiq/luxon-date-adapter": "npm:^3.0.2"
     "@koobiq/moment-date-adapter": "npm:^3.0.2"
-    "@koobiq/tokens-builder": "npm:3.0.0-rc.2"
+    "@koobiq/tokens-builder": "npm:3.0.0-rc.4"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@nx/angular": "npm:^18.3.4"
