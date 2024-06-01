@@ -5,9 +5,9 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-      schedule: 'tuesday'
+      day: 'tuesday'
       time: '09:00'
-    allow:
-      - dependency-type: 'development'
-    open-pull-requests-limit: 6
+      # Use East Africa Standard Time (UTC +03:00)
+      timezone: 'Africa/Nairobi'
+    open-pull-requests-limit: 8
     versioning-strategy: increase
