@@ -5319,10 +5319,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jasmine@npm:^4.6.4":
-  version: 4.6.4
-  resolution: "@types/jasmine@npm:4.6.4"
-  checksum: 10c0/3a42e8feeadd22b02b68d43ab46f72fc59a563e0c2d51c7e3d40d0d3bd342ba5a069a827049d8e7dbb2aa7b30befd266f88d75744dd48258347bf50f453562ab
+"@types/jasmine@npm:^5.1.4":
+  version: 5.1.4
+  resolution: "@types/jasmine@npm:5.1.4"
+  checksum: 10c0/4b8d27182e62f5003db1f1f174a810ace704e411cbfd0bc41edbaacf307246aec1f9bd20812846700198fc881268834ffde1d5301f819b1ba7caac9662534ceb
   languageName: node
   linkType: hard
 
@@ -12288,22 +12288,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^4.6.0":
-  version: 4.6.0
-  resolution: "jasmine-core@npm:4.6.0"
-  checksum: 10c0/c78338fff7e6383653e049f7d5101f0933beb5dc09be6ed526c209c0521b7fa974477206c0ac1041455f6555a4bdcba163ea8581d420fdd35cd58a67a07466dc
+"jasmine-core@npm:~5.1.0":
+  version: 5.1.2
+  resolution: "jasmine-core@npm:5.1.2"
+  checksum: 10c0/bca92fd9c69eb3ed6e11d9de2e06939ba2c4157acaf15f9a19efc87a10af6a6937acbc424726e34ea8b2cc06b3d6fe733fbd2cfd3c9a258b3528567f89d8a578
   languageName: node
   linkType: hard
 
-"jasmine@npm:^4.6.0":
-  version: 4.6.0
-  resolution: "jasmine@npm:4.6.0"
+"jasmine@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "jasmine@npm:5.1.0"
   dependencies:
-    glob: "npm:^7.1.6"
-    jasmine-core: "npm:^4.6.0"
+    glob: "npm:^10.2.2"
+    jasmine-core: "npm:~5.1.0"
   bin:
     jasmine: bin/jasmine.js
-  checksum: 10c0/73dbb28a0051531b3dfa644884f9e9e2a421516ae4a1b33e706dec2d31357ad69aadc936d4e7585a3c9921fe552d3c7bc4ddfb227c46c969f5271ea6ceae5661
+  checksum: 10c0/6efd8333f481f087fee843e236611ffaf7b213da9da8be979a8b5735ace5df9adb8eff508e20ff619ad0dda066ad2920fd60fa6d65f19ffb83505f06ecc79125
   languageName: node
   linkType: hard
 
@@ -12912,7 +12912,7 @@ __metadata:
     "@types/fs-extra": "npm:^5.1.0"
     "@types/glob": "npm:^7.1.4"
     "@types/inquirer": "npm:^7.3.3"
-    "@types/jasmine": "npm:^4.6.4"
+    "@types/jasmine": "npm:^5.1.4"
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.4.2"
     "@types/marked": "npm:^5.0.0"
@@ -12940,7 +12940,7 @@ __metadata:
     highlight.js: "npm:^10.4.1"
     husky: "npm:^9.0.11"
     inquirer: "npm:^7.3.3"
-    jasmine: "npm:^4.6.0"
+    jasmine: "npm:^5.1.0"
     jasmine-core: "npm:^3.99.1"
     karma: "npm:^6.4.3"
     karma-chrome-launcher: "npm:^3.2.0"
