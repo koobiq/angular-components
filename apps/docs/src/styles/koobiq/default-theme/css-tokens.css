@@ -28,7 +28,7 @@
   --kbq-alert-size-compact-container-padding-bottom: 0;
   --kbq-alert-size-compact-container-padding-left: 16px;
   --kbq-alert-size-compact-content-padding-top: 12px;
-  --kbq-alert-size-compact-content-padding-right: 0;
+  --kbq-alert-size-compact-content-padding-right: 8px;
   --kbq-alert-size-compact-content-padding-bottom: 12px;
   --kbq-alert-size-compact-content-padding-left: 0;
   --kbq-alert-size-compact-icon-margin-top: 12px;
@@ -307,8 +307,8 @@
   --kbq-sidepanel-size-footer-padding-horizontal: 32px;
   --kbq-sidepanel-size-footer-content-gap-horizontal: 16px;
   --kbq-table-size-border-width: 1px;
-  --kbq-table-size-row-padding-vertical: 8px;
-  --kbq-table-size-row-padding-horizontal: 16px;
+  --kbq-table-size-row-padding-vertical: 12px;
+  --kbq-table-size-row-padding-horizontal: 8px;
   --kbq-tabs-size-tab-item-padding-horizontal: 12px;
   --kbq-tabs-size-tab-item-padding-vertical: 8px;
   --kbq-tabs-size-tab-item-content-gap-horizontal: 4px;
