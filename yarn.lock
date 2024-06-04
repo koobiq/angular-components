@@ -12281,7 +12281,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^3.6.0, jasmine-core@npm:^3.99.1":
+"jasmine-core@npm:^3.6.0":
   version: 3.99.1
   resolution: "jasmine-core@npm:3.99.1"
   checksum: 10c0/f89721874e2af19a098e214b8f3f201a644d625339c010733b6b0dba4ff9149f16997712a639c2bb427e7533526f82e0477b7927e175d3a2b2f9ff92928a5329
@@ -12292,6 +12292,13 @@ __metadata:
   version: 4.6.0
   resolution: "jasmine-core@npm:4.6.0"
   checksum: 10c0/c78338fff7e6383653e049f7d5101f0933beb5dc09be6ed526c209c0521b7fa974477206c0ac1041455f6555a4bdcba163ea8581d420fdd35cd58a67a07466dc
+  languageName: node
+  linkType: hard
+
+"jasmine-core@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "jasmine-core@npm:5.1.2"
+  checksum: 10c0/bca92fd9c69eb3ed6e11d9de2e06939ba2c4157acaf15f9a19efc87a10af6a6937acbc424726e34ea8b2cc06b3d6fe733fbd2cfd3c9a258b3528567f89d8a578
   languageName: node
   linkType: hard
 
@@ -12941,7 +12948,7 @@ __metadata:
     husky: "npm:^9.0.11"
     inquirer: "npm:^7.3.3"
     jasmine: "npm:^4.6.0"
-    jasmine-core: "npm:^3.99.1"
+    jasmine-core: "npm:^5.1.2"
     karma: "npm:^6.4.3"
     karma-chrome-launcher: "npm:^3.2.0"
     karma-coverage: "npm:^2.2.1"
