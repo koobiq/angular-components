@@ -855,6 +855,9 @@
         error: (
             color: map-get($tokens, 'icon-#{$scheme}-error-color')
         ),
+        warning: (
+            color: map-get($tokens, 'icon-#{$scheme}-warning-default')
+        ),
         success: (
             color: map-get($tokens, 'icon-#{$scheme}-success-color')
         )
@@ -876,6 +879,10 @@
         error: (
             color: map-get($tokens, 'icon-item-#{$scheme}-error-color'),
             background: map-get($tokens, 'icon-item-#{$scheme}-error-background')
+        ),
+        warning: (
+            color: map-get($tokens, 'icon-item-#{$scheme}-warning-color'),
+            background: map-get($tokens, 'icon-item-#{$scheme}-warning-background')
         ),
         success: (
             color: map-get($tokens, 'icon-item-#{$scheme}-success-color'),
