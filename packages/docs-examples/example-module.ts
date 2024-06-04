@@ -2292,6 +2292,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-sidepanel"
     }
   },
+  "splitter-dynamic-data": {
+    "packagePath": "components/splitter/splitter-dynamic-data",
+    "title": "Splitter with dynamic data",
+    "componentName": "SplitterDynamicDataExample",
+    "files": [
+      "splitter-dynamic-data-example.ts",
+      "splitter-dynamic-data-example.html",
+      "splitter-dynamic-data-example.css"
+    ],
+    "selector": "splitter-dynamic-data-example",
+    "additionalComponents": [],
+    "primaryFile": "splitter-dynamic-data-example.ts",
+    "module": {
+      "name": "SplitterExamplesModule",
+      "importSpecifier": "components/splitter",
+      "importPath": "koobiq-docs-examples-components-splitter"
+    }
+  },
   "splitter-fixed": {
     "packagePath": "components/splitter/splitter-fixed",
     "title": "Basic Splitter",
@@ -2362,6 +2380,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "name": "SplitterExamplesModule",
       "importSpecifier": "components/splitter",
       "importPath": "koobiq-docs-examples-components-splitter"
+    }
+  },
+  "table-full-width": {
+    "packagePath": "components/table/table-full-width",
+    "title": "Basic Table",
+    "componentName": "TableFullWidthExample",
+    "files": [
+      "table-full-width-example.ts",
+      "table-full-width-example.html",
+      "table-full-width-example.css"
+    ],
+    "selector": "table-full-width-example",
+    "additionalComponents": [],
+    "primaryFile": "table-full-width-example.ts",
+    "module": {
+      "name": "TableExamplesModule",
+      "importSpecifier": "components/table",
+      "importPath": "koobiq-docs-examples-components-table"
     }
   },
   "table-overview": {
