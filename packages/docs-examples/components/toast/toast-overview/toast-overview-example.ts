@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
-import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqToastService } from '@koobiq/components/toast';
+import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 
 /**
@@ -15,7 +15,13 @@ import { KbqToastService } from '@koobiq/components/toast';
 export class ToastOverviewExample {
     constructor(private toastService: KbqToastService) {}
 
-    showToast() {
-        this.toastService.show({ title: 'Доступно обновление агента' });
+    showToast(actions: TemplateRef<any>) {
+        this.toastService.show({
+            style: KbqToastStyle.Success,
+            title: 'Доступно обновление агента',
+            caption: 'Версия 2.03.15 от 15 мая 2022',
+            actions,
+            closeButton: true
+        });
     }
 }

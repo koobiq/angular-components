@@ -15,7 +15,7 @@ import { KbqToastService } from '@koobiq/components/toast';
 export class ToastLinkOverviewExample {
     constructor(private toastService: KbqToastService) {}
 
-    showToastWithInlineLink(caption: TemplateRef<any>) {
-        this.toastService.show({ caption });
+    showToastWithInlineLink(caption: TemplateRef<any>, actions: TemplateRef<any>) {
+        this.toastService.show({ caption, actions });
     }
 }

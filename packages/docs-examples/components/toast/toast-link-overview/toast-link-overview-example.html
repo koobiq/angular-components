@@ -1,20 +1,15 @@
-<kbq-dropdown #dropdown="kbqDropdown">
-    <button kbq-dropdown-item>Второстепенное действие 1</button>
-    <button kbq-dropdown-item>Второстепенное действие 2</button>
-    <button kbq-dropdown-item>Второстепенное действие 3</button>
-</kbq-dropdown>
-
 <ng-template #toastWithInlineLinkTemplate let-toast>
     <p>
-        <a kbq-link>Запрос REQ-20180101-02</a> назначен на вас
+        Запрос <a kbq-link pseudo>REQ-20180101-02</a> назначен на вас
     </p>
 </ng-template>
 
-<div class="demo-block">
-    <button
-        class="example-button"
-        kbq-button
-        (click)="showToastWithInlineLink(toastWithInlineLinkTemplate)">
-        Тост с инлайн-ссылкой
-    </button>
-</div>
+<ng-template #toastActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a>
+</ng-template>
+
+<button
+    kbq-button
+    (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">
+    Тост с гиперссылкой в заголовке
+</button>

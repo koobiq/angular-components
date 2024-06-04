@@ -418,7 +418,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     name: 'Toast',
                     hasApi: true,
                     apiId: 'toast',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['toast-types']
                 },
                 {
