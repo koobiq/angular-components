@@ -5600,16 +5600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:<8.5.5":
-  version: 8.5.4
-  resolution: "@types/ws@npm:8.5.4"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/dd8bde7d69296037b5053d9c644ce3a86a988e6cb8a632e36f5040e9e274c8879a10c13ac7fe163e4eb11a85f5b8c46fe6ce5f257b80cc93118494336f4e26c6
-  languageName: node
-  linkType: hard
-
-"@types/ws@npm:^8.5.5":
+"@types/ws@npm:<8.5.11, @types/ws@npm:^8.5.5":
   version: 8.5.10
   resolution: "@types/ws@npm:8.5.10"
   dependencies:
@@ -12920,7 +12911,7 @@ __metadata:
     "@types/node": "npm:^18.18.14"
     "@types/nunjucks": "npm:^3.2.1"
     "@types/spdx-satisfies": "npm:^0.1.2"
-    "@types/ws": "npm:<8.5.5"
+    "@types/ws": "npm:<8.5.11"
     "@typescript-eslint/eslint-plugin": "npm:7.5.0"
     "@typescript-eslint/parser": "npm:7.5.0"
     autoprefixer: "npm:^10.4.19"
