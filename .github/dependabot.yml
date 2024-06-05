@@ -9,5 +9,9 @@ updates:
       time: '09:00'
       # Use East Africa Standard Time (UTC +03:00)
       timezone: 'Africa/Nairobi'
-    open-pull-requests-limit: 8
+    open-pull-requests-limit: 5
     versioning-strategy: increase
+    groups:
+      dev-dependencies:
+        patterns:
+          - "*"
