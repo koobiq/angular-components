@@ -32,6 +32,6 @@ echo "::group:: CLI ..."
     yarn run build:cli
 echo '::endgroup::'
 
-echo "::group:: Schematics ..."
+echo "::group:: Schematics  ..."
     yarn run build:schematics
 echo '::endgroup::'
