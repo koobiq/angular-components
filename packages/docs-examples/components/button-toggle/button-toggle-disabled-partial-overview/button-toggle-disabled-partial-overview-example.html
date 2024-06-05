@@ -1,39 +1,27 @@
 <div>
     <kbq-button-toggle-group #group1="kbqButtonToggleGroup">
-        <kbq-button-toggle [value]="1" [checked]="true">
-            Курьером
+        <kbq-button-toggle [value]="1" [checked]="true" disabled="true">
+            <i kbq-icon="mc-play_16"></i>Курьером
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
-            Пони Экспресс
+            <i kbq-icon="mc-play_16"></i>Ослик Экспресс
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
-            Почтой России
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="4" disabled>
-            СДЭК
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="4">
-            Дронами
+            <i kbq-icon="mc-play_16"></i>Почтой Средиземья
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
 
 <div>
     <kbq-button-toggle-group #group2="kbqButtonToggleGroup">
-        <kbq-button-toggle [value]="1" [checked]="true" disabled>
-            Курьером
+        <kbq-button-toggle [value]="1" [checked]="true">
+            <i kbq-icon="mc-play_16"></i>Курьером
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
-            Пони Экспресс
+            <i kbq-icon="mc-play_16"></i>Ослик Экспресс
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            Почтой России
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="4">
-            СДЭК
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="4">
-            Дронами
+        <kbq-button-toggle [value]="3" disabled>
+            <i kbq-icon="mc-play_16"></i>Почтой Средиземья
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>

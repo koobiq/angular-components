@@ -10,4 +10,12 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['button-toggle-tooltip-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ButtonToggleTooltipOverviewExample {}
+export class ButtonToggleTooltipOverviewExample {
+    group = [
+        'Длинный текст кнопки-переключателя, чтобы показать, как обрезается текст',
+        'Ослик Экспресс',
+        'Почтой Средиземья'
+    ];
+
+    model = 1;
+}
