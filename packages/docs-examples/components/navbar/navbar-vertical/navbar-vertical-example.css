@@ -1,11 +1,17 @@
 .demo-vertical-navbar {
     display: flex;
 
-    margin-bottom: 10px;
+    margin-left: -20px;
+    margin-top: -20px;
+    margin-bottom: -20px;
 
-    height: 700px;
+    height: 480px;
 }
 
 .kbq-vertical-navbar {
     z-index: 0;
+}
+
+.demo-vertical-navbar .kbq-vertical-navbar__container {
+    border-top-left-radius: 12px;
 }

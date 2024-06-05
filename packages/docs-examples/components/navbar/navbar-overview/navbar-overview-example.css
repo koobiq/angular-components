@@ -1,3 +1,8 @@
-.demo-container {
-    margin-bottom: 10px;
+.demo-navbar {
+    margin: -20px -20px 12px;
+}
+
+.demo-navbar .kbq-navbar {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }

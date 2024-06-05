@@ -41,12 +41,12 @@
             </div>
 
             <a href="#" kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
+                <i kbq-icon="mc-stop_16"></i>
                 <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
             </a>
 
             <button kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
+                <i kbq-icon="mc-stop_16"></i>
                 <span kbq-navbar-title>Задачи</span>
             </button>
 
@@ -69,29 +69,15 @@
                         [kbqPlacement]="popUpPlacements.Right"
                         [kbqTooltipDisabled]="verticalNavbar.expanded">
                     <i kbq-icon="mc-info-o_16"></i>
-                    <span *ngIf="verticalNavbar.expanded">Новый инцидент</span>
+                    <span *ngIf="verticalNavbar.expanded">Новая задача</span>
                 </button>
             </kbq-navbar-item>
         </kbq-navbar-container>
 
         <kbq-navbar-container>
-            <kbq-navbar-item
-                #verticalPopover="kbqPopover"
-                kbqPopover
-                [kbqPopoverPlacement]="popUpPlacements.Right"
-                [class.kbq-active]="verticalPopover.isOpen"
-                [kbqPopoverHeader]="'Центр уведомлений'"
-                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '">
-                <i kbq-icon="mc-bell-o_16"></i>
-                <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                <kbq-badge [compact]="true" [badgeColor]="'error'">2</kbq-badge>
-            </kbq-navbar-item>
-
-            <kbq-navbar-divider></kbq-navbar-divider>
-
             <kbq-navbar-item>
-                <i kbq-icon="mc-gear_16"></i>
-                <kbq-navbar-title>Настройки</kbq-navbar-title>
+                <i kbq-icon="mc-user_16"></i>
+                <kbq-navbar-title>Профиль</kbq-navbar-title>
             </kbq-navbar-item>
 
             <kbq-navbar-divider></kbq-navbar-divider>

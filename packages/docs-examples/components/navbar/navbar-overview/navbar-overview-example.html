@@ -16,24 +16,6 @@
 </kbq-dropdown>
 
 <kbq-dropdown
-    #horizontalNavbarProjects="kbqDropdown">
-
-    <button kbq-dropdown-item>Открытые</button>
-    <button kbq-dropdown-item>В работе</button>
-    <button kbq-dropdown-item>Выполненные</button>
-    <button kbq-dropdown-item>Отмененные</button>
-</kbq-dropdown>
-
-<kbq-dropdown
-    #horizontalNavbarOneMore="kbqDropdown">
-
-    <button kbq-dropdown-item>Шаблоны</button>
-    <button kbq-dropdown-item>Платежи</button>
-    <button kbq-dropdown-item>Учет времени</button>
-    <button kbq-dropdown-item>Управление доступом</button>
-</kbq-dropdown>
-
-<kbq-dropdown
     #horizontalNavbarProfile="kbqDropdown">
 
     <button kbq-dropdown-item>Настройки</button>
@@ -43,12 +25,11 @@
     <kbq-divider></kbq-divider>
     <button kbq-dropdown-item>Скачать приложение</button>
     <kbq-divider></kbq-divider>
-    <kbq-divider></kbq-divider>
     <button kbq-dropdown-item>Сменить тенант</button>
     <button kbq-dropdown-item>Выход</button>
 </kbq-dropdown>
 
-<div class="demo-container">
+<div class="demo-navbar">
     <kbq-navbar>
         <kbq-navbar-container>
             <kbq-navbar-item
@@ -89,22 +70,8 @@
                 <kbq-navbar-title>Задачи</kbq-navbar-title>
             </kbq-navbar-item>
 
-            <kbq-navbar-item
-                #horizontalNavbarProjectsDropdownTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="horizontalNavbarProjects"
-                [class.kbq-active]="horizontalNavbarProjectsDropdownTrigger.opened"
-                [collapsable]="false">
-
+            <kbq-navbar-item>
                 <kbq-navbar-title>Проекты</kbq-navbar-title>
-            </kbq-navbar-item>
-
-            <kbq-navbar-item
-                #horizontalNavbarOneMoreDropdownTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="horizontalNavbarOneMore"
-                [class.kbq-active]="horizontalNavbarOneMoreDropdownTrigger.opened"
-                [collapsable]="false">
-
-                <kbq-navbar-title>Еще</kbq-navbar-title>
             </kbq-navbar-item>
 
             <kbq-navbar-item>
@@ -139,7 +106,7 @@
             <kbq-navbar-item
                 [kbqTooltip]="'Профиль'"
                 [kbqTrigger]="'hover'"
-                [kbqPlacement]="popUpPlacements.BottomRight"
+                [kbqPlacement]="popUpPlacements.BottomLeft"
 
                 #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
                 [kbqDropdownTriggerFor]="horizontalNavbarProfile"
