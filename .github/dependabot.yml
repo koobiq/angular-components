@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Weekly updates for devDependencies.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'tuesday'
+      time: '09:00'
+      # Use East Africa Standard Time (UTC +03:00)
+      timezone: 'Africa/Nairobi'
+    open-pull-requests-limit: 8
+    versioning-strategy: increase

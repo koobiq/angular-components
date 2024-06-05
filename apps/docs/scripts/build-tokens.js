@@ -6,12 +6,12 @@ require('@koobiq/tokens-builder/transforms/attribute/md-typography.js')(StyleDic
 require('@koobiq/tokens-builder/transforms/attribute/typography.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/palette.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/prefix.js')(StyleDictionary);
-require('@koobiq/tokens-builder/transforms/attribute/size.js')(StyleDictionary);
+require('@koobiq/tokens-builder/transforms/attribute/font.js')(StyleDictionary);
 
 // ==== Include custom filters ====
 require('@koobiq/tokens-builder/filters/palette.js')(StyleDictionary);
+require('@koobiq/tokens-builder/filters/css-variables.js')(StyleDictionary);
 require('@koobiq/tokens-builder/filters/color.js')(StyleDictionary);
-require('@koobiq/tokens-builder/filters/size.js')(StyleDictionary);
 require('@koobiq/tokens-builder/filters/typography.js')(StyleDictionary);
 require('@koobiq/tokens-builder/filters/md-typography.js')(StyleDictionary);
 
@@ -23,7 +23,6 @@ require('@koobiq/tokens-builder/transformGroups/ts.js')(StyleDictionary);
 // ==== Include custom formats ====
 require('@koobiq/tokens-builder/formats/typography.js')(StyleDictionary);
 require('@koobiq/tokens-builder/formats/palette.js')(StyleDictionary);
-
 
 function buildTokens(themeConfig) {
     StyleDictionary.registerFileHeader({
@@ -55,12 +54,11 @@ function buildTokens(themeConfig) {
     console.log('\nBuild completed!');
 }
 
-
 const kbq = 'koobiq';
 
 const themesConfig = [];
 
-const themeColorNames = ['default-theme']
+const themeColorNames = ['default-theme'];
 
 for (const skin of [kbq]) {
     const koobiqTokensProps = `node_modules/@koobiq/design-tokens/web/properties/**/*.json5`;
@@ -81,4 +79,3 @@ for (const skin of [kbq]) {
 }
 
 buildTokens(themesConfig);
-

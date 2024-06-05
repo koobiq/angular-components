@@ -1,6 +1,6 @@
 {
     "name": "koobiq",
-    "version": "17.0.0-rc.3",
+    "version": "17.0.0-rc.4",
     "description": "Components for Angular",
     "private": true,
     "homepage": "https://github.com/koobiq/angular-components",
@@ -56,7 +56,7 @@
         "@koobiq/design-tokens": "3.0.0-rc.6",
         "@koobiq/luxon-date-adapter": "^3.0.2",
         "@koobiq/moment-date-adapter": "^3.0.2",
-        "@koobiq/tokens-builder": "3.0.0-rc.2",
+        "@koobiq/tokens-builder": "3.0.0-rc.4",
         "@messageformat/core": "^3.0.1",
         "@microsoft/api-extractor": "7.40.2",
         "@nx/angular": "^18.3.4",

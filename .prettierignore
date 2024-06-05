@@ -3,12 +3,22 @@
 .nx/
 node_modules/
 
+.yarn/
+yarn.lock
+
 *.yml
 
+*.api.md
+api-report.md
+
 /dist
-/CHANGELOG.md
-/CODE_OF_CONDUCT.md
 /tmp
+/temp
+
+CODEOWNERS
+CHANGELOG.md
+CHANGELOG.*
+CODE_OF_CONDUCT.md
 
 # ignore build tokens
 /apps/docs/src/styles/koobiq/default-theme/
