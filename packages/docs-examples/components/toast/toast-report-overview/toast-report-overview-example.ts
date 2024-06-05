@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { KbqToastService } from '@koobiq/components/toast';
+import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 
 /**
@@ -15,7 +15,7 @@ import { KbqToastService } from '@koobiq/components/toast';
 export class ToastReportOverviewExample {
     constructor(private toastService: KbqToastService) {}
 
-    showSingleActonToast(caption: TemplateRef<any>, actions: TemplateRef<any>) {
-        this.toastService.show({ caption, actions }, 0);
+    showToast(caption: TemplateRef<any>, actions: TemplateRef<any>) {
+        this.toastService.show({ style: KbqToastStyle.Success, caption, actions }, 0);
     }
 }

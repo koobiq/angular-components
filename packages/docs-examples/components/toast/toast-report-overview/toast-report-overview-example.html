@@ -1,16 +1,13 @@
-<ng-template #toastSingleActonContentTemplate let-toast>
-    Отчет&nbsp;<span class="kbq-body_strong">Название отчета</span>&nbsp;удален.
+<ng-template #toastContentTemplate>
+    Отчет&nbsp;<span class="kbq-text-normal-strong">Защита периметра</span>&nbsp;удален
 </ng-template>
 
-<ng-template #toastSingleActonActionsTemplate let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
+<ng-template #toastActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a>
 </ng-template>
 
-<div class="demo-block">
-    <button
-        class="example-button"
-        kbq-button
-        (click)="showSingleActonToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)">
-        Отчет
-    </button>
-</div>
+<button
+    kbq-button
+    (click)="showToast(toastContentTemplate, toastActionsTemplate)">
+    Отчет
+</button>

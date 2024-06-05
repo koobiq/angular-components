@@ -1,6 +1,8 @@
 /* tslint:disable:no-console */
-import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { KbqToastService } from '@koobiq/components/toast';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { KbqDropdown } from '@koobiq/components/dropdown';
+import { take } from 'rxjs/operators';
 
 
 /**
@@ -13,17 +15,24 @@ import { KbqToastService } from '@koobiq/components/toast';
     encapsulation: ViewEncapsulation.None
 })
 export class ToastActionsOverviewExample {
+    @ViewChild('dropdown') dropdown: KbqDropdown;
+
     constructor(private toastService: KbqToastService) {}
 
-    showSingleActonToast(title: TemplateRef<any>, actions: TemplateRef<any>) {
-        this.toastService.show({ title, actions }, 0);
+    showSingleActionToast(title: TemplateRef<any>, actions: TemplateRef<any>) {
+        this.toastService.show({ style: KbqToastStyle.Success, title, actions });
     }
 
-    showTwoActonToast(actions: TemplateRef<any>) {
+    showTwoActionToast(actions: TemplateRef<any>) {
         this.toastService.show({ title: 'Доступно обновление компонентов', actions });
     }
 
-    showManyActonToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: 'error', title: 'Заголовок', caption: 'Подзаголовок, подробности', actions }, 0);
+    showManyActionToast(actions: TemplateRef<any>) {
+        const { ref } = this.toastService.show({
+            title: 'Заголовок',
+            caption: 'Подзаголовок, подробности',
+            actions
+        }, 0);
+        this.dropdown.closed.pipe(take(1)).subscribe(() => ref.instance.close());
     }
 }

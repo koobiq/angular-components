@@ -1,5 +1,5 @@
 <ng-template #toastSingleActonContentTemplate>
-    Политика <span class="kbq-body_strong">Почтовые серверы</span> удалена
+    Политика <span class="kbq-text-normal-strong">Почтовые серверы Windows</span> удалена
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
@@ -11,23 +11,24 @@
     <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отклонить</a>
 </ng-template>
 
-<ng-template #toastManyActonActionsTemplate let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a> <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
+<ng-template #toastManyActionActionsTemplate let-toast>
+    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Действие 1</a>
+    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Действие 2</a>
+    <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
 </ng-template>
-
 <kbq-dropdown #dropdown="kbqDropdown">
     <button kbq-dropdown-item>Второстепенное действие 1</button>
     <button kbq-dropdown-item>Второстепенное действие 2</button>
     <button kbq-dropdown-item>Второстепенное действие 3</button>
+    <button kbq-dropdown-item>Второстепенное действие 4</button>
 </kbq-dropdown>
 
-<div class="demo-block">
+<div class="demo-block layout-row">
     <button
-        class="example-button"
         kbq-button
-        (click)="showSingleActonToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)">
-        Single Action
+        (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)">
+        Одно действие
     </button>
-    <button class="example-button" kbq-button  (click)="showTwoActonToast(toastTwoActonActionsTemplate)">Two Actions</button>
-    <button class="example-button" kbq-button  (click)="showManyActonToast(toastManyActonActionsTemplate)">Many Actions</button>
+    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">Два действия</button>
+    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">Много действий</button>
 </div>
