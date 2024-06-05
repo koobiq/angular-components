@@ -1,0 +1,76 @@
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert [alertColor]="alertColors.Error">
+            <i kbq-icon-item="mc-error_16"></i>
+            <div kbq-alert-title>Не удалось загрузить файл</div>
+            Файл <span class="kbq-caption_strong">key-december.zip</span> с лицензией уже загружен на сервер.
+            <a kbq-link [pseudo]="true" kbq-alert-control class="layout-margin-right-l">Псевдоссылка</a>
+            <a kbq-link [pseudo]="true" kbq-alert-control>Псевдоссылка</a>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored">
+            <i kbq-icon-item="mc-error_16"></i>
+            Не удалось обновить агент
+            <a kbq-link [pseudo]="true" kbq-alert-control class="layout-margin-right-l">Псевдоссылка</a>
+            <a kbq-link [pseudo]="true" kbq-alert-control>Псевдоссылка</a>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Warning">
+            <i kbq-icon-item="mc-error_16"></i>
+            После восстановления нужно проверить связи групп агентов с политиками
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored">
+            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Warning" [alertStyle]="alertStyles.Colored">
+            Количество авторизованных агентов достигло максимума. Новые агенты не будут авторизованы
+        </kbq-alert>
+
+        <kbq-alert [@hideShowAnimator]="state">
+            <i kbq-icon-item="mc-info_16"></i>
+            Модуль настраивается в политике <a kbq-link [pseudo]="true">Гипервизоры</a>
+            <i kbq-icon-button="mc-close-M_16"
+               [color]="colors.ContrastFade"
+               kbq-alert-close-button
+               (click)="state = !state">
+            </i>
+        </kbq-alert>
+    </div>
+
+
+    <div class="layout-column">
+        <kbq-alert [alertStyle]="alertStyles.Colored" [compact]="true" class="kbq-alert_theme">
+            <i kbq-icon="mc-info_16"></i>
+            Недостаточно прав. Обратитесь к администратору.
+            <a kbq-link [pseudo]="true" kbq-alert-control class="layout-margin-right-l">Псевдоссылка</a>
+            <a kbq-link [pseudo]="true" kbq-alert-control>Псевдоссылка</a>
+        </kbq-alert>
+
+        <kbq-alert [compact]="true">
+            <i kbq-icon="mc-info_16"></i>
+            Доступно обновление до версии 1.4.0.210
+            <a kbq-link [pseudo]="true" kbq-alert-control class="layout-margin-right-l">Псевдоссылка</a>
+            <a kbq-link [pseudo]="true" kbq-alert-control>Псевдоссылка</a>
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Success" [alertStyle]="alertStyles.Colored" [compact]="true">
+            <i kbq-icon="mc-success_16"></i>
+            Агент успешно обновлен до версии 1.4.0.210
+        </kbq-alert>
+
+        <kbq-alert [compact]="true">
+            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Error" [compact]="true">
+            <i kbq-icon="mc-error_16"></i>
+            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.
+        </kbq-alert>
+
+        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
+            Сервер поведенческих аномалий недоступен
+        </kbq-alert>
+    </div>
+</div>

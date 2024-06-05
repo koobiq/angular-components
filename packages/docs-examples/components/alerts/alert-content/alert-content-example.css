@@ -1,0 +1,10 @@
+alert-content-example .layout-row,
+alert-content-example .layout-column {
+    gap: 16px;
+}
+
+@media (width <= 768px) {
+    alert-content-example .layout-row {
+        flex-wrap: wrap;
+    }
+}

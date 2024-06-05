@@ -5,12 +5,12 @@ import { KbqComponentColors } from '@koobiq/components/core';
 
 
 /**
- * @title Alerts
+ * @title Alert Close
  */
 @Component({
-    selector: 'alerts-overview-example',
-    templateUrl: 'alerts-overview-example.html',
-    styleUrls: ['alerts-overview-example.css'],
+    selector: 'alert-close-example',
+    templateUrl: 'alert-close-example.html',
+    styleUrls: ['alert-close-example.css'],
     animations: [
         trigger('hideShowAnimator', [
             state('true' , style({ opacity: 1, display: '' })),
@@ -21,7 +21,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class AlertsOverviewExample {
+export class AlertCloseExample {
     colors = KbqComponentColors;
     style = KbqButtonStyles;
+    state = true;
 }

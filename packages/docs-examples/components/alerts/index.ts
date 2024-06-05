@@ -5,15 +5,27 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
-import { AlertsOverviewExample } from './alerts-overview/alerts-overview-example';
+import { AlertContentExample } from './alert-content/alert-content-example';
+import { AlertStatusExample } from './alert-status/alert-status-example';
+import { AlertCloseExample } from './alert-close/alert-close-example';
+import { AlertSizeExample } from './alert-size/alert-size-example';
+import { AlertVariantsExample } from './alert-variants/alert-variants-example';
 
 
 export {
-    AlertsOverviewExample
+    AlertCloseExample,
+    AlertContentExample,
+    AlertSizeExample,
+    AlertStatusExample,
+    AlertVariantsExample,
 };
 
 const EXAMPLES = [
-    AlertsOverviewExample
+    AlertCloseExample,
+    AlertContentExample,
+    AlertSizeExample,
+    AlertStatusExample,
+    AlertVariantsExample,
 ];
 
 @NgModule({
