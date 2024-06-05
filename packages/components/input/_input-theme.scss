@@ -11,4 +11,8 @@
     .kbq-input.kbq-input-password::placeholder {
         @include kbq-typography-level-to-styles($config, map.get($tokens, input-font-text));
     }
+
+    .kbq-input.kbq-input-password {
+        @include kbq-typography-level-to-styles($config, mono-normal);
+    }
 }
