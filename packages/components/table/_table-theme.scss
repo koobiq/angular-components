@@ -21,7 +21,7 @@
 
         & > tbody {
             & > tr {
-                &:hover {
+                &:hover td {
                     background-color: map.get($states-background, transparent-hover);
                 }
 

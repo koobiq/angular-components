@@ -39,18 +39,90 @@ export interface NgModuleInfo {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
-  "alerts-overview": {
-    "packagePath": "components/alerts/alerts-overview",
-    "title": "Alerts",
-    "componentName": "AlertsOverviewExample",
+  "alert-close": {
+    "packagePath": "components/alerts/alert-close",
+    "title": "Alert Close",
+    "componentName": "AlertCloseExample",
     "files": [
-      "alerts-overview-example.ts",
-      "alerts-overview-example.html",
-      "alerts-overview-example.css"
+      "alert-close-example.ts",
+      "alert-close-example.html",
+      "alert-close-example.css"
     ],
-    "selector": "alerts-overview-example",
+    "selector": "alert-close-example",
     "additionalComponents": [],
-    "primaryFile": "alerts-overview-example.ts",
+    "primaryFile": "alert-close-example.ts",
+    "module": {
+      "name": "AlertsExamplesModule",
+      "importSpecifier": "components/alerts",
+      "importPath": "koobiq-docs-examples-components-alerts"
+    }
+  },
+  "alert-content": {
+    "packagePath": "components/alerts/alert-content",
+    "title": "Alerts",
+    "componentName": "AlertContentExample",
+    "files": [
+      "alert-content-example.ts",
+      "alert-content-example.html",
+      "alert-content-example.css"
+    ],
+    "selector": "alert-content-example",
+    "additionalComponents": [],
+    "primaryFile": "alert-content-example.ts",
+    "module": {
+      "name": "AlertsExamplesModule",
+      "importSpecifier": "components/alerts",
+      "importPath": "koobiq-docs-examples-components-alerts"
+    }
+  },
+  "alert-size": {
+    "packagePath": "components/alerts/alert-size",
+    "title": "Alert Size",
+    "componentName": "AlertSizeExample",
+    "files": [
+      "alert-size-example.ts",
+      "alert-size-example.html",
+      "alert-size-example.css"
+    ],
+    "selector": "alert-size-example",
+    "additionalComponents": [],
+    "primaryFile": "alert-size-example.ts",
+    "module": {
+      "name": "AlertsExamplesModule",
+      "importSpecifier": "components/alerts",
+      "importPath": "koobiq-docs-examples-components-alerts"
+    }
+  },
+  "alert-status": {
+    "packagePath": "components/alerts/alert-status",
+    "title": "Alert Status",
+    "componentName": "AlertStatusExample",
+    "files": [
+      "alert-status-example.ts",
+      "alert-status-example.html",
+      "alert-status-example.css"
+    ],
+    "selector": "alert-status-example",
+    "additionalComponents": [],
+    "primaryFile": "alert-status-example.ts",
+    "module": {
+      "name": "AlertsExamplesModule",
+      "importSpecifier": "components/alerts",
+      "importPath": "koobiq-docs-examples-components-alerts"
+    }
+  },
+  "alert-variants": {
+    "packagePath": "components/alerts/alert-variants",
+    "title": "Alerts Variants",
+    "componentName": "AlertVariantsExample",
+    "files": [
+      "alert-variants-example.ts",
+      "alert-variants-example.html",
+      "alert-variants-example.css"
+    ],
+    "selector": "alert-variants-example",
+    "additionalComponents": [],
+    "primaryFile": "alert-variants-example.ts",
     "module": {
       "name": "AlertsExamplesModule",
       "importSpecifier": "components/alerts",
