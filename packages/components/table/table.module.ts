@@ -3,7 +3,7 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { KbqTable } from './table.component';
+import { KbqTable, KbqTableCellContent } from './table.component';
 
 
 @NgModule({
@@ -12,7 +12,13 @@ import { KbqTable } from './table.component';
         A11yModule,
         PlatformModule
     ],
-    exports: [KbqTable],
-    declarations: [KbqTable]
+    declarations: [
+        KbqTable,
+        KbqTableCellContent
+    ],
+    exports: [
+        KbqTable,
+        KbqTableCellContent
+    ]
 })
 export class KbqTableModule {}

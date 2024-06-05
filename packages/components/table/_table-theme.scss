@@ -2,25 +2,27 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-table-theme($theme) {
     $foreground: map.get($theme, foreground);
-    $background: map.get($theme, background);
+    $states-background: map.get(map.get($theme, states), background);
+    $line: map.get($theme, line);
 
     .kbq-table {
         & > thead {
-            color: map.get($foreground, text-less-contrast);
+            color: map.get($foreground, contrast-secondary);
 
             & > tr > th {
-                border-color: map.get($foreground, divider);
+                border-bottom-color: map.get($line, contrast-fade);
             }
         }
 
         & > tbody {
             & > tr {
-                &:hover {
-                    background-color: map.get($background, overlay-hover);
+                &:hover td {
+                    background-color: map.get($states-background, transparent-hover);
                 }
 
                 & > th,
@@ -34,7 +36,7 @@
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: map.get($foreground, divider);
+                    border-bottom-color: map.get($line, contrast-fade);
                 }
             }
         }
@@ -42,15 +44,13 @@
 }
 
 @mixin kbq-table-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-table {
         & > thead {
             & > tr > th {
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, map.get($tokens, table-font-header));
+            @include kbq-typography-level-to-styles($config, getToken(table-font-header));
         }
 
         & > tbody {
@@ -58,7 +58,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, map.get($tokens, table-font-body));
+            @include kbq-typography-level-to-styles($config, getToken(table-font-body));
         }
     }
 }

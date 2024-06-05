@@ -1,7 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -16,61 +16,60 @@ $tokens: meta.module-variables(tokens) !default;
             & > th,
             & > td {
                 padding: {
-                    top: var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical));
-                    right: calc((var(
-                        --kbq-table-size-row-padding-horizontal,
-                        map.get($tokens, table-size-row-padding-horizontal)
-                    ) / 2));
-                    bottom: calc(
-                        var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical)) -
-                        var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width))
-                    );
-                    left: calc((var(
-                        --kbq-table-size-row-padding-horizontal,
-                        map.get($tokens, table-size-row-padding-horizontal)
-                    ) / 2))
+                    top: cssVar(table-size-row-padding-vertical);
+                    right: cssVar(table-size-row-padding-horizontal);
+                    bottom: cssVar(table-size-row-padding-vertical);
+                    left: cssVar(table-size-row-padding-horizontal);
                 };
 
                 vertical-align: baseline;
                 text-align: left;
             }
-
-            & > th:first-child,
-            & > td:first-child {
-                padding-left:
-                    var(--kbq-table-size-row-padding-horizontal, map.get($tokens, table-size-row-padding-horizontal));
-            }
-
-            & > th:last-child,
-            & > td:last-child {
-                padding-right:
-                    var(--kbq-table-size-row-padding-horizontal, map.get($tokens, table-size-row-padding-horizontal));
-            }
         }
     }
 
-    /* stylelint-disable no-descending-specificity */
     & > thead {
         & > tr > th {
-            padding: {
-                top: var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical));
-                bottom: (
-                    calc(var(--kbq-table-size-row-padding-vertical, map.get($tokens, table-size-row-padding-vertical)) -
-                    var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)))
-                );
-            }
-
-            border-bottom:
-                var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)) solid transparent;
+            border-bottom-width: cssVar(table-size-border-width);
+            border-bottom-style: solid;
         }
     }
 
+    .kbq-table-cell_has-button {
+        padding-top: cssVar(size-xxs);
+        padding-bottom: cssVar(size-xxs);
+    }
+}
+.kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & th,
         & td {
-            border-bottom:
-                var(--kbq-table-size-border-width, map.get($tokens, table-size-border-width)) solid transparent;
+            border-bottom-width: cssVar(table-size-border-width);
+            border-bottom-style: solid;
         }
     }
-    /* stylelint-enable no-descending-specificity */
+}
+
+.kbq-table:not(.kbq-table_bordered) {
+    & > tbody > tr {
+        & > td:first-child {
+            border-top-left-radius: cssVar(size-m);
+            border-bottom-left-radius: cssVar(size-m);
+        }
+
+        & > td:last-child {
+            border-top-right-radius: cssVar(size-m);
+            border-bottom-right-radius: cssVar(size-m);
+        }
+
+        &:first-child {
+            & > td:first-child {
+                border-top-left-radius: 0;
+            }
+
+            & > td:last-child {
+                border-top-right-radius: 0;
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 
 
 /**
@@ -10,4 +11,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['table-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class TableOverviewExample {}
+export class TableOverviewExample {
+    protected readonly colors = KbqComponentColors;
+}

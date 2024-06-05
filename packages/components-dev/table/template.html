@@ -2,37 +2,42 @@
 <table kbq-table>
     <thead>
         <tr>
-            <th>Column header</th>
-            <th>Column header</th>
-            <th>Column header</th>
+            <th>Клиент</th>
+            <th>Значение</th>
+            <th>Зарегистрирован</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td></td>
-            <td>Column content</td>
-            <td>Column content</td>
+            <td>КВАРЦ Групп</td>
+            <td>Identity Theft</td>
+            <td><button kbq-button [color]="colors.Contrast">8 июля, 14:31</button>&nbsp;</td>
         </tr>
         <tr>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
+            <td>Верхнетагильская ГРЭС</td>
+            <td>DDoS</td>
+            <td>4 дек, 16:11</td>
         </tr>
         <tr>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
+            <td>КВАРЦ Групп</td>
+            <td>HIPS Alert</td>
+            <td>4 дек, 16:11</td>
         </tr>
         <tr>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
+            <td>ТГК-11</td>
+            <td>Spam Attack</td>
+            <td>4 дек, 16:11</td>
+        </tr>
+        <tr>
+            <td>Верхнетагильская ГРЭС</td>
+            <td>Vulnerability Exploitation</td>
+            <td>4 дек, 16:11</td>
         </tr>
     </tbody>
 </table>
 
 <div>With dividers</div>
-<table kbq-table class="kbq-table_bordered">
+<table kbq-table [border]="true">
     <thead>
         <tr>
             <th>Column header Column header Column header Column header</th>
@@ -44,7 +49,7 @@
         <tr>
             <td>Column content</td>
             <td>Column content</td>
-            <td>Column content</td>
+            <td><button kbq-button [color]="colors.Contrast">normal</button>&nbsp;</td>
         </tr>
         <tr>
             <td>Column content</td>

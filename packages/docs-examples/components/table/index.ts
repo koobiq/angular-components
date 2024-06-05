@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTableModule } from '@koobiq/components/table';
+import { TableFullWidthExample } from './table-full-width/table-full-width-example';
 
 import { TableOverviewExample } from './table-overview/table-overview-example';
 import { TableWithBordersExample } from './table-with-borders/table-with-borders-example';
@@ -8,16 +10,18 @@ import { TableWithBordersExample } from './table-with-borders/table-with-borders
 
 export {
     TableOverviewExample,
-    TableWithBordersExample
+    TableWithBordersExample,
+    TableFullWidthExample
 };
 
 const EXAMPLES = [
     TableOverviewExample,
-    TableWithBordersExample
+    TableWithBordersExample,
+    TableFullWidthExample
 ];
 
 @NgModule({
-    imports: [CommonModule, KbqTableModule],
+    imports: [CommonModule, KbqTableModule, KbqButtonModule],
     declarations: EXAMPLES,
     exports: EXAMPLES
 })
