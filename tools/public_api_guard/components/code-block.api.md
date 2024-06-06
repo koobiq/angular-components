@@ -9,6 +9,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import * as i4 from '@koobiq/components/button';
@@ -46,8 +47,10 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 };
 
 // @public (undocumented)
-export class KbqCodeBlockComponent implements OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, config: KbqCodeBlockConfiguration);
+export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
+    // (undocumented)
+    canShowFocus(currentCodeContent: HTMLPreElement): boolean;
     // (undocumented)
     checkOverflow(currentCodeContentElement: HTMLElement): void;
     // (undocumented)
@@ -59,11 +62,15 @@ export class KbqCodeBlockComponent implements OnDestroy {
     // (undocumented)
     copyCode(): void;
     // (undocumented)
+    readonly currentCodeBlock: Subject<HTMLElement>;
+    // (undocumented)
     downloadCode(): void;
     // (undocumented)
     filled: boolean;
     // (undocumented)
     getMaxHeight(): string;
+    // (undocumented)
+    hasFocus: boolean;
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
@@ -73,9 +80,13 @@ export class KbqCodeBlockComponent implements OnDestroy {
     // (undocumented)
     multiLine: boolean;
     // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     get noHeader(): any;
+    // (undocumented)
+    onEnter(currentCodeBlock: HTMLPreElement): void;
     // (undocumented)
     onHighlighted(): void;
     // (undocumented)
@@ -105,7 +116,7 @@ export class KbqCodeBlockComponent implements OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }]>;
 }
 
 // @public (undocumented)

@@ -216,7 +216,11 @@ export enum KbqToastStyle {
     // (undocumented)
     Contrast = "contrast",
     // (undocumented)
-    Error = "error"
+    Error = "error",
+    // (undocumented)
+    Success = "success",
+    // (undocumented)
+    Warning = "warning"
 }
 
 // (No @packageDocumentation comment for this package)

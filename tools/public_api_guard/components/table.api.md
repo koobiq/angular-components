@@ -8,13 +8,26 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@angular/cdk/platform';
+import { KbqButton } from '@koobiq/components/button';
 
 // @public (undocumented)
 export class KbqTable {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], {}, {}, never, ["*"], false, never>;
+    border: boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
+}
+
+// @public (undocumented)
+export class KbqTableCellContent {
+    // (undocumented)
+    button: KbqButton;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableCellContent, never>;
 }
 
 // @public (undocumented)
@@ -26,7 +39,7 @@ export class KbqTableModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, [typeof i1.KbqTable], [typeof i2.CommonModule, typeof i3.A11yModule, typeof i4.PlatformModule], [typeof i1.KbqTable]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, [typeof i1.KbqTable, typeof i1.KbqTableCellContent], [typeof i2.CommonModule, typeof i3.A11yModule, typeof i4.PlatformModule], [typeof i1.KbqTable, typeof i1.KbqTableCellContent]>;
 }
 
 // (No @packageDocumentation comment for this package)
