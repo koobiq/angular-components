@@ -91,7 +91,7 @@ export class KbqFileUploadModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, [typeof i1.KbqFileDropDirective, typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent], [typeof i4.CommonModule, typeof i5.FormsModule, typeof i5.ReactiveFormsModule, typeof i6.KbqToolTipModule, typeof i7.KbqProgressSpinnerModule, typeof i8.KbqIconModule, typeof i9.KbqButtonModule, typeof i10.KbqListModule, typeof i11.KbqFormFieldModule, typeof i12.KbqEllipsisCenterModule, typeof i13.KbqDataSizeModule, typeof i14.KbqLinkModule], [typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent, typeof i1.KbqFileDropDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, [typeof i1.KbqFileDropDirective, typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent], [typeof i4.CommonModule, typeof i5.FormsModule, typeof i5.ReactiveFormsModule, typeof i6.KbqToolTipModule, typeof i7.KbqProgressSpinnerModule, typeof i8.KbqIconModule, typeof i9.KbqButtonModule, typeof i10.KbqListModule, typeof i11.KbqFormFieldModule, typeof i12.KbqEllipsisCenterModule, typeof i13.KbqDataSizePipe, typeof i14.KbqLinkModule], [typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent, typeof i1.KbqFileDropDirective]>;
 }
 
 // @public (undocumented)

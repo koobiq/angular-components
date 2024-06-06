@@ -18,6 +18,9 @@ jobs:
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
+      - name: API Golden Checks
+        run: yarn run check-api
+
       - name: Unit
         run: |
           yarn run unit:cdk

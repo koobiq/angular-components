@@ -250,7 +250,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
 // @public (undocumented)
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, formField: KbqFormFieldRef, changeDetector: ChangeDetectorRef);
+    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, focusMonitor: FocusMonitor, direction: Directionality, formField: KbqFormFieldRef, changeDetector: ChangeDetectorRef);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -271,7 +271,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, [null, null, null, null, null, null, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, [null, null, null, null, null, null, null, { optional: true; }, null, null]>;
 }
 
 // @public (undocumented)

@@ -188,6 +188,22 @@ export const enUSFormattersData: {
             fractionSeparator: string;
         };
     };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -257,6 +273,22 @@ export const esLAFormattersData: {
             fractionSeparator: string;
         };
     };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -319,6 +351,22 @@ export const faIRFormattersData: {
             fractionSeparator: string;
         };
     };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -358,13 +406,13 @@ export const faIRLocaleData: {
 export type FloatLabelType = 'always' | 'never' | 'auto';
 
 // @public (undocumented)
-export const formatDataSize: (value: number, systemCode?: MeasurementSystem, precision?: number) => {
+export const formatDataSize: (value: number, precision: number, system: any) => {
     value: string;
     unit: string;
 };
 
 // @public
-export const getHumanizedBytes: (value: number, systemCode?: MeasurementSystem, threshold?: number) => {
+export const getHumanizedBytes: (value: number, system: any, threshold?: number) => {
     result: number;
     unit: string;
 };
@@ -437,6 +485,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 fractionSeparator: string;
             };
         };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+            };
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -484,6 +548,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+            };
+        };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
             };
         };
         select: {
@@ -535,6 +615,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 fractionSeparator: string;
             };
         };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+            };
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -582,6 +678,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+            };
+        };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
             };
         };
         select: {
@@ -634,6 +746,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 startFormattingFrom: number;
             };
         };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+            };
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -683,6 +811,22 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+            };
+        };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
             };
         };
         select: {
@@ -766,6 +910,27 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 };
 
 // @public (undocumented)
+export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<SizeUnitsConfig>;
+
+// @public (undocumented)
+export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: {
+    defaultUnitSystem: string;
+    defaultPrecision: number;
+    unitSystems: {
+        SI: {
+            abbreviations: string[];
+            base: number;
+            power: number;
+        };
+        IEC: {
+            abbreviations: string[];
+            base: number;
+            power: number;
+        };
+    };
+};
+
+// @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public (undocumented)
@@ -805,23 +970,16 @@ export enum KbqComponentColors {
 }
 
 // @public (undocumented)
-export class KbqDataSizeModule {
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizeModule, never>;
-    // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqDataSizeModule>;
-    // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDataSizeModule, [typeof KbqDataSizePipe], never, [typeof KbqDataSizePipe]>;
-}
-
-// @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
+    constructor(externalConfig: SizeUnitsConfig, localeService?: KbqLocaleService | undefined);
     // (undocumented)
-    transform(source: number, precision?: number, measurementSystem?: MeasurementSystem): string;
+    readonly externalConfig: SizeUnitsConfig;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizePipe, never>;
+    transform(source: number, precision?: number, unitSystemName?: string): string;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "kbqDataSize", false>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDataSizePipe, [{ optional: true; }, { optional: true; }]>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "kbqDataSize", true>;
 }
 
 // @public (undocumented)
@@ -1284,7 +1442,7 @@ export abstract class KbqPopUpTrigger<T> {
     // (undocumented)
     leaveDelay: number;
     // (undocumented)
-    protected listeners: Map<string, EventListenerOrEventListenerObject>;
+    protected listeners: Map<string, EventListener>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -1317,6 +1475,8 @@ export abstract class KbqPopUpTrigger<T> {
     show(delay?: number): void;
     // (undocumented)
     abstract trigger: string;
+    // (undocumented)
+    protected triggerName: string;
     // (undocumented)
     abstract updateClassMap(newPlacement?: string): void;
     // (undocumented)
@@ -1623,6 +1783,22 @@ export const ptBRFormattersData: {
             fractionSeparator: string;
         };
     };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -1787,6 +1963,22 @@ export const ruRUFormattersData: {
             startFormattingFrom: number;
         };
     };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -1849,22 +2041,25 @@ export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 // @public (undocumented)
-export const sizeUnitsConfig: {
-    defaultUnitSystem: MeasurementSystem;
+export interface SizeUnitsConfig {
+    // (undocumented)
     defaultPrecision: number;
+    // (undocumented)
+    defaultUnitSystem: string;
+    // (undocumented)
     unitSystems: {
-        SI: {
+        [MeasurementSystem.SI]: {
             abbreviations: string[];
             base: number;
             power: number;
         };
-        IEC: {
+        [MeasurementSystem.IEC]: {
             abbreviations: string[];
             base: number;
             power: number;
         };
     };
-};
+}
 
 // @public (undocumented)
 export enum ThemePalette {
@@ -1949,6 +2144,22 @@ export const zhCNFormattersData: {
         number: {
             groupSeparator: string[];
             fractionSeparator: string;
+        };
+    };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
         };
     };
 };

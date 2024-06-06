@@ -8,6 +8,7 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/select';
 import * as i11 from '@koobiq/components/icon';
@@ -82,7 +83,7 @@ export class KbqTimezoneOption extends KbqOption {
 
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
+    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -94,7 +95,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, [null, null, null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, [null, null, null, null, null, null, null, null, { optional: true; }, null]>;
 }
 
 // @public (undocumented)

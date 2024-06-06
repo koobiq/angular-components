@@ -198,7 +198,7 @@ export interface KbqNavbarFocusableItemEvent {
 
 // @public (undocumented)
 export class KbqNavbarItem extends KbqTooltipTrigger {
-    constructor(rectangleElement: KbqNavbarRectangleElement, navbarFocusableItem: KbqNavbarFocusableItem, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, dropdownTrigger: KbqDropdownTrigger, bento: KbqNavbarBento);
+    constructor(rectangleElement: KbqNavbarRectangleElement, navbarFocusableItem: KbqNavbarFocusableItem, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, focusMonitor: FocusMonitor, direction: Directionality, dropdownTrigger: KbqDropdownTrigger, bento: KbqNavbarBento);
     // (undocumented)
     get collapsable(): boolean;
     set collapsable(value: boolean);
@@ -245,7 +245,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, [null, null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, [null, null, null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
@@ -325,7 +325,7 @@ export class KbqNavbarTitle implements AfterViewInit {
 
 // @public (undocumented)
 export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
-    constructor(navbar: KbqVerticalNavbar, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, document: any);
+    constructor(navbar: KbqVerticalNavbar, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, focusMonitor: FocusMonitor, direction: Directionality, document: any);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -346,7 +346,7 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle", never, { "content": { "alias": "kbqCollapsedTooltip"; "required": false; }; }, {}, ["customIcon"], ["[kbq-icon]", "kbq-navbar-title"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, [null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, [null, null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)

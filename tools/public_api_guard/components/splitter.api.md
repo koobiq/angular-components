@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -79,7 +78,7 @@ export class KbqGutterGhostDirective {
 }
 
 // @public (undocumented)
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+export class KbqSplitterAreaDirective implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef, renderer: Renderer2, splitter: KbqSplitterComponent);
     // (undocumented)
     disableFlex(): void;
@@ -92,9 +91,9 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     // (undocumented)
     isResizing(): boolean;
     // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     setOrder(order: number): void;
     // (undocumented)
@@ -112,12 +111,10 @@ export class KbqSplitterComponent implements OnInit {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2);
     // (undocumented)
     addArea(area: KbqSplitterAreaDirective): void;
-    // (undocumented)
-    areaRefs: QueryList<KbqSplitterAreaDirective>;
     // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    areas: IArea[];
+    readonly areas: IArea[];
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -145,10 +142,6 @@ export class KbqSplitterComponent implements OnInit {
     // (undocumented)
     isVertical(): boolean;
     // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
     ngOnInit(): void;
     // (undocumented)
     onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number): void;
@@ -160,7 +153,7 @@ export class KbqSplitterComponent implements OnInit {
     get useGhost(): boolean;
     set useGhost(useGhost: boolean);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterComponent, never>;
 }

@@ -8,6 +8,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/cdk/overlay';
@@ -17,6 +18,7 @@ import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -49,7 +51,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
+    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -63,7 +65,7 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqExtendedTooltipTrigger, "[kbqExtendedTooltip]", ["kbqExtendedTooltip"], { "content": { "alias": "kbqExtendedTooltip"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqExtendedTooltipTrigger, [null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqExtendedTooltipTrigger, [null, null, null, null, null, null, { optional: true; }, null]>;
 }
 
 // @public (undocumented)
@@ -99,8 +101,8 @@ export class KbqToolTipModule {
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
+export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
+    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
     // (undocumented)
     closingActions(): Observable<void | MouseEvent>;
     // (undocumented)
@@ -118,17 +120,23 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> {
     // (undocumented)
     enterDelay: number;
     // (undocumented)
+    protected focusMonitor: FocusMonitor;
+    // (undocumented)
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     // (undocumented)
     leaveDelay: number;
     // (undocumented)
     protected modifier: TooltipModifier;
     // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
     protected originSelector: string;
     // (undocumented)
     protected overlayConfig: OverlayConfig;
     // (undocumented)
     placementChange: EventEmitter<any>;
+    // (undocumented)
+    show(delay?: number): void;
     // (undocumented)
     get tooltipPlacement(): PopUpPlacements;
     set tooltipPlacement(value: PopUpPlacements);
@@ -152,12 +160,12 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "tooltipVisible": { "alias": "kbqVisible"; "required": false; }; "tooltipPlacement": { "alias": "kbqPlacement"; "required": false; }; "tooltipPlacementPriority": { "alias": "kbqPlacementPriority"; "required": false; }; "content": { "alias": "kbqTooltip"; "required": false; }; "disabled": { "alias": "kbqTooltipDisabled"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "customClass": { "alias": "kbqTooltipClass"; "required": false; }; "color": { "alias": "kbqTooltipColor"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, [null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, [null, null, null, null, null, null, { optional: true; }, null]>;
 }
 
 // @public (undocumented)
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
+    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -166,7 +174,7 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqWarningTooltipTrigger, "[kbqWarningTooltip]", ["kbqWarningTooltip"], { "content": { "alias": "kbqWarningTooltip"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWarningTooltipTrigger, [null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqWarningTooltipTrigger, [null, null, null, null, null, null, { optional: true; }, null]>;
 }
 
 // @public (undocumented)

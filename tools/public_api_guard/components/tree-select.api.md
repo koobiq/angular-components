@@ -99,6 +99,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     get empty(): boolean;
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
+    get firstSelected(): any;
+    // (undocumented)
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
