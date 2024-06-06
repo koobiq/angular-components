@@ -6,11 +6,4 @@ runs:
 
     - name: Build packages
       shell: bash
-      run: |
-        yarn run build:cdk
-        yarn run build:components
-        yarn run build:angular-luxon-adapter
-        yarn run build:angular-moment-adapter
-        yarn run styles:built-all
-        yarn run build:cli
-        yarn run build:schematics
+      run: .github/workflows/actions/build-packages/entrypoint.sh
