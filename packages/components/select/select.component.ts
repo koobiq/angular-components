@@ -963,11 +963,35 @@ export class KbqSelect extends KbqSelectMixinBase implements
         return this.elementRef.nativeElement.offsetTop < this.elementRef.nativeElement.offsetHeight;
     }
 
+    private currentOverlayPosition(): number {
+        const element = this.overlayDir.overlayRef.hostElement
+
+        return Array.from(this.overlayContainer.getContainerElement().childNodes)
+            .findIndex((node) => {
+                return ((node as HTMLElement).firstChild as HTMLElement).id == (element.firstChild as HTMLElement).id;
+            });
+    }
+
+    private modalOverlayPosition(): number {
+        return Array.from(this.overlayContainer.getContainerElement().childNodes)
+            .findIndex((childNode) => (childNode as HTMLElement).classList.contains('kbq-modal-overlay'));
+    }
+
     private closingActions() {
+
+        // used for calling toggle on select from outside of component
+        const outsidePointerEvents = this.overlayDir.overlayRef!.outsidePointerEvents()
+            .pipe(delay(0))
+            .pipe(filter(() => {
+                if (this.overlayContainer.getContainerElement().childElementCount > 1) {
+                    return this.currentOverlayPosition() > this.modalOverlayPosition();
+                }
+
+                return true;
+            }));
+
         return merge(
-            this.overlayDir.overlayRef!.outsidePointerEvents()
-                // used for calling toggle on select from outside of component
-                .pipe(delay(0)),
+            outsidePointerEvents,
             this.overlayDir.overlayRef!.detachments()
         );
     }
@@ -1382,6 +1406,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     private resetOverlay() {
+        this.overlayDir.overlayRef.hostElement.classList.add('kbq-select-overlay');
         this.overlayDir.offsetX = 0;
         this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
         this.overlayDir.overlayRef.updatePosition();

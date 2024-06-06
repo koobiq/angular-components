@@ -1960,6 +1960,35 @@
                     }
                 }
             }
+        },
+        "dev-z-index": {
+            "projectType": "application",
+            "root": "packages/components-dev/z-index",
+            "sourceRoot": "packages/components-dev/z-index",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/z-index",
+                        "tsConfig": "packages/components-dev/z-index/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/z-index/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-z-index:build"
+                    }
+                }
+            }
         }
     },
     "cli": {
