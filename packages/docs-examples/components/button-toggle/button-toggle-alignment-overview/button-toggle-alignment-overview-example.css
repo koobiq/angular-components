@@ -10,10 +10,18 @@ button-toggle-alignment-overview-example .kbq-button-toggle-group_stretched > .k
     flex: 1;
 }
 
-button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-wrapper,
-button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-wrapper {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: unset;
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper,
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper {
+    display: block !important;
+}
+
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper > :not(:last-child),
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper > :not(:last-child) {
+    margin-right: 4px;
+}
+
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper .kbq-icon,
+button-toggle-alignment-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper .kbq-icon {
+    position: relative;
+    top: -1px;
 }

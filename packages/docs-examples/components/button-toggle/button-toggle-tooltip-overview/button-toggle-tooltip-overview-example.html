@@ -11,7 +11,7 @@
     <kbq-button-toggle-group [(ngModel)]="model" class="kbq-button-toggle-group_stretched">
         <kbq-button-toggle [value]="i"
                            *ngFor="let toggle of group; let i = index">
-                <i kbq-icon="mc-stop_16"></i>{{ toggle }}
+                <i kbq-icon="mc-stop_16"></i><span>{{ toggle }}</span>
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
