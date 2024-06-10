@@ -230,6 +230,26 @@
                 <kbq-option [value]="'Selected8'">Selected8</kbq-option>
                 <kbq-option [value]="'Selected9'">Selected9</kbq-option>
                 <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+                <kbq-select-footer class="kbq-select__footer_icon">
+                    <button kbq-button class="kbq-button_transparent" (click)="showModal(modalTitle, controls)">
+                        <i kbq-icon="kbq-upload-to-cloud_16"></i>
+                        Добавить
+                    </button>
+
+                    <button
+                        class="example-button"
+                        kbq-button
+                        (click)="showManyActonToast(controls)">
+                        Show toast
+                    </button>
+
+                    <button
+                        class="example-button"
+                        kbq-button
+                        (click)="openTemplateSidepanel()">
+                        show sidepanel
+                    </button>
+                </kbq-select-footer>
             </kbq-select>
         </kbq-form-field>
 </ng-template>

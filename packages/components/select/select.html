@@ -74,7 +74,8 @@
         [ngClass]="panelClass"
         [style.transformOrigin]="transformOrigin"
         [style.font-size.px]="triggerFontSize"
-        (keydown)="handleKeydown($event)">
+        (keydown)="handleKeydown($event)"
+        (click)="handleClick($event)">
 
         <div *ngIf="search" class="kbq-select__search-container">
             <ng-content select="[kbqSelectSearch]"></ng-content>
