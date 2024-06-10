@@ -958,7 +958,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
     handleClick($event: MouseEvent) {
         if (this.footer?.nativeElement.contains($event.target)) {
             this.close();
-        };
+        }
     }
 
     private updateLocaleParams = () => {
