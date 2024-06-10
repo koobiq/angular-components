@@ -10,4 +10,5 @@ import { Component } from '@angular/core';
     styleUrls: ['button-toggle-disabled-all-overview-example.css']
 })
 export class ButtonToggleDisabledAllOverviewExample {
+    model = 1;
 }

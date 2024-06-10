@@ -1,15 +1,28 @@
-.kbq-button-toggle-group_stretched {
+button-toggle-tooltip-overview-example .kbq-button-toggle-group_stretched {
     width: 100%;
 }
 
-.kbq-button-toggle-group_stretched .kbq-button-toggle {
+button-toggle-tooltip-overview-example .kbq-button-toggle-group_stretched .kbq-button-toggle {
     flex: 1;
 }
 
-.kbq-button-toggle-group_stretched > .kbq-button-toggle > .kbq-button {
+button-toggle-tooltip-overview-example .kbq-button-toggle-group_stretched > .kbq-button-toggle > .kbq-button {
     flex: 1;
 }
 
-.kbq-button-toggle-group:not(:last-of-type) {
-    margin-bottom: 16px;
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper,
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper {
+    display: block !important;
 }
+
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper > :not(:last-child),
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper > :not(:last-child) {
+    margin-right: 4px;
+}
+
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper .kbq-icon,
+button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper .kbq-icon {
+    position: relative;
+    top: -1px;
+}
+

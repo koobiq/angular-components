@@ -1,15 +1,19 @@
+<div class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
+    <kbq-button-toggle-group [(ngModel)]="model" class="kbq-button-toggle-group_stretched">
+        <kbq-button-toggle [value]="i"
+                           *ngFor="let toggle of group; let i = index">
+                {{ toggle }}
+        </kbq-button-toggle>
+    </kbq-button-toggle-group>
+</div>
 
-<kbq-button-toggle-group class="kbq-button-toggle-group_stretched">
-    <kbq-button-toggle [value]="1" [checked]="true">
-        <i kbq-icon="mc-bell-o_16"></i>Длинный текст кнопки-переключателя, чтобы показать, как обрезается текст
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="2">
-        <i kbq-icon="mc-bell-o_16"></i>Пони Экспресс
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="3">
-        <i kbq-icon="mc-bell-o_16"></i>Почтой России
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="4">
-        <i kbq-icon="mc-bell-o_16"></i>СДЭК
-    </kbq-button-toggle>
-</kbq-button-toggle-group>
+<div>
+    <kbq-button-toggle-group [(ngModel)]="model" class="kbq-button-toggle-group_stretched">
+        <kbq-button-toggle [value]="i"
+                           *ngFor="let toggle of group; let i = index">
+                <i kbq-icon="mc-stop_16"></i><span>{{ toggle }}</span>
+        </kbq-button-toggle>
+    </kbq-button-toggle-group>
+</div>
+
+

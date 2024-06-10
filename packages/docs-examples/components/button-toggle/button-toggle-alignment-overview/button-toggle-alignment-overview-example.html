@@ -1,44 +1,20 @@
-<kbq-button-toggle-group #group1="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched">
-    <kbq-button-toggle [value]="1" [checked]="true">
-        <i kbq-icon="mc-bell-o_16"></i>Курьером
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="2">
-        <i kbq-icon="mc-bell-o_16"></i>Пони Экспресс
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="3">
-        <i kbq-icon="mc-bell-o_16"></i>Почтой России
+<kbq-button-toggle-group [(ngModel)]="model" #group1="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
+    <kbq-button-toggle [value]="i"
+                       *ngFor="let toggle of group; let i = index">
+        <i kbq-icon="mc-stop_16"></i><span>{{ toggle }}</span>
     </kbq-button-toggle>
 </kbq-button-toggle-group>
 
-<kbq-button-toggle-group #group2="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched">
-    <kbq-button-toggle [value]="1" [checked]="true">
-        Курьером
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="2">
-        Пони Экспресс
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="3">
-        Почтой России
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="3">
-        СДЭК
+<kbq-button-toggle-group #group2="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
+    <kbq-button-toggle [value]="i" [checked]="i === 1"
+                       *ngFor="let toggle of group; let i = index">
+        {{ toggle }}
     </kbq-button-toggle>
 </kbq-button-toggle-group>
 
 <kbq-button-toggle-group #group3="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched">
-    <kbq-button-toggle [value]="1" [checked]="true">
-        <i kbq-icon="mc-bell-o_16"></i>
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="2">
-        <i kbq-icon="mc-bell-o_16"></i>
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="3">
-        <i kbq-icon="mc-bell-o_16"></i>
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="4">
-        <i kbq-icon="mc-bell-o_16"></i>
-    </kbq-button-toggle>
-    <kbq-button-toggle [value]="5">
-        <i kbq-icon="mc-bell-o_16"></i>
+    <kbq-button-toggle [value]="i" [checked]="i === 2"
+                       *ngFor="let toggle of group; let i = index">
+        <i kbq-icon="mc-stop_16"></i>
     </kbq-button-toggle>
 </kbq-button-toggle-group>
