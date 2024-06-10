@@ -856,7 +856,7 @@
             color: map-get($tokens, 'icon-#{$scheme}-error-color')
         ),
         warning: (
-            color: map-get($tokens, 'icon-#{$scheme}-warning-default')
+            color: map-get($tokens, 'icon-#{$scheme}-warning-color')
         ),
         success: (
             color: map-get($tokens, 'icon-#{$scheme}-success-color')
