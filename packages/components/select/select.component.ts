@@ -316,6 +316,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
+    @ContentChild(KbqSelectFooter, { static: false, read: ElementRef }) footer?: ElementRef;
+
     @ContentChild(CdkVirtualForOf, { static: false }) cdkVirtualForOf?: CdkVirtualForOf<any>;
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
@@ -951,6 +953,12 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     getItemHeight(): number {
         return this.options.first ? this.options.first.getHeight() : 0;
+    }
+
+    handleClick($event: MouseEvent) {
+        if (this.footer?.nativeElement.contains($event.target)) {
+            this.close();
+        };
     }
 
     private updateLocaleParams = () => {
