@@ -31,7 +31,7 @@ export class NavbarComponent {
 
     kbqThemes: KbqTheme[] = [
         {
-            name: 'Авто',
+            name: 'Как в системе',
             className: this.colorAutomaticTheme.matches ? Themes.Default : Themes.Dark,
             selected: false
         },
