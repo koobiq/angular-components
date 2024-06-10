@@ -2922,6 +2922,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-toast"
     }
   },
+  "toast-hide-overview": {
+    "packagePath": "components/toast/toast-hide-overview",
+    "title": "Toast Hide Strategies overview",
+    "componentName": "ToastHideOverviewExample",
+    "files": [
+      "toast-hide-overview-example.ts",
+      "toast-hide-overview-example.html",
+      "toast-hide-overview-example.css"
+    ],
+    "selector": "toast-hide-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "toast-hide-overview-example.ts",
+    "module": {
+      "name": "ToastExamplesModule",
+      "importSpecifier": "components/toast",
+      "importPath": "koobiq-docs-examples-components-toast"
+    }
+  },
   "toast-link-overview": {
     "packagePath": "components/toast/toast-link-overview",
     "title": "Basic Toast",
