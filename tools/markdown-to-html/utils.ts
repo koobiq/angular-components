@@ -2,6 +2,8 @@ import { GlobSync } from 'glob';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { basename, join } from 'path';
 import { marked } from 'marked';
+import chalk from 'chalk';
+
 import { DocsMarkdownRenderer } from './docs-marked-renderer';
 import { highlightCodeBlock } from '../highlight-files/highlight-code-block';
 
@@ -36,7 +38,7 @@ export const createDirIfNotExists = (dir: string) => access(dir)
 
 export const docTask = (taskId: string, { source, dest }: { source: string | string[], dest: string }) => {
     return async () => {
-        console.log(`...starting ${ taskId }`);
+        console.log(`Starting ${chalk.blue(taskId)}...`);
         await createDirIfNotExists(dest);
 
         const promises = src(source).map(async (inputPath: string) => {
@@ -50,7 +52,8 @@ export const docTask = (taskId: string, { source, dest }: { source: string | str
         })
 
         const res = await Promise.all(promises);
-        console.log(`finsished ${taskId}`);
+        console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
+        console.log(chalk.green('------------------------------------------------------------------------------'));
         return res;
     }
 }

@@ -18,7 +18,38 @@
 <div class="kbq-markdown">
     <pre class="kbq-markdown__pre docs-import">
         {%- highlight "typescript" -%}
-          const {$ item.name | safe $}: {$ item.type | safe $};
+          const {$ item.name | safe $}: {$ item.returnType | safe $};
             {%- end_highlight -%}
     </pre>
 </div>
+
+{%- if item.params.length -%}
+<table class="kbq-docs-table kbq-table kbq-table_bordered layout-fill">
+    <thead><tr>
+        <th class="kbq-docs-table__name">Parameters</th>
+        <th class="kbq-docs-table__description">Description</th>
+    </tr></thead>
+
+    <tbody>
+    {% for parameter in item.params %}
+    <tr>
+        <td>
+                <span class="kbq-markdown__code">
+                    {$ parameter.name $}
+                    {%- if parameter.isOptional -%}
+                    <span>?</span>
+                    {%- endif -%}
+                    :
+                </span>
+
+            <span class="kbq-markdown__code">{$ parameter.type $}</span>
+        </td>
+
+        <td>
+            <span>{$ parameter.description | safe $}</span>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{%- endif -%}
