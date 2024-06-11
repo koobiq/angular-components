@@ -1,11 +1,9 @@
 <div class="layout-margin">
     <form class="kbq-form-vertical margin docs-width" novalidate>
-        <div style="margin-bottom: 16px" class="kbq-alert kbq-alert_error" *ngIf="showError">
-            <i kbq-icon="mc-info_16" [color]="'error'" class="kbq-alert__icon"></i>
-            <div class="kbq-body">
-                Заполните хотя бы одно из полей - <br> <b>Серия, Номер</b> или <b>Фамилия</b>
-            </div>
-        </div>
+        <kbq-alert [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true" *ngIf="showError">
+            <i kbq-icon="mc-info_16" [color]="'error'"></i>
+            Заполните хотя бы одно из полей - <b>Серия</b>, <b>Номер</b> или <b>Фамилия</b>
+        </kbq-alert>
 
         <div class="kbq-form__fieldset">
             <div class="kbq-form__fieldset kbq-horizontal">

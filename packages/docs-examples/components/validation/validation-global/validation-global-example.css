@@ -1,7 +1,11 @@
-.docs-width {
-    width: 400px;
+validation-global-example .docs-width {
+    max-width: 480px;
 }
 
-.kbq-alert {
+validation-global-example .kbq-alert {
+    margin-bottom: 16px;
+}
+
+validation-global-example button {
     margin-bottom: 16px;
 }
