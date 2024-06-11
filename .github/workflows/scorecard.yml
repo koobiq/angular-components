@@ -16,10 +16,10 @@ jobs:
       security-events: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: OSSF Scorecard action
-        uses: ossf/scorecard-action@v2.3.3
+        uses: ossf/scorecard-action@dc50aa9510b46c811795eb24b2f1ba02a914e534 # v2.3.3
         with:
           results_file: results.sarif
           results_format: sarif
@@ -31,7 +31,7 @@ jobs:
           name: SARIF file
           path: results.sarif
           retention-days: 5
-  
+
       - name: Upload to code-scanning
         uses: github/codeql-action/upload-sarif@2e230e8fe0ad3a14a340ad0815ddb96d599d2aff # v3.25.8
         with:
