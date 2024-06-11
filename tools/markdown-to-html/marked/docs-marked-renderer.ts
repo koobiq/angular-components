@@ -4,7 +4,7 @@ import {
     CLASS_PREFIX,
     MARKDOWN_TAGS_TO_CLASS_ALIAS,
     MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS
-} from '../../packages/components/markdown/markdown.values';
+} from '../../../packages/components/markdown/markdown.values';
 
 /** Regular expression that matches example comments. */
 const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
@@ -38,7 +38,7 @@ function createTagNameStringAliaser(classPrefix: string) {
     };
 }
 
-function setImageCaption(content: string): string  {
+function setImageCaption(content: string): string {
     let html = content;
     let pos = 0;
 
