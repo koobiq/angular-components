@@ -7,7 +7,7 @@ kbq-checkbox {
     justify-content: flex-end;
 }
 
-button + button {
+.buttons-container button + button {
     margin-left: 16px;
 }
 
