@@ -1,11 +1,10 @@
 name: OpenSSF Scorecard
 on:
-#  schedule:
-#    - cron: 31 2 * * 1
+  schedule:
+    - cron: 31 2 * * 1
   push:
     branches:
       - main
-  pull_request:
 
 permissions: read-all
 jobs:
