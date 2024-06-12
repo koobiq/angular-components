@@ -4,11 +4,6 @@ on:
   pull_request_target:
     branches:
       - main
-#    types:
-#      - opened
-#      - reopened
-#      - synchronize
-#      - labeled
 
 permissions:
   checks: write
@@ -17,6 +12,7 @@ permissions:
 
 jobs:
   deploy_live:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
