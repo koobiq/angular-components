@@ -28,7 +28,7 @@
         "@koobiq/luxon-date-adapter": "^3.0.2",
         "@koobiq/date-formatter": "^3.0.2",
         "@koobiq/design-tokens": "3.0.0-rc.6",
-        "marked": "^4.0.18",
+        "marked": "^9.0.0",
         "@messageformat/core": "^3.0.0",
         "moment": "~2.29.2",
         "ngx-highlightjs": "^10.0.0",

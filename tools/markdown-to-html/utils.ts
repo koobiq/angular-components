@@ -1,21 +1,19 @@
 import { GlobSync } from 'glob';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { basename, join } from 'path';
-import { marked } from 'marked';
 import chalk from 'chalk';
 
-import { DocsMarkdownRenderer } from './docs-marked-renderer';
-import { highlightCodeBlock } from '../highlight-files/highlight-code-block';
+import { configureMarkedGlobally } from './marked/configuration';
+import { DocsMarkdownRenderer } from './marked/docs-marked-renderer';
 
 // Regular expression that matches the markdown extension of a given path.
 const markdownExtension = /.md$/;
 
-
 // Custom markdown renderer for transforming markdown files for the docs.
 const markdownRenderer = new DocsMarkdownRenderer();
 
-// Setup our custom docs renderer by default.
-marked.setOptions({renderer: markdownRenderer, highlight: highlightCodeBlock});
+// Setup custom marked instance.
+const marked = configureMarkedGlobally(markdownRenderer);
 
 export const src = (path: string | string[]): string[] => {
     let res: string[];
@@ -46,7 +44,7 @@ export const docTask = (taskId: string, { source, dest }: { source: string | str
                 dest, basename(inputPath).replace(markdownExtension, '.html')
             );
             const mdContent = await readFile(inputPath, 'utf8');
-            const htmlOutput = markdownRenderer.finalizeOutput(marked(mdContent))
+            const htmlOutput = markdownRenderer.finalizeOutput(marked.parse(mdContent) as string)
 
             return await writeFile(outputPath, htmlOutput);
         })
