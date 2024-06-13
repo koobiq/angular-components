@@ -69,16 +69,16 @@ describe('ToastService', () => {
 
             const toastIcon = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
 
-            expect(toastIcon).toHaveClass('mc-error_16');
+            expect(toastIcon).toHaveClass('kbq-error_16');
         });
 
         it('should create one sticky warning toast with custom icon', () => {
-            const toast = toastService.show({ style: 'error', title: 'Error', icon: true, iconClass: 'mc-custom' }, 0);
+            const toast = toastService.show({ style: 'error', title: 'Error', icon: true, iconClass: 'kbq-custom' }, 0);
             fixture.detectChanges();
 
             const toastIcon = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
 
-            expect(toastIcon).toHaveClass('mc-custom');
+            expect(toastIcon).toHaveClass('kbq-custom');
         });
 
         it('should container only title', () => {
