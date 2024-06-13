@@ -110,12 +110,12 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['autocomplete-types']
                 },
                 {
-                    id: 'badges',
-                    name: 'Badges',
+                    id: 'badge',
+                    name: 'Badge',
                     hasApi: true,
                     apiId: 'badge',
                     hasExamples: false,
-                    examples: ['badges-types']
+                    examples: ['badge-types']
                 },
                 {
                     id: 'button',

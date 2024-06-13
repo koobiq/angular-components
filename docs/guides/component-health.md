@@ -18,7 +18,7 @@
 | Datepicker        |          |            |             |              |         |              |            |
 | Timepicker        |          |            |             |              |         |              |            |
 | Alert             | ✅       |            | ✅          |              |         |              |            |
-| Badges            | ✅       |            | ✅          |              |         |              |            |
+| Badge             | ✅       |            | ✅          |              |         |              |            |
 | Progress bar      | ✅       |            | ✅          |              |         |              |            |
 | Progress spinner  | ✅       |            | ✅          |              |         |              |            |
 | Tags              | ✅       |            | ✅          |              |         |              |            |

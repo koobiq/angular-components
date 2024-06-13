@@ -3,14 +3,14 @@ import { KbqBadgeColors } from '@koobiq/components/badge';
 
 
 /**
- * @title Corner Cases
+ * @title Size
  */
 @Component({
-    selector: 'badges-hug-content-example',
-    templateUrl: 'badges-hug-content-example.html',
-    styleUrls: ['badges-hug-content-example.css'],
+    selector: 'badge-size-example',
+    templateUrl: 'badge-size-example.html',
+    styleUrls: ['badge-size-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class BadgesHugContentExample {
+export class BadgeSizeExample {
     colors = KbqBadgeColors;
 }
