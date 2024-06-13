@@ -37,7 +37,7 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase =
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'mc kbq-icon',
+        class: 'kbq kbq-icon',
         '[class.kbq-error]': 'color === "error" || hasError'
     }
 })

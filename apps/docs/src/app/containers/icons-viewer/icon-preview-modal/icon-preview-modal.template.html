@@ -4,7 +4,7 @@
             [color]="'contrast'"
             (click)="modal.close()"
             class="kbq-modal-close kbq-button_transparent">
-        <i kbq-icon="mc-close-L_16" [color]="componentColors.Contrast"></i>
+        <i kbq-icon="kbq-close_16" [color]="componentColors.Contrast"></i>
     </button>
 </kbq-modal-title>
 
@@ -19,7 +19,7 @@
         <kbq-form-field>
             <kbq-select [(value)]="selectedColorTheme" [placeholder]="'Цвет'">
                 <kbq-select-trigger>
-                    <i kbq-icon="mc-circle-8_16"
+                    <i kbq-icon="kbq-circle_16"
                        class="icon-preview-modal__palette-icon"
                        [color]="selectedColorTheme">
                     </i>
@@ -29,7 +29,7 @@
                 <kbq-option *ngFor="let paletteName of themePalettes"
                            class="icon-preview-modal__select-option"
                            [value]="paletteName">
-                    <i kbq-icon="mc-circle-8_16"
+                    <i kbq-icon="kbq-circle_16"
                        class="icon-preview-modal__palette-icon"
                        [color]="paletteName">
                     </i>
@@ -40,11 +40,11 @@
 
         <div class="icon-preview-modal__buttons">
             <a href="{{ SVGLink }}" download kbq-button>
-                <i kbq-icon="mc-download_16"></i>Скачать SVG
+                <i kbq-icon="kbq-download_16"></i>Скачать SVG
             </a>
 
             <button kbq-button (click)="copySVG()">
-                <i kbq-icon="mc-copy-o_16"></i>Скопировать SVG
+                <i kbq-icon="kbq-copy-o_16"></i>Скопировать SVG
             </button>
         </div>
 

@@ -78,7 +78,7 @@
 
 <br>
 <div class="kbq-alert kbq-alert_warning">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-error_16 kbq-alert__icon"></i>
     Нужную вариацию выбирают дизайнер и аналитик в зависимости от задачи
 </div>
 

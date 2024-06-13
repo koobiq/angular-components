@@ -35,10 +35,10 @@ import { KbqIconModule } from '@koobiq/components';
 1. Добавить атрибут `[color]`, используя следующие значения: *primary*, *secondary*, *error*.
 
 ```
-<i kbq-icon="mc-gear_16" [color]="'contrast'"></i>
+<i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
 ```
 
 2. Более простой способ
 ```
-<i class="mc kbq-gear_16"></i>
+<i class="kbq kbq-gear_16"></i>
 ```

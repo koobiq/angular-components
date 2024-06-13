@@ -15,7 +15,7 @@
 
 #### Вариации
 <div class="kbq-alert kbq-alert_info">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     Нужную вариацию выбирают дизайнер и аналитик в зависимости от задачи
 </div>
 
@@ -28,7 +28,7 @@
 
 <br>
 <div class="kbq-alert kbq-alert_warning">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-error_16 kbq-alert__icon"></i>
     Ввод времени допустим только в 24-часовом формате.
 </div>
 

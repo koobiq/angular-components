@@ -2,7 +2,7 @@
     <kbq-tag-list #tagList>
         <kbq-tag *ngFor="let tag of selectedTags" [value]="tag" (removed)="onRemove(tag)">
             {{ tag }}
-            <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            <i kbq-icon="kbq-close_16" kbqTagRemove></i>
         </kbq-tag>
         <input placeholder="Placeholder"
                #tagInput

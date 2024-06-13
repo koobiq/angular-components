@@ -162,7 +162,7 @@ $dark: theming.kbq-dark-theme($tokens);
 - Используйте сервис `ThemeService`, который будет обеспечивать функциональность для переключения между светлой и темной темами.
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon mc-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     Важно на этом этапе описать процесс переключения между классами светлой и темной тем,
     которые определены в главном файле стиля.
     Реализация может варьироваться.
@@ -491,7 +491,7 @@ buildTokens([
 #####  Настройка переключения наборов кастомных токенов
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon mc-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     Важно на этом этапе описать процесс переключение между классами наборов токенов,
     которые определены в главном файле стиля.
     Реализация может варьироваться.

@@ -21,7 +21,7 @@
                                 [selectable]="false"
                                 [class.kbq-error]="errorState">
                                 {{ option.viewValue }}
-                            <i kbq-icon="mc-close-S_16" kbqTagRemove
+                            <i kbq-icon="kbq-close_16" kbqTagRemove
                                *ngIf="!option.disabled && !disabled"
                                (click)="onRemoveMatcherItem(option, $event)">
                             </i>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="kbq-select__arrow-wrapper">
-            <i class="kbq-select__arrow" kbq-icon="mc-angle-down-S_16" [color]="'contrast-fade'"></i>
+            <i class="kbq-select__arrow" kbq-icon="kbq-angle-down-S_16" [color]="'contrast-fade'"></i>
         </div>
     </div>
 

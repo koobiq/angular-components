@@ -104,7 +104,7 @@ class KbqLinkPrintTestApp {
     template: `
         <a href="http://localhost:3003/" kbq-link>
             <span class="kbq-link__text">Отчет сканирования</span>
-            <i kbq-icon="mc-new-tab_16"></i>
+            <i kbq-icon="kbq-new-tab_16"></i>
         </a>
     `
 })

@@ -23,8 +23,8 @@ If kbq-icons.css does't suit your project, you can also add:
 
 There are two icon usage variants:
 
-1. `<i kbq-icon="mc-gear_16"></i>`;
+1. `<i kbq-icon="kbq-gear_16"></i>`;
 
     In this case you can provide `[color]` attribute. It can have following values: *primary*, *secondary*, *error*.
 
-2. Simply `<i class="mc kbq-gear_16"></i>`.
+2. Simply `<i class="kbq kbq-gear_16"></i>`.

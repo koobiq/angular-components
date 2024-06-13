@@ -9,7 +9,7 @@
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <i kbq-icon="mc-angle-down-S_16"
+                <i kbq-icon="kbq-angle-down-S_16"
                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                    kbqTreeNodeToggle>
                 </i>
@@ -22,7 +22,7 @@
         <kbq-tree-select-footer>
             <a href="/components/tree-select/overview" kbq-link>
                 <span class="kbq-link__text">Ссылка</span>
-                <i kbq-icon="mc-external-link_16"></i>
+                <i kbq-icon="kbq-external-link_16"></i>
             </a>
         </kbq-tree-select-footer>
     </kbq-tree-select>

@@ -2,19 +2,19 @@
     <ng-container *ngIf="data.icon === true">
         <ng-container [ngSwitch]="data.style">
             <ng-container *ngSwitchCase="'contrast'">
-                <i kbq-icon="mc-info_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i kbq-icon="kbq-info_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'success'">
-                <i kbq-icon="mc-success_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i kbq-icon="kbq-success_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'warning'">
-                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i kbq-icon="kbq-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'error'">
-                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i kbq-icon="kbq-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
             </ng-container>
         </ng-container>
     </ng-container>
@@ -71,7 +71,7 @@
 </div>
 
 <div *ngIf="data.closeButton">
-    <i kbq-icon-button="mc-close-M_16"
+    <i kbq-icon-button="kbq-close_16"
        kbq-toast-close-button
        *ngIf="data.closeButton === true"
        (click)="close()">
