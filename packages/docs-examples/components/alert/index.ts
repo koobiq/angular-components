@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -39,5 +40,5 @@ const EXAMPLES = [
     declarations: EXAMPLES,
     exports: EXAMPLES
 })
-export class AlertsExamplesModule {
+export class AlertExamplesModule {
 }

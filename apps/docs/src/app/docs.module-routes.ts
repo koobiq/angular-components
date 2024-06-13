@@ -12,7 +12,6 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { IconsViewerComponent } from './containers/icons-viewer/icons-viewer.component';
 
-
 export const APP_ROUTES: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'main', redirectTo: 'main/installation', pathMatch: 'full' },
@@ -25,7 +24,7 @@ export const APP_ROUTES: Routes = [
             { path: '**', redirectTo: 'overview' }
         ]
     },
-    { path: 'components', redirectTo: 'components/alerts', pathMatch: 'full' },
+    { path: 'components', redirectTo: 'components/alert', pathMatch: 'full' },
     {
         path: 'components/:id',
         component: ComponentViewerComponent,

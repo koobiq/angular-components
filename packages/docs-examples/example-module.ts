@@ -40,7 +40,7 @@ export interface NgModuleInfo {
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   "alert-close": {
-    "packagePath": "components/alerts/alert-close",
+    "packagePath": "components/alert/alert-close",
     "title": "Alert Close",
     "componentName": "AlertCloseExample",
     "files": [
@@ -52,14 +52,14 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-close-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-content": {
-    "packagePath": "components/alerts/alert-content",
-    "title": "Alerts",
+    "packagePath": "components/alert/alert-content",
+    "title": "Alert",
     "componentName": "AlertContentExample",
     "files": [
       "alert-content-example.ts",
@@ -70,13 +70,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-content-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-size": {
-    "packagePath": "components/alerts/alert-size",
+    "packagePath": "components/alert/alert-size",
     "title": "Alert Size",
     "componentName": "AlertSizeExample",
     "files": [
@@ -88,13 +88,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-size-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-status": {
-    "packagePath": "components/alerts/alert-status",
+    "packagePath": "components/alert/alert-status",
     "title": "Alert Status",
     "componentName": "AlertStatusExample",
     "files": [
@@ -106,14 +106,14 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-status-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-variants": {
-    "packagePath": "components/alerts/alert-variants",
-    "title": "Alerts Variants",
+    "packagePath": "components/alert/alert-variants",
+    "title": "Alert Variants",
     "componentName": "AlertVariantsExample",
     "files": [
       "alert-variants-example.ts",
@@ -124,9 +124,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-variants-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "autocomplete-overview": {

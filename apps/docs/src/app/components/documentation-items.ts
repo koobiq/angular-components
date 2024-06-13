@@ -94,12 +94,12 @@ const DOCS: { [key: string]: DocCategory[] } = {
             name: 'Компоненты',
             items:  [
                 {
-                    id: 'alerts',
-                    name: 'Alerts',
+                    id: 'alert',
+                    name: 'Alert',
                     hasApi: true,
                     apiId: 'alert',
                     hasExamples: false,
-                    examples: ['alerts-types']
+                    examples: ['alert-types']
                 },
                 {
                     id: 'autocomplete',
