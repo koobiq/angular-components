@@ -27,6 +27,7 @@
         "@angular/platform-browser": "17.2.0",
         "@koobiq/date-adapter": "^3.0.2",
         "@koobiq/date-formatter": "^3.0.2",
+        "@koobiq/kbq-icons": "^8.0.0-beta.2",
         "core-js": "^3.36.0",
         "marked": "^9.0.0",
         "overlayscrollbars": "^2.7.3",

@@ -34,7 +34,7 @@ describe(`ng add '@koobiq/components'`, () => {
         expect(dependencies['@koobiq/design-tokens'])
             .withContext('@koobiq/design-tokens should be installed')
             .toBeDefined();
-        expect(dependencies['@koobiq/icons']).withContext('@koobiq/icons should be installed').toBeDefined();
+        expect(dependencies['@koobiq/kbq-icons']).withContext('@koobiq/kbq-icons should be installed').toBeDefined();
         expect(dependencies['@messageformat/core'])
             .withContext('@messageformat/core should be installed')
             .toBeDefined();

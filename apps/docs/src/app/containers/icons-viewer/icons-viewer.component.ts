@@ -67,7 +67,7 @@ export class IconsViewerComponent implements OnDestroy {
         private elementRef: ElementRef
     ) {
         this.http
-            .get('assets/SVGIcons/mc-icons-info.json', { responseType: 'json' })
+            .get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' })
             .subscribe((data) => {
                 this.iconItems = new IconItems(data);
 
