@@ -34,7 +34,7 @@
 | Textarea         | ✅       |            | ✅          |              |         |              |            |
 | Radio            | ✅       |            | ✅          |              |         |              |            |
 | Select           | ✅       |            | ✅          |              |         |              |            |
-| Tree-select      | ✅       |            | ✅          |              |         |              |            |
+| Tree select      | ✅       |            | ✅          |              |         |              |            |
 | Autocomplete     |          |            |             |              |         |              |            |
 | Tag autocomplete | ✅       |            | ✅          |              |         |              |            |
 | Link             | ✅       |            | ✅          |              |         |              |            |
@@ -52,4 +52,4 @@
 | Tag list         | ✅       |            | ✅          |              |         |              |            |
 | Table            |          |            |             |              |         |              |            |
 | Dl               |          |            |             |              |         |              |            |
-| Code-block       |          |            |             |              |         |              |            |
+| Code block       |          |            |             |              |         |              |            |

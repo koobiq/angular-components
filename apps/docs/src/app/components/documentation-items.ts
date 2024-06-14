@@ -152,7 +152,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'code-block',
-                    name: 'Code-block',
+                    name: 'Code block',
                     hasApi: true,
                     apiId: 'code-block',
                     hasExamples: false,
@@ -160,11 +160,11 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'date-formatter',
-                    name: 'Date',
+                    name: 'Date formatter',
                     hasApi: true,
                     apiId: 'date-formatter',
                     hasExamples: false,
-                    examples: ['date-types']
+                    examples: ['date-formatter-types']
                 },
                 {
                     id: 'datepicker',
@@ -279,11 +279,11 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'number-formatter',
-                    name: 'Number',
+                    name: 'Number formatter',
                     hasApi: true,
                     apiId: 'number-formatter',
                     hasExamples: false,
-                    examples: ['number-types']
+                    examples: ['number-formatter-types']
                 },
                 {
                     id: 'popover',
@@ -295,7 +295,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'progress-bar',
-                    name: 'Progress-bar',
+                    name: 'Progress bar',
                     hasApi: true,
                     apiId: 'progress-bar',
                     hasExamples: false,
@@ -303,7 +303,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'progress-spinner',
-                    name: 'Progress-spinner',
+                    name: 'Progress spinner',
                     hasApi: true,
                     apiId: 'progress-spinner',
                     hasExamples: false,
@@ -447,7 +447,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'tree-select',
-                    name: 'Tree-select',
+                    name: 'Tree select',
                     hasApi: true,
                     apiId: 'tree-select',
                     hasExamples: false,
