@@ -366,36 +366,36 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['tabs-types']
                 },
                 {
-                    id: 'tags',
-                    name: 'Tags',
+                    id: 'tag',
+                    name: 'Tag',
                     hasApi: true,
-                    apiId: 'tags',
+                    apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tags-types']
+                    examples: ['tag-types']
                 },
                 {
-                    id: 'tags-autocomplete',
-                    name: 'Tags autocomplete',
+                    id: 'tag-autocomplete',
+                    name: 'Tag autocomplete',
                     hasApi: true,
-                    apiId: 'tags',
+                    apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tags-autocomplete-types']
+                    examples: ['tag-autocomplete-types']
                 },
                 {
-                    id: 'tags-input',
-                    name: 'Tags input',
+                    id: 'tag-input',
+                    name: 'Tag input',
                     hasApi: true,
-                    apiId: 'tags',
+                    apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tags-input-types']
+                    examples: ['tag-input-types']
                 },
                 {
-                    id: 'tags-list',
-                    name: 'Tags list',
+                    id: 'tag-list',
+                    name: 'Tag list',
                     hasApi: true,
-                    apiId: 'tags',
+                    apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tags-list-types']
+                    examples: ['tag-list-types']
                 },
                 {
                     id: 'textarea',

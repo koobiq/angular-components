@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { KBQ_SELECT_SCROLL_STRATEGY_PROVIDER, KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagModule } from '@koobiq/components/tag';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 import { KbqOptionTooltip } from './select-option.directive';
@@ -24,7 +24,7 @@ import {
         OverlayModule,
         KbqOptionModule,
         KbqIconModule,
-        KbqTagsModule,
+        KbqTagModule,
         KbqToolTipModule
     ],
     exports: [

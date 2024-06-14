@@ -12,44 +12,44 @@
 
 **Accessible**: компонент соответствует требованиям руководства по доступности веб-контента (WCAG) 2.1, уровень AA.
 
-| Компонент         | Designed | Documented | Implemented | All variants | Content | Localization | Accessible |
-| ----------------- | -------- | ---------- | ----------- | ------------ | ------- | ------------ | ---------- |
-| Button            | ✅       | ✅         | ✅          | ✅           | ✅      |              | ✅         |
-| Datepicker        |          |            |             |              |         |              |            |
-| Timepicker        |          |            |             |              |         |              |            |
-| Alert             | ✅       |            | ✅          |              |         |              |            |
-| Badge             | ✅       |            | ✅          |              |         |              |            |
-| Progress bar      | ✅       |            | ✅          |              |         |              |            |
-| Progress spinner  | ✅       |            | ✅          |              |         |              |            |
-| Tags              | ✅       |            | ✅          |              |         |              |            |
-| Loader-overlay    | ✅       |            | ✅          |              |         |              |            |
-| Modal             | ✅       |            | ✅          |              |         |              |            |
-| Popover           |          |            |             |              |         |              |            |
-| Sidepanel         |          |            | ✅          |              |         |              |            |
-| Tooltip           |          |            |             |              |         |              |            |
-| Toast             | ✅       |            | ✅          |              |         |              |            |
-| Checkbox          | ✅       |            | ✅          |              |         |              |            |
-| Input             | ✅       |            | ✅          |              |         |              |            |
-| File upload       |          |            |             |              |         |              |            |
-| Textarea          | ✅       |            | ✅          |              |         |              |            |
-| Radio             | ✅       |            | ✅          |              |         |              |            |
-| Select            | ✅       |            | ✅          |              |         |              |            |
-| Tree-select       | ✅       |            | ✅          |              |         |              |            |
-| Autocomplete      |          |            |             |              |         |              |            |
-| Tags-autocomplete | ✅       |            | ✅          |              |         |              |            |
-| Link              | ✅       |            | ✅          |              |         |              |            |
-| Navbar            |          |            |             |              |         |              |            |
-| Card              |          |            |             |              |         |              |            |
-| Splitter          |          |            |             |              |         |              |            |
-| Divider           | ✅       |            | ✅          |              |         |              |            |
-| Tabs              | ✅       |            | ✅          |              |         |              |            |
-| Button-toggle     |          |            |             |              |         |              |            |
-| Toggle            |          |            |             |              |         |              |            |
-| Dropdown          | ✅       |            | ✅          |              |         |              |            |
-| Markdown          |          |            |             |              |         |              |            |
-| List              | ✅       |            | ✅          |              |         |              |            |
-| Tree              | ✅       |            | ✅          |              |         |              |            |
-| Tags-list         | ✅       |            | ✅          |              |         |              |            |
-| Table             |          |            |             |              |         |              |            |
-| Dl                |          |            |             |              |         |              |            |
-| Code-block        |          |            |             |              |         |              |            |
+| Компонент        | Designed | Documented | Implemented | All variants | Content | Localization | Accessible |
+| ---------------- | -------- | ---------- | ----------- | ------------ | ------- | ------------ | ---------- |
+| Button           | ✅       | ✅         | ✅          | ✅           | ✅      |              | ✅         |
+| Datepicker       |          |            |             |              |         |              |            |
+| Timepicker       |          |            |             |              |         |              |            |
+| Alert            | ✅       |            | ✅          |              |         |              |            |
+| Badge            | ✅       |            | ✅          |              |         |              |            |
+| Progress bar     | ✅       |            | ✅          |              |         |              |            |
+| Progress spinner | ✅       |            | ✅          |              |         |              |            |
+| Tag              | ✅       |            | ✅          |              |         |              |            |
+| Loader-overlay   | ✅       |            | ✅          |              |         |              |            |
+| Modal            | ✅       |            | ✅          |              |         |              |            |
+| Popover          |          |            |             |              |         |              |            |
+| Sidepanel        |          |            | ✅          |              |         |              |            |
+| Tooltip          |          |            |             |              |         |              |            |
+| Toast            | ✅       |            | ✅          |              |         |              |            |
+| Checkbox         | ✅       |            | ✅          |              |         |              |            |
+| Input            | ✅       |            | ✅          |              |         |              |            |
+| File upload      |          |            |             |              |         |              |            |
+| Textarea         | ✅       |            | ✅          |              |         |              |            |
+| Radio            | ✅       |            | ✅          |              |         |              |            |
+| Select           | ✅       |            | ✅          |              |         |              |            |
+| Tree-select      | ✅       |            | ✅          |              |         |              |            |
+| Autocomplete     |          |            |             |              |         |              |            |
+| Tag autocomplete | ✅       |            | ✅          |              |         |              |            |
+| Link             | ✅       |            | ✅          |              |         |              |            |
+| Navbar           |          |            |             |              |         |              |            |
+| Card             |          |            |             |              |         |              |            |
+| Splitter         |          |            |             |              |         |              |            |
+| Divider          | ✅       |            | ✅          |              |         |              |            |
+| Tabs             | ✅       |            | ✅          |              |         |              |            |
+| Button-toggle    |          |            |             |              |         |              |            |
+| Toggle           |          |            |             |              |         |              |            |
+| Dropdown         | ✅       |            | ✅          |              |         |              |            |
+| Markdown         |          |            |             |              |         |              |            |
+| List             | ✅       |            | ✅          |              |         |              |            |
+| Tree             | ✅       |            | ✅          |              |         |              |            |
+| Tag list         | ✅       |            | ✅          |              |         |              |            |
+| Table            |          |            |             |              |         |              |            |
+| Dl               |          |            |             |              |         |              |            |
+| Code-block       |          |            |             |              |         |              |            |
