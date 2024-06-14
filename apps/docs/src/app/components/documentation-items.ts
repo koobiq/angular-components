@@ -28,7 +28,6 @@ function updatePackageName(categories, name) {
 
 const MAIN = 'main';
 const COMPONENTS = 'components';
-const PATTERNS = 'patterns';
 const ICONS = 'icons';
 const CDK = 'cdk';
 
@@ -463,31 +462,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
             ]
         }
     ],
-    [PATTERNS]: [
-        {
-            id: 'patterns',
-            name: 'Паттерны',
-            summary: '',
-            items: [
-                {
-                    id: 'file-upload',
-                    name: 'File upload',
-                    hasApi: true,
-                    apiId: 'file-upload',
-                    hasExamples: true,
-                    examples: ['file-upload-types']
-                },
-                {
-                    id: 'timezone',
-                    name: 'Timezone',
-                    hasApi: true,
-                    apiId: 'timezone',
-                    hasExamples: false,
-                    examples: ['timezone-types']
-                }
-            ]
-        }
-    ],
     [ICONS]: [{
         id: 'icons',
         name: 'Иконки',
@@ -523,7 +497,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
 
 updatePackageName(DOCS[MAIN], MAIN);
 updatePackageName(DOCS[COMPONENTS], COMPONENTS);
-updatePackageName(DOCS[PATTERNS], PATTERNS);
 updatePackageName(DOCS[ICONS], ICONS);
 updatePackageName(DOCS[CDK], CDK);
 
@@ -532,9 +505,6 @@ const ALL_MAIN = DOCS[MAIN]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
 const ALL_COMPONENTS = DOCS[COMPONENTS]
-    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
-
-const ALL_PATTERNS = DOCS[PATTERNS]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
 const ALL_ICONS = DOCS[ICONS]
@@ -546,7 +516,6 @@ const ALL_CDK = DOCS[CDK]
 const ALL_DOCS = [
     ...ALL_MAIN,
     ...ALL_COMPONENTS,
-    ...ALL_PATTERNS,
     ...ALL_ICONS,
     ...ALL_CDK
 ];
@@ -554,7 +523,6 @@ const ALL_DOCS = [
 const ALL_CATEGORIES = [
     ...DOCS[MAIN],
     ...DOCS[COMPONENTS],
-    ...DOCS[PATTERNS],
     ...DOCS[ICONS],
     ...DOCS[CDK]
 ];

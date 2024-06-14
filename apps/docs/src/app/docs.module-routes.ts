@@ -48,18 +48,6 @@ export const APP_ROUTES: Routes = [
             { path: '**', redirectTo: 'overview' }
         ]
     },
-    { path: 'patterns', redirectTo: 'patterns/timezone', pathMatch: 'full' },
-    {
-        path: 'patterns/:id',
-        component: ComponentViewerComponent,
-        children: [
-            { path: '', redirectTo: 'overview', pathMatch: 'full' },
-            { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
-            { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
-            { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
-            { path: '**', redirectTo: 'overview' }
-        ]
-    },
     { path: 'icons', component: IconsViewerComponent },
     { path: '404', component: PageNotFoundComponent },
     { path: '**', redirectTo: '/404' }
