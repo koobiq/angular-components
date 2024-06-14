@@ -1,6 +1,5 @@
 import { spawnSync, SpawnSyncReturns } from 'child_process';
 
-
 /**
  * Class that can be used to execute Git commands within a given project directory.
  *
@@ -8,8 +7,10 @@ import { spawnSync, SpawnSyncReturns } from 'child_process';
  * guaranteed that the working directory is always the target project directory.
  */
 export class GitClient {
-
-    constructor(public projectDir: string, public remoteGitUrl: string) {}
+    constructor(
+        public projectDir: string,
+        public remoteGitUrl: string
+    ) {}
 
     /** Gets the currently checked out branch for the project directory. */
     getCurrentBranch(): string {
@@ -68,7 +69,7 @@ export class GitClient {
 
     /** Creates a tag for the specified commit reference. */
     createTag(tagName: string, message: string): boolean {
-        return this.spawnGitProcess(['tag', tagName, '-m', message]).status === 0;
+        return this.spawnGitProcess(['tag', '-s', tagName, '-m', message]).status === 0;
     }
 
     /** Checks whether the specified tag exists locally. */
@@ -123,4 +124,3 @@ export class GitClient {
         });
     }
 }
-

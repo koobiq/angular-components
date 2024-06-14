@@ -1,3 +1,16 @@
+# 17.0.0-rc.5 "Useful Form" (2024-06-14)
+
+### Koobiq
+
+ * bug fix  **docs,chore:** marked update ([#DS-2536](https://github.com/koobiq/angular-components/issues/issue/DS-2536)) ([#82](https://github.com/koobiq/angular-components/issues/82)) ([ea22b29](https://github.com/koobiq/angular-components/commit/ea22b29d597f76d4c2e0d242623cb2823f856ca8))
+ * bug fix  **docs,chore:** ts -> mts ([#DS-2401](https://github.com/koobiq/angular-components/issues/issue/DS-2401)) ([#80](https://github.com/koobiq/angular-components/issues/80)) ([cc44707](https://github.com/koobiq/angular-components/commit/cc447073b8f726491eb426e715162e9446786459))
+ * bug fix  **icon-item:** added warning color, fixed tokens after removal in design-tokens repo ([#DS-2510](https://github.com/koobiq/angular-components/issues/issue/DS-2510)) ([#54](https://github.com/koobiq/angular-components/issues/54)) ([dd6199f](https://github.com/koobiq/angular-components/commit/dd6199fd3fe6c15224d50385bfef69ebc6c76cca))
+ * bug fix  **icon:** warning style (DS-2485) ([#77](https://github.com/koobiq/angular-components/issues/77)) ([87cd7ff](https://github.com/koobiq/angular-components/commit/87cd7ffdc09819ab2744a5b0510f213c499b227d))
+ * bug fix  **select:** prevent closing under modal ([#DS-2488](https://github.com/koobiq/angular-components/issues/issue/DS-2488)) ([#76](https://github.com/koobiq/angular-components/issues/76)) ([e864f60](https://github.com/koobiq/angular-components/commit/e864f60fecf780ad947c3c151c76021d314934c3))
+ * feature  **docs:** alert v2 documentation text ([#DS-2343](https://github.com/koobiq/angular-components/issues/issue/DS-2343)) ([#45](https://github.com/koobiq/angular-components/issues/45)) ([9e389c8](https://github.com/koobiq/angular-components/commit/9e389c83904349b9393bc47ec8d0392076f1db79))
+ * feature  **input:** input password font -> mono ([#DS-2502](https://github.com/koobiq/angular-components/issues/issue/DS-2502)) ([#73](https://github.com/koobiq/angular-components/issues/73)) ([663b6b4](https://github.com/koobiq/angular-components/commit/663b6b4466fb515586acd51bc07ccc5a193e3612))
+ * feature  **table:** added Table ([#DS-1820](https://github.com/koobiq/angular-components/issues/issue/DS-1820)) ([#72](https://github.com/koobiq/angular-components/issues/72)) ([1365df2](https://github.com/koobiq/angular-components/commit/1365df2d22695f73c5554e831530d0219e3818fb))
+
 # 17.0.0-rc.4 (2024-05-31)
 
 ### Koobiq
