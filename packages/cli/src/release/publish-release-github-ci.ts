@@ -1,7 +1,6 @@
-// tslint:disable:no-console
-/* tslint:disable:no-string-literal */
-import chalk from 'chalk';
 import { join } from 'path';
+
+import chalk from 'chalk';
 
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
 import { CHANGELOG_FILE_NAME } from './constants';
@@ -12,12 +11,9 @@ import { npmPublish } from './npm/npm-client';
 import { checkReleasePackage } from './release-output/check-packages';
 import { parseVersionName, Version } from './version-name/parse-version';
 
-
 const { bold, cyan, green, italic, red } = chalk;
 
-// tslint:disable-next-line:naming-convention
 export class PublishReleaseCIGithubTask extends BaseReleaseTask {
-
     /** Parsed current version of the project. */
     currentVersion: Version;
 
@@ -35,8 +31,12 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
         this.packageJsonPath = join(config.projectDir, 'package.json');
 
         if (!this.currentVersion) {
-            console.error(red(`Cannot parse current version in ${italic('package.json')}. Please ` +
-                                  `make sure "${this.packageJson.version}" is a valid Semver version.`));
+            console.error(
+                red(
+                    `Cannot parse current version in ${italic('package.json')}. Please ` +
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`
+                )
+            );
             process.exit(1);
         }
     }
@@ -68,7 +68,9 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
         const newVersionName = this.currentVersion.format();
 
         const extractedReleaseNotes = extractReleaseNotes(
-            join(this.config.projectDir, CHANGELOG_FILE_NAME), newVersionName);
+            join(this.config.projectDir, CHANGELOG_FILE_NAME),
+            newVersionName
+        );
 
         if (!extractedReleaseNotes) {
             console.error(red(`  ✘   Could not find release notes in the changelog.`));
@@ -113,8 +115,12 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
         // In case any release validation did not pass, abort the publishing because
         // the issues need to be resolved before publishing.
         if (hasFailed) {
-            console.error(red(`  ✘   Release output does not pass all release validations. Please fix ` +
-                `all failures or reach out to the team.`));
+            console.error(
+                red(
+                    `  ✘   Release output does not pass all release validations. Please fix ` +
+                        `all failures or reach out to the team.`
+                )
+            );
             process.exit(1);
         }
 
