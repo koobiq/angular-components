@@ -2,6 +2,7 @@
 
 [![npm latest version](https://img.shields.io/npm/v/@koobiq/components/latest.svg)](https://www.npmjs.com/package/@koobiq/components)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/koobiq/angular-components/badge)](https://scorecard.dev/viewer/?uri=github.com/koobiq/angular-components)
+[![downloads](https://img.shields.io/npm/dm/@koobiq/components.svg?style=flat-round)](https://www.npmjs.com/package/@koobiq/components)
 
 Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
