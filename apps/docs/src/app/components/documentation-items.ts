@@ -28,6 +28,7 @@ function updatePackageName(categories, name) {
 
 const MAIN = 'main';
 const COMPONENTS = 'components';
+const OTHER = 'other';
 const ICONS = 'icons';
 const CDK = 'cdk';
 
@@ -157,14 +158,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false,
                     examples: ['code-block-types']
                 },
-                {
-                    id: 'date-formatter',
-                    name: 'Date formatter',
-                    hasApi: true,
-                    apiId: 'date-formatter',
-                    hasExamples: false,
-                    examples: ['date-formatter-types']
-                },
+
                 {
                     id: 'datepicker',
                     name: 'Datepicker',
@@ -198,14 +192,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['dropdown-types']
                 },
                 {
-                    id: 'forms',
-                    name: 'Forms',
-                    hasApi: true,
-                    apiId: 'forms',
-                    hasExamples: false,
-                    examples: ['forms-types']
-                },
-                {
                     id: 'icon',
                     name: 'Icon',
                     hasApi: true,
@@ -220,6 +206,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'input',
                     hasExamples: false,
                     examples: ['input-types']
+                },
+                {
+                    id: 'file-upload',
+                    name: 'File upload',
+                    hasApi: true,
+                    apiId: 'file-upload',
+                    hasExamples: true,
+                    examples: ['file-upload-types']
                 },
                 {
                     id: 'layout-flex',
@@ -275,14 +269,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'navbar',
                     hasExamples: false,
                     examples: ['navbar-types']
-                },
-                {
-                    id: 'number-formatter',
-                    name: 'Number formatter',
-                    hasApi: true,
-                    apiId: 'number-formatter',
-                    hasExamples: false,
-                    examples: ['number-formatter-types']
                 },
                 {
                     id: 'popover',
@@ -413,6 +399,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['timepicker-types']
                 },
                 {
+                    id: 'timezone',
+                    name: 'Timezone',
+                    hasApi: true,
+                    apiId: 'timezone',
+                    hasExamples: false,
+                    examples: ['timezone-types']
+                },
+                {
                     id: 'toast',
                     name: 'Toast',
                     hasApi: true,
@@ -452,15 +446,48 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false,
                     examples: ['treeSelect-types']
                 },
-                {
-                    id: 'validation',
-                    name: 'Validation',
-                    hasApi: false,
-                    hasExamples: false,
-                    examples: ['validation-types']
-                }
             ]
         }
+    ],
+    [OTHER]: [
+       {
+        id: OTHER,
+        name: 'Другое',
+        summary: '',
+        items: [
+            {
+                id: 'date-formatter',
+                name: 'Date formatter',
+                hasApi: true,
+                apiId: 'date-formatter',
+                hasExamples: false,
+                examples: ['date-formatter-types']
+            },
+            {
+                id: 'forms',
+                name: 'Forms',
+                hasApi: true,
+                apiId: 'forms',
+                hasExamples: false,
+                examples: ['forms-types']
+            },
+            {
+                id: 'number-formatter',
+                name: 'Number formatter',
+                hasApi: true,
+                apiId: 'number-formatter',
+                hasExamples: false,
+                examples: ['number-formatter-types']
+            },
+            {
+                id: 'validation',
+                name: 'Validation',
+                hasApi: false,
+                hasExamples: false,
+                examples: ['validation-types']
+            }
+        ],
+       }
     ],
     [ICONS]: [{
         id: 'icons',
@@ -497,6 +524,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
 
 updatePackageName(DOCS[MAIN], MAIN);
 updatePackageName(DOCS[COMPONENTS], COMPONENTS);
+updatePackageName(DOCS[OTHER], OTHER);
 updatePackageName(DOCS[ICONS], ICONS);
 updatePackageName(DOCS[CDK], CDK);
 
@@ -505,6 +533,9 @@ const ALL_MAIN = DOCS[MAIN]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
 const ALL_COMPONENTS = DOCS[COMPONENTS]
+    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+
+const ALL_OTHER = DOCS[OTHER]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
 const ALL_ICONS = DOCS[ICONS]
@@ -516,6 +547,7 @@ const ALL_CDK = DOCS[CDK]
 const ALL_DOCS = [
     ...ALL_MAIN,
     ...ALL_COMPONENTS,
+    ...ALL_OTHER,
     ...ALL_ICONS,
     ...ALL_CDK
 ];
@@ -523,6 +555,7 @@ const ALL_DOCS = [
 const ALL_CATEGORIES = [
     ...DOCS[MAIN],
     ...DOCS[COMPONENTS],
+    ...DOCS[OTHER],
     ...DOCS[ICONS],
     ...DOCS[CDK]
 ];

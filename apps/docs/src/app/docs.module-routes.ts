@@ -36,6 +36,18 @@ export const APP_ROUTES: Routes = [
             { path: '**', redirectTo: 'overview' }
         ]
     },
+    { path: 'other', redirectTo: 'other/date-formatter', pathMatch: 'full' },
+    {
+        path: 'other/:id',
+        component: ComponentViewerComponent,
+        children: [
+            { path: '', redirectTo: 'overview', pathMatch: 'full' },
+            { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
+            { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
+            { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
+            { path: '**', redirectTo: 'overview' }
+        ]
+    },
     { path: 'cdk', redirectTo: 'cdk/a11y', pathMatch: 'full' },
     {
         path: 'cdk/:id',
