@@ -23,7 +23,7 @@
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@koobiq/date-formatter": "^3.0.2",
-        "@koobiq/kbq-icons": "^8.0.0-beta.1",
+        "@koobiq/kbq-icons": "^8.0.0-beta.2",
         "@koobiq/tokens-builder": "3.0.0-rc.6",
         "@koobiq/design-tokens": "3.0.0-rc.8",
         "marked": "^9.0.0",
@@ -52,5 +52,5 @@
             "style": "./prebuilt-visual/default-visual.css"
         }
     },
-    "schematics": "./schematics/collection.json"
+    "schematics": "../schematics/dist/collection.json"
 }

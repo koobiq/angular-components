@@ -249,7 +249,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                         kbqTreeNodePadding
                         [disabled]="node.name === 'Downloads'">
 
-                        <i kbq-icon="kbq-angle-down-S_16" kbqTreeNodeToggle></i>
+                        <i kbq-icon="kbq-angle-down_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -306,7 +306,7 @@ class BasicTreeSelect {
                         kbqTreeNodePadding
                         [disabled]="node.name === 'Downloads'">
 
-                        <i kbq-icon="kbq-angle-down-S_16" kbqTreeNodeToggle></i>
+                        <i kbq-icon="kbq-angle-down_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -1543,7 +1543,7 @@ class SelectWithFormFieldLabel {
                         kbqTreeNodePadding>
 
                         <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)"></kbq-pseudo-checkbox>
-                        <i kbq-icon="kbq-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                        <i kbq-icon="kbq-angle-down_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>

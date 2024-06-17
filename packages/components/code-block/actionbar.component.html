@@ -6,7 +6,7 @@
         *ngIf="multiLine"
         [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
         (click)="toggleSoftWrap.emit()">
-    <i *ngIf="!softWrap" kbq-icon="kbq-word-wrap_16"></i>
+    <i *ngIf="!softWrap" kbq-icon="kbq-wrap-text_16"></i>
     <i *ngIf="softWrap" kbq-icon="kbq-word-wrap-slash_16"></i>
 </button>
 
