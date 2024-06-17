@@ -24,7 +24,9 @@ module.exports = [
             exports: 'named'
         },
         input: {
-            'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts')
+            'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
+            'new-icons-pack/index': path.join(__dirname, 'src/new-icons-pack/index.ts'),
+            'new-icons-pack/data': path.join(__dirname, 'src/new-icons-pack/data.ts')
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
         external: (dependency) =>
