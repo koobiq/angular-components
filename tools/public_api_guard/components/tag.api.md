@@ -128,6 +128,15 @@ export class KbqTagBase {
     elementRef: ElementRef;
 }
 
+// @public
+export interface KbqTagDefaultOptions {
+    separatorKeyCodes: number[];
+    // (undocumented)
+    separators?: {
+        [key: number]: KbqTagSeparator;
+    };
+}
+
 // @public (undocumented)
 export interface KbqTagEvent {
     // (undocumented)
@@ -307,6 +316,20 @@ export const KbqTagListMixinBase: CanUpdateErrorStateCtor & typeof KbqTagListBas
 // @public
 export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase;
 
+// @public (undocumented)
+export class KbqTagModule {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagModule, never>;
+    // (undocumented)
+    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTagModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagModule, [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.CommonModule, typeof i5.PlatformModule], [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove]>;
+}
+
 // @public
 export class KbqTagRemove {
     constructor(parentTag: KbqTag);
@@ -319,15 +342,6 @@ export class KbqTagRemove {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagRemove, never>;
-}
-
-// @public
-export interface KbqTagDefaultOptions {
-    separatorKeyCodes: number[];
-    // (undocumented)
-    separators?: {
-        [key: number]: KbqTagSeparator;
-    };
 }
 
 // @public
@@ -347,20 +361,6 @@ export interface KbqTagSeparator {
     key: string;
     // (undocumented)
     symbol: RegExp;
-}
-
-// @public (undocumented)
-export class KbqTagModule {
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagModule, never>;
-    // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTagModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagModule, [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.CommonModule, typeof i5.PlatformModule], [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove]>;
 }
 
 // @public
