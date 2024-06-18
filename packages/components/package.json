@@ -52,5 +52,5 @@
             "style": "./prebuilt-visual/default-visual.css"
         }
     },
-    "schematics": "../schematics/dist/collection.json"
+    "schematics": "./schematics/collection.json"
 }

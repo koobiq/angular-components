@@ -17,7 +17,7 @@ export default function newIconsPack(options: Schema): Rule {
         { replace: 'kbq-icon-item="mc-', replaceWith: 'kbq-icon-item="kbq-' },
         { replace: 'kbq-icon-button="mc-', replaceWith: 'kbq-icon-button="kbq-' },
         { replace: 'class="mc kbq-icon mc-', replaceWith: 'class="kbq kbq-icon kbq-' },
-        { replace: '\\[class\\.mc\\]="', replaceWith: '\[class\.kbq\]="' },
+        { replace: '\\[class\\.mc', replaceWith: '\[class\.kbq' },
         { replace: '\'mc-', replaceWith: '\'kbq-' }
     ];
 
