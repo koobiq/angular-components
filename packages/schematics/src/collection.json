@@ -9,7 +9,8 @@
         },
         "new-icons-pack": {
             "description": "Updates prefixes, names of changed/removed icons",
-            "factory": "./new-icons-pack/index"
+            "factory": "./new-icons-pack/index",
+            "schema": "./new-icons-pack/schema.json"
         }
     }
 }
