@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { KBQ_SELECT_SCROLL_STRATEGY_PROVIDER, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagModule } from '@koobiq/components/tag';
 import { KbqTreeModule } from '@koobiq/components/tree';
 
 import {
@@ -21,7 +21,7 @@ import {
         OverlayModule,
         KbqTreeModule,
         KbqIconModule,
-        KbqTagsModule,
+        KbqTagModule,
         KbqPseudoCheckboxModule,
         KbqSelectModule
     ],
