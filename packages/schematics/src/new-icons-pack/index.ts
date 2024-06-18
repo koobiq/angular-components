@@ -21,6 +21,18 @@ export default function newIconsPack(options: Schema): Rule {
 
     return async (tree: Tree, context: SchematicContext) => {
         const { logger } = context;
+        const handleDeprecatedIcons = (newContent: string | undefined, path: Path) =>  {
+            if (options.fix) {
+                data.forEach(({ replace, replaceWith }) => {
+                    newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
+                });
+            } else {
+                const foundIcons = data
+                    .filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+                showWarning(path, foundIcons, logger);
+            }
+            return newContent;
+        }
 
         // Check if breaking version is used indeed
         if (tree.exists('package.json')) {
@@ -35,6 +47,7 @@ export default function newIconsPack(options: Schema): Rule {
                 return;
             }
         }
+
         // Update templates & components
         tree.visit((path: Path, entry) => {
             if (path.endsWith('.html') || path.endsWith('.ts')) {
@@ -45,49 +58,29 @@ export default function newIconsPack(options: Schema): Rule {
                     iconReplacements.forEach(({ replace, replaceWith }) => {
                         newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
                     });
-                    // replace deprecated icons with new
 
-                    if (options.fix) {
-                        data.forEach(({ replace, replaceWith }) => {
-                            newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
-                        });
-                    } else {
-                        const foundIcons = data
-                            .filter(({ replace }) => newContent!.indexOf(replace) !== -1);
-                        showWarning(path, foundIcons, logger);
-                    }
+                    newContent = handleDeprecatedIcons(newContent, path);
 
                     if (initialContent !== newContent) {
                         tree.overwrite(path, newContent || '');
                     }
                 }
-
             }
         });
 
         // update styles
         tree.visit((path: Path, entry) => {
-            // styles
             if (path.endsWith(options.stylesExt)) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
 
                 if (newContent) {
-                    // replace icons in inline templates
+                    // replace icons in styles, update pkg name
                     newContent = newContent
                         .replace(new RegExp(`@koobiq/icons`, 'g'), pkg)
                         .replace(new RegExp('mc-', 'g'), 'kbq-');
 
-                    // replace deprecated icons with new
-                    if (options.fix) {
-                        data.forEach(({ replace, replaceWith }) => {
-                            newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
-                        });
-                    } else {
-                        const foundIcons = data
-                            .filter(({ replace }) => newContent!.indexOf(replace) !== -1);
-                        showWarning(path, foundIcons, logger);
-                    }
+                    newContent = handleDeprecatedIcons(newContent, path);
                 }
 
                 if (initialContent !== newContent) {
@@ -98,11 +91,13 @@ export default function newIconsPack(options: Schema): Rule {
     };
 }
 
-function showWarning (path, foundIcons: ReplaceData[], logger: LoggerApi) {
+function showWarning(path: Path, foundIcons: ReplaceData[], logger: LoggerApi) {
     if (foundIcons.length) {
         logger.warn('-------------------------');
         logger.warn(`Please pay attention! Found deprecated icons in file ${ path }: `);
-        logger.warn(foundIcons.map(({ replace }) =>`\t${replace}`).join('\n'));
+        logger.warn(
+            foundIcons.map(({ replace, replaceWith }) =>`\t${replace} -> \t${replaceWith}`).join('\n')
+        );
         logger.warn('-------------------------');
     }
 }
