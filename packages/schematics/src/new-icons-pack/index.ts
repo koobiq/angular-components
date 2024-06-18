@@ -1,13 +1,15 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Path } from '@angular-devkit/core';
 
 import { newIconsPackData, ReplaceData } from './data';
 import { Schema } from './schema';
 import { LoggerApi } from '@angular-devkit/core/src/logger';
+import { setupOptions } from '../utils/package-config';
 
 const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
+    let targetDir: Tree | DirEntry;
     const breakingIconsVersion = '^8.0.0-beta.2';
     const pkg = '@koobiq/kbq-icons';
     const iconReplacements: ReplaceData[] = [
@@ -20,6 +22,14 @@ export default function newIconsPack(options: Schema): Rule {
     ];
 
     return async (tree: Tree, context: SchematicContext) => {
+        const { project } = options;
+        try {
+            const projectDefinition = await setupOptions(project, tree);
+            targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
+        } catch (e) {
+            targetDir = tree;
+        }
+
         const { logger } = context;
         const handleDeprecatedIcons = (newContent: string | undefined, path: Path) =>  {
             if (options.fix) {
@@ -49,7 +59,7 @@ export default function newIconsPack(options: Schema): Rule {
         }
 
         // Update templates & components
-        tree.visit((path: Path, entry) => {
+        targetDir.visit((path: Path, entry) => {
             if (path.endsWith('.html') || path.endsWith('.ts')) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
@@ -69,7 +79,7 @@ export default function newIconsPack(options: Schema): Rule {
         });
 
         // update styles
-        tree.visit((path: Path, entry) => {
+        targetDir.visit((path: Path, entry) => {
             if (path.endsWith(options.stylesExt)) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
