@@ -13,7 +13,6 @@ describe('new-icons-pack', () => {
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner);
-        console.log(appTree);
     });
 
     it('should skip changes if koobiq icons package with breaking changes is not installed', () => {
@@ -29,8 +28,10 @@ describe('new-icons-pack', () => {
     });
 
     it('works', async () => {
-       /* const tree = await runner.runSchematic('new-icons-pack', {}, appTree);
+       const tree = await runner.runSchematic('new-icons-pack', {}, appTree);
 
-        expect(tree.files).toEqual([]);*/
+        console.log(tree.files);
+
+        /* expect(tree.files).toEqual([]);*/
     });
 });
