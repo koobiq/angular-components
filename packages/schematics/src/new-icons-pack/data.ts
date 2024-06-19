@@ -227,18 +227,14 @@ export const newIconsPackData: ReplaceData[] = [
         'replaceWith': 'success_16'
     },
     {
-        'comment': 'заменить на 16/common/kbq-icons-user_16',
+        'comment': 'change to 16/common/kbq-icons-user_16',
         'replace': 'asset-account_16',
         'replaceWith': 'user_16'
     },
     {
-        'comment': 'заменить на 16/common/kbq-icons-user_16',
+        'comment': 'change to 16/common/kbq-icons-user_16',
         'replace': 'user-o_16',
         'replaceWith': 'user_16'
-    },
-    {
-        'replace': 'topology_16',
-        'replaceWith': 'topology_16'
     },
     {
         'replace': 'word-wrap_16',
@@ -297,10 +293,6 @@ export const newIconsPackData: ReplaceData[] = [
         'replaceWith': 'stop_16'
     },
     {
-        'replace': 'word-wrap_16',
-        'replaceWith': 'wrap-text_16'
-    },
-    {
         'replace': 'compliance-level-not-defined_16',
         'replaceWith': 'compliance-level-low_16'
     },
@@ -353,8 +345,8 @@ export const newIconsPackData: ReplaceData[] = [
         'replaceWith': 'folder-open_24'
     },
     {
-        'replace': 'log-o_24',
-        'replaceWith': 'log_24'
+        'replace': 'log_24',
+        'replaceWith': 'log-o_24'
     },
     {
         'replace': 'connection-o_24',
