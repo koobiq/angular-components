@@ -1,6 +1,6 @@
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import { ProjectDefinition, readWorkspace } from '@schematics/angular/utility';
-import * as messages from '../ng-add/messages';
+import * as messages from './messages';
 
 /**
  * Sorts the keys of the given object.

@@ -10,7 +10,7 @@ const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
-    const breakingIconsVersion = '^8.0.0-beta.2';
+    const breakingIconsVersionRegExp = /^\^|\~?8\.0\.0-beta\.2/;
     const pkg = '@koobiq/kbq-icons';
     const iconReplacements: ReplaceData[] = [
         { replace: 'kbq-icon="mc-', replaceWith: 'kbq-icon="kbq-' },
@@ -50,7 +50,7 @@ export default function newIconsPack(options: Schema): Rule {
             const json: Partial<{ devDependencies: any; dependencies: any }> = JSON.parse(sourceText);
 
             const isIconsBreakingVersionUsed = ['devDependencies', 'dependencies', 'peerDependencies']
-                .some((type) => json[type] && json[type][pkg] && json[type][pkg] === breakingIconsVersion);
+                .some((type) => json[type] && json[type][pkg] && breakingIconsVersionRegExp.test(json[type][pkg]));
 
             if (!isIconsBreakingVersionUsed) {
                 logger.warn('Breaking version of icons is not used. Everything is OK.');
@@ -60,6 +60,9 @@ export default function newIconsPack(options: Schema): Rule {
 
         // Update templates & components
         targetDir.visit((path: Path, entry) => {
+            // if project property not provided, provide node_modules to be changed
+            if (path.includes('node_modules')) { return; }
+
             if (path.endsWith('.html') || path.endsWith('.ts')) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
@@ -80,6 +83,9 @@ export default function newIconsPack(options: Schema): Rule {
 
         // update styles
         targetDir.visit((path: Path, entry) => {
+            // if project property not provided, provide node_modules to be changed
+            if (path.includes('node_modules')) { return; }
+
             if (path.endsWith(options.stylesExt)) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
