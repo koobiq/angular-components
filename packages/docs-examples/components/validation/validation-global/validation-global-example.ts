@@ -1,6 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-
 
 /**
  * @title validation-global
@@ -12,6 +11,8 @@ import { FormControl, FormGroup } from '@angular/forms';
     encapsulation: ViewEncapsulation.None
 })
 export class ValidationGlobalExample {
+    @ViewChild('submitButton') submitButton: ElementRef;
+
     globalErrorForm: FormGroup;
     showServerErrors: boolean = false;
     inProgress: boolean = false;
@@ -32,6 +33,7 @@ export class ValidationGlobalExample {
             () => {
                 this.showServerErrors = true;
                 this.inProgress = false;
+                this.submitButton.nativeElement.focus();
             },
             // tslint:disable-next-line:no-magic-numbers
             1000

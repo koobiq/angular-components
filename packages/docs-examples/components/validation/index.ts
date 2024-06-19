@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -17,7 +19,6 @@ import { ValidationOnBlurExample } from './validation-on-blur/validation-on-blur
 import { ValidationOnTypeExample } from './validation-on-type/validation-on-type-example';
 import { ValidationOverviewExample } from './validation-overview/validation-overview-example';
 import { ValidationSmallExample } from './validation-small/validation-small-example';
-
 
 export {
     ValidationOverviewExample,
@@ -51,7 +52,8 @@ const EXAMPLES = [
         KbqSelectModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqTextareaModule
+        KbqTextareaModule,
+        KbqAlertModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES
