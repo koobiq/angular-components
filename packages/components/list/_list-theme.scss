@@ -58,9 +58,11 @@
     .kbq-list-item,
     .kbq-list-option {
         @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
-    }
 
-    .kbq-list-option-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+        .kbq-list-text {
+            .kbq-list-option-caption {
+                @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+            }
+        }
     }
 }

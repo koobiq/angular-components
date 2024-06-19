@@ -25,7 +25,7 @@
         "@koobiq/date-formatter": "^3.0.2",
         "@koobiq/icons": "^7.1.0",
         "@koobiq/tokens-builder": "3.0.0-rc.6",
-        "@koobiq/design-tokens": "3.0.0-rc.6",
+        "@koobiq/design-tokens": "3.0.0-rc.8",
         "marked": "^9.0.0",
         "overlayscrollbars": "^2.2.0",
         "ngx-highlightjs": "^10.0.0"

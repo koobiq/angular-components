@@ -50,6 +50,12 @@
         }
     }
 
+    .kbq-dropdown__group-header {
+        &.kbq-dropdown__group-header_small {
+            color: map.get(map.get($theme, foreground), contrast-secondary);
+        }
+    }
+
     .kbq-dropdown-item-overlay {
         background: transparent;
     }
@@ -61,10 +67,10 @@
     .kbq-dropdown-item,
     .kbq-dropdown__content {
         @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
-    }
 
-    .kbq-dropdown-item__caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+        .kbq-dropdown-item__caption {
+            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+        }
     }
 
     .kbq-dropdown__group-header {
