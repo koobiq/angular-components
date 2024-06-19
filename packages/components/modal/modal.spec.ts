@@ -531,7 +531,7 @@ describe('KbqModal', () => {
 // -------------------------------------------
 
 @Component({
-    selector: 'mc-modal-by-service-from-dropdown',
+    selector: 'kbq-modal-by-service-from-dropdown',
     template: `
         <kbq-modal [(kbqVisible)]="nonServiceModalVisible" kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"></kbq-modal>
         <button kbq-button class="template-button" [kbqDropdownTriggerFor]="dropdown">Open modal from dropdown</button>

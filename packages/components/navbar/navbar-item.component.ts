@@ -545,8 +545,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     selector: 'kbq-navbar-toggle',
     template: `
         <i kbq-icon
-           [class.mc-angle-left-M_16]="navbar.expanded"
-           [class.mc-angle-right-M_16]="!navbar.expanded"
+           [class.kbq-angle-left_16]="navbar.expanded"
+           [class.kbq-angle-right_16]="!navbar.expanded"
            *ngIf="!customIcon">
         </i>
 

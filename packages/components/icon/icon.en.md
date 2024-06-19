@@ -2,13 +2,13 @@
 Note that koobiq Icons is optional package and it should be installed manually.
 
 ##### NPM
-`npm install @koobiq/icons --save`
+`npm install @koobiq/kbq-icons --save`
 ##### Yarn
-`yarn add @koobiq/icons`
+`yarn add @koobiq/kbq-icons`
 
 Then you should add icons styles:
 
-`@use '@koobiq/icons/dist/fonts/kbq-icons.css';`
+`@use '@koobiq/kbq-icons/dist/fonts/kbq-icons.css';`
 
 And finally import KbqIconModule to your component module.
 
@@ -23,8 +23,8 @@ If kbq-icons.css does't suit your project, you can also add:
 
 There are two icon usage variants:
 
-1. `<i kbq-icon="mc-gear_16"></i>`;
+1. `<i kbq-icon="kbq-gear_16"></i>`;
 
     In this case you can provide `[color]` attribute. It can have following values: *primary*, *secondary*, *error*.
 
-2. Simply `<i class="mc kbq-gear_16"></i>`.
+2. Simply `<i class="kbq kbq-gear_16"></i>`.

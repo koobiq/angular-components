@@ -15,7 +15,7 @@
                 [tabindex]="-1">
             {{ monthSelect.triggerValue }}
 
-            <i class="layout-padding-left-3xs" kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
+            <i class="layout-padding-left-3xs" kbq-icon="kbq-angle-down_16" [color]="'contrast'"></i>
         </button>
 
         <kbq-option *ngFor="let month of monthNames"
@@ -39,7 +39,7 @@
                 [tabindex]="-1">
             {{ selectedYear.value }}
 
-            <i class="layout-padding-left-3xs" kbq-icon="mc-angle-down-S_16"></i>
+            <i class="layout-padding-left-3xs" kbq-icon="kbq-angle-down_16"></i>
         </button>
 
         <kbq-option *ngFor="let year of years"
@@ -59,7 +59,7 @@
             [disabled]="previousDisabled"
             (click)="selectPreviousMonth()">
 
-        <i kbq-icon="mc-angle-left-L_16"></i>
+        <i kbq-icon="kbq-angle-left_16"></i>
     </button>
 
     <button kbq-button
@@ -68,7 +68,7 @@
             [tabindex]="-1"
             (click)="selectCurrentDate()">
 
-        <i kbq-icon="mc-circle-8_16"></i>
+        <i kbq-icon="kbq-circle_16"></i>
     </button>
 
     <button kbq-button
@@ -79,6 +79,6 @@
             [disabled]="nextDisabled"
             (click)="selectNextMonth()">
 
-        <i kbq-icon="mc-angle-right-L_16"></i>
+        <i kbq-icon="kbq-angle-right_16"></i>
     </button>
 </div>

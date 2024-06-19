@@ -46,8 +46,8 @@
                     kbq-button
                     (keydown.enter)="onEnter(codeContent)"
                     (click)="onShowMoreClick(codeContent)">
-                <i kbq-icon="mc-angle-down-L_16" *ngIf="!viewAll"></i>
-                <i kbq-icon="mc-angle-up-L_16" *ngIf="viewAll"></i>
+                <i kbq-icon="kbq-angle-down_16" *ngIf="!viewAll"></i>
+                <i kbq-icon="kbq-angle-up_16" *ngIf="viewAll"></i>
                     {{ viewAll ? config.viewLessText : config.viewAllText}}
             </button>
             </span>

@@ -73,7 +73,7 @@ class KbqFormFieldWithHint {}
 @Component({
     template: `
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-search_16"></i>
+            <i kbqPrefix kbq-icon="kbq-search_16"></i>
             <input kbqInput />
         </kbq-form-field>
     `
@@ -84,7 +84,7 @@ class KbqFormFieldWithPrefix {}
     template: `
         <kbq-form-field>
             <input kbqInput />
-            <i kbqSuffix kbq-icon="mc-search_16"></i>
+            <i kbqSuffix kbq-icon="kbq-search_16"></i>
         </kbq-form-field>
     `
 })

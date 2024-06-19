@@ -4,14 +4,14 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
 @Component({
     selector: 'kbq-stepper',
     template: `
-        <i kbq-icon-button="mc-angle-down-L_16"
+        <i kbq-icon-button="kbq-angle-down_16"
            class="kbq-stepper-step-up"
            [small]="true"
            [tabindex]="-1"
            [autoColor]="true"
            (mousedown)="onStepUp($event)">
         </i>
-        <i kbq-icon-button="mc-angle-down-L_16"
+        <i kbq-icon-button="kbq-angle-down_16"
            class="kbq-stepper-step-down"
            [small]="true"
            [tabindex]="-1"

@@ -49,7 +49,7 @@ export const KbqOptionActionMixinBase:
     exportAs: 'kbqOptionAction',
     template: `
         <ng-container [ngSwitch]="!!customIcon">
-            <i class="mc kbq-icon mc-ellipsis_16" *ngSwitchCase="false"></i>
+            <i class="kbq kbq-icon kbq-ellipsis_16" *ngSwitchCase="false"></i>
             <ng-content select="[kbq-icon]" *ngSwitchCase="true"></ng-content>
         </ng-container>
     `,

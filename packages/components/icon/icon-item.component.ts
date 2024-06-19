@@ -25,7 +25,7 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'mc kbq-icon kbq-icon-item'
+        class: 'kbq kbq-icon kbq-icon-item'
     }
 })
 export class KbqIconItem extends KbqIcon implements CanColor {

@@ -6,8 +6,8 @@
         *ngIf="multiLine"
         [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
         (click)="toggleSoftWrap.emit()">
-    <i *ngIf="!softWrap" kbq-icon="mc-word-wrap_16"></i>
-    <i *ngIf="softWrap" kbq-icon="mc-word-wrap-slash_16"></i>
+    <i *ngIf="!softWrap" kbq-icon="kbq-wrap-text_16"></i>
+    <i *ngIf="softWrap" kbq-icon="kbq-word-wrap-slash_16"></i>
 </button>
 
 <button kbq-button
@@ -15,7 +15,7 @@
         [kbqStyle]="'transparent'"
         [kbqTooltip]="config.downloadTooltip"
         (click)="downloadCode.emit()">
-    <i kbq-icon="mc-download_16"></i>
+    <i kbq-icon="kbq-download_16"></i>
 </button>
 
 <button kbq-button
@@ -24,7 +24,7 @@
         #copyTooltip="kbqTooltip"
         [kbqTooltip]="copyTooltipText"
         (click)="onCopy()">
-    <i kbq-icon="mc-copy-o_16"></i>
+    <i kbq-icon="kbq-copy-o_16"></i>
 </button>
 
 <button kbq-button
@@ -33,5 +33,5 @@
         *ngIf="codeFiles[selectedTabIndex].link"
         [kbqTooltip]="config.openExternalSystemTooltip"
         (click)="openExternalSystem.emit()">
-    <i kbq-icon="mc-external-link_16"></i>
+    <i kbq-icon="kbq-external-link_16"></i>
 </button>

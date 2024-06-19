@@ -19,7 +19,7 @@
 * Текста подсказки (не обязательно)
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     <span> Если есть ограничения по формату допустимых файлов или по размеру, перечислите их в тексте подсказки </span>
 </div>
 
@@ -61,7 +61,7 @@
 Если названия файла не влезает полностью, оно в середине обрезается многоточием, а при наведении показывается [тултип](https://koobiq.io/components/tooltip/overview) с полным названием (это правило действует и для загрузки нескольких файлов)
 
 <div class="kbq-alert kbq-alert_warning" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-error_16 kbq-alert__icon"></i>
     <span> Стандартный тултип из Koobiq имеет ограничение по ширине в 240px, в данном случае стоит это ограничение не учитывать, чтобы имя файла показывалось в тултипе без переносов. Но ширина тултипа не должна превышать ширину экрана, в таком случае перенос имени файла на другую строку допустим. </span>
 </div>
 
@@ -76,7 +76,7 @@
 #### Валидация
 
 <div class="kbq-alert kbq-alert_warning" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-error_16 kbq-alert__icon"></i>
     <span> Если процесс загрузки файлов не завершился, ограничьте возможность отправки формы путем блокирования кнопки отправки. </span>
 </div>
 

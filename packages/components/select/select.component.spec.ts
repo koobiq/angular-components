@@ -133,7 +133,7 @@ const OPTIONS  =
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -182,7 +182,7 @@ class BasicSelect {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -291,7 +291,7 @@ class NgIfSelect {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -333,7 +333,7 @@ class SelectWithChangeEvent {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                          {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -486,7 +486,7 @@ class BasicSelectOnPushPreselected {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -527,7 +527,7 @@ class MultiSelect {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -633,7 +633,7 @@ class BasicSelectWithTheming {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -669,7 +669,7 @@ class ResetValuesSelect {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -909,7 +909,7 @@ class SelectWithCustomTrigger {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -1055,7 +1055,7 @@ class SelectWithFormFieldLabel {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -1089,7 +1089,7 @@ class SelectWithLongOptionText {
                     <kbq-tag [selectable]="false"
                             [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
+                        <i kbq-icon="kbq-close_16" kbqTagRemove
                            *ngIf="!option.disabled && !select.disabled"
                            (click)="select.onRemoveMatcherItem(option, $event)">
                         </i>
@@ -1159,8 +1159,8 @@ class CdkVirtualScrollViewportSelect<T = string> {
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.value.name }}
                         <i
-                            kbq-icon="mc-close-S_16"
-                            mcTagRemove
+                            kbq-icon="kbq-close_16"
+                            kbqTagRemove
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
                         >

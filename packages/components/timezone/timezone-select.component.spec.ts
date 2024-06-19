@@ -112,7 +112,7 @@ class BasicTimezoneSelect {
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                    <i kbqPrefix kbq-icon="mc-search_16"></i>
+                    <i kbqPrefix kbq-icon="kbq-search_16"></i>
                     <input kbqInput [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" type="text"/>
                     <kbq-cleaner></kbq-cleaner>
                 </kbq-form-field>

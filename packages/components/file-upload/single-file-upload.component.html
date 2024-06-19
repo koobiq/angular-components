@@ -5,7 +5,7 @@
      (filesDropped)="onFileDropped($event)">
 
     <div class="dropzone" *ngIf="!file; else fileOutput">
-        <i kbq-icon="mc-upload-to-cloud_24"></i>
+        <i kbq-icon="kbq-upload-to-cloud_24"></i>
         <span class="dropzone__text">
             {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}
         </span>
@@ -36,7 +36,7 @@
 
             <div class="file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
         </div>
-        <i kbq-icon-button="mc-close-circle_16"
+        <i kbq-icon-button="kbq-close-circle_16"
            [color]="'contrast'"
            [disabled]="disabled"
            (keydown.delete)="deleteItem()"

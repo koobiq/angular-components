@@ -6,7 +6,7 @@
              #languageDropdownTrigger="kbqDropdownTrigger"
              [class.kbq-active]="languageDropdownTrigger.opened">
             <span>{{ selectedLanguages }}</span>
-            <i kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
+            <i kbq-icon="kbq-angle-down-S_16" [color]="'contrast'"></i>
         </div>
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
@@ -47,7 +47,7 @@
          #versionPicker="kbqDocVersionPicker">
 
             {{ version }}<span *ngIf="versionPicker.isNext">.next</span>
-            <i kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
+            <i kbq-icon="kbq-angle-down-S_16" [color]="'contrast'"></i>
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
