@@ -89,7 +89,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInput } from '@koobiq/components/input';
-import { KbqTag } from '@koobiq/components/tag';
+import { KbqTag } from '@koobiq/components/tags';
 import { BehaviorSubject, defer, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
     filter,

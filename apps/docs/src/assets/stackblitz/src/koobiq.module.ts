@@ -33,7 +33,7 @@ import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTimezoneModule } from '@koobiq/components/timezone';
@@ -74,7 +74,7 @@ const KBQ_COMPONENTS = [
     KbqSplitterModule,
     KbqTableModule,
     KbqTabsModule,
-    KbqTagModule,
+    KbqTagsModule,
     KbqTextareaModule,
     KbqTimepickerModule,
     KbqTimezoneModule,

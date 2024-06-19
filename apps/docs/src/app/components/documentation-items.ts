@@ -28,7 +28,7 @@ function updatePackageName(categories, name) {
 
 const MAIN = 'main';
 const COMPONENTS = 'components';
-const OTHER = 'other';
+const PATTERNS = 'patterns';
 const ICONS = 'icons';
 const CDK = 'cdk';
 
@@ -94,12 +94,12 @@ const DOCS: { [key: string]: DocCategory[] } = {
             name: 'Компоненты',
             items:  [
                 {
-                    id: 'alert',
-                    name: 'Alert',
+                    id: 'alerts',
+                    name: 'Alerts',
                     hasApi: true,
                     apiId: 'alert',
                     hasExamples: false,
-                    examples: ['alert-types']
+                    examples: ['alerts-types']
                 },
                 {
                     id: 'autocomplete',
@@ -110,12 +110,12 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['autocomplete-types']
                 },
                 {
-                    id: 'badge',
-                    name: 'Badge',
+                    id: 'badges',
+                    name: 'Badges',
                     hasApi: true,
                     apiId: 'badge',
                     hasExamples: false,
-                    examples: ['badge-types']
+                    examples: ['badges-types']
                 },
                 {
                     id: 'button',
@@ -152,13 +152,20 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'code-block',
-                    name: 'Code block',
+                    name: 'Code-block',
                     hasApi: true,
                     apiId: 'code-block',
                     hasExamples: false,
                     examples: ['code-block-types']
                 },
-
+                {
+                    id: 'date-formatter',
+                    name: 'Date',
+                    hasApi: true,
+                    apiId: 'date-formatter',
+                    hasExamples: false,
+                    examples: ['date-types']
+                },
                 {
                     id: 'datepicker',
                     name: 'Datepicker',
@@ -192,6 +199,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['dropdown-types']
                 },
                 {
+                    id: 'forms',
+                    name: 'Forms',
+                    hasApi: true,
+                    apiId: 'forms',
+                    hasExamples: false,
+                    examples: ['forms-types']
+                },
+                {
                     id: 'icon',
                     name: 'Icon',
                     hasApi: true,
@@ -206,14 +221,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'input',
                     hasExamples: false,
                     examples: ['input-types']
-                },
-                {
-                    id: 'file-upload',
-                    name: 'File upload',
-                    hasApi: true,
-                    apiId: 'file-upload',
-                    hasExamples: true,
-                    examples: ['file-upload-types']
                 },
                 {
                     id: 'layout-flex',
@@ -271,6 +278,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['navbar-types']
                 },
                 {
+                    id: 'number-formatter',
+                    name: 'Number',
+                    hasApi: true,
+                    apiId: 'number-formatter',
+                    hasExamples: false,
+                    examples: ['number-types']
+                },
+                {
                     id: 'popover',
                     name: 'Popover',
                     hasApi: true,
@@ -280,7 +295,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'progress-bar',
-                    name: 'Progress bar',
+                    name: 'Progress-bar',
                     hasApi: true,
                     apiId: 'progress-bar',
                     hasExamples: false,
@@ -288,7 +303,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'progress-spinner',
-                    name: 'Progress spinner',
+                    name: 'Progress-spinner',
                     hasApi: true,
                     apiId: 'progress-spinner',
                     hasExamples: false,
@@ -351,36 +366,36 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['tabs-types']
                 },
                 {
-                    id: 'tag',
-                    name: 'Tag',
+                    id: 'tags',
+                    name: 'Tags',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false,
-                    examples: ['tag-types']
+                    examples: ['tags-types']
                 },
                 {
-                    id: 'tag-autocomplete',
-                    name: 'Tag autocomplete',
+                    id: 'tags-autocomplete',
+                    name: 'Tags autocomplete',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false,
-                    examples: ['tag-autocomplete-types']
+                    examples: ['tags-autocomplete-types']
                 },
                 {
-                    id: 'tag-input',
-                    name: 'Tag input',
+                    id: 'tags-input',
+                    name: 'Tags input',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false,
-                    examples: ['tag-input-types']
+                    examples: ['tags-input-types']
                 },
                 {
-                    id: 'tag-list',
-                    name: 'Tag list',
+                    id: 'tags-list',
+                    name: 'Tags list',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false,
-                    examples: ['tag-list-types']
+                    examples: ['tags-list-types']
                 },
                 {
                     id: 'textarea',
@@ -397,14 +412,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'timepicker',
                     hasExamples: false,
                     examples: ['timepicker-types']
-                },
-                {
-                    id: 'timezone',
-                    name: 'Timezone',
-                    hasApi: true,
-                    apiId: 'timezone',
-                    hasExamples: false,
-                    examples: ['timezone-types']
                 },
                 {
                     id: 'toast',
@@ -440,54 +447,46 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'tree-select',
-                    name: 'Tree select',
+                    name: 'Tree-select',
                     hasApi: true,
                     apiId: 'tree-select',
                     hasExamples: false,
                     examples: ['treeSelect-types']
                 },
+                {
+                    id: 'validation',
+                    name: 'Validation',
+                    hasApi: false,
+                    hasExamples: false,
+                    examples: ['validation-types']
+                }
             ]
         }
     ],
-    [OTHER]: [
-       {
-        id: OTHER,
-        name: 'Другое',
-        summary: '',
-        items: [
-            {
-                id: 'date-formatter',
-                name: 'Date formatter',
-                hasApi: true,
-                apiId: 'date-formatter',
-                hasExamples: false,
-                examples: ['date-formatter-types']
-            },
-            {
-                id: 'forms',
-                name: 'Forms',
-                hasApi: true,
-                apiId: 'forms',
-                hasExamples: false,
-                examples: ['forms-types']
-            },
-            {
-                id: 'number-formatter',
-                name: 'Number formatter',
-                hasApi: true,
-                apiId: 'number-formatter',
-                hasExamples: false,
-                examples: ['number-formatter-types']
-            },
-            {
-                id: 'validation',
-                name: 'Validation',
-                hasApi: false,
-                hasExamples: false,
-                examples: ['validation-types']
-            }
-        ],
-       }
+    [PATTERNS]: [
+        {
+            id: 'patterns',
+            name: 'Паттерны',
+            summary: '',
+            items: [
+                {
+                    id: 'file-upload',
+                    name: 'File upload',
+                    hasApi: true,
+                    apiId: 'file-upload',
+                    hasExamples: true,
+                    examples: ['file-upload-types']
+                },
+                {
+                    id: 'timezone',
+                    name: 'Timezone',
+                    hasApi: true,
+                    apiId: 'timezone',
+                    hasExamples: false,
+                    examples: ['timezone-types']
+                }
+            ]
+        }
     ],
     [ICONS]: [{
         id: 'icons',
@@ -524,7 +523,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
 
 updatePackageName(DOCS[MAIN], MAIN);
 updatePackageName(DOCS[COMPONENTS], COMPONENTS);
-updatePackageName(DOCS[OTHER], OTHER);
+updatePackageName(DOCS[PATTERNS], PATTERNS);
 updatePackageName(DOCS[ICONS], ICONS);
 updatePackageName(DOCS[CDK], CDK);
 
@@ -535,7 +534,7 @@ const ALL_MAIN = DOCS[MAIN]
 const ALL_COMPONENTS = DOCS[COMPONENTS]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
-const ALL_OTHER = DOCS[OTHER]
+const ALL_PATTERNS = DOCS[PATTERNS]
     .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
 const ALL_ICONS = DOCS[ICONS]
@@ -547,7 +546,7 @@ const ALL_CDK = DOCS[CDK]
 const ALL_DOCS = [
     ...ALL_MAIN,
     ...ALL_COMPONENTS,
-    ...ALL_OTHER,
+    ...ALL_PATTERNS,
     ...ALL_ICONS,
     ...ALL_CDK
 ];
@@ -555,7 +554,7 @@ const ALL_DOCS = [
 const ALL_CATEGORIES = [
     ...DOCS[MAIN],
     ...DOCS[COMPONENTS],
-    ...DOCS[OTHER],
+    ...DOCS[PATTERNS],
     ...DOCS[ICONS],
     ...DOCS[CDK]
 ];

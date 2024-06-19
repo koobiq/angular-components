@@ -23,7 +23,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagInputEvent, KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -358,7 +358,7 @@ export class DemoComponent {
         KbqButtonModule,
         KbqToolTipModule,
         KbqAutocompleteModule,
-        KbqTagModule,
+        KbqTagsModule,
         KbqInputModule,
         KbqTextareaModule,
         KbqSelectModule,

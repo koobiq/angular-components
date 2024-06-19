@@ -58,7 +58,7 @@
             "@koobiq/components/splitter": ["packages/components/splitter/index.ts"],
             "@koobiq/components/table": ["packages/components/table/index.ts"],
             "@koobiq/components/tabs": ["packages/components/tabs/index.ts"],
-            "@koobiq/components/tag": ["packages/components/tag/index.ts"],
+            "@koobiq/components/tags": ["packages/components/tags/index.ts"],
             "@koobiq/components/textarea": ["packages/components/textarea/index.ts"],
             "@koobiq/components/timepicker": ["packages/components/timepicker/index.ts"],
             "@koobiq/components/timezone": ["packages/components/timezone/index.ts"],

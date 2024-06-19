@@ -27,14 +27,14 @@ import * as i2 from '@angular/common';
 import * as i3 from '@angular/cdk/overlay';
 import * as i4 from '@koobiq/components/tree';
 import * as i5 from '@koobiq/components/icon';
-import * as i6 from '@koobiq/components/tag';
+import * as i6 from '@koobiq/components/tags';
 import * as i7 from '@koobiq/components/core';
 import * as i8 from '@koobiq/components/select';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSelectSearch } from '@koobiq/components/select';
-import { KbqTag } from '@koobiq/components/tag';
+import { KbqTag } from '@koobiq/components/tags';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelection } from '@koobiq/components/tree';
 import { NgControl } from '@angular/forms';
@@ -245,7 +245,7 @@ export class KbqTreeSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect, typeof i1.KbqTreeSelectTrigger, typeof i1.KbqTreeSelectMatcher, typeof i1.KbqTreeSelectFooter], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagModule, typeof i7.KbqPseudoCheckboxModule, typeof i8.KbqSelectModule], [typeof i1.KbqTreeSelect, typeof i1.KbqTreeSelectTrigger, typeof i1.KbqTreeSelectMatcher, typeof i1.KbqTreeSelectFooter, typeof i2.CommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect, typeof i1.KbqTreeSelectTrigger, typeof i1.KbqTreeSelectMatcher, typeof i1.KbqTreeSelectFooter], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqPseudoCheckboxModule, typeof i8.KbqSelectModule], [typeof i1.KbqTreeSelect, typeof i1.KbqTreeSelectTrigger, typeof i1.KbqTreeSelectMatcher, typeof i1.KbqTreeSelectFooter, typeof i2.CommonModule]>;
 }
 
 // @public (undocumented)

@@ -5,7 +5,7 @@ import { KbqHighlightModule, KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
@@ -23,7 +23,7 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqOptionModule,
         KbqSelectModule,
         KbqIconModule,
-        KbqTagModule,
+        KbqTagsModule,
         KbqToolTipModule,
         KbqHighlightModule
     ],

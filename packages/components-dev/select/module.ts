@@ -11,7 +11,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule, KbqSelectChange } from '@koobiq/components/select';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -123,7 +123,7 @@ export class DemoComponent implements OnInit {
         KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
-        KbqTagModule
+        KbqTagsModule
     ],
     bootstrap: [DemoComponent]
 })

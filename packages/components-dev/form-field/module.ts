@@ -10,7 +10,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
     defaultCompareValues, defaultCompareViewValues,
@@ -226,7 +226,7 @@ export class DemoComponent {
         KbqInputModule,
         KbqFormFieldModule,
         KbqIconModule,
-        KbqTagModule,
+        KbqTagsModule,
         KbqToolTipModule,
         KbqHighlightModule,
         KbqTreeModule,

@@ -25,7 +25,7 @@ import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/component
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -245,7 +245,7 @@ export class DemoComponent {
         KbqRadioModule,
         KbqSelectModule,
         KbqSplitterModule,
-        KbqTagModule,
+        KbqTagsModule,
         KbqTextareaModule,
         KbqTimepickerModule,
         KbqToggleModule,

@@ -72,7 +72,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagModule } from '@koobiq/components/tag';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
@@ -1204,7 +1204,7 @@ describe('KbqSelect', () => {
                 KbqFormFieldModule,
                 KbqSelectModule,
                 KbqInputModule,
-                KbqTagModule,
+                KbqTagsModule,
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
@@ -5297,7 +5297,7 @@ describe('KbqSelect', () => {
                     KbqFormFieldModule,
                     KbqSelectModule,
                     KbqInputModule,
-                    KbqTagModule,
+                    KbqTagsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,

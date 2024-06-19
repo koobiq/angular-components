@@ -80,7 +80,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSelectSearch } from '@koobiq/components/select';
-import { KbqTag } from '@koobiq/components/tag';
+import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeSelection, KbqTreeOption } from '@koobiq/components/tree';
 import { defer, merge, Observable, Subject, Subscription } from 'rxjs';
 import {

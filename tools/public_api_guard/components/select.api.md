@@ -30,7 +30,7 @@ import * as i3 from '@angular/common';
 import * as i4 from '@angular/cdk/overlay';
 import * as i5 from '@koobiq/components/core';
 import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@koobiq/components/tag';
+import * as i7 from '@koobiq/components/tags';
 import * as i8 from '@koobiq/components/tooltip';
 import * as i9 from '@koobiq/components/form-field';
 import { KbqCleaner } from '@koobiq/components/form-field';
@@ -42,7 +42,7 @@ import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
-import { KbqTag } from '@koobiq/components/tag';
+import { KbqTag } from '@koobiq/components/tags';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -291,7 +291,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i2.KbqOptionTooltip, typeof i1.KbqSelectFooter], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagModule, typeof i8.KbqToolTipModule], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i1.KbqSelectFooter, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i2.KbqOptionTooltip, typeof i1.KbqSelectFooter], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i1.KbqSelectFooter, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule]>;
 }
 
 // @public (undocumented)

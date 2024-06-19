@@ -1613,18 +1613,18 @@
                 }
             }
         },
-        "dev-tag": {
+        "dev-tags": {
             "projectType": "application",
-            "root": "packages/components-dev/tag",
-            "sourceRoot": "packages/components-dev/tag",
+            "root": "packages/components-dev/tags",
+            "sourceRoot": "packages/components-dev/tags",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/components-dev/tag",
-                        "tsConfig": "packages/components-dev/tag/tsconfig.app.json",
+                        "outputPath": "dist/components-dev/tags",
+                        "tsConfig": "packages/components-dev/tags/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tag/main.ts",
+                        "main": "packages/components-dev/tags/main.ts",
                         "polyfills": "packages/components-dev/polyfills.ts",
                         "vendorChunk": true,
                         "extractLicenses": false,
@@ -1637,7 +1637,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "buildTarget": "dev-tag:build"
+                        "buildTarget": "dev-tags:build"
                     }
                 }
             }

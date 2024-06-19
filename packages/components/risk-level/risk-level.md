@@ -1,1 +1,1 @@
-<!-- example(badge-overview) -->
+<!-- example(badges-overview) -->
