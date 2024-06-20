@@ -46,9 +46,9 @@ $tokens: meta.module-variables(tokens) !default;
         padding: map.get($tokens, size-l) map.get($tokens, size-m);
 
         &:after {
-            top: map.get($tokens, size-s);
+            top: map.get($tokens, size-xs);
             right: 0;
-            bottom: map.get($tokens, size-s);
+            bottom: map.get($tokens, size-xs);
             left: 0;
         }
 
