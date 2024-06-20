@@ -27,6 +27,12 @@ $tokens: meta.module-variables(tokens) !default;
         display: flex;
         overflow: hidden;
         justify-content: flex-start;
+        align-items: center;
+
+        height: var(
+            --kbq-button-toggle-size-item-height,
+            map.get($tokens, button-toggle-size-item-height)
+        );
 
         $padding-vertical: map.get($tokens, button-toggle-size-item-padding-vertical);
         $padding-horizontal: map.get($tokens, button-toggle-size-item-padding-horizontal);
@@ -53,6 +59,7 @@ $tokens: meta.module-variables(tokens) !default;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
+                align-items: center;
 
                 width: 100%;
 
@@ -67,8 +74,10 @@ $tokens: meta.module-variables(tokens) !default;
             > .kbq-button-icon {
                 max-width: 100%;
 
-                height: unset;
-                min-height: unset;
+                height: var(
+                    --kbq-button-toggle-size-item-height,
+                    map.get($tokens, button-toggle-size-item-height)
+                );
             }
         }
     }
