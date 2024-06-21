@@ -44,6 +44,16 @@ $tokens: meta.module-variables(tokens) !default;
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
     cursor: inherit;
 
+    padding-top: var(
+        --kbq-checkbox-size-normal-paddding-top,
+        map.get($tokens, checkbox-size-normal-paddding-top)
+    );
+
+    padding-bottom: var(
+        --kbq-checkbox-size-normal-paddding-bottom,
+        map.get($tokens, checkbox-size-normal-paddding-bottom)
+    );
+
     padding-left: calc(
         var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
         var(
@@ -59,7 +69,7 @@ $tokens: meta.module-variables(tokens) !default;
     display: inline-block;
 
     position: absolute;
-    top: 0;
+    top: var(--kbq-checkbox-size-normal-top, map.get($tokens, checkbox-size-normal-top));
     left: 0;
 
     height: var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width));
@@ -110,6 +120,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-checkbox.kbq-checkbox_big {
     & .kbq-checkbox__layout {
+        
         padding-left: calc(
             var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
             var(
@@ -120,7 +131,7 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & .kbq-checkbox__inner-container {
-        top: 2px;
+        top: var(--kbq-checkbox-size-big-top, map.get($tokens, checkbox-size-big-top));
         height: var(--kbq-checkbox-size-big-width, map.get($tokens, checkbox-size-big-width));
         width: var(--kbq-checkbox-size-big-width, map.get($tokens, checkbox-size-big-width));
     }
@@ -157,9 +168,14 @@ $tokens: meta.module-variables(tokens) !default;
 /* stylelint-disable no-descending-specificity */
 .kbq-checkbox_label-before {
     .kbq-checkbox__layout {
+        
         padding-left: 0;
         padding-right: calc(
-            var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
+            var(
+                --kbq-checkbox-size-normal-width, 
+                map.get($tokens, checkbox-size-normal-width)
+            )
+            +
             var(
                 --kbq-checkbox-size-normal-horizontal-content-padding,
                 map.get($tokens, checkbox-size-normal-horizontal-content-padding)
