@@ -180,7 +180,7 @@ export enum KbqToastPosition {
 
 // @public (undocumented)
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
-    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, toastFactory: any, toastConfig: KbqToastConfig);
+    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
     // (undocumented)
@@ -206,7 +206,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqToastService<any>>;
 }

@@ -14,7 +14,8 @@ import {
     Optional,
     TemplateRef,
     EmbeddedViewRef,
-    InjectionToken
+    InjectionToken,
+    NgZone
 } from '@angular/core';
 import { BehaviorSubject, timer } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -65,14 +66,16 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
         private overlay: Overlay,
         private injector: Injector,
         private overlayContainer: OverlayContainer,
+        private ngZone: NgZone,
         @Inject(KBQ_TOAST_FACTORY) private toastFactory: any,
         @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig
     ) {
         this.toastConfig = toastConfig || defaultToastConfig;
 
-        timer(CHECK_INTERVAL, CHECK_INTERVAL)
+        this.ngZone.runOutsideAngular(() => timer(CHECK_INTERVAL, CHECK_INTERVAL)
             .pipe(filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()))
-            .subscribe(this.processToasts);
+            .subscribe(this.processToasts)
+        );
     }
 
     show(
@@ -148,9 +151,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
             toast.instance.ttl -= CHECK_INTERVAL;
 
             if (toast.instance.ttl <= 0) {
-                this.hide(toast.instance.id);
+                this.ngZone.run(() => {
+                    this.hide(toast.instance.id);
 
-                this.updateTTLAfterDelete();
+                    this.updateTTLAfterDelete();
+                });
 
                 break;
             }
