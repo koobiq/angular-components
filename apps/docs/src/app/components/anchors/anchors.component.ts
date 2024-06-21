@@ -38,8 +38,8 @@ export class AnchorsComponent implements OnDestroy {
 
     private fragment = '';
 
-    // coef for calculating the distance between anchor and header when scrolling (== headerHeight * anchorHeaderCoef)
-    private anchorHeaderCoef: number = 2;
+    // coefficient for calculating the distance between anchor and header when scrolling (== headerHeight * anchorHeaderCoefficient)
+    private anchorHeaderCoefficient: number = 2;
 
     private noSmoothScrollDebounce = 10;
     private debounceTime = 15;
@@ -61,7 +61,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     private get scrollOffset(): number {
-        return this.scrollContainer.scrollTop + this.headerHeight * this.anchorHeaderCoef;
+        return this.scrollContainer.scrollTop + this.headerHeight * this.anchorHeaderCoefficient;
     }
 
     constructor(
@@ -142,7 +142,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     /* TODO Техдолг: при изменении ширины экрана должен переопределяться параметр top
-    *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы проиходит после window:resize */
+    *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы происходит после window:resize */
     onResize() {
         const headers = Array.from(this.document.querySelectorAll(this.headerSelectors));
 
@@ -226,7 +226,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     private isLinkActive(currentLink, nextLink): boolean {
-        // A link is active if the scroll position is lower than the anchor position + headerHeight*anchorHeaderCoef
+        // A link is active if the scroll position is lower than the anchor position + headerHeight*anchorHeaderCoefficient
         // and above the next anchor
         return this.scrollOffset >= currentLink.top && !(nextLink?.top < this.scrollOffset);
     }

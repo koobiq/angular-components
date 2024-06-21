@@ -164,7 +164,7 @@ describe('KbqPasswordInput', () => {
     it('should change visibility of toggle if form field disabled and empty', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
         const kbqPasswordToggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
-        const initialVisiblity = kbqPasswordToggle.styles.visibility;
+        const initialVisibility = kbqPasswordToggle.styles.visibility;
 
         fixture.componentInstance.disabled = true;
         fixture.componentInstance.value = '';
@@ -172,7 +172,7 @@ describe('KbqPasswordInput', () => {
         tick(1000);
 
         expect(kbqPasswordToggle.styles.visibility).toEqual('hidden');
-        expect(initialVisiblity).not.toEqual(kbqPasswordToggle.styles.visibility);
+        expect(initialVisibility).not.toEqual(kbqPasswordToggle.styles.visibility);
 
         fixture.componentInstance.disabled = false;
         fixture.componentInstance.value = '123';

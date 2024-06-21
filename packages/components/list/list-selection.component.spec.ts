@@ -28,7 +28,7 @@ describe('KbqListSelection without forms', () => {
         let fixture: ComponentFixture<SelectionListWithListOptions>;
         let listOptions: DebugElement[];
         let selectionList: DebugElement;
-        let cliboardContent: string;
+        let clipboardContent: string;
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -44,7 +44,7 @@ describe('KbqListSelection without forms', () => {
                         copy: (value) => {
                             const originalClipboard = new Clipboard(document);
                             originalClipboard.copy(value);
-                            cliboardContent = value;
+                            clipboardContent = value;
                         }
                     })
                 }]
@@ -60,7 +60,7 @@ describe('KbqListSelection without forms', () => {
             listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
             selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
 
-            cliboardContent = '';
+            clipboardContent = '';
         }));
 
         it('should add and remove focus class on focus/blur', fakeAsync(() => {
@@ -90,7 +90,7 @@ describe('KbqListSelection without forms', () => {
             selectionList.componentInstance.onKeyDown(copyKeyEvent);
             fixture.detectChanges();
 
-            expect(cliboardContent).toBe(listOptions[2].componentInstance.value);
+            expect(clipboardContent).toBe(listOptions[2].componentInstance.value);
         }));
 
         it('should not blur on focused option when copying', fakeAsync(() => {
@@ -108,7 +108,7 @@ describe('KbqListSelection without forms', () => {
             selectionList.componentInstance.onKeyDown(copyKeyEvent);
             fixture.detectChanges();
 
-            expect(cliboardContent).toBe(listOptions[2].componentInstance.value);
+            expect(clipboardContent).toBe(listOptions[2].componentInstance.value);
             expect(listOptions[2].componentInstance.hasFocus).toBeTrue();
         }));
 

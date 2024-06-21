@@ -37,7 +37,7 @@ describe('KbqTreeSelection', () => {
         describe('should initialize', () => {
             let fixture: ComponentFixture<SimpleKbqTreeApp>;
             let component: SimpleKbqTreeApp;
-            let cliboardContent: string;
+            let clipboardContent: string;
             let testScheduler: TestScheduler;
 
             beforeEach(() => {
@@ -50,7 +50,7 @@ describe('KbqTreeSelection', () => {
                             copy: (value) => {
                                 const originalClipboard = new Clipboard(document);
                                 originalClipboard.copy(value);
-                                cliboardContent = value;
+                                clipboardContent = value;
                             }
                         })
                     }, {
@@ -64,7 +64,7 @@ describe('KbqTreeSelection', () => {
 
                 fixture.detectChanges();
 
-                cliboardContent = '';
+                clipboardContent = '';
             });
 
             it('with rendered dataNodes', () => {
@@ -113,7 +113,7 @@ describe('KbqTreeSelection', () => {
                 component.tree.onKeyDown(copyKeyEvent);
                 fixture.detectChanges();
 
-                expect(cliboardContent).toBe(treeOptions[2].componentInstance.value);
+                expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
             }));
 
             it('should not blur on focused option when copying', fakeAsync(() => {
@@ -136,7 +136,7 @@ describe('KbqTreeSelection', () => {
                     component.tree.onKeyDown(copyKeyEvent);
                     fixture.detectChanges();
 
-                    expect(cliboardContent).toBe(treeOptions[2].componentInstance.value);
+                    expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
                     expect(treeOptions[2].componentInstance.hasFocus).toBeTrue();
                 });
             }));

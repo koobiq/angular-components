@@ -25,7 +25,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     .kbq-tab-list__content {
         gap: var(
-            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
+            --kbq-tabs-size-tab-stack-vertical-content-gap-vertical,
             map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
         ) 0;
     }

@@ -76,7 +76,7 @@ export class ToastDemoComponent {
 
     array = new Array(40); // tslint:disable-line
 
-    @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
+    @ViewChild('sidepanelTemplate', { static: false }) template: TemplateRef<any>;
 
     constructor(
         private toastService: KbqToastService,

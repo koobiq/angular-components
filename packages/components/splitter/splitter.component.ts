@@ -124,7 +124,7 @@ export class KbqGutterDirective implements OnInit {
             this.setStyle(StyleProperty.Height, '100%');
         }
 
-        // fix IE issue with gutter icon. flex-direction is requied for flex alignment options
+        // fix IE issue with gutter icon. flex-direction is required for flex alignment options
         this.setStyle(StyleProperty.FlexDirection, this.isVertical ? 'row' : 'column');
     }
 

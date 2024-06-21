@@ -34,7 +34,7 @@ import { kbqTabsAnimations } from './tabs-animations';
  *
  * In the case of a new tab body that should immediately be centered with an animating transition,
  * then left-origin-center or right-origin-center can be used, which will use left or right as its
- * psuedo-prior state.
+ * pseudo-prior state.
  */
 export type KbqTabBodyPositionState = 'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
 

@@ -1,0 +1,4 @@
+{
+    "*.md": "yarn run cspell --files",
+    "*.yml": "yamllint"
+}

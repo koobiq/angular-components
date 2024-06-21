@@ -25,8 +25,8 @@ $tokens: meta.module-variables(tokens) !default;
         var(--kbq-textarea-size-padding-vertical, map.get($tokens, textarea-size-padding-vertical))
         var(--kbq-textarea-size-padding-horizontal, map.get($tokens, textarea-size-padding-horizontal));
 
-    -webkit-appearance: none; // Chrome textaria height sizing fix
-    vertical-align: bottom; // Chrome textaria height sizing fix
+    -webkit-appearance: none; // Chrome textarea height sizing fix
+    vertical-align: bottom; // Chrome textarea height sizing fix
 
     &:not(.kbq-textarea-resizable) {
         box-sizing: border-box;

@@ -386,7 +386,7 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     private clampTabIndex(index: number | null): number {
         // Note the `|| 0`, which ensures that values like NaN can't get through
         // and which would otherwise throw the component into an infinite loop
-        // (since Kbqh.max(NaN, 0) === NaN).
+        // (since Math.max(NaN, 0) === NaN).
         return Math.min(this.tabs.length - 1, Math.max(index || 0, 0));
     }
 }

@@ -26,7 +26,7 @@ $tokens: meta.module-variables(tokens) !default;
     height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
     max-height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
 
-    border-radius: var(--kbq-toast-size-border-raius, map.get($tokens, toast-size-border-raius));
+    border-radius: var(--kbq-toast-size-border-radius, map.get($tokens, toast-size-border-radius));
 
     margin-right: var(--kbq-toast-size-icon-margin-right, map.get($tokens, toast-size-icon-margin-right));
 
