@@ -1,19 +1,26 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/tokens';
 
+
+$tokens: meta.module-variables(tokens) !default;
 
 .kbq-hint {
     display: flex;
 
     & .kbq-icon {
-        margin-right: kbq-css-variable(hint-size-normal-content-padding);
+        margin-top: var(--kbq-hint-size-normal-margin-top, map-get($tokens, hint-size-normal-margin-top));
+        margin-right: var(--kbq-hint-size-normal-content-padding, map-get($tokens, hint-size-normal-content-padding));
     }
 
     &.kbq-hint_compact {
         & .kbq-icon {
-            margin-right: kbq-css-variable(hint-size-compact-content-padding);
+
+            margin-top: var(--kbq-hint-size-compact-margin-top, map-get($tokens, hint-size-compact-margin-top));
+            margin-right: var(
+                --kbq-hint-size-compact-content-padding, map-get($tokens, hint-size-compact-content-padding)
+            );
         }
     }
 }
