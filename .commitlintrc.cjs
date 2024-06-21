@@ -48,7 +48,7 @@ const scope_types = [
     'splitter',
     'table',
     'tabs',
-    'tags',
+    'tag',
     'textarea',
     'timepicker',
     'timezone',

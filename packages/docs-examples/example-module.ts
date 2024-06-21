@@ -40,7 +40,7 @@ export interface NgModuleInfo {
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   "alert-close": {
-    "packagePath": "components/alerts/alert-close",
+    "packagePath": "components/alert/alert-close",
     "title": "Alert Close",
     "componentName": "AlertCloseExample",
     "files": [
@@ -52,14 +52,14 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-close-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-content": {
-    "packagePath": "components/alerts/alert-content",
-    "title": "Alerts",
+    "packagePath": "components/alert/alert-content",
+    "title": "Alert",
     "componentName": "AlertContentExample",
     "files": [
       "alert-content-example.ts",
@@ -70,13 +70,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-content-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-size": {
-    "packagePath": "components/alerts/alert-size",
+    "packagePath": "components/alert/alert-size",
     "title": "Alert Size",
     "componentName": "AlertSizeExample",
     "files": [
@@ -88,13 +88,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-size-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-status": {
-    "packagePath": "components/alerts/alert-status",
+    "packagePath": "components/alert/alert-status",
     "title": "Alert Status",
     "componentName": "AlertStatusExample",
     "files": [
@@ -106,14 +106,14 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-status-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "alert-variants": {
-    "packagePath": "components/alerts/alert-variants",
-    "title": "Alerts Variants",
+    "packagePath": "components/alert/alert-variants",
+    "title": "Alert Variants",
     "componentName": "AlertVariantsExample",
     "files": [
       "alert-variants-example.ts",
@@ -124,9 +124,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "alert-variants-example.ts",
     "module": {
-      "name": "AlertsExamplesModule",
-      "importSpecifier": "components/alerts",
-      "importPath": "koobiq-docs-examples-components-alerts"
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/alert",
+      "importPath": "koobiq-docs-examples-components-alert"
     }
   },
   "autocomplete-overview": {
@@ -147,94 +147,94 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-autocomplete"
     }
   },
-  "badges-content": {
-    "packagePath": "components/badges/badges-content",
+  "badge-content": {
+    "packagePath": "components/badge/badge-content",
     "title": "Content",
-    "componentName": "BadgesContentExample",
+    "componentName": "BadgeContentExample",
     "files": [
-      "badges-content-example.ts",
-      "badges-content-example.html",
-      "badges-content-example.css"
+      "badge-content-example.ts",
+      "badge-content-example.html",
+      "badge-content-example.css"
     ],
-    "selector": "badges-content-example",
+    "selector": "badge-content-example",
     "additionalComponents": [],
-    "primaryFile": "badges-content-example.ts",
+    "primaryFile": "badge-content-example.ts",
     "module": {
-      "name": "BadgesExamplesModule",
-      "importSpecifier": "components/badges",
-      "importPath": "koobiq-docs-examples-components-badges"
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
     }
   },
-  "badges-fill-and-style": {
-    "packagePath": "components/badges/badges-fill-and-style",
+  "badge-fill-and-style": {
+    "packagePath": "components/badge/badge-fill-and-style",
     "title": "Fill and Style",
-    "componentName": "BadgesFillAndStyleExample",
+    "componentName": "BadgeFillAndStyleExample",
     "files": [
-      "badges-fill-and-style-example.ts",
-      "badges-fill-and-style-example.html",
-      "badges-fill-and-style-example.css"
+      "badge-fill-and-style-example.ts",
+      "badge-fill-and-style-example.html",
+      "badge-fill-and-style-example.css"
     ],
-    "selector": "badges-fill-and-style-example",
+    "selector": "badge-fill-and-style-example",
     "additionalComponents": [],
-    "primaryFile": "badges-fill-and-style-example.ts",
+    "primaryFile": "badge-fill-and-style-example.ts",
     "module": {
-      "name": "BadgesExamplesModule",
-      "importSpecifier": "components/badges",
-      "importPath": "koobiq-docs-examples-components-badges"
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
     }
   },
-  "badges-hug-content": {
-    "packagePath": "components/badges/badges-hug-content",
+  "badge-hug-content": {
+    "packagePath": "components/badge/badge-hug-content",
     "title": "Corner Cases",
-    "componentName": "BadgesHugContentExample",
+    "componentName": "BadgeHugContentExample",
     "files": [
-      "badges-hug-content-example.ts",
-      "badges-hug-content-example.html",
-      "badges-hug-content-example.css"
+      "badge-hug-content-example.ts",
+      "badge-hug-content-example.html",
+      "badge-hug-content-example.css"
     ],
-    "selector": "badges-hug-content-example",
+    "selector": "badge-hug-content-example",
     "additionalComponents": [],
-    "primaryFile": "badges-hug-content-example.ts",
+    "primaryFile": "badge-hug-content-example.ts",
     "module": {
-      "name": "BadgesExamplesModule",
-      "importSpecifier": "components/badges",
-      "importPath": "koobiq-docs-examples-components-badges"
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
     }
   },
-  "badges-overview": {
-    "packagePath": "components/badges/badges-overview",
-    "title": "Badges",
-    "componentName": "BadgesOverviewExample",
+  "badge-overview": {
+    "packagePath": "components/badge/badge-overview",
+    "title": "Badge",
+    "componentName": "BadgeOverviewExample",
     "files": [
-      "badges-overview-example.ts",
-      "badges-overview-example.html",
-      "badges-overview-example.css"
+      "badge-overview-example.ts",
+      "badge-overview-example.html",
+      "badge-overview-example.css"
     ],
-    "selector": "badges-overview-example",
+    "selector": "badge-overview-example",
     "additionalComponents": [],
-    "primaryFile": "badges-overview-example.ts",
+    "primaryFile": "badge-overview-example.ts",
     "module": {
-      "name": "BadgesExamplesModule",
-      "importSpecifier": "components/badges",
-      "importPath": "koobiq-docs-examples-components-badges"
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
     }
   },
-  "badges-size": {
-    "packagePath": "components/badges/badges-size",
+  "badge-size": {
+    "packagePath": "components/badge/badge-size",
     "title": "Size",
-    "componentName": "BadgesSizeExample",
+    "componentName": "BadgeSizeExample",
     "files": [
-      "badges-size-example.ts",
-      "badges-size-example.html",
-      "badges-size-example.css"
+      "badge-size-example.ts",
+      "badge-size-example.html",
+      "badge-size-example.css"
     ],
-    "selector": "badges-size-example",
+    "selector": "badge-size-example",
     "additionalComponents": [],
-    "primaryFile": "badges-size-example.ts",
+    "primaryFile": "badge-size-example.ts",
     "module": {
-      "name": "BadgesExamplesModule",
-      "importSpecifier": "components/badges",
-      "importPath": "koobiq-docs-examples-components-badges"
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
     }
   },
   "button-toggle-alignment-overview": {
@@ -2616,148 +2616,148 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
-  "tags-autocomplete-option-operations": {
-    "packagePath": "components/tags/tags-autocomplete-option-operations",
-    "title": "Tags Autocomplete Option Operations",
-    "componentName": "TagsAutocompleteOptionOperationsExample",
+  "tag-autocomplete-option-operations": {
+    "packagePath": "components/tag/tag-autocomplete-option-operations",
+    "title": "Tag Autocomplete Option Operations",
+    "componentName": "TagAutocompleteOptionOperationsExample",
     "files": [
-      "tags-autocomplete-option-operations-example.ts",
-      "tags-autocomplete-option-operations-example.html",
-      "tags-autocomplete-option-operations-example.css"
+      "tag-autocomplete-option-operations-example.ts",
+      "tag-autocomplete-option-operations-example.html",
+      "tag-autocomplete-option-operations-example.css"
     ],
-    "selector": "tags-autocomplete-option-operations-example",
+    "selector": "tag-autocomplete-option-operations-example",
     "additionalComponents": [],
-    "primaryFile": "tags-autocomplete-option-operations-example.ts",
+    "primaryFile": "tag-autocomplete-option-operations-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-autocomplete": {
-    "packagePath": "components/tags/tags-autocomplete",
-    "title": "Basic tags autocomplete",
-    "componentName": "TagsAutocompleteExample",
+  "tag-autocomplete": {
+    "packagePath": "components/tag/tag-autocomplete",
+    "title": "Basic tag autocomplete",
+    "componentName": "TagAutocompleteExample",
     "files": [
-      "tags-autocomplete-example.ts",
-      "tags-autocomplete-example.html",
-      "tags-autocomplete-example.css"
+      "tag-autocomplete-example.ts",
+      "tag-autocomplete-example.html",
+      "tag-autocomplete-example.css"
     ],
-    "selector": "tags-autocomplete-example",
+    "selector": "tag-autocomplete-example",
     "additionalComponents": [],
-    "primaryFile": "tags-autocomplete-example.ts",
+    "primaryFile": "tag-autocomplete-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-content": {
-    "packagePath": "components/tags/tags-content",
+  "tag-content": {
+    "packagePath": "components/tag/tag-content",
     "title": "Content",
-    "componentName": "TagsContentExample",
+    "componentName": "TagContentExample",
     "files": [
-      "tags-content-example.ts",
-      "tags-content-example.html",
-      "tags-content-example.css"
+      "tag-content-example.ts",
+      "tag-content-example.html",
+      "tag-content-example.css"
     ],
-    "selector": "tags-content-example",
+    "selector": "tag-content-example",
     "additionalComponents": [],
-    "primaryFile": "tags-content-example.ts",
+    "primaryFile": "tag-content-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-fill-and-style": {
-    "packagePath": "components/tags/tags-fill-and-style",
+  "tag-fill-and-style": {
+    "packagePath": "components/tag/tag-fill-and-style",
     "title": "Fill and Style",
-    "componentName": "TagsFillAndStyleExample",
+    "componentName": "TagFillAndStyleExample",
     "files": [
-      "tags-fill-and-style-example.ts",
-      "tags-fill-and-style-example.html",
-      "tags-fill-and-style-example.css"
+      "tag-fill-and-style-example.ts",
+      "tag-fill-and-style-example.html",
+      "tag-fill-and-style-example.css"
     ],
-    "selector": "tags-fill-and-style-example",
+    "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
-    "primaryFile": "tags-fill-and-style-example.ts",
+    "primaryFile": "tag-fill-and-style-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-hug-content": {
-    "packagePath": "components/tags/tags-hug-content",
+  "tag-hug-content": {
+    "packagePath": "components/tag/tag-hug-content",
     "title": "Corner Cases",
-    "componentName": "TagsHugContentExample",
+    "componentName": "TagHugContentExample",
     "files": [
-      "tags-hug-content-example.ts",
-      "tags-hug-content-example.html",
-      "tags-hug-content-example.css"
+      "tag-hug-content-example.ts",
+      "tag-hug-content-example.html",
+      "tag-hug-content-example.css"
     ],
-    "selector": "tags-hug-content-example",
+    "selector": "tag-hug-content-example",
     "additionalComponents": [],
-    "primaryFile": "tags-hug-content-example.ts",
+    "primaryFile": "tag-hug-content-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-input": {
-    "packagePath": "components/tags/tags-input",
-    "title": "Basic tags input",
-    "componentName": "TagsInputExample",
+  "tag-input": {
+    "packagePath": "components/tag/tag-input",
+    "title": "Basic tag input",
+    "componentName": "TagInputExample",
     "files": [
-      "tags-input-example.ts",
-      "tags-input-example.html",
-      "tags-input-example.css"
+      "tag-input-example.ts",
+      "tag-input-example.html",
+      "tag-input-example.css"
     ],
-    "selector": "tags-input-example",
+    "selector": "tag-input-example",
     "additionalComponents": [],
-    "primaryFile": "tags-input-example.ts",
+    "primaryFile": "tag-input-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-list": {
-    "packagePath": "components/tags/tags-list",
-    "title": "Basic tags list",
-    "componentName": "TagsListExample",
+  "tag-list": {
+    "packagePath": "components/tag/tag-list",
+    "title": "Basic tag list",
+    "componentName": "TagListExample",
     "files": [
-      "tags-list-example.ts",
-      "tags-list-example.html",
-      "tags-list-example.css"
+      "tag-list-example.ts",
+      "tag-list-example.html",
+      "tag-list-example.css"
     ],
-    "selector": "tags-list-example",
+    "selector": "tag-list-example",
     "additionalComponents": [],
-    "primaryFile": "tags-list-example.ts",
+    "primaryFile": "tag-list-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
-  "tags-overview": {
-    "packagePath": "components/tags/tags-overview",
-    "title": "Basic tags",
-    "componentName": "TagsOverviewExample",
+  "tag-overview": {
+    "packagePath": "components/tag/tag-overview",
+    "title": "Basic tag",
+    "componentName": "TagOverviewExample",
     "files": [
-      "tags-overview-example.ts",
-      "tags-overview-example.html",
-      "tags-overview-example.css"
+      "tag-overview-example.ts",
+      "tag-overview-example.html",
+      "tag-overview-example.css"
     ],
-    "selector": "tags-overview-example",
+    "selector": "tag-overview-example",
     "additionalComponents": [],
-    "primaryFile": "tags-overview-example.ts",
+    "primaryFile": "tag-overview-example.ts",
     "module": {
-      "name": "TagsExamplesModule",
-      "importSpecifier": "components/tags",
-      "importPath": "koobiq-docs-examples-components-tags"
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
     }
   },
   "text-area-overview": {
