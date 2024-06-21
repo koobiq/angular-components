@@ -5,7 +5,6 @@
 @use '../core/styles/common/layout';
 
 @use '../core/styles/tokens';
-@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -25,15 +24,15 @@ $tokens: meta.module-variables(tokens) !default;
     pointer-events: none;
     background-color: transparent;
 
-    border-radius: kbq-css-variable(checkbox-size-normal-border-radius);
+    border-radius: var(--kbq-checkbox-size-normal-border-radius, map.get($tokens, checkbox-size-normal-border-radius));
 
     border: {
-        width: kbq-css-variable(checkbox-size-normal-border-width);
+        width: var(--kbq-checkbox-size-normal-border-width, map.get($tokens, checkbox-size-normal-border-width));
         style: solid;
     }
 
-    height: kbq-css-variable(checkbox-size-normal-width);
-    width: kbq-css-variable(checkbox-size-normal-width);
+    height: var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width));
+    width: var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width));
 }
 
 .kbq-checkbox__layout {
@@ -44,6 +43,16 @@ $tokens: meta.module-variables(tokens) !default;
     // `cursor: inherit` ensures that the wrapper element gets the same cursor as the kbq-checkbox
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
     cursor: inherit;
+
+    padding-top: var(
+        --kbq-checkbox-size-normal-paddding-top,
+        map.get($tokens, checkbox-size-normal-paddding-top)
+    );
+
+    padding-bottom: var(
+        --kbq-checkbox-size-normal-paddding-bottom,
+        map.get($tokens, checkbox-size-normal-paddding-bottom)
+    );
 
     padding-left: calc(
         var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
@@ -60,11 +69,11 @@ $tokens: meta.module-variables(tokens) !default;
     display: inline-block;
 
     position: absolute;
-    top: 0;
+    top: var(--kbq-checkbox-size-normal-top, map.get($tokens, checkbox-size-normal-top));
     left: 0;
 
-    height: kbq-css-variable(checkbox-size-normal-width);
-    width: kbq-css-variable(checkbox-size-normal-width);
+    height: var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width));
+    width: var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width));
 }
 
 .kbq-checkbox {
@@ -102,12 +111,16 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & .kbq-hint {
-        margin-top: kbq-css-variable(checkbox-size-normal-vertical-content-padding);
+        margin-top: var(
+            --kbq-checkbox-size-normal-vertical-content-padding,
+            map.get($tokens, checkbox-size-normal-vertical-content-padding)
+        );
     }
 }
 
 .kbq-checkbox.kbq-checkbox_big {
     & .kbq-checkbox__layout {
+        
         padding-left: calc(
             var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
             var(
@@ -118,22 +131,25 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & .kbq-checkbox__inner-container {
-        top: 2px;
-        height: kbq-css-variable(checkbox-size-big-width);
-        width: kbq-css-variable(checkbox-size-big-width);
+        top: var(--kbq-checkbox-size-big-top, map.get($tokens, checkbox-size-big-top));
+        height: var(--kbq-checkbox-size-big-width, map.get($tokens, checkbox-size-big-width));
+        width: var(--kbq-checkbox-size-big-width, map.get($tokens, checkbox-size-big-width));
     }
 
     & .kbq-checkbox__frame {
-        border-radius: kbq-css-variable(checkbox-size-big-border-radius);
+        border-radius: var(--kbq-checkbox-size-big-border-radius, map.get($tokens, checkbox-size-big-border-radius));
 
         border: {
-            width: kbq-css-variable(checkbox-size-big-border-width);
+            width: var(--kbq-checkbox-size-big-border-width, map.get($tokens, checkbox-size-big-border-width));
             style: solid;
         }
     }
 
     & .kbq-hint {
-        margin-top: kbq-css-variable(checkbox-size-big-vertical-content-padding);
+        margin-top: var(
+            --kbq-checkbox-size-big-vertical-content-padding,
+            map.get($tokens, checkbox-size-big-vertical-content-padding)
+        );
     }
 }
 
@@ -152,9 +168,14 @@ $tokens: meta.module-variables(tokens) !default;
 /* stylelint-disable no-descending-specificity */
 .kbq-checkbox_label-before {
     .kbq-checkbox__layout {
+        
         padding-left: 0;
         padding-right: calc(
-            var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
+            var(
+                --kbq-checkbox-size-normal-width, 
+                map.get($tokens, checkbox-size-normal-width)
+            )
+            +
             var(
                 --kbq-checkbox-size-normal-horizontal-content-padding,
                 map.get($tokens, checkbox-size-normal-horizontal-content-padding)
