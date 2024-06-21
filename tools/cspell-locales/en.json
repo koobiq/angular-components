@@ -1,0 +1,28 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "dictionaries": [
+        "en-us"
+    ],
+    "caseSensitive": false,
+    "words": [
+        "autoselect",
+        "behaviour",
+        "codeowners",
+        "cvedetails",
+        "datepicker",
+        "dgeni",
+        "gulpfile",
+        "koobiq",
+        "lazyload",
+        "luxon",
+        "messageformat",
+        "noborder",
+        "opensource",
+        "overlayed",
+        "sidepanel",
+        "sidepanels",
+        "stackblitz",
+        "timepicker",
+        "unclickable"
+    ]
+}

@@ -40,7 +40,7 @@ $tokens: meta.module-variables(tokens) !default;
         flex-grow: 0;
 
         gap: var(
-            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
+            --kbq-tabs-size-tab-stack-vertical-content-gap-vertical,
             map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
         ) 0;
     }

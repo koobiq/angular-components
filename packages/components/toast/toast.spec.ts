@@ -45,7 +45,7 @@ describe('ToastService', () => {
             testComponent = fixture.componentInstance;
         });
 
-        afterEach(fakeAsync(() => { // wait all openModals tobe closed to clean up the ModalManager as it is globally static
+        afterEach(fakeAsync(() => { // wait all openModals to be closed to clean up the ModalManager as it is globally static
             overlayContainer.ngOnDestroy();
             fixture.detectChanges();
             tick(1000);

@@ -97,7 +97,7 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
             <ng-template #kbqFileIcon>
                 <i kbq-icon="mc-file-empty_16"></i>
             </ng-template>
-            <span hint>Ctest</span>
+            <span hint>test</span>
         </kbq-multiple-file-upload>
     `,
     providers: [

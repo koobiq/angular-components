@@ -57,7 +57,7 @@ describe('KbqModal', () => {
             buttonElement = <HTMLButtonElement> fixture.debugElement.nativeElement.querySelector('button');
         });
 
-        afterEach(fakeAsync(() => { // wait all openModals tobe closed to clean up the ModalManager as it is globally static
+        afterEach(fakeAsync(() => { // wait all openModals to be closed to clean up the ModalManager as it is globally static
             modalService.closeAll();
             fixture.detectChanges();
             tick(1000);

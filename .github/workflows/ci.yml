@@ -23,6 +23,9 @@ jobs:
       - name: API Golden Checks
         run: yarn run check-api
 
+      - name: Spell Checking
+        run: yarn run cspell --no-progress
+
       - name: Unit
         run: |
           yarn run unit:cdk

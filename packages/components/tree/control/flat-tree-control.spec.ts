@@ -91,7 +91,7 @@ describe('FlatTreeControl', () => {
 
             for (let i = 0; i < numNodes; i++) {
                 expect(treeControl.getLevel(nodes[i]))
-                    .withContext(`Expec node[${i}]'s level to be 1`)
+                    .withContext(`Expect node[${i}]'s level to be 1`)
                     .toBe(1);
 
                 for (let j = 0; j < numChildren; j++) {

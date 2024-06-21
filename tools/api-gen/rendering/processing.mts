@@ -51,7 +51,7 @@ export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRend
         return getCliRenderable(entry);
     }*/
 
-    // Fallback to an uncategorized renderable.
+    // Fallback to an uncategorised renderable.
     return setEntryFlags(
         addHtmlAdditionalLinks(
             addHtmlDescription(

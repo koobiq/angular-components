@@ -243,7 +243,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 ```
 └─ customized-component ···························· имя компоненты
-    ├─ _customized-component-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typograhy)
+    ├─ _customized-component-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typography)
     ├─ customized-component.component.html ········· Шаблон компонента
     ├─ customized-component.component.scss ········· Основные стили (inline to component. Здесь подключаем геометрию: размеры и т.д.)
     ├─ customized-component.component.spec.ts

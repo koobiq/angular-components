@@ -509,10 +509,10 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     }
 
     private animateTo(isVisible: boolean): Promise<any> {
-        // Figure out the lastest click position when shows up
+        // Figure out the latest click position when shows up
         if (isVisible) {
             // [NOTE] Using timeout due to the document.click event is fired later than visible change,
-            // so if not postponed to next event-loop, we can't get the lastest click position
+            // so if not postponed to next event-loop, we can't get the latest click position
             window.setTimeout(() => this.updateTransformOrigin());
         }
 
@@ -582,7 +582,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     }
 
     /**
-     * Take care of the body's overflow to decide the existense of scrollbar
+     * Take care of the body's overflow to decide the existence of scrollbar
      * @param plusNum The number that the openModals.length will increase soon
      */
     private changeBodyOverflow(plusNum: number = 0) {

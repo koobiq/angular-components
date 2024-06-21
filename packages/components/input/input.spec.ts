@@ -394,7 +394,7 @@ describe('KbqInput', () => {
         }));
     });
 
-    describe('apperance', () => {
+    describe('appearance', () => {
         it('should change font to monospace', () => {
             const fixture = createComponent(KbqInputWithKbqInputMonospace);
             fixture.detectChanges();

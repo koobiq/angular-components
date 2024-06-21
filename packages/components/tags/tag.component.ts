@@ -112,7 +112,7 @@ export class KbqTag extends KbqTagMixinBase
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
 
-    /** Emits when the tag is blured. */
+    /** Emits when the tag is blurred. */
     readonly onBlur = new Subject<KbqTagEvent>();
 
     nativeElement: HTMLElement;

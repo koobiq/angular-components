@@ -18,7 +18,7 @@ export class ArrowCounterDirective {
 
   handleKeyPress(event: KeyboardEvent) {
     if ([UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
-      this.arrowPresscount++;
+      this.arrowPressCount++;
     }
   }
 }

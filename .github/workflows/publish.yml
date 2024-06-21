@@ -33,6 +33,7 @@ jobs:
         env:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_ENDPOINT_URL: ${{ secrets.MM_WEBHOOK_URL }}
+          # todo: fix typo "MM_CHANNGEL_NAME"
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
 
       - name: Generate Changelog
