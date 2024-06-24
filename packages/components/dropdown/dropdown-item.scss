@@ -7,6 +7,8 @@
 
 
 .kbq-dropdown-item {
+    width: 100%;
+
     @include common.user-select(none);
     @include common.kbq-list-item-base();
 
