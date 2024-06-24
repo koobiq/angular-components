@@ -291,7 +291,7 @@ describe('KbqPopover', () => {
 @Component({
     selector: 'kbq-popover-test-component',
     template: `
-        <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1</button>
+        <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
         <button #test2 kbqPopover [kbqTrigger]="'manual'" [kbqPopoverVisible]="popoverVisibility" kbqPopoverContent="_TEST2">_TEST2</button>
         <button #test3 kbqPopover [kbqTrigger]="'focus'" [kbqPopoverContent]="'_TEST3'">_TEST3</button>
 

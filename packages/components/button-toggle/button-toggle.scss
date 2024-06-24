@@ -70,7 +70,6 @@ $tokens: meta.module-variables(tokens) !default;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
-                align-items: center;
 
                 width: 100%;
 
@@ -88,10 +87,8 @@ $tokens: meta.module-variables(tokens) !default;
             > .kbq-button-icon {
                 max-width: 100%;
 
-                height: var(
-                    --kbq-button-toggle-size-item-height,
-                    map.get($tokens, button-toggle-size-item-height)
-                );
+                height: unset;
+                min-height: unset;
             }
         }
     }

@@ -182,7 +182,7 @@
         "linter:styles": "stylelint './packages/**/*.+(css|scss)' --config .stylelintrc",
         "linter:styles:json": "stylelint './packages/**/*.+(css|scss)' --config .stylelintrc -f json --output-file ./dist/reports/stylelint.json",
         "linter:yaml": "yamllint **/*.yml --ignore=node_modules/**/*.yml",
-        "cspell": "cspell lint '**/*.md' --no-must-find-files",
+        "cspell:md": "cspell lint '**/*.md' --no-must-find-files",
         "format:check": "prettier --check packages/**/** --cache",
         "format:check:changed-files": "pretty-quick --staged --check",
         "format:write": "prettier --write packages/**/** --cache",
