@@ -9,7 +9,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
+    height: var(--kbq-badge-size-normal-height, map.get($tokens, badge-size-normal-height));
     text-align: center;
     white-space: nowrap;
 
@@ -39,6 +39,8 @@
     }
 
     &.kbq-badge_compact {
+        height: var(--kbq-badge-size-compact-height, map.get($tokens, badge-size-compact-height));
+
         padding:
             kbq-css-variable(badge-size-compact-vertical-padding)
             kbq-css-variable(badge-size-compact-horizontal-padding);
