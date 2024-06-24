@@ -12,7 +12,7 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
+    height: var(--kbq-badge-size-normal-height, map.get($tokens, badge-size-normal-height));
     text-align: center;
     white-space: nowrap;
 
@@ -49,6 +49,8 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     &.kbq-badge_compact {
+        height: var(--kbq-badge-size-compact-height, map.get($tokens, badge-size-compact-height));
+
         padding:
             var(--kbq-badge-size-compact-vertical-padding, map.get($tokens, badge-size-compact-vertical-padding))
             var(
