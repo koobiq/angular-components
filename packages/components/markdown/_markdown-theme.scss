@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-markdown-theme($theme) {
@@ -96,47 +97,45 @@
 }
 
 @mixin kbq-markdown-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-markdown {
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {
             .kbq-markdown__h#{$i} {
-                @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-h#{$i}-font-default));
+                @include kbq-typography-css-variables(markdown-h#{$i}, default);
             }
         }
 
         .kbq-markdown__p {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-p-font-default));
+            @include kbq-typography-css-variables(markdown-p, default);
         }
 
         .kbq-markdown__ul,
         .kbq-markdown__ol {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-list-font-default));
+            @include kbq-typography-css-variables(markdown-list, default);
         }
 
         .kbq-markdown__blockquote > .kbq-markdown__p {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-blockquote-font-default));
+            @include kbq-typography-css-variables(markdown-blockquote, default);
         }
 
         .kbq-markdown__code {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-code-font-default));
+            @include kbq-typography-css-variables(markdown-code, default);
         }
 
         .kbq-markdown__a {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-link-font-default));
+            @include kbq-typography-css-variables(markdown-link, default);
         }
 
         .kbq-markdown__img + em {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-image-font-caption));
+            @include kbq-typography-css-variables(markdown-image, caption);
         }
 
         .kbq-markdown__table > .kbq-markdown__thead {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-table-font-header));
+            @include kbq-typography-css-variables(markdown-table, header);
         }
 
         .kbq-markdown__table > .kbq-markdown__tbody {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, markdown-table-font-body));
+            @include kbq-typography-css-variables(markdown-table, body);
         }
     }
 }

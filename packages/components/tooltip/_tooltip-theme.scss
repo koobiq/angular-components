@@ -3,6 +3,7 @@
 
 @use '../core/pop-up/pop-up' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-tooltip-color($tooltip) {
@@ -41,9 +42,7 @@
 }
 
 @mixin kbq-tooltip-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-tooltip {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tooltip-font-default));
+        @include kbq-typography-css-variables(tooltip, default);
     }
 }

@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-hint-color($hint) {
@@ -59,13 +60,11 @@
 }
 
 @mixin kbq-hint-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-hint .kbq-hint__text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, hint-font-normal-text));
+        @include kbq-typography-css-variables(hint, normal-text);
     }
 
     .kbq-hint.kbq-hint_compact .kbq-hint__text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, hint-font-compact-text));
+        @include kbq-typography-css-variables(hint, compact-text);
     }
 }

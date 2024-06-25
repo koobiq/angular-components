@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-tree-option($state) {
@@ -69,13 +70,11 @@
 }
 
 @mixin kbq-tree-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-tree-option {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-text));
+        @include kbq-typography-css-variables(tree, text);
     }
 
     .kbq-tree-option-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-caption));
+        @include kbq-typography-css-variables(tree, caption);
     }
 }

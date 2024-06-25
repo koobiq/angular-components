@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-risk-level-filled-color($risk-level) {
@@ -80,9 +81,7 @@
 }
 
 @mixin kbq-risk-level-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-risk-level {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, risk-level-font-text));
+        @include kbq-typography-css-variables(risk-level, text);
     }
 }

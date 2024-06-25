@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-loader-overlay-theme($theme) {
@@ -41,25 +42,23 @@
 }
 
 @mixin kbq-loader-overlay-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-loader-overlay_big {
         & .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-big-text));
+            @include kbq-typography-css-variables(loader-overlay, big-text);
         }
 
         & .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-big-caption));
+            @include kbq-typography-css-variables(loader-overlay, big-caption);
         }
     }
 
     .kbq-loader-overlay_compact {
         & .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-compact-text));
+            @include kbq-typography-css-variables(loader-overlay, compact-text);
         }
 
         & .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, loader-overlay-font-compact-caption));
+            @include kbq-typography-css-variables(loader-overlay, compact-caption);
         }
     }
 }

@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-sidepanel-theme($theme) {
@@ -24,14 +25,12 @@
 }
 
 @mixin kbq-sidepanel-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-sidepanel-title {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, sidepanel-font-header));
+        @include kbq-typography-css-variables(sidepanel, header);
     }
 
     .kbq-sidepanel-container,
     .kbq-sidepanel-footer {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, sidepanel-font-content));
+        @include kbq-typography-css-variables(sidepanel, content);
     }
 }

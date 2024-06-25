@@ -3,6 +3,7 @@
 @use 'sass:list';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-code-block-style($style) {
@@ -377,10 +378,8 @@
 }
 
 @mixin kbq-code-block-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-code-block {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, code-block-font-default));
+        @include kbq-typography-css-variables(code-block, default);
 
         & .kbq-code-block__code {
             font: inherit;

@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming';
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 $kbq-datepicker-selected-fade-amount: 0.6;
@@ -75,13 +76,11 @@ $kbq-datepicker-today-fade-amount: 0.2;
 }
 
 @mixin kbq-datepicker-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-calendar {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+        @include kbq-typography-css-variables(datepicker, text);
     }
 
     .kbq-calendar__table-header th {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+        @include kbq-typography-css-variables(datepicker, text);
     }
 }

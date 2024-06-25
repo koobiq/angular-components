@@ -2,37 +2,25 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-alert-default($style) {
-    background: map.get($style, background);
+@mixin kbq-alert-style($component, $type, $style-name) {
+    $style: map.get($component, $type, $style-name);
+
+    background: kbq-css-variable(alert-#{$type}-#{$style-name}-background, map.get($style, background));
 
     .kbq-alert__title {
-        color: map.get($style, title);
+        color: kbq-css-variable(alert-#{$type}-#{$style-name}-title, map.get($style, title));
     }
 
     .kbq-alert__text {
-        color: map.get($style, text);
-    }
-}
-
-@mixin kbq-alert-colored($style) {
-    background: map.get($style, background);
-
-    .kbq-alert__title {
-        color: map.get($style, title);
-    }
-
-    .kbq-alert__text {
-        color: map.get($style, text);
+        color: kbq-css-variable(alert-#{$type}-#{$style-name}-text, map.get($style, text));
     }
 }
 
 @mixin kbq-alert-theme($theme) {
     $alert: map.get(map.get($theme, components), alert);
-
-    $default: map.get($alert, default);
-    $colored: map.get($alert, colored);
 
     .kbq-alert__close:focus {
         outline: none;
@@ -40,61 +28,59 @@
 
     .kbq-alert.kbq-alert_default {
         &.kbq-alert_contrast {
-            @include kbq-alert-default(map.get($default, contrast));
+            @include kbq-alert-style($alert, default, contrast);
         }
 
         &.kbq-alert_error {
-            @include kbq-alert-default(map.get($default, error));
+            @include kbq-alert-style($alert, default, error);
         }
 
         &.kbq-alert_warning {
-            @include kbq-alert-default(map.get($default, warning));
+            @include kbq-alert-style($alert, default, warning);
         }
 
         &.kbq-alert_success {
-            @include kbq-alert-default(map.get($default, success));
+            @include kbq-alert-style($alert, default, success);
         }
 
         &.kbq-alert_theme {
-            @include kbq-alert-default(map.get($default, theme));
+            @include kbq-alert-style($alert, default, theme);
         }
     }
 
     .kbq-alert.kbq-alert_colored {
         &.kbq-alert_contrast {
-            @include kbq-alert-colored(map.get($colored, contrast));
+            @include kbq-alert-style($alert, colored, contrast);
         }
 
         &.kbq-alert_error {
-            @include kbq-alert-colored(map.get($colored, error));
+            @include kbq-alert-style($alert, colored, error);
         }
 
         &.kbq-alert_warning {
-            @include kbq-alert-colored(map.get($colored, warning));
+            @include kbq-alert-style($alert, colored, warning);
         }
 
         &.kbq-alert_success {
-            @include kbq-alert-colored(map.get($colored, success));
+            @include kbq-alert-style($alert, colored, success);
         }
 
         &.kbq-alert_theme {
-            @include kbq-alert-colored(map.get($colored, theme));
+            @include kbq-alert-style($alert, colored, theme);
         }
     }
 }
 
 @mixin kbq-alert-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-alert {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, alert-font-text));
+        @include kbq-typography-css-variables(alert, text);
 
         .kbq-alert__title {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, alert-font-title));
+            @include kbq-typography-css-variables(alert, title);
         }
 
         &.kbq-alert_compact .kbq-alert__title {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, alert-font-title-compact));
+            @include kbq-typography-css-variables(alert, title-compact);
         }
     }
 }

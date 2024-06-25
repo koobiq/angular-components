@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-popover-theme($theme) {
@@ -36,13 +37,11 @@
 }
 
 @mixin kbq-popover-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-popover__header {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, popover-font-header));
+        @include kbq-typography-css-variables(popover, header);
     }
 
     .kbq-popover__content {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, popover-font-content));
+        @include kbq-typography-css-variables(popover, content);
     }
 }

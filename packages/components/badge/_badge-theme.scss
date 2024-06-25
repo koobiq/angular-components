@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-badge-style($badge) {
@@ -103,21 +104,19 @@
 }
 
 @mixin kbq-badge-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-badge {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-default));
+        @include kbq-typography-css-variables(badge, normal-default);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-caption));
+            @include kbq-typography-css-variables(badge, normal-caption);
         }
     }
 
     .kbq-badge_compact {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-default));
+        @include kbq-typography-css-variables(badge, compact-default);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-caption));
+            @include kbq-typography-css-variables(badge, compact-caption);
         }
     }
 }

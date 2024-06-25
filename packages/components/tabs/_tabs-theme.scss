@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-tab-item-state($state) {
@@ -137,10 +138,8 @@
 }
 
 @mixin kbq-tabs-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-tab-label,
     .kbq-tab-link {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tabs-font-text));
+        @include kbq-typography-css-variables(tabs, text);
     }
 }

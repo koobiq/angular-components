@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-form-field-state($state) {
@@ -94,13 +95,12 @@
 }
 
 @mixin kbq-form-field-typography($config) {
-    $tokens: map.get($config, tokens);
 
     .kbq-form-field {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, form-field-font-text));
+        @include kbq-typography-css-variables(form-field, text);
     }
 
     .kbq-form-field__hint > .kbq-hint:not(.kbq-password-hint) .kbq-hint__text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, form-field-hint-font-text));
+        @include kbq-typography-css-variables(form-field-hint, text);
     }
 }

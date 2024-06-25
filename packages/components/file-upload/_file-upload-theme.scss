@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 @use '../core/styles/tokens';
 
@@ -147,42 +148,34 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-single-file-upload {
         & .file-item__text-wrapper,
         & .dropzone__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, file-upload-font-single-text-block));
+            @include kbq-typography-css-variables(file-upload, single-text-block);
         }
     }
 
     .kbq-multiple-file-upload {
         .multiple__header {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, file-upload-font-multiple-title));
+            @include kbq-typography-css-variables(file-upload, multiple-title);
         }
 
         .multiple__caption {
             &,
             .kbq-link {
-                @include kbq-typography-level-to-styles(
-                    $config, map.get($tokens, file-upload-font-multiple-text-block)
-                );
+                @include kbq-typography-css-variables(file-upload, multiple-text-block);
             }
         }
 
         .kbq-file-multiple-uploaded__header {
-            @include kbq-typography-level-to-styles(
-                $config,
-                map.get($tokens, file-upload-font-multiple-grid)
-            );
+            @include kbq-typography-css-variables(file-upload, multiple-grid);
         }
 
         .multiple__uploaded-item {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, file-upload-font-multiple-grid));
+            @include kbq-typography-css-variables(file-upload, multiple-grid);
         }
 
         .kbq-file-upload {
             .kbq-list-item,
             .kbq-list-option {
-                @include kbq-typography-level-to-styles(
-                    $config,
-                    map.get($tokens, file-upload-font-multiple-grid)
-                );
+                @include kbq-typography-css-variables(file-upload, multiple-grid);
             }
         }
     }
@@ -190,7 +183,7 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-single-file-upload,
     .kbq-multiple-file-upload {
         .kbq-file-upload__hint.kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, form-field-hint-font-text));
+            @include kbq-typography-css-variables(form-field-hint, text);
         }
     }
 }

@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-modal-theme($theme) {
@@ -40,13 +41,11 @@
 }
 
 @mixin kbq-modal-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-modal-title {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, modal-font-header));
+        @include kbq-typography-css-variables(modal, header);
     }
 
     .kbq-modal-body {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, modal-font-content));
+        @include kbq-typography-css-variables(modal, content);
     }
 }

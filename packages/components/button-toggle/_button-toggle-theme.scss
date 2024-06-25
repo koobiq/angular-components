@@ -4,6 +4,7 @@
 @use '../core/styles/typography/typography-utils' as *;
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -71,7 +72,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 @mixin kbq-button-toggle-typography($config) {
     .kbq-button-toggle .kbq-button-toggle-wrapper {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, button-toggle-font-item));
+        @include kbq-typography-css-variables(button-toggle, item);
     }
 }
 

@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 /* stylelint-disable no-descending-specificity */
@@ -111,21 +112,19 @@
 }
 
 @mixin kbq-checkbox-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-checkbox {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-normal-label));
+        @include kbq-typography-css-variables(checkbox, normal-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-normal-caption));
+            @include kbq-typography-css-variables(checkbox, normal-caption);
         }
     }
 
     .kbq-checkbox.kbq-checkbox_big {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-big-label));
+        @include kbq-typography-css-variables(checkbox, big-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, checkbox-font-big-caption));
+            @include kbq-typography-css-variables(checkbox, big-caption);
         }
     }
 }

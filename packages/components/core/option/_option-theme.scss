@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../styles/typography/typography-utils' as *;
+@use '../styles/common/tokens' as *;
 
 
 @mixin kbq-option($state) {
@@ -55,13 +56,11 @@
 }
 
 @mixin kbq-option-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-option {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+        @include kbq-typography-css-variables(list, text);
     }
 
     .kbq-list-option-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+        @include kbq-typography-css-variables(list, caption);
     }
 }

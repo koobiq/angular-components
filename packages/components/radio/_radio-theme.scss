@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-radio-state($state) {
@@ -88,21 +89,19 @@
 }
 
 @mixin kbq-radio-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-radio-button {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-label));
+        @include kbq-typography-css-variables(radio, normal-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-caption));
+            @include kbq-typography-css-variables(radio, normal-caption);
         }
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-label));
+        @include kbq-typography-css-variables(radio, big-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-caption));
+            @include kbq-typography-css-variables(radio, big-caption);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-progress-spinner-theme($theme) {
@@ -23,13 +24,11 @@
 }
 
 @mixin kbq-progress-spinner-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-progress-spinner-text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-label));
+        @include kbq-typography-css-variables(progress-spinner, label);
     }
 
     .kbq-progress-spinner-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-caption));
+        @include kbq-typography-css-variables(progress-spinner, caption);
     }
 }

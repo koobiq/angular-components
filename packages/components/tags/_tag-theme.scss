@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-tag-state($state) {
@@ -63,14 +64,12 @@
 }
 
 @mixin kbq-tag-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-tag {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tag-font-default));
+        @include kbq-typography-css-variables(tag, default);
     }
 
     .kbq-tag-input {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tag-input-font-default));
+        @include kbq-typography-css-variables(tag-input, default);
     }
 }
 

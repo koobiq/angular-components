@@ -4,6 +4,7 @@
 @use '../core/styles/common/popup' as *;
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-select-theme($theme) {
@@ -51,13 +52,11 @@
 }
 
 @mixin kbq-select-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-select {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, select-font-default));
+        @include kbq-typography-css-variables(select, default);
     }
 
     .kbq-select__panel {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, select-panel-font-default));
+        @include kbq-typography-css-variables(select-panel, default);
     }
 }

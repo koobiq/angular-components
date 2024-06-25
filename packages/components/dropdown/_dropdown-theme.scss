@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-dropdown-item-state($state) {
@@ -62,22 +63,20 @@
 }
 
 @mixin kbq-dropdown-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-dropdown-item,
     .kbq-dropdown__content {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+        @include kbq-typography-css-variables(list, text);
 
         .kbq-dropdown-item__caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+            @include kbq-typography-css-variables(list, caption);
         }
     }
 
     .kbq-dropdown__group-header {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-header));
+        @include kbq-typography-css-variables(list, header);
 
         &.kbq-dropdown__group-header_small {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-subheading));
+            @include kbq-typography-css-variables(list, subheading);
         }
     }
 }

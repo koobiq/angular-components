@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-navbar-item($state) {
@@ -107,15 +108,13 @@ button {
 }
 
 @mixin kbq-navbar-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles($config, 'text-normal-strong');
+        @include kbq-typography-level-to-styles($config, text-normal-strong);
     }
 
     .kbq-navbar-brand {
         .kbq-navbar-title {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, navbar-font-title));
+            @include kbq-typography-css-variables(navbar, title);
         }
     }
 }

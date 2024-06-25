@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-link-geometry($tokens) {
@@ -169,10 +170,8 @@
 }
 
 @mixin kbq-link-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-link {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, link-font-normal));
+        @include kbq-typography-css-variables(link, normal);
 
         & .kbq-icon {
             line-height: inherit;
@@ -181,10 +180,10 @@
     }
 
     .kbq-link.kbq-link_compact {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, link-font-compact));
+        @include kbq-typography-css-variables(link, compact);
     }
 
     .kbq-link.kbq-link_big {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, link-font-big));
+        @include kbq-typography-css-variables(link, big);
     }
 }

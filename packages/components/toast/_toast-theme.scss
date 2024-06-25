@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-toast($toast) {
@@ -42,13 +43,11 @@
 }
 
 @mixin kbq-toast-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-toast {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, toast-font-text));
+        @include kbq-typography-css-variables(toast, text);
     }
 
     .kbq-toast__title {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, toast-font-title));
+        @include kbq-typography-css-variables(toast, title);
     }
 }

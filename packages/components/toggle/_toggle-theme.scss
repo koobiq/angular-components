@@ -3,6 +3,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-toggle-state($state) {
@@ -78,29 +79,27 @@
 }
 
 @mixin kbq-toggle-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-toggle:not(.kbq-toggle_big) {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, toggle-font-normal-label));
+        @include kbq-typography-css-variables(toggle, normal-label);
 
         & .kbq-hint {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, toggle-font-normal-caption));
+            @include kbq-typography-css-variables(toggle, normal-caption);
         }
 
         & .kbq-toggle-bar-container {
-            height: kbq-line-height($config, map.get($tokens, toggle-font-normal-label));
+            @include kbq-css-font-variable(toggle, normal-caption, line-height, font-);
         }
     }
 
     .kbq-toggle.kbq-toggle_big {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, toggle-font-big-label));
+        @include kbq-typography-css-variables(toggle, big-label);
 
         & .kbq-hint {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, toggle-font-big-caption));
+            @include kbq-typography-css-variables(toggle, big-caption);
         }
 
         & .kbq-toggle-bar-container {
-            height: kbq-line-height($config, map.get($tokens, toggle-font-big-label));
+            @include kbq-css-font-variable(toggle, big-label, line-height, font-);
         }
     }
 }

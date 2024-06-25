@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin _icon($left-icon, $right-icon) {
@@ -160,11 +161,9 @@
 }
 
 @mixin kbq-button-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-button,
     .kbq-button-icon {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, button-font-default));
+        @include kbq-typography-css-variables(button, default);
     }
 
     .kbq-button-icon.kbq-button-wrapper {

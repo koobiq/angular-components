@@ -50,7 +50,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, getToken(table-font-header));
+            @include kbq-typography-css-variables(table, header);
         }
 
         & > tbody {
@@ -58,7 +58,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, getToken(table-font-body));
+            @include kbq-typography-css-variables(table, body);
         }
     }
 }

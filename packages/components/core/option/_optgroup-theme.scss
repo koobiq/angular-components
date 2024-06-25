@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../styles/typography/typography-utils' as *;
+@use '../styles/common/tokens' as *;
 
 
 @mixin kbq-optgroup-theme($theme) {
@@ -17,9 +18,7 @@
 }
 
 @mixin kbq-optgroup-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-optgroup-label {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, optgroup-font-default));
+        @include kbq-typography-css-variables(optgroup, default);
     }
 }

@@ -2,6 +2,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-progress-bar-theme($theme) {
@@ -29,13 +30,11 @@
 }
 
 @mixin kbq-progress-bar-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-progress-bar-text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-label));
+        @include kbq-typography-css-variables(progress-bar, label);
     }
 
     .kbq-progress-bar-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-caption));
+        @include kbq-typography-css-variables(progress-bar, caption);
     }
 }

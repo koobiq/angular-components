@@ -3,6 +3,7 @@
 
 @use '../styles/typography/typography-utils' as *;
 @use './forms' as *;
+@use '../styles/common/tokens' as *;
 
 
 @mixin kbq-forms-theme($theme) {
@@ -22,10 +23,8 @@
 }
 
 @mixin kbq-forms-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-form__label {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, forms-font-label));
+        @include kbq-typography-css-variables(forms, label);
     }
 
     //.kbq-form__legend {
