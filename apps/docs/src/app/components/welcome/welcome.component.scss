@@ -1,5 +1,8 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
+@use 'sass:meta';
+@use 'sass:map';
 
+@use '../../../styles/koobiq/default-theme/theme' as *;
+@use '../../../styles/koobiq/default-theme/variables' as *;
 
 .docs-welcome {
     display: flex;
@@ -40,6 +43,19 @@
         flex-wrap: wrap;
 
         gap: $size-4xl;
+    }
+
+    &-item {
+        width: 200px;
+    }
+
+    &-item-preview {
+        width: 100%;
+        height: 140px;
+    }
+
+    &-item-title {
+        color: map.get(map.get($dark, foreground), contrast-secondary);
     }
 }
 
