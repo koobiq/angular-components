@@ -1,8 +1,10 @@
-import { Component, ElementRef, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject, fromEvent, Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { DocStates } from '../doс-states';
+import { DocCategory, DocumentationItems } from '../documentation-items';
+import { KbqTheme, ThemeService } from '@koobiq/components/core';
 
 
 @Component({
@@ -14,12 +16,16 @@ import { DocStates } from '../doс-states';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class WelcomeComponent implements OnDestroy {
+export class WelcomeComponent implements OnInit, OnDestroy {
     readonly destroyed = new Subject<void>();
+    docCategories: DocCategory[];
+    currentTheme$: BehaviorSubject<KbqTheme>;
 
     constructor(
         private elementRef: ElementRef,
-        private docStates: DocStates
+        private docStates: DocStates,
+        private docItems: DocumentationItems,
+        private themeService: ThemeService,
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
             .pipe(
@@ -28,6 +34,11 @@ export class WelcomeComponent implements OnDestroy {
                 debounceTime(10)
             )
             .subscribe(this.checkOverflow);
+    }
+
+    ngOnInit(): void {
+        this.docCategories = this.docItems.getCategories();
+        this.currentTheme$ = this.themeService.current;
     }
 
     ngOnDestroy(): void {

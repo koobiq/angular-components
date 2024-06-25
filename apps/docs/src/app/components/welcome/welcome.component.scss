@@ -29,7 +29,18 @@
 
 .docs-welcome__description {
     max-width: 900px;
-    padding-bottom: $size-5xl;
+}
+
+.docs-welcome__category {
+    margin-top: $size-5xl;
+
+    &-items {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        gap: $size-4xl;
+    }
 }
 
 .docs-welcome__articles {
