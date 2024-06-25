@@ -13,8 +13,7 @@
 
     min-width: 0;
 
-    padding-top: $size-l;
-    padding-bottom: $size-7xl;
+    padding-bottom: 160px;
     padding-left: 160px;
 }
 
@@ -25,8 +24,12 @@
 }
 
 .docs-welcome__header {
-    padding-top: $size-5xl;
-    padding-bottom: $size-3xl;
+    padding-bottom: $size-xxl;
+}
+
+.docs-welcome__description {
+    max-width: 900px;
+    padding-bottom: $size-5xl;
 }
 
 .docs-welcome__articles {
@@ -34,7 +37,7 @@
     flex-direction: row;
     flex-wrap: wrap;
 
-    gap: $size-3xl;
+    gap: $size-4xl;
 }
 
 .docs-welcome__article {
@@ -83,9 +86,9 @@
     }
 }
 
-@media (1201px <= width <= 1920px) {
+@media (1200px <= width <= 1919px) {
     .docs-welcome {
-        padding: $size-l $size-7xl $size-7xl;
+        padding: 0 $size-7xl 160px $size-7xl;
     }
 
     .docs-welcome__article {
