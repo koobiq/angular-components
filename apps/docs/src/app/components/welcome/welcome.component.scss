@@ -45,6 +45,10 @@
         gap: $size-4xl;
     }
 
+    &-items {
+        margin-top: $size-m;
+    }
+
     &-item {
         width: 200px;
     }
@@ -56,6 +60,7 @@
 
     &-item-title {
         color: map.get(map.get($dark, foreground), contrast-secondary);
+        margin-top: $size-m;
     }
 }
 

@@ -14,11 +14,15 @@
         @include typography.kbq-typography-level-to-styles($config, headline);
     }
 
-    .docs-welcome__article-header {
+    .docs-welcome__description {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .docs-welcome__category-title {
         @include typography.kbq-typography-level-to-styles($config, title);
     }
 
-    .docs-welcome__article-text {
+    .docs-welcome__category-item-title {
         @include typography.kbq-typography-level-to-styles($config, text-big);
     }
 }
