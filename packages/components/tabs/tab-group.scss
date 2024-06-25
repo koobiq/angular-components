@@ -24,7 +24,6 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: row;
 
     .kbq-tab-list__content {
-        // todo: fix typo "vartical"
         gap: var(
             --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
             map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)

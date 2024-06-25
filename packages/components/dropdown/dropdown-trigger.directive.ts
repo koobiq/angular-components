@@ -157,7 +157,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         @Optional() private parent: KbqDropdown,
         @Optional() @Self() private dropdownItemInstance: KbqDropdownItem,
         @Optional() private _dir: Directionality,
-        // todo: fix typo changeDetecotrRef
         private changeDetecotrRef: ChangeDetectorRef,
         private focusMonitor?: FocusMonitor
     ) {
