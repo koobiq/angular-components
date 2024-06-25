@@ -235,7 +235,7 @@
         "dev:splitter": "ng serve dev-splitter --port 3003",
         "dev:table": "ng serve dev-table --port 3003",
         "dev:tabs": "ng serve dev-tabs --port 3003",
-        "dev:tags": "ng serve dev-tags --port 3003",
+        "dev:tag": "ng serve dev-tag --port 3003",
         "dev:textarea": "ng serve dev-textarea --port 3003",
         "dev:toast": "ng serve dev-toast --port 3003",
         "dev:toggle": "ng serve dev-toggle --port 3003",

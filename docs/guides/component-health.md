@@ -19,11 +19,11 @@
 | Button            | ✅        | ✅          | ✅           | ✅            | ✅       |              | ✅          |
 | Datepicker        |          |            |             |              |         |              |            |
 | Timepicker        |          |            |             |              |         |              |            |
-| Alerts            | ✅        |            | ✅           |              |         |              |            |
-| Badges            | ✅        |            | ✅           |              |         |              |            |
+| Alert            | ✅        |            | ✅           |              |         |              |            |
+| Badge            | ✅        |            | ✅           |              |         |              |            |
 | Progress bar      | ✅        |            | ✅           |              |         |              |            |
 | Progress spinner  | ✅        |            | ✅           |              |         |              |            |
-| Tags              | ✅        |            | ✅           |              |         |              |            |
+| Tag              | ✅        |            | ✅           |              |         |              |            |
 | Loader-overlay    | ✅        |            | ✅           |              |         |              |            |
 | Modal             | ✅        |            | ✅           |              |         |              |            |
 | Popover           |          |            |             |              |         |              |            |
@@ -36,9 +36,9 @@
 | Textarea          | ✅        |            | ✅           |              |         |              |            |
 | Radio             | ✅        |            | ✅           |              |         |              |            |
 | Select            | ✅        |            | ✅           |              |         |              |            |
-| Tree-select       | ✅        |            | ✅           |              |         |              |            |
+| Tree select       | ✅        |            | ✅           |              |         |              |            |
 | Autocomplete      |          |            |             |              |         |              |            |
-| Tags-autocomplete | ✅        |            | ✅           |              |         |              |            |
+| Tag autocomplete | ✅        |            | ✅           |              |         |              |            |
 | Link              | ✅        |            | ✅           |              |         |              |            |
 | Navbar            |          |            |             |              |         |              |            |
 | Card              |          |            |             |              |         |              |            |
@@ -51,8 +51,7 @@
 | Markdown          |          |            |             |              |         |              |            |
 | List              | ✅        |            | ✅           |              |         |              |            |
 | Tree              | ✅        |            | ✅           |              |         |              |            |
-| Tags-list         | ✅        |            | ✅           |              |         |              |            |
+| Tag list         | ✅        |            | ✅           |              |         |              |            |
 | Table             |          |            |             |              |         |              |            |
 | Dl                |          |            |             |              |         |              |            |
-| Code-block        |          |            |             |              |         |              |            |
-
+| Code block        |          |            |             |              |         |              |            |
