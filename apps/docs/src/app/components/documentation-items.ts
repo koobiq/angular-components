@@ -20,6 +20,7 @@ export interface DocCategory {
     name: string;
     items: DocItem[];
     summary?: string;
+    isPreviewed?: boolean;
 }
 
 function updatePackageName(categories, name) {
@@ -38,6 +39,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
         {
             id: 'main',
             name: 'Основное',
+            isPreviewed: true,
             items: [
                 {
                     id: 'installation',
@@ -99,6 +101,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
         {
             id: 'components',
             name: 'Компоненты',
+            isPreviewed: true,
             items:  [
                 {
                     id: 'alert',
@@ -504,6 +507,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
        {
         id: OTHER,
         name: 'Другое',
+        isPreviewed: true,
         summary: '',
         items: [
             {
@@ -547,13 +551,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
     [ICONS]: [{
         id: 'icons',
         name: 'Иконки',
+        isPreviewed: false,
         summary: '',
-        items: []
+        items: [],
     }],
     [CDK]: [
         {
             id: 'cdk',
             name: 'CDK',
+            isPreviewed: false,
             summary: '',
             items: [
                 {
