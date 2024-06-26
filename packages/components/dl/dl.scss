@@ -1,21 +1,13 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-dl {
     display: grid;
-    column-gap: var(
-        --kbq-description-list-size-horizontal-content-gap-horizontal,
-        map.get($tokens, description-list-size-horizontal-content-gap-horizontal)
-    );
-    row-gap: var(
-        --kbq-description-list-size-horizontal-gap-vertical,
-        map.get($tokens, description-list-size-horizontal-gap-vertical)
-    );
+    column-gap: kbq-css-variable(description-list-size-horizontal-content-gap-horizontal);
+    row-gap: kbq-css-variable(description-list-size-horizontal-gap-vertical);
 
     grid-template-columns: repeat(4, 1fr);
 
@@ -42,10 +34,7 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-dl_vertical {
         grid-template-columns: repeat(1, 1fr);
 
-        row-gap: var(
-            --kbq-description-list-size-vertical-content-gap-vertical,
-            map.get($tokens, description-list-size-vertical-content-gap-vertical)
-        );
+        row-gap: kbq-css-variable(description-list-size-vertical-content-gap-vertical);
 
         .kbq-dt,
         .kbq-dd {
@@ -53,10 +42,7 @@ $tokens: meta.module-variables(tokens) !default;
         }
 
         .kbq-dd {
-            margin-bottom: var(
-                --kbq-description-list-size-vertical-gap-vertical,
-                map.get($tokens, description-list-size-vertical-gap-vertical)
-            );
+            margin-bottom: kbq-css-variable(description-list-size-vertical-gap-vertical);
         }
     }
 }

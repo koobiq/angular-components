@@ -4,6 +4,7 @@
 @use 'button-base' as *;
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -13,22 +14,18 @@ $tokens: meta.module-variables(tokens) !default;
 
     // base padding + compensation (4px) - border-width (2px)
     padding-left: calc(
-        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) +
-        4px -
-        var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width))
+        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px
     );
     padding-right: calc(
-        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) +
-        4px -
-        var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width))
+        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px
     );
 
     &.kbq-button-icon_left {
-        padding-left: var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding));
+        padding-left: kbq-css-variable(button-size-horizontal-padding);
     }
 
     &.kbq-button-icon_right {
-        padding-right: var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding));
+        padding-right: kbq-css-variable(button-size-horizontal-padding);
     }
 }
 
@@ -39,15 +36,9 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-button-icon {
     @extend %kbq-button-base;
 
-    padding-left: calc(
-        var(--kbq-button-icon-size-horizontal-padding, map.get($tokens, button-icon-size-horizontal-padding)) -
-        var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width))
-    );
+    padding-left: kbq-css-variable(button-icon-size-horizontal-padding);
 
-    padding-right: calc(
-        var(--kbq-button-icon-size-horizontal-padding, map.get($tokens, button-icon-size-horizontal-padding)) -
-        var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width))
-    );
+    padding-right: kbq-css-variable(button-icon-size-horizontal-padding);
 }
 
 .kbq-button-overlay {

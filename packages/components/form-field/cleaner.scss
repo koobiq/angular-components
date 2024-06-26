@@ -1,21 +1,16 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-cleaner {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size));
-    margin-right: var(
-        --kbq-form-field-size-icon-button-margin-right,
-        map.get($tokens, form-field-size-icon-button-margin-right)
-    );
+    width: kbq-css-variable(form-field-size-icon-button-size);
+    margin-right: kbq-css-variable(form-field-size-icon-button-margin-right);
     height: 100%;
 
     cursor: pointer;

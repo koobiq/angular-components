@@ -1,10 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-form-field-type-datepicker {
     width: auto;

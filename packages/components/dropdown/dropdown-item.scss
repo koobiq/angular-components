@@ -3,10 +3,8 @@
 
 @use '../core/styles/common';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-dropdown-item {
     @include common.user-select(none);
@@ -19,19 +17,13 @@ $tokens: meta.module-variables(tokens) !default;
     text-align: left;
 
     & > .kbq-icon:first-child {
-        $outline-width: map.get($tokens, list-size-container-focus-outline-width);
-        $padding-vertical: map.get($tokens, list-size-container-padding-vertical);
-
         align-self: flex-start;
 
-        margin-top: var(--kbq-list-size-container-padding-vertical, $padding-vertical);
+        margin-top: kbq-css-variable(list-size-container-padding-vertical);
     }
 
     & .kbq-dropdown-item__caption {
-        padding-top: var(
-            --kbq-list-size-container-content-gap-vertical,
-            map.get($tokens, list-size-container-content-gap-vertical)
-        );
+        padding-top: kbq-css-variable(list-size-container-content-gap-vertical);
     }
 }
 

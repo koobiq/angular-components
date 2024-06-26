@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../tokens';
+@use './tokens' as *;
 
 
 // This mixin will ensure that lines that overflow the container will hide the overflow and
@@ -55,8 +56,8 @@
 
     @include kbq-truncate-line();
 
-    padding-top: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
-    padding-bottom: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+    padding-top: kbq-css-variable(list-size-text-padding-vertical);
+    padding-bottom: kbq-css-variable(list-size-text-padding-vertical);
 }
 
 // This mixin provides all list-item styles, changing font size and height based on whether the list is in dense mode.
@@ -82,11 +83,9 @@
 
     min-height: 32px;
 
-    gap: var(
-        --kbq-list-size-container-content-gap-horizontal, map.get($tokens, list-size-container-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(list-size-container-content-gap-horizontal);
 
-    border-width: var(--kbq-list-size-container-focus-outline-width, $outline-width);
+    border-width: kbq-css-variable(list-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
 
@@ -113,10 +112,7 @@
     }
 
     .kbq-list-option-caption {
-        padding-top: var(
-            --kbq-list-size-container-content-gap-vertical,
-            map.get($tokens, list-size-container-content-gap-vertical)
-        );
+        padding-top: kbq-css-variable(list-size-container-content-gap-vertical);
     }
 }
 
@@ -132,10 +128,10 @@
     min-height: 32px;
 
     padding:
-        var(--kbq-list-size-header-padding-top, map.get($tokens, list-size-header-padding-top))
-        var(--kbq-list-size-header-padding-horizontal, map.get($tokens, list-size-header-padding-horizontal))
-        var(--kbq-list-size-header-padding-bottom, map.get($tokens, list-size-header-padding-bottom))
-        var(--kbq-list-size-header-padding-horizontal, map.get($tokens, list-size-header-padding-horizontal));
+        kbq-css-variable(list-size-header-padding-top)
+        kbq-css-variable(list-size-header-padding-horizontal)
+        kbq-css-variable(list-size-header-padding-bottom)
+        kbq-css-variable(list-size-header-padding-horizontal);
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -154,10 +150,10 @@
     min-height: 32px;
 
     padding:
-        var(--kbq-list-size-subheading-padding-top, map.get($tokens, list-size-subheading-padding-top))
-        var(--kbq-list-size-subheading-padding-horizontal, map.get($tokens, list-size-subheading-padding-horizontal))
-        var(--kbq-list-size-subheading-padding-bottom, map.get($tokens, list-size-subheading-padding-bottom))
-        var(--kbq-list-size-subheading-padding-horizontal, map.get($tokens, list-size-subheading-padding-horizontal));
+        kbq-css-variable(list-size-subheading-padding-top)
+        kbq-css-variable(list-size-subheading-padding-horizontal)
+        kbq-css-variable(list-size-subheading-padding-bottom)
+        kbq-css-variable(list-size-subheading-padding-horizontal);
 
     .kbq-list-text {
         @include kbq-list-text();

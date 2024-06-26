@@ -3,10 +3,8 @@
 
 @use '../core/styles/common/button';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 %kbq-button-base {
     @include button.kbq-button-reset();
@@ -21,8 +19,8 @@ $tokens: meta.module-variables(tokens) !default;
 
     margin: 0; /* Safari */
 
-    height: var(--kbq-button-size-height, map.get($tokens, button-size-height));
-    min-height: var(--kbq-button-size-height, map.get($tokens, button-size-height));
+    height: kbq-css-variable(button-size-height);
+    min-height: kbq-css-variable(button-size-height);
 
     white-space: nowrap;
 
@@ -31,8 +29,8 @@ $tokens: meta.module-variables(tokens) !default;
 
     vertical-align: baseline;
 
-    border: var(--kbq-button-size-border-width, map.get($tokens, button-size-border-width)) solid transparent;
-    border-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
+    border: kbq-css-variable(button-size-border-width) solid transparent;
+    border-radius: kbq-css-variable(button-size-border-radius);
 
     &::-moz-focus-inner {
         border: 0;
@@ -56,14 +54,10 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & .kbq-icon_left {
-        margin-right: var(
-            --kbq-button-size-content-padding, map.get($tokens, button-size-content-padding)
-        );
+        margin-right: kbq-css-variable(button-size-content-padding);
     }
 
     & .kbq-icon_right {
-        margin-left: var(
-            --kbq-button-size-content-padding, map.get($tokens, button-size-content-padding)
-        );
+        margin-left: kbq-css-variable(button-size-content-padding);
     }
 }

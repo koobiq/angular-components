@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-autocomplete-panel {
@@ -21,16 +18,12 @@ $tokens: meta.module-variables(tokens) !default;
     width: 100%;
     max-width: none;
 
-    max-height: var(--kbq-autocomplete-size-panel-max-height, map.get($tokens, autocomplete-size-panel-max-height));
+    max-height: kbq-css-variable(autocomplete-size-panel-max-height);
 
-    border-bottom-left-radius: var(
-        --kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius)
-    );
-    border-bottom-right-radius: var(
-        --kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius)
-    );
+    border-bottom-left-radius: kbq-css-variable(autocomplete-size-panel-border-radius);
+    border-bottom-right-radius: kbq-css-variable(autocomplete-size-panel-border-radius);
 
-    padding: var(--kbq-autocomplete-size-panel-padding, map.get($tokens, autocomplete-size-panel-padding));
+    padding: kbq-css-variable(autocomplete-size-panel-padding);
 
     &.kbq-autocomplete_visible {
         visibility: visible;
@@ -42,8 +35,8 @@ $tokens: meta.module-variables(tokens) !default;
 
     .kbq-autocomplete-panel-above & {
         border-radius:
-            var(--kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius))
-            var(--kbq-autocomplete-size-panel-border-radius, map.get($tokens, autocomplete-size-panel-border-radius))
+            kbq-css-variable(autocomplete-size-panel-border-radius)
+            kbq-css-variable(autocomplete-size-panel-border-radius)
             0 0;
     }
 

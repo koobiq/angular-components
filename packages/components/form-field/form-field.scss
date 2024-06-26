@@ -4,6 +4,7 @@
 @use '../core/forms/forms';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -20,13 +21,13 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
-        height: var(--kbq-form-field-size-height, map.get($tokens, form-field-size-height));
+        height: kbq-css-variable(form-field-size-height);
     }
 
     &,
     .kbq-input,
     .kbq-textarea {
-        border-radius: var(--kbq-form-field-size-border-radius, map.get($tokens, form-field-size-border-radius));
+        border-radius: kbq-css-variable(form-field-size-border-radius);
     }
 
     &:hover {
@@ -72,17 +73,17 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & + .kbq-password-hint {
-        margin-top: var(--kbq-size-m, map.get($tokens, size-m));
+        margin-top: kbq-css-variable(size-m);
     }
 }
 
 .kbq-form-field__container {
     position: relative;
 
-    border-width: var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width));
+    border-width: kbq-css-variable(form-field-size-border-width);
     border-style: solid;
     border-color: transparent;
-    border-radius: var(--kbq-form-field-size-border-radius, map.get($tokens, form-field-size-border-radius));
+    border-radius: kbq-css-variable(form-field-size-border-radius);
 }
 
 .kbq-form-field__prefix,
@@ -122,12 +123,12 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: center;
     align-items: center;
 
-    width: var(--kbq-form-field-size-button-width, map.get($tokens, form-field-size-button-width));
+    width: kbq-css-variable(form-field-size-button-width);
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
         cursor: pointer;
-        width: var(--kbq-form-field-size-button-width, map.get($tokens, form-field-size-button-width));
+        width: kbq-css-variable(form-field-size-button-width);
         text-align: center;
     }
 
@@ -139,16 +140,14 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-form-field__hint {
     display: flex;
     flex-direction: column;
-    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
 
     & .kbq-password-hint:first-child {
-        margin-top: var(--kbq-size-s, map.get($tokens, size-s));
+        margin-top: kbq-css-variable(size-s);
     }
 }
 
 .kbq-password-hint {
-    margin-top: var(--kbq-form-field-hint-size-gap, map.get($tokens, form-field-hint-size-gap));
+    margin-top: kbq-css-variable(form-field-hint-size-gap);
 }
-
-
 /* stylelint-enable no-descending-specificity */

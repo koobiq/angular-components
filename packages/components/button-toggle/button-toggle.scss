@@ -4,6 +4,7 @@
 @use '../core/styles/common';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -14,25 +15,13 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: row;
     align-items: center;
 
-    gap: var(
-        --kbq-button-toggle-size-container-content-gap-horizontal,
-        map.get($tokens, button-toggle-size-container-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(button-toggle-size-container-content-gap-horizontal);
 
-    border-radius: var(
-        --kbq-button-toggle-size-container-border-radius,
-        map.get($tokens, button-toggle-size-container-border-radius)
-    );
+    border-radius: kbq-css-variable(button-toggle-size-container-border-radius);
 
     padding:
-        var(
-            --kbq-button-toggle-size-container-padding-vertical,
-            map.get($tokens, button-toggle-size-container-padding-vertical)
-        )
-        var(
-            --kbq-button-toggle-size-container-padding-horizontal,
-            map.get($tokens, button-toggle-size-container-padding-horizontal)
-        );
+        kbq-css-variable(button-toggle-size-container-padding-vertical)
+        kbq-css-variable(button-toggle-size-container-padding-horizontal);
 
     .kbq-button-toggle {
         display: flex;
@@ -43,17 +32,11 @@ $tokens: meta.module-variables(tokens) !default;
         $padding-horizontal: map.get($tokens, button-toggle-size-item-padding-horizontal);
         $outline-width: map.get($tokens, button-toggle-size-item-focus-outline-width);
 
-        border-radius: var(
-            --kbq-button-toggle-size-item-border-radius,
-            map.get($tokens, button-toggle-size-item-border-radius)
-        );
+        border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
         > .kbq-button,
         > .kbq-button-icon {
-            border-radius: var(
-                --kbq-button-toggle-size-item-border-radius,
-                map.get($tokens, button-toggle-size-item-border-radius)
-            );
+            border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
             padding:
                 calc(var(--kbq-button-toggle-size-item-padding-vertical, $padding-vertical) - $outline-width)
@@ -73,10 +56,7 @@ $tokens: meta.module-variables(tokens) !default;
 
                 width: 100%;
 
-                gap: var(
-                    --kbq-button-toggle-size-item-content-gap-horizontal,
-                    map.get($tokens, button-toggle-size-item-content-gap-horizontal)
-                );
+                gap: kbq-css-variable(button-toggle-size-item-content-gap-horizontal);
             }
         }
     }
@@ -105,10 +85,7 @@ $tokens: meta.module-variables(tokens) !default;
         > .kbq-button-icon {
             width: 100%;
 
-            border-radius: var(
-                --kbq-button-toggle-size-item-border-radius,
-                map.get($tokens, button-toggle-size-item-border-radius)
-            );
+            border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
         }
     }
 }

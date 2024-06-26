@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../tokens';
+@use '../common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -82,7 +83,7 @@ $tokens: meta.module-variables(tokens) !default;
         &:first-child:not(:last-child) {
             @include border-bottom-radius(0);
 
-            border-top-right-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
+            border-top-right-radius: kbq-css-variable(button-size-border-radius);
 
             > .kbq-form-field__container {
                 @include border-bottom-radius(0);
@@ -92,10 +93,7 @@ $tokens: meta.module-variables(tokens) !default;
         &:last-child:not(:first-child) {
             @include border-top-radius(0);
 
-            border-bottom-left-radius: var(
-                --kbq-button-size-border-radius,
-                map.get($tokens, button-size-border-radius)
-            );
+            border-bottom-left-radius: kbq-css-variable(button-size-border-radius);
 
             > .kbq-form-field__container {
                 @include border-top-radius(0);

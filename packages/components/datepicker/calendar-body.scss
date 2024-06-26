@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -33,14 +34,8 @@ $tokens: meta.module-variables(tokens) !default;
     // Prevents text being off-center on Android.
     line-height: 1;
 
-    border-radius: var(
-        --kbq-datepicker-size-grid-cell-border-radius,
-        map.get($tokens, datepicker-size-grid-cell-border-radius)
-    );
+    border-radius: kbq-css-variable(datepicker-size-grid-cell-border-radius);
 
-    margin-bottom: var(
-        --kbq-datepicker-size-grid-content-gap-vertical,
-        map.get($tokens, datepicker-size-grid-content-gap-vertical)
-    );
+    margin-bottom: kbq-css-variable(datepicker-size-grid-content-gap-vertical);
 }
 

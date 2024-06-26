@@ -1,11 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-@use '../core/styles/common';
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-file-upload {
     box-sizing: border-box;
