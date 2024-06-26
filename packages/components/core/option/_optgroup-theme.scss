@@ -9,11 +9,11 @@
     $foreground: map.get($theme, foreground);
 
     .kbq-optgroup-label {
-        color: map.get($foreground, contrast);
+        color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
     }
 
     .kbq-disabled .kbq-optgroup-label {
-        color: map.get($foreground, text-disabled);
+        color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
     }
 }
 

@@ -6,22 +6,19 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-code-block-style($style) {
-    $header: map.get($style, header);
-    $container: map.get($style, container);
-    $actionbar: map.get($style, actionbar);
-    $collapse: map.get($style, collapse);
+@mixin kbq-code-block-style($component, $style-name) {
+    $style: map.get($component, $style-name);
+    $base: code-block-#{$style-name};
 
-    background: map.get($container, background);
+    background: kbq-css-variable(#{$base}-container-background, map.get($style, container, background));
 
     & .kbq-tab-header {
-        $header: map.get($style, header);
-        background: map.get($header, background) !important;
-        border-color: map.get($container, border);
+        background: kbq-css-variable(#{$base}-header-background, map.get($style, header, background)) !important;
+        border-color: kbq-css-variable(#{$base}-container-border, map.get($style, container, border));
     }
 
     .kbq-tab-body__wrapper {
-        border-color: map.get($container, border);
+        border-color: kbq-css-variable(#{$base}-container-border, map.get($style, container, border));
     }
 
     &:not(.kbq-code-block_no-header) {
@@ -31,12 +28,12 @@
     }
 
     & .kbq-code-block-actionbar {
-        background: map.get($actionbar, background);
+        background: kbq-css-variable(#{$base}-actionbar-background, map.get($style, actionbar, background));
     }
 
     &.kbq-code-block_header-with-shadow {
         & .kbq-tab-header {
-            box-shadow: map.get($header, shadow);
+            box-shadow: kbq-css-variable(#{$base}-header-shadow, map.get($style, header, shadow));
         }
     }
 
@@ -44,23 +41,26 @@
         & .kbq-code-block__fade-gradient {
             display: block;
 
-            background: map.get($actionbar, fade-gradient)
+            background: kbq-css-variable(#{$base}-actionbar-fade-gradient, map.get($style, actionbar, fade-gradient))
         }
     }
 
     .kbq-code-block__show-more {
         .bg-wrapper {
-            background: map.get($collapse, button-expand-background);
+            background: kbq-css-variable(
+                #{$base}-collapse-button-expand-background, map.get($style, collapse, button-expand-background));
             opacity: 90%;
         }
     }
 
     & .kbq-code-block__show-more_expanded {
-        background: map.get($collapse, expanded-background);
+        background: kbq-css-variable(
+            #{$base}-collapse-expanded-background, map.get($style, collapse, expanded-background));
     }
 
     & .kbq-code-block__show-more_collapsed {
-        background: map.get($collapse, collapsed-background);
+        background: kbq-css-variable(
+            #{$base}-collapse-collapsed-background, map.get($style, collapse, collapsed-background));
     }
 }
 
@@ -339,22 +339,23 @@
         }
 
         &.kbq-code-block_outline {
-            @include kbq-code-block-style(map.get($code-block, outline));
+            @include kbq-code-block-style($code-block, outline);
         }
 
         &.kbq-code-block_filled {
-            @include kbq-code-block-style(map.get($code-block, filled));
+            @include kbq-code-block-style($code-block, filled);
         }
 
         .kbq-tab-group.kbq-focused {
             // paint focus border from the top since because of border constraints
             .kbq-tab-header {
-                box-shadow: 0 3px 0 -1px map.get(map.get($theme, states), focused-color);
+                box-shadow: 0 3px 0 -1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
             }
 
             .kbq-tab-body__wrapper {
-                border-color: map.get(map.get($theme, states), focused-color);
-                box-shadow: inset 0 0 0 1px map.get(map.get($theme, states), focused-color);
+                border-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+                box-shadow: inset 0 0 0 1px kbq-css-variable(
+                    states-focused-color, map.get($theme, states, focused-color));
             }
         }
 
@@ -368,11 +369,12 @@
 
     .kbq-code-block-actionbar {
         .kbq-code-block-actionbar_less-contrast {
-            background-color: map-get($code-block, actionbar, bg-less-contrast);
+            background-color: kbq-css-variable(
+                code-block-actionbar-bg-less-contrast, map-get($code-block, actionbar, bg-less-contrast));
         }
 
         &.kbq-actionbar-block_floating {
-            background-color: map-get($code-block, actionbar, bg);
+            background-color: kbq-css-variable(code-block-actionbar-bg, map-get($code-block, actionbar, bg));
         }
     }
 }

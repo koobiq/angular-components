@@ -32,23 +32,23 @@
         @include kbq-list-item(map.get($list-item, default));
 
         &:hover:not(.kbq-disabled) {
-            @include kbq-list-item(map.get($list-item, hover));
+            @include kbq-list-item(map.get($list-item, states-hover));
         }
 
         &.kbq-focused {
-            border-color: map.get(map.get($list-item, focused), focus-outline);
+            border-color: map.get(map.get($list-item, states-focused), focus-outline);
         }
 
         &.kbq-selected {
-            @include kbq-list-item(map.get($list-item, selected));
+            @include kbq-list-item(map.get($list-item, states-selected));
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-list-item(map.get($list-item, selected-hover));
+                @include kbq-list-item(map.get($list-item, states-selected-hover));
             }
         }
 
         &.kbq-disabled {
-            @include kbq-list-item(map.get($list-item, disabled));
+            @include kbq-list-item(map.get($list-item, states-disabled));
         }
     }
 }

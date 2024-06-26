@@ -3,19 +3,18 @@
 
 @use '../core/styles/typography/typography-utils' as *;
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
 
-$tokens: meta.module-variables(tokens) !default;
+@mixin kbq-button-toggle-state($component, $state-name) {
+    $state: map.get($component, $state-name);
 
-@mixin kbq-button-toggle-color($state) {
-    background: map.get($state, background);
+    background: kbq-css-variable(button-toggle-item-#{$state-name}-background, map.get($state, background));
 
-    color: map.get($state, text);
+    color: kbq-css-variable(button-toggle-item-#{$state-name}-text, map.get($state, text));
 
     & .kbq-icon {
-        color: map.get($state, icon);
+        color: kbq-css-variable(button-toggle-item-#{$state-name}-icon, map.get($state, icon));
     }
 }
 
@@ -23,43 +22,43 @@ $tokens: meta.module-variables(tokens) !default;
     $button-toggle: map.get(map.get($theme, components), button-toggle);
 
     .kbq-button-toggle-group {
-        $container: map.get($button-toggle, container);
-
-        background: map.get($container, background);
+        background: kbq-css-variable(
+            button-toggle-container-background, map.get($button-toggle, container, background)
+        );
 
         .kbq-button-toggle {
             $button: map.get($button-toggle, item);
 
             & > .kbq-button,
             & > .kbq-icon-button {
-                @include kbq-button-toggle-color(map.get($button, default));
+                @include kbq-button-toggle-state($button, default);
 
                 &:hover:not(.kbq-disabled) {
-                    @include kbq-button-toggle-color(map.get($button, hover));
+                    @include kbq-button-toggle-state($button, states-hover);
                 }
 
                 &:active:not(.kbq-disabled) {
-                    @include kbq-button-toggle-color(map.get($button, active));
+                    @include kbq-button-toggle-state($button, states-active);
                 }
 
                 &.kbq-selected:not(.kbq-disabled) {
-                    @include kbq-button-toggle-color(map.get($button, selected));
+                    @include kbq-button-toggle-state($button, states-selected);
 
                     &:hover {
-                        @include kbq-button-toggle-color(map.get($button, selected-hover));
+                        @include kbq-button-toggle-state($button, states-selected-hover);
                     }
 
                     &:active {
-                        @include kbq-button-toggle-color(map.get($button, selected-active));
+                        @include kbq-button-toggle-state($button, states-selected-active);
                     }
                 }
 
                 &.kbq-disabled {
-                    @include kbq-button-toggle-color(map.get($button, disabled));
+                    @include kbq-button-toggle-state($button, states-disabled);
                 }
 
                 &.kbq-disabled.kbq-selected {
-                    @include kbq-button-toggle-color(map.get($button, selected-disabled));
+                    @include kbq-button-toggle-state($button, states-selected-disabled);
                 }
 
                 &.cdk-keyboard-focused {

@@ -9,16 +9,14 @@
 @mixin kbq-forms-theme($theme) {
     @include kbq-form-geometry(map.get($theme, tokens));
 
-    $foreground: map.get($theme, foreground);
-
     $forms: map.get(map.get($theme, components), forms);
 
     .kbq-form__label {
-        color: map.get($forms, label);
+        color: kbq-css-variable(forms-label, map.get($forms, label));
     }
 
     .kbq-form__legend {
-        color: map.get($forms, legend);
+        color: kbq-css-variable(forms-legend, map.get($forms, legend));
     }
 }
 

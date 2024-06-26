@@ -6,7 +6,9 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-form-field-state($state) {
+@mixin kbq-form-field-state($component, $state-name) {
+    $state: map.get($component, $state-name);
+
     .kbq-form-field__container {
         border-color: map.get($state, border);
         background-color: map.get($state, background);
@@ -32,10 +34,8 @@
 }
 
 @mixin kbq-form-field-theme($theme) {
-    $foreground: map.get($theme, foreground);
-
     .kbq-form-field {
-        $form-field: map.get(map.get($theme, components), form-field);
+        $form-field: map.get($theme, components, form-field);
 
         $default: map.get($form-field, default);
         $autofill: map.get($form-field, autofill);
@@ -43,7 +43,7 @@
         $focused: map.get($form-field, focused);
         $disabled: map.get($form-field, disabled);
 
-        @include kbq-form-field-state($default);
+        @include kbq-form-field-state($form-field, default);
 
         /* stylelint-disable no-descending-specificity */
         & .kbq-input {
@@ -58,7 +58,7 @@
         }
 
         &.cdk-focused {
-            @include kbq-form-field-state($focused);
+            @include kbq-form-field-state($form-field, focused);
 
             & .kbq-form-field__container {
                 box-shadow: 0 0 0 1px map.get($focused, focus-outline);
@@ -67,7 +67,7 @@
 
         &.kbq-form-field_invalid,
         &.ng-invalid {
-            @include kbq-form-field-state($error);
+            @include kbq-form-field-state($form-field, error);
 
             &.cdk-focused .kbq-form-field__container {
                 box-shadow: 0 0 0 1px map.get($error, focus-outline);
@@ -75,7 +75,7 @@
         }
 
         &.kbq-disabled {
-            @include kbq-form-field-state($disabled);
+            @include kbq-form-field-state($form-field, disabled);
 
             .kbq-icon {
                 color: map.get($disabled, text);
@@ -87,9 +87,7 @@
 
     .kbq-form-field__hint {
         & > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
-            $form-field-hint: map.get(map.get($theme, components), form-field-hint);
-
-            color: map.get($form-field-hint, text);
+            color: map.get($theme, components, form-field-hint, text);
         }
     }
 }
