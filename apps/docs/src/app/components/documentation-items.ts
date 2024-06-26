@@ -70,7 +70,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'component-health',
-                    name: 'Статус компонент',
+                    name: 'Статус компонентов',
                     svgPreview: 'component statuses',
                     isGuide: true,
                     hasApi: false,
