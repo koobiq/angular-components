@@ -53,6 +53,15 @@ $border-width: var(
         border-radius: $border-radius $border-radius 0 0;
     }
 
+    &:has(.kbq-code-block__show-more) {
+        .kbq-code-block__code {
+            & > code {
+                padding-bottom: map.get($tokens, size-3xl) !important;
+                overflow-x: scroll;
+            }
+        }
+    }
+
     .kbq-code-block__code {
         > code {
             padding:
