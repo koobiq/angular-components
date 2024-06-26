@@ -17,7 +17,7 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-expanded {
         height: map.get($tokens, size-5xl);
 
-        padding: map.get($tokens, size-l) map.get($tokens, size-xl);
+        padding: 14px map.get($tokens, size-xl);
 
         gap: map.get($tokens, size-m);
 
