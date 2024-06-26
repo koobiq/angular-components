@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
         CommonModule,
         KbqIconModule,
         KbqLinkModule,
-        RouterModule
+        RouterModule,
     ],
     exports: [WelcomeComponent],
     declarations: [WelcomeComponent]

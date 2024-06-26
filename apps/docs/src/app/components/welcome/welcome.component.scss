@@ -20,18 +20,13 @@
     padding-left: 160px;
 }
 
-.docs-welcome__image {
-    min-width: 0;
-    width: 100%;
-    max-width: 1024px;
-}
-
 .docs-welcome__header {
-    padding-bottom: $size-xxl;
+    max-width: 1300px;
 }
 
 .docs-welcome__description {
     max-width: 900px;
+    margin-top: $size-xxl;
 }
 
 .docs-welcome__category {
@@ -55,7 +50,7 @@
 
     &-item-preview {
         width: 100%;
-        height: 140px;
+        height: auto;
     }
 
     &-item-title {
@@ -64,87 +59,29 @@
     }
 }
 
-.docs-welcome__articles {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    gap: $size-4xl;
-}
-
-.docs-welcome__article {
-    .docs-welcome__article-header {
-        margin-bottom: $size-s;
-    }
-}
-
-@media (width <= 768px) {
+@media (width < 768px) {
     .docs-welcome {
-        padding: $size-l $size-l $size-3xl;
+        padding: $size-l $size-xxl 160px $size-xxl;
     }
 
-    .docs-welcome__header {
-        padding-top: $size-3xl;
-        padding-bottom: $size-4xl;
+    .docs-welcome__category-items {
+        gap: $size-l;
     }
 
-    .docs-welcome__articles {
-        gap: $size-xxl;
-        flex-direction: column;
-    }
-
-    .docs-welcome__image,
-    .docs-welcome__header,
-    .docs-welcome__articles {
-        min-width: 343px;
-        max-width: 700px;
+    .docs-welcome__category-item {
+        width: calc(50% - #{$size-l});
     }
 }
 
-@media (769px <= width <= 1200px) {
+@media (768px <= width < 1200px) {
     .docs-welcome {
-        padding: $size-l $size-xxl $size-7xl;
-    }
-
-    .docs-welcome__articles {
-        flex-direction: column;
-    }
-
-    .docs-welcome__image,
-    .docs-welcome__header,
-    .docs-welcome__articles {
-        min-width: 480px;
-        max-width: 772px;
+        padding: 0 $size-xxl 160px $size-xxl;
     }
 }
 
-@media (1200px <= width <= 1919px) {
+@media (1200px <= width < 1920px) {
     .docs-welcome {
         padding: 0 $size-7xl 160px $size-7xl;
     }
-
-    .docs-welcome__article {
-        min-width: 370px;
-        width: 370px;
-    }
-
-    .docs-welcome__image,
-    .docs-welcome__header,
-    .docs-welcome__articles {
-        min-width: 772px;
-        max-width: 1024px
-    }
 }
 
-@media (width >= 1920px) {
-    .docs-welcome__image,
-    .docs-welcome__header,
-    .docs-welcome__articles {
-        max-width: 1024px;
-    }
-
-    .docs-welcome__article {
-        min-width: 496px;
-        width: 496px;
-    }
-}
