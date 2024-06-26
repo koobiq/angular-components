@@ -1,11 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
-
 
 .kbq-icon-rotate_90 {
     transform: rotate(90deg);

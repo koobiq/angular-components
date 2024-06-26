@@ -3,10 +3,6 @@
 
 @use '../core/styles/common/list';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-list,
 .kbq-list-selection {

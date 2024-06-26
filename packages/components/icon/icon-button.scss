@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-icon-button {
@@ -13,21 +10,12 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     padding:
-        var(--kbq-icon-button-size-small-vertical-padding, map-get($tokens, icon-button-size-small-vertical-padding))
-        var(
-            --kbq-icon-button-size-small-horizontal-padding,
-            map-get($tokens, icon-button-size-small-horizontal-padding)
-        );
+        kbq-css-variable(icon-button-size-small-vertical-padding)
+        kbq-css-variable(icon-button-size-small-horizontal-padding);
 
     &.kbq-icon-button_small {
         padding:
-            var(
-                --kbq-icon-button-size-normal-vertical-padding,
-                map-get($tokens, icon-button-size-normal-vertical-padding)
-            )
-            var(
-                --kbq-icon-button-size-normal-horizontal-padding,
-                map-get($tokens, icon-button-size-normal-horizontal-padding)
-            );
+            kbq-css-variable(icon-button-size-normal-vertical-padding)
+            kbq-css-variable(icon-button-size-normal-horizontal-padding);
     }
 }

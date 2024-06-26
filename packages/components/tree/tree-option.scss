@@ -3,6 +3,7 @@
 
 @use '../core/styles/common';
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -25,7 +26,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     word-wrap: break-word;
 
-    border-width: var(--kbq-tree-size-container-focus-outline-width, $outline-width);
+    border-width: kbq-css-variable(tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
 
@@ -42,9 +43,7 @@ $tokens: meta.module-variables(tokens) !default;
         var(--kbq-tree-size-container-focus-outline-width, $outline-width)
     );
 
-    gap: var(
-        --kbq-tree-size-container-content-gap-horizontal, map.get($tokens, tree-size-container-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(tree-size-container-content-gap-horizontal);
 
     & .kbq-option-text {
         $tokens: meta.module-variables(tokens) !default;
@@ -54,8 +53,8 @@ $tokens: meta.module-variables(tokens) !default;
 
         @include common.kbq-truncate-line();
 
-        padding-top: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
-        padding-bottom: var(--kbq-list-size-text-padding-vertical, map.get($tokens, list-size-text-padding-vertical));
+        padding-top: kbq-css-variable(list-size-text-padding-vertical);
+        padding-bottom: kbq-css-variable(list-size-text-padding-vertical);
     }
 
     &:focus {

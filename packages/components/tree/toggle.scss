@@ -1,10 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tree-node-toggle {
     display: flex;
@@ -14,8 +12,8 @@ $tokens: meta.module-variables(tokens) !default;
 
     height: 100%;
 
-    padding-left: var(--kbq-tree-size-toggle-padding, map.get($tokens, tree-size-toggle-padding));
-    padding-right: var(--kbq-tree-size-toggle-padding, map.get($tokens, tree-size-toggle-padding));
+    padding-left: kbq-css-variable(tree-size-toggle-padding);
+    padding-right: kbq-css-variable(tree-size-toggle-padding);
 
     cursor: pointer;
 

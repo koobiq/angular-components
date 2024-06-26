@@ -5,6 +5,7 @@
 @use '../core/styles/common';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -16,10 +17,7 @@ $trigger-margin: 9px;
 .kbq-popover {
     position: relative;
 
-    border-radius: var(
-        --kbq-popover-size-container-border-radius,
-        map.get($tokens, popover-size-container-border-radius)
-    );
+    border-radius: kbq-css-variable(popover-size-container-border-radius);
 
     box-sizing: border-box;
 
@@ -29,16 +27,15 @@ $trigger-margin: 9px;
     z-index: 1;
 
     &.kbq-popover_small {
-        max-width: var(--kbq-popover-size-container-width-small, map.get($tokens, popover-size-container-width-small));
+        max-width: kbq-css-variable(popover-size-container-width-small);
     }
 
     &.kbq-popover_medium {
-        max-width:
-            var(--kbq-popover-size-container-width-medium, map.get($tokens, popover-size-container-width-medium));
+        max-width: kbq-css-variable(popover-size-container-width-medium);
     }
 
     &.kbq-popover_large {
-        max-width: var(--kbq-popover-size-container-width-large, map.get($tokens, popover-size-container-width-large));
+        max-width: kbq-css-variable(popover-size-container-width-large);
     }
 
     @include pop-up.popup-margins(kbq-popover, 8px);
@@ -48,9 +45,9 @@ $trigger-margin: 9px;
     overflow-y: auto;
 
     padding:
-        var(--kbq-popover-size-content-padding-top, map.get($tokens, popover-size-content-padding-top))
-        var(--kbq-popover-size-content-padding-horizontal, map.get($tokens, popover-size-content-padding-horizontal))
-        var(--kbq-popover-size-content-padding-bottom, map.get($tokens, popover-size-content-padding-bottom));
+        kbq-css-variable(popover-size-content-padding-top)
+        kbq-css-variable(popover-size-content-padding-horizontal)
+        kbq-css-variable(popover-size-content-padding-bottom);
 }
 
 .kbq-popover__container {
@@ -59,22 +56,19 @@ $trigger-margin: 9px;
     display: flex;
     flex-direction: column;
 
-    max-height: var(--kbq-popover-size-container-max-height, map.get($tokens, popover-size-container-max-height));
+    max-height: kbq-css-variable(popover-size-container-max-height);
 
-    border-radius: var(
-        --kbq-popover-size-container-border-radius,
-        map.get($tokens, popover-size-container-border-radius)
-    );
+    border-radius: kbq-css-variable(popover-size-container-border-radius);
 
     &.kbq-popover__container_with-header {
         .kbq-popover__content {
-            padding-top: map.get($tokens, size-s);
+            padding-top: kbq-css-variable(size-s);
         }
     }
 
     &.kbq-popover__container_with-footer {
         .kbq-popover__content {
-            padding-bottom: map.get($tokens, size-s);
+            padding-bottom: kbq-css-variable(size-s);
         }
     }
 }
@@ -86,10 +80,10 @@ $trigger-margin: 9px;
     overflow: hidden;
 
     padding:
-        var(--kbq-popover-size-header-padding-top, map.get($tokens, popover-size-header-padding-top))
-        var(--kbq-popover-size-header-padding-horizontal, map.get($tokens, popover-size-header-padding-horizontal))
-        var(--kbq-popover-size-header-padding-bottom, map.get($tokens, popover-size-header-padding-bottom))
-        var(--kbq-popover-size-header-padding-horizontal, map.get($tokens, popover-size-header-padding-horizontal));
+        kbq-css-variable(popover-size-header-padding-top)
+        kbq-css-variable(popover-size-header-padding-horizontal)
+        kbq-css-variable(popover-size-header-padding-bottom)
+        kbq-css-variable(popover-size-header-padding-horizontal);
 
     & .kbq-popover__header-text {
         @include common.kbq-truncate-line();
@@ -98,8 +92,8 @@ $trigger-margin: 9px;
 
 .kbq-popover__footer {
     padding:
-        var(--kbq-popover-size-footer-padding-vertical, map.get($tokens, popover-size-footer-padding-vertical))
-        var(--kbq-popover-size-footer-padding-horizontal, map.get($tokens, popover-size-footer-padding-horizontal));
+        kbq-css-variable(popover-size-footer-padding-vertical)
+        kbq-css-variable(popover-size-footer-padding-horizontal);
 }
 
 .kbq-popover__arrow {

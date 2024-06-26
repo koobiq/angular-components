@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -11,11 +12,11 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: column;
 
     &.kbq-radio-group_normal {
-        gap: var(--kbq-radio-size-normal-vertical-gap, map.get($tokens, radio-size-normal-vertical-gap));;
+        gap: kbq-css-variable(radio-size-normal-vertical-gap);
     }
 
     &.kbq-radio-group_big {
-        gap: var(--kbq-radio-size-big-vertical-gap, map.get($tokens, radio-size-big-vertical-gap));;
+        gap: kbq-css-variable(radio-size-big-vertical-gap);
     }
 }
 
@@ -46,10 +47,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     padding-left: calc(
         var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) +
-        var(
-            --kbq-radio-size-normal-horizontal-content-padding,
-            map.get($tokens, radio-size-normal-horizontal-content-padding)
-        )
+        var(--kbq-radio-size-normal-horizontal-content-padding, map.get($tokens, radio-size-normal-horizontal-content-padding))
     );
     padding-right: 0;
 
@@ -74,39 +72,29 @@ $tokens: meta.module-variables(tokens) !default;
 
         left: 0;
 
-        width: var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size));
-        height: var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size));
+        width: kbq-css-variable(radio-size-normal-outer-size);
+        height: kbq-css-variable(radio-size-normal-outer-size);
     }
 
     .kbq-radio-button__inner-circle {
         position: relative;
         margin: auto;
 
-        width: var(--kbq-radio-size-normal-inner-size, map.get($tokens, radio-size-normal-inner-size));
-        height: var(--kbq-radio-size-normal-inner-size, map.get($tokens, radio-size-normal-inner-size));
+        width: kbq-css-variable(radio-size-normal-inner-size);
+        height: kbq-css-variable(radio-size-normal-inner-size);
     }
 
     .kbq-radio__text-container {
         display: flex;
         flex-direction: column;
-
-        & .kbq-radio__text {
-
-        }
     }
 
     & .kbq-hint {
-        margin-top: var(
-            --kbq-radio-size-normal-vertical-content-padding,
-            map.get($tokens, radio-size-normal-vertical-content-padding)
-        );
+        margin-top: kbq-css-variable(radio-size-normal-vertical-content-padding);
     }
 
     [dir='rtl'] & {
-        padding-right: var(
-            --kbq-radio-size-normal-horizontal-content-padding,
-            map.get($tokens, radio-size-normal-horizontal-content-padding)
-        );
+        padding-right: kbq-css-variable(radio-size-normal-horizontal-content-padding);
         padding-left: 0;
     }
 }
@@ -121,36 +109,27 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-radio-label-content {
         padding-left: calc(
             var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) +
-            var(
-                --kbq-radio-size-big-horizontal-content-padding,
-                map.get($tokens, radio-size-big-horizontal-content-padding)
-            )
+            var(--kbq-radio-size-big-horizontal-content-padding, map.get($tokens, radio-size-big-horizontal-content-padding))
         );
 
         .kbq-radio-button__outer-circle {
             top: 2px;
 
-            width: var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size));
-            height: var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size));
+            width: kbq-css-variable(radio-size-big-outer-size);
+            height: kbq-css-variable(radio-size-big-outer-size);
         }
 
         .kbq-radio-button__inner-circle {
-            width: var(--kbq-radio-size-big-inner-size, map.get($tokens, radio-size-big-inner-size));
-            height: var(--kbq-radio-size-big-inner-size, map.get($tokens, radio-size-big-inner-size));
+            width: kbq-css-variable(radio-size-big-inner-size);
+            height: kbq-css-variable(radio-size-big-inner-size);
         }
 
         & .kbq-hint {
-            margin-top: var(
-                --kbq-radio-size-big-vertical-content-padding,
-                map.get($tokens, radio-size-big-vertical-content-padding)
-            );
+            margin-top: kbq-css-variable(radio-size-big-vertical-content-padding);
         }
 
         [dir='rtl'] & {
-            padding-right: var(
-                --kbq-radio-size-big-horizontal-content-padding,
-                map.get($tokens, radio-size-big-horizontal-content-padding)
-            );
+            padding-right: kbq-css-variable(radio-size-big-horizontal-content-padding);
         }
     }
 }

@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -20,11 +21,9 @@ $tokens: meta.module-variables(tokens) !default;
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .kbq-markdown__h#{$i} {
-            max-width: var(--kbq-markdown-h#{$i}-size-max-width, map.get($tokens, markdown-h#{$i}-size-max-width));
-            margin-top: var(--kbq-markdown-h#{$i}-size-margin-top, map.get($tokens, markdown-h#{$i}-size-margin-top));
-            margin-bottom: var(
-                --kbq-markdown-h#{$i}-size-margin-bottom, map.get($tokens, markdown-h#{$i}-size-margin-bottom)
-            );
+            max-width: kbq-css-variable(markdown-h#{$i}-size-max-width);
+            margin-top: kbq-css-variable(markdown-h#{$i}-size-margin-top);
+            margin-bottom: kbq-css-variable(markdown-h#{$i}-size-margin-bottom);
         }
     }
 
@@ -40,29 +39,26 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-markdown__p {
-        max-width: var(--kbq-markdown-p-size-max-width, map.get($tokens, markdown-p-size-max-width));
-        margin-top: var(--kbq-markdown-p-size-margin-top, map.get($tokens, markdown-p-size-margin-top));
-        margin-bottom: var(--kbq-markdown-p-size-margin-bottom, map.get($tokens, markdown-p-size-margin-bottom));
+        max-width: kbq-css-variable(markdown-p-size-max-width);
+        margin-top: kbq-css-variable(markdown-p-size-margin-top);
+        margin-bottom: kbq-css-variable(markdown-p-size-margin-bottom);
     }
 
     .kbq-markdown__ul,
     .kbq-markdown__ol {
-        max-width: var(--kbq-markdown-list-size-max-width, map.get($tokens, markdown-list-size-max-width));
-        margin-top: var(--kbq-markdown-list-size-margin-top, map.get($tokens, markdown-list-size-margin-top));
-        margin-bottom: var(--kbq-markdown-list-size-margin-bottom, map.get($tokens, markdown-list-size-margin-bottom));
+        max-width: kbq-css-variable(markdown-list-size-max-width);
+        margin-top: kbq-css-variable(markdown-list-size-margin-top);
+        margin-bottom: kbq-css-variable(markdown-list-size-margin-bottom);
 
         > li {
-            margin-bottom: var(
-                --kbq-markdown-list-size-item-margin-bottom,
-                map.get($tokens, markdown-list-size-item-margin-bottom)
-            );
+            margin-bottom: kbq-css-variable(markdown-list-size-item-margin-bottom);
         }
     }
 
     .kbq-markdown__ul {
         position: relative;
         list-style: none;
-        padding: var(--kbq-markdown-list-size-ul-padding, map.get($tokens, markdown-list-size-ul-padding));
+        padding: kbq-css-variable(markdown-list-size-ul-padding);
     }
 
     .kbq-markdown__ul > li:before {
@@ -75,7 +71,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-markdown__ol {
-        //padding: var(--kbq-markdown-list-size-ol-padding, map.get($tokens, markdown-list-size-ol-padding));
         list-style: none;
         padding: 0;
         counter-reset: li;
@@ -84,10 +79,7 @@ $tokens: meta.module-variables(tokens) !default;
             &:before {
                 content:counter(li) ".";
                 counter-increment: li;
-                padding-right: var(
-                    --kbq-markdown-list-size-ol-number-padding-right,
-                    map.get($tokens, markdown-list-size-ol-number-padding-right)
-                );
+                padding-right: kbq-css-variable(markdown-list-size-ol-number-padding-right);
             }
 
             > * {
@@ -98,36 +90,21 @@ $tokens: meta.module-variables(tokens) !default;
 
     .kbq-markdown__p + .kbq-markdown__ul,
     .kbq-markdown__p + .kbq-markdown__ol {
-        margin-top: var(
-            --kbq-markdown-list-size-margin-top-after-paragraph,
-            map.get($tokens, markdown-list-size-margin-top-after-paragraph)
-        );
+        margin-top: kbq-css-variable(markdown-list-size-margin-top-after-paragraph);
     }
 
     .kbq-markdown__blockquote {
-        max-width: var(
-            --kbq-markdown-blockquote-size-max-width, map.get($tokens, markdown-blockquote-size-max-width)
-        );
-        margin-top: var(
-            --kbq-markdown-blockquote-size-margin-top, map.get($tokens, markdown-blockquote-size-margin-top)
-        );
+        max-width: kbq-css-variable(markdown-blockquote-size-max-width);
+        margin-top: kbq-css-variable(markdown-blockquote-size-margin-top);
+        margin-left: 0;
+        margin-bottom: kbq-css-variable(markdown-blockquote-size-margin-bottom);
+        margin-right: 0;
 
-        margin-bottom: var(
-            --kbq-markdown-blockquote-size-margin-bottom, map.get($tokens, markdown-blockquote-size-margin-bottom)
-        );
-
-        border-left-width: var(
-            --kbq-markdown-blockquote-size-line-width, map.get($tokens, markdown-blockquote-size-line-width)
-        );
+        border-left-width: kbq-css-variable(markdown-blockquote-size-line-width);
 
         border-left-style: solid;
 
-        padding: var(
-            --kbq-markdown-blockquote-size-padding, map.get($tokens, markdown-blockquote-size-padding)
-        );
-
-        margin-left: 0;
-        margin-right: 0;
+        padding: kbq-css-variable(markdown-blockquote-size-padding);
     }
 
     .kbq-markdown__blockquote > .kbq-markdown__p {
@@ -139,53 +116,33 @@ $tokens: meta.module-variables(tokens) !default;
         position: relative;
         overflow-x: auto;
 
-        margin-top: var(
-            --kbq-markdown-code-size-multiline-margin-top,
-            map.get($tokens, markdown-code-size-multiline-margin-top)
-        );
-        margin-bottom: var(
-            --kbq-markdown-code-size-multiline-margin-bottom,
-            map.get($tokens, markdown-code-size-multiline-margin-bottom)
-        );
+        margin-top: kbq-css-variable(markdown-code-size-multiline-margin-top);
+        margin-bottom: kbq-css-variable(markdown-code-size-multiline-margin-bottom);
 
-        padding: var(
-            --kbq-markdown-code-size-multiline-padding,
-            map.get($tokens, markdown-code-size-multiline-padding)
-        );
+        padding: kbq-css-variable(markdown-code-size-multiline-padding);
     }
 
     .kbq-markdown__pre,
     .kbq-markdown__p > .kbq-markdown__code {
-        border-radius: var(
-            --kbq-markdown-code-size-border-radius, map.get($tokens, markdown-code-size-border-radius)
-        );
-        border-width: var(
-            --kbq-markdown-code-size-border-width, map.get($tokens, markdown-code-size-border-width)
-        );
+        border-radius: kbq-css-variable(markdown-code-size-border-radius);
+        border-width: kbq-css-variable(markdown-code-size-border-width);
         border-style: solid;
     }
 
     .kbq-markdown__p > .kbq-markdown__code {
-        max-width: var(--kbq-markdown-code-size-max-width, map.get($tokens, markdown-code-size-max-width));
-        padding: var(--kbq-markdown-code-size-inline-padding, map.get($tokens, markdown-code-size-inline-padding));
+        max-width: kbq-css-variable(markdown-code-size-max-width);
+        padding: kbq-css-variable(markdown-code-size-inline-padding);
     }
 
     .kbq-markdown__img {
-        max-width: var(--kbq-markdown-image-size-max-width, map.get($tokens, markdown-image-size-max-width));
-        margin-top: var(--kbq-markdown-image-size-margin-top, map.get($tokens, markdown-image-size-margin-top));
-        margin-bottom: var(
-            --kbq-markdown-image-size-margin-bottom, map.get($tokens, markdown-image-size-margin-bottom)
-        );
+        max-width: kbq-css-variable(markdown-image-size-max-width);
+        margin-top: kbq-css-variable(markdown-image-size-margin-top);
+        margin-bottom: kbq-css-variable(markdown-image-size-margin-bottom);
 
         + em {
             display: block;
-            margin-top: var(
-                --kbq-markdown-image-size-caption-margin-top, map.get($tokens, markdown-image-size-caption-margin-top)
-            );
-            margin-bottom: var(
-                --kbq-markdown-image-size-caption-margin-bottom,
-                map.get($tokens, markdown-image-size-caption-margin-bottom)
-            );
+            margin-top: kbq-css-variable(markdown-image-size-caption-margin-top);
+            margin-bottom: kbq-css-variable(markdown-image-size-caption-margin-bottom);
         }
     }
 
@@ -194,10 +151,8 @@ $tokens: meta.module-variables(tokens) !default;
         border-left: none;
         border-right: none;
         border-bottom-style: solid;
-        border-bottom-width: var(--kbq-markdown-hr-size-width, map.get($tokens, markdown-hr-size-width));
-        margin: var(
-            --kbq-markdown-hr-size-margin-vertical, map.get($tokens, markdown-hr-size-margin-vertical)
-        ) 0;
+        border-bottom-width: kbq-css-variable(markdown-hr-size-width);
+        margin: kbq-css-variable(markdown-hr-size-margin-vertical) 0;
     }
 
     .kbq-markdown__table {
@@ -205,26 +160,21 @@ $tokens: meta.module-variables(tokens) !default;
         overflow-x: auto;
         display: table;
         border-collapse: collapse;
-        margin-bottom: var(
-            --kbq-markdown-table-size-margin-bottom,
-            map.get($tokens, markdown-table-size-margin-bottom)
-        );
+        margin-bottom: kbq-css-variable(markdown-table-size-margin-bottom);
 
         td {
             vertical-align: top;
         }
 
         th, td {
-            padding: var(--kbq-markdown-table-size-padding, map.get($tokens, markdown-table-size-padding));
+            padding: kbq-css-variable(markdown-table-size-padding);
             font-weight: 400;
         }
     }
 
     .kbq-markdown__table > .kbq-markdown__thead {
         border-bottom-style: solid;
-        border-bottom-width: var(
-            --kbq-markdown-table-size-border-width, map.get($tokens, markdown-table-size-border-width)
-        );
+        border-bottom-width: kbq-css-variable(markdown-table-size-border-width);
 
         text-align: left;
 

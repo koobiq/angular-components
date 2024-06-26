@@ -3,10 +3,8 @@
 
 @use '../core/styles/common/layout';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tab-group {
     display: flex;
@@ -24,10 +22,7 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: row;
 
     .kbq-tab-list__content {
-        gap: var(
-            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
-            map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
-        ) 0;
+        gap: kbq-css-variable(tabs-size-tab-stack-vertical-content-gap-vertical) 0;
     }
 
     & .kbq-tab-header__content {

@@ -3,49 +3,47 @@
 
 @use '../core/pop-up/pop-up';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 $trigger-margin: 8px;
 
 
 .kbq-tooltip__inner {
-    border-radius: var(--kbq-tooltip-size-border-radius, map.get($tokens, tooltip-size-border-radius));
+    border-radius: kbq-css-variable(tooltip-size-border-radius);
     word-break: break-word;
 }
 
 .kbq-tooltip {
     box-sizing: border-box;
 
-    border-radius: var(--kbq-tooltip-size-border-radius, map.get($tokens, tooltip-size-border-radius));
+    border-radius: kbq-css-variable(tooltip-size-border-radius);
 
     white-space: pre-line;
 
     @include pop-up.popup-margins(kbq-tooltip, $trigger-margin);
 
-    max-width: var(--kbq-tooltip-size-max-width, map.get($tokens, tooltip-size-max-width));
+    max-width: kbq-css-variable(tooltip-size-max-width);
 
     .kbq-tooltip__inner {
         padding:
-            var(--kbq-tooltip-size-padding-vertical, map.get($tokens, tooltip-size-padding-vertical))
-            var(--kbq-tooltip-size-padding-horizontal, map.get($tokens, tooltip-size-padding-horizontal));
+            kbq-css-variable(tooltip-size-padding-vertical)
+            kbq-css-variable(tooltip-size-padding-horizontal);
     }
 }
 
 .kbq-tooltip__arrow {
     position: absolute;
 
-    width: var(--kbq-tooltip-size-arrow-size, map.get($tokens, tooltip-size-arrow-size));
-    height: var(--kbq-tooltip-size-arrow-size, map.get($tokens, tooltip-size-arrow-size));
+    width: kbq-css-variable(tooltip-size-arrow-size);
+    height: kbq-css-variable(tooltip-size-arrow-size);
 
     transform: rotate(45deg);
 
     z-index: -1;
 }
 
-$arrow-offset: calc((var(--kbq-tooltip-size-arrow-size, #{map.get($tokens, tooltip-size-arrow-size)}) - 1px) / -2);
+$arrow-offset: calc((kbq-css-variable(var(--kbq-tooltip-size-arrow-size, tooltip-size-arrow-size)) - 1px) / -2);
 $arrow-padding: calc((18px + $trigger-margin) / 2);
 
 @include pop-up.popup-arrow-positions(kbq-tooltip, $arrow-offset, $arrow-padding);

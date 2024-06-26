@@ -3,13 +3,11 @@
 
 @use '../core/styles/common/list';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 @use 'navbar-item_vertical';
 @use 'navbar-item_horizontal';
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-navbar-item {
     box-sizing: border-box;
@@ -19,14 +17,11 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     align-items: center;
 
-    border-radius: var(
-        --kbq-navbar-item-size-content-border-radius,
-        map.get($tokens, navbar-item-size-content-border-radius)
-    );
+    border-radius: kbq-css-variable(navbar-item-size-content-border-radius);
 
     & .kbq-icon {
-        min-width: map.get($tokens, size-l);
-        min-height: map.get($tokens, size-l);
+        min-width: kbq-css-variable(size-l);
+        min-height: kbq-css-variable(size-l);
     }
 
     &:after {
@@ -35,10 +30,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         display: none;
 
-        border-radius: var(
-            --kbq-navbar-item-size-content-border-radius,
-            map.get($tokens, navbar-item-size-content-border-radius)
-        );
+        border-radius: kbq-css-variable(navbar-item-size-content-border-radius);
     }
 
     &.kbq-horizontal {

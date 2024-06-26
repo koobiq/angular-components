@@ -4,10 +4,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/select' as *;
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tree-select {
     @extend %kbq-select-base;

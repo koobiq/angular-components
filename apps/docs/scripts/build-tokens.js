@@ -7,6 +7,7 @@ require('@koobiq/tokens-builder/transforms/attribute/typography.js')(StyleDictio
 require('@koobiq/tokens-builder/transforms/attribute/palette.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/prefix.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/font.js')(StyleDictionary);
+require('@koobiq/tokens-builder/transforms/attribute/theme.js')(StyleDictionary);
 
 // ==== Include custom filters ====
 require('@koobiq/tokens-builder/filters/palette.js')(StyleDictionary);
@@ -23,6 +24,7 @@ require('@koobiq/tokens-builder/transformGroups/ts.js')(StyleDictionary);
 // ==== Include custom formats ====
 require('@koobiq/tokens-builder/formats/typography.js')(StyleDictionary);
 require('@koobiq/tokens-builder/formats/palette.js')(StyleDictionary);
+require('@koobiq/tokens-builder/formats/variables.js')(StyleDictionary);
 
 function buildTokens(themeConfig) {
     StyleDictionary.registerFileHeader({

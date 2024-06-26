@@ -1,7 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -50,15 +50,12 @@ $tokens: meta.module-variables(tokens) !default;
             radius: 8px;
         }
 
-        height: var(--kbq-toggle-size-normal-height, map.get($tokens, toggle-size-normal-height));
-        width: var(--kbq-toggle-size-normal-width, map.get($tokens, toggle-size-normal-width));
+        height: kbq-css-variable(toggle-size-normal-height);
+        width: kbq-css-variable(toggle-size-normal-width);
     }
 
     .kbq-hint {
-        margin-top: var(
-            --kbq-toggle-size-normal-vertical-content-padding,
-            map.get($tokens, toggle-size-normal-vertical-content-padding)
-        );
+        margin-top: kbq-css-variable(toggle-size-normal-vertical-content-padding);
     }
 }
 
@@ -69,31 +66,22 @@ $tokens: meta.module-variables(tokens) !default;
     flex: 1;
 
     &.left {
-        margin-right: var(
-            --kbq-toggle-size-normal-horizontal-content-padding,
-            map.get($tokens, toggle-size-normal-horizontal-content-padding)
-        );
+        margin-right: kbq-css-variable(toggle-size-normal-horizontal-content-padding);
     }
 
     &.right {
-        margin-left: var(
-            --kbq-toggle-size-normal-horizontal-content-padding,
-            map.get($tokens, toggle-size-normal-horizontal-content-padding)
-        );
+        margin-left: kbq-css-variable(toggle-size-normal-horizontal-content-padding);
     }
 }
 
 .kbq-toggle.kbq-toggle_big {
     & .kbq-toggle-bar {
-        height: var(--kbq-toggle-size-big-height, map.get($tokens, toggle-size-big-height));
-        width: var(--kbq-toggle-size-big-width, map.get($tokens, toggle-size-big-width));
+        height: kbq-css-variable(toggle-size-big-height);
+        width: kbq-css-variable(toggle-size-big-width);
     }
 
     & .kbq-hint {
-        margin-top: var(
-            --kbq-toggle-size-big-vertical-content-padding,
-            map.get($tokens, toggle-size-big-vertical-content-padding)
-        );
+        margin-top: kbq-css-variable(toggle-size-big-vertical-content-padding);
     }
 }
 
