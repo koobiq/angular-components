@@ -23,7 +23,7 @@
 ```
 └─ button ···························· имя компоненты
     ├─ _button-base.scss ············· Базовые стили компонента (включают button.scss)
-    ├─ _button-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typograhy)
+    ├─ _button-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typography)
     ├─ button.component.html ········· Шаблон компонента
     ├─ button.component.spec.ts
     ├─ button.component.ts

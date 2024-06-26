@@ -142,7 +142,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     /* TODO Техдолг: при изменении ширины экрана должен переопределяться параметр top
-    *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы проиходит после window:resize */
+    *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы происходит после window:resize */
     onResize() {
         const headers = Array.from(this.document.querySelectorAll(this.headerSelectors));
 

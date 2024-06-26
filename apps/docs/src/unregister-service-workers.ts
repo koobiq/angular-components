@@ -1,5 +1,5 @@
 /**
- * Unregisters all currently registered service workers and returns a boolean that indicates
+ * Unregister all currently registered service workers and returns a boolean that indicates
  * whether there were service workers registered or not.
  */
 export async function unregisterServiceWorkers(): Promise<boolean> {

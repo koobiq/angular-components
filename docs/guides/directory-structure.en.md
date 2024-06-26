@@ -26,7 +26,7 @@ The top-level directory structure:
 ```
 └─ button ···························· component name
     ├─ _button-base.scss ············· Base styles for component (include to button.scss)
-    ├─ _button-theme.scss ············ Theme & typograhy styles (include to _all-themes & _all-typograhy)
+    ├─ _button-theme.scss ············ Theme & typography styles (include to _all-themes & _all-typography)
     ├─ button.component.html ········· Component template
     ├─ button.component.spec.ts
     ├─ button.component.ts

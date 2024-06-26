@@ -1275,7 +1275,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
                     // want to restore focus back to the trigger, in order to
                     // prevent the select keyboard controls from clashing with
                     // the ones from `kbq-option`.
-                    // If search is avaliable then we focus search again.
+                    // If search is available then we focus search again.
                     if (this.search) {
                         this.search.focus();
                     } else {

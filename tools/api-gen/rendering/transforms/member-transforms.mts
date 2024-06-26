@@ -82,7 +82,7 @@ export function addRenderableGroupMembers<T extends HasMembers>(
 ): T & HasRenderableMembersGroups {
     const members = filterLifecycleMethods(entry.members);
 
-    // overloads groupped in map
+    // overloads grouped in map
     const membersGroups = members.reduce((groups, item) => {
         const member = setEntryFlags(
             addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(item))),

@@ -50,7 +50,10 @@ const ignoredPackages: PackageID[] = [
     'make-plural@7.3.0',
 
     // https://github.com/soldair/node-gitconfiglocal?tab=BSD-3-Clause-1-ov-file
-    'gitconfiglocal@1.0.0'
+    'gitconfiglocal@1.0.0',
+
+    // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
+    '@cspell/dict-en-common-misspellings@2.0.2',
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
@@ -103,7 +106,7 @@ async function validateLicense(): Promise<ReturnCode> {
             .filter((pkg) => !isLicenseValid(pkg.licenses));
 
         if (badLicensePackages.length > 0) {
-            console.error('Invalid package licences found:\n');
+            console.error('Invalid package licenses found:\n');
             badLicensePackages.forEach((pkg) => {
                 console.error(`▪ ${pkg.id}: ${JSON.stringify(pkg.licenses)}`);
             });

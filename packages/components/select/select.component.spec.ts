@@ -1683,7 +1683,7 @@ describe('KbqSelect', () => {
                     flush();
 
                     expect(formControl.value)
-                        .withContext('Expected value to remain unchaged.')
+                        .withContext('Expected value to remain unchanged.')
                         .toBe('eggs-5');
                 }));
 

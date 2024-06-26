@@ -11,7 +11,7 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 
 function setTargetBlank(content: string): string {
     return content.replace(
-        new RegExp(`href=".[^"]*"`, 'g'), // .[^"]* - any symbol exept "
+        new RegExp(`href=".[^"]*"`, 'g'), // .[^"]* - any symbol except "
         (match: string) => `${match} target="_blank"`
     );
 }

@@ -721,7 +721,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     /**
-     * @description Get params for arrow-keys (up/down) time valie edit.
+     * @description Get params for arrow-keys (up/down) time value edit.
      * @param cursorPosition Current cursor position in timeString
      */
     private getTimeEditMetrics(cursorPosition: number): {

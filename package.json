@@ -52,6 +52,8 @@
         "@angular/router": "17.2.0",
         "@commitlint/cli": "^19.3.0",
         "@commitlint/config-conventional": "^19.2.2",
+        "@cspell/dict-markdown": "^2.0.2",
+        "@cspell/dict-ru_ru": "^2.2.1",
         "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
         "@koobiq/design-tokens": "3.0.0-rc.8",
         "@koobiq/luxon-date-adapter": "^3.0.2",
@@ -91,6 +93,7 @@
         "conventional-changelog": "^3.1.10",
         "conventional-changelog-angular": "5.0.13",
         "conventional-changelog-writer": "5.0.1",
+        "cspell": "^8.8.4",
         "dotenv": "^16.4.5",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^9.1.0",
@@ -179,6 +182,7 @@
         "linter:styles": "stylelint './packages/**/*.+(css|scss)' --config .stylelintrc",
         "linter:styles:json": "stylelint './packages/**/*.+(css|scss)' --config .stylelintrc -f json --output-file ./dist/reports/stylelint.json",
         "linter:yaml": "yamllint **/*.yml --ignore=node_modules/**/*.yml",
+        "cspell:md": "cspell lint '**/*.md' --no-must-find-files",
         "format:check": "prettier --check packages/**/** --cache",
         "format:check:changed-files": "pretty-quick --staged --check",
         "format:write": "prettier --write packages/**/** --cache",
@@ -186,7 +190,7 @@
         "release:stage": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage",
         "release:stage:commit": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
         "release:publish:ci": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci",
-        "release:publish:dist": "ts-node --project p ackages/cli/tsconfig.lib.json packages/cli/src/cli publish-dist",
+        "release:publish:dist": "ts-node --project p packages/cli/tsconfig.lib.json packages/cli/src/cli publish-dist",
         "release:publish:ci-gitlab": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-gitlab",
         "release:publish:ci-github": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-github",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
@@ -258,8 +262,5 @@
             "angular-moment-adapter",
             "cli"
         ]
-    },
-    "lint-staged": {
-        "*.yml": "yamllint"
     }
 }

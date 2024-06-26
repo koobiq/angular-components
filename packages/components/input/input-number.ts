@@ -500,7 +500,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
         if (num === null || num === undefined) { return null; }
 
-        /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
+        /* if some locale input config satisfies pasted number, try to normalize with selected locale config */
         let numberOutput: number | null = null;
         for (const { config } of this.allNumberLocaleConfigs) {
             const normalized = +this.normalizeNumber(num, config);

@@ -115,7 +115,7 @@ describe('KbqToggle', () => {
             expect(inputElement.disabled).toBe(false);
         });
 
-        it('should not toggle `checked` state upon interation while disabled', () => {
+        it('should not toggle `checked` state upon interaction while disabled', () => {
             testComponent.isDisabled = true;
             fixture.detectChanges();
 

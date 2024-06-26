@@ -42,7 +42,7 @@ $tokens: meta.module-variables(tokens) !default;
         width: var(--kbq-modal-size-large-width, map.get($tokens, modal-size-large-width));
     }
 
-    // todo реализуем когда будем делать 2.0, пока нет возможности отслеживать наличие/отстутствие футера
+    // todo реализуем когда будем делать 2.0, пока нет возможности отслеживать наличие/отсутствие футера
     //&.kbq-modal_no-footer .kbq-modal-body {
     //    padding-bottom: var(
     //        --kbq-modal-size-content-padding-bottom-without-footer,

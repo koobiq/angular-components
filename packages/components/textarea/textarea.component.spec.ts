@@ -163,7 +163,7 @@ describe('KbqTextarea', () => {
         }));
     });
 
-    describe('apperance', () => {
+    describe('appearance', () => {
 
         it('should change font to monospace', () => {
             const fixture = createComponent(KbqTextareaWithMonospace);
