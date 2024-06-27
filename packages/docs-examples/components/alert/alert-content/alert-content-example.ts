@@ -29,3 +29,4 @@ export class AlertContentExample {
     alertColors = KbqAlertColors;
     state = true;
 }
+
