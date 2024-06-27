@@ -14,7 +14,7 @@ import {
     AfterContentInit,
     SkipSelf,
     Input,
-    forwardRef
+    forwardRef, ViewChild
 } from '@angular/core';
 import {
     mixinColor,
@@ -23,7 +23,9 @@ import {
     CanDisable,
     CanColorCtor,
     HasTabIndexCtor,
-    KbqComponentColors
+    KbqComponentColors,
+    KbqTitleTextRef,
+    KBQ_TITLE_TEXT_REF,
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -137,10 +139,15 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor &
 
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()'
-    }
+    },
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
+    ]
 })
-export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor {
+export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
     hasFocus: boolean = false;
+
+    @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     @Input()
     get kbqStyle(): string {

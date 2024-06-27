@@ -29,7 +29,7 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     get isOverflown(): boolean {
-        return this.parent.offsetWidth < this.child.scrollWidth || this.parent.offsetWidth < this.child.offsetWidth || this.parent.clientHeight < this.child.scrollHeight;
+        return this.parent.offsetWidth < this.child.scrollWidth || this.parent.offsetHeight < this.child.scrollHeight;
     }
 
     get viewValue(): string {
