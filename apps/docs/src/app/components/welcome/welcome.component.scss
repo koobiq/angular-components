@@ -18,7 +18,6 @@
 
     padding-bottom: 160px;
     padding-left: 160px;
-    max-width: 1300px;
 }
 
 .docs-welcome__header {
@@ -32,6 +31,7 @@
 
 .docs-welcome__category {
     margin-top: $size-5xl;
+    max-width: 1300px;
 
     &-items {
         display: flex;
