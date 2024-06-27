@@ -3,7 +3,6 @@
 
 @mixin kbq-docs-welcome-theme($theme) {
     $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
 
     .docs-footer__label {
         color: map-get($foreground, contrast-secondary);
@@ -11,10 +10,12 @@
 
     .docs-welcome__category-item-title {
         color: map-get($foreground, contrast-secondary);
+    }
 
-        //&:hover {
-        //    color: map-get($background, contrast-tertiary);
-        //}
+    .docs-welcome__category-item:hover {
+        .docs-welcome__category-item-title {
+            color: map-get($theme, states, foreground, theme-hover);
+        }
     }
 }
 
