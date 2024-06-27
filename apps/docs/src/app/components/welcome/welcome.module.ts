@@ -6,9 +6,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
 import { WelcomeComponent } from './welcome.component';
 import { RouterModule } from '@angular/router';
+import { AnchorsModule } from '../anchors/anchors.module';
 
 @NgModule({
     imports: [
+        AnchorsModule,
         CommonModule,
         KbqIconModule,
         KbqLinkModule,
