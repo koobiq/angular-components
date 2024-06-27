@@ -1,3 +1,15 @@
+# 17.0.0-rc.6 (2024-06-27)
+
+### Koobiq
+
+ * bug fix  **alert:** colors in dark theme ([#DS-2555](https://github.com/koobiq/angular-components/issues/issue/DS-2555)) ([#92](https://github.com/koobiq/angular-components/issues/92)) ([0018344](https://github.com/koobiq/angular-components/commit/001834400799190d5a0ded0b9304abe6edc7c247))
+ * bug fix  **alert:** icon container alignment  ([#DS-2519](https://github.com/koobiq/angular-components/issues/issue/DS-2519)) ([#87](https://github.com/koobiq/angular-components/issues/87)) ([bd0de72](https://github.com/koobiq/angular-components/commit/bd0de7259983b089539fa3514b27429b96043422))
+ * bug fix  **code-block:** "show all" position when expanded ([#DS-2518](https://github.com/koobiq/angular-components/issues/issue/DS-2518)) ([#85](https://github.com/koobiq/angular-components/issues/85)) ([db453f0](https://github.com/koobiq/angular-components/commit/db453f0d6a3fe7666577f3695054dd343aaf1dd0))
+ * bug fix  **dropdown,list:** caption layout & heading, subheading fonts/colors ([#DS-2461](https://github.com/koobiq/angular-components/issues/issue/DS-2461)) ([#75](https://github.com/koobiq/angular-components/issues/75)) ([6e1904b](https://github.com/koobiq/angular-components/commit/6e1904be256e6bf4ffb134e88475880cf9ca92a7))
+ * bug fix  **validation:** alert styles ([#DS-2540](https://github.com/koobiq/angular-components/issues/issue/DS-2540)) ([#83](https://github.com/koobiq/angular-components/issues/83)) ([173938d](https://github.com/koobiq/angular-components/commit/173938d9ce22023798c43a8876c1d24378228f76))
+ * feature  **chore:** added cspell support for markdown files ([#DS-2570](https://github.com/koobiq/angular-components/issues/issue/DS-2570)) ([#94](https://github.com/koobiq/angular-components/issues/94)) ([d9c15b5](https://github.com/koobiq/angular-components/commit/d9c15b5c5183eff6fb5768ddb7b316473ec62f3f))
+ * revert  Revert "refactor(docs): renamed sections (#DS-2535) (#88)" ([80d4969](https://github.com/koobiq/angular-components/commit/80d4969c074adff8c699f1f972b0c3324bc0ff5d))
+
 # 17.0.0-rc.5 "Useful Form" (2024-06-14)
 
 ### Koobiq
