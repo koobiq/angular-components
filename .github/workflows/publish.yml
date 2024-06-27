@@ -34,16 +34,3 @@ jobs:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_ENDPOINT_URL: ${{ secrets.MM_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
-
-      - name: Generate Changelog
-        id: generate-changelog
-        uses: ./.github/workflows/actions/generate-changelog
-
-      - name: Notification
-        uses: mattermost/action-mattermost-notify@master
-        with:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
-          MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
-          TEXT: |
-            ${{ steps.generate-changelog.outputs.changelog }}
