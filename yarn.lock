@@ -3949,20 +3949,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/date-adapter@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@koobiq/date-adapter@npm:3.0.2"
-  checksum: 10c0/502ecd4783f54a2bd5b29d6202bed7de35345ff5456bcbc2dd66e32f9541d9d859a22d440a8fb688cd5bbcccce2ca0361626dc4e5898c39c5cad84ddc42377eb
+"@koobiq/date-adapter@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@koobiq/date-adapter@npm:3.1.2"
+  checksum: 10c0/1dd0c8f063b1a11b1d41c8757e674982054eaac5abd0c833095aee246250c91f17aaee49887b6dc6a1cac5b405ec30d5e84639a8ada590d42f565c6b259da309
   languageName: node
   linkType: hard
 
-"@koobiq/date-formatter@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@koobiq/date-formatter@npm:3.0.2"
+"@koobiq/date-formatter@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@koobiq/date-formatter@npm:3.1.2"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     "@messageformat/core": ^3.2.0
-  checksum: 10c0/9e4a9117e66ce00e6990857e5d2c976e799233160d9c46a8e3517f4247c2b4abe8d2642efdd1f74117219a38bd05b5b8d7cb83ada06a8c54e26b77d2d04246d4
+  checksum: 10c0/bbaee96a8596c45465fdd1585ed49d32bf0bdbc7c48e2d84999843027d0a0f79e6dbf5d3cd44ba6acd1b3c4486c9cfc0111cc425567c2c449eda3f64880a1f2b
   languageName: node
   linkType: hard
 
@@ -3980,23 +3980,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/luxon-date-adapter@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@koobiq/luxon-date-adapter@npm:3.0.2"
+"@koobiq/luxon-date-adapter@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@koobiq/luxon-date-adapter@npm:3.1.2"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     luxon: ^3.2.1
-  checksum: 10c0/d052d8aaf5ef41f4e2b87b5df7d900a7b2996ff9799bd60236599516c32795170f2b53725c78357f6c01d888c522d632fd92aef97224da7041ab3c8a09f37a72
+  checksum: 10c0/3248b7b2f407efc32c796b9764a95f3691ea521de33e68834b03c27bd2793d2b982d58c4a7dffb2d14ee86fccdb524307bbc118ebf9b93e73946f86beef5c903
   languageName: node
   linkType: hard
 
-"@koobiq/moment-date-adapter@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@koobiq/moment-date-adapter@npm:3.0.2"
+"@koobiq/moment-date-adapter@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@koobiq/moment-date-adapter@npm:3.1.2"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     moment: ^2.24.0
-  checksum: 10c0/5e72567e8a43a626ef174b9a58752c5a497bfd23d8fc056e321c5ce178851cd9f76658610bf3b6c5cea6cdd3cf2396aa667bfcc591220461ad1b5888a3ac967b
+  checksum: 10c0/43bdd221f633cce8b4120139ccb299b8dd28fe5d482a321ef9d2c9e31274042a45005f8a19e9aa98fcdcdc7e0eaa1b1b69212c324fd48978ef058780630de532
   languageName: node
   linkType: hard
 
@@ -13652,12 +13652,12 @@ __metadata:
     "@cspell/dict-markdown": "npm:^2.0.2"
     "@cspell/dict-ru_ru": "npm:^2.2.1"
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.2.1"
-    "@koobiq/date-adapter": "npm:^3.0.2"
-    "@koobiq/date-formatter": "npm:^3.0.2"
+    "@koobiq/date-adapter": "npm:^3.1.2"
+    "@koobiq/date-formatter": "npm:^3.1.2"
     "@koobiq/design-tokens": "npm:3.0.0-rc.8"
     "@koobiq/icons": "npm:^7.1.1"
-    "@koobiq/luxon-date-adapter": "npm:^3.0.2"
-    "@koobiq/moment-date-adapter": "npm:^3.0.2"
+    "@koobiq/luxon-date-adapter": "npm:^3.1.2"
+    "@koobiq/moment-date-adapter": "npm:^3.1.2"
     "@koobiq/tokens-builder": "npm:3.0.0-rc.4"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
