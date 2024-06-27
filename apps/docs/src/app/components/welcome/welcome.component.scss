@@ -18,10 +18,11 @@
 
     padding-bottom: 160px;
     padding-left: 160px;
+    max-width: 1300px;
 }
 
 .docs-welcome__header {
-    max-width: 1300px;
+    max-width: 900px;
 }
 
 .docs-welcome__description {
@@ -36,12 +37,9 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        margin-top: $size-l;
 
         gap: $size-4xl;
-    }
-
-    &-items {
-        margin-top: $size-m;
     }
 
     &-item {
@@ -55,14 +53,13 @@
     }
 
     &-item-title {
-        color: map.get(map.get($dark, foreground), contrast-secondary);
         margin-top: $size-m;
     }
 }
 
 @media (width < 768px) {
     .docs-welcome {
-        padding: $size-l $size-xxl 160px $size-xxl;
+        padding: $size-l $size-l 160px;
     }
 
     .docs-welcome__category-items {
@@ -70,7 +67,7 @@
     }
 
     .docs-welcome__category-item {
-        width: calc(50% - #{$size-l});
+        width: calc(50% - #{$size-l} / 2);
     }
 }
 
