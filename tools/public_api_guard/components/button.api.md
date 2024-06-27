@@ -18,6 +18,7 @@ import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@angular/cdk/platform';
 import * as i5 from '@angular/cdk/observers';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -32,7 +33,7 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public (undocumented)
-export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor {
+export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
     // (undocumented)
     get disabled(): any;
@@ -58,6 +59,8 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
     onFocus($event: any): void;
     // (undocumented)
     projectContentChanged(): void;
+    // (undocumented)
+    textElement: ElementRef;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
