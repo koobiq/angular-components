@@ -43,7 +43,7 @@ $trigger-margin: 8px;
     z-index: -1;
 }
 
-$arrow-offset: calc((kbq-css-variable(var(--kbq-tooltip-size-arrow-size, tooltip-size-arrow-size)) - 1px) / -2);
+$arrow-offset: calc((var(--kbq-tooltip-size-arrow-size, #{map.get($tokens, tooltip-size-arrow-size)}) - 1px) / -2);
 $arrow-padding: calc((18px + $trigger-margin) / 2);
 
 @include pop-up.popup-arrow-positions(kbq-tooltip, $arrow-offset, $arrow-padding);

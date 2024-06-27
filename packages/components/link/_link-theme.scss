@@ -11,9 +11,7 @@
     text-decoration: none;
     cursor: pointer;
 
-    outline-offset: var(
-        --kbq-link-size-state-focused-outline-offset, map.get($tokens, link-size-state-focused-outline-offset)
-    );
+    outline-offset: kbq-css-variable(link-size-state-focused-outline-offset);
 
     &:focus {
         outline: none;
@@ -27,30 +25,22 @@
 
     &.kbq-text-with-icon .kbq-link__text {
         &:not(:first-child) {
-            margin-left: var(
-                --kbq-link-size-normal-content-padding, map.get($tokens, link-size-normal-content-padding)
-            );
+            margin-left: kbq-css-variable(link-size-normal-content-padding);
         }
 
         &:not(:last-child) {
-            margin-right: var(
-                --kbq-link-size-normal-content-padding, map.get($tokens, link-size-normal-content-padding)
-            );
+            margin-right: kbq-css-variable(link-size-normal-content-padding);
         }
     }
 
     &.kbq-link_compact {
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
-                margin-left: var(
-                    --kbq-link-size-compact-content-padding, map.get($tokens, link-size-compact-content-padding)
-                );
+                margin-left: kbq-css-variable(link-size-compact-content-padding);
             }
 
             &:not(:last-child) {
-                margin-right: var(
-                    --kbq-link-size-compact-content-padding, map.get($tokens, link-size-compact-content-padding)
-                );
+                margin-right: kbq-css-variable(link-size-compact-content-padding);
             }
         }
     }
@@ -59,11 +49,11 @@
     &.kbq-link_big {
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
-                margin-left: var(--kbq-link-size-big-content-padding, map.get($tokens, link-size-big-content-padding));
+                margin-left: kbq-css-variable(link-size-big-content-padding);
             }
 
             &:not(:last-child) {
-                margin-right: var(--kbq-link-size-big-content-padding, map.get($tokens, link-size-big-content-padding));
+                margin-right: kbq-css-variable(link-size-big-content-padding);
             }
         }
     }
@@ -85,16 +75,18 @@
     /* stylelint-enable no-descending-specificity */
 }
 
-@mixin kbq-link-state($state) {
-    color: map.get($state, text);
+@mixin kbq-link-state($component, $state-name) {
+    $state: map.get($component, $state-name);
+
+    color: kbq-css-variable(link-#{$state-name}-text, map.get($state, text));
 
     &.kbq-text-only,
     &.kbq-text-with-icon .kbq-link__text {
-        border-bottom-color: map.get($state, border-bottom);
+        border-bottom-color: kbq-css-variable(link-#{$state-name}-border-bottom, map.get($state, border-bottom));
     }
 
     & .kbq-icon {
-        color: map.get($state, text) !important;
+        color: kbq-css-variable(link-#{$state-name}-text, map.get($state, text)) !important;
     }
 }
 
@@ -106,51 +98,43 @@
     .kbq-link {
         @include kbq-link-geometry($tokens);
 
-        $default: map.get($link, default);
-        @include kbq-link-state($default);
+        @include kbq-link-state($link, default);
 
         transition: color ease-out 300ms;
 
         &:hover {
             transition: color 0ms;
 
-            $hover: map.get($link, hover);
-            @include kbq-link-state($hover);
+            @include kbq-link-state($link, state-hover);
         }
 
         &:active,
         &.kbq-active {
-            $active: map.get($link, active);
-            @include kbq-link-state($active);
+            @include kbq-link-state($link, state-active);
         }
 
         &.kbq-link_use-visited:not(.kbq-disabled):visited {
-            $visited: map.get($link, visited);
-            @include kbq-link-state($visited);
+            @include kbq-link-state($link, state-visited);
 
             &:hover {
-                $visited-hover: map.get($link, visited-hover);
-                @include kbq-link-state($visited-hover);
+                @include kbq-link-state($link, state-visited-hover);
             }
 
             &:active,
             &.kbq-active {
-                $visited-active: map.get($link, visited-active);
-                @include kbq-link-state($visited-active);
+                @include kbq-link-state($link, state-visited-active);
             }
         }
 
         &.cdk-keyboard-focused {
-            $focused: map.get($link, focused);
-            outline: map.get($focused, outline) solid;
+            outline: kbq-css-variable(link-state-focused-outline, map.get($link, state-focused, outline)) solid;
         }
 
         &.kbq-disabled {
             cursor: default;
             pointer-events: none;
 
-            $disabled: map.get($link, disabled);
-            @include kbq-link-state($disabled);
+            @include kbq-link-state($link, state-disabled);
         }
 
         @media print {

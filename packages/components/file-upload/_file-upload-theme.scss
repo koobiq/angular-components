@@ -186,7 +186,7 @@
     .kbq-single-file-upload,
     .kbq-multiple-file-upload {
         .kbq-file-upload__hint:not(.kbq-error) {
-            color: map.get($theme, components, form-field-hint, text);
+            color: kbq-css-variable(form-field-hint-text, map.get($theme, components, form-field-hint, text));
         }
     }
 }

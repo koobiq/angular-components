@@ -6,74 +6,81 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-toggle-state($state) {
+@mixin kbq-toggle-state($component, $type, $state-name) {
+    $state: map.get($component, $type, $state-name);
+    $base: toggle-#{$type}-#{$state-name};
+
     .kbq-toggle-bar {
-        border-color: map.get($state, border);
-        background: map.get($state, background);
+        border-color: kbq-css-variable(#{$base}-border, map.get($state, border));
+        background: kbq-css-variable(#{$base}-background, map.get($state, background));
     }
 
     .kbq-toggle__circle {
-        background: map.get($state, circle-background);
+        background: kbq-css-variable(#{$base}-circle-background, map.get($state, circle-background));
     }
 }
 
-@mixin kbq-toggle-focused-state($state) {
-    & .kbq-toggle-bar {
-        border-color: map.get($state, focus-outline);
-        box-shadow: 0 0 0 1px map.get($state, focus-outline);
-    }
-}
-
-@mixin kbq-toggle-color($toggle) {
-    @include kbq-toggle-state(map.get($toggle, default));
+@mixin kbq-toggle-color($component, $type) {
+    @include kbq-toggle-state($component, $type, default);
 
     &:hover {
-        @include kbq-toggle-state(map.get($toggle, hover));
+        @include kbq-toggle-state($component, $type, states-hover);
     }
 
     &.kbq-active {
-        @include kbq-toggle-state(map.get($toggle, checked));
+        @include kbq-toggle-state($component, $type, states-checked);
     }
 
     &.kbq-active:hover {
-        @include kbq-toggle-state(map.get($toggle, checked-hover));
+        @include kbq-toggle-state($component, $type, states-checked-hover);
     }
 
     &.cdk-keyboard-focused {
-        $focused: map.get($toggle, focused);
+        @include kbq-toggle-state($component, $type, states-focused);
 
-        @include kbq-toggle-state($focused);
-        @include kbq-toggle-focused-state($focused);
+        & .kbq-toggle-bar {
+            border-color: kbq-css-variable(
+                toggle-#{$type}-states-focused-focus-outline,
+                map.get($component, $type, states-focused, focus-outline)
+            );
+            box-shadow: 0 0 0 1px kbq-css-variable(
+                toggle-#{$type}-states-focused-focus-outline,
+                map.get($component, $type, states-focused, focus-outline)
+            );
+        }
     }
 
     &.kbq-active.cdk-keyboard-focused {
-        $checked-focused: map.get($toggle, checked-focused);
+        @include kbq-toggle-state($component, $type, states-checked-focused);
 
-        @include kbq-toggle-state($checked-focused);
-        @include kbq-toggle-focused-state($checked-focused);
+        & .kbq-toggle-bar {
+            border-color: kbq-css-variable(
+                toggle-#{$type}-states-checked-focused-focus-outline,
+                map.get($component, $type, states-checked-focused, focus-outline)
+            );
+            box-shadow: 0 0 0 1px kbq-css-variable(
+                toggle-#{$type}-states-checked-focused-focus-outline,
+                map.get($component, $type, states-checked-focused, focus-outline)
+            );
+        }
     }
 
     &.kbq-disabled,
     &.kbq-active.kbq-disabled {
-        @include kbq-toggle-state(map.get($toggle, disabled));
+        @include kbq-toggle-state($component, $type, states-disabled);
     }
 }
 
 @mixin kbq-toggle-theme($theme) {
-    $foreground: map.get($theme, foreground);
-
-    $toggle: map.get(map.get($theme, components), toggle);
-
-    $toggle-theme: map.get($toggle, theme);
-    $toggle-error: map.get($toggle, error);
+    $toggle: map.get($theme, components, toggle);
 
     .kbq-toggle {
-        color: map.get($foreground, contrast);
+        color: kbq-css-variable(foreground-contrast, map.get($theme, foreground, contrast));
 
-        @include kbq-toggle-color($toggle-theme);
+        @include kbq-toggle-color($toggle, theme);
 
         &.kbq-error {
-            @include kbq-toggle-color($toggle-error);
+            @include kbq-toggle-color($toggle, error);
         }
     }
 }

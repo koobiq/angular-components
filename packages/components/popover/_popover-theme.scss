@@ -8,31 +8,25 @@
 @mixin kbq-popover-theme($theme) {
     $popover: map.get(map.get($theme, components), popover);
 
-    $container: map.get($popover, container);
-
-    $header: map.get($popover, header);
-    $content: map.get($popover, content);
-    $footer: map.get($popover, footer);
-
     .kbq-popover {
-        box-shadow: map.get($container, box-shadow);
+        box-shadow: kbq-css-variable(popover-ontainer-box-shadow, map.get($popover, container, box-shadow));
     }
 
     .kbq-popover__container {
-        background: map.get($container, background);
+        background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
     }
 
     .kbq-popover__arrow {
-        box-shadow: map.get($container, box-shadow);
-        background: map.get($container, background);
+        box-shadow: kbq-css-variable(popover-ontainer-box-shadow, map.get($popover, container, box-shadow));
+        background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
     }
 
     .kbq-popover__header {
-        color: map.get($header, text);
+        color: kbq-css-variable(popover-header-text, map.get($popover, header, text));
     }
 
     .kbq-popover__content {
-        color: map.get($content, text);
+        color: kbq-css-variable(popover-content-text, map.get($popover, content, text));
     }
 }
 

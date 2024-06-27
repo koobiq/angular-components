@@ -3,10 +3,8 @@
 
 @use '../tabs-common';
 
-@use '../../core/styles/tokens';
+@use '../../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tab-link {
     vertical-align: top;
@@ -38,9 +36,6 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-tab-group_vertical {
         flex-direction: column;
         flex-grow: 0;
-        gap: var(
-            --kbq-tabs-size-tab-stack-vertical-content-gap-vartical,
-            map.get($tokens, tabs-size-tab-stack-vertical-content-gap-vertical)
-        ) 0;
+        gap: kbq-css-variable(tabs-size-tab-stack-vertical-content-gap-vertical) 0;
     }
 }

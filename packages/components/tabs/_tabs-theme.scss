@@ -5,94 +5,108 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-tab-item-state($state) {
-    background: map.get($state, background);
-    color: map.get($state, text);
+@mixin kbq-tab-item-state($component, $type, $sub-type, $style-name) {
+    $style: map.get($component, $type, $sub-type, $style-name);
+
+    $base: tabs-tab-item-#{$type}-#{$sub-type}-#{$style-name};
+
+    background: kbq-css-variable(#{$base}-background, map.get($style, background));
+    color: kbq-css-variable(#{$base}-text, map.get($style, text));
 
     & .kbq-icon {
-        color: map.get($state, icon);
+        color: kbq-css-variable(#{$base}-icon, map.get($style, icon));
     }
 }
 
-@mixin kbq-tab-item-style($tab-item) {
-    @include kbq-tab-item-state(map.get($tab-item, default));
+@mixin kbq-tab-item-style($component, $type, $sub-type) {
+    @include kbq-tab-item-state($component, $type, $sub-type, default);
 
     &:hover:not(.kbq-disabled) {
-        @include kbq-tab-item-state(map.get($tab-item, hover));
+        @include kbq-tab-item-state($component, $type, $sub-type, states-hover);
     }
 
     &.kbq-selected {
-        @include kbq-tab-item-state(map.get($tab-item, selected));
+        @include kbq-tab-item-state($component, $type, $sub-type, states-selected);
 
         &:hover {
-            @include kbq-tab-item-state(map.get($tab-item, selected-hover));
+            @include kbq-tab-item-state($component, $type, $sub-type, states-selected-hover);
         }
     }
 
     &.cdk-keyboard-focused {
-        border-color: map.get(map.get($tab-item, focused), border-color);
+        border-color: kbq-css-variable(
+            tabs-tab-item-#{$type}-#{$sub-type}-states-focused-border-color,
+            map.get($component, $type, $sub-type, states-focused, border-color)
+        );
     }
 
     &.kbq-disabled {
-        @include kbq-tab-item-state(map.get($tab-item, disabled));
+        @include kbq-tab-item-state($component, $type, $sub-type, states-disabled);
 
         &.kbq-selected {
-            @include kbq-tab-item-state(map.get($tab-item, selected-disabled));
+            @include kbq-tab-item-state($component, $type, $sub-type, states-selected-disabled);
         }
-    }
-}
-
-@mixin kbq-tab-stack-style($tab-stack) {
-    .kbq-tab-header {
-        background: map.get($tab-stack, background);
     }
 }
 
 //noinspection ALL
 @mixin kbq-tabs-theme($theme) {
     $tab-item: map.get(map.get($theme, components), tab-item);
-
     $tab-stack: map.get(map.get($theme, components), tab-stack);
-
-    $tab-stack_filled: map.get($tab-stack, filled);
-    $tab-item_filled: map.get($tab-item, filled);
-
-    $tab-stack_transparent: map.get($tab-stack, transparent);
-    $tab-item_transparent: map.get($tab-item, transparent);
 
     .kbq-tab-group {
         &.kbq-tab-group_filled {
             &.kbq-tab-group_on-background {
-                @include kbq-tab-stack-style(map.get($tab-stack_filled, on-background));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-background-background,
+                        map.get($tab-stack, filled, on-background, background)
+                    );
+                }
 
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(map.get($tab-item_filled, on-background));
+                    @include kbq-tab-item-style($tab-item, filled, on-background);
                 }
             }
 
             &.kbq-tab-group_on-surface {
-                @include kbq-tab-stack-style(map.get($tab-stack_filled, on-surface));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-surface-background,
+                        map.get($tab-stack, filled, on-surface, background)
+                    );
+                }
 
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(map.get($tab-item_filled, on-background));
+                    @include kbq-tab-item-style($tab-item, filled, on-background);
                 }
             }
         }
 
         &.kbq-tab-group_transparent {
             &.kbq-tab-group_on-background {
-                @include kbq-tab-stack-style(map.get($tab-stack_transparent, on-background));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-background-background,
+                        map.get($tab-stack, transparent, on-background, background)
+                    );
+                }
 
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(map.get($tab-item_transparent, on-background));
+                    @include kbq-tab-item-style($tab-item, transparent, on-background);
                 }
             }
 
             &.kbq-tab-group_on-surface {
-                @include kbq-tab-stack-style(map.get($tab-stack_transparent, on-surface));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-surface-background,
+                        map.get($tab-stack, transparent, on-surface, background)
+                    );
+                }
 
                 & .kbq-tab-label {
-                    @include kbq-tab-item-style(map.get($tab-item_transparent, on-background));
+                    @include kbq-tab-item-style($tab-item, transparent, on-background);
                 }
             }
         }
@@ -101,36 +115,56 @@
     .kbq-tab-nav-bar {
         &.kbq-tab-nav-bar_filled {
             &.kbq-tab-nav-bar_on-background {
-                @include kbq-tab-stack-style(map.get($tab-stack_filled, on-background));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-background-background,
+                        map.get($tab-stack, filled, on-background, background)
+                    );
+                }
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(map.get($tab-item_filled, on-background));
+                    @include kbq-tab-item-style($tab-item, filled, on-background);
                 }
             }
 
             &.kbq-tab-nav-bar_on-surface {
-                @include kbq-tab-stack-style(map.get($tab-stack_filled, on-surface));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-surface-background,
+                        map.get($tab-stack, filled, on-surface, background)
+                    );
+                }
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(map.get($tab-item_filled, on-background));
+                    @include kbq-tab-item-style($tab-item, filled, on-background);
                 }
             }
         }
 
         &.kbq-tab-nav-bar_transparent {
             &.kbq-tab-nav-bar_on-background {
-                @include kbq-tab-stack-style(map.get($tab-stack_transparent, on-background));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-background-background,
+                        map.get($tab-stack, transparent, on-background, background)
+                    );
+                }
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(map.get($tab-item_transparent, on-background));
+                    @include kbq-tab-item-style($tab-item, transparent, on-background);
                 }
             }
 
             &.kbq-tab-nav-bar_on-surface {
-                @include kbq-tab-stack-style(map.get($tab-stack_transparent, on-surface));
+                .kbq-tab-header {
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-surface-background,
+                        map.get($tab-stack, transparent, on-surface, background)
+                    );
+                }
 
                 & .kbq-tab-link {
-                    @include kbq-tab-item-style(map.get($tab-item_transparent, on-background));
+                    @include kbq-tab-item-style($tab-item, transparent, on-background);
                 }
             }
         }

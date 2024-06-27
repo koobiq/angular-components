@@ -9,35 +9,34 @@
 
 @mixin kbq-tree-select-theme($theme) {
     $foreground: map.get($theme, foreground);
-    $error: map.get($theme, error);
 
-    $select-panel: map.get(map.get($theme, components), select-panel);
-    $divider: map.get(map.get($theme, components), divider);
+    $select-panel: map.get($theme, components, select-panel);
+    $divider: map.get($theme, components, divider);
 
     .kbq-tree-select {
-        color: map.get($foreground, contrast);
+        color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
 
         &.ng-invalid {
-            color: kbq-color($error);
+            color: kbq-css-variable(error-default, map.get($theme, error, default));
         }
 
         &.kbq-disabled {
-            color: map.get($foreground, text-disabled);
+            color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: map.get($foreground, text-disabled);
+        color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
     }
 
     .kbq-tree-select__panel {
-        box-shadow: map.get($select-panel, shadow);
-        background: map.get($select-panel, background);
+        box-shadow: kbq-css-variable(select-panel-shadow, map.get($select-panel, shadow));
+        background: kbq-css-variable(select-panel-background, map.get($select-panel, background));
 
         & .kbq-tree-select__footer {
-            border-color: map.get($divider, color);
+            border-color: kbq-css-variable(divider-color, map.get($divider, color));
         }
     }
 }

@@ -1,41 +1,35 @@
 @use 'sass:map';
 
 @use '../core/styles/theming/theming' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-icon-theme($themeObj) {
-    $icon: map.get(map.get($themeObj, components), icon);
-
-    $theme: map.get($icon, theme);
-    $contrast: map.get($icon, contrast);
-    $fade-contrast: map.get($icon, fade-contrast);
-    $error: map.get($icon, error);
-    $warning: map.get($icon, warning);
-    $success: map.get($icon, success);
+@mixin kbq-icon-theme($theme) {
+    $icon: map.get($theme, components, icon);
 
     .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
         &.kbq-theme {
-            color: map.get($theme, color);
+            color: kbq-css-variable(icon-theme-color, map.get($icon, theme, color));
         }
 
         &.kbq-contrast {
-            color: map.get($contrast, color);
+            color: kbq-css-variable(icon-contrast-color, map.get($icon, contrast, color));
         }
 
         &.kbq-contrast-fade {
-            color: map.get($fade-contrast, color);
+            color: kbq-css-variable(icon-fade-contrast-color, map.get($icon, fade-contrast, color));
         }
 
         &.kbq-error {
-            color: map.get($error, color);
+            color: kbq-css-variable(icon-error-color, map.get($icon, error, color));
         }
 
         &.kbq-warning {
-            color: map.get($warning, color);
+            color: kbq-css-variable(icon-warning-color, map.get($icon, warning, color));
         }
 
         &.kbq-success {
-            color: map.get($success, color);
+            color: kbq-css-variable(icon-success-color, map.get($icon, success, color));
         }
     }
 }

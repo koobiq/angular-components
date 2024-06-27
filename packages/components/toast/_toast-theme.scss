@@ -5,39 +5,41 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-toast($toast) {
-    box-shadow: map.get($toast, box-shadow);
+@mixin kbq-toast($component, $style-name) {
+    $style: map.get($component, $style-name);
 
-    background: map.get($toast, background);
+    box-shadow: kbq-css-variable(toast-#{$style-name}-container-box-shadow, map.get($style, box-shadow));
+
+    background: kbq-css-variable(toast-#{$style-name}-container-background, map.get($style, background));
 
     .kbq-toast__title {
-        color: map.get($toast, title);
+        color: kbq-css-variable(toast-#{$style-name}-container-title, map.get($style, title));
     }
 
     .kbq-toast__text {
-        color: map.get($toast, text);
+        color: kbq-css-variable(toast-#{$style-name}-container-text, map.get($style, text));
     }
 }
 
 
 @mixin kbq-toast-theme($theme) {
-    $toast: map.get(map.get($theme, components), toast);
+    $toast: map.get($theme, components, toast);
 
     .kbq-toast {
         &.kbq-toast_contrast {
-            @include kbq-toast(map.get($toast, contrast));
+            @include kbq-toast($toast, contrast);
         }
 
         &.kbq-toast_success {
-            @include kbq-toast(map.get($toast, success));
+            @include kbq-toast($toast, success);
         }
 
         &.kbq-toast_warning {
-            @include kbq-toast(map.get($toast, success));
+            @include kbq-toast($toast, success);
         }
 
         &.kbq-toast_error {
-            @include kbq-toast(map.get($toast, error));
+            @include kbq-toast($toast, error);
         }
     }
 }

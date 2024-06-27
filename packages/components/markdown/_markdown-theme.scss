@@ -7,91 +7,89 @@
 
 
 @mixin kbq-markdown-theme($theme) {
-    $tokens: map.get($theme, tokens);
-
-    $foreground: map.get($theme, foreground);
-    $background: map.get($theme, background);
-
-    $markdown: map.get(map.get($theme, components), markdown);
+    $markdown: map.get($theme, components, markdown);
 
     .kbq-markdown {
-        color: map.get($foreground, contrast);
-        background: map.get($background, bg);
+        color: kbq-css-variable(foreground-contrast, map.get($theme, foreground, contrast));
+        background: kbq-css-variable(background-bg, map.get($theme, background, bg));
 
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {
             .kbq-markdown__h#{$i} {
-                color: map.get($markdown, h#{$i}-color);
+                color: kbq-css-variable(markdown-h#{$i}-color, map.get($markdown, h#{$i}-color));
             }
         }
 
         .kbq-markdown__p {
-            color: map.get($markdown, p-color);
+            color: kbq-css-variable(markdown-p-color, map.get($markdown, p-color));
         }
 
         .kbq-markdown__ul,
         .kbq-markdown__ol {
-            color: map.get($markdown, list-color);
+            color: kbq-css-variable(markdown-list-color, map.get($markdown, list-color));
         }
 
         .kbq-markdown__blockquote {
-            color: map.get($markdown, blockquote-text);
-            background: map.get($markdown, blockquote-background);
-            border-color: map.get($markdown, blockquote-border);
-            border-left-color: map.get($markdown, blockquote-line);
+            color: kbq-css-variable(markdown-blockquote-text, map.get($markdown, blockquote-text));
+            background: kbq-css-variable(markdown-blockquote-background, map.get($markdown, blockquote-background));
+            border-color: kbq-css-variable(markdown-blockquote-border, map.get($markdown, blockquote-border));
+            border-left-color: kbq-css-variable(markdown-blockquote-line, map.get($markdown, blockquote-line));
         }
 
         .kbq-markdown__pre,
         .kbq-markdown__p > .kbq-markdown__code {
-            color: map.get($markdown, code-text);
-            background-color: map.get($markdown, code-background);
-            border-color: map.get($markdown, code-border);
+            color: kbq-css-variable(markdown-code-text, map.get($markdown, code-text));
+            background-color: kbq-css-variable(markdown-code-background, map.get($markdown, code-background));
+            border-color: kbq-css-variable(markdown-code-border, map.get($markdown, code-border));
         }
 
         .kbq-markdown__a {
-            color: map.get($markdown, link-text);
-            border-bottom-color: map.get($markdown, link-border-bottom);
+            color: kbq-css-variable(markdown-link-text, map.get($markdown, link-text));
+            border-bottom-color: kbq-css-variable(markdown-link-border-bottom, map.get($markdown, link-border-bottom));
 
             &:visited {
-                color: map.get($markdown, link-state-visited-text);
-                border-bottom-color: map.get($markdown, link-state-visited-border-bottom);
+                color: kbq-css-variable(markdown-link-state-visited-text, map.get($markdown, link-state-visited-text));
+                border-bottom-color: kbq-css-variable(
+                    markdown-link-state-visited-border-bottom, map.get($markdown, link-state-visited-border-bottom));
             }
 
             &:hover {
-                color: map.get($markdown, link-state-hover-text);
+                color: kbq-css-variable(markdown-link-state-hover-text, map.get($markdown, link-state-hover-text));
                 transition: color 0ms;
-                border-bottom-color: map.get($markdown, link-state-hover-border-bottom);
+                border-bottom-color: kbq-css-variable(
+                    markdown-link-state-hover-border-bottom, map.get($markdown, link-state-hover-border-bottom));
             }
 
             &:active {
-                color: map.get($markdown, link-state-active-text);
+                color: kbq-css-variable(markdown-link-state-active-text, map.get($markdown, link-state-active-text));
             }
 
             &:focus {
                 outline:
-                    map.get($markdown, link-state-focused-outline)
+                    kbq-css-variable(
+                        markdown-link-state-focused-outline, map.get($markdown, link-state-focused-outline))
                     solid
-                    map.get($tokens, markdown-link-size-state-focused-outline-width);
+                    kbq-css-variable(markdown-link-size-state-focused-outline-width);
 
-                outline-offset: map.get($tokens, markdown-link-size-state-focused-outline-offset);
+                outline-offset: kbq-css-variable(markdown-link-size-state-focused-outline-offset);
             }
         }
 
         .kbq-markdown__img + em {
-            color: map.get($markdown, image-caption-text);
+            color: kbq-css-variable(markdown-image-caption-text, map.get($markdown, image-caption-text));
         }
 
         .kbq-markdown__hr {
-            border-bottom-color: map.get($markdown, hr-color);
+            border-bottom-color: kbq-css-variable(markdown-hr-color, map.get($markdown, hr-color));
         }
 
         .kbq-markdown__table > .kbq-markdown__thead {
-            color: map.get($markdown, table-header);
-            border-bottom-color: map.get($markdown, table-border);
+            color: kbq-css-variable(markdown-table-header, map.get($markdown, table-header));
+            border-bottom-color: kbq-css-variable(markdown-table-border, map.get($markdown, table-border));
         }
 
         .kbq-markdown__table > .kbq-markdown__tbody {
-            color: map.get($markdown, table-body);
+            color: kbq-css-variable(markdown-table-body, map.get($markdown, table-body));
         }
     }
 }

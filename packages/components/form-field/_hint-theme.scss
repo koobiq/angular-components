@@ -6,11 +6,13 @@
 @use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-hint-color($hint) {
-    color: map.get($hint, text);
+@mixin kbq-hint-color($component, $type, $style-name) {
+    $style: map.get($component, $type, $style-name);
+
+    color: kbq-css-variable(hint-#{$type}-#{$style-name}-text, map.get($style, text));
 
     & .kbq-icon {
-        color: map.get($hint, icon) !important;
+        color: kbq-css-variable(hint-#{$type}-#{$style-name}-icon, map.get($style, icon)) !important;
     }
 }
 
@@ -19,42 +21,38 @@
     $hint: map.get(map.get($theme, components), hint);
 
     .kbq-hint {
-        $fill-text-on: map.get($hint, fill-text-on);
-
         &.kbq-contrast-fade {
-            @include kbq-hint-color(map.get($fill-text-on, fade-contrast));
+            @include kbq-hint-color($hint, fill-text-on, fade-contrast);
         }
 
         &.kbq-success {
-            @include kbq-hint-color(map.get($fill-text-on, success));
+            @include kbq-hint-color($hint, fill-text-on, success);
         }
 
         &.kbq-warning {
-            @include kbq-hint-color(map.get($fill-text-on, warning));
+            @include kbq-hint-color($hint, fill-text-on, warning);
         }
 
         &.kbq-error {
-            @include kbq-hint-color(map.get($fill-text-on, error));
+            @include kbq-hint-color($hint, fill-text-on, error);
         }
     }
 
     .kbq-hint.kbq-hint_fill-text-off {
-        $fill-text-off: map.get($hint, fill-text-off);
-
         &.kbq-contrast-fade {
-            @include kbq-hint-color(map.get($fill-text-off, fade-contrast));
+            @include kbq-hint-color($hint, fill-text-off, fade-contrast);
         }
 
         &.kbq-success {
-            @include kbq-hint-color(map.get($fill-text-off, success));
+            @include kbq-hint-color($hint, fill-text-off, success);
         }
 
         &.kbq-warning {
-            @include kbq-hint-color(map.get($fill-text-off, warning));
+            @include kbq-hint-color($hint, fill-text-off, warning);
         }
 
         &.kbq-error {
-            @include kbq-hint-color(map.get($fill-text-off, error));
+            @include kbq-hint-color($hint, fill-text-off, error);
         }
     }
 }

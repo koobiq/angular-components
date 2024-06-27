@@ -10,25 +10,25 @@
     $state: map.get($component, $state-name);
 
     .kbq-form-field__container {
-        border-color: map.get($state, border);
-        background-color: map.get($state, background);
+        border-color: kbq-css-variable(form-field-#{$state-name}-border, map.get($state, border));
+        background-color: kbq-css-variable(form-field-#{$state-name}-background, map.get($state, background));
     }
 
     .kbq-input,
     .kbq-tag-input,
     .kbq-textarea {
-        color: map.get($state, text);
+        color: kbq-css-variable(form-field-#{$state-name}-text, map.get($state, text));
 
         &::placeholder {
-            color: map.get($state, placeholder);
+            color: kbq-css-variable(form-field-#{$state-name}-placeholder, map.get($state, placeholder));
         }
 
         &::-ms-input-placeholder {
-            color: map.get($state, placeholder);
+            color: kbq-css-variable(form-field-#{$state-name}-placeholder, map.get($state, placeholder));
         }
 
         &::-webkit-input-placeholder {
-            color: map.get($state, placeholder);
+            color: kbq-css-variable(form-field-#{$state-name}-placeholder, map.get($state, placeholder));
         }
     }
 }
@@ -36,12 +36,6 @@
 @mixin kbq-form-field-theme($theme) {
     .kbq-form-field {
         $form-field: map.get($theme, components, form-field);
-
-        $default: map.get($form-field, default);
-        $autofill: map.get($form-field, autofill);
-        $error: map.get($form-field, error);
-        $focused: map.get($form-field, focused);
-        $disabled: map.get($form-field, disabled);
 
         @include kbq-form-field-state($form-field, default);
 
@@ -51,35 +45,42 @@
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
             &:-webkit-autofill:focus {
-                -webkit-box-shadow: 0 0 0 40rem map.get($autofill, background) inset;
-                -webkit-text-fill-color: map.get($autofill, text);
-                caret-color: map-get($autofill, text);
+                -webkit-box-shadow: 0 0 0 40rem kbq-css-variable(
+                    form-field-states-autofill-background, map.get($form-field, states-autofill, background)) inset;
+                -webkit-text-fill-color: kbq-css-variable(
+                    form-field-states-autofill-text, map.get($form-field, states-autofill, text));
+                caret-color: kbq-css-variable(
+                    form-field-states-autofill-text, map.get($form-field, states-autofill, text));
             }
         }
 
         &.cdk-focused {
-            @include kbq-form-field-state($form-field, focused);
+            @include kbq-form-field-state($form-field, states-focused);
 
             & .kbq-form-field__container {
-                box-shadow: 0 0 0 1px map.get($focused, focus-outline);
+                box-shadow: 0 0 0 1px kbq-css-variable(
+                    form-field-states-focused-focu-outline, map.get($form-field, states-focused, focus-outline));
             }
         }
 
         &.kbq-form-field_invalid,
         &.ng-invalid {
-            @include kbq-form-field-state($form-field, error);
+            @include kbq-form-field-state($form-field, states-error);
 
             &.cdk-focused .kbq-form-field__container {
-                box-shadow: 0 0 0 1px map.get($error, focus-outline);
+                box-shadow: 0 0 0 1px kbq-css-variable(
+                    form-field-states-error-focu-outline, map.get($form-field, states-error, focus-outline));
             }
         }
 
         &.kbq-disabled {
-            @include kbq-form-field-state($form-field, disabled);
+            @include kbq-form-field-state($form-field, states-disabled);
 
             .kbq-icon {
-                color: map.get($disabled, text);
-                -webkit-text-fill-color: map.get($disabled, text);
+                color: kbq-css-variable(form-field-disabled-text, map.get($form-field, disabled, text));
+                -webkit-text-fill-color: kbq-css-variable(
+                    form-field-disabled-text, map.get($form-field, disabled, text)
+                );
             }
         }
         /* stylelint-enable no-descending-specificity */
@@ -87,13 +88,12 @@
 
     .kbq-form-field__hint {
         & > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
-            color: map.get($theme, components, form-field-hint, text);
+            color: kbq-css-variable(form-field-hint-text, map.get($theme, components, form-field-hint, text));
         }
     }
 }
 
 @mixin kbq-form-field-typography($config) {
-
     .kbq-form-field {
         @include kbq-typography-css-variables(form-field, text);
     }
