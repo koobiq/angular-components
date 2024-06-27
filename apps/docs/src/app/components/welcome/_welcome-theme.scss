@@ -20,7 +20,13 @@
 
 @mixin kbq-docs-welcome-typography($config) {
     .docs-welcome__header {
-        @include typography.kbq-typography-level-to-styles($config, headline);
+        font-family: Inter;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: normal;
+        font-weight: 700;
+        text-transform: none;
+        font-feature-settings: "ss01" on, "ss04" on;
     }
 
     .docs-welcome__description {

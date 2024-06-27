@@ -10,7 +10,7 @@
     <div class="docs-welcome__category-title">{{ category.name }}</div>
     <div class="docs-welcome__category-items">
         <div class="docs-welcome__category-item" [routerLink]="[category.id, item.id]" *ngFor="let item of category.items">
-            <img src="./assets/images/welcome/{{ item.svgPreview }}-{{ (currentTheme$ | async)?.className.replace('theme-', '') }}.svg" class="docs-welcome__category-item-preview"/>
+            <img src="./assets/images/welcome/{{ item.svgPreview }}-{{ (currentTheme$ | async)?.className.replace('theme-', '') }}.png" class="docs-welcome__category-item-preview"/>
             <div class="docs-welcome__category-item-title">{{ item.name }}</div>
         </div>
     </div>
