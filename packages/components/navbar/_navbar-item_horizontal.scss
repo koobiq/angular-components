@@ -43,8 +43,8 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
-        padding: map.get($tokens, size-l) map.get($tokens, size-m);
-
+        padding: 14px map.get($tokens, size-m);
+        // (total height 48 - grey hover 32) / 2
         &:after {
             top: map.get($tokens, size-s);
             right: 0;

@@ -49,17 +49,39 @@ $tokens: meta.module-variables(tokens) !default;
         );
 
     & .kbq-alert__icon {
-        margin:
-            var(--kbq-alert-size-normal-icon-margin-top, map.get($tokens, alert-size-normal-icon-margin-top))
-            var(--kbq-alert-size-normal-icon-margin-right, map.get($tokens, alert-size-normal-icon-margin-right))
-            var(--kbq-alert-size-normal-icon-margin-bottom, map.get($tokens, alert-size-normal-icon-margin-bottom))
-            var(--kbq-alert-size-normal-icon-margin-left, map.get($tokens, alert-size-normal-icon-margin-left));
 
-        &.kbq-alert__icon_title .kbq-icon {
+        margin-top: var(
+            --kbq-alert-size-normal-no-title-icon-margin-top,
+            map.get($tokens, alert-size-normal-no-title-icon-margin-top)
+        );
+
+        margin-right: var(
+            --kbq-alert-size-normal-icon-margin-right,
+            map.get($tokens, alert-size-normal-icon-margin-right)
+        );
+
+        margin-left: var(
+            --kbq-alert-size-normal-icon-margin-left,
+            map.get($tokens, alert-size-normal-icon-margin-left)
+        );
+
+        margin-bottom: var(
+            --kbq-alert-size-normal-icon-margin-bottom,
+            map.get($tokens, alert-size-normal-icon-margin-bottom)
+        );
+
+        &.kbq-alert__icon_title {
+            
             margin-top: var(
-                --kbq-alert-size-normal-icon-margin-addon-title,
-                map.get($tokens, alert-size-normal-icon-margin-addon-title)
+                --kbq-alert-size-normal-no-title-icon-margin-top,
+                map.get($tokens, alert-size-normal-icon-margin-top)
             );
+
+            padding-top: var(
+                --kbq-alert-size-normal-no-title-icon-padding-top,
+                map.get($tokens, alert-size-normal-no-title-icon-padding-top)
+            );
+            
         }
 
         display: inline-flex;
@@ -68,6 +90,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     & .kbq-alert__content {
         padding:
+
             var(
                 --kbq-alert-size-normal-content-padding-top,
                 map.get($tokens, alert-size-normal-content-padding-top)
@@ -106,14 +129,17 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     & .kbq-alert__close-button {
+
         margin-top: var(
             --kbq-alert-size-normal-close-button-margin-top,
             map.get($tokens, alert-size-normal-close-button-margin-top)
         );
+
         margin-left: var(
             --kbq-alert-size-normal-close-button-margin-left,
             map.get($tokens, alert-size-normal-close-button-margin-left)
         );
+
     }
 }
 
@@ -142,17 +168,31 @@ $tokens: meta.module-variables(tokens) !default;
         );
 
     & .kbq-alert__icon {
-        margin-top: var(--kbq-alert-size-compact-icon-margin-top, map.get($tokens, alert-size-compact-icon-margin-top));
+
+        margin-top: var( 
+            --kbq-alert-size-compact-no-title-icon-margin-top,
+            map.get($tokens, alert-size-compact-no-title-icon-margin-top)
+        );
+
+        padding-top: var(
+            --kbq-alert-size-compact-no-title-icon-padding-top,
+            map.get($tokens, alert-size-compact-no-title-icon-padding-top)
+        );
 
         margin-right: var(
             --kbq-alert-size-compact-icon-margin-right,
             map.get($tokens, alert-size-compact-icon-margin-right)
         );
 
-        &.kbq-alert__icon_title .kbq-icon {
+        &.kbq-alert__icon_title {
             margin-top: var(
-                --kbq-alert-size-compact-icon-margin-addon-title,
-                map.get($tokens, alert-size-compact-icon-margin-addon-title)
+                --kbq-alert-size-compact-icon-margin-top,
+                map.get($tokens, alert-size-compact-icon-margin-top)
+            );
+
+            padding-top: var(
+                --kbq-alert-size-compact-icon-padding-top,
+                map.get($tokens, alert-size-compact-icon-padding-top)
             );
         }
 

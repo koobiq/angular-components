@@ -11,7 +11,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-list,
 .kbq-list-selection {
     display: block;
-
     outline: none;
 }
 
@@ -27,11 +26,14 @@ $tokens: meta.module-variables(tokens) !default;
 
     & .kbq-option-action {
         display: none;
+        height: 20px;
+        align-items: center;
     }
 
     &:not(.kbq-disabled):hover,
     &:not(.kbq-disabled).kbq-focused,
     &:not(.kbq-disabled).kbq-action-button-focused {
+
         & .kbq-option-action {
             display: flex;
         }
