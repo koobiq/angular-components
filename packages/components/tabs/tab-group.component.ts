@@ -1,4 +1,4 @@
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -86,6 +86,8 @@ export class KbqTabGroupBase {
 /** @docs-private */
 export const KbqTabGroupMixinBase: CanDisableCtor & typeof KbqTabGroupBase = mixinDisabled(KbqTabGroupBase);
 
+export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | null);
+
 /**
  * Tab-group component.  Supports basic tab pairs (label + content) and includes
  * keyboard navigation.
@@ -143,10 +145,29 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     }
 
     set selectedIndex(value: number | null) {
-        this.indexToSelect = coerceNumberProperty(value, null);
+        this.activeTab = value;
     }
 
     private _selectedIndex: number | null = null;
+
+    @Input()
+    get activeTab(): KbqTab | null {
+        switch (typeof this.attributeToSelectBy) {
+            case 'number':
+                return this.tabs.get(this.clampTabIndex(this.attributeToSelectBy)) || null;
+            case 'string':
+                return this.tabs.toArray()
+                    .find(({ tabId }) => tabId === this.attributeToSelectBy) || this.tabs.get(0) || null;
+            case 'function':
+                return this.attributeToSelectBy(this.tabs.toArray());
+            default:
+                return this.tabs.get(0) || null;
+        }
+    }
+
+    set activeTab(value: KbqTabSelectBy | null) {
+        this.attributeToSelectBy = value;
+    }
 
     /** Position of the tab header. */
     @Input() headerPosition: KbqTabHeaderPosition = 'above';
@@ -157,6 +178,9 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
+    /** Event emitted when the tab selection has changed. */
+    @Output() readonly activeTabChange: EventEmitter<string | number | KbqTab> = new EventEmitter<string | number | KbqTab>();
+
     /** Event emitted when focus has changed within a tab group. */
     @Output() readonly focusChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>();
 
@@ -166,8 +190,7 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     /** Event emitted when the tab selection has changed. */
     @Output() readonly selectedTabChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>(true);
 
-    /** The tab index that should be selected after the content has been checked. */
-    private indexToSelect: number | null = 0;
+    private attributeToSelectBy: KbqTabSelectBy | null  = null;
 
     /** Snapshot of the height of the tab body wrapper before another tab is activated. */
     private tabBodyWrapperHeight = 0;
@@ -207,7 +230,7 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     ngAfterContentChecked() {
         // Don't clamp the `indexToSelect` immediately in the setter because it can happen that
         // the amount of tabs changes before the actual change detection runs.
-        const indexToSelect = this.indexToSelect = this.clampTabIndex(this.indexToSelect);
+        const indexToSelect = this.getTabIndexToSelect();
 
         // If there is a change in selected index, emit a change event. Should not trigger if
         // the selected index has not yet been initialized.
@@ -224,7 +247,14 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
                 this.tabs.forEach((tab, index) => tab.isActive = index === indexToSelect);
 
                 if (!isFirstRun) {
+                    const tabToSelect = this.activeTab;
+
                     this.selectedIndexChange.emit(indexToSelect);
+                    this.activeTabChange.emit(
+                        this.attributeToSelectBy && typeof this.attributeToSelectBy === 'function' && tabToSelect
+                            ? tabToSelect
+                            : this.attributeToSelectBy as string | number
+                    );
                 }
             });
         }
@@ -253,7 +283,8 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
         // able to re-render the content as new tabs are added or removed.
         this.tabsSubscription = this.tabs.changes
             .subscribe(() => {
-                const indexToSelect = this.clampTabIndex(this.indexToSelect);
+                // const indexToSelect = this.clampTabIndex(this.indexToSelect);
+                const indexToSelect = this.getTabIndexToSelect();
 
                 // Maintain the previously-selected tab if a new tab is added or removed and there is no
                 // explicit change that selects a different tab.
@@ -262,10 +293,11 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
 
                     for (let i = 0; i < tabs.length; i++) {
                         if (tabs[i].isActive) {
-                            // Assign both to the `_indexToSelect` and `_selectedIndex` so we don't fire a changed
+                            // Assign both to the `activeTab` and `_selectedIndex` so we don't fire a changed
                             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
                             // adding a tab within the `selectedIndexChange` event.
-                            this.indexToSelect = this._selectedIndex = i;
+                            this._selectedIndex = i;
+                            this.onSelectFocusedIndex(i);
                             break;
                         }
                     }
@@ -329,7 +361,8 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number) {
         if (tab.disabled) { return; }
 
-        this.selectedIndex = tabHeader.focusIndex = index;
+        this.onSelectFocusedIndex(index);
+        tabHeader.focusIndex = index;
     }
 
     /** Retrieves the tabindex for the tab. */
@@ -337,6 +370,15 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
         if (tab.disabled) { return null; }
 
         return this.selectedIndex === index ? 0 : -1;
+    }
+
+    onSelectFocusedIndex($event: number): void {
+        if (typeof this.attributeToSelectBy === 'string') {
+            this.activeTab = this.tabs.get($event)?.tabId || null;
+            return;
+        }
+
+        this.activeTab = $event;
     }
 
     private checkOverflow = () => {
@@ -388,5 +430,11 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
         // and which would otherwise throw the component into an infinite loop
         // (since Math.max(NaN, 0) === NaN).
         return Math.min(this.tabs.length - 1, Math.max(index || 0, 0));
+    }
+
+    private getTabIndexToSelect(): number {
+        const currentSelectedTab = this.activeTab;
+        if (currentSelectedTab === null) { return 0; }
+        return this.tabs?.toArray().indexOf(currentSelectedTab);
     }
 }

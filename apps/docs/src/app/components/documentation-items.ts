@@ -347,7 +347,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     name: 'Tabs',
                     hasApi: true,
                     apiId: 'tabs',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['tabs-types']
                 },
                 {

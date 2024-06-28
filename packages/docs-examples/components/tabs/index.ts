@@ -10,6 +10,9 @@ import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
 import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
 import { TabsVerticalExample } from './tabs-vertical/tabs-vertical-example';
 import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-example';
+import { TabActiveTabExample } from './tab-active-tab/tab-active-tab-example';
+import { TabActiveTabIndexExample } from './tab-active-tab-index/tab-active-tab-index-example';
+import { TabActiveTabCustomExample } from './tab-active-tab-custom/tab-active-tab-custom-example';
 
 
 export {
@@ -18,7 +21,10 @@ export {
     TabsStretchExample,
     TabsVerticalExample,
     TabsWithScrollExample,
-    TabsEmptyExample
+    TabsEmptyExample,
+    TabActiveTabExample,
+    TabActiveTabIndexExample,
+    TabActiveTabCustomExample
 };
 
 const EXAMPLES = [
@@ -27,7 +33,10 @@ const EXAMPLES = [
     TabsStretchExample,
     TabsVerticalExample,
     TabsWithScrollExample,
-    TabsEmptyExample
+    TabsEmptyExample,
+    TabActiveTabExample,
+    TabActiveTabIndexExample,
+    TabActiveTabCustomExample
 ];
 
 @NgModule({

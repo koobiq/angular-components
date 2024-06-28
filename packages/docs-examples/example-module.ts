@@ -2508,6 +2508,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-table"
     }
   },
+  "tab-active-tab-index": {
+    "packagePath": "components/tabs/tab-active-tab-index",
+    "title": "Tab list with selection by index",
+    "componentName": "TabActiveTabIndexExample",
+    "files": [
+      "tab-active-tab-index-example.ts",
+      "tab-active-tab-index-example.html",
+      "tab-active-tab-index-example.css"
+    ],
+    "selector": "tab-active-tab-index-example",
+    "additionalComponents": [],
+    "primaryFile": "tab-active-tab-index-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
+  "tab-active-tab": {
+    "packagePath": "components/tabs/tab-active-tab",
+    "title": "Tab list with selection by tabId",
+    "componentName": "TabActiveTabExample",
+    "files": [
+      "tab-active-tab-example.ts",
+      "tab-active-tab-example.html",
+      "tab-active-tab-example.css"
+    ],
+    "selector": "tab-active-tab-example",
+    "additionalComponents": [],
+    "primaryFile": "tab-active-tab-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-empty": {
     "packagePath": "components/tabs/tabs-empty",
     "title": "Tabs empty",
