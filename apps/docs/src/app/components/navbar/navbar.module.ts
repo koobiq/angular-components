@@ -9,6 +9,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 import { NavbarComponent } from './navbar.component';
+import { DocsearchComponent } from '../docsearch/docsearch.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { NavbarComponent } from './navbar.component';
         KbqLinkModule,
         KbqIconModule,
         KbqSelectModule,
-        KbqNavbarModule
+        KbqNavbarModule,
+        DocsearchComponent,
     ],
     exports: [NavbarComponent],
     declarations: [NavbarComponent]
