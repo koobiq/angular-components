@@ -1353,7 +1353,7 @@
   --kbq-typography-text-normal-strong-font-weight: 500;
   --kbq-typography-text-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-text-normal-strong-text-transform: null;
-  --kbq-typography-text-normal-strong-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-text-normal-strong-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-text-compact-font-size: 11px;
   --kbq-typography-text-compact-line-height: 16px;
   --kbq-typography-text-compact-letter-spacing: 0.01em;
@@ -1508,7 +1508,7 @@
   --kbq-typography-italic-big-font-weight: normal;
   --kbq-typography-italic-big-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-big-text-transform: null;
-  --kbq-typography-italic-big-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-big-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-italic-big-strong-font-style: italic;
   --kbq-typography-italic-big-strong-font-size: 15px;
   --kbq-typography-italic-big-strong-line-height: 20px;
@@ -1516,7 +1516,7 @@
   --kbq-typography-italic-big-strong-font-weight: 500;
   --kbq-typography-italic-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-big-strong-text-transform: null;
-  --kbq-typography-italic-big-strong-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-big-strong-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-italic-normal-font-style: italic;
   --kbq-typography-italic-normal-font-size: 13px;
   --kbq-typography-italic-normal-line-height: 16px;
@@ -1524,7 +1524,7 @@
   --kbq-typography-italic-normal-font-weight: normal;
   --kbq-typography-italic-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-normal-text-transform: null;
-  --kbq-typography-italic-normal-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-normal-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-italic-normal-strong-font-style: italic;
   --kbq-typography-italic-normal-strong-font-size: 13px;
   --kbq-typography-italic-normal-strong-line-height: 16px;
@@ -1532,7 +1532,7 @@
   --kbq-typography-italic-normal-strong-font-weight: 500;
   --kbq-typography-italic-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-normal-strong-text-transform: null;
-  --kbq-typography-italic-normal-strong-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-normal-strong-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-italic-compact-font-style: italic;
   --kbq-typography-italic-compact-font-size: 11px;
   --kbq-typography-italic-compact-line-height: 16px;
@@ -1540,7 +1540,7 @@
   --kbq-typography-italic-compact-font-weight: normal;
   --kbq-typography-italic-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-compact-text-transform: null;
-  --kbq-typography-italic-compact-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-compact-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-italic-compact-strong-font-style: italic;
   --kbq-typography-italic-compact-strong-font-size: 11px;
   --kbq-typography-italic-compact-strong-line-height: 16px;
@@ -1548,7 +1548,7 @@
   --kbq-typography-italic-compact-strong-font-weight: 500;
   --kbq-typography-italic-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-compact-strong-text-transform: null;
-  --kbq-typography-italic-compact-strong-font-feature-settings: "tnum" on, "ss01" on, "ss04" on;
+  --kbq-typography-italic-compact-strong-font-feature-settings: "ss01" on, "ss04" on;
   --kbq-typography-navbar-title-font-size: 18px;
   --kbq-typography-navbar-title-line-height: 28px;
   --kbq-typography-navbar-title-letter-spacing: normal;
@@ -1714,6 +1714,22 @@
   --kbq-dropdown-size-container-width-max: 640px;
   --kbq-dropdown-size-container-padding-vertical: 4px;
   --kbq-dropdown-size-container-border-radius: 8px;
+  --kbq-empty-state-size-big-max-width: 480px;
+  --kbq-empty-state-size-big-padding-horizontal: 56px;
+  --kbq-empty-state-size-big-padding-top: 48px;
+  --kbq-empty-state-size-big-padding-bottom: 48px;
+  --kbq-empty-state-size-big-actions-margin-top: 20px;
+  --kbq-empty-state-size-big-image-margin-bottom: 32px;
+  --kbq-empty-state-size-big-image-addon-height: 56px;
+  --kbq-empty-state-size-big-title-margin-bottom: 20px;
+  --kbq-empty-state-size-normal-max-width: 320px;
+  --kbq-empty-state-size-normal-padding-horizontal: 32px;
+  --kbq-empty-state-size-normal-padding-top: 32px;
+  --kbq-empty-state-size-normal-padding-bottom: 32px;
+  --kbq-empty-state-size-normal-actions-margin-top: 8px;
+  --kbq-empty-state-size-normal-image-margin-bottom: 32px;
+  --kbq-empty-state-size-normal-image-addon-height: 24px;
+  --kbq-empty-state-size-normal-title-margin-bottom: 8px;
   --kbq-file-upload-size-single-container-border-radius: 8px;
   --kbq-file-upload-size-single-container-border-width: 1px;
   --kbq-file-upload-size-single-container-content-gap-horizontal: 8px;
@@ -1756,8 +1772,10 @@
   --kbq-forms-size-vertical-legend-margin-bottom: 12px;
   --kbq-hint-size-normal-content-padding: 4px;
   --kbq-hint-size-compact-content-padding: 2px;
-  --kbq-icon-item-size-horizontal-padding: 8px;
-  --kbq-icon-item-size-vertical-padding: 8px;
+  --kbq-icon-item-size-normal-horizontal-padding: 8px;
+  --kbq-icon-item-size-normal-vertical-padding: 8px;
+  --kbq-icon-item-size-big-horizontal-padding: 16px;
+  --kbq-icon-item-size-big-vertical-padding: 16px;
   --kbq-input-size-padding-horizontal: 12px;
   --kbq-input-size-padding-vertical: 4px;
   --kbq-link-size-state-focused-outline-offset: 0px;
