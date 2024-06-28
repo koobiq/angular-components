@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     Inject,
+    Input,
     Optional,
     ViewEncapsulation
 } from '@angular/core';
@@ -25,12 +26,20 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'mc kbq-icon kbq-icon-item'
+        class: 'mc kbq-icon kbq-icon-item kbq-icon-item_filled',
+        '[class.kbq-icon-item_normal]': '!big',
+        '[class.kbq-icon-item_big]': 'big',
+        '[class.kbq-icon-item_fade-off]': '!fade',
+        '[class.kbq-icon-item_fade-on]': 'fade'
     }
 })
 export class KbqIconItem extends KbqIcon implements CanColor {
 
     override name = 'KbqIconItem';
+
+    @Input() fade: boolean = false;
+    @Input() big: boolean = false;
+
     constructor(
         elementRef: ElementRef,
         @Attribute('kbq-icon-item') iconName: string,
