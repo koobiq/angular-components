@@ -25,6 +25,7 @@
         "@angular/core": "17.2.0",
         "@angular/forms": "17.2.0",
         "@angular/platform-browser": "17.2.0",
+        "@docsearch/js": "^3.6.0",
         "@koobiq/date-adapter": "^3.1.2",
         "@koobiq/date-formatter": "^3.1.2",
         "@koobiq/icons": "^7.1.1",
