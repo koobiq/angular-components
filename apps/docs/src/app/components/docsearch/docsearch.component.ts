@@ -15,7 +15,8 @@ export class DocsearchComponent {
 
     private initDocSearch(): void {
         let transformItems;
-        if (location.host !== 'koobiq.io' && location.protocol !== 'https:') {
+        // transform URL to work docsearch on DEV stand
+        if (location.host !== 'koobiq.io' || location.protocol !== 'https:') {
             transformItems = (items) => {
                 return items.map((item) => {
                     item.url = item.url.replace('koobiq.io', location.host);
