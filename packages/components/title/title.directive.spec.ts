@@ -44,6 +44,16 @@ describe('KbqTitleDirective', () => {
             expect(tooltipInstance).not.toBeNull();
         }));
 
+        it('should open tooltip for overflown text with inline element', fakeAsync(() => {
+            dispatchMouseEvent(debugElement.query(By.css('#parent3')).nativeElement, 'mouseenter');
+
+            fixture.detectChanges();
+            flush();
+
+            const tooltipInstance = document.querySelector('.kbq-tooltip');
+            expect(tooltipInstance).not.toBeNull();
+        }));
+
         it('should NOT open tooltip for text with wide parent', fakeAsync(() => {
             dispatchMouseEvent(debugElement.query(By.css('#parent2')).nativeElement, 'mouseenter');
 
@@ -96,6 +106,7 @@ describe('KbqTitleDirective', () => {
     template: `
         <div id="parent1" class="parent" style="max-width: 150px;" kbq-title>{{ longValue }}</div>
         <div id="parent2" class="parent" style="max-width: 600px;" kbq-title>{{ defaultValue }}</div>
+        <div id="parent3" class="parent" style="max-width: 600px;" kbq-title><span>{{ longValue }}</span></div>
     `
 })
 class BaseKbqTitleComponent {
