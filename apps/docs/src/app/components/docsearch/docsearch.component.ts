@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import docsearch from '@docsearch/js';
 
@@ -6,8 +6,6 @@ import docsearch from '@docsearch/js';
     standalone: true,
     selector: 'docs-docsearch',
     template: '',
-    styleUrl: './docsearch.component.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsearchComponent {
