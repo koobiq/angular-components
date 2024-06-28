@@ -3,10 +3,8 @@
 
 @use '../../styles/common/rtl';
 
-@use '../tokens';
+@use '../common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 /*
 *  Responsive attributes
@@ -456,19 +454,19 @@ $tokens: meta.module-variables(tokens) !default;
 
 @mixin layout-indents() {
     $sizes: (
-        '3xs': map.get($tokens, size-3xs),
-        'xxs': map.get($tokens, size-xxs),
-        'xs': map.get($tokens, size-xs),
-        's': map.get($tokens, size-s),
-        'm': map.get($tokens, size-m),
-        'l': map.get($tokens, size-l),
-        'xl': map.get($tokens, size-xl),
-        'xxl': map.get($tokens, size-xxl),
-        '3xl': map.get($tokens, size-3xl),
-        '4xl': map.get($tokens, size-4xl),
-        '5xl': map.get($tokens, size-5xl),
-        '6xl': map.get($tokens, size-6xl),
-        '7xl': map.get($tokens, size-7xl)
+        '3xs': kbq-css-variable(size-3xs),
+        'xxs': kbq-css-variable(size-xxs),
+        'xs': kbq-css-variable(size-xs),
+        's': kbq-css-variable(size-s),
+        'm': kbq-css-variable(size-m),
+        'l': kbq-css-variable(size-l),
+        'xl': kbq-css-variable(size-xl),
+        'xxl': kbq-css-variable(size-xxl),
+        '3xl': kbq-css-variable(size-3xl),
+        '4xl': kbq-css-variable(size-4xl),
+        '5xl': kbq-css-variable(size-5xl),
+        '6xl': kbq-css-variable(size-6xl),
+        '7xl': kbq-css-variable(size-7xl)
     );
 
     $indents: 'padding', 'margin';

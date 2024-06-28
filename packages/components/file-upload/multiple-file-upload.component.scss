@@ -10,6 +10,7 @@
 $tokens: meta.module-variables(tokens) !default;
 
 //todo нужно рефакторить со стилями тут сложно
+
 /* stylelint-disable no-descending-specificity */
 
 .kbq-multiple-file-upload .kbq-file-upload {
@@ -100,8 +101,8 @@ $tokens: meta.module-variables(tokens) !default;
         }
 
         .kbq-file-upload__size {
-            width: map.get($tokens, size-7xl);
-            min-width: map.get($tokens, size-7xl);
+            width: kbq-css-variable(size-7xl);
+            min-width: kbq-css-variable(size-7xl);
             text-align: left;
             flex-grow: 1;
         }
