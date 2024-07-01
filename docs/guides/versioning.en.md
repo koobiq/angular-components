@@ -1,4 +1,4 @@
-For the sake of keeping things simple, refer to the [Semver spec](semver-org)
+For the sake of keeping things simple, refer to the [Semver spec](http://semver.org/)
 for anything this document does not cover.
 
 ### Versioning semver
@@ -29,6 +29,3 @@ for anything this document does not cover.
   - Add tests or examples
   - Update examples
   - Update internal documentation
-  
-
-[semver-org]: http://semver.org/
