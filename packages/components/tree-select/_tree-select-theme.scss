@@ -6,7 +6,6 @@
 @use '../core/styles/common/popup' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-tree-select-theme($theme) {
     $foreground: map.get($theme, foreground);
 

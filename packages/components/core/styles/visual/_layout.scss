@@ -5,7 +5,6 @@
 
 @use '../common/tokens' as *;
 
-
 /*
 *  Responsive attributes
 *
@@ -54,7 +53,7 @@
     }
 }
 
-@mixin offset-for-name($sizes:null) {
+@mixin offset-for-name($sizes: null) {
     @if $sizes == null {
         $sizes: '';
     }
@@ -175,13 +174,27 @@
     }
 
     // === flex: 1 1 0%;
-    .#{$flexName}             { flex: 1; }
-    .#{$flexName}-grow        { flex: 1 1 100%; }
-    .#{$flexName}-initial     { flex: 0 1 auto; }
-    .#{$flexName}-auto        { flex: 1 1 auto; }
-    .#{$flexName}-none        { flex: 0 0 auto; }
-    .#{$flexName}-no-shrink    { flex: 1 0 auto; }
-    .#{$flexName}-no-grow      { flex: 0 1 auto; }
+    .#{$flexName} {
+        flex: 1;
+    }
+    .#{$flexName}-grow {
+        flex: 1 1 100%;
+    }
+    .#{$flexName}-initial {
+        flex: 0 1 auto;
+    }
+    .#{$flexName}-auto {
+        flex: 1 1 auto;
+    }
+    .#{$flexName}-none {
+        flex: 0 0 auto;
+    }
+    .#{$flexName}-no-shrink {
+        flex: 1 0 auto;
+    }
+    .#{$flexName}-no-grow {
+        flex: 0 1 auto;
+    }
 
     // (1-20) * 5 = 0-100%
     @for $i from 0 through 20 {
@@ -332,7 +345,6 @@
 }
 
 @mixin layout-align-for-name($suffix: null) {
-
     // Alignment attributes for layout containers' children
     // Arrange on the Main Axis
     // center, start, end, space-between, space-around
@@ -466,7 +478,7 @@
         '4xl': kbq-css-variable(size-4xl),
         '5xl': kbq-css-variable(size-5xl),
         '6xl': kbq-css-variable(size-6xl),
-        '7xl': kbq-css-variable(size-7xl)
+        '7xl': kbq-css-variable(size-7xl),
     );
 
     $indents: 'padding', 'margin';
@@ -522,4 +534,3 @@
 
     @include layout-indents();
 }
-

@@ -5,7 +5,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-tag-state($component, $type, $style-name) {
     $style: map.get($component, $type, $style-name);
 
@@ -70,4 +69,3 @@
         @include kbq-typography-css-variables(tag-input, default);
     }
 }
-

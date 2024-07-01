@@ -6,7 +6,6 @@
 @use '../styles/typography/typography-utils' as *;
 @use '../styles/common/tokens' as *;
 
-
 @mixin kbq-form-geometry($tokens) {
     .kbq-form {
         display: flex;

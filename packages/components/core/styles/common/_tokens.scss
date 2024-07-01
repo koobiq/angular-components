@@ -5,9 +5,7 @@
 
 @use '../tokens';
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 @function kbq-css-variable($name, $value: null) {
     @if $value {

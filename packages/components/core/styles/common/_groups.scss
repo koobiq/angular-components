@@ -4,7 +4,6 @@
 @use '../tokens';
 @use '../common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 @mixin border-top-radius($radius) {
@@ -114,4 +113,3 @@ $tokens: meta.module-variables(tokens) !default;
     }
     /* stylelint-enable no-descending-specificity */
 }
-

@@ -4,9 +4,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 @mixin tab-label {
     position: relative;

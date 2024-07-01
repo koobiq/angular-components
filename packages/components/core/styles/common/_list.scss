@@ -4,7 +4,6 @@
 @use '../tokens';
 @use './tokens' as *;
 
-
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
 @mixin kbq-truncate-line() {

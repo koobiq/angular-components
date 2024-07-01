@@ -4,7 +4,7 @@
     width: 90px;
     position: relative;
 
-    border: 1px solid #B3B3B2;
+    border: 1px solid #b3b3b2;
     border-radius: 8px;
 }
 
@@ -14,13 +14,13 @@
     height: 16px;
     width: 16px;
 
-    background: #338FCB;;
+    background: #338fcb;
 
     cursor: pointer;
 }
 
 .tooltip-example__trigger.kbq-tooltip_open {
-    background: #CB3C33;
+    background: #cb3c33;
 }
 
 .tooltip-example__trigger_top {
@@ -42,4 +42,3 @@
     right: -8px;
     bottom: calc(50% - 8px);
 }
-

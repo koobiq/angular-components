@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-popover-theme($theme) {
     $popover: map.get(map.get($theme, components), popover);
 

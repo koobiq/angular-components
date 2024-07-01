@@ -6,7 +6,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-select-theme($theme) {
     $foreground: map.get($theme, foreground);
 

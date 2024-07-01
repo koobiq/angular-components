@@ -1,6 +1,5 @@
 @use '../../../styles/koobiq/default-theme/variables' as *;
 
-
 .docs-welcome {
     display: flex;
     flex-direction: column;
@@ -97,7 +96,7 @@
     .docs-welcome__header,
     .docs-welcome__articles {
         min-width: 772px;
-        max-width: 1024px
+        max-width: 1024px;
     }
 }
 

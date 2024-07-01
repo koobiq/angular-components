@@ -5,9 +5,7 @@
 @use '../tokens';
 @use './tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 %kbq-select-base {
     box-sizing: border-box;

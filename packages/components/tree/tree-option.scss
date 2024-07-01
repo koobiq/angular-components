@@ -5,9 +5,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 .kbq-tree-option {
     @include common.kbq-no-select;

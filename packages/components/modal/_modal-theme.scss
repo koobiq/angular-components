@@ -4,39 +4,38 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-modal-theme($theme) {
     $modal: map.get(map.get($theme, components), modal);
 
     .kbq-modal {
-        background:  kbq-css-variable(modal-container-background, map.get($modal, container-background));
-        box-shadow:  kbq-css-variable(modal-container-box-shadow, map.get($modal, container-box-shadow));
+        background: kbq-css-variable(modal-container-background, map.get($modal, container-background));
+        box-shadow: kbq-css-variable(modal-container-box-shadow, map.get($modal, container-box-shadow));
 
         .kbq-modal-header {
             & .kbq-modal-title {
-                color:  kbq-css-variable(modal-header, map.get($modal, header));
+                color: kbq-css-variable(modal-header, map.get($modal, header));
             }
 
             & .kbq-modal-close {
-                color:  kbq-css-variable(modal-close-button, map.get($modal, close-button));
+                color: kbq-css-variable(modal-close-button, map.get($modal, close-button));
             }
         }
 
         .kbq-modal-content {
-            color:  kbq-css-variable(modal-content, map.get($modal, content));
+            color: kbq-css-variable(modal-content, map.get($modal, content));
         }
 
         .kbq-modal-header.kbq-modal-body_top-overflow {
-            box-shadow:  kbq-css-variable(modal-body-top-shadow, map.get($modal, body-top-shadow));
+            box-shadow: kbq-css-variable(modal-body-top-shadow, map.get($modal, body-top-shadow));
         }
 
         .kbq-modal-footer.kbq-modal-body_bottom-overflow {
-            box-shadow:  kbq-css-variable(modal-body-bottom-shadow, map.get($modal, body-bottom-shadow));
+            box-shadow: kbq-css-variable(modal-body-bottom-shadow, map.get($modal, body-bottom-shadow));
         }
     }
 
     .kbq-modal-mask {
-        background-color:  kbq-css-variable(modal-overlay, map.get($modal, overlay));
+        background-color: kbq-css-variable(modal-overlay, map.get($modal, overlay));
     }
 }
 

@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-navbar-item($component, $state-name) {
     $state: map.get($component, $state-name);
 
@@ -27,7 +26,6 @@
         color: kbq-css-variable(navbar-item-#{$state-name}-icon-right, map.get($state, icon-right)) !important;
     }
 }
-
 
 @mixin kbq-navbar-theme($theme) {
     $navbar: map.get($theme, components, navbar);

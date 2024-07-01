@@ -20,12 +20,10 @@
 
 @use '../styles/hot-keys';
 
-
 @include components.kbq-core();
 
 @include visual.body-html();
 @include visual.layouts-for-breakpoint();
-
 
 // Include all typography for the components.
 @mixin docs-typography($tokens, $config, $md-config) {
@@ -70,4 +68,3 @@
     @include koobiq-theme($theme);
     @include docs-components-theme($theme);
 }
-

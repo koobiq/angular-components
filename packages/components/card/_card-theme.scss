@@ -2,7 +2,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-card-style($component, $style-name) {
     $style: map.get($component, $style-name);
 

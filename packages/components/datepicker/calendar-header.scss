@@ -4,7 +4,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-calendar-header {

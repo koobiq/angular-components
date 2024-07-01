@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-link-geometry($tokens) {
     display: inline;
 
@@ -57,7 +56,6 @@
             }
         }
     }
-
 
     &.kbq-link_pseudo {
         &.kbq-text-only,
@@ -145,7 +143,7 @@
                 }
 
                 &::after {
-                    content: ":\a" attr(print);
+                    content: ':\a' attr(print);
                     white-space: pre;
                 }
             }

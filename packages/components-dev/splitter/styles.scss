@@ -1,6 +1,5 @@
 @use '../main';
 
-
 .container {
     margin: 8px;
 }
@@ -24,12 +23,12 @@
 }
 
 div[kbq-splitter-area] {
-    background: #c5c0c0
+    background: #c5c0c0;
 }
 
 // custom color
 kbq-splitter.custom-color > kbq-gutter {
-    background-color: #03A9F4;
+    background-color: #03a9f4;
     color: white;
 }
 
@@ -43,7 +42,7 @@ kbq-splitter.custom-color > kbq-gutter:hover {
 kbq-splitter.custom-gutter > kbq-gutter {
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
 }
 /* stylelint-enable no-descending-specificity */
 

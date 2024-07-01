@@ -6,7 +6,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-input {
@@ -31,12 +30,12 @@ $tokens: meta.module-variables(tokens) !default;
         kbq-css-variable(input-size-padding-horizontal);
 }
 
-input.kbq-input[type="number"] {
+input.kbq-input[type='number'] {
     -moz-appearance: textfield;
 }
 
-input.kbq-input[type="number"]::-webkit-inner-spin-button,
-input.kbq-input[type="number"]::-webkit-outer-spin-button {
+input.kbq-input[type='number']::-webkit-inner-spin-button,
+input.kbq-input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 

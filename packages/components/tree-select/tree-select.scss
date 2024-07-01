@@ -4,7 +4,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/select' as *;
 
-
 .kbq-tree-select {
     @extend %kbq-select-base;
 }

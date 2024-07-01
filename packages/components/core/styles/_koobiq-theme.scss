@@ -56,7 +56,6 @@
 @use '../highlight/highlight-theme' as *;
 @use '../../dl/dl-theme' as *;
 
-
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 

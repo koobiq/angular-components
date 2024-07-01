@@ -1,8 +1,7 @@
 @use '../main';
 
-
-.colorNested > div div  {
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+.colorNested > div div {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     opacity: 0.9;
     color: white;
     text-align: center;
@@ -25,14 +24,14 @@
     background-color: #8bc34a;
 }
 
-.colorNested > div div:nth-child(5)  {
+.colorNested > div div:nth-child(5) {
     background-color: #deb867;
 }
 
 .colorNested > div div:nth-child(6) {
-    background-color: #FF5722;
+    background-color: #ff5722;
 }
 
-.colorNested > div div:nth-child(7)  {
-    background-color: #03A9F4;
+.colorNested > div div:nth-child(7) {
+    background-color: #03a9f4;
 }

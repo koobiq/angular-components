@@ -5,7 +5,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-dropdown-item {
     @include common.user-select(none);
     @include common.kbq-list-item-base();

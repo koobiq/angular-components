@@ -5,7 +5,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-button-toggle-state($component, $state-name) {
     $state: map.get($component, $state-name);
 
@@ -23,7 +22,8 @@
 
     .kbq-button-toggle-group {
         background: kbq-css-variable(
-            button-toggle-container-background, map.get($button-toggle, container, background)
+            button-toggle-container-background,
+            map.get($button-toggle, container, background)
         );
 
         .kbq-button-toggle {
@@ -74,4 +74,3 @@
         @include kbq-typography-css-variables(button-toggle, item);
     }
 }
-

@@ -9,7 +9,7 @@ kbq-splitter.without-border {
 }
 
 .with-border > div[kbq-splitter-area] {
-    background: #c5c0c0
+    background: #c5c0c0;
 }
 
 .without-border > div[kbq-splitter-area] {

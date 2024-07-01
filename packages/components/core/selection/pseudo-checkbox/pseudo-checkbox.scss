@@ -4,7 +4,6 @@
 @use '../../styles/tokens';
 @use '../../styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-pseudo-checkbox {

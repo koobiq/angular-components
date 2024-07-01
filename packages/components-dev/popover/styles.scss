@@ -3,7 +3,6 @@
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
 
-
 $tokens: meta.module-variables(tokens);
 $theme: theming.kbq-light-theme($tokens);
 

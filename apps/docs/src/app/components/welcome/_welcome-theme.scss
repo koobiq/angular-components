@@ -1,6 +1,5 @@
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-welcome-theme($theme) {
     $foreground: map-get($theme, foreground);
 

@@ -1,6 +1,5 @@
 @use '../core/styles/functions/timing' as *;
 
-
 $animation-duration-base: 0.3s;
 
 @mixin _motion-common($duration: $animation-duration-base) {

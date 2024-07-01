@@ -1,7 +1,6 @@
 @use '../main';
 @use '../../components/core/styles/visual/layout';
 
-
 @include layout.layouts-for-breakpoint();
 
 .sidepanel-demo {

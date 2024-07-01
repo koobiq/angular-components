@@ -5,7 +5,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-datepicker-theme($theme) {
     $datepicker: map.get(map.get($theme, components), datepicker);
 
@@ -24,39 +23,53 @@
 
     .kbq-calendar__body-cell-content {
         background: kbq-css-variable(
-            datepicker-cell-default-background, map.get($datepicker, cell, default, background));
+            datepicker-cell-default-background,
+            map.get($datepicker, cell, default, background)
+        );
         color: kbq-css-variable(datepicker-cell-default-text, map.get($datepicker, cell, default, text));
 
         &.kbq-calendar__body-today {
             background: kbq-css-variable(
-                datepicker-cell-today-background, map.get($datepicker, cell, today, background));
+                datepicker-cell-today-background,
+                map.get($datepicker, cell, today, background)
+            );
             color: kbq-css-variable(datepicker-cell-today-text, map.get($datepicker, cell, today, text));
         }
 
         &:hover:not(.kbq-disabled) {
             background: kbq-css-variable(
-                datepicker-cell-hover-background, map.get($datepicker, cell, hover, background));
+                datepicker-cell-hover-background,
+                map.get($datepicker, cell, hover, background)
+            );
         }
 
         &:active:not(.kbq-disabled) {
             background: kbq-css-variable(
-                datepicker-cell-active-background, map.get($datepicker, cell, active, background));
+                datepicker-cell-active-background,
+                map.get($datepicker, cell, active, background)
+            );
         }
 
         &.kbq-selected:not(.kbq-disabled) {
             background: kbq-css-variable(
-                datepicker-cell-selected-background, map.get($datepicker, cell, selected, background));
+                datepicker-cell-selected-background,
+                map.get($datepicker, cell, selected, background)
+            );
             color: kbq-css-variable(datepicker-cell-selected-text, map.get($datepicker, cell, selected, text));
 
             &:hover {
                 background: kbq-css-variable(
-                    datepicker-cell-selected-hover-background, map.get($datepicker, cell, selected-hover, background));
+                    datepicker-cell-selected-hover-background,
+                    map.get($datepicker, cell, selected-hover, background)
+                );
             }
         }
 
         &.kbq-disabled {
             background: kbq-css-variable(
-                datepicker-cell-disabled-background, map.get($datepicker, cell, disabled, background));
+                datepicker-cell-disabled-background,
+                map.get($datepicker, cell, disabled, background)
+            );
         }
     }
 }

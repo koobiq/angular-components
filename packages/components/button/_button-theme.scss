@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin _icon($left-icon, $right-icon) {
     .kbq-icon {
         color: $left-icon;
@@ -45,7 +44,8 @@
     &.kbq-disabled {
         color: kbq-css-variable(#{$base-path}-states-disabled-foreground, map.get($style, states-disabled-foreground));
         background: kbq-css-variable(
-            #{$base-path}-states-disabled-background, map.get($style, states-disabled-background)
+            #{$base-path}-states-disabled-background,
+            map.get($style, states-disabled-background)
         );
 
         @include _icon(

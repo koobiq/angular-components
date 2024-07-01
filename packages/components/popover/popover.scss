@@ -7,9 +7,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 $arrow-size: 12px;
 $trigger-margin: 9px;

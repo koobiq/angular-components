@@ -3,7 +3,6 @@
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
 
-
 $tokens: meta.module-variables(tokens);
 $theme: theming.kbq-light-theme($tokens);
 
@@ -11,7 +10,6 @@ $theme: theming.kbq-light-theme($tokens);
     width: 485px;
     max-width: 485px;
 }
-
 
 .left-padding {
     padding-left: 32px;

@@ -1,7 +1,6 @@
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 
-
 /* stylelint-disable no-descending-specificity */
 @mixin kbq-docs-component-viewer-theme($theme) {
     $background: map-get($theme, background);

@@ -6,7 +6,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 //todo нужно рефакторить со стилями тут сложно
@@ -109,7 +108,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         .kbq-file-upload__file,
         .kbq-file-upload__size,
-        .kbq-file-upload__action, {
+        .kbq-file-upload__action {
             //padding-left: $horizontal-padding-item;
             //padding-right: $horizontal-padding-item;
         }
@@ -146,7 +145,6 @@ $tokens: meta.module-variables(tokens) !default;
                     $compensation
                 );
         }
-
     }
 
     .btn-upload {

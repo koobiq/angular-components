@@ -1,7 +1,6 @@
 @use 'components/core/styles/core' as common;
 @use '../../../styles/koobiq/default-theme/variables' as *;
 
-
 .docs-icons-viewer {
     overflow-y: auto;
 
@@ -34,7 +33,7 @@
         text-align: left;
     }
 
-    & > .kbq-form-field    {
+    & > .kbq-form-field {
         max-width: 320px;
     }
 }

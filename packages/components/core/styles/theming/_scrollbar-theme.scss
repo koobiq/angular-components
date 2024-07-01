@@ -3,7 +3,6 @@
 
 @use '../functions/string' as *;
 
-
 @mixin kbq-scrollbar($tokens) {
     $border-width: calc(
         (var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) -
@@ -56,7 +55,6 @@
         display: none;
     }
 }
-
 
 @mixin kbq-scrollbar-theme($theme) {
     $scrollbar: map.get(map.get($theme, components), scrollbar);

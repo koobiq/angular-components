@@ -5,9 +5,7 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $trigger-margin: 8px;
-
 
 .kbq-tooltip__inner {
     border-radius: kbq-css-variable(tooltip-size-border-radius);

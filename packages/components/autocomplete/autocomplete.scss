@@ -3,14 +3,13 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-autocomplete-panel {
     visibility: hidden;
 
     position: relative;
 
     overflow: hidden auto;
-    -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
+    -webkit-overflow-scrolling: touch; // for momentum scroll on mobile
 
     margin-top: -1px;
 

@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-table-theme($theme) {
     $foreground: map.get($theme, foreground);
     $states-background: map.get($theme, states, background);
@@ -23,7 +22,9 @@
             & > tr {
                 &:hover td {
                     background-color: kbq-css-variable(
-                        states-background-transparent-hover, map.get($states-background, transparent-hover));
+                        states-background-transparent-hover,
+                        map.get($states-background, transparent-hover)
+                    );
                 }
 
                 & > th,
@@ -63,4 +64,3 @@
         }
     }
 }
-

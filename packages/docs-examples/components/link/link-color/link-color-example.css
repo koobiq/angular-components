@@ -5,11 +5,11 @@ td {
 /*Цвета ссылок должны браться как переменные из необходимой темы*/
 
 .warning {
-    color: #F0D49B !important;
-    border-bottom: 1px solid #F0D49B !important;
+    color: #f0d49b !important;
+    border-bottom: 1px solid #f0d49b !important;
 }
 
 .ok {
-    color: #B79A45 !important;
-    border-bottom: 1px solid #B79A45 !important;
+    color: #b79a45 !important;
+    border-bottom: 1px solid #b79a45 !important;
 }

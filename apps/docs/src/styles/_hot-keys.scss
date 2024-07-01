@@ -1,18 +1,17 @@
 @use '../dist/components/core/styles/theming';
 
-
 @mixin hot-key-button-theme($theme) {
     $foreground: map-get($theme, foreground);
 
     .hot-key-button {
-        @if(map-get($theme, is-dark)) {
+        @if (map-get($theme, is-dark)) {
             color: theming.kbq-color($foreground, contrast);
             border-color: #808080;
 
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
         } @else {
             color: theming.kbq-color($foreground, contrast);
-            border-color: #D8D9DB;
+            border-color: #d8d9db;
 
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04);
         }

@@ -3,9 +3,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 .kbq-code-block-actionbar {
     display: flex;

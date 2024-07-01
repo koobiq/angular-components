@@ -9,7 +9,6 @@
 
 @use './styles/markdown';
 
-
 .docs {
     @include theme-kbq.docs-typography(
         tokens.$tokens,

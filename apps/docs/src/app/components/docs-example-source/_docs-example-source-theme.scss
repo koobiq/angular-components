@@ -1,7 +1,6 @@
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-example-source-theme($theme) {
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
