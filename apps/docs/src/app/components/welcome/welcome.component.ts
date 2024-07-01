@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject, fromEvent, Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 
 import { DocStates } from '../doс-states';
 import { DocCategory, DocumentationItems } from '../documentation-items';
@@ -19,7 +19,7 @@ import { KbqTheme, ThemeService } from '@koobiq/components/core';
 export class WelcomeComponent implements OnInit, OnDestroy {
     readonly destroyed = new Subject<void>();
     docCategories: DocCategory[];
-    currentTheme$: BehaviorSubject<KbqTheme>;
+    currentTheme$: Observable<string>;
 
     constructor(
         private elementRef: ElementRef,
@@ -38,7 +38,9 @@ export class WelcomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.docCategories = this.docItems.getCategories().filter(category => category.isPreviewed);
-        this.currentTheme$ = this.themeService.current;
+        this.currentTheme$ = this.themeService.current.pipe(
+            map(currentTheme => currentTheme.className.replace('theme-', ''))
+        );
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 

@@ -32,29 +32,26 @@
 .docs-welcome__category {
     margin-top: $size-5xl;
     max-width: 1300px;
+}
 
-    &-items {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        margin-top: $size-l;
+.docs-welcome__category-items {
+    flex-wrap: wrap;
 
-        gap: $size-4xl;
-    }
+    gap: $size-4xl;
+}
 
-    &-item {
-        width: 200px;
-        text-decoration: none;
-    }
+.docs-welcome__category-item {
+    width: 200px;
+    text-decoration: none;
+}
 
-    &-item-preview {
-        width: 100%;
-        height: auto;
-    }
+.docs-welcome__category-item-preview {
+    width: 100%;
+    height: auto;
+}
 
-    &-item-title {
-        margin-top: $size-m;
-    }
+.docs-welcome__category-item-title {
+    margin-top: $size-m;
 }
 
 @media (width < 768px) {
