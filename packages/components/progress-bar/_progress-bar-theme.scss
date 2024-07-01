@@ -2,40 +2,37 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-progress-bar-theme($theme) {
     $progress-bar: map.get(map.get($theme, components), progress-bar);
 
     .kbq-progress-bar.kbq-theme {
-        $bar: map.get($progress-bar, bar);
-
         .kbq-progress-bar__inner {
-            background-color: map.get($bar, background);
+            background-color: kbq-css-variable(progress-bar-bar-background, map.get($progress-bar, bar, background));
         }
 
         .kbq-progress-bar__line {
-            background-color: map.get($bar, foreground);
+            background-color: kbq-css-variable(progress-bar-bar-foreground, map.get($progress-bar, bar, foreground));
         }
     }
 
     .kbq-progress-bar-text {
-        color: map.get($progress-bar, text);
+        color: kbq-css-variable(progress-bar-text, map.get($progress-bar, text));
     }
 
     .kbq-progress-bar-caption {
-        color: map.get($progress-bar, caption);
+        color: kbq-css-variable(progress-bar-caption, map.get($progress-bar, caption));
     }
 }
 
 @mixin kbq-progress-bar-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-progress-bar-text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-label));
+        @include kbq-typography-css-variables(progress-bar, label);
     }
 
     .kbq-progress-bar-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-bar-font-caption));
+        @include kbq-typography-css-variables(progress-bar, caption);
     }
 }

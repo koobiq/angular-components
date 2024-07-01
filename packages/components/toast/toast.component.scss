@@ -1,7 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -10,27 +10,27 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     box-sizing: border-box;
 
-    width: var(--kbq-toast-size-container-width, map.get($tokens, toast-size-container-width));
+    width: kbq-css-variable(toast-size-container-width);
 
     height: auto;
 
-    border-radius: var(--kbq-toast-size-container-border-radius, map.get($tokens, toast-size-container-border-radius));
+    border-radius: kbq-css-variable(toast-size-container-border-radius);
 
-    padding-left: var(--kbq-toast-size-container-padding-left, map.get($tokens, toast-size-container-padding-left));
-    padding-right: var(--kbq-toast-size-container-padding-right, map.get($tokens, toast-size-container-padding-right));
+    padding-left: kbq-css-variable(toast-size-container-padding-left);
+    padding-right: kbq-css-variable(toast-size-container-padding-right);
 }
 
 .kbq-toast__icon-container {
-    width: var(--kbq-toast-size-icon-width, map.get($tokens, toast-size-icon-width));
-    max-width: var(--kbq-toast-size-icon-width, map.get($tokens, toast-size-icon-width));
-    height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
-    max-height: var(--kbq-toast-size-icon-height, map.get($tokens, toast-size-icon-height));
+    width: kbq-css-variable(toast-size-icon-width);
+    max-width: kbq-css-variable(toast-size-icon-width);
+    height: kbq-css-variable(toast-size-icon-height);
+    max-height: kbq-css-variable(toast-size-icon-height);
 
-    border-radius: var(--kbq-toast-size-border-raius, map.get($tokens, toast-size-border-raius));
+    border-radius: kbq-css-variable(toast-size-border-raius);
 
-    margin-right: var(--kbq-toast-size-icon-margin-right, map.get($tokens, toast-size-icon-margin-right));
+    margin-right: kbq-css-variable(toast-size-icon-margin-right);
 
-    padding-top: var(--kbq-toast-size-content-padding-top, map.get($tokens, toast-size-content-padding-top));
+    padding-top: kbq-css-variable(toast-size-content-padding-top);
 }
 
 .kbq-toast__container {
@@ -39,9 +39,9 @@ $tokens: meta.module-variables(tokens) !default;
 
     flex: 1;
 
-    padding-top: var(--kbq-toast-size-content-padding-top, map.get($tokens, toast-size-content-padding-top));
-    padding-right: map.get($tokens, size-s);
-    padding-bottom: var(--kbq-toast-size-content-padding-bottom, map.get($tokens, toast-size-content-padding-bottom));
+    padding-top: kbq-css-variable(toast-size-content-padding-top);
+    padding-right: kbq-css-variable(size-s);
+    padding-bottom: kbq-css-variable(toast-size-content-padding-bottom);
 }
 
 .kbq-toast__title {
@@ -51,7 +51,7 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-toast__title_with-content {
-    padding-bottom: var(--kbq-toast-size-caption-padding-bottom, map.get($tokens, toast-size-caption-padding-bottom));
+    padding-bottom: kbq-css-variable(toast-size-caption-padding-bottom);
 }
 
 .kbq-toast__text {
@@ -68,17 +68,12 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-toast__actions {
     display: flex;
 
-    padding-top: var(--kbq-toast-size-button-stack-padding-top, map.get($tokens, toast-size-button-stack-padding-top));
+    padding-top: kbq-css-variable(toast-size-button-stack-padding-top);
 
-    gap: var(
-        --kbq-toast-size-button-stack-content-gap-horizontal,
-        map.get($tokens, toast-size-button-stack-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(toast-size-button-stack-content-gap-horizontal);
 }
 
 .kbq-toast__close-button {
-    margin-top: var(--kbq-toast-size-close-button-margin-top, map.get($tokens, toast-size-close-button-margin-top));
-    margin-right: var(
-        --kbq-toast-size-close-button-margin-right, map.get($tokens, toast-size-close-button-margin-right)
-    );
+    margin-top: kbq-css-variable(toast-size-close-button-margin-top);
+    margin-right: kbq-css-variable(toast-size-close-button-margin-right);
 }

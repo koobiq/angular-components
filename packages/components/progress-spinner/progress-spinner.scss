@@ -3,7 +3,7 @@
 
 @use '../core/styles/functions/timing';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -18,10 +18,7 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     flex-direction: row;
 
-    gap: var(
-        --kbq-progress-spinner-size-compact-content-gap-horizontal,
-        map.get($tokens, progress-spinner-size-compact-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(progress-spinner-size-compact-content-gap-horizontal);
 }
 
 .kbq-progress-spinner__circle {
@@ -34,8 +31,8 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-progress-spinner__inner {
-    width: var(--kbq-progress-spinner-size-compact-size, map.get($tokens, progress-spinner-size-compact-size));
-    height: var(--kbq-progress-spinner-size-compact-size, map.get($tokens, progress-spinner-size-compact-size));
+    width: kbq-css-variable(progress-spinner-size-compact-size);
+    height: kbq-css-variable(progress-spinner-size-compact-size);
 
     transform: rotateZ(-90deg);
 
@@ -44,22 +41,16 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-progress-spinner__content {
     .kbq-progress-spinner-text {
-        margin-bottom: var(
-            --kbq-progress-spinner-size-compact-content-gap-vertical,
-            map.get($tokens, progress-spinner-size-compact-content-gap-vertical)
-        );
+        margin-bottom: kbq-css-variable(progress-spinner-size-compact-content-gap-vertical);
     }
 }
 
 .kbq-progress-spinner_big {
-    gap: var(
-        --kbq-progress-spinner-size-big-content-gap-horizontal,
-        map.get($tokens, progress-spinner-size-big-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(progress-spinner-size-big-content-gap-horizontal);
 
     & .kbq-progress-spinner__inner {
-        width: var(--kbq-progress-spinner-size-big-size, map.get($tokens, progress-spinner-size-big-size));
-        height: var(--kbq-progress-spinner-size-big-size, map.get($tokens, progress-spinner-size-big-size));
+        width: kbq-css-variable(progress-spinner-size-big-size);
+        height: kbq-css-variable(progress-spinner-size-big-size);
     }
 
     & .kbq-progress-spinner__circle {

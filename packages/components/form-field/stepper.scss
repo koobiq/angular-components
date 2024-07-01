@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-stepper {
@@ -13,17 +10,14 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: center;
     align-items: center;
 
-    width: var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size));
-    margin-right: var(
-        --kbq-form-field-size-icon-button-margin-right,
-        map.get($tokens, form-field-size-icon-button-margin-right)
-    );
+    width: kbq-css-variable(form-field-size-icon-button-size);
+    margin-right: kbq-css-variable(form-field-size-icon-button-margin-right);
     height: 100%;
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
         cursor: pointer;
-        width: var(--kbq-form-field-size-button-width, map.get($tokens, form-field-size-button-width));
+        width: kbq-css-variable(form-field-size-button-width);
         text-align: center;
     }
 

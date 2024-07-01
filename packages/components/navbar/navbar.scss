@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-navbar {
@@ -28,5 +25,5 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-navbar .kbq-navbar-container + .kbq-navbar-container {
-    margin-left: map.get($tokens, size-xxl);
+    margin-left: kbq-css-variable(size-xxl);
 }

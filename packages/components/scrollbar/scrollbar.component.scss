@@ -1,26 +1,16 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
 
 /* stylelint-disable no-descending-specificity */
 .kbq-scrollbar-component {
-    $scrollbar-size-thumb-width: var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width));
-    $padding-vertical: var(
-        --kbq-scrollbar-size-track-padding-vertical,
-        map.get($tokens, scrollbar-size-track-padding-vertical)
-    );
-    $padding-horizontal: var(
-        --kbq-scrollbar-size-track-padding-horizontal,
-        map.get($tokens, scrollbar-size-track-padding-horizontal)
-    );
-    $kbq-scrollbar-track-width: var(
-        --kbq-scrollbar-size-track-dimension,
-        map.get($tokens, scrollbar-size-track-dimension)
-    );
-    $thumb-min-height: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
+    $scrollbar-size-thumb-width: kbq-css-variable(scrollbar-size-thumb-width);
+    $padding-vertical: kbq-css-variable(scrollbar-size-track-padding-vertical);
+    $padding-horizontal: kbq-css-variable(scrollbar-size-track-padding-horizontal);
+    $kbq-scrollbar-track-width: kbq-css-variable(scrollbar-size-track-dimension);
+    $thumb-min-height: kbq-css-variable(scrollbar-size-thumb-min-size);
     $border-width: calc(($kbq-scrollbar-track-width - $scrollbar-size-thumb-width) / 4);
 
     .os-scrollbar-vertical {
@@ -62,10 +52,7 @@ $tokens: meta.module-variables(tokens) !default;
     .os-scrollbar {
         .os-scrollbar-handle, .os-scrollbar-handle::before, .os-scrollbar-track {
             box-sizing: border-box;
-            border-radius: var(
-                --kbq-scrollbar-size-thumb-inset-border-radius,
-                map.get($tokens, scrollbar-size-thumb-border-radius)
-            );
+            border-radius: kbq-css-variable(scrollbar-size-thumb-border-radius);
         }
 
         .os-scrollbar-track {

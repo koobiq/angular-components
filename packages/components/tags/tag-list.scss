@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -26,8 +27,8 @@ $tokens: meta.module-variables(tokens) !default;
 
     min-height: unset;
 
-    padding-top: var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical));
-    padding-bottom: var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical));
+    padding-top: kbq-css-variable(tag-size-padding-vertical);
+    padding-bottom: kbq-css-variable(tag-size-padding-vertical);
     padding-left: 4px;
     padding-right: unset;
 }
@@ -41,7 +42,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     min-width: 0;
 
-    gap: var(--kbq-tag-list-size-content-gap, map.get($tokens, tag-list-size-content-gap));
+    gap: kbq-css-variable(tag-list-size-content-gap);
 
     & .kbq-tag-input {
         max-width: 100%;
@@ -66,11 +67,11 @@ $tokens: meta.module-variables(tokens) !default;
                 var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
                 var(--kbq-form-field-size-border-width, $border-width)
             )
-            var(--kbq-tag-input-size-padding-right, map.get($tokens, tag-input-size-padding-right))
+            kbq-css-variable(tag-input-size-padding-right)
             calc(
                 var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
                 var(--kbq-form-field-size-border-width, $border-width)
             )
-            var(--kbq-tag-input-size-padding-left, map.get($tokens, tag-input-size-padding-left));
+            kbq-css-variable(tag-input-size-padding-left);
     }
 }

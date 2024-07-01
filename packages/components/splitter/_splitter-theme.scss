@@ -1,10 +1,10 @@
 @use 'sass:map';
 
-@use '../core/styles/theming/theming' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-splitter-theme($theme) {
-    $background: map.get(map.get($theme, states), background);
+    $background: map.get($theme, states, background);
 
     .kbq-gutter {
         cursor: col-resize;
@@ -20,7 +20,7 @@
 
         // todo
         &[disabled] {
-            background-color: kbq-color($background, disabled);
+            background-color: kbq-css-variable(background-disabled, map.get($background, disabled));
 
             cursor: default;
         }

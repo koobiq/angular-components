@@ -2,66 +2,67 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-list-item($state) {
-    background: map.get($state, container-background);
+@mixin kbq-list-item($component, $state-name) {
+    $state: map.get($component, $state-name);
+
+    background: kbq-css-variable(list-#{$state-name}-container-background, map.get($state, container-background));
 
     .kbq-list-text {
-        color: map.get($state, text);
+        color: kbq-css-variable(list-#{$state-name}-text, map.get($state, text));
     }
 
     .kbq-icon {
-        color: map.get($state, icon);
+        color: kbq-css-variable(list-#{$state-name}-icon, map.get($state, icon));
     }
 
     .kbq-option-action .kbq-icon {
-        color: map.get($state, icon-button);
+        color: kbq-css-variable(list-#{$state-name}-icon-button, map.get($state, icon-button));
     }
 
     .kbq-list-option-caption {
-        color: map.get($state, caption);
+        color: kbq-css-variable(list-#{$state-name}-caption, map.get($state, caption));
     }
 }
 
 @mixin kbq-list-theme($theme) {
-    $list-item: map.get(map.get($theme, components), list-item);
+    $list-item: map.get($theme, components, list-item);
 
     .kbq-list-option {
-        @include kbq-list-item(map.get($list-item, default));
+        @include kbq-list-item($list-item, default);
 
         &:hover:not(.kbq-disabled) {
-            @include kbq-list-item(map.get($list-item, hover));
+            @include kbq-list-item($list-item, states-hover);
         }
 
         &.kbq-focused {
-            border-color: map.get(map.get($list-item, focused), focus-outline);
+            border-color: map.get($list-item, states-focused, focus-outline);
         }
 
         &.kbq-selected {
-            @include kbq-list-item(map.get($list-item, selected));
+            @include kbq-list-item($list-item, states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-list-item(map.get($list-item, selected-hover));
+                @include kbq-list-item($list-item, states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-list-item(map.get($list-item, disabled));
+            @include kbq-list-item($list-item, states-disabled);
         }
     }
 }
 
 @mixin kbq-list-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-list-item,
     .kbq-list-option {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+        @include kbq-typography-css-variables(list, text);
 
         .kbq-list-text {
             .kbq-list-option-caption {
-                @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+                @include kbq-typography-css-variables(list, caption);
             }
         }
     }

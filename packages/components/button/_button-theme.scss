@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin _icon($left-icon, $right-icon) {
@@ -18,85 +19,43 @@
     }
 }
 
-@mixin kbq-filled-button($params) {
-    border-color: map.get($params, border);
-    color: map.get($params, foreground);
-    background: map.get($params, background);
+@mixin kbq-button-type($component, $type, $sub-type) {
+    $style: map.get($component, $type, $sub-type);
+    $base-path: button-#{$type}-#{$sub-type};
 
-    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
+    border-color: kbq-css-variable(#{$base-path}-border, map.get($style, border));
+    color: kbq-css-variable(#{$base-path}-foreground, map.get($style, foreground));
+    background: kbq-css-variable(#{$base-path}-background, map.get($style, background));
+
+    @include _icon(
+        kbq-css-variable(#{$base-path}-left-icon, map.get($style, left-icon)),
+        kbq-css-variable(#{$base-path}-right-icon, map.get($style, right-icon))
+    );
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
-        background: map.get($params, states_hover_background);
+        background: kbq-css-variable(#{$base-path}-states-hover-background, map.get($style, states-hover-background));
     }
 
     &:active:not(.kbq-disabled),
     &.kbq-active:not(.kbq-disabled) {
-        background: map.get($params, states_active_background);
+        background: kbq-css-variable(#{$base-path}-states-active-background, map.get($style, states-active-background));
     }
 
     &.kbq-disabled {
-        color: map.get($params, states_disabled_foreground);
-        background: map.get($params, states_disabled_background);
+        color: kbq-css-variable(#{$base-path}-states-disabled-foreground, map.get($style, states-disabled-foreground));
+        background: kbq-css-variable(
+            #{$base-path}-states-disabled-background, map.get($style, states-disabled-background)
+        );
 
-        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
-    }
-}
-
-@mixin kbq-outline-button($params) {
-    border-color: map.get($params, border);
-    color: map.get($params, foreground);
-    background: map.get($params, background);
-
-    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
-
-    &:hover:not(.kbq-disabled),
-    &.kbq-hover:not(.kbq-disabled) {
-        background: map.get($params, states_hover_background);
-    }
-
-    &:active:not(.kbq-disabled),
-    &.kbq-active:not(.kbq-disabled) {
-        background: map.get($params, states_active_background);
-    }
-
-    &.kbq-disabled {
-        border-color: map.get($params, states_disabled_border);
-        color: map.get($params, states_disabled_foreground);
-
-        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
-    }
-}
-
-@mixin kbq-transparent-button($params) {
-    border-color: map.get($params, border);
-    color: map.get($params, foreground);
-    background: map.get($params, background);
-
-    @include _icon(map.get($params, left-icon), map.get($params, right-icon));
-
-    &:hover:not(.kbq-disabled),
-    &.kbq-hover:not(.kbq-disabled) {
-        background: map.get($params, states_hover_background);
-    }
-
-    &:active:not(.kbq-disabled),
-    &.kbq-active:not(.kbq-disabled) {
-        background: map.get($params, states_active_background);
-    }
-
-    &.kbq-disabled {
-        border-color: map.get($params, states_disabled_border);
-        color: map.get($params, states_disabled_foreground);
-
-        @include _icon(map.get($params, states_disabled_left-icon), map.get($params, states_disabled_left-icon));
+        @include _icon(
+            kbq-css-variable(#{$base-path}-states-disabled-left-icon, map.get($style, states-disabled-left-icon)),
+            kbq-css-variable(#{$base-path}-states-disabled-right-icon, map.get($style, states-disabled-right-icon))
+        );
     }
 }
 
 @mixin kbq-button-theme($theme) {
-    $primary: map.get($theme, theme);
-    $background: map.get($theme, background);
-
     $button: map.get(map.get($theme, components), button);
 
     .kbq-button-overlay {
@@ -109,43 +68,31 @@
 
         &.kbq-button_filled {
             &.kbq-contrast {
-                $filled-contrast: map.get(map.get($button, filled), contrast-fade-off);
-
-                @include kbq-filled-button($filled-contrast);
+                @include kbq-button-type($button, filled, contrast-fade-off);
             }
 
             &.kbq-contrast-fade {
-                $filled-fade-contrast: map.get(map.get($button, filled), contrast-fade-on);
-
-                @include kbq-filled-button($filled-fade-contrast);
+                @include kbq-button-type($button, filled, contrast-fade-on);
             }
         }
 
         &.kbq-button_outline {
             &.kbq-theme-fade {
-                $outline-theme-fade-on: map.get(map.get($button, outline), theme-fade-on);
-
-                @include kbq-outline-button($outline-theme-fade-on);
+                @include kbq-button-type($button, outline, theme-fade-on);
             }
 
             &.kbq-contrast-fade {
-                $outline-contrast-fade-on: map.get(map.get($button, outline), contrast-fade-on);
-
-                @include kbq-outline-button($outline-contrast-fade-on);
+                @include kbq-button-type($button, outline, contrast-fade-on);
             }
         }
 
         &.kbq-button_transparent {
             &.kbq-theme {
-                $transparent-theme: map.get(map.get($button, transparent), theme);
-
-                @include kbq-transparent-button($transparent-theme);
+                @include kbq-button-type($button, transparent, theme);
             }
 
             &.kbq-contrast {
-                $transparent-contrast: map.get(map.get($button, transparent), contrast);
-
-                @include kbq-transparent-button($transparent-contrast);
+                @include kbq-button-type($button, transparent, contrast);
             }
         }
 
@@ -160,11 +107,9 @@
 }
 
 @mixin kbq-button-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-button,
     .kbq-button-icon {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, button-font-default));
+        @include kbq-typography-css-variables(button, default);
     }
 
     .kbq-button-icon.kbq-button-wrapper {
@@ -173,4 +118,3 @@
         }
     }
 }
-

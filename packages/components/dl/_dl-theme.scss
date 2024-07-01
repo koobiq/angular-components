@@ -2,30 +2,29 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-dl-theme($theme) {
     $dl: map.get(map.get($theme, components), dl);
 
     .kbq-dt {
-        color: map.get($dl, dt);
+        color: kbq-css-variable(dl-dt, map.get($dl, dt));
     }
 
     .kbq-dd {
-        color: map.get($dl, dd);
+        color: kbq-css-variable(dl-dd, map.get($dl, dd));
     }
 }
 
 @mixin kbq-dl-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-dl {
         & .kbq-dt {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, description-list-font-term));
+            @include kbq-typography-css-variables(description-list, term);
         }
 
         & .kbq-dd {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, description-list-font-description));
+            @include kbq-typography-css-variables(description-list, description);
         }
     }
 }

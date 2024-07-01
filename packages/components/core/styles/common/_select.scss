@@ -3,6 +3,7 @@
 
 @use '../common/vendor-prefixes';
 @use '../tokens';
+@use './tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -116,11 +117,9 @@ $tokens: meta.module-variables(tokens) !default;
                     (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
                 );
 
-                gap: var(--kbq-select-size-multiple-content-gap, map.get($tokens, select-size-multiple-content-gap));
+                gap: kbq-css-variable(select-size-multiple-content-gap);
 
-                margin-right: var(
-                    --kbq-select-size-multiple-content-gap, map.get($tokens, select-size-multiple-content-gap)
-                );
+                margin-right: kbq-css-variable(select-size-multiple-content-gap);
             }
         }
     }
@@ -135,9 +134,7 @@ $tokens: meta.module-variables(tokens) !default;
             flex: 0 0 70px;
             align-self: center;
             padding-left: 4px;
-            padding-right: var(
-                --kbq-select-size-multiple-content-gap, map.get($tokens, select-size-multiple-content-gap)
-            );
+            padding-right: kbq-css-variable(select-size-multiple-content-gap);
 
             text-align: right;
         }
@@ -175,9 +172,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     overflow: hidden;
 
-    border-radius: var(
-        --kbq-select-panel-size-border-radius, map.get($tokens, select-panel-size-border-radius)
-    );
+    border-radius: kbq-css-variable(select-panel-size-border-radius);
 
     // Override optgroup and option to scale based on font-size of the trigger.
     .kbq-optgroup-label,
@@ -194,15 +189,15 @@ $tokens: meta.module-variables(tokens) !default;
         position: relative;
 
         max-width: 100%;
-        height: var(--kbq-option-size-height, map.get($tokens, option-size-height));
+        height: kbq-css-variable(option-size-height);
 
         cursor: default;
         outline: none;
 
-        padding-left: var(--kbq-option-size-horizontal-padding, map.get($tokens, option-size-horizontal-padding));
-        padding-right: var(--kbq-option-size-horizontal-padding, map.get($tokens, option-size-horizontal-padding));
+        padding-left: kbq-css-variable(option-size-horizontal-padding);
+        padding-right: kbq-css-variable(option-size-horizontal-padding);
 
-        border: var(--kbq-option-size-border-width, map.get($tokens, option-size-border-width)) solid transparent;
+        border: kbq-css-variable(option-size-border-width) solid transparent;
     }
 
     .kbq-select__search-container {
@@ -214,7 +209,7 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 %kbq-select-content {
-    max-height: var(--kbq-select-panel-size-max-height, map.get($tokens, select-panel-size-max-height));
+    max-height: kbq-css-variable(select-panel-size-max-height);
     padding: 4px 0;
     overflow: hidden auto;
 }
@@ -229,5 +224,5 @@ $tokens: meta.module-variables(tokens) !default;
     border-top-width: 1px;
     border-top-style: solid;
 
-    padding: map.get($tokens, size-xxs) map.get($tokens, size-m);
+    padding: kbq-css-variable(size-xxs) kbq-css-variable(size-m);
 }

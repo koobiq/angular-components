@@ -2,58 +2,59 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-radio-state($state) {
+@mixin kbq-radio-state($component, $type, $state-name) {
+    $state: map.get($component, $type, $state-name);
+
     & .kbq-radio-button__outer-circle {
-        border-color: map.get($state, outer-circle-border);
-        background: map.get($state, outer-circle-background);
-        box-shadow: map.get($state, outer-circle-shadow);
+        border-color: kbq-css-variable(
+            radio-#{$type}-#{$state-name}-outer-circle-border, map.get($state, outer-circle-border));
+        background: kbq-css-variable(
+            radio-#{$type}-#{$state-name}-outer-circle-background, map.get($state, outer-circle-background));
+        box-shadow: kbq-css-variable(
+            radio-#{$type}-#{$state-name}-outer-circle-shadow, map.get($state, outer-circle-shadow));
     }
 
     & .kbq-radio-button__inner-circle {
-        background: map.get($state, inner-circle-background);
+        background: kbq-css-variable(
+            radio-#{$type}-#{$state-name}-inner-circle-background, map.get($state, inner-circle-background));
     }
 }
 
-@mixin kbq-radio-color($radio) {
-    $default: map.get($radio, default);
-    @include kbq-radio-state($default);
+@mixin kbq-radio-color($component, $type-name) {
+    @include kbq-radio-state($component, $type-name, default);
 
     & .kbq-hint .kbq-hint__text {
-        color: map.get($default, caption);
+        color: map.get($component, $type-name, default, caption);
     }
 
     &:hover {
-        $hover: map.get($radio, hover);
-        @include kbq-radio-state($hover);
+        @include kbq-radio-state($component, $type-name, states-hover);
     }
 
     &.cdk-keyboard-focused {
-        $focused: map.get($radio, focused);
-        @include kbq-radio-state($focused);
+        @include kbq-radio-state($component, $type-name, states-focused);
     }
 
     &.kbq-selected:not(.kbq-disabled) {
-        $selected: map.get($radio, checked);
-        @include kbq-radio-state($selected);
+        @include kbq-radio-state($component, $type-name, states-checked);
     }
 
     &.kbq-selected.kbq-disabled {
-        $selected-disabled: map.get($radio, checked-disabled);
-        @include kbq-radio-state($selected-disabled);
+        @include kbq-radio-state($component, $type-name, states-checked-disabled);
     }
 
     &.kbq-disabled {
-        $disabled: map.get($radio, disabled);
-        @include kbq-radio-state($disabled);
+        @include kbq-radio-state($component, $type-name, states-disabled);
 
         & .kbq-radio-label {
             cursor: default;
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: map.get($default, caption);
+            color: map.get($component, $type-name, states-disabled, caption);
         }
     }
 }
@@ -63,46 +64,37 @@
 
     $radio: map.get(map.get($theme, components), radio);
 
-    $radio-theme: map.get($radio, theme);
-    $radio-error: map.get($radio, error);
-
-    .kbq-radio-group {
-
-    }
-
     .kbq-radio-button {
         & .kbq-radio-button__inner-circle {
             border-width: 0 !important;
         }
 
-        @include kbq-radio-color($radio-theme);
+        @include kbq-radio-color($radio, theme);
 
-        color: map.get($foreground, contrast);
+        color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
 
         &.kbq-error {
-            @include kbq-radio-color($radio-error);
+            @include kbq-radio-color($radio, error);
 
-            color: map.get($foreground, contrast);
+            color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
         }
     }
 }
 
 @mixin kbq-radio-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-radio-button {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-label));
+        @include kbq-typography-css-variables(radio, normal-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-normal-caption));
+            @include kbq-typography-css-variables(radio, normal-caption);
         }
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-label));
+        @include kbq-typography-css-variables(radio, big-label);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, radio-font-big-caption));
+            @include kbq-typography-css-variables(radio, big-caption);
         }
     }
 }

@@ -3,56 +3,58 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-dropdown-item-state($state) {
-    background: map.get($state, container-background);
-    color: map.get($state, text);
+@mixin kbq-dropdown-item-state($component, $style-name) {
+    $state: map.get($component, $style-name);
+
+    background: kbq-css-variable(list-#{$style-name}-container-background, map.get($state, container-background));
+    color: kbq-css-variable(list-#{$style-name}-text, map.get($state, text));
 
     .kbq-dropdown-item__caption {
-        color: map.get($state, caption);
+        color: kbq-css-variable(list-#{$style-name}-caption, map.get($state, caption));
     }
 }
 
 @mixin kbq-dropdown-theme($theme) {
     $dropdown: map.get(map.get($theme, components), dropdown);
-    $divider: map.get(map.get($theme, components), divider);
 
     .kbq-dropdown__panel {
-        box-shadow: map.get($dropdown, box-shadow);
-        background: map.get($dropdown, background);
+        box-shadow: kbq-css-variable(dropdown-box-shadow, map.get($dropdown, box-shadow));
+        background: kbq-css-variable(dropdown-background, map.get($dropdown, background));
     }
 
     .kbq-dropdown-item {
-        $dropdown-item: map.get(map.get($theme, components), list-item);
+        $list-item: map.get(map.get($theme, components), list-item);
 
-        @include kbq-dropdown-item-state(map.get($dropdown-item, default));
+        @include kbq-dropdown-item-state($list-item, default);
 
         &.kbq-dropdown-item_highlighted,
         &:hover:not(.kbq-disabled) {
-            @include kbq-dropdown-item-state(map.get($dropdown-item, hover));
+            @include kbq-dropdown-item-state($list-item, states-hover);
         }
 
         &.cdk-keyboard-focused {
-            border-color: map.get(map.get($dropdown-item, focused), focus-outline);
+            border-color: kbq-css-variable(list-focused-focus-outline, map.get($list-item, focused, focus-outline));
         }
 
         &.kbq-selected {
-            @include kbq-dropdown-item-state(map.get($dropdown-item, selected));
+            @include kbq-dropdown-item-state($list-item, states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-dropdown-item-state(map.get($dropdown-item, selected-hover));
+                @include kbq-dropdown-item-state($list-item, states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-dropdown-item-state(map.get($dropdown-item, disabled));
+            @include kbq-dropdown-item-state($list-item, states-disabled);
         }
     }
 
     .kbq-dropdown__group-header {
         &.kbq-dropdown__group-header_small {
-            color: map.get(map.get($theme, foreground), contrast-secondary);
+            color: kbq-css-variable(foreground-contrast-secondary, map.get($theme, foreground, contrast-secondary));
         }
     }
 
@@ -62,22 +64,20 @@
 }
 
 @mixin kbq-dropdown-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-dropdown-item,
     .kbq-dropdown__content {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-text));
+        @include kbq-typography-css-variables(list, text);
 
         .kbq-dropdown-item__caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-caption));
+            @include kbq-typography-css-variables(list, caption);
         }
     }
 
     .kbq-dropdown__group-header {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-header));
+        @include kbq-typography-css-variables(list, header);
 
         &.kbq-dropdown__group-header_small {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, list-font-subheading));
+            @include kbq-typography-css-variables(list, subheading);
         }
     }
 }

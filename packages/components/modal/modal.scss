@@ -1,11 +1,10 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 @use './modal-confirm';
 
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-modal {
     box-sizing: border-box;
@@ -14,7 +13,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     top: 48px;
 
-    border-radius: var(--kbq-modal-size-border-radius, map.get($tokens, modal-size-border-radius));
+    border-radius: kbq-css-variable(modal-size-border-radius);
 
     width: auto;
 
@@ -31,15 +30,15 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     &.kbq-modal_small {
-        width: var(--kbq-modal-size-small-width, map.get($tokens, modal-size-small-width));
+        width: kbq-css-variable(modal-size-small-width);
     }
 
     &.kbq-modal_medium {
-        width: var(--kbq-modal-size-medium-width, map.get($tokens, modal-size-medium-width));
+        width: kbq-css-variable(modal-size-medium-width);
     }
 
     &.kbq-modal_large {
-        width: var(--kbq-modal-size-large-width, map.get($tokens, modal-size-large-width));
+        width: kbq-css-variable(modal-size-large-width);
     }
 
     // todo реализуем когда будем делать 2.0, пока нет возможности отслеживать наличие/отсутствие футера
@@ -75,7 +74,7 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-modal-content {
     position: relative;
 
-    border-radius: var(--kbq-modal-size-border-radius, map.get($tokens, modal-size-border-radius));
+    border-radius: kbq-css-variable(modal-size-border-radius);
 
     background-clip: padding-box;
 }
@@ -86,13 +85,13 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: space-between;
 
     padding:
-        var(--kbq-modal-size-header-padding-vertical, map.get($tokens, modal-size-header-padding-vertical))
-        var(--kbq-modal-size-header-padding-right, map.get($tokens, modal-size-header-padding-right))
-        var(--kbq-modal-size-header-padding-vertical, map.get($tokens, modal-size-header-padding-vertical))
-        var(--kbq-modal-size-header-padding-left, map.get($tokens, modal-size-header-padding-left));
+        kbq-css-variable(modal-size-header-padding-vertical)
+        kbq-css-variable(modal-size-header-padding-right)
+        kbq-css-variable(modal-size-header-padding-vertical)
+        kbq-css-variable(modal-size-header-padding-left);
 
     & + .kbq-modal-body {
-        padding-top: var(--kbq-modal-size-content-padding-top, map.get($tokens, modal-size-content-padding-top));
+        padding-top: kbq-css-variable(modal-size-content-padding-top);
     }
 }
 
@@ -111,13 +110,10 @@ $tokens: meta.module-variables(tokens) !default;
     max-height: calc(100vh - 260px);
 
     padding:
-        var(
-            --kbq-modal-size-content-padding-top-without-header,
-            map.get($tokens, modal-size-content-padding-top-without-header)
-        )
-        var(--kbq-modal-size-content-padding-horizontal, map.get($tokens, modal-size-content-padding-horizontal))
-        var(--kbq-modal-size-content-padding-bottom, map.get($tokens, modal-size-content-padding-bottom))
-        var(--kbq-modal-size-content-padding-horizontal, map.get($tokens, modal-size-content-padding-horizontal));
+        kbq-css-variable(modal-size-content-padding-top-without-header)
+        kbq-css-variable(modal-size-content-padding-horizontal)
+        kbq-css-variable(modal-size-content-padding-bottom)
+        kbq-css-variable(modal-size-content-padding-horizontal);
 
     word-wrap: break-word;
 }
@@ -129,12 +125,10 @@ $tokens: meta.module-variables(tokens) !default;
     align-items: center;
 
     padding:
-        var(--kbq-modal-size-footer-padding-vertical, map.get($tokens, modal-size-footer-padding-vertical))
-        var(--kbq-modal-size-footer-padding-horizontal, map.get($tokens, modal-size-footer-padding-horizontal));
+        kbq-css-variable(modal-size-footer-padding-vertical)
+        kbq-css-variable(modal-size-footer-padding-horizontal);
 
-    gap: var(
-        --kbq-modal-size-footer-content-gap-horizontal, map.get($tokens, modal-size-footer-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(modal-size-footer-content-gap-horizontal);
 }
 
 .kbq-modal-mask {

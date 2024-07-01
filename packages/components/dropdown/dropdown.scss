@@ -1,10 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-dropdown-trigger.kbq-button-icon_right.kbq-button-icon_left {
     & .kbq-icon_left {
@@ -23,20 +21,14 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-dropdown__panel {
     margin-top: 2px;
 
-    min-width: var(--kbq-dropdown-size-container-width-min, map.get($tokens, dropdown-size-container-width-min));
-    max-width: var(--kbq-dropdown-size-container-width-max, map.get($tokens, dropdown-size-container-width-max));
+    min-width: kbq-css-variable(dropdown-size-container-width-min);
+    max-width: kbq-css-variable(dropdown-size-container-width-max);
 
-    border-radius: var(
-        --kbq-dropdown-size-container-border-radius, map.get($tokens, dropdown-size-container-border-radius)
-    );
+    border-radius: kbq-css-variable(dropdown-size-container-border-radius);
 
-    padding-top: var(
-        --kbq-dropdown-size-container-padding-vertical, map.get($tokens, dropdown-size-container-padding-vertical)
-    );
+    padding-top: kbq-css-variable(dropdown-size-container-padding-vertical);
 
-    padding-bottom: var(
-        --kbq-dropdown-size-container-padding-vertical, map.get($tokens, dropdown-size-container-padding-vertical)
-    );
+    padding-bottom: kbq-css-variable(dropdown-size-container-padding-vertical);
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.

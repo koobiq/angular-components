@@ -2,6 +2,7 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-progress-spinner-theme($theme) {
@@ -9,27 +10,25 @@
 
     .kbq-progress-spinner {
         .kbq-progress-spinner__circle {
-            stroke: map.get($progress-spinner, circle);
+            stroke: kbq-css-variable(progress-spinner-circle, map.get($progress-spinner, circle));
         }
     }
 
     .kbq-progress-spinner-text {
-        color: map.get($progress-spinner, text);
+        color: kbq-css-variable(progress-spinner-text, map.get($progress-spinner, text));
     }
 
     .kbq-progress-spinner-caption {
-        color: map.get($progress-spinner, caption);
+        color: kbq-css-variable(progress-spinner-caption, map.get($progress-spinner, caption));
     }
 }
 
 @mixin kbq-progress-spinner-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-progress-spinner-text {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-label));
+        @include kbq-typography-css-variables(progress-spinner, label);
     }
 
     .kbq-progress-spinner-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, progress-spinner-font-caption));
+        @include kbq-typography-css-variables(progress-spinner, caption);
     }
 }

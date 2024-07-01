@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-navbar-divider {
@@ -14,7 +11,7 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-navbar-divider.kbq-vertical {
     height: 1px;
 
-    margin: map.get($tokens, size-s) map.get($tokens, size-l);
+    margin: kbq-css-variable(size-s) kbq-css-variable(size-l);
 }
 
 .kbq-navbar-divider.kbq-horizontal {
@@ -22,6 +19,6 @@ $tokens: meta.module-variables(tokens) !default;
 
     height: 12px;
 
-    margin-left: map.get($tokens, size-m);
-    margin-right: map.get($tokens, size-m);
+    margin-left: kbq-css-variable(size-m);
+    margin-right: kbq-css-variable(size-m);
 }

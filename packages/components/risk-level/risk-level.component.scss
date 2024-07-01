@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-risk-level {
@@ -16,11 +13,11 @@ $tokens: meta.module-variables(tokens) !default;
     border-style: solid;
 
     padding:
-        var(--kbq-risk-level-size-padding-vertical, map.get($tokens, risk-level-size-padding-vertical))
-        var(--kbq-risk-level-size-padding-horizontal, map.get($tokens, risk-level-size-padding-horizontal));
+        kbq-css-variable(risk-level-size-padding-vertical)
+        kbq-css-variable(risk-level-size-padding-horizontal);
 
     border: {
-        width: var(--kbq-risk-level-size-border-width, map.get($tokens, risk-level-size-border-width));
-        radius: var(--kbq-risk-level-size-border-radius, map.get($tokens, risk-level-size-border-radius));
+        width: kbq-css-variable(risk-level-size-border-width);
+        radius: kbq-css-variable(risk-level-size-border-radius);
     }
 }

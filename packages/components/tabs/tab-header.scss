@@ -4,10 +4,6 @@
 @use '../core/styles/common/vendor-prefixes';
 @use 'tabs-common' as *;
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tab-header {
     display: flex;

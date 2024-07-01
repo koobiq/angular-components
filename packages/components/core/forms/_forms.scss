@@ -4,6 +4,7 @@
 @use '../styles/common/vendor-prefixes';
 @use '../styles/typography/typography' as *;
 @use '../styles/typography/typography-utils' as *;
+@use '../styles/common/tokens' as *;
 
 
 @mixin kbq-form-geometry($tokens) {
@@ -18,41 +19,26 @@
     }
 
     .kbq-form-horizontal {
-        $config: kbq-typography-config($tokens);
-
-        $line-height: kbq-line-height($config, map.get($tokens, forms-font-label));
+        $line-height: map.get($tokens, forms-font-label-line-height);
         $form-field-size-height: map.get($tokens, form-field-size-height);
-        $label-padding-top: calc(($form-field-size-height - $line-height) / 2);
 
         & .kbq-form-row_margin {
-            margin-bottom: var(
-                --kbq-forms-size-horizontal-row-margin-bottom,
-                #{map.get($tokens, forms-size-horizontal-row-margin-bottom)}
-            );
+            margin-bottom: kbq-css-variable(forms-size-horizontal-row-margin-bottom);
         }
 
         & .kbq-form__label {
-            padding-top: var(--kbq-forms-size-horizontal-label-padding-top, #{$label-padding-top});
+            padding-top: calc(($form-field-size-height - $line-height) / 2);
 
             text-align: start;
         }
 
         & .kbq-form__control {
-            padding-left: var(
-                --kbq-forms-size-horizontal-control-padding-left,
-                #{map.get($tokens, forms-size-horizontal-control-padding-left)}
-            );
+            padding-left: kbq-css-variable(forms-size-horizontal-control-padding-left);
         }
 
         & .kbq-form__legend {
-            margin-top: var(
-                --kbq-forms-size-horizontal-legend-margin-top,
-                #{map.get($tokens, forms-size-horizontal-legend-margin-top)}
-            );
-            margin-bottom: var(
-                --kbq-forms-size-horizontal-legend-margin-bottom,
-                #{map.get($tokens, forms-size-horizontal-legend-margin-bottom)}
-            );
+            margin-top: kbq-css-variable(forms-size-horizontal-legend-margin-top);
+            margin-bottom: kbq-css-variable(forms-size-horizontal-legend-margin-bottom);
         }
     }
 
@@ -62,19 +48,12 @@
         }
 
         & .kbq-form-row_margin {
-            margin-bottom: var(
-                --kbq-forms-size-vertical-row-margin-bottom, #{map.get($tokens, forms-size-vertical-row-margin-bottom)}
-            );
+            margin-bottom: kbq-css-variable(forms-size-vertical-row-margin-bottom);
         }
 
         & .kbq-form__label {
-            padding-top: var(
-                --kbq-forms-size-vertical-label-padding-top, #{map.get($tokens, forms-size-vertical-label-padding-top)}
-            );
-            padding-bottom: var(
-                --kbq-forms-size-vertical-label-padding-bottom,
-                #{map.get($tokens, forms-size-vertical-label-padding-bottom)}
-            );
+            padding-top: kbq-css-variable(forms-size-vertical-label-padding-top);
+            padding-bottom: kbq-css-variable(forms-size-vertical-label-padding-bottom);
 
             text-align: start;
         }
@@ -84,13 +63,8 @@
         }
 
         & .kbq-form__legend {
-            margin-top: var(
-                --kbq-forms-size-vertical-legend-margin-top, #{map.get($tokens, forms-size-vertical-legend-margin-top)}
-            );
-            margin-bottom: var(
-                --kbq-forms-size-vertical-legend-margin-bottom,
-                #{map.get($tokens, forms-size-vertical-legend-margin-bottom)}
-            );
+            margin-top: kbq-css-variable(forms-size-vertical-legend-margin-top);
+            margin-bottom: kbq-css-variable(forms-size-vertical-legend-margin-bottom);
         }
     }
 
@@ -103,10 +77,7 @@
         flex-direction: row;
 
         & .kbq-form__row:not(:first-child) {
-            padding-left: var(
-                --kbq-forms-size-vertical-control-padding-left,
-                #{map.get($tokens, forms-size-vertical-control-padding-left)}
-            );
+            padding-left: kbq-css-variable(forms-size-vertical-control-padding-left);
         }
     }
 }

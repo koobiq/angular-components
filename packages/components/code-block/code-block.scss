@@ -1,15 +1,13 @@
 @use 'sass:meta';
 @use 'sass:map';
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
+
 
 $tokens: meta.module-variables(tokens) !default;
 
-$border-radius: var(
-    --kbq-code-block-size-container-border-radius, map.get($tokens, code-block-size-container-border-radius)
-);
-$border-width: var(
-        --kbq-code-block-size-container-border-width, map.get($tokens, code-block-size-container-border-width)
-);
+$border-radius: kbq-css-variable(code-block-size-container-border-radius);
+$border-width: kbq-css-variable(code-block-size-container-border-width);
 
 /* stylelint-disable no-descending-specificity */
 .kbq-code-block {
@@ -32,21 +30,13 @@ $border-width: var(
         $buttons-margin: calc(32 * 4) + 24px;
 
         padding:
-            var(
-                --kbq-code-block-size-header-padding-vertical,
-                map.get($tokens, code-block-size-header-padding-vertical)
-            )
+            kbq-css-variable(code-block-size-header-padding-vertical)
             calc(var(
                 --kbq-code-block-size-header-padding-right,
                 map.get($tokens, code-block-size-header-padding-right)
             ) + $buttons-margin)
-            var(
-                --kbq-code-block-size-header-padding-vertical,
-                map.get($tokens, code-block-size-header-padding-vertical)
-            ) var(
-                --kbq-code-block-size-header-padding-left,
-                map.get($tokens, code-block-size-header-padding-left)
-            );
+            kbq-css-variable(code-block-size-header-padding-vertical)
+            kbq-css-variable(code-block-size-header-padding-left);
 
         border-width: $border-width $border-width 0 $border-width;
         border-style: solid;
@@ -56,7 +46,7 @@ $border-width: var(
     &:has(.kbq-code-block__show-more) {
         .kbq-code-block__code {
             & > code {
-                padding-bottom: map.get($tokens, size-3xl) !important;
+                padding-bottom: kbq-css-variable(size-3xl) !important;
                 overflow-x: scroll;
             }
         }
@@ -65,21 +55,10 @@ $border-width: var(
     .kbq-code-block__code {
         > code {
             padding:
-                var(
-                    --kbq-code-block-size-with-header-content-padding-top,
-                    map.get($tokens, code-block-size-with-header-content-padding-top)
-                )
-                var(
-                    --kbq-code-block-size-with-header-content-padding-horizontal,
-                    map.get($tokens, code-block-size-with-header-content-padding-horizontal)
-                )
-                var(
-                    --kbq-code-block-size-with-header-content-padding-bottom,
-                    map.get($tokens, code-block-size-with-header-content-padding-bottom)
-                ) var(
-                    --kbq-code-block-size-with-header-content-padding-horizontal,
-                    map.get($tokens, code-block-size-with-header-content-padding-horizontal)
-                );
+                kbq-css-variable(code-block-size-with-header-content-padding-top)
+                kbq-css-variable(code-block-size-with-header-content-padding-horizontal)
+                kbq-css-variable(code-block-size-with-header-content-padding-bottom)
+                kbq-css-variable(code-block-size-with-header-content-padding-horizontal);
 
             border-radius: $border-radius;
 
@@ -89,10 +68,7 @@ $border-width: var(
         }
 
         .hljs-ln-numbers {
-            padding-right: var(
-                --kbq-code-block-size-with-header-content-content-gap-horizontal,
-                map.get($tokens, code-block-size-with-header-content-content-gap-horizontal)
-            );
+            padding-right: kbq-css-variable(code-block-size-with-header-content-content-gap-horizontal);
         }
     }
 
@@ -133,21 +109,12 @@ $border-width: var(
 
             & > code {
                 padding:
-                    var(
-                        --kbq-code-block-size-no-header-content-padding-vertical,
-                        map.get($tokens, code-block-size-no-header-content-padding-vertical)
-                    )
-                    var(
-                        --kbq-code-block-size-no-header-content-padding-horizontal,
-                        map.get($tokens, code-block-size-no-header-content-padding-horizontal)
-                    );
+                    kbq-css-variable(code-block-size-no-header-content-padding-vertical)
+                    kbq-css-variable(code-block-size-no-header-content-padding-horizontal);
             }
 
             .hljs-ln-numbers {
-                padding-right: var(
-                    --kbq-code-block-size-no-header-content-content-gap-horizontal,
-                    map.get($tokens, code-block-size-no-header-content-content-gap-horizontal)
-                );
+                padding-right: kbq-css-variable(code-block-size-no-header-content-content-gap-horizontal);
             }
         }
     }
@@ -218,31 +185,19 @@ $border-width: var(
     border-radius: $border-radius;
 
     &.kbq-code-block__show-more_collapsed {
-        padding-top: var(
-            --kbq-code-block-size-collapse-collapsed-padding-top,
-            map.get($tokens, code-block-size-collapse-collapsed-padding-top)
-        );
+        padding-top: kbq-css-variable(code-block-size-collapse-collapsed-padding-top);
 
-        padding-bottom: var(
-            --kbq-code-block-size-collapse-collapsed-padding-bottom,
-            map.get($tokens, code-block-size-collapse-collapsed-padding-bottom)
-        );
+        padding-bottom: kbq-css-variable(code-block-size-collapse-collapsed-padding-bottom);
     }
 
     &.kbq-code-block__show-more_expanded {
-        padding-top: var(
-            --kbq-code-block-size-collapse-expanded-padding-top,
-            map.get($tokens, code-block-size-collapse-expanded-padding-top)
-        );
+        padding-top: kbq-css-variable(code-block-size-collapse-expanded-padding-top);
 
-        margin-bottom: var(
-            --kbq-code-block-size-collapse-expanded-padding-bottom,
-            map.get($tokens, code-block-size-collapse-expanded-padding-bottom)
-        );
+        margin-bottom: kbq-css-variable(code-block-size-collapse-expanded-padding-bottom);
     }
 
     .bg-wrapper {
-        border-radius: var(--kbq-button-size-border-radius, map.get($tokens, button-size-border-radius));
+        border-radius: kbq-css-variable(button-size-border-radius);
     }
 }
 /* stylelint-enable no-descending-specificity */

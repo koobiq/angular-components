@@ -3,10 +3,8 @@
 
 @use '../core/styles/common/layout';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-card {
     position: relative;
@@ -22,7 +20,7 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     border-left: {
-        width: var(--kbq-card-size-vertical-line, map.get($tokens, card-size-vertical-line));
+        width: kbq-css-variable(card-size-vertical-line);
         style: solid;
         color: transparent;
     };

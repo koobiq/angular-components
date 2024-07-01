@@ -3,30 +3,28 @@
 
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-tree-option($state) {
-    background: map.get($state, container-background);
+@mixin kbq-tree-option($component, $state-name) {
+    $state: map.get($component, $state-name);
+
+    background: kbq-css-variable(tree-#{$state-name}-container-background, map.get($state, container-background));
 
     .kbq-option-text {
-        color: map.get($state, text);
+        color: kbq-css-variable(tree-#{$state-name}-text, map.get($state, text));
     }
 
-    // todo выглядит как баг
-    //.kbq-icon {
-    //    color: map.get($state, icon);
-    //}
-
     .kbq-tree-node-toggle .kbq-icon {
-        color: map.get($state, tree-toggle);
+        color: kbq-css-variable(tree-#{$state-name}-tree-toggle, map.get($state, tree-toggle));
     }
 
     .kbq-option-action .kbq-icon {
-        color: map.get($state, action-button);
+        color: kbq-css-variable(tree-#{$state-name}-action-button, map.get($state, action-button));
     }
 
     .kbq-option-caption {
-        color: map.get($state, caption);
+        color: kbq-css-variable(tree-#{$state-name}-caption, map.get($state, caption));
     }
 }
 
@@ -37,29 +35,31 @@
     }
 
     .kbq-tree-option {
-        $tree-item: map.get(map.get($theme, components), tree-item);
+        $tree-item: map.get($theme, components, tree-item);
 
-        @include kbq-tree-option(map.get($tree-item, default));
+        @include kbq-tree-option($tree-item, default);
 
         &:hover:not(.kbq-disabled) {
-            @include kbq-tree-option(map.get($tree-item, hover));
+            @include kbq-tree-option($tree-item, states-hover);
         }
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: map.get(map.get($tree-item, focused), focus-outline);
+            border-color: kbq-css-variable(
+                tree-states-focused-focus-outline, map.get($tree-item, states-focused, focus-outline)
+            );
         }
 
         &.kbq-selected {
-            @include kbq-tree-option(map.get($tree-item, selected));
+            @include kbq-tree-option($tree-item, states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-tree-option(map.get($tree-item, selected-hover));
+                @include kbq-tree-option($tree-item, states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-tree-option(map.get($tree-item, disabled));
+            @include kbq-tree-option($tree-item, states-disabled);
 
             & .kbq-icon {
                 cursor: default;
@@ -69,13 +69,11 @@
 }
 
 @mixin kbq-tree-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-tree-option {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-text));
+        @include kbq-typography-css-variables(tree, text);
     }
 
     .kbq-tree-option-caption {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, tree-font-caption));
+        @include kbq-typography-css-variables(tree, caption);
     }
 }

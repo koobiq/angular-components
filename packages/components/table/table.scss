@@ -16,10 +16,10 @@ $tokens: meta.module-variables(tokens) !default;
             & > th,
             & > td {
                 padding: {
-                    top: cssVar(table-size-row-padding-vertical);
-                    right: cssVar(table-size-row-padding-horizontal);
-                    bottom: cssVar(table-size-row-padding-vertical);
-                    left: cssVar(table-size-row-padding-horizontal);
+                    top: kbq-css-variable(table-size-row-padding-vertical);
+                    right: kbq-css-variable(table-size-row-padding-horizontal);
+                    bottom: kbq-css-variable(table-size-row-padding-vertical);
+                    left: kbq-css-variable(table-size-row-padding-horizontal);
                 };
 
                 vertical-align: baseline;
@@ -30,21 +30,21 @@ $tokens: meta.module-variables(tokens) !default;
 
     & > thead {
         & > tr > th {
-            border-bottom-width: cssVar(table-size-border-width);
+            border-bottom-width: kbq-css-variable(table-size-border-width);
             border-bottom-style: solid;
         }
     }
 
     .kbq-table-cell_has-button {
-        padding-top: cssVar(size-xxs);
-        padding-bottom: cssVar(size-xxs);
+        padding-top: kbq-css-variable(size-xxs);
+        padding-bottom: kbq-css-variable(size-xxs);
     }
 }
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & th,
         & td {
-            border-bottom-width: cssVar(table-size-border-width);
+            border-bottom-width: kbq-css-variable(table-size-border-width);
             border-bottom-style: solid;
         }
     }
@@ -53,13 +53,13 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-table:not(.kbq-table_bordered) {
     & > tbody > tr {
         & > td:first-child {
-            border-top-left-radius: cssVar(size-m);
-            border-bottom-left-radius: cssVar(size-m);
+            border-top-left-radius: kbq-css-variable(size-m);
+            border-bottom-left-radius: kbq-css-variable(size-m);
         }
 
         & > td:last-child {
-            border-top-right-radius: cssVar(size-m);
-            border-bottom-right-radius: cssVar(size-m);
+            border-top-right-radius: kbq-css-variable(size-m);
+            border-bottom-right-radius: kbq-css-variable(size-m);
         }
 
         &:first-child {

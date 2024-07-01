@@ -1,6 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -17,27 +18,15 @@ $tokens: meta.module-variables(tokens) !default;
     right: 0;
 
     margin:
-        var(
-            --kbq-code-block-size-actionbar-padding-vertical,
-            map.get($tokens, code-block-size-actionbar-padding-vertical)
-        )
-        var(
-            --kbq-code-block-size-actionbar-padding-horizontal,
-            map.get($tokens, code-block-size-actionbar-padding-horizontal)
-        );
+        kbq-css-variable(code-block-size-actionbar-padding-vertical)
+        kbq-css-variable(code-block-size-actionbar-padding-horizontal);
 
-    gap: var(
-        --kbq-code-block-size-actionbar-content-gap-horizontal,
-        map.get($tokens, code-block-size-actionbar-content-gap-horizontal)
-    );
+    gap: kbq-css-variable(code-block-size-actionbar-content-gap-horizontal);
 
     & .kbq-code-block__fade-gradient {
         display: none;
 
-        width: var(
-            --kbq-code-block-size-actionbar-fade-gradient-width,
-            map.get($tokens, code-block-size-actionbar-fade-gradient-width)
-        );
+        width: kbq-css-variable(code-block-size-actionbar-fade-gradient-width);
         height: 32px;
 
         margin-top: calc(
@@ -49,7 +38,7 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     &.kbq-actionbar-block_floating {
-        top: map.get($tokens, code-block-size-actionbar-margin-top);
-        right: map.get($tokens, code-block-size-actionbar-margin-right);
+        top: kbq-css-variable(code-block-size-actionbar-margin-top);
+        right: kbq-css-variable(code-block-size-actionbar-margin-right);
     }
 }

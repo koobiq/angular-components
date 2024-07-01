@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -11,15 +12,9 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-calendar__content {
-    padding-right: var(
-        --kbq-datepicker-size-grid-padding-horizontal,
-        map.get($tokens, datepicker-size-grid-padding-horizontal)
-    );
+    padding-right: kbq-css-variable(datepicker-size-grid-padding-horizontal);
 
-    padding-left: var(
-        --kbq-datepicker-size-grid-padding-horizontal,
-        map.get($tokens, datepicker-size-grid-padding-horizontal)
-    );
+    padding-left: kbq-css-variable(datepicker-size-grid-padding-horizontal);
 
     outline: none;
 }
@@ -38,10 +33,7 @@ $tokens: meta.module-variables(tokens) !default;
         position: relative;
 
         box-sizing: border-box;
-        height: var(
-            --kbq-datepicker-size-grid-content-gap-vertical,
-            map.get($tokens, datepicker-size-grid-content-gap-vertical)
-        );;
+        height: kbq-css-variable(datepicker-size-grid-content-gap-vertical);;
 
         $horizontal-padding: map.get($tokens, datepicker-size-grid-padding-horizontal);
         // We use an absolutely positioned pseudo-element as the divider line for the table header so we
@@ -54,10 +46,7 @@ $tokens: meta.module-variables(tokens) !default;
             left: calc(-1 * var(--kbq-datepicker-size-grid-padding-horizontal, #{$horizontal-padding}));
             right: calc(-1 * var(--kbq-datepicker-size-grid-padding-horizontal, #{$horizontal-padding}));
 
-            height: var(
-                --kbq-datepicker-size-grid-divider-height,
-                map.get($tokens, datepicker-size-grid-divider-height)
-            );
+            height: kbq-css-variable(datepicker-size-grid-divider-height);
         }
     }
 }

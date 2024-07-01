@@ -1,10 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tag {
     position: relative;
@@ -14,8 +12,8 @@ $tokens: meta.module-variables(tokens) !default;
     max-width: 100%;
 
     padding:
-        var(--kbq-tag-size-padding-vertical, map.get($tokens, tag-size-padding-vertical))
-        var(--kbq-tag-size-padding-horizontal, map.get($tokens, tag-size-padding-horizontal));
+        kbq-css-variable(tag-size-padding-vertical)
+        kbq-css-variable(tag-size-padding-horizontal);
 
     border-radius: 4px;
 
@@ -32,8 +30,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         flex-shrink: 0;
 
-        margin-right:
-            var(--kbq-tag-size-close-button-margin-right, map.get($tokens, tag-size-close-button-margin-right));
+        margin-right: kbq-css-variable(tag-size-close-button-margin-right);
 
         &:hover {
             cursor: pointer;
@@ -49,11 +46,11 @@ $tokens: meta.module-variables(tokens) !default;
         white-space: nowrap;
         overflow: hidden;
 
-        margin: 0 var(--kbq-tag-size-content-gap-horizontal, map.get($tokens, tag-size-content-gap-horizontal));
+        margin: 0 kbq-css-variable(tag-size-content-gap-horizontal);
     }
 
     & .kbq-icon_left {
-        margin-left: var(--kbq-tag-size-icon-margin-left, map.get($tokens, tag-size-icon-margin-left));
+        margin-left: kbq-css-variable(tag-size-icon-margin-left);
     }
 }
 

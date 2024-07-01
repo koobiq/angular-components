@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -36,12 +37,10 @@ $tokens: meta.module-variables(tokens) !default;
         );
 
     border: {
-        width: var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width);
+        width: kbq-css-variable(tabs-size-tab-item-focus-outline-width);
         style: solid;
         color: transparent;
-        radius: var(
-            --kbq-tabs-size-tab-item-border-radius, map.get($tokens, tabs-size-tab-item-border-radius)
-        );
+        radius: kbq-css-variable(tabs-size-tab-item-border-radius);
     }
 
     outline: none;
@@ -61,9 +60,7 @@ $tokens: meta.module-variables(tokens) !default;
     & .kbq-tab-label__content {
         display: flex;
 
-        gap: var(
-            --kbq-tabs-size-tab-item-content-gap-horizontal, map.get($tokens, tabs-size-tab-item-content-gap-horizontal)
-        );
+        gap: kbq-css-variable(tabs-size-tab-item-content-gap-horizontal);
     }
 
     &.kbq-tab-label_vertical {

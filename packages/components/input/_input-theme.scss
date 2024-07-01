@@ -2,14 +2,13 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-input-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, input-font-text));
+        @include kbq-typography-css-variables(input, text);
     }
 
     .kbq-input.kbq-input-password {

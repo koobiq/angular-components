@@ -2,45 +2,44 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-navbar-item($state) {
+@mixin kbq-navbar-item($component, $state-name) {
+    $state: map.get($component, $state-name);
+
     &:not(.kbq-navbar-item_has-nested) {
         &:after {
             display: block;
-            background: map.get($state, background);
+            background: kbq-css-variable(navbar-item-#{$state-name}-background, map.get($state, background));
         }
     }
 
     .kbq-navbar-title {
-        color: map.get($state, text);
+        color: kbq-css-variable(navbar-item-#{$state-name}-text, map.get($state, text));
     }
 
     & > .kbq-icon {
-        color: map.get($state, icon-left) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-icon-left, map.get($state, icon-left)) !important;
     }
 
     .kbq-navbar-item__arrow-icon {
-        color: map.get($state, icon-right) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-icon-right, map.get($state, icon-right)) !important;
     }
 }
 
 
 @mixin kbq-navbar-theme($theme) {
-    $line: map.get($theme, line);
-    $states-line: map.get(map.get($theme, states), line);
-
-    $navbar: map.get(map.get($theme, components), navbar);
+    $navbar: map.get($theme, components, navbar);
     $item: map.get($navbar, item);
-
 
     .kbq-navbar,
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        background-color: map.get($navbar, background);
+        background-color: kbq-css-variable(navbar-background, map.get($navbar, background));
     }
 
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        border-right: 1px solid map.get($navbar, border);
+        border-right: 1px solid kbq-css-variable(navbar-border, map.get($navbar, border));
     }
 
     .kbq-navbar-item,
@@ -48,10 +47,10 @@
     .kbq-navbar-toggle {
         cursor: pointer;
 
-        @include kbq-navbar-item(map.get($item, default));
+        @include kbq-navbar-item($item, default);
 
         &:hover:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item(map.get($item, hover));
+            @include kbq-navbar-item($item, hover);
         }
 
         &.cdk-focused.cdk-keyboard-focused {
@@ -59,13 +58,15 @@
 
             &:after {
                 display: block;
-                box-shadow: inset 0 0 0 2px map.get($states-line, focus-theme)
+                box-shadow: inset 0 0 0 2px kbq-css-variable(
+                    states-line-focus-theme, map.get($theme, states, line, focus-theme)
+                )
             };
         }
 
         &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
         &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item(map.get($item, selected));
+            @include kbq-navbar-item($item, selected);
         }
 
         &.kbq-navbar-focusable-item {
@@ -73,7 +74,7 @@
         }
 
         &.kbq-disabled {
-            @include kbq-navbar-item(map.get($item, disabled));
+            @include kbq-navbar-item($item, disabled);
 
             pointer-events: none;
             cursor: default;
@@ -93,7 +94,7 @@
     }
 
     .kbq-navbar-divider {
-        background: map.get($line, contrast-fade);
+        background: kbq-css-variable(line-contrast-fade, map.get($theme, line, contrast-fade));
     }
 }
 
@@ -107,15 +108,13 @@ button {
 }
 
 @mixin kbq-navbar-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles($config, 'text-normal-strong');
+        @include kbq-typography-level-to-styles($config, text-normal-strong);
     }
 
     .kbq-navbar-brand {
         .kbq-navbar-title {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, navbar-font-title));
+            @include kbq-typography-css-variables(navbar, title);
         }
     }
 }

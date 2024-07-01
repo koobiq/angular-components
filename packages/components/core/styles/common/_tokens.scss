@@ -9,15 +9,9 @@
 $tokens: meta.module-variables(tokens) !default;
 
 
-@function cssVar($name) {
-    @if string.index($name, light-) {
-        $short-name: '';
-
-        @each $part in string.split($name, '-light') {
-            $short-name: $short-name + $part;
-        }
-
-        @return var(--kbq-#{$short-name}, map.get($tokens, $name));
+@function kbq-css-variable($name, $value: null) {
+    @if $value {
+        @return var(--kbq-#{$name}, $value);
     } @else {
         @return var(--kbq-#{$name}, map.get($tokens, $name));
     }
@@ -25,4 +19,31 @@ $tokens: meta.module-variables(tokens) !default;
 
 @function getToken($name) {
     @return map.get($tokens, $name);
+}
+
+@mixin kbq-css-font-variable($component, $component-property, $font-property, $font) {
+    #{$font-property}: var(
+        --kbq-#{$component}-#{$font}#{$component-property}-#{$font-property},
+        map.get($tokens, #{$component}-#{$font}#{$component-property}-#{$font-property})
+    );
+}
+
+@mixin kbq-typography-css-variables($component, $property) {
+    @include kbq-css-font-variable($component, $property, font-size, font-);
+    @include kbq-css-font-variable($component, $property, font-weight, font-);
+    @include kbq-css-font-variable($component, $property, line-height, font-);
+    @include kbq-css-font-variable($component, $property, font-family, font-);
+    @include kbq-css-font-variable($component, $property, text-transform, font-);
+    @include kbq-css-font-variable($component, $property, font-feature-settings, font-);
+    @include kbq-css-font-variable($component, $property, letter-spacing, font-);
+}
+
+@mixin kbq-typography-level-to-styles_css-variables($component, $property) {
+    @include kbq-css-font-variable($component, $property, font-size, '');
+    @include kbq-css-font-variable($component, $property, font-weight, '');
+    @include kbq-css-font-variable($component, $property, line-height, '');
+    @include kbq-css-font-variable($component, $property, font-family, '');
+    @include kbq-css-font-variable($component, $property, text-transform, '');
+    @include kbq-css-font-variable($component, $property, font-feature-settings, '');
+    @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }

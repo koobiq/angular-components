@@ -2,13 +2,14 @@
 
 @use '../core/styles/common/popup';
 @use '../core/styles/theming/theming';
+@use '../core/styles/common/tokens' as *;
 
 
 @mixin kbq-autocomplete-theme($theme) {
     $select-panel: map.get(map.get($theme, components), select-panel);
 
     .kbq-autocomplete-panel {
-        box-shadow: map.get($select-panel, shadow);
-        background: map.get($select-panel, background);
+        box-shadow: kbq-css-variable(select-panel-shadow, map.get($select-panel, shadow));
+        background: kbq-css-variable(select-panel-background, map.get($select-panel, background));
     }
 }

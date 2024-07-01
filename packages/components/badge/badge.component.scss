@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-badge {
@@ -21,63 +18,46 @@ $tokens: meta.module-variables(tokens) !default;
     box-sizing: border-box;
 
     padding:
-        var(--kbq-badge-size-normal-vertical-padding, map.get($tokens, badge-size-normal-vertical-padding))
-        var(--kbq-badge-size-normal-horizontal-padding, map.get($tokens, badge-size-normal-horizontal-padding));
+        kbq-css-variable(badge-size-normal-vertical-padding)
+        kbq-css-variable(badge-size-normal-horizontal-padding);
 
     border: {
-        width: var(--kbq-badge-size-normal-border-width, map.get($tokens, badge-size-normal-border-width));
-        radius: var(--kbq-badge-size-normal-border-radius, map.get($tokens, badge-size-normal-border-radius));
+        width: kbq-css-variable(badge-size-normal-border-width);
+        radius: kbq-css-variable(badge-size-normal-border-radius);
     }
 
     & .kbq-badge-caption {
-        padding-left:
-            var(--kbq-badge-size-normal-content-padding, map.get($tokens, badge-size-normal-content-padding));
+        padding-left: kbq-css-variable(badge-size-normal-content-padding);
     }
 
     & .kbq-icon_left {
-        margin-right: var(
-            --kbq-badge-size-normal-icon-left-margin-right,
-            map.get($tokens, badge-size-normal-icon-left-margin-right)
-        );
+        margin-right: kbq-css-variable(badge-size-normal-icon-left-margin-right);
     }
 
     & .kbq-icon_right {
-        margin-left: var(
-            --kbq-badge-size-normal-icon-right-margin-left,
-            map.get($tokens, badge-size-normal-icon-right-margin-left)
-        );
+        margin-left: kbq-css-variable(badge-size-normal-icon-right-margin-left);
     }
 
     &.kbq-badge_compact {
         padding:
-            var(--kbq-badge-size-compact-vertical-padding, map.get($tokens, badge-size-compact-vertical-padding))
-            var(
-                --kbq-badge-size-compact-horizontal-padding,
-                map.get($tokens, badge-size-compact-horizontal-padding)
-            );
+            kbq-css-variable(badge-size-compact-vertical-padding)
+            kbq-css-variable(badge-size-compact-horizontal-padding);
 
         border: {
-            width: var(--kbq-badge-size-compact-border-width, map.get($tokens, badge-size-compact-border-width));
-            radius: var(--kbq-badge-size-compact-border-radius, map.get($tokens, badge-size-compact-border-radius));
+            width: kbq-css-variable(badge-size-compact-border-width);
+            radius: kbq-css-variable(badge-size-compact-border-radius);
         }
 
         & .kbq-badge-caption {
-            padding-left:
-                var(--kbq-badge-size-compact-content-padding, map.get($tokens, badge-size-compact-content-padding));
+            padding-left: kbq-css-variable(badge-size-compact-content-padding);
         }
 
         & .kbq-icon_left {
-            margin-right: var(
-                --kbq-badge-size-compact-icon-left-margin-right,
-                map.get($tokens, badge-size-compact-icon-left-margin-right)
-            );
+            margin-right: kbq-css-variable(badge-size-compact-icon-left-margin-right);
         }
 
         & .kbq-icon_right {
-            margin-left: var(
-                --kbq-badge-size-compact-icon-right-margin-left,
-                map.get($tokens, badge-size-compact-icon-right-margin-left)
-            );
+            margin-left: kbq-css-variable(badge-size-compact-icon-right-margin-left);
         }
     }
 }

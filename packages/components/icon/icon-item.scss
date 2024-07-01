@@ -1,10 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-icon-item {
@@ -13,6 +10,6 @@ $tokens: meta.module-variables(tokens) !default;
     border-radius: 50%;
 
     padding:
-        var(--kbq-icon-item-size-vertical-padding, map-get($tokens, icon-item-size-vertical-padding))
-        var(--kbq-icon-item-size-horizontal-padding, map-get($tokens, icon-item-size-horizontal-padding));
+        kbq-css-variable(icon-item-size-vertical-padding)
+        kbq-css-variable(icon-item-size-horizontal-padding);
 }

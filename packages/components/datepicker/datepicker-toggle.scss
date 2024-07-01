@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -11,8 +12,8 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-datepicker-toggle__button.kbq-button-icon {
-    width: var(--kbq-datepicker-toggle-size-width, map.get($tokens, datepicker-toggle-size-width));
-    height: var(--kbq-datepicker-toggle-size-height, map.get($tokens, datepicker-toggle-size-height));
+    width: kbq-css-variable(datepicker-toggle-size-width);
+    height: kbq-css-variable(datepicker-toggle-size-height);
     margin-left: 2px;
 }
 

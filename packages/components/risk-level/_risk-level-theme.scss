@@ -2,87 +2,82 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-risk-level-filled-color($risk-level) {
+@mixin kbq-risk-level-filled-color($component, $type, $sub-type, $style-name) {
+    $style: map.get($component, $type, $sub-type, $style-name);
+    $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
     border: transparent;
 
-    color: map.get($risk-level, color);
-    background: map.get($risk-level, background);
+    color: kbq-css-variable(#{$base}-color, map.get($style, color));
+    background: kbq-css-variable(#{$base}-background, map.get($style, background));
 }
 
-@mixin kbq-risk-level-outline-color($risk-level) {
-    border-color: map.get($risk-level, border);
+@mixin kbq-risk-level-outline-color($component, $type, $sub-type, $style-name) {
+    $style: map.get($component, $type, $sub-type, $style-name);
+    $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
 
-    color: map.get($risk-level, color);
-    background: map.get($risk-level, background);
+    border-color: kbq-css-variable(#{$base}-border, map.get($style, border));
+
+    color: kbq-css-variable(#{$base}-color, map.get($style, color));
+    background: kbq-css-variable(#{$base}-background, map.get($style, background));
 }
 
 @mixin kbq-risk-level-theme($theme) {
     $risk-level: map.get(map.get($theme, components), risk-level);
 
-    $filled: map.get($risk-level, filled);
-    $outline: map.get($risk-level, outline);
-
     .kbq-risk-level_filled {
-        $fade-on: map.get($filled, fade-on);
-
         &.kbq-risk-level_fade-contrast {
-            @include kbq-risk-level-filled-color(map.get($fade-on, contrast));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, contrast);
         }
 
         &.kbq-risk-level_fade-success {
-            @include kbq-risk-level-filled-color(map.get($fade-on, success));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, success);
         }
 
         &.kbq-risk-level_fade-warning {
-            @include kbq-risk-level-filled-color(map.get($fade-on, warning));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, warning);
         }
 
         &.kbq-risk-level_fade-error {
-            @include kbq-risk-level-filled-color(map.get($fade-on, error));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, error);
         }
 
-        $fade-off: map.get($filled, fade-off);
-
         &.kbq-risk-level_success {
-            @include kbq-risk-level-filled-color(map.get($fade-off, success));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, success);
         }
 
         &.kbq-risk-level_warning {
-            @include kbq-risk-level-filled-color(map.get($fade-off, warning));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, warning);
         }
 
         &.kbq-risk-level_error {
-            @include kbq-risk-level-filled-color(map.get($fade-off, error));
+            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, error);
         }
     }
 
     .kbq-risk-level_outline {
-        $fade-on: map.get($outline, fade-on);
-
         &.kbq-risk-level_fade-contrast {
-            @include kbq-risk-level-outline-color(map.get($fade-on, contrast));
+            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, contrast);
         }
 
         &.kbq-risk-level_fade-success {
-            @include kbq-risk-level-outline-color(map.get($fade-on, success));
+            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, success);
         }
 
         &.kbq-risk-level_fade-warning {
-            @include kbq-risk-level-outline-color(map.get($fade-on, warning));
+            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, warning);
         }
 
         &.kbq-risk-level_fade-error {
-            @include kbq-risk-level-outline-color(map.get($fade-on, error));
+            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, error);
         }
     }
 }
 
 @mixin kbq-risk-level-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-risk-level {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, risk-level-font-text));
+        @include kbq-typography-css-variables(risk-level, text);
     }
 }

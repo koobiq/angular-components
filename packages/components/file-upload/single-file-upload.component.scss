@@ -4,6 +4,8 @@
 @use '../core/styles/tokens';
 
 @use '../core/styles/common';
+@use '../core/styles/common/tokens' as *;
+
 
 $tokens: meta.module-variables(tokens) !default;
 
@@ -16,38 +18,20 @@ $tokens: meta.module-variables(tokens) !default;
         calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
         calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
 
-    border-radius: var(
-        --kbq-file-upload-size-single-container-border-radius,
-        map.get($tokens, file-upload-size-single-container-border-radius)
-    );
-    border-width: var(
-        --kbq-file-upload-size-single-container-border-width,
-        map.get($tokens, file-upload-size-single-container-border-width)
-    );
+    border-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
+    border-width: kbq-css-variable(file-upload-size-single-container-border-width);
     border-style: dashed;
 
     & .dropzone__text {
-        padding-top: var(
-            --kbq-file-upload-size-single-text-block-padding-vertical,
-            map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-        );
+        padding-top: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-        padding-bottom: var(
-            --kbq-file-upload-size-single-text-block-padding-vertical,
-            map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-        );
+        padding-bottom: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-        gap: var(
-            --kbq-file-upload-size-single-text-block-content-gap-horizontal,
-            map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
-        );
+        gap: kbq-css-variable(file-upload-size-single-text-block-content-gap-horizontal);
     }
 
     & .dropzone {
-        gap: var(
-            --kbq-file-upload-size-single-container-content-gap-horizontal,
-            map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
-        );
+        gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
     }
 
     .file-item {
@@ -58,10 +42,7 @@ $tokens: meta.module-variables(tokens) !default;
             align-items: center;
             width: 100%;
 
-            gap: var(
-                --kbq-file-upload-size-single-container-content-gap-horizontal,
-                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
-            );
+            gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
 
             .file-item__text {
                 width: 120px;
@@ -76,5 +57,5 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-file-upload__hint {
-    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
 }

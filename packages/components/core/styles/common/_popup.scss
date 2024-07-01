@@ -1,11 +1,12 @@
 @use 'sass:map';
+@use './tokens' as *;
 
 
 @mixin popup-params($theme) {
-    $popup: map.get(map.get($theme, components), popup);
+    $popup: map.get($theme, components, popup);
 
-    box-shadow: map.get($popup, shadow);
-    border-color: map.get($popup, border);
+    box-shadow: kbq-css-variable(popup-shadow, map.get($popup, shadow));
+    border-color: kbq-css-variable(popup-border, map.get($popup, border));
 
-    background-color: map.get($popup, background);
+    background-color: kbq-css-variable(popup-background, map.get($popup, background));
 }

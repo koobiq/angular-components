@@ -1,10 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-textarea {
     display: inline-block;
@@ -22,8 +20,8 @@ $tokens: meta.module-variables(tokens) !default;
     box-sizing: border-box;
 
     padding:
-        var(--kbq-textarea-size-padding-vertical, map.get($tokens, textarea-size-padding-vertical))
-        var(--kbq-textarea-size-padding-horizontal, map.get($tokens, textarea-size-padding-horizontal));
+        kbq-css-variable(textarea-size-padding-vertical)
+        kbq-css-variable(textarea-size-padding-horizontal);
 
     -webkit-appearance: none; // Chrome textarea height sizing fix
     vertical-align: bottom; // Chrome textarea height sizing fix
@@ -35,7 +33,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     &.kbq-textarea-resizable {
         resize: vertical;
-        min-height: var(--kbq-textarea-size-min-height, map.get($tokens, textarea-size-min-height));
+        min-height: kbq-css-variable(textarea-size-min-height);
     }
 }
 

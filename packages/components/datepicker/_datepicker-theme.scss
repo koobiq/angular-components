@@ -3,85 +3,70 @@
 
 @use '../core/styles/theming/theming';
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
-
-$kbq-datepicker-selected-fade-amount: 0.6;
-$kbq-datepicker-today-fade-amount: 0.2;
 
 @mixin kbq-datepicker-theme($theme) {
     $datepicker: map.get(map.get($theme, components), datepicker);
 
-    $container: map.get($datepicker, container);
-    $header: map.get($datepicker, header);
-    $cell: map.get($datepicker, cell);
-
     .kbq-datepicker__content {
-        background: map.get($container, background);
-        box-shadow: map.get($container, box-shadow);
+        background: kbq-css-variable(datepicker-container-background, map.get($datepicker, container, background));
+        box-shadow: kbq-css-variable(datepicker-container-bo-shadow, map.get($datepicker, container, box-shadow));
     }
 
     .kbq-calendar__table-header {
-        color: map.get($header, text);
+        color: kbq-css-variable(datepicker-header-text, map.get($datepicker, header, text));
     }
 
     .kbq-calendar__table-header-divider::after {
-        background: map.get($header, divider);
+        background: kbq-css-variable(datepicker-header-divider, map.get($datepicker, header, divider));
     }
 
     .kbq-calendar__body-cell-content {
-        $default: map.get($cell, default);
-
-        background: map.get($default, background);
-        color: map.get($default, text);
+        background: kbq-css-variable(
+            datepicker-cell-default-background, map.get($datepicker, cell, default, background));
+        color: kbq-css-variable(datepicker-cell-default-text, map.get($datepicker, cell, default, text));
 
         &.kbq-calendar__body-today {
-            $today: map.get($cell, today);
-
-            background: map.get($today, background);
-            color: map.get($today, text);
+            background: kbq-css-variable(
+                datepicker-cell-today-background, map.get($datepicker, cell, today, background));
+            color: kbq-css-variable(datepicker-cell-today-text, map.get($datepicker, cell, today, text));
         }
 
         &:hover:not(.kbq-disabled) {
-            $hover: map.get($cell, hover);
-
-            background: map.get($hover, background);
+            background: kbq-css-variable(
+                datepicker-cell-hover-background, map.get($datepicker, cell, hover, background));
         }
 
         &:active:not(.kbq-disabled) {
-            $active: map.get($cell, active);
-
-            background: map.get($active, background);
+            background: kbq-css-variable(
+                datepicker-cell-active-background, map.get($datepicker, cell, active, background));
         }
 
         &.kbq-selected:not(.kbq-disabled) {
-            $selected: map.get($cell, selected);
-
-            background: map.get($selected, background);
-            color: map.get($selected, text);
+            background: kbq-css-variable(
+                datepicker-cell-selected-background, map.get($datepicker, cell, selected, background));
+            color: kbq-css-variable(datepicker-cell-selected-text, map.get($datepicker, cell, selected, text));
 
             &:hover {
-                $selected-hover: map.get($cell, selected-hover);
-
-                background: map.get($selected-hover, background);
+                background: kbq-css-variable(
+                    datepicker-cell-selected-hover-background, map.get($datepicker, cell, selected-hover, background));
             }
         }
 
         &.kbq-disabled {
-            $disabled: map.get($cell, disabled);
-
-            background: map.get($disabled, background);
+            background: kbq-css-variable(
+                datepicker-cell-disabled-background, map.get($datepicker, cell, disabled, background));
         }
     }
 }
 
 @mixin kbq-datepicker-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-calendar {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+        @include kbq-typography-css-variables(datepicker, text);
     }
 
     .kbq-calendar__table-header th {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, datepicker-font-text));
+        @include kbq-typography-css-variables(datepicker, text);
     }
 }

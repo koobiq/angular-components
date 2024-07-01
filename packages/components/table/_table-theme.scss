@@ -7,27 +7,28 @@
 
 @mixin kbq-table-theme($theme) {
     $foreground: map.get($theme, foreground);
-    $states-background: map.get(map.get($theme, states), background);
+    $states-background: map.get($theme, states, background);
     $line: map.get($theme, line);
 
     .kbq-table {
         & > thead {
-            color: map.get($foreground, contrast-secondary);
+            color: kbq-css-variable(foreground-contrast-secondary, map.get($foreground, contrast-secondary));
 
             & > tr > th {
-                border-bottom-color: map.get($line, contrast-fade);
+                border-bottom-color: kbq-css-variable(line-contrast-fade, map.get($line, contrast-fade));
             }
         }
 
         & > tbody {
             & > tr {
                 &:hover td {
-                    background-color: map.get($states-background, transparent-hover);
+                    background-color: kbq-css-variable(
+                        states-background-transparent-hover, map.get($states-background, transparent-hover));
                 }
 
                 & > th,
                 & > td {
-                    color: map.get($foreground, contrast);
+                    color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
                 }
             }
         }
@@ -36,7 +37,7 @@
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: map.get($line, contrast-fade);
+                    border-bottom-color: kbq-css-variable(line-contrast-fade, map.get($line, contrast-fade));
                 }
             }
         }
@@ -50,7 +51,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, getToken(table-font-header));
+            @include kbq-typography-css-variables(table, header);
         }
 
         & > tbody {
@@ -58,7 +59,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles($config, getToken(table-font-body));
+            @include kbq-typography-css-variables(table, body);
         }
     }
 }

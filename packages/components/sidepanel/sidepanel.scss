@@ -3,7 +3,7 @@
 
 @use '../core/styles/common';
 
-@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
@@ -39,18 +39,18 @@ $tokens: meta.module-variables(tokens) !default;
         top: 0;
 
         &.kbq-sidepanel_small {
-            width: var(--kbq-sidepanel-size-small-width, map.get($tokens, sidepanel-size-small-width));
-            max-width: var(--kbq-sidepanel-size-small-width, map.get($tokens, sidepanel-size-small-width));
+            width: kbq-css-variable(sidepanel-size-small-width);
+            max-width: kbq-css-variable(sidepanel-size-small-width);
         }
 
         &.kbq-sidepanel_medium {
-            width: var(--kbq-sidepanel-size-medium-width, map.get($tokens, sidepanel-size-medium-width));
-            max-width: var(--kbq-sidepanel-size-medium-width, map.get($tokens, sidepanel-size-medium-width));
+            width: kbq-css-variable(sidepanel-size-medium-width);
+            max-width: kbq-css-variable(sidepanel-size-medium-width);
         }
 
         &.kbq-sidepanel_large {
-            width: var(--kbq-sidepanel-size-large-width, map.get($tokens, sidepanel-size-large-width));
-            max-width: var(--kbq-sidepanel-size-large-width, map.get($tokens, sidepanel-size-large-width));
+            width: kbq-css-variable(sidepanel-size-large-width);
+            max-width: kbq-css-variable(sidepanel-size-large-width);
         }
 
         .kbq-sidepanel-indent {
@@ -128,15 +128,13 @@ $tokens: meta.module-variables(tokens) !default;
     flex: 0 0 auto;
 
     padding:
-        var(--kbq-sidepanel-size-header-padding-vertical, map.get($tokens, sidepanel-size-header-padding-vertical))
-        var(--kbq-sidepanel-size-header-padding-right, map.get($tokens, sidepanel-size-header-padding-right))
-        var(--kbq-sidepanel-size-header-padding-vertical, map.get($tokens, sidepanel-size-header-padding-vertical))
-        var(--kbq-sidepanel-size-header-padding-left, map.get($tokens, sidepanel-size-header-padding-left));
+        kbq-css-variable(sidepanel-size-header-padding-vertical)
+        kbq-css-variable(sidepanel-size-header-padding-right)
+        kbq-css-variable(sidepanel-size-header-padding-vertical)
+        kbq-css-variable(sidepanel-size-header-padding-left);
 
     .kbq-sidepanel-close {
-        margin-left: var(
-            --kbq-sidepanel-size-close-button-margin-left, map.get($tokens, sidepanel-size-close-button-margin-left)
-        );
+        margin-left: kbq-css-variable(sidepanel-size-close-button-margin-left);
     }
 }
 
@@ -153,17 +151,11 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: column;
     min-height: 0;
 
-    padding-right: var(
-        --kbq-sidepanel-size-content-padding-horizontal, map.get($tokens, sidepanel-size-content-padding-horizontal)
-    );
+    padding-right: kbq-css-variable(sidepanel-size-content-padding-horizontal);
 
-    padding-left: var(
-        --kbq-sidepanel-size-content-padding-horizontal, map.get($tokens, sidepanel-size-content-padding-horizontal)
-    );
+    padding-left: kbq-css-variable(sidepanel-size-content-padding-horizontal);
 
-    padding-bottom: var(
-        --kbq-sidepanel-size-content-padding-bottom, map.get($tokens, sidepanel-size-content-padding-bottom)
-    );
+    padding-bottom: kbq-css-variable(sidepanel-size-content-padding-bottom);
 }
 
 .kbq-sidepanel-footer {
@@ -175,9 +167,9 @@ $tokens: meta.module-variables(tokens) !default;
     flex: 0 0 auto;
 
     padding:
-        var(--kbq-sidepanel-size-footer-padding-top, map.get($tokens, sidepanel-size-footer-padding-top))
-        var(--kbq-sidepanel-size-footer-padding-horizontal, map.get($tokens, sidepanel-size-footer-padding-horizontal))
-        var(--kbq-sidepanel-size-footer-padding-bottom, map.get($tokens, sidepanel-size-footer-padding-bottom));
+        kbq-css-variable(sidepanel-size-footer-padding-top)
+        kbq-css-variable(sidepanel-size-footer-padding-horizontal)
+        kbq-css-variable(sidepanel-size-footer-padding-bottom);
 
     .kbq-sidepanel-actions {
         display: flex;
@@ -193,9 +185,6 @@ $tokens: meta.module-variables(tokens) !default;
             justify-content: flex-end;
         }
 
-        gap: var(
-            --kbq-sidepanel-size-footer-content-gap-horizontal,
-            map.get($tokens, sidepanel-size-footer-content-gap-horizontal)
-        );
+        gap: kbq-css-variable(sidepanel-size-footer-content-gap-horizontal);
     }
 }

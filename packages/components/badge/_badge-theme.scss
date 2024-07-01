@@ -2,122 +2,108 @@
 @use 'sass:map';
 
 @use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
 
 
-@mixin kbq-badge-style($badge) {
-    color: map.get($badge, color);
-    background: map.get($badge, background);
+@mixin kbq-badge-style($component, $type, $sub-type, $style-name) {
+    $style: map.get($component, $type, $sub-type, $style-name);
+
+    color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-color, map.get($style, color));
+    background: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-background, map.get($style, background));
 
     & .kbq-badge-caption {
-        color: map.get($badge, caption);
+        color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-caption, map.get($style, caption));
     }
 
     & .kbq-icon {
-        color: map.get($badge, icon) !important;
+        color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-icon, map.get($style, icon)) !important;
     }
-}
 
-@mixin kbq-badge-filled-color($badge) {
-    @include kbq-badge-style($badge);
-
-    border: transparent;
-}
-
-@mixin kbq-badge-outline-color($badge) {
-    @include kbq-badge-style($badge);
-
-    border-color: map.get($badge, border);
+    @if $type == filled {
+        border: transparent;
+    } @else {
+        border-color: map.get($component, border);
+    }
 }
 
 @mixin kbq-badge-theme($theme) {
     $badge: map.get(map.get($theme, components), badge);
 
-    $filled: map.get($badge, filled);
-    $outline: map.get($badge, outline);
-
     .kbq-badge-filled {
-        $fade-on: map.get($filled, fade-on);
-
         &.kbq-badge_fade-contrast {
-            @include kbq-badge-filled-color(map.get($fade-on, contrast));
+            @include kbq-badge-style($badge, filled, fade-on, contrast);
         }
 
         &.kbq-badge_fade-theme {
-            @include kbq-badge-filled-color(map.get($fade-on, theme));
+            @include kbq-badge-style($badge, filled, fade-on, theme);
         }
 
         &.kbq-badge_fade-success {
-            @include kbq-badge-filled-color(map.get($fade-on, success));
+            @include kbq-badge-style($badge, filled, fade-on, success);
         }
 
         &.kbq-badge_fade-warning {
-            @include kbq-badge-filled-color(map.get($fade-on, warning));
+            @include kbq-badge-style($badge, filled, fade-on, warning);
         }
 
         &.kbq-badge_fade-error {
-            @include kbq-badge-filled-color(map.get($fade-on, error));
+            @include kbq-badge-style($badge, filled, fade-on, error);
         }
 
-        $fade-off: map.get($filled, fade-off);
-
         &.kbq-badge_theme {
-            @include kbq-badge-filled-color(map.get($fade-off, theme));
+            @include kbq-badge-style($badge, filled, fade-off, theme);
         }
 
         &.kbq-badge_success {
-            @include kbq-badge-filled-color(map.get($fade-off, success));
+            @include kbq-badge-style($badge, filled, fade-off, success);
         }
 
         &.kbq-badge_warning {
-            @include kbq-badge-filled-color(map.get($fade-off, warning));
+            @include kbq-badge-style($badge, filled, fade-off, warning);
         }
 
         &.kbq-badge_error {
-            @include kbq-badge-filled-color(map.get($fade-off, error));
+            @include kbq-badge-style($badge, filled, fade-off, error);
         }
     }
 
     .kbq-badge-outline {
-        $fade-on: map.get($outline, fade-on);
-
         &.kbq-badge_fade-contrast {
-            @include kbq-badge-outline-color(map.get($fade-on, contrast));
+            @include kbq-badge-style($badge, outline, fade-on, contrast);
         }
 
         &.kbq-badge_fade-theme {
-            @include kbq-badge-outline-color(map.get($fade-on, theme));
+            @include kbq-badge-style($badge, outline, fade-on, theme);
         }
 
         &.kbq-badge_fade-success {
-            @include kbq-badge-outline-color(map.get($fade-on, success));
+            @include kbq-badge-style($badge, outline, fade-on, success);
         }
 
         &.kbq-badge_fade-warning {
-            @include kbq-badge-outline-color(map.get($fade-on, warning));
+            @include kbq-badge-style($badge, outline, fade-on, warning);
         }
 
         &.kbq-badge_fade-error {
-            @include kbq-badge-outline-color(map.get($fade-on, error));
+            @include kbq-badge-style($badge, outline, fade-on, error);
         }
     }
 }
 
 @mixin kbq-badge-typography($config) {
-    $tokens: map.get($config, tokens);
-
     .kbq-badge {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-default));
+        @include kbq-typography-css-variables(badge, normal-default);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-normal-caption));
+            @include kbq-typography-css-variables(badge, normal-caption);
         }
     }
 
     .kbq-badge_compact {
-        @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-default));
+        @include kbq-typography-css-variables(badge, compact-default);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles($config, map.get($tokens, badge-font-compact-caption));
+            @include kbq-typography-css-variables(badge, compact-caption);
         }
     }
 }
