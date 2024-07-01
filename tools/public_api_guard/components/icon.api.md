@@ -80,11 +80,15 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
 export class KbqIconItem extends KbqIcon implements CanColor {
     constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
+    big: boolean;
+    // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    fade: boolean;
     // (undocumented)
     name: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconItem, [null, { attribute: "kbq-icon-item"; }, { optional: true; }, null]>;
 }

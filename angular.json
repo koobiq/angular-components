@@ -946,6 +946,35 @@
                 }
             }
         },
+        "dev-icon-item": {
+            "projectType": "application",
+            "root": "packages/components-dev/icon-item",
+            "sourceRoot": "packages/components-dev/icon-item",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/icon-item",
+                        "tsConfig": "packages/components-dev/icon-item/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/icon-item/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-icon-item:build"
+                    }
+                }
+            }
+        },
         "dev-hint": {
             "projectType": "application",
             "root": "packages/components-dev/hint",

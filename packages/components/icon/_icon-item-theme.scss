@@ -3,40 +3,60 @@
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
+@mixin kbq-icon-item-style($component, $type, $style-name) {
+    $style: map.get($component, $type, $style-name);
+    $base: icon-item-filled-#{$type}-#{$type}-#{$style-name};
+
+    color: kbq-css-variable(#{$base}-color, map.get($component, $type, $style-name, color));
+    background: kbq-css-variable(#{$base}-background, map.get($component, $type, $style-name, background));
+}
 
 @mixin kbq-icon-item-theme($theme) {
     $icon-item: map.get($theme, components, icon-item);
 
-    .kbq-icon-item {
-        &.kbq-theme {
-            color: kbq-css-variable(icon-item-theme-color, map.get($icon-item, theme, color));
-            background: kbq-css-variable(icon-item-theme-background, map.get($icon-item, theme, background));
+    .kbq-icon-item.kbq-icon-item_filled {
+        &.kbq-icon-item_fade-off {
+            &.kbq-theme {
+                @include kbq-icon-item-style($icon-item, fade-off, theme);
+            }
+
+            &.kbq-contrast {
+                @include kbq-icon-item-style($icon-item, fade-off, contrast);
+            }
+
+            &.kbq-error {
+                @include kbq-icon-item-style($icon-item, fade-off, error);
+            }
+
+            &.kbq-warning {
+                @include kbq-icon-item-style($icon-item, fade-off, warning);
+            }
+
+            &.kbq-success {
+                @include kbq-icon-item-style($icon-item, fade-off, success);
+            }
         }
 
-        &.kbq-contrast {
-            color: kbq-css-variable(icon-item-contrast-color, map.get($icon-item, contrast, color));
-            background: kbq-css-variable(icon-item-contrast-background, map.get($icon-item, contrast, background));
-        }
+        &.kbq-icon-item_fade-on {
+            &.kbq-theme {
+                @include kbq-icon-item-style($icon-item, fade-on, theme);
+            }
 
-        &.kbq-contrast-fade {
-            color: kbq-css-variable(icon-item-fade-contrast-color, map.get($icon-item, fade-contrast, color));
-            background: kbq-css-variable(
-                icon-item-fade-contrast-background, map.get($icon-item, fade-contrast, background));
-        }
+            &.kbq-contrast {
+                @include kbq-icon-item-style($icon-item, fade-on, contrast);
+            }
 
-        &.kbq-error {
-            color: kbq-css-variable(icon-item-error-color, map.get($icon-item, error, color));
-            background: kbq-css-variable(icon-item-error-background, map.get($icon-item, error, background));
-        }
+            &.kbq-error {
+                @include kbq-icon-item-style($icon-item, fade-on, error);
+            }
 
-        &.kbq-warning {
-            color: kbq-css-variable(icon-item-warning-color, map.get($icon-item, warning, color));
-            background: kbq-css-variable(icon-item-warning-background, map.get($icon-item, warning, background));
-        }
+            &.kbq-warning {
+                @include kbq-icon-item-style($icon-item, fade-on, warning);
+            }
 
-        &.kbq-success {
-            color: kbq-css-variable(icon-item-success-color, map.get($icon-item, success, color));
-            background: kbq-css-variable(icon-item-success-background, map.get($icon-item, success, background));
+            &.kbq-success {
+                @include kbq-icon-item-style($icon-item, fade-on, success);
+            }
         }
     }
 }

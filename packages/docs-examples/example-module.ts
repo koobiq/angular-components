@@ -1209,6 +1209,78 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-forms"
     }
   },
+  "icon-item-color": {
+    "packagePath": "components/icon-item/icon-item-color",
+    "title": "Icon Item Colors",
+    "componentName": "IconItemColorExample",
+    "files": [
+      "icon-item-color-example.ts",
+      "icon-item-color-example.html",
+      "icon-item-color-example.css"
+    ],
+    "selector": "icon-item-color-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-item-color-example.ts",
+    "module": {
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/icon-item",
+      "importPath": "koobiq-docs-examples-components-icon-item"
+    }
+  },
+  "icon-item-default": {
+    "packagePath": "components/icon-item/icon-item-default",
+    "title": "Icon Item",
+    "componentName": "IconItemDefaultExample",
+    "files": [
+      "icon-item-default-example.ts",
+      "icon-item-default-example.html",
+      "icon-item-default-example.css"
+    ],
+    "selector": "icon-item-default-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-item-default-example.ts",
+    "module": {
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/icon-item",
+      "importPath": "koobiq-docs-examples-components-icon-item"
+    }
+  },
+  "icon-item-size": {
+    "packagePath": "components/icon-item/icon-item-size",
+    "title": "Icon Item Size",
+    "componentName": "IconItemSizeExample",
+    "files": [
+      "icon-item-size-example.ts",
+      "icon-item-size-example.html",
+      "icon-item-size-example.css"
+    ],
+    "selector": "icon-item-size-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-item-size-example.ts",
+    "module": {
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/icon-item",
+      "importPath": "koobiq-docs-examples-components-icon-item"
+    }
+  },
+  "icon-item-variant": {
+    "packagePath": "components/icon-item/icon-item-variant",
+    "title": "Icon Item Variant",
+    "componentName": "IconItemVariantExample",
+    "files": [
+      "icon-item-variant-example.ts",
+      "icon-item-variant-example.html",
+      "icon-item-variant-example.css"
+    ],
+    "selector": "icon-item-variant-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-item-variant-example.ts",
+    "module": {
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/icon-item",
+      "importPath": "koobiq-docs-examples-components-icon-item"
+    }
+  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Basic Input",

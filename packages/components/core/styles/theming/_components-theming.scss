@@ -864,29 +864,49 @@
     );
 
     $icon-item: (
-        theme: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-theme-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-theme-background')
+        fade-off: (
+            theme: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-theme-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-theme-background')
+            ),
+            contrast: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-contrast-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-contrast-background')
+            ),
+            error: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-error-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-error-background')
+            ),
+            warning: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-warning-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-warning-background')
+            ),
+            success: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-success-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-off-success-background')
+            )
         ),
-        contrast: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-contrast-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-contrast-background')
-        ),
-        fade-contrast: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-fade-contrast-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-fade-contrast-background')
-        ),
-        error: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-error-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-error-background')
-        ),
-        warning: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-warning-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-warning-background')
-        ),
-        success: (
-            color: map-get($tokens, 'icon-item-#{$scheme}-success-color'),
-            background: map-get($tokens, 'icon-item-#{$scheme}-success-background')
+        fade-on: (
+            theme: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-theme-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-theme-background')
+            ),
+            contrast: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-contrast-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-contrast-background')
+            ),
+            error: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-error-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-error-background')
+            ),
+            warning: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-warning-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-warning-background')
+            ),
+            success: (
+                color: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-success-color'),
+                background: map-get($tokens, 'icon-item-#{$scheme}-filled-fade-on-success-background')
+            )
         )
     );
 
