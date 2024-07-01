@@ -1,500 +1,198 @@
-Включение темы является **необходимым** условием для применения всех основных и тематических стилей к вашему приложению.
-Существуют различные методы подключения стилей.
+В этом руководстве дается подробное описание подключения и настройки тем в Angular приложениях с использованием дизайн-системы Koobiq. В нем рассказывается о подключении готовых тем, кастомизации стандартных тем с помощью дизайн-токенов и расширенной кастомизации с использованием кастомных токенов и переменных CSS.
 
-#### Простое подключение
+Термины:
+- [Миксины](https://sass-lang.com/documentation/at-rules/mixin/) - повторяющиеся участки кода в Sass.
 
-Для работы только с одним набором тем, подключите файл преднастроенных стилей.
+### Простое подключение темы
+Для быстрого запуска вы можете подключить готовую тему из Koobiq. Данный подход позволит использовать стили по-умолчанию для компонентов дизайн системы Koobiq, а также использовать одну из стандартных тем - светлую или темную.
 
-```scss
-@use '@koobiq/components/prebuilt-themes/light-theme.css';
+#### Подготовка
+Установите пакет дизайн системы Koobiq. Подробнее про установку [тут](./installation.md).
+
+#### Применение темы
+
+1. Импорт готовой темы: Включите нужную тему, используя  команду @use, в свой основной файл стиля (например, styles.scss).:
+
+#### Пример на Stackblitz
+Пример простого подключения можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
+
+### Кастомизация: Уровень 1
+В рамках данного раздела дается описание по настройке переключения тем и кастомизации новых компонентов с помощью имеющихся токенов в дизайн системе. Koobiq позволяет подключать стандартные темы оформления (светлую и темную) с помощью дизайн-токенов. Эти токены представляют элементы дизайна, такие как цвета, шрифты и размеры, что позволяет согласованно настраивать переключение тем в вашем приложении.
+
+#### Подключение стандартных тем
+В этом разделе вы узнаете, как подключить светлую и темную темы, подключить стили Koobiq, включив их в свой основной файл стилей, и настроить переключение тем.
+
+##### Описание процесса
+Процесс настройки состоит из 4 основных этапов:
+- 1 Подключение основных стилей светлой и темной темы, в рамках которой создается отдельная директория с файлами для каждого типа токенов соответственно - цвета тем и типографика.
+- 2 Подключение стилей Koobiq - создаётся вспомогательный scss-файл для подключения в основной файл стилей. В данном вспомогательном файле:
+   - 2.1 объявляются и применяются необходимые инструменты из пакета @koobiq/components - цвета, базовые визуальные элементы, темизация стандартных компонентов Koobiq
+   - 2.2 Создаются миксины для подключения в основном файле - миксин базовой типографики и миксин для подключения цветов. Таким образом, структура вспомогательного файла стилей Koobiq выглядит так:
 ```
-
-
-#### Переключение темы
-
-##### Подключение базовых стилей светлой и тёмной темы
-- Создайте директорию `src/styles/out-of-the-box-theme`
-- Добавьте в созданную директорию файлы `_theme.scss` и `_typography.scss`
-
+_theme.kbq.scss
+  ├── объявление инструментов стилей из пакета @koobiq/components
+  ├── применение инструментов из пакета @koobiq/components
+  ├── миксин базовой типографики (@mixin app-typography)
+  └── миксин для подключения цветов и темизации цветов (@mixin app-theme)
 ```
-└─ out-of-the-box-theme ············ Директория для подключения стилей
-    ├─ _theme.scss ················· Файл для подключенные миксинов темной и светлой темы
-    └─ _typography.scss ············ Типографика для маркдауна и текста
-```
+- 3 Подключение вспомогательного файла стилей в основной файл стилей - на данном этапе необходимо подключить файлы, где подключили темы на этапе 1 и стили Koobiq на этапе 2. Затем в рамках базового CSS-селектора `.kbq` задается подключение типографики и настраиваются стили для переключения тем.
+- 4 Настройка переключения тем - данный этап подразумевает реализацию логики подстановки CSS-классов указанной темы. В рамках данного гайда используется сервис `KbqThemeService` из пакета `@koobiq/components/core` для управления переключением тем. CSS-селекторы для темной и светлой темы должны совпадать со значениями тем в инструменте для переключения тем. Каждый CSS-класс темы инкапсулирует настроенные цвета для всех стандартных компонентов Koobiq.
 
-Подключите необходимые стили в каждом из файлов.
-
-- `_typography.scss`
-
-```scss
-@use 'sass:meta';
-
-@use 'node_modules/@koobiq/components/core/styles/tokens';
-@use 'node_modules/@koobiq/components/core/styles/typography/typography';
-
-$tokens: meta.module-variables(tokens);
-
-$typography-config: typography.kbq-typography-config($tokens);
-$markdown-typography-config: typography.kbq-markdown-typography-config($tokens);
-```
-
-
-- `_theme.scss`
-
-
-```scss
-@use 'sass:meta';
-
-@use 'node_modules/@koobiq/components/core/styles/theming/theming';
-@use 'node_modules/@koobiq/components/core/styles/tokens';
-
-@forward 'typography';
-
-$tokens: meta.module-variables(tokens);
-
-$light: theming.kbq-light-theme($tokens);
-$dark: theming.kbq-dark-theme($tokens);
-```
+##### Подключение основных стилей светлой и темной темы
+1. Создайте директории тем: организуйте свои стили тем, добавив каталог для светлой и темной темы в каталоге стилей вашего проекта:
+2. Импортируйте стили тем: Импортируйте стили тем из каталога в свой основной файл стилей (например, styles.scss).:
 
 ##### Подключение стилей Koobiq
+1. Импортируйте стили Koobiq: В свой основной файл стилей импортируйте необходимые стили Koobiq
 
-- Создайте файл `_theme.kbq.scss`
+##### Включение стилей Koobiq в основной файл стилей
 
-Добавьте основные миксины, включая импорты, и подключите базовую типографику:
-
-- Импорты
-
-```scss
-@use 'node_modules/@koobiq/components';
-
-@use 'node_modules/@koobiq/components/core/styles/visual';
-@use 'node_modules/@koobiq/components/core/styles/typography';
-
-@use 'node_modules/@koobiq/components/core/styles/koobiq-theme' as *;
-```
-
-- Использование
-
-```scss
-@include components.kbq-core();
-
-@include visual.body-html();
-@include visual.layouts-for-breakpoint();
-```
-
-- Подключите базовую типографику:
-
-```scss
-@mixin app-typography($tokens, $config, $md-config) {
-    @include typography.kbq-typography-level-to-styles($config, body);
-
-    @include koobiq-typography($tokens, $config, $md-config);
-}
-```
-
-- Подготовьте миксин для подключения в основной файл стилей:
-
-```scss
-@mixin app-theme($theme) {
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
-
-    background: components.kbq-color($background, background);
-    color: components.kbq-color($foreground, text);
-
-    @include koobiq-theme($theme);
-}
-```
-
-##### Включение стилей в основной файл стилей
-
-Добавьте все стили в основной файл стилей, включая импорты необходимых зависимостей,
-подключение типографики и настройку стилей для переключения между темами:
-
-- Импортируем необходимые зависимости
-
-```scss
-@use './styles/theme.kbq' as theme-kbq; // файл, где подключили стили Koobiq
-@use './styles/out-of-the-box-theme/theme' as tokens;  // файл с темами
-```
-
-- Подключите типографику и настройте стили для переключения темы
-
-```scss
-.kbq {
-    @include theme-kbq.app-typography(
-            tokens.$tokens,
-            tokens.$typography-config,
-            tokens.$markdown-typography-config
-    );
-    
-    /* selectors the same as in theme.service.ts */
-    &.theme-light {
-        @include theme-kbq.app-theme(tokens.$light);
-    }
-
-    &.theme-dark {
-        @include theme-kbq.app-theme(tokens.$dark);
-    }
-}
-```
+1. Включите основные стили: В свой основной файл стилей добавьте импортированные стили светлой и темной темы и основные стили Koobiq:
 
 ##### Настройка переключения тем
+Контекст: Здесь стоит сказать про то, что такое переключение тем и как оно работает
+Переключение темы представляет собой логику подстановки CSS-классов с указанной темой, которые инкапсулирует настроенные цвета для всех компонентов.
 
-- Добавьте необходимые классы тегу `body` в `index.html`
+1. В рамках данного гайда используется сервис `KbqThemeService` для управления переключением тем
 
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>KoobiqTesting</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body class="theme-light kbq">
-  <app-root></app-root>
-</body>
-</html>
-```
+// TODO: Добавить пример кода
 
-- Используйте сервис `ThemeService`, который будет обеспечивать функциональность для переключения между светлой и темной темами.
+// TODO: добавить логику переключения в зависимости от операционной системы
 
-<div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon mc-info-o_16 kbq-alert__icon"></i>
-    Важно на этом этапе описать процесс переключения между классами светлой и темной тем,
-    которые определены в главном файле стиля.
-    Реализация может варьироваться.
-</div>
+##### Пример на StackBlitz
 
-Добавьте сервис в компонент и соедините события в шаблоне с переключением темы:
+Пример переключения стандартных тем [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
 
-- `app.component.ts`
-
-```ts
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ThemeService } from '@koobiq/components/core';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
-})
-export class AppComponent implements OnInit, OnDestroy {
-  themeSubscription: Subscription = Subscription.EMPTY;
-
-  get themeSwitch() {
-    return this.themeService.themeSwitch;
-  }
-
-  constructor(private themeService: ThemeService) {}
-
-  ngOnInit() {
-    this.themeSubscription = this.themeService.getTheme().subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.themeSubscription.unsubscribe();
-  }
-
-  setValue(i: number) {
-    this.themeService.setTheme(i);
-  }
-}
-```
-
-- `app.component.html`
-
-```html
-<button *ngFor="let theme of themeSwitch.data; let i = index"
-        (click)="setValue(i)">
-    {{ theme.name }}
-</button>
-```
-
-
-#### Кастомизация компонентов через дизайн-токены
-Имея цветовую палитру и предустановленные значения размеров и шрифтов, можно легко создавать и настраивать компоненты.
-Преимущество данного подхода заключается в том, что один используемый токен будет использовать разные значения для различных тем.
-В качестве примера рассмотрим процесс создания компонента с круглой аватаркой и именем.
+#### Кастомизация Компонентов с помощью Дизайн Токенов
+В этом разделе вы узнаете, как создать настраиваемый компонент с использованием дизайн токенов Koobiq.
 
 ##### Подготовка
-Для начала, подготовьте миксин кастомизируемых компонентов в файле `_theme.kbq.scss` для подключения в основной миксин:
+Для возможности кастомизации компонентов с помощью дизайн токенов необходимо настроить [подключение стандартных тем](#подключение-стандартных-тем) без логики переключения тем.
 
-```scss
-@mixin app-components-theme($theme) {
-    // Здесь подключайте все стили тем для компонентов.
-}
-```
-
-- Добавьте этот миксин в основной миксин:
-
-```scss
-@mixin app-theme($theme) {
-    // ... здесь будет ранее написанный код
-    @include app-components-theme($theme);
-}
-```
+##### Описание процесса
+Процесс кастомизации компонента с помощью дизайн-токенов Koobiq состоит из 2 основных этапов:
+1. Создание и настройка компонента. Здесь создаётся angular компонент по умолчанию и scss-файл темизации. Обычно, имя файла темизации задаётся в формате `_<component-name>-theme.scss`. В данном файле темизации создаётся 2 миксина - для подключения цветов из темы и для стилизации типографики. Основной файл стилей используется для кастомизации геометрии - ширина, высота, скругления и т.д.
+2. Импорт файла темизации кастомного компонента в основной файл стилей - подключение миксина подключения цветов и миксина стилизации типографики в миксин темизации цветов и в миксин базовой типографики соответственно.
 
 ##### Создание компонента и добавление дизайн-токенов
-- Создайте компонент, структура директории которого будет следующей:
 
-```
-└─ customized-component ···························· имя компоненты
-    ├─ _customized-component-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typography)
-    ├─ customized-component.component.html ········· Шаблон компонента
-    ├─ customized-component.component.scss ········· Основные стили (inline to component. Здесь подключаем геометрию: размеры и т.д.)
-    ├─ customized-component.component.spec.ts
-    └─ customized-component.component.ts
-```
+- Создайте файл Mixin: В каталоге вашей темы (например, src/styles/out-of-the-box-theme) создайте новый SCSS-файл (например, _theme.kbq.scss), в котором будут размещены Mixin файлы для настройки вашей темы.
 
-Импортируйте 2 миксина в `_customized-component-theme.scss`, названия которых могут быть произвольными:
-
+- Структура компонента: Создайте новый каталог компонентов со следующей структурой:
 ```
-└─ _customized-component-theme.scss ··························
-    ├─ @mixin kbq-customized-component-theme($theme) ········· Отвечает за CSS-правила цветов
-    └─ @mixin kbq-customized-component-typography($config) ··· Шаблон компонента
+customized-component
+  ├── _customized-component-theme.scss (Theme & Typography mixins)
+  ├── customized-component.component.html (Component template)
+  ├── customized-component.component.scss (Component styles)
+  ├── customized-component.component.spec.ts (Component tests)
+  └── customized-component.component.ts (Component logic)
 ```
 
-Определите необходимые цвета согласно палитре и типы текста в соответствующих миксинах: 
-
-- `_customized-component-theme.scss`
+- Импортируйте миксины дизайн-токенов: В _customized-component-theme.scss импортируйте два миксина (названия может быть любым):
+1. для стилей цветов компонента, которые берутся из текущей темы
+2. для типографики компонета
 
 ```scss
-@use 'node_modules/@koobiq/components/core/styles/typography';
+@use '@koobiq/components/core/styles/typography';
 
-/* mixin for component styling, colors etc. */
 @mixin kbq-customized-component-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .avatar {
-    background: map-get($background, background-under);
-    color: map-get($foreground, text-less-contrast);
-
-    border: 1px solid map-get($foreground, divider);
-  }
+  // ... your component's color styles using tokens from $theme
 }
 
-/* mixin for component fonts, etc. */
 @mixin kbq-customized-component-typography($config) {
-  .avatar {
-    @include typography.kbq-typography-level-to-styles($config, caption);
-  }
+  // ... your component's typography styles using $config
 }
 ```
+- Определите стили компонента: В `_customized-component-theme.scss` определите стили, используя импортированные миксины и токены темы
 
-Подключите получившиеся миксины в `_theme.kbq.scss`:
-```scss
-@use '../app/customized-component/customized-component-theme';
+##### Импорт стилей кастомного компонента в основной файл стилей
 
-//...
+- Подключите миксины компонента к миксину основной темы:
+   В вашем файле миксина основной темы (_theme.kb.scss) импортируйте и используйте созданные миксины компонентоа:
 
-@mixin app-components-theme($theme) {
-    // ... здесь будет ранее написанный код
-    @include customized-component-theme.kbq-customized-component-typography($config);
-}
+##### Пример на StackBlitz
+Пример кастомизации компонентов с помощью дизайн-токенов [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
 
-@mixin app-components-theme($theme) {
-    @include customized-component-theme.kbq-customized-component-theme($theme);
-}
-```
+### Кастомизация: Уровень 2
+В этом руководстве вы познакомитесь с процессом создания пользовательских дизайн-токенов и управления ими с помощью [Style-Dictionary](http://amzn.github.io/styledictionary/#/architecture). Пользовательские дизайн-токены позволяют вам переопределять свойства, используемые в дизайн-системе, делая их масштабируемым и персонализированными. Создание пользовательских дизайн-токенов аналогично созданию пользовательских тем.
 
-Задайте необходимые размеры в файле `customized-component.component.scss`, используя ранее объявленные токены в `styles/out-of-the-box-theme/theme`:
+#### Подготовка
+Для создания кастомизированных токенов, необходимо добавить style-dictionary в зависимости:
 
-```scss
-@use '../../styles/out-of-the-box-theme/theme' as tokens;
-
-.avatar {
-  width: map-get(tokens.$tokens, size-4xl);
-  height: map-get(tokens.$tokens, size-4xl);
-  border-radius: map-get(tokens.$tokens, size-4xl);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-```
-
-И добавьте разметку в шаблон компонента в `customized-component.component.html`:
-```html
-<div class="avatar">KBQ</div>
-```
-
-##### Использование в компоненте
-Токены могут быть импортированы и использованы в JavaScript/TypeScript коде в виде переменной.
-
-Импортируйте его как обычную зависимость для использования. Как пример, представлено использование предустановленных размеров в Koobiq.
-
-```ts
-import { Size3xs, SizeL, SizeM, SizeXs, SizeXxs } from '@koobiq/design-tokens';
-```
-
-##### Использование CSS-переменных
-
-- Простой способ
-
-1. Скопируйте файл `css-tokens.css` из `node_modules/@koobiq/design-tokens/web в `src/styles`
-2. В раздел `head` в файле `index.html`, добавьте токены `<link rel="stylesheet" href="styles/css-tokens.css">`
-3. Добавьте в `angular.json` в раздел architect/build/options/styles стили - `"src/styles/css-tokens.css"`
-4. Используйте CSS-переменные вместо объявленных ранее токенов. 
-
-```scss
-.avatar {
-  width: var(--kbq-popover-header-size-height);
-  height: var(--kbq-popover-header-size-height);
-  border-radius: var(--kbq-popover-header-size-height);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-```
-
-#### Кастомные токены
-
-Для описания токенов мы используем [Style-Dictionary](http://amzn.github.io/styledictionary/#/architecture).
-
-Использование предустановленных токенов не является обязательным, их значения могут быть изменены без изменения определений токенов.
-
-Для этого нужно:
-
-- Добавьте style-dictionary к дев зависимостям в `package.json`
-
-```
-// NPM
+npm:
+```shell
 npm install --save-dev style-dictionary
 ```
 
-```
-// Yarn
+yarn:
+```shell
 yarn add --dev style-dictionary
 ```
 
-- Подготовьте новую тему для генерации кастомных токенов
-  - Создайте директорию `customized-theme` в директории `src/styles`
-  - В сформированной директории темы создайте директорию `properties` и добавьте файлы с расширением `json5` для значений, которые необходимо изменить.
+#### Описание процесса
+Процесс создания пользовательских тем состоит из 2 этапов:
 
-Список возможных файлов:
-```
-└─ properties ···················
-    ├─ colors.json5 ············· Именованные цвета для основных состояний и главных цветов
-    ├─ globals.json5 ············ Размеры, общие цвета и т.д.
-    ├─ md-typography.json5 ······ Типографика для маркдауна
-    ├─ typography.json5 ········· Общая типографика
-    └─ palette.json5  ··········· Палитра цветов со значениями
-```
+- 1 Создание кастомных токенов
+  - 1.1 Создание директории. Данный этап включает в себя создание директории рядом с директорией стандартной темы. Далее добавляем в эту директорию файлы с расширением .json5, чтобы задать значения, которые хотим настроить. Если для пользовательской темы необходимо переопределить некоторые значения стандартных тем, то наименования этих файлов должны совпадать с названиями из пакета `@koobiq/design-tokens`.
+  - 1.2 Создание скрипта генерации токенов. Данный скрипт принимает на вход пути стандартных свойств дизайн-токенов, стандартных стилей компонентов, а также путь до файлов с переопределенными пользовательскими свойстами. Таким образом, скрипт расширяет и меняет значение базовых токенов, складывая их в директорию, указанную в `outputPath`.
+- 2 Применение кастомных токенов - данный этап аналогичен [подключению стандартных тем](#подключение-стандартных-тем), только токены здесь берутся по локальным путям и меняется имя темы. Если для светлой/темной темы необходимо применение стандартного и пользовательского отображения, то можно настроить это путём уточнения CSS-класса.
 
-- Создайте скрипт генерации токенов в `scripts/build-tokens.js`
+#### Создание кастомных токенов
+Чтобы создать пользовательские токены, вам необходимо подготовить директорию для новой темы. Вот как вы можете его настроить:
 
-Данный скрипт расширяет и меняет значение базовых токенов, складывая их в директорию, указанную в `outputPath`.
+1. Создайте каталог темы:
 
-```javascript
-const buildTokens = require('@koobiq/tokens-builder/build');
+Перейдите в каталог src/styles вашего проекта и создайте новый каталог с именем customized-theme.
 
-const koobiqTokensProps = './node_modules/@koobiq/design-tokens/web/properties/**/*.json5';
-const koobiqTokensComponents = './node_modules/@koobiq/design-tokens/web/components/**/*.json5';
+2. Добавьте файлы свойств:
+   Внутри каталога customized-theme создайте другой каталог с именем properties.
 
+В каталоге свойств добавьте файлы с расширением .json5, чтобы задать значения, которые вы хотите настроить. Вот несколько примеров того, что могут содержать эти файлы:
 
-buildTokens([
-    {
-        name: 'customized-theme',
-        buildPath: [
-            koobiqTokensProps,
-            `src/styles/customized-theme/properties/**/*.json5`,
-            koobiqTokensComponents
-        ],
-        outputPath: 'src/styles/customized-theme/'
-    }
-])
-```
+| property            | description                                               |
+|---------------------|-----------------------------------------------------------|
+| colors.json5        | Именованные цвета для основных состояний и главных цветов |
+| globals.json5       | Размеры, общие цвета                                      |
+| md-typography.json5 | Типографика для маркдауна                                 |
+| typography.json5    | Общая типографика                                         |
+| palette.json5       | Палитра цветов со значениями                              |
 
-- Примените новую тему аналогично подключению базовых стилей светлой и темной темы.
+#### Создание скрипта генерации токенов
+To automate the process of generating tokens, create a script in your project. This script will handle the expansion and modification of base tokens.
 
-##### Применение разных наборов кастомных токенов
+Чтобы автоматизировать процесс генерации токенов, добавьте скрипт в своем проекте. Этот скрипт будет отвечат за расширение и модификацию базовых токенов.
 
-Для переключения между наборами кастомных токенов требуется изменить структуру директории `styles`:
+1. Создайте файл скрипта:
+- В вашем проекте перейдите в каталог scripts и создайте новый файл с именем build-tokens.js.
 
+#### Применение кастомных токенов
+To apply the new theme, you can connect it in the same way as the basic light and dark themes.
+Чтобы применить новую тему, вы можете подключить ее таким же образом, как и основные светлую/темные темы.
+
+Структура каталогов для нескольких тем
+Чтобы управлять несколькими наборами дизайн-токенов, организуйте свой каталог стилей следующим образом:
 ```
 └─ styles
-    └─ koobiq ·························· Директория с наборами
-        ├─ customized-theme ············ Сгенерированный набор кастомных токенов с импортированными токенами
-        ├─ out-of-the-box-theme ········ Набор с токенами по умолчанию из пакета Koobiq
+    └─ koobiq ·························· Directory with sets
+        ├─ customized-theme ············ A generated set of custom tokens with imported tokens
+        ├─ out-of-the-box-theme ········ Set with default tokens from the Koobiq package
         ├─ _index.scss
         └─ _theme.kbq.scss
 ```
 
-Импортируйте `_theme.scss` из каждой темы в `_index.scss`:
+#### Пример на Stackblitz
+Пример применения пользовательских тем можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
 
-```scss
-@forward 'out-of-the-box-theme/theme' as out-of-the-box-theme-*;
+### Использование CSS-переменных
+В рамках дизайн-системы Koobiq помимо использования SCSS переменных, возможно использование [CSS переменных.](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
 
-@forward 'customized-theme/theme' as customized-theme-*;
-```
+#### Описание процесса
+Процесс применения CSS-переменных состоит из 4 этапов:
 
+- 1 Переместите файл с CSS-переменных в вашу директорию со стилями: `css-tokens.css` из `@koobiq/design-tokens/web` например, в `src/styles`
+- 2 Подключите к основной HTML-странице CSS-файл: `<link rel="stylesheet" href="styles/css-tokens.css">`
+- 3 Для приложения с Angular CLI (опционально) добавьте объявление стилей: в раздел `architect.build.options.styles` путь до стилей - `src/styles/css-tokens.css`
+- 4 Используйте CSS-переменные вместо объявленных ранее токенов.
 
-Импортируйте наборы в главный файл стилей и задайте им определённый CSS-селектор и подключить миксины типографики и цветов:
-
-```scss
-@use './styles/koobiq' as tokens;
-
-.kbq {
-    &.theme-light {
-        &.out-of-the-box {
-            @include theme-kbq.app-typography(
-                    tokens.$out-of-the-box-theme-tokens,
-                    tokens.$out-of-the-box-theme-typography-config,
-                    tokens.$out-of-the-box-theme-markdown-typography-config
-            );
-
-            @include theme-kbq.app-theme(tokens.$out-of-the-box-theme-light);
-        }
-
-        &.customized {
-            @include theme-kbq.app-typography(
-                    tokens.$customized-theme-tokens,
-                    tokens.$customized-theme-typography-config,
-                    tokens.$customized-theme-markdown-typography-config
-            );
-
-            @include theme-kbq.app-theme(tokens.$customized-theme-light);
-        }
-    }
-
-    &.theme-dark {
-        &.out-of-the-box {
-            @include theme-kbq.app-typography(
-                    tokens.$out-of-the-box-theme-tokens,
-                    tokens.$out-of-the-box-theme-typography-config,
-                    tokens.$out-of-the-box-theme-markdown-typography-config
-            );
-
-            @include theme-kbq.app-theme(tokens.$out-of-the-box-theme-dark);
-        }
-
-        &.customized {
-            @include theme-kbq.app-typography(
-                    tokens.$customized-theme-tokens,
-                    tokens.$customized-theme-typography-config,
-                    tokens.$customized-theme-markdown-typography-config
-            );
-
-            @include theme-kbq.app-theme(tokens.$customized-theme-dark);
-        }
-    }
-}
-```
-
-
-#####  Настройка переключения наборов кастомных токенов
-
-<div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon mc-info-o_16 kbq-alert__icon"></i>
-    Важно на этом этапе описать процесс переключение между классами наборов токенов,
-    которые определены в главном файле стиля.
-    Реализация может варьироваться.
-</div>
-
-- Добавьте переключение тем с помощью подключенного ранее сервиса в компонент и соедините в шаблоне.
+#### Пример на Stackblitz
+Пример применения CSS-переменных можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
