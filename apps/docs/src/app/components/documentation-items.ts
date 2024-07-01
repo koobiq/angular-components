@@ -198,6 +198,13 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'icon',
                     hasExamples: false,
                     examples: ['icon-types']
+                },                {
+                    id: 'icon-item',
+                    name: 'Icon Item',
+                    hasApi: true,
+                    apiId: 'icon',
+                    hasExamples: false,
+                    examples: ['icon-types']
                 },
                 {
                     id: 'input',

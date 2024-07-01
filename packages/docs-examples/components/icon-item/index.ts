@@ -1,0 +1,35 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+
+import { KbqIconModule } from '@koobiq/components/icon';
+
+import { IconItemDefaultExample } from './icon-item-default/icon-item-default-example';
+import { IconItemColorExample } from './icon-item-color/icon-item-color-example';
+import { IconItemSizeExample } from './icon-item-size/icon-item-size-example';
+import { IconItemVariantExample } from './icon-item-variant/icon-item-variant-example';
+
+
+
+export {
+    IconItemDefaultExample,
+    IconItemColorExample,
+    IconItemSizeExample,
+    IconItemVariantExample
+};
+
+const EXAMPLES = [
+    IconItemDefaultExample,
+    IconItemColorExample,
+    IconItemSizeExample,
+    IconItemVariantExample
+];
+
+@NgModule({
+    imports: [
+        CommonModule,
+        KbqIconModule
+    ],
+    declarations: EXAMPLES,
+    exports: EXAMPLES
+})
+export class AlertExamplesModule {}
