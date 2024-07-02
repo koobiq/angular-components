@@ -144,7 +144,7 @@ function syncComponentsVersion(
 
         for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
             if (value.includes(placeholder)) {
-                context.logger.info(`VERSION: ${newPackageJson.version}`);
+                context.logger.info(`${key}: ${newPackageJson.version}`);
                 newPackageJson.peerDependencies![key] = `${newPackageJson.version}`;
             }
         }
@@ -163,7 +163,7 @@ function syncNgVersion(
 
     for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
         if (value.includes(placeholder)) {
-            context.logger.info(`NG_VERSION: ${rootPackageJson.requiredAngularVersion}`);
+            context.logger.info(`${key}: ${rootPackageJson.requiredAngularVersion}`);
             updatedJson.peerDependencies![key] = `${rootPackageJson.requiredAngularVersion}`;
         }
     }
