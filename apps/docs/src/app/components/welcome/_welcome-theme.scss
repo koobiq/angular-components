@@ -1,6 +1,5 @@
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-welcome-theme($theme) {
     $foreground: map-get($theme, foreground);
 
@@ -16,6 +15,10 @@
         .docs-welcome__category-item-title {
             color: map-get($theme, states, foreground, theme-hover);
         }
+    }
+
+    .docs-welcome__category-item:focus {
+        border-color: map-get(map-get($theme, states), focused-color);
     }
 }
 
