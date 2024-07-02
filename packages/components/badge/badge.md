@@ -1,27 +1,27 @@
 Используется для индикации состояний и статусов.
 
-<!-- example(badges-overview) -->
+<!-- example(badge-overview) -->
 
 ### Size
 
-<!-- example(badges-size) -->
+<!-- example(badge-size) -->
 
 ### Fill and Style
 
-<!-- example(badges-fill-and-style) -->
+<!-- example(badge-fill-and-style) -->
 
 ### Content
 
-<!-- example(badges-content) -->
+<!-- example(badge-content) -->
 
 ### Measure
 
-| Параметр | Значение |
-|:--- |:--- |
-| Мин. ширина | 24px |
-| Текст | Обязательный элемент<br>Текст Normal Strong (Size normal)<br>Текст Compact Strong (Size compact) |
-| Иконка (слева, справа) | Необязательный элемент |
-| Caption | Необязательный элемент |
+| Параметр               | Значение                                                                                         |
+| :--------------------- | :----------------------------------------------------------------------------------------------- |
+| Мин. ширина            | 24px                                                                                             |
+| Текст                  | Обязательный элемент<br>Текст Normal Strong (Size normal)<br>Текст Compact Strong (Size compact) |
+| Иконка (слева, справа) | Необязательный элемент                                                                           |
+| Caption                | Необязательный элемент                                                                           |
 
 ### Corner cases
 
@@ -29,4 +29,4 @@
 
 Hug — ширина зависит от длины текста внутри бейджа и равна ширине содержимого + отступы по бокам.
 
-<!-- example(badges-hug-content) -->
+<!-- example(badge-hug-content) -->
