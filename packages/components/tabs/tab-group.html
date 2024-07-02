@@ -3,7 +3,7 @@
     [vertical]="vertical"
     [selectedIndex]="selectedIndex"
     (indexFocused)="focusChanged($event)"
-    (selectFocusedIndex)="selectedIndex = $event">
+    (selectFocusedIndex)="onSelectFocusedIndex($event)">
 
     <div class="kbq-tab-label"
          kbqTabLabelWrapper
