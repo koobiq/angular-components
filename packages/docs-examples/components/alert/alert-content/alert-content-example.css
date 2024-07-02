@@ -3,6 +3,11 @@ alert-content-example .layout-column {
     gap: 16px;
 }
 
+.kbq-alert__text p {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
 @media (width <= 768px) {
     alert-content-example .layout-row {
         flex-wrap: wrap;
