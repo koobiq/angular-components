@@ -1,3 +1,15 @@
+# 17.0.0-rc.7 "Inhouse Worksite" (2024-07-02)
+
+### Koobiq
+
+ * bug fix  **build:** peers placeholders ([#DS-2621](https://github.com/koobiq/angular-components/issues/issue/DS-2621)) ([#111](https://github.com/koobiq/angular-components/issues/111)) ([2a5478b](https://github.com/koobiq/angular-components/commit/2a5478b0f5d8049962412fef72829c5dde8916ef))
+ * bug fix  **timepicker:** don't change model onBlur ([#DS-2355](https://github.com/koobiq/angular-components/issues/issue/DS-2355)) ([#110](https://github.com/koobiq/angular-components/issues/110)) ([3cd2f5f](https://github.com/koobiq/angular-components/commit/3cd2f5f7287ce9d3c9f3d7c14cf3b49394674cab))
+ * bug fix  **visual:** kbq-title with inline blocks ([#DS-2451](https://github.com/koobiq/angular-components/issues/issue/DS-2451)) ([#97](https://github.com/koobiq/angular-components/issues/97)) ([a390fea](https://github.com/koobiq/angular-components/commit/a390fea31bccbee1cd435a492fcaf8cb248693a5))
+ * bug fix  **visual:** welcome page images fixed ([#DS-2583](https://github.com/koobiq/angular-components/issues/issue/DS-2583)) ([#113](https://github.com/koobiq/angular-components/issues/113)) ([ee89638](https://github.com/koobiq/angular-components/commit/ee896389fdd54b23e96b598cc90d8a31eb2cb6c5))
+ * feature  **docs:** new welcome page ([#DS-2583](https://github.com/koobiq/angular-components/issues/issue/DS-2583)) ([#102](https://github.com/koobiq/angular-components/issues/102)) ([4c35196](https://github.com/koobiq/angular-components/commit/4c351960d4af62c684bac52f2fe7a6ed697374aa))
+ * feature  **icon-item:** Icon Item - big size, fade variant ([#DS-2587](https://github.com/koobiq/angular-components/issues/issue/DS-2587)) ([#108](https://github.com/koobiq/angular-components/issues/108)) ([a68d42a](https://github.com/koobiq/angular-components/commit/a68d42a6e66251bdfb9ab9f09c64ff7d28a9e32c))
+ * feature  **styles:** css-variables ([#DS-2338](https://github.com/koobiq/angular-components/issues/issue/DS-2338)) ([#100](https://github.com/koobiq/angular-components/issues/100)) ([3334d72](https://github.com/koobiq/angular-components/commit/3334d72872f8e1b16c0b7e2a5f36cadb7b40a434))
+
 # 17.0.0-rc.6 (2024-06-27)
 
 ### Koobiq
