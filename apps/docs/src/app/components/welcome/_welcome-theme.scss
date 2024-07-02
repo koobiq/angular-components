@@ -7,18 +7,38 @@
     .docs-footer__label {
         color: map-get($foreground, contrast-secondary);
     }
+
+    .docs-welcome__category-item-title {
+        color: map-get($foreground, contrast-secondary);
+    }
+
+    .docs-welcome__category-item:hover {
+        .docs-welcome__category-item-title {
+            color: map-get($theme, states, foreground, theme-hover);
+        }
+    }
 }
 
 @mixin kbq-docs-welcome-typography($config) {
     .docs-welcome__header {
-        @include typography.kbq-typography-level-to-styles($config, headline);
+        font-family: Inter;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: normal;
+        font-weight: 700;
+        text-transform: none;
+        font-feature-settings: "ss01" on, "ss04" on;
     }
 
-    .docs-welcome__article-header {
+    .docs-welcome__description {
+        @include typography.kbq-typography-level-to-styles($config, text-big);
+    }
+
+    .docs-welcome__category-title {
         @include typography.kbq-typography-level-to-styles($config, title);
     }
 
-    .docs-welcome__article-text {
+    .docs-welcome__category-item-title {
         @include typography.kbq-typography-level-to-styles($config, text-big);
     }
 }
