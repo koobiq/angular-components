@@ -62,15 +62,15 @@ export class TimepickerDemoComponent {
         this.languageList = this.localeService.locales.items;
         this.selectedLanguage = this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
 
-        this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 0, 0);
-        this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 0, 0);
+        this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
+        this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 10, 0);
 
-        this.reactiveFormControlValue = new UntypedFormControl(this.adapter.createDateTime(2020, 0, 6, 12, 0, 0, 0));
-        this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2020, 0, 6, 12, 0, 0, 0));
-        this.ngModelValue = this.adapter.createDateTime(2020, 0, 6, 12, 0, 0, 0);
+        this.reactiveFormControlValue = new UntypedFormControl(this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0));
+        this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0));
+        this.ngModelValue = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
 
         this.testForm = this.fb.group({
-            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 0, 0)]
+            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 10, 0)]
         });
 
         this.reactiveFormControlValue.valueChanges.subscribe((value) => {
@@ -89,6 +89,10 @@ export class TimepickerDemoComponent {
     setLocale($event: KbqRadioChange) {
         this.selectedLanguage = $event.value;
         this.localeService.setLocale($event.value.id);
+    }
+
+    onTimepickerChange() {
+        console.log('onTimepickerChange: ');
     }
 }
 

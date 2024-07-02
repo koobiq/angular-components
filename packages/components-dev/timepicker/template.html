@@ -48,6 +48,7 @@
         <input
             kbqTimepicker
             [(ngModel)]="ngModelValue"
+            (ngModelChange)="onTimepickerChange()"
             [min]="minDate"
             [max]="maxDate"
             [format]="timeFormat">

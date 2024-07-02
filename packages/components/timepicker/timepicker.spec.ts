@@ -272,6 +272,23 @@ describe('KbqTimepicker', () => {
             expect(testComponent.ngModel.valid).toBeFalse();
         });
 
+        it('Should not change model on blur', () => {
+            const date = testComponent.adapter.toIso8601(testComponent.timeValue);
+
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value))
+                .toBe(date);
+
+            inputElementDebug.triggerEventHandler(
+                'blur',
+                { target: inputElementDebug.nativeElement }
+            );
+
+            fixture.detectChanges();
+
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value))
+                .toBe(date);
+        });
+
         it('Add lead zeros on blur', () => {
             expect(testComponent.ngModel.valid).toBeTrue();
             inputElementDebug.nativeElement.value = '1';

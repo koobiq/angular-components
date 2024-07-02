@@ -374,6 +374,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     onBlur() {
         this.focusChanged(false);
 
+        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) { return; }
+
         this.setViewValue(this.formatUserPaste(this.viewValue));
 
         this.onInput();
@@ -517,7 +519,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             return value;
         }
 
-        return this.replaceNumbers(Object.values(match.groups)
+        return this.replaceNumbers(
+            Object.values(match.groups)
             // tslint:disable-next-line:no-magic-numbers
             .map((group) => (group || '').padStart(2, '0'))
             .join(':')
@@ -767,6 +770,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private getDateFromTimeString(timeString: string): D | null {
         if (!timeString) { return null; }
 
+        const date = this.value || this.dateAdapter.today();
+
         const HMS = timeString.match(HOURS_MINUTES_SECONDS_REGEXP);
         const HM = timeString.match(HOURS_MINUTES_REGEXP);
         const H = timeString.match(HOURS_ONLY_REGEXP);
@@ -784,6 +789,10 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             if (/[p]/i.test(amPm[3]) || (/[a]/i.test(amPm[3]) && hours === 12)) {
                 hours += 12;
             }
+        } else if (HMS && this.isShortFormat) {
+            hours = Number(HMS[1]);
+            minutes = Number(HMS[2]);
+            seconds = this.dateAdapter.getSeconds(date);
         } else if (HMS) {
             hours = Number(HMS[1]);
             minutes = Number(HMS[2]);
@@ -797,7 +806,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             return null;
         }
         // tslint:enable
-        const date = this.value || this.dateAdapter.today();
 
         const resultDate = this.dateAdapter.createDateTime(
             this.dateAdapter.getYear(date),
