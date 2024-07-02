@@ -9,9 +9,11 @@
 <div class="docs-welcome__category" *ngFor="let category of docCategories">
     <div class="docs-welcome__category-title">{{ category.name }}</div>
     <div class="docs-welcome__category-items layout-row layout-margin-top-l">
-        <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]" *ngFor="let item of category.items">
-            <img src="./assets/images/welcome/{{ item.svgPreview }}-{{ currentTheme$ | async }}.png" class="docs-welcome__category-item-preview"/>
-            <div class="docs-welcome__category-item-title">{{ item.name }}</div>
-        </a>
+        <ng-container *ngFor="let item of category.items">
+            <a *ngIf="item.svgPreview" class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
+                <img src="./assets/images/welcome/{{ item.svgPreview }}-{{ currentTheme$ | async }}.png" class="docs-welcome__category-item-preview"/>
+                <div class="docs-welcome__category-item-title">{{ item.name }}</div>
+            </a>
+        </ng-container>
     </div>
 </div>

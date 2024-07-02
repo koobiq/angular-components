@@ -17,6 +17,10 @@
             color: map-get($theme, states, foreground, theme-hover);
         }
     }
+
+    .docs-welcome__category-item:focus {
+        border-color: map-get(map-get($theme, states), focused-color);
+    }
 }
 
 @mixin kbq-docs-welcome-typography($config) {
