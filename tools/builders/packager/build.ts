@@ -144,7 +144,7 @@ function syncComponentsVersion(
 
         for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
             if (value.includes(placeholder)) {
-                context.logger.info(`VERSION: ${rootPackageJson.requiredAngularVersion}`);
+                context.logger.info(`VERSION: ${newPackageJson.version}`);
                 newPackageJson.peerDependencies![key] = `${newPackageJson.version}`;
             }
         }
