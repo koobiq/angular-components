@@ -75,10 +75,15 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         let releasePackageJson = await tryJsonParse<IPackageJson>(releasePackageJsonPath);
 
         context.logger.info('Syncing Koobiq components version for releasing...');
-        releasePackageJson = syncComponentsVersion(releasePackageJson, packageJson, options.versionPlaceholder);
+        releasePackageJson = syncComponentsVersion(
+            releasePackageJson,
+            packageJson,
+            options.versionPlaceholder,
+            context
+        );
 
         context.logger.info('Syncing Angular dependency versions for releasing...');
-        releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder);
+        releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder, context);
 
         writeFileSync(join(libraryDestination, 'package.json'), JSON.stringify(releasePackageJson, null, 4), {
             encoding: 'utf-8'
@@ -117,6 +122,7 @@ interface INgPackagerJson {
 
 interface IPackageJson {
     version?: string;
+    requiredAngularVersion: string;
     peerDependencies: {
         [key: string]: string;
     };
@@ -128,7 +134,8 @@ interface IPackageJson {
 function syncComponentsVersion(
     releaseJson: IPackageJson,
     rootPackageJson: IPackageJson,
-    placeholder: string
+    placeholder: string,
+    context: BuilderContext
 ): IPackageJson {
     const newPackageJson = { ...releaseJson };
 
@@ -137,7 +144,8 @@ function syncComponentsVersion(
 
         for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
             if (value.includes(placeholder)) {
-                newPackageJson.peerDependencies![key] = `^${newPackageJson.version}`;
+                context.logger.info(`${key}: ${newPackageJson.version}`);
+                newPackageJson.peerDependencies![key] = `${newPackageJson.version}`;
             }
         }
     }
@@ -145,12 +153,18 @@ function syncComponentsVersion(
     return newPackageJson;
 }
 
-function syncNgVersion(releaseJson: IPackageJson, rootPackageJson: IPackageJson, placeholder: string): IPackageJson {
+function syncNgVersion(
+    releaseJson: IPackageJson,
+    rootPackageJson: IPackageJson,
+    placeholder: string,
+    context: BuilderContext
+): IPackageJson {
     const updatedJson = { ...releaseJson };
 
     for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
         if (value.includes(placeholder)) {
-            updatedJson.peerDependencies![key] = `^${rootPackageJson.dependencies![key]}`;
+            context.logger.info(`${key}: ${rootPackageJson.requiredAngularVersion}`);
+            updatedJson.peerDependencies![key] = `${rootPackageJson.requiredAngularVersion}`;
         }
     }
 
