@@ -12,6 +12,7 @@ import { RadioContentExample } from './radio-content/radio-content-example';
 import { RadioGroupExample } from './radio-group/radio-group-example';
 import { RadioInvalidExample } from './radio-invalid/radio-invalid-example';
 import { RadioRequiredExample } from './radio-required/radio-required-example';
+import { KbqButtonModule } from '@koobiq/components/button';
 
 
 export {
@@ -40,7 +41,8 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        FormsModule
+        FormsModule,
+        KbqButtonModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES
