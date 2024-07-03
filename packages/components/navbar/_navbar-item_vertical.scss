@@ -9,13 +9,16 @@
     align-items: flex-start;
 
     & .kbq-navbar-item__container {
-        gap: kbq-css-variable(size-m);;
+        gap: kbq-css-variable(size-m);
     }
 
     &.kbq-expanded {
         height: kbq-css-variable(size-5xl);
 
-        padding: 14px kbq-css-variable(size-xl);
+        align-items: center;
+
+        padding-right: kbq-css-variable(size-xl);
+        padding-left: kbq-css-variable(size-xl);
 
         gap: kbq-css-variable(size-m);
 

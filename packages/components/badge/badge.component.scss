@@ -17,9 +17,8 @@
 
     box-sizing: border-box;
 
-    padding:
-        kbq-css-variable(badge-size-normal-vertical-padding)
-        kbq-css-variable(badge-size-normal-horizontal-padding);
+    padding-right: kbq-css-variable(badge-size-normal-horizontal-padding);
+    padding-left: kbq-css-variable(badge-size-normal-horizontal-padding);
 
     border: {
         width: kbq-css-variable(badge-size-normal-border-width);
@@ -41,9 +40,8 @@
     &.kbq-badge_compact {
         height: var(--kbq-badge-size-compact-height, map.get($tokens, badge-size-compact-height));
 
-        padding:
-            kbq-css-variable(badge-size-compact-vertical-padding)
-            kbq-css-variable(badge-size-compact-horizontal-padding);
+        padding-right: kbq-css-variable(badge-size-compact-horizontal-padding);
+        padding-left: kbq-css-variable(badge-size-compact-horizontal-padding);
 
         border: {
             width: kbq-css-variable(badge-size-compact-border-width);

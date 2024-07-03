@@ -40,7 +40,8 @@
     }
 
     &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
-        padding: 14px kbq-css-variable(size-m);
+        padding-right: kbq-css-variable(size-m);
+        padding-left: kbq-css-variable(size-m);
         // (total height 48 - grey hover 32) / 2
         &:after {
             top: kbq-css-variable(size-s);
@@ -50,6 +51,8 @@
         }
 
         & > .kbq-icon {
+            align-self: center;
+
             padding-right: kbq-css-variable(size-xxs);
         }
     }
