@@ -2150,7 +2150,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "radio-invalid": {
     "packagePath": "components/radio/radio-invalid",
-    "title": "Radio invalild",
+    "title": "Radio invalid",
     "componentName": "RadioInvalidExample",
     "files": [
       "radio-invalid-example.ts",

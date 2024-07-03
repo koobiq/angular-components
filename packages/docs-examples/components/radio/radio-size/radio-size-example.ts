@@ -10,6 +10,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['radio-size-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class RadioSizeExample {
-    isDisabled = false;
-}
+export class RadioSizeExample {}

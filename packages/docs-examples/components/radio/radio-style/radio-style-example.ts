@@ -10,6 +10,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['radio-style-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class RadioStyleExample {
-    isDisabled = false;
-}
+export class RadioStyleExample {}

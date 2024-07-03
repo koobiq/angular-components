@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 
 /**
- * @title Radio invalild
+ * @title Radio invalid
  */
 @Component({
     selector: 'radio-invalid-example',
@@ -10,6 +10,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['radio-invalid-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class RadioInvalidExample {
-    isDisabled = false;
-}
+export class RadioInvalidExample {}
