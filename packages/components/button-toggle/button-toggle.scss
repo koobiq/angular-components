@@ -29,10 +29,7 @@ $tokens: meta.module-variables(tokens) !default;
         justify-content: flex-start;
         align-items: center;
 
-        height: var(
-            --kbq-button-toggle-size-item-height,
-            map.get($tokens, button-toggle-size-item-height)
-        );
+        height: kbq-css-variable(button-toggle-size-item-height);
 
         $padding-vertical: map.get($tokens, button-toggle-size-item-padding-vertical);
         $padding-horizontal: map.get($tokens, button-toggle-size-item-padding-horizontal);
@@ -74,10 +71,7 @@ $tokens: meta.module-variables(tokens) !default;
             > .kbq-button-icon {
                 max-width: 100%;
 
-                height: var(
-                    --kbq-button-toggle-size-item-height,
-                    map.get($tokens, button-toggle-size-item-height)
-                );
+                height: kbq-css-variable(button-toggle-size-item-height);
             }
         }
     }
