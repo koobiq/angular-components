@@ -2,8 +2,8 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
 
-@use '../core/styles/common';
 
 $tokens: meta.module-variables(tokens) !default;
 
@@ -11,44 +11,23 @@ $tokens: meta.module-variables(tokens) !default;
 /* stylelint-disable no-descending-specificity */
 
 .kbq-multiple-file-upload .kbq-file-upload {
-    border-radius: var(
-        --kbq-file-upload-size-multiple-big-container-border-radius,
-        map.get($tokens, file-upload-size-multiple-big-container-border-radius)
-    );
-    border-width: var(
-        --kbq-file-upload-size-multiple-big-container-border-width,
-        map.get($tokens, file-upload-size-multiple-big-container-border-width)
-    );
+    border-radius: kbq-css-variable(file-upload-size-multiple-big-container-border-radius);
+    border-width: kbq-css-variable(file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
     &.default:not(.selected) {
         justify-content: center;
 
         padding:
-            var(
-                --kbq-file-upload-size-multiple-big-container-padding-vertical,
-                map.get($tokens, file-upload-size-multiple-big-container-padding-vertical)
-            )
-            var(
-                --kbq-file-upload-size-multiple-big-container-padding-vertical,
-                map.get($tokens, file-upload-size-multiple-big-container-padding-vertical)
-            );
+            kbq-css-variable(file-upload-size-multiple-big-container-padding-vertical)
+            kbq-css-variable(file-upload-size-multiple-big-container-padding-vertical);
 
-        min-height: var(
-            --kbq-file-upload-size-multiple-big-container-min-height,
-            map.get($tokens, file-upload-size-multiple-big-container-min-height)
-        );
+        min-height: kbq-css-variable(file-upload-size-multiple-big-container-min-height);
 
-        min-width: var(
-            --kbq-file-upload-size-multiple-big-container-min-width,
-            map.get($tokens, file-upload-size-multiple-big-container-min-width)
-        );
+        min-width: kbq-css-variable(file-upload-size-multiple-big-container-min-width);
 
         & .dropzone {
-            gap: var(
-                --kbq-file-upload-size-multiple-big-container-content-gap-horizontal,
-                map.get($tokens, file-upload-size-multiple-big-container-content-gap-horizontal)
-            );
+            gap: kbq-css-variable(file-upload-size-multiple-big-container-content-gap-horizontal);
         }
 
         & .dropzone__text {
@@ -58,51 +37,27 @@ $tokens: meta.module-variables(tokens) !default;
 
             & .multiple__caption {
                 display: block;
-                padding-top: var(
-                    --kbq-file-upload-size-multiple-big-text-block-content-gap-vertical,
-                    map.get($tokens, file-upload-size-multiple-big-text-block-content-gap-vertical)
-                );
+                padding-top: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-vertical);
                 // гап не применяется тк не флекс. в целом гап не нужен, тк по логике дизайна ссылка от текста отделяется пробелом
-                gap: var(
-                    --kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal,
-                    map.get($tokens, file-upload-size-multiple-big-text-block-content-gap-horizontal)
-                );
+                gap: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-horizontal);
             }
         }
     }
 
     &.compact:not(.selected) {
         padding:
-            var(
-                --kbq-file-upload-size-single-container-padding-vertical,
-                map.get($tokens, file-upload-size-single-container-padding-vertical)
-            )
-            var(
-                --kbq-file-upload-size-single-container-padding-horizontal,
-                map.get($tokens, file-upload-size-single-container-padding-horizontal)
-            );
+            kbq-css-variable(file-upload-size-single-container-padding-vertical)
+            kbq-css-variable(file-upload-size-single-container-padding-horizontal);
 
         & .dropzone {
-            gap: var(
-                --kbq-file-upload-size-single-container-content-gap-horizontal,
-                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
-            );
+            gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
 
             & .dropzone__text.multiple__caption {
-                padding-top: var(
-                    --kbq-file-upload-size-single-text-block-padding-vertical,
-                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-                );
+                padding-top: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-                padding-bottom: var(
-                    --kbq-file-upload-size-single-text-block-padding-vertical,
-                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-                );
+                padding-bottom: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-                gap: var(
-                    --kbq-file-upload-size-single-text-block-content-gap-horizontal,
-                    map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
-                );
+                gap: kbq-css-variable(file-upload-size-single-text-block-content-gap-horizontal);
             }
         }
     }
@@ -144,10 +99,7 @@ $tokens: meta.module-variables(tokens) !default;
             width: 65%;
             max-width: 65%;
 
-            gap: var(
-                --kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal,
-                map.get($tokens, file-upload-size-multiple-big-grid-cell-content-gap-horizontal)
-            );
+            gap: kbq-css-variable(file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
         }
 
         .kbq-file-upload__size {
@@ -208,42 +160,21 @@ $tokens: meta.module-variables(tokens) !default;
             calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
             calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
 
-        border-top-left-radius: var(
-            --kbq-file-upload-size-single-container-border-radius,
-            map.get($tokens, file-upload-size-single-container-border-radius)
-        );
+        border-top-left-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
 
-        border-top-right-radius: var(
-            --kbq-file-upload-size-single-container-border-radius,
-            map.get($tokens, file-upload-size-single-container-border-radius)
-        );
-        border-top-width: var(
-            --kbq-file-upload-size-single-container-border-width,
-            map.get($tokens, file-upload-size-single-container-border-width)
-        );
+        border-top-right-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
+        border-top-width: kbq-css-variable(file-upload-size-single-container-border-width);
         border-top-style: dashed;
 
         & .dropzone {
-            gap: var(
-                --kbq-file-upload-size-single-container-content-gap-horizontal,
-                map.get($tokens, file-upload-size-single-container-content-gap-horizontal)
-            );
+            gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
 
             & .dropzone__text.multiple__caption {
-                padding-top: var(
-                    --kbq-file-upload-size-single-text-block-padding-vertical,
-                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-                );
+                padding-top: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-                padding-bottom: var(
-                    --kbq-file-upload-size-single-text-block-padding-vertical,
-                    map.get($tokens, file-upload-size-single-text-block-padding-vertical)
-                );
+                padding-bottom: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
 
-                gap: var(
-                    --kbq-file-upload-size-single-text-block-content-gap-horizontal,
-                    map.get($tokens, file-upload-size-single-text-block-content-gap-horizontal)
-                );
+                gap: kbq-css-variable(file-upload-size-single-text-block-content-gap-horizontal);
             }
         }
     }
@@ -259,6 +190,6 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-file-upload__hint {
-    margin-top: var(--kbq-form-field-hint-size-margin-top, map.get($tokens, form-field-hint-size-margin-top));
+    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
 }
 /* stylelint-enable no-descending-specificity */

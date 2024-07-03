@@ -2,30 +2,28 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
-
-
-$tokens: meta.module-variables(tokens) !default;
+@use '../core/styles/common/tokens' as *;
 
 
 .kbq-navbar-item.kbq-vertical {
     align-items: flex-start;
 
     & .kbq-navbar-item__container {
-        gap: map.get($tokens, size-m);;
+        gap: kbq-css-variable(size-m);;
     }
 
     &.kbq-expanded {
-        height: map.get($tokens, size-5xl);
+        height: kbq-css-variable(size-5xl);
 
-        padding: 14px map.get($tokens, size-xl);
+        padding: 14px kbq-css-variable(size-xl);
 
-        gap: map.get($tokens, size-m);
+        gap: kbq-css-variable(size-m);
 
         &:after {
-            top: map.get($tokens, size-xxs);
-            right: map.get($tokens, size-s);
-            bottom: map.get($tokens, size-xxs);
-            left: map.get($tokens, size-s);
+            top: kbq-css-variable(size-xxs);
+            right: kbq-css-variable(size-s);
+            bottom: kbq-css-variable(size-xxs);
+            left: kbq-css-variable(size-s);
         }
 
         &.kbq-navbar-bento {
@@ -36,44 +34,44 @@ $tokens: meta.module-variables(tokens) !default;
             justify-content: center;
             align-items: center;
 
-            top: map.get($tokens, size-xxs);
-            right: map.get($tokens, size-xxs);
+            top: kbq-css-variable(size-xxs);
+            right: kbq-css-variable(size-xxs);
 
             z-index: 1;
 
-            padding: map.get($tokens, size-s);
+            padding: kbq-css-variable(size-s);
 
-            height: map.get($tokens, size-5xl);
-            width: map.get($tokens, size-5xl);
+            height: kbq-css-variable(size-5xl);
+            width: kbq-css-variable(size-5xl);
 
             &:after {
-                top: map.get($tokens, size-s);
-                right: map.get($tokens, size-s);
-                bottom: map.get($tokens, size-s);
-                left: map.get($tokens, size-s);
+                top: kbq-css-variable(size-s);
+                right: kbq-css-variable(size-s);
+                bottom: kbq-css-variable(size-s);
+                left: kbq-css-variable(size-s);
             }
         }
 
         &.kbq-navbar-item_has-nested {
             align-items: center;
 
-            padding: 0 map.get($tokens, size-m);
+            padding: 0 kbq-css-variable(size-m);
         }
     }
 
     &.kbq-collapsed {
-        height: map.get($tokens, size-5xl);
-        width: map.get($tokens, size-5xl);
+        height: kbq-css-variable(size-5xl);
+        width: kbq-css-variable(size-5xl);
 
-        padding: map.get($tokens, size-l);
+        padding: kbq-css-variable(size-l);
 
         justify-content: center;
 
         &:after {
-            top: map.get($tokens, size-s);
-            right: map.get($tokens, size-s);
-            bottom: map.get($tokens, size-s);
-            left: map.get($tokens, size-s);
+            top: kbq-css-variable(size-s);
+            right: kbq-css-variable(size-s);
+            bottom: kbq-css-variable(size-s);
+            left: kbq-css-variable(size-s);
         }
 
         & .kbq-badge {
@@ -81,8 +79,8 @@ $tokens: meta.module-variables(tokens) !default;
 
             z-index: 1;
 
-            top: map.get($tokens, size-xs);
-            right: map.get($tokens, size-xs);
+            top: kbq-css-variable(size-xs);
+            right: kbq-css-variable(size-xs);
         }
 
         & .kbq-navbar-item__container {
