@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { ThemePalette } from '@koobiq/components/core';
 
 
 /**
@@ -10,4 +11,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['radio-style-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class RadioStyleExample {}
+export class RadioStyleExample {
+    protected readonly themePalette = ThemePalette;
+}
