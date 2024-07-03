@@ -6,33 +6,33 @@
 
 #### Size
 
-<!-- example -->
+<!-- example(radio-size) -->
 
 #### Style
 
-<!-- example -->
+<!-- example(radio-style) -->
 
 #### Content
 
-<!-- example -->
+<!-- example(radio-content) -->
 
 ### Примеры использования
 
 #### Radio Group
 
-<!-- example -->
+<!-- example(radio-group) -->
 
 #### Invalid Radio
 
 Если выбранный пункт недействителен или неверен, используйте параметр **%Наименование параметра%**. 
 
-<!-- example -->
+<!-- example(radio-invalid) -->
 
 #### Required Radio
 
 Используйте параметр **%Наименование параметра%**, чтобы сделать заполнение поля обязательным перед отправкой формы.
 
-<!-- example -->
+<!-- example(radio-required) -->
 
 ### Рекомендации
 
