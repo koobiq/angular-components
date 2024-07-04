@@ -62,6 +62,12 @@
     }
 }
 
+[data-overlayscrollbars-contents] {
+    &:focus-visible {
+        outline: none;
+    }
+}
+
 
 // core
 .os-size-observer,
