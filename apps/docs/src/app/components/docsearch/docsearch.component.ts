@@ -6,7 +6,8 @@ import docsearch from '@docsearch/js';
     standalone: true,
     selector: 'docs-docsearch',
     template: '',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './docsearch.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocsearchComponent {
     constructor() {
@@ -28,12 +29,17 @@ export class DocsearchComponent {
         /** @see https://docsearch.algolia.com/docs/api */
         docsearch({
             container: 'docs-docsearch',
+            environment: window,
             appId: '7N2W9AKEM6',
             apiKey: '0f0df042e7b349df5cb381e72f268b4d',
             indexName: 'koobiq',
-            maxResultsPerGroup: 99,
+            maxResultsPerGroup: 20,
             transformItems,
-            placeholder: 'Поиск',
+            searchParameters: {
+                hitsPerPage: 40,
+            },
+            disableUserPersonalization: false,
+            resultsFooterComponent: null,
             translations: {
                 button: {
                     buttonText: 'Поиск',
@@ -60,14 +66,14 @@ export class DocsearchComponent {
                         helpText: 'Возможно, вам следует проверить соединение с интернетом.'
                     },
                     footer: {
-                        selectText: 'для выбора',
+                        selectText: 'Выбор',
                         selectKeyAriaLabel: 'Клавиша Enter',
-                        navigateText: 'для навигации',
-                        navigateUpKeyAriaLabel: 'Стрелка вверх',
-                        navigateDownKeyAriaLabel: 'Стрелка вниз',
-                        closeText: 'для закрытия',
+                        navigateText: 'Вниз (вверх)',
+                        navigateUpKeyAriaLabel: 'Клавиша стрелка вверх',
+                        navigateDownKeyAriaLabel: 'Клавиша стрелка вниз',
+                        closeText: 'Закрыть',
                         closeKeyAriaLabel: 'Клавиша Escape',
-                        searchByText: 'Поиск по'
+                        searchByText: 'Поиск'
                     },
                     noResultsScreen: {
                         noResultsText: 'Нет результатов для',

@@ -16,6 +16,7 @@ import {
     ruRUFormattersData,
     zhCNFormattersData
 } from './formatters';
+import { DOCUMENT } from '@angular/common';
 
 
 export const KBQ_LOCALE_ID = new InjectionToken<string>('KbqLocaleId');
@@ -56,6 +57,7 @@ export class KbqLocaleService {
     current;
 
     constructor(
+        @Inject(DOCUMENT) private readonly document: Document,
         @Optional() @Inject(KBQ_LOCALE_ID) id: string,
         @Optional() @Inject(KBQ_LOCALE_DATA) localeData
     ) {
@@ -70,6 +72,8 @@ export class KbqLocaleService {
     setLocale(id: string) {
         this.id = id;
         this.current = this.locales[this.id];
+
+        this.document.documentElement.lang = this.id;
 
         this.changes.next(this.id);
     }
