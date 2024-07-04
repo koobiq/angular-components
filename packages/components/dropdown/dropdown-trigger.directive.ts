@@ -157,7 +157,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         @Optional() private parent: KbqDropdown,
         @Optional() @Self() private dropdownItemInstance: KbqDropdownItem,
         @Optional() private _dir: Directionality,
-        private changeDetecotrRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor?: FocusMonitor
     ) {
         elementRef.nativeElement.addEventListener(
@@ -387,7 +387,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     // set state rather than toggle to support triggers sharing a dropdown
     private setIsOpened(isOpen: boolean): void {
         if (isOpen !== this._opened) {
-            this.changeDetecotrRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         }
 
         this._opened = isOpen;
