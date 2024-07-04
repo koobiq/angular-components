@@ -57,7 +57,7 @@
         }
 
         &.cdk-keyboard-focused {
-            box-shadow: 0 0 0 2px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+            box-shadow: 0 0 0.1px 2px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
         }
     }
 }

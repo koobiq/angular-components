@@ -43,7 +43,7 @@
                 toggle-#{$type}-states-focused-focus-outline,
                 map.get($component, $type, states-focused, focus-outline)
             );
-            box-shadow: 0 0 0 1px kbq-css-variable(
+            box-shadow: 0 0 0.1px 1px kbq-css-variable(
                 toggle-#{$type}-states-focused-focus-outline,
                 map.get($component, $type, states-focused, focus-outline)
             );
@@ -58,7 +58,7 @@
                 toggle-#{$type}-states-checked-focused-focus-outline,
                 map.get($component, $type, states-checked-focused, focus-outline)
             );
-            box-shadow: 0 0 0 1px kbq-css-variable(
+            box-shadow: 0 0 0.1px 1px kbq-css-variable(
                 toggle-#{$type}-states-checked-focused-focus-outline,
                 map.get($component, $type, states-checked-focused, focus-outline)
             );

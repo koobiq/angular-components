@@ -58,7 +58,7 @@
             @include kbq-form-field-state($form-field, states-focused);
 
             & .kbq-form-field__container {
-                box-shadow: 0 0 0 1px kbq-css-variable(
+                box-shadow: 0 0 0.1px 1px kbq-css-variable(
                     form-field-states-focused-focu-outline, map.get($form-field, states-focused, focus-outline));
             }
         }
@@ -68,7 +68,7 @@
             @include kbq-form-field-state($form-field, states-error);
 
             &.cdk-focused .kbq-form-field__container {
-                box-shadow: 0 0 0 1px kbq-css-variable(
+                box-shadow: 0 0 0.1px 1px kbq-css-variable(
                     form-field-states-error-focu-outline, map.get($form-field, states-error, focus-outline));
             }
         }
