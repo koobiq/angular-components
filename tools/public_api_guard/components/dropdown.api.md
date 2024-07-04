@@ -244,7 +244,7 @@ export interface KbqDropdownPanel {
 
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
-    constructor(overlay: Overlay, elementRef: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parent: KbqDropdown, dropdownItemInstance: KbqDropdownItem, _dir: Directionality, changeDetecotrRef: ChangeDetectorRef, focusMonitor?: FocusMonitor | undefined);
+    constructor(overlay: Overlay, elementRef: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parent: KbqDropdown, dropdownItemInstance: KbqDropdownItem, _dir: Directionality, changeDetectorRef: ChangeDetectorRef, focusMonitor?: FocusMonitor | undefined);
     close(): void;
     data: any;
     get dir(): Direction;
