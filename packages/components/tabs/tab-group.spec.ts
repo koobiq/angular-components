@@ -2,14 +2,14 @@
 // tslint:disable:no-empty
 import { CommonModule } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { Observable } from 'rxjs';
 
-import { KbqTab, KbqTabGroup, KbqTabHeaderPosition, KbqTabsModule } from './index';
+import { KbqTab, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy, KbqTabsModule } from './index';
 
 
 describe('KbqTabGroup', () => {
@@ -24,7 +24,8 @@ describe('KbqTabGroup', () => {
                 DisabledTabsTestApp,
                 TabGroupWithSimpleApi,
                 TemplateTabs,
-                TabGroupWithIsActiveBinding
+                TabGroupWithIsActiveBinding,
+                TestSelectionByIndexOrTabIdApp
             ]
         });
 
@@ -511,6 +512,47 @@ describe('KbqTabGroup', () => {
         }));
     });
 
+    describe('with selection by activeTab input', () => {
+        let fixture: ComponentFixture<TestSelectionByIndexOrTabIdApp>;
+        let instance: TestSelectionByIndexOrTabIdApp;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestSelectionByIndexOrTabIdApp);
+            instance = fixture.componentInstance;
+            fixture.detectChanges();
+        })
+
+        it('should select by number and assign number to binded property', () => {
+            const indexToSelect: number = instance.tabs.length - 1;
+            expect(instance.selectBy).toEqual(1);
+            checkSelectedIndex(instance.selectBy as number, fixture);
+
+            instance.selectBy = indexToSelect;
+            fixture.detectChanges();
+            checkSelectedIndex(indexToSelect, fixture);
+            expect(typeof instance.selectBy).toEqual('number');
+        });
+
+        it('should select by string and assign string type to binded property', fakeAsync(() => {
+            const indexToSelect = 0;
+            instance.selectBy = instance.tabs.get(indexToSelect)!.tabId;
+            expect(instance.selectBy).toEqual('first');
+            fixture.detectChanges();
+            checkSelectedIndex(indexToSelect, fixture);
+
+            // check selection by click
+            const tabLabels: DebugElement[] = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
+            dispatchMouseEvent(tabLabels[tabLabels.length - 1].nativeElement, 'click');
+            fixture.detectChanges();
+            tick();
+
+            checkSelectedIndex(tabLabels.length - 1, fixture);
+            expect(typeof instance.selectBy).toEqual('string');
+            expect(instance.selectBy).toEqual('last');
+            flush();
+        }));
+    })
+
     /**
      * Checks that the `selectedIndex` has been updated; checks that the label and body have their
      * respective `active` classes
@@ -774,3 +816,28 @@ class TemplateTabs { }
 })
 class TabGroupWithIsActiveBinding {
 }
+
+@Component({
+    template: `
+    <kbq-tab-group class="tab-group"
+        [(activeTab)]="selectBy">
+      <kbq-tab tabId="first">
+        <ng-template kbq-tab-label>Tab first</ng-template>
+        Tab first content
+      </kbq-tab>
+      <kbq-tab tabId="second">
+        <ng-template kbq-tab-label>Tab second</ng-template>
+        <span>Tab </span><span>second</span><span>content</span>
+      </kbq-tab>
+      <kbq-tab tabId="last">
+        <ng-template kbq-tab-label>Tab last</ng-template>
+        Tab last content
+      </kbq-tab>
+    </kbq-tab-group>
+  `
+})
+class TestSelectionByIndexOrTabIdApp {
+    @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
+    selectBy: KbqTabSelectBy = 1;
+}
+

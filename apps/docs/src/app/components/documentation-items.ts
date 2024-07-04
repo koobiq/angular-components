@@ -396,7 +396,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tabs',
                     hasApi: true,
                     apiId: 'tabs',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['tabs-types']
                 },
                 {

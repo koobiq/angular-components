@@ -187,6 +187,10 @@ export class KbqTabContent {
 // @public
 export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, vertical: string, defaultConfig?: IKbqTabsConfig);
+    // (undocumented)
+    get activeTab(): KbqTab | null;
+    set activeTab(value: KbqTabSelectBy | null);
+    readonly activeTabChange: EventEmitter<string | number | KbqTab>;
     readonly animationDone: EventEmitter<void>;
     animationDuration: string;
     get dynamicHeight(): boolean;
@@ -206,6 +210,8 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    onSelectFocusedIndex($event: number): void;
     // (undocumented)
     onSurface: boolean;
     removeTabBodyWrapperHeight(): void;
@@ -227,7 +233,7 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     // (undocumented)
     vertical: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "disabled": { "alias": "disabled"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "disabled": { "alias": "disabled"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, null, { attribute: "vertical"; }, { optional: true; }]>;
 }
@@ -356,6 +362,9 @@ export class KbqTabNav implements AfterContentInit {
 export const kbqTabsAnimations: {
     readonly translateTab: AnimationTriggerMetadata;
 };
+
+// @public (undocumented)
+export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | null);
 
 // @public (undocumented)
 export class KbqTabsModule {
