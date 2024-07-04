@@ -12,7 +12,7 @@
 .kbq-tree-select__panel {
     @extend %kbq-select-panel;
 
-    & .kbq-tree-select__footer {
+    & .kbq-select__footer {
         @extend %kbq-select-footer;
     }
 }

@@ -15,7 +15,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    Directive,
     DoCheck,
     ElementRef,
     EventEmitter,
@@ -76,10 +75,12 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonFunctionValueError,
     getKbqSelectNonArrayValueError,
-    MultipleMode
+    MultipleMode,
+    KbqSelectSearch,
+    KbqSelectTrigger,
+    KbqSelectMatcher
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqSelectSearch } from '@koobiq/components/select';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeSelection, KbqTreeOption } from '@koobiq/components/tree';
 import { defer, merge, Observable, Subject, Subscription } from 'rxjs';
@@ -108,18 +109,6 @@ export class KbqTreeSelectChange {
     constructor(public source: KbqTreeSelect, public value: any, public isUserInput = false) {}
 }
 
-
-@Directive({ selector: 'kbq-tree-select-trigger,[kbq-tree-select-trigger]' })
-export class KbqTreeSelectTrigger {}
-
-@Directive({ selector: 'kbq-tree-select-matcher' })
-export class KbqTreeSelectMatcher {}
-
-@Directive({
-    selector: 'kbq-tree-select-footer, [kbq-tree-select-footer]',
-    host: { class: 'kbq-tree-select__footer' }
-})
-export class KbqTreeSelectFooter {}
 
 /** @docs-private */
 class KbqTreeSelectBase {
@@ -243,9 +232,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     @ContentChild('kbqSelectCleaner', { static: true }) cleaner: KbqCleaner;
 
     /** User-supplied override of the trigger element. */
-    @ContentChild(KbqTreeSelectTrigger, { static: false }) customTrigger: KbqTreeSelectTrigger;
+    @ContentChild(KbqSelectTrigger, { static: false }) customTrigger: KbqSelectTrigger;
 
-    @ContentChild(KbqTreeSelectMatcher, { static: false }) customMatcher: KbqTreeSelectMatcher;
+    @ContentChild(KbqSelectMatcher, { static: false }) customMatcher: KbqSelectMatcher;
 
     @ContentChild('kbqSelectTagContent', { static: false, read: TemplateRef }) customTagTemplateRef: TemplateRef<any>;
 
@@ -1188,9 +1177,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     private _compareWith = (o1: any, o2: any) => o1 === o2;
 
     private subscribeOnSearchChanges() {
-        if (!this.search?.input.ngControl.valueChanges) { return; }
+        if (!this.search?.ngControl.valueChanges) { return; }
 
-        this.search.input.ngControl.valueChanges
+        this.search.ngControl.valueChanges
             .pipe(delay(0))
             .subscribe((value) => {
                 this.isEmptySearchResult = !!value && this.tree.isEmpty;

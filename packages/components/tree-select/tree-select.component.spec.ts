@@ -1286,9 +1286,9 @@ class BasicSelectWithoutFormsMultiple {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control" #select="kbqTreeSelect">
-                <kbq-tree-select-trigger>
+                <kbq-select-trigger>
                     {{ select.triggerValue?.split('').reverse().join('') }}
-                </kbq-tree-select-trigger>
+                </kbq-select-trigger>
                 <kbq-tree-selection
                     [dataSource]="dataSource"
                     [treeControl]="treeControl">

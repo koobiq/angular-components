@@ -1,18 +1,19 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { KBQ_SELECT_SCROLL_STRATEGY_PROVIDER, KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import {
+    KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
+    KbqPseudoCheckboxModule,
+    KbqSelectFooter,
+    KbqSelectMatcher,
+    KbqSelectSearch,
+    KbqSelectTrigger
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
 
-import {
-    KbqTreeSelect,
-    KbqTreeSelectFooter,
-    KbqTreeSelectMatcher,
-    KbqTreeSelectTrigger
-} from './tree-select.component';
+import { KbqTreeSelect } from './tree-select.component';
 
 
 @NgModule({
@@ -23,10 +24,20 @@ import {
         KbqIconModule,
         KbqTagsModule,
         KbqPseudoCheckboxModule,
-        KbqSelectModule
+        KbqSelectSearch,
+        KbqSelectFooter,
+        KbqSelectMatcher,
+        KbqSelectTrigger
     ],
-    exports: [KbqTreeSelect, KbqTreeSelectTrigger, KbqTreeSelectMatcher, KbqTreeSelectFooter, CommonModule],
-    declarations: [KbqTreeSelect, KbqTreeSelectTrigger, KbqTreeSelectMatcher, KbqTreeSelectFooter],
+    exports: [
+        KbqTreeSelect,
+        CommonModule,
+        KbqSelectSearch,
+        KbqSelectFooter,
+        KbqSelectMatcher,
+        KbqSelectTrigger
+    ],
+    declarations: [KbqTreeSelect],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })
 export class KbqTreeSelectModule {}
