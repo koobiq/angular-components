@@ -2,15 +2,12 @@
 @use 'sass:map';
 
 @use '../core/styles/tokens';
-
-@use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
 
 
 $tokens: meta.module-variables(tokens) !default;
 
 //todo нужно рефакторить со стилями тут сложно
-
 /* stylelint-disable no-descending-specificity */
 
 .kbq-multiple-file-upload .kbq-file-upload {
@@ -34,9 +31,14 @@ $tokens: meta.module-variables(tokens) !default;
         }
 
         & .dropzone__text {
-            & .multiple__caption {
-                padding-top: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-vertical);
+            & .multiple__header {
+                display: block;
+            }
 
+            & .multiple__caption {
+                display: block;
+                padding-top: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-vertical);
+                // гап не применяется тк не флекс. в целом гап не нужен, тк по логике дизайна ссылка от текста отделяется пробелом
                 gap: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-horizontal);
             }
         }
@@ -101,8 +103,8 @@ $tokens: meta.module-variables(tokens) !default;
         }
 
         .kbq-file-upload__size {
-            width: kbq-css-variable(size-7xl);
-            min-width: kbq-css-variable(size-7xl);
+            width: map.get($tokens, size-7xl);
+            min-width: map.get($tokens, size-7xl);
             text-align: left;
             flex-grow: 1;
         }
@@ -134,7 +136,7 @@ $tokens: meta.module-variables(tokens) !default;
         .kbq-file-multiple-uploaded__header-inner {
             $padding-vertical: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-vertical);
             $padding-horizontal: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-horizontal);
-            $compensation: 3px;
+            $compensation: 2px;
 
             padding:
                 calc(

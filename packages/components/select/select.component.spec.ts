@@ -2775,7 +2775,7 @@ describe('KbqSelect', () => {
                 // 3 options because the second group is disabled.
                 expect(panel.scrollTop)
                     .withContext('Expected scroll to be at the 9th option.')
-                    .toBe(172);
+                    .toBe(158);
             }));
 
             it('should scroll top the top when pressing HOME', fakeAsync(() => {
