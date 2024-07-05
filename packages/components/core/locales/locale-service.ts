@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Optional, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { enUSLocaleData } from './en-US';
@@ -53,11 +53,12 @@ export class KbqLocaleService {
     readonly changes: BehaviorSubject<string>;
     readonly locales: any = {};
 
+    private readonly document = inject(DOCUMENT);
+
     id: string;
     current;
 
     constructor(
-        @Inject(DOCUMENT) private readonly document: Document,
         @Optional() @Inject(KBQ_LOCALE_ID) id: string,
         @Optional() @Inject(KBQ_LOCALE_DATA) localeData
     ) {
