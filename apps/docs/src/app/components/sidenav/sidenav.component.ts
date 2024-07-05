@@ -61,7 +61,7 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
     encapsulation: ViewEncapsulation.None
 })
 export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('sidenavMenu') sidenavMenuContainer: KbqScrollbar;
+    @ViewChild(KbqScrollbar) sidenavMenuContainer: KbqScrollbar;
     set category(value: string) {
         if (!value || value === this._category) { return; }
 

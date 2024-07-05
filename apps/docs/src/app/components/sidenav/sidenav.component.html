@@ -23,7 +23,7 @@
 
 </a>
 
-<div class="docs-sidenav__menu" kbq-scrollbar [defer]="true" #sidenavMenu>
+<div class="docs-sidenav__menu" kbq-scrollbar [defer]="true">
 <kbq-tree-selection
     [autoSelect]="false"
     [(ngModel)]="selectedItem"
@@ -54,6 +54,7 @@
         {{ node.name }}
     </kbq-tree-option>
 </kbq-tree-selection>
+</div>
 
 <kbq-divider></kbq-divider>
 
