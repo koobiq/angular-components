@@ -30,21 +30,6 @@
     padding: 0 $size-xs;
 }
 
-.DocSearch-Button-Keys {
-    min-width: 0;
-}
-
-.DocSearch-Button-Key {
-    font-family: inherit;
-    background-color: transparent;
-    color: inherit;
-    top: 0;
-    width: auto;
-    height: auto;
-    margin: 0;
-    padding: 0;
-}
-
 .DocSearch-Button-Container::before {
     @extend .mc;
     @extend .mc-search_16;
@@ -199,6 +184,7 @@
     letter-spacing: 0.01em;
 }
 
+.DocSearch-Button-Keys,
 .DocSearch-Cancel,
 .DocSearch-Button-Container svg,
 .DocSearch-MagnifierLabel svg,

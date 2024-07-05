@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import docsearch from '@docsearch/js';
+import * as UAParser from 'ua-parser-js';
 
 @Component({
     standalone: true,
@@ -10,11 +11,21 @@ import docsearch from '@docsearch/js';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocsearchComponent {
+    private readonly uaParser = new UAParser();
+
     constructor() {
         this.initDocSearch();
     }
 
     private initDocSearch(): void {
+        const osName = this.uaParser.getOS().name;
+        let buttonText = 'Поиск';
+        if (osName.includes('Win')) {
+            buttonText += ' Ctrl+K';
+        }
+        if (osName.includes('Mac')) {
+            buttonText += ' ⌘K';
+        }
         let transformItems;
         // transform URL to work docsearch on DEV stand
         if (location.host !== 'koobiq.io' || location.protocol !== 'https:') {
@@ -36,13 +47,13 @@ export class DocsearchComponent {
             maxResultsPerGroup: 20,
             transformItems,
             searchParameters: {
-                hitsPerPage: 40,
+                hitsPerPage: 40
             },
             disableUserPersonalization: false,
             resultsFooterComponent: null,
             translations: {
                 button: {
-                    buttonText: 'Поиск',
+                    buttonText,
                     buttonAriaLabel: 'Поиск'
                 },
                 modal: {
