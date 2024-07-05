@@ -40,17 +40,17 @@ export class DocsearchComponent {
         /** @see https://docsearch.algolia.com/docs/api */
         docsearch({
             container: 'docs-docsearch',
-            environment: window,
             appId: '7N2W9AKEM6',
             apiKey: '0f0df042e7b349df5cb381e72f268b4d',
             indexName: 'koobiq',
             maxResultsPerGroup: 20,
             transformItems,
             searchParameters: {
-                hitsPerPage: 40
+                hitsPerPage: 40,
             },
             disableUserPersonalization: false,
             resultsFooterComponent: null,
+            placeholder: 'Поиск',
             translations: {
                 button: {
                     buttonText,
@@ -77,7 +77,7 @@ export class DocsearchComponent {
                         helpText: 'Возможно, вам следует проверить соединение с интернетом.'
                     },
                     footer: {
-                        selectText: 'Выбор',
+                        selectText: 'Выбрать',
                         selectKeyAriaLabel: 'Клавиша Enter',
                         navigateText: 'Вниз (вверх)',
                         navigateUpKeyAriaLabel: 'Клавиша стрелка вверх',

@@ -73,8 +73,12 @@
 }
 
 .DocSearch-Input {
-    font-size: 16px;
+    font-size: 15px;
     padding-left: $size-xs;
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
 }
 
 .DocSearch-Input::placeholder {
@@ -99,10 +103,15 @@
 .DocSearch-Dropdown {
     min-height: 0;
     scrollbar-color: var(--docsearch-icon-color);
+    padding: 0 $size-s $size-xxl $size-s;
 
     @media (max-width: 768px) {
         max-height: calc(var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height));
     }
+}
+
+.DocSearch-Dropdown-Container {
+    padding-top: $size-s;
 }
 
 .DocSearch-Hit {
@@ -144,18 +153,18 @@
     line-height: 20px;
     letter-spacing: -0.14px;
     margin: 0;
-    padding: $size-l 0 $size-xs 0;
+    padding: $size-xs $size-m;
 }
 
 .DocSearch-Hit-title {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 24px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
 }
 
 .DocSearch-Hit-path {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 16px;
     letter-spacing: 0.005em;
 }
 
@@ -184,6 +193,8 @@
     letter-spacing: 0.01em;
 }
 
+.DocSearch-Hit--Child,
+.DocSearch-Hit-Select-Icon,
 .DocSearch-Button-Keys,
 .DocSearch-Cancel,
 .DocSearch-Button-Container svg,
@@ -191,7 +202,7 @@
 .DocSearch-Reset svg,
 .DocSearch-Screen-Icon,
 .DocSearch-NoResults-Prefill-List {
-    display: none;
+    display: none !important;
 }
 
 :root {
