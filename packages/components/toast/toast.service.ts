@@ -17,8 +17,7 @@ import {
     InjectionToken,
     NgZone
 } from '@angular/core';
-import { BehaviorSubject, timer } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject, filter, timer, shareReplay } from 'rxjs';
 
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
@@ -62,6 +61,12 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
 
+    timer = timer(CHECK_INTERVAL, CHECK_INTERVAL)
+        .pipe(
+            filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
+            shareReplay()
+        );
+
     constructor(
         private overlay: Overlay,
         private injector: Injector,
@@ -72,9 +77,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     ) {
         this.toastConfig = toastConfig || defaultToastConfig;
 
-        this.ngZone.runOutsideAngular(() => timer(CHECK_INTERVAL, CHECK_INTERVAL)
-            .pipe(filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()))
-            .subscribe(this.processToasts)
+        this.ngZone.runOutsideAngular(
+            () => this.timer.subscribe(this.processToasts)
         );
     }
 

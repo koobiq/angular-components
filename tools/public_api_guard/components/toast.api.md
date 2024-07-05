@@ -21,6 +21,7 @@ import * as i7 from '@koobiq/components/button';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -203,6 +204,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     };
     // (undocumented)
     get templates(): EmbeddedViewRef<T>[];
+    // (undocumented)
+    timer: Observable<number>;
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
