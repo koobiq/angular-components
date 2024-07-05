@@ -3966,10 +3966,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:3.0.0-rc.10":
-  version: 3.0.0-rc.10
-  resolution: "@koobiq/design-tokens@npm:3.0.0-rc.10"
-  checksum: 10c0/43943b1e3ae1a8554c6d16cf42cb4d86840deefe87993d6e2630e07fb5d939c73bfc0b4e985158ccdba1969d701c49caf2c36f0c10ff5113cf8c5ddb944b86ad
+"@koobiq/design-tokens@npm:3.0.0-rc.11":
+  version: 3.0.0-rc.11
+  resolution: "@koobiq/design-tokens@npm:3.0.0-rc.11"
+  checksum: 10c0/7f327098227dd90391df65096ecd3e9e8e23835665985125bf018f1a28edaae9beb28a9e02d4b136124b9fac1db88670a406cf16a188d30774fa52a2aa0274dd
   languageName: node
   linkType: hard
 
@@ -4000,10 +4000,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:3.0.0-rc.10":
-  version: 3.0.0-rc.10
-  resolution: "@koobiq/tokens-builder@npm:3.0.0-rc.10"
-  checksum: 10c0/9194edd4f11b1a68dfdfdab840b4b35fc04f151ba53468ab414262aede68067fb926436daeb20d0dd20573cd1ada29e52d4eef390912f31fd34fe983d78b7010
+"@koobiq/tokens-builder@npm:3.0.0-rc.11":
+  version: 3.0.0-rc.11
+  resolution: "@koobiq/tokens-builder@npm:3.0.0-rc.11"
+  checksum: 10c0/f42303e12e43213074f3fdbeb95468b37c1aba47ee1724950d1621fa73c56b84e982e86db808e0a80dea147d70d6b5fc9271544a0f622ee861175c9bf18b0397
   languageName: node
   linkType: hard
 
@@ -13654,11 +13654,11 @@ __metadata:
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.2.1"
     "@koobiq/date-adapter": "npm:^3.1.2"
     "@koobiq/date-formatter": "npm:^3.1.2"
-    "@koobiq/design-tokens": "npm:3.0.0-rc.10"
+    "@koobiq/design-tokens": "npm:3.0.0-rc.11"
     "@koobiq/icons": "npm:^7.1.1"
     "@koobiq/luxon-date-adapter": "npm:^3.1.2"
     "@koobiq/moment-date-adapter": "npm:^3.1.2"
-    "@koobiq/tokens-builder": "npm:3.0.0-rc.10"
+    "@koobiq/tokens-builder": "npm:3.0.0-rc.11"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@nx/angular": "npm:^18.3.4"
