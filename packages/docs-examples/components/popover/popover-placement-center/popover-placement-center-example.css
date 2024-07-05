@@ -1,6 +1,5 @@
 .buttons-container {
     display: flex;
-    width: 364px;
     justify-content: flex-end;
 }
 
