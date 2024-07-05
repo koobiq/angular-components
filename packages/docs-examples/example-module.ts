@@ -2184,6 +2184,60 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-progress-spinner"
     }
   },
+  "radio-content": {
+    "packagePath": "components/radio/radio-content",
+    "title": "Radio content",
+    "componentName": "RadioContentExample",
+    "files": [
+      "radio-content-example.ts",
+      "radio-content-example.html",
+      "radio-content-example.css"
+    ],
+    "selector": "radio-content-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-content-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
+  "radio-group": {
+    "packagePath": "components/radio/radio-group",
+    "title": "Radio group",
+    "componentName": "RadioGroupExample",
+    "files": [
+      "radio-group-example.ts",
+      "radio-group-example.html",
+      "radio-group-example.css"
+    ],
+    "selector": "radio-group-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-group-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
+  "radio-invalid": {
+    "packagePath": "components/radio/radio-invalid",
+    "title": "Radio invalid",
+    "componentName": "RadioInvalidExample",
+    "files": [
+      "radio-invalid-example.ts",
+      "radio-invalid-example.html",
+      "radio-invalid-example.css"
+    ],
+    "selector": "radio-invalid-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-invalid-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
   "radio-overview": {
     "packagePath": "components/radio/radio-overview",
     "title": "Basic radio",
@@ -2196,6 +2250,60 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-overview-example",
     "additionalComponents": [],
     "primaryFile": "radio-overview-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
+  "radio-required": {
+    "packagePath": "components/radio/radio-required",
+    "title": "Radio required",
+    "componentName": "RadioRequiredExample",
+    "files": [
+      "radio-required-example.ts",
+      "radio-required-example.html",
+      "radio-required-example.css"
+    ],
+    "selector": "radio-required-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-required-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
+  "radio-size": {
+    "packagePath": "components/radio/radio-size",
+    "title": "Radio size",
+    "componentName": "RadioSizeExample",
+    "files": [
+      "radio-size-example.ts",
+      "radio-size-example.html",
+      "radio-size-example.css"
+    ],
+    "selector": "radio-size-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-size-example.ts",
+    "module": {
+      "name": "RadioExamplesModule",
+      "importSpecifier": "components/radio",
+      "importPath": "koobiq-docs-examples-components-radio"
+    }
+  },
+  "radio-style": {
+    "packagePath": "components/radio/radio-style",
+    "title": "Radio style",
+    "componentName": "RadioStyleExample",
+    "files": [
+      "radio-style-example.ts",
+      "radio-style-example.html",
+      "radio-style-example.css"
+    ],
+    "selector": "radio-style-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-style-example.ts",
     "module": {
       "name": "RadioExamplesModule",
       "importSpecifier": "components/radio",
