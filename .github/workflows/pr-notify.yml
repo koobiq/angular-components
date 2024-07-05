@@ -17,7 +17,7 @@ jobs:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
-          MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNGEL_NAME }}
+          MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNEL_NAME }}
           MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
           TEXT: |
             [${{ github.repository }}] | [${{ github.event.pull_request.title }} #${{ github.event.number }}](${{ env.PR_URL }}) was created by ${{ github.actor }}
