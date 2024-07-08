@@ -19,23 +19,14 @@ export class DocsearchComponent {
 
     private initDocSearch(): void {
         const osName = this.uaParser.getOS().name;
+        // should transform item URL to work docsearch on DEV stand
+        const shouldTransformItemURL = location.host !== 'koobiq.io' || location.protocol !== 'https:';
         let buttonText = 'Поиск';
         if (osName.includes('Win')) {
             buttonText += ' Ctrl+K';
         }
         if (osName.includes('Mac')) {
             buttonText += ' ⌘K';
-        }
-        let transformItems;
-        // transform URL to work docsearch on DEV stand
-        if (location.host !== 'koobiq.io' || location.protocol !== 'https:') {
-            transformItems = (items) => {
-                return items.map((item) => {
-                    item.url = item.url.replace('koobiq.io', location.host);
-                    item.url = item.url.replace('https:', location.protocol);
-                    return item;
-                });
-            };
         }
         /** @see https://docsearch.algolia.com/docs/api */
         docsearch({
@@ -44,7 +35,27 @@ export class DocsearchComponent {
             apiKey: '0f0df042e7b349df5cb381e72f268b4d',
             indexName: 'koobiq',
             maxResultsPerGroup: 20,
-            transformItems,
+            transformItems: (items) => {
+                if (shouldTransformItemURL) {
+                    items = items.map((item) => {
+                        item.url = item.url.replace('koobiq.io', location.host);
+                        item.url = item.url.replace('https:', location.protocol);
+                        return item;
+                    });
+                }
+                return items.filter(item => {
+                    // hide child (lvl2) item, that does't match the search query
+                    if (
+                        item.type === 'lvl2' &&
+                        item.content === null &&
+                        item._highlightResult.hierarchy.lvl2.matchLevel === 'none'
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            },
             searchParameters: {
                 hitsPerPage: 40,
             },

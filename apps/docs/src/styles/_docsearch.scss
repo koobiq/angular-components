@@ -11,7 +11,7 @@
     border-style: solid;
     border-color: $button-light-outline-contrast-fade-on-border;
     color: inherit;
-    font-size: $button-font-default-font-size;
+    font-size: 15px;
     line-height: $button-font-default-line-height;
     font-weight: $button-font-default-font-weight;
     font-family: $button-font-default-font-family;
@@ -122,16 +122,26 @@
 .DocSearch-Hit a {
     padding-left: $size-l;
     border-radius: $button-size-border-radius;
+    outline-offset: -1px;
+    outline-width: 1px;
 }
 
 .DocSearch-Hit[aria-selected=true] a {
     background-color: $light-states-background-transparent-active;
 }
 
-.DocSearch-Hits mark,
+.DocSearch-Hit mark,
 .DocSearch-Hit[aria-selected=true] mark {
     text-decoration: none;
     color: $light-foreground-warning !important;
+}
+
+.DocSearch-Hit-action {
+    width: auto;
+    height: auto;
+}
+
+.DocSearch-Hit .DocSearch-Hit-title mark {
     background-color: $light-background-warning-fade;
 }
 
@@ -160,6 +170,8 @@
     font-size: 15px;
     font-weight: 400;
     line-height: 20px;
+    overflow: inherit;
+    text-overflow: inherit;
 }
 
 .DocSearch-Hit-path {
@@ -193,7 +205,17 @@
     letter-spacing: 0.01em;
 }
 
-.DocSearch-Hit--Child,
+.DocSearch-StartScreen .DocSearch-Help,
+.DocSearch-NoResults .DocSearch-Title {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.DocSearch-NoResults .DocSearch-Title strong {
+    font-weight: inherit;
+}
+
 .DocSearch-Hit-Select-Icon,
 .DocSearch-Button-Keys,
 .DocSearch-Cancel,
@@ -282,9 +304,12 @@ body.theme-dark {
         background-color: $dark-states-background-transparent-active;
     }
 
-    .DocSearch-Hits mark,
+    .DocSearch-Hit mark,
     .DocSearch-Hit[aria-selected=true] mark {
         color: $dark-foreground-warning !important;
+    }
+
+    .DocSearch-Hit .DocSearch-Hit-title mark {
         background-color: $dark-background-warning-fade;
     }
 
