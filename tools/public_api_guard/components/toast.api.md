@@ -21,6 +21,7 @@ import * as i7 from '@koobiq/components/button';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -179,8 +180,8 @@ export enum KbqToastPosition {
 }
 
 // @public (undocumented)
-export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
-    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, toastFactory: any, toastConfig: KbqToastConfig);
+export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
+    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
     // (undocumented)
@@ -191,6 +192,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     hideTemplate(id: number): void;
     // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     show(data: KbqToastData, duration?: number, onTop?: boolean): {
         ref: ComponentRef<T>;
@@ -204,9 +207,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     // (undocumented)
     get templates(): EmbeddedViewRef<T>[];
     // (undocumented)
+    timer: Observable<number>;
+    // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqToastService<any>>;
 }
