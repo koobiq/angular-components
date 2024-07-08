@@ -7,6 +7,7 @@ import {
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
+    KbqSelectSearchEmptyResult,
     KbqSelectTrigger
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -29,7 +30,8 @@ import { KbqSelect } from './select.component';
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,
-        KbqSelectTrigger
+        KbqSelectTrigger,
+        KbqSelectSearchEmptyResult
     ],
     exports: [
         KbqFormFieldModule,
@@ -40,7 +42,8 @@ import { KbqSelect } from './select.component';
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,
-        KbqSelectTrigger
+        KbqSelectTrigger,
+        KbqSelectSearchEmptyResult
     ],
     declarations: [
         KbqSelect,
