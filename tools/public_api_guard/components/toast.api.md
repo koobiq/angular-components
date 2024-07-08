@@ -180,7 +180,7 @@ export enum KbqToastPosition {
 }
 
 // @public (undocumented)
-export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
+export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
@@ -192,6 +192,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     hideTemplate(id: number): void;
     // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     show(data: KbqToastData, duration?: number, onTop?: boolean): {
         ref: ComponentRef<T>;

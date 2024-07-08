@@ -15,9 +15,10 @@ import {
     TemplateRef,
     EmbeddedViewRef,
     InjectionToken,
-    NgZone
+    NgZone,
+    OnDestroy
 } from '@angular/core';
-import { BehaviorSubject, filter, timer, shareReplay } from 'rxjs';
+import { BehaviorSubject, filter, timer, shareReplay, Subscription } from 'rxjs';
 
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
@@ -40,7 +41,7 @@ const CHECK_INTERVAL = 500;
 let templateId = 0;
 
 @Injectable({ providedIn: 'root' })
-export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
+export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     get toasts(): ComponentRef<T>[] {
         return Object.values(this.toastsDict)
             .filter((item) => !item.hostView.destroyed);
@@ -57,6 +58,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
     private containerInstance: KbqToastContainerComponent;
     private overlayRef: OverlayRef;
     private portal: ComponentPortal<KbqToastContainerComponent>;
+    private timerSubscription: Subscription;
 
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
@@ -78,8 +80,12 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> {
         this.toastConfig = toastConfig || defaultToastConfig;
 
         this.ngZone.runOutsideAngular(
-            () => this.timer.subscribe(this.processToasts)
+            () => this.timerSubscription = this.timer.subscribe(this.processToasts)
         );
+    }
+
+    ngOnDestroy(): void {
+        this.timerSubscription.unsubscribe();
     }
 
     show(
