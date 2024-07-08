@@ -19,7 +19,7 @@ import { filter, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { AnchorsComponent } from '../anchors/anchors.component';
-import { DocCategory, DocItem, DocumentationItems } from '../documentation-items';
+import { DocItem, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
 
 
