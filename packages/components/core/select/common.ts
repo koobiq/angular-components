@@ -67,7 +67,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     value() {
-        return this.formField.control.vaue;
+        return this.formField.control.value;
     }
 
     ngAfterContentInit(): void {
