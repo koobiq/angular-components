@@ -276,7 +276,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)

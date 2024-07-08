@@ -230,7 +230,7 @@ export class KbqTreeSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqPseudoCheckboxModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger], [typeof i1.KbqTreeSelect, typeof i2.CommonModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqPseudoCheckboxModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult], [typeof i1.KbqTreeSelect, typeof i2.CommonModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)
