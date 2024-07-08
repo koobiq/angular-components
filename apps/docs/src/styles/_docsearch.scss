@@ -164,6 +164,10 @@
     letter-spacing: -0.14px;
     margin: 0;
     padding: $size-xs $size-m;
+
+    // safari bug:
+    // https://github.com/algolia/docsearch/issues/1477
+    position: relative;
 }
 
 .DocSearch-Hit-title {
@@ -207,7 +211,7 @@
 
 .DocSearch-StartScreen .DocSearch-Help,
 .DocSearch-NoResults .DocSearch-Title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     line-height: 24px;
 }
