@@ -55,6 +55,12 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     readonly focused = new BehaviorSubject<boolean>(false);
     readonly animation = new BehaviorSubject<AnimationEvent | null>(null);
 
+    timer = timer(CHECK_INTERVAL, CHECK_INTERVAL)
+        .pipe(
+            filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
+            shareReplay()
+        );
+
     private containerInstance: KbqToastContainerComponent;
     private overlayRef: OverlayRef;
     private portal: ComponentPortal<KbqToastContainerComponent>;
@@ -62,12 +68,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
-
-    timer = timer(CHECK_INTERVAL, CHECK_INTERVAL)
-        .pipe(
-            filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
-            shareReplay()
-        );
 
     constructor(
         private overlay: Overlay,
