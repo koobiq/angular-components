@@ -15,7 +15,15 @@ import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } 
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagList, KbqTagsModule, KbqTagInputEvent, KbqTag, KbqTagInput } from '@koobiq/components/tags';
+import {
+    KbqTagList,
+    KbqTagsModule,
+    KbqTagInputEvent,
+    KbqTag,
+    KbqTagInput,
+    KBQ_TAGS_DEFAULT_OPTIONS,
+    KbqTagsDefaultOptions
+} from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -212,9 +220,66 @@ export class DemoComponent implements AfterViewInit {
     }
 }
 
+@Component({
+    selector: 'tag-input-default-options-override',
+    template: `
+        <h4 class="kbq-title">Tags with input</h4>
+        <kbq-form-field>
+            <kbq-tag-list #inputTagList>
+                <kbq-tag *ngFor="let tag of inputTags" [value]="tag" (removed)="inputOnRemoveTag(tag)">
+                    {{ tag }}
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+                </kbq-tag>
 
+                <input placeholder="New tag..."
+                       kbqInput
+                       #inputTagInput
+                       [formControl]="tagCtrl"
+                       [kbqTagInputFor]="inputTagList"
+                       [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                       [distinct]="true"
+                       (kbqTagInputTokenEnd)="inputOnCreate($event)">
+
+                <kbq-cleaner #kbqTagListCleaner (click)="onClear()"></kbq-cleaner>
+            </kbq-tag-list>
+        </kbq-form-field>
+
+        <h4 class="kbq-title">Tags with autocomplete</h4>
+        <kbq-form-field>
+            <kbq-tag-list #autocompleteTagList>
+                <kbq-tag *ngFor="let tag of autocompleteSelectedTags" [value]="tag" (removed)="autocompleteOnRemove(tag)">
+                    {{ tag }}
+                    <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+                </kbq-tag>
+                <input placeholder="New Tag..."
+                       #autocompleteTagInput
+                       [formControl]="tagCtrl"
+                       [kbqAutocomplete]="autocomplete"
+                       [kbqTagInputAddOnBlur]="false"
+                       [kbqTagInputFor]="autocompleteTagList"
+                       (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
+                       [distinct]="true"
+                       (blur)="addOnBlurFunc($event)">
+            </kbq-tag-list>
+            <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
+                <kbq-option *ngIf="canCreate" [value]="{ new: true, value: autocompleteTagInput.value }">
+                    Создать: {{ autocompleteTagInput.value }}
+                </kbq-option>
+                <kbq-option *ngIf="hasDuplicates" [disabled]="true">Ничего не найдено</kbq-option>
+                <kbq-option *ngFor="let tag of autocompleteFilteredTags | async" [value]="tag">{{ tag }}</kbq-option>
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `,
+    providers: [{
+        provide: KBQ_TAGS_DEFAULT_OPTIONS,
+        // tslint:disable-next-line: no-object-literal-type-assertion
+        useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
+    }]
+})
+
+export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
 @NgModule({
-    declarations: [DemoComponent],
+    declarations: [DemoComponent, TagInputDefaultOptionsOverrideComponent],
     imports: [
         BrowserAnimationsModule,
         BrowserModule,
