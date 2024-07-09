@@ -9,6 +9,7 @@ export interface KbqTagsDefaultOptions {
     /** The list of key codes that will trigger a chipEnd event. */
     separatorKeyCodes: number[];
     separators?: { [key: number]: KbqTagSeparator };
+    addOnPaste?: boolean;
 }
 
 /** Injection token to be used to override the default options for the chips module. */
