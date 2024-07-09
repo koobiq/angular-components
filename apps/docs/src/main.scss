@@ -4,11 +4,10 @@
 @use 'highlightjs/material-light' as *;
 
 @use './styles/theme.kbq' as theme-kbq;
-
 @use 'styles/koobiq' as tokens;
 
 @use './styles/markdown';
-
+@use './styles/docsearch';
 
 .docs {
     @include theme-kbq.docs-typography(

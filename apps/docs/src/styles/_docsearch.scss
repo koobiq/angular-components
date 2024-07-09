@@ -1,0 +1,323 @@
+/** @see https://docsearch.algolia.com/docs/styling */
+@use '@docsearch/css/dist/style.scss';
+@use 'koobiq/default-theme/variables' as *;
+@use '@koobiq/icons/dist/fonts/mc-icons';
+
+.DocSearch-Button {
+    padding: 0 $button-size-horizontal-padding;
+    margin: 0;
+    border-radius: $button-size-border-radius;
+    border-width: $button-size-border-width;
+    border-style: solid;
+    border-color: $button-light-outline-contrast-fade-on-border;
+    color: inherit;
+    font-size: 15px;
+    line-height: $button-font-default-line-height;
+    font-weight: $button-font-default-font-weight;
+    font-family: $button-font-default-font-family;
+
+    @media (width <= 768px) {
+        border: none;
+    }
+}
+
+.DocSearch-Button:hover {
+    background-color: $button-light-outline-contrast-fade-on-states-hover-background;
+}
+
+.DocSearch-Button-Placeholder {
+    font-size: inherit;
+    padding: 0 $size-xs;
+}
+
+.DocSearch-Button-Container::before {
+    @extend .mc;
+    @extend .mc-search_16;
+
+    @media (width <= 768px) {
+        font-size: 20px;
+    }
+}
+
+.DocSearch-Modal {
+    border-radius: $modal-size-border-radius;
+
+    @media (max-width: 768px) {
+        height: calc(var(--docsearch-vh, 1vh) * 85);
+    }
+}
+
+.DocSearch-Container {
+    @media (max-width: 768px) {
+        display: flex;
+        align-items: flex-end;
+    }
+}
+
+.DocSearch-SearchBar {
+    padding: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: $light-line-contrast-fade;
+}
+
+.DocSearch-Form {
+    border-radius: $modal-size-border-radius $modal-size-border-radius 0 0;
+}
+
+.DocSearch-MagnifierLabel::before {
+    @extend .mc;
+    @extend .mc-search_16;
+
+    color: $light-icon-contrast-fade;
+}
+
+.DocSearch-Input {
+    font-size: 15px;
+    padding-left: $size-xs;
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
+}
+
+.DocSearch-Input::placeholder {
+    color: $light-foreground-contrast-tertiary;
+}
+
+.DocSearch-Reset::before {
+    @extend .mc;
+    @extend .mc-close-circle_16;
+}
+
+.DocSearch-Reset:hover {
+    color: $icon-button-light-fade-contrast-states-hover;
+}
+
+.DocSearch-Logo a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.DocSearch-Dropdown {
+    min-height: 0;
+    scrollbar-color: var(--docsearch-icon-color);
+    padding: 0 $size-s $size-xxl $size-s;
+
+    @media (max-width: 768px) {
+        max-height: calc(var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height));
+    }
+}
+
+.DocSearch-Dropdown-Container {
+    padding-top: $size-s;
+}
+
+.DocSearch-Hit {
+    border-radius: $button-size-border-radius;
+    padding-bottom: 0;
+}
+
+.DocSearch-Hit a {
+    padding-left: $size-l;
+    border-radius: $button-size-border-radius;
+    outline-offset: -1px;
+    outline-width: 1px;
+}
+
+.DocSearch-Hit[aria-selected=true] a {
+    background-color: $light-states-background-transparent-active;
+}
+
+.DocSearch-Hit mark,
+.DocSearch-Hit[aria-selected=true] mark {
+    text-decoration: none;
+    color: $light-foreground-warning !important;
+}
+
+.DocSearch-Hit-action {
+    width: auto;
+    height: auto;
+}
+
+.DocSearch-Hit .DocSearch-Hit-title mark {
+    background-color: $light-background-warning-fade;
+}
+
+.DocSearch-Hit-Container {
+    padding-right: $size-l;
+}
+
+.DocSearch-Hit-content-wrapper {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    width: auto;
+    margin: 0 0 0 $size-l;
+}
+
+.DocSearch-Hit-source {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: -0.14px;
+    margin: 0;
+    padding: $size-xs $size-m;
+
+    // safari bug:
+    // https://github.com/algolia/docsearch/issues/1477
+    position: relative;
+}
+
+.DocSearch-Hit-title {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    overflow: inherit;
+    text-overflow: inherit;
+}
+
+.DocSearch-Hit-path {
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.005em;
+}
+
+.DocSearch-Footer {
+    border-radius: 0 0 $modal-size-border-radius $modal-size-border-radius;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: $light-line-contrast-fade;
+}
+
+.DocSearch-Commands li {
+    margin-right: $size-l;
+}
+
+.DocSearch-Commands-Key {
+    border-radius: 6px;
+    width: $size-xxl;
+    height: $size-xxl;
+    padding: $size-3xs $size-xxs;
+    margin-right: $size-xs;
+}
+
+.DocSearch-Label {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+}
+
+.DocSearch-StartScreen .DocSearch-Help,
+.DocSearch-NoResults .DocSearch-Title {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.DocSearch-NoResults .DocSearch-Title strong {
+    font-weight: inherit;
+}
+
+.DocSearch-Hit-Select-Icon,
+.DocSearch-Button-Keys,
+.DocSearch-Cancel,
+.DocSearch-Button-Container svg,
+.DocSearch-MagnifierLabel svg,
+.DocSearch-Reset svg,
+.DocSearch-Screen-Icon,
+.DocSearch-NoResults-Prefill-List {
+    display: none !important;
+}
+
+:root {
+    --docsearch-primary-color: inherit;
+    --docsearch-text-color: #{$light-foreground-contrast};
+    --docsearch-spacing: #{$size-xxl};
+    --docsearch-highlight-color: inherit;
+    --docsearch-muted-color: #{$light-foreground-contrast-secondary};
+    --docsearch-container-background: #{$light-background-overlay};
+    --docsearch-icon-color: #{$light-icon-contrast-fade};
+    --docsearch-modal-width: 640px;
+    --docsearch-modal-height: 550px;
+    --docsearch-modal-background: #{$light-background-bg};
+    --docsearch-modal-shadow: none;
+    --docsearch-searchbox-height: #{$size-5xl};
+    --docsearch-searchbox-background: $light-background-card;
+    --docsearch-searchbox-focus-background: #{$light-background-bg};
+    --docsearch-searchbox-shadow: none;
+    --docsearch-hit-height: #{$size-6xl};
+    --docsearch-hit-color: #{$light-foreground-contrast};
+    --docsearch-hit-active-color: #{$light-foreground-contrast};
+    --docsearch-hit-background: #{$light-background-card};
+    --docsearch-hit-shadow: none;
+    --docsearch-key-gradient: #{$light-background-contrast-fade};
+    --docsearch-key-shadow: none;
+    --docsearch-key-pressed-shadow: none;
+    --docsearch-footer-height: #{$size-5xl};
+    --docsearch-footer-background: #{$light-background-bg};
+    --docsearch-footer-shadow: none;
+}
+
+body.theme-dark {
+    --docsearch-highlight-color: inherit;
+    --docsearch-icon-color: #{$dark-icon-contrast-fade};
+    --docsearch-text-color: #{$dark-foreground-contrast};
+    --docsearch-container-background: #{$dark-background-overlay};
+    --docsearch-modal-background: #{$dark-background-card};
+    --docsearch-modal-shadow: none;
+    --docsearch-searchbox-background: #{$dark-background-card};
+    --docsearch-searchbox-focus-background: #{$dark-background-bg};
+    --docsearch-hit-color: #{$dark-foreground-contrast};
+    --docsearch-hit-shadow: none;
+    --docsearch-hit-background: #{$dark-background-card};
+    --docsearch-key-gradient: #{$dark-background-contrast-fade};
+    --docsearch-key-shadow: none;
+    --docsearch-key-pressed-shadow: none;
+    --docsearch-footer-background: #{$dark-background-card};
+    --docsearch-footer-shadow: none;
+    --docsearch-muted-color: #{$dark-foreground-contrast-secondary};
+    --docsearch-hit-active-color: #{$dark-foreground-contrast};
+
+    .DocSearch-Button {
+        border-color: $button-dark-outline-contrast-fade-on-border;
+    }
+
+    .DocSearch-Button:hover {
+        background-color: $button-dark-outline-contrast-fade-on-states-hover-background;
+    }
+
+    .DocSearch-SearchBar {
+        border-bottom-color: $dark-line-contrast-fade;
+    }
+
+    .DocSearch-MagnifierLabel {
+        color: $dark-icon-contrast-fade;
+    }
+
+    .DocSearch-Input::placeholder {
+        color: $dark-foreground-contrast-tertiary;
+    }
+
+    .DocSearch-Reset:hover {
+        color: $icon-button-dark-fade-contrast-states-hover;
+    }
+
+    .DocSearch-Hit[aria-selected=true] a {
+        background-color: $dark-states-background-transparent-active;
+    }
+
+    .DocSearch-Hit mark,
+    .DocSearch-Hit[aria-selected=true] mark {
+        color: $dark-foreground-warning !important;
+    }
+
+    .DocSearch-Hit .DocSearch-Hit-title mark {
+        background-color: $dark-background-warning-fade;
+    }
+
+    .DocSearch-Footer {
+        border-top-color: $dark-line-contrast-fade;
+    }
+}

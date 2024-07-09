@@ -34,6 +34,7 @@ import { DocStates } from '../doс-states';
 })
 export class ComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
     docItem: DocItem;
+    docCategoryName: string;
 
     private destroyed: Subject<void> = new Subject();
 
@@ -67,6 +68,7 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
                 }
 
                 this.docItem = docItem;
+                this.docCategoryName = this.docItems.getCategoryById(this.docItem.packageName).name;
             });
 
         this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);

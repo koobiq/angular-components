@@ -25,7 +25,8 @@
     flex-direction: row;
     align-items: center;
 
-    .kbq-button-icon {
+    .kbq-button-icon,
+    docs-docsearch {
         margin-left: $size-l;
     }
 
@@ -57,7 +58,8 @@
     .docs-navbar {
         padding: $size-s $size-xxs $size-s $size-l;
 
-        .kbq-button-icon {
+        .kbq-button-icon,
+        docs-docsearch {
             width: $size-5xl;
             height: $size-5xl;
 

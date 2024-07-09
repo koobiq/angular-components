@@ -51,6 +51,8 @@
         class="docs-sidenav__item"
         kbqTreeNodePadding
         [kbqTreeNodePaddingIndent]="0">
+        <!-- link for algolia crawler -->
+        <a [href]="node.id" style="display: none;">{{ node.name }}</a>
         {{ node.name }}
     </kbq-tree-option>
 </kbq-tree-selection>

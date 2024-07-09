@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Optional, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { enUSLocaleData } from './en-US';
@@ -16,6 +16,7 @@ import {
     ruRUFormattersData,
     zhCNFormattersData
 } from './formatters';
+import { DOCUMENT } from '@angular/common';
 
 
 export const KBQ_LOCALE_ID = new InjectionToken<string>('KbqLocaleId');
@@ -52,6 +53,8 @@ export class KbqLocaleService {
     readonly changes: BehaviorSubject<string>;
     readonly locales: any = {};
 
+    private readonly document = inject(DOCUMENT);
+
     id: string;
     current;
 
@@ -70,6 +73,8 @@ export class KbqLocaleService {
     setLocale(id: string) {
         this.id = id;
         this.current = this.locales[this.id];
+
+        this.document.documentElement.lang = this.id;
 
         this.changes.next(this.id);
     }
