@@ -1,3 +1,24 @@
+# 17.0.0-rc.8 (2024-07-09)
+
+### Koobiq
+
+ * bug fix  box-shadow gpu lines ([#115](https://github.com/koobiq/angular-components/issues/115)) ([f98188c](https://github.com/koobiq/angular-components/commit/f98188c81325a40a044f40f2a38ca72ec32e515f))
+ * bug fix  **cspell:** ru json cspell fixes ([#122](https://github.com/koobiq/angular-components/issues/122)) ([adfcfef](https://github.com/koobiq/angular-components/commit/adfcfef3465fc3b5e734a494e20c87e651818791))
+ * bug fix  **dropdown:** missprint changeDetectorRef fix ([#DS-2594](https://github.com/koobiq/angular-components/issues/issue/DS-2594)) ([#117](https://github.com/koobiq/angular-components/issues/117)) ([f497045](https://github.com/koobiq/angular-components/commit/f497045261dcde04cbec60266d618fcea28980fa))
+ * bug fix  missprint MM_CHANNGEL_NAME fix ([#DS-2590](https://github.com/koobiq/angular-components/issues/issue/DS-2590)) ([#119](https://github.com/koobiq/angular-components/issues/119)) ([3856385](https://github.com/koobiq/angular-components/commit/3856385f379dfc8820b9de4b37bf5fce87912e75))
+ * bug fix  **navbar:** fixed vetical align icons + kbq-navbar-title styles ([#DS-2595](https://github.com/koobiq/angular-components/issues/issue/DS-2595)) ([#123](https://github.com/koobiq/angular-components/issues/123)) ([0312d13](https://github.com/koobiq/angular-components/commit/0312d137975a74b759731402725eb6f495a099fd))
+ * bug fix  **popover:** fixed popovers buttons content ([#DS-2527](https://github.com/koobiq/angular-components/issues/issue/DS-2527)) ([#120](https://github.com/koobiq/angular-components/issues/120)) ([1af475e](https://github.com/koobiq/angular-components/commit/1af475efad71a6b47b6a5bbde71d53ec1f3b551f))
+ * bug fix  **select:** move footer, trigger, matcher and search in common ([#DS-2496](https://github.com/koobiq/angular-components/issues/issue/DS-2496)) ([#116](https://github.com/koobiq/angular-components/issues/116)) ([c6b65ef](https://github.com/koobiq/angular-components/commit/c6b65efbe7b8de4e7df825af004e5bc501671c7f))
+ * bug fix  **styles:** border-radius misstype fix ([#DS-2591](https://github.com/koobiq/angular-components/issues/issue/DS-2591)) ([#121](https://github.com/koobiq/angular-components/issues/121)) ([10af7cd](https://github.com/koobiq/angular-components/commit/10af7cda0e30c0bcf649b375c65d09ad39ae6538))
+ * bug fix  **toast:** improved toastService timer performance ([#DS-2521](https://github.com/koobiq/angular-components/issues/issue/DS-2521)) ([#96](https://github.com/koobiq/angular-components/issues/96)) ([e5d6913](https://github.com/koobiq/angular-components/commit/e5d6913c1c0e32880136ff75ee79dbff94c0027c))
+ * bug fix  **visual:** remove paddings in side-panel code-block ([#DS-2293](https://github.com/koobiq/angular-components/issues/issue/DS-2293)) ([#105](https://github.com/koobiq/angular-components/issues/105)) ([ea3b737](https://github.com/koobiq/angular-components/commit/ea3b73769a93c10f8ed9ce440edaf069d8b97f7b))
+ * feature  **docs:** added algolia docsearch support ([#DS-2503](https://github.com/koobiq/angular-components/issues/issue/DS-2503)) ([#107](https://github.com/koobiq/angular-components/issues/107)) ([3da797e](https://github.com/koobiq/angular-components/commit/3da797e339ee0cdf8791fa41b7780f4314d6acfe))
+ * feature  **docs:** auto hiding scrollbar in docs sidenav menu ([#DS-2589](https://github.com/koobiq/angular-components/issues/issue/DS-2589)) ([#118](https://github.com/koobiq/angular-components/issues/118)) ([c5af038](https://github.com/koobiq/angular-components/commit/c5af0382c4790318e0e4f9e2728b4d5adbb9f822))
+ * feature  **docs:** New Sections for Radio Component ([#DS-1483](https://github.com/koobiq/angular-components/issues/issue/DS-1483)) ([#91](https://github.com/koobiq/angular-components/issues/91)) ([f0ae49e](https://github.com/koobiq/angular-components/commit/f0ae49e9b0e4edd5bfefe5c59fddae08c33a45f8))
+ * feature  **tabs:** use tabId as selection key ([#DS-1036](https://github.com/koobiq/angular-components/issues/issue/DS-1036)) ([#109](https://github.com/koobiq/angular-components/issues/109)) ([4f648e0](https://github.com/koobiq/angular-components/commit/4f648e09fbc79ce2ea9c1b5b73cf1bb3a55cc8cd))
+ * feature  **tag-input,autocomplete:** disable tag creation by the paste event ([#DS-2455](https://github.com/koobiq/angular-components/issues/issue/DS-2455)) ([#125](https://github.com/koobiq/angular-components/issues/125)) ([062c335](https://github.com/koobiq/angular-components/commit/062c33555752965307893ae6bf7d09aa780281e6))
+ * feature  **visual:** update sizes for components ([#DS-2168](https://github.com/koobiq/angular-components/issues/issue/DS-2168)) ([#99](https://github.com/koobiq/angular-components/issues/99)) ([dc2f7ab](https://github.com/koobiq/angular-components/commit/dc2f7ab5e4741f6dbc434eb69ebe00f1e11363c9))
+
 # 17.0.0-rc.7 "Inhouse Worksite" (2024-07-02)
 
 ### Koobiq
