@@ -54,8 +54,16 @@
                                 "input": "apps/docs/src/styles",
                                 "output": "/tokens"
                             },
-                            "apps/docs/src/robots.txt",
-                            "apps/docs/src/sitemap.xml"
+                            {
+                                "glob": "robots.txt",
+                                "input": "apps/docs/src",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "sitemap.xml",
+                                "input": "apps/docs/src",
+                                "output": "/"
+                            }
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["packages"]
