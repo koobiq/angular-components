@@ -38,7 +38,7 @@
                     {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
                 </div>
             </div>
-            <ng-content select="kbq-tree-select-trigger" *ngSwitchCase="true"></ng-content>
+            <ng-content select="kbq-select-trigger" *ngSwitchCase="true"></ng-content>
         </span>
 
         <div class="kbq-select__cleaner" *ngIf="canShowCleaner" (click)="clearValue($event)">
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <ng-content select="kbq-tree-select-matcher, [kbq-tree-select-matcher]" *ngSwitchCase="true"></ng-content>
+    <ng-content select="kbq-select-matcher, [kbq-select-matcher]" *ngSwitchCase="true"></ng-content>
 </div>
 
 <ng-template
@@ -90,6 +90,6 @@
             <ng-content select="kbq-tree-selection"></ng-content>
         </div>
 
-        <ng-content select="kbq-tree-select-footer,[kbq-tree-select-footer]"></ng-content>
+        <ng-content select="kbq-select-footer,[kbq-tree-select-footer]"></ng-content>
     </div>
 </ng-template>

@@ -35,7 +35,7 @@
         box-shadow: kbq-css-variable(select-panel-shadow, map.get($select-panel, shadow));
         background: kbq-css-variable(select-panel-background, map.get($select-panel, background));
 
-        & .kbq-tree-select__footer {
+        & .kbq-select__footer {
             border-color: kbq-css-variable(divider-color, map.get($divider, color));
         }
     }

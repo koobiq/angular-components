@@ -21,7 +21,7 @@ import * as i9 from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqSelectSearch } from '@koobiq/components/select';
+import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';

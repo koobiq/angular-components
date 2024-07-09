@@ -36,12 +36,14 @@ import * as i9 from '@koobiq/components/form-field';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqInput } from '@koobiq/components/input';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqSelectMatcher } from '@koobiq/components/core';
+import { KbqSelectSearch } from '@koobiq/components/core';
+import { KbqSelectTrigger } from '@koobiq/components/core';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
@@ -59,7 +61,6 @@ import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
@@ -266,22 +267,6 @@ export class KbqSelectChange {
 }
 
 // @public (undocumented)
-export class KbqSelectFooter {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooter, "kbq-select-footer, [kbq-select-footer]", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooter, never>;
-}
-
-// @public (undocumented)
-export class KbqSelectMatcher {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectMatcher, "kbq-select-matcher, [kbq-select-matcher]", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectMatcher, never>;
-}
-
-// @public (undocumented)
 export class KbqSelectModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectModule, never>;
@@ -291,48 +276,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i2.KbqOptionTooltip, typeof i1.KbqSelectFooter], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i1.KbqSelectSearch, typeof i1.KbqSelectSearchEmptyResult, typeof i1.KbqSelectTrigger, typeof i1.KbqSelectMatcher, typeof i1.KbqSelectFooter, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule]>;
-}
-
-// @public (undocumented)
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    constructor(formField: KbqFormField);
-    // (undocumented)
-    focus(): void;
-    // (undocumented)
-    handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
-    input: KbqInput;
-    // (undocumented)
-    isSearchChanged: boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    reset(): void;
-    // (undocumented)
-    searchChangesSubscription: Subscription;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, ["input"], never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
-}
-
-// @public (undocumented)
-export class KbqSelectSearchEmptyResult {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearchEmptyResult, "[kbq-select-search-empty-result]", ["kbqSelectSearchEmptyResult"], {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearchEmptyResult, never>;
-}
-
-// @public (undocumented)
-export class KbqSelectTrigger {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectTrigger, "kbq-select-trigger, [kbq-select-trigger]", never, {}, {}, never, never, false, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)

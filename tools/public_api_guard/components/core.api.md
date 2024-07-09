@@ -1056,7 +1056,11 @@ export class KbqFormElement implements AfterContentInit {
 // @public (undocumented)
 export interface KbqFormFieldRef {
     // (undocumented)
+    canCleanerClearByEsc: boolean;
+    // (undocumented)
     control: any;
+    // (undocumented)
+    focusViaKeyboard(): void;
     // (undocumented)
     shouldForward(str: string): boolean;
 }
@@ -1561,8 +1565,69 @@ export const kbqSelectAnimations: {
     readonly fadeInContent: AnimationTriggerMetadata;
 };
 
+// @public (undocumented)
+export class KbqSelectFooter {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooter, "kbq-select-footer, [kbq-select-footer]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooter, never>;
+}
+
+// @public (undocumented)
+export class KbqSelectMatcher {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectMatcher, "kbq-select-matcher, [kbq-select-matcher]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectMatcher, never>;
+}
+
 // @public
 export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy;
+
+// @public (undocumented)
+export class KbqSelectSearch implements AfterContentInit, OnDestroy {
+    constructor(formField: KbqFormFieldRef);
+    // (undocumented)
+    focus(): void;
+    // (undocumented)
+    protected formField: KbqFormFieldRef;
+    // (undocumented)
+    handleKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    isSearchChanged: boolean;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    get ngControl(): any;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    reset(): void;
+    // (undocumented)
+    searchChangesSubscription: Subscription;
+    // (undocumented)
+    value(): any;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, [{ optional: true; }]>;
+}
+
+// @public (undocumented)
+export class KbqSelectSearchEmptyResult {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearchEmptyResult, "[kbq-select-search-empty-result]", ["kbqSelectSearchEmptyResult"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearchEmptyResult, never>;
+}
+
+// @public (undocumented)
+export class KbqSelectTrigger {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectTrigger, "kbq-select-trigger, [kbq-select-trigger]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
+}
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements PipeTransform {

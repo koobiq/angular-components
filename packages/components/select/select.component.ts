@@ -13,7 +13,6 @@ import {
     Component,
     ContentChild,
     ContentChildren,
-    Directive,
     DoCheck,
     ElementRef,
     EventEmitter,
@@ -85,10 +84,15 @@ import {
     getKbqSelectNonFunctionValueError,
     getKbqSelectNonArrayValueError,
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService, KbqVirtualOption, KbqOptionBase
+    KbqLocaleService,
+    KbqVirtualOption,
+    KbqOptionBase,
+    KbqSelectFooter,
+    KbqSelectTrigger,
+    KbqSelectMatcher,
+    KbqSelectSearch
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqInput } from '@koobiq/components/input';
 import { KbqTag } from '@koobiq/components/tags';
 import { BehaviorSubject, defer, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
@@ -109,88 +113,6 @@ let nextUniqueId = 0;
 export class KbqSelectChange {
     constructor(public source: KbqSelect, public value: any) {}
 }
-
-
-@Directive({
-    selector: 'kbq-select-footer, [kbq-select-footer]',
-    host: { class: 'kbq-select__footer' }
-})
-export class KbqSelectFooter {}
-
-@Directive({
-    selector: '[kbqSelectSearch]',
-    exportAs: 'kbqSelectSearch',
-    host: {
-        '(keydown)': 'handleKeydown($event)'
-    }
-})
-export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    @ContentChild(KbqInput, { static: false }) input: KbqInput;
-
-    searchChangesSubscription: Subscription = new Subscription();
-
-    isSearchChanged: boolean = false;
-
-    constructor(formField: KbqFormField) {
-        formField.canCleanerClearByEsc = false;
-    }
-
-    focus(): void {
-        this.input.focus();
-    }
-
-    reset(): void {
-        this.input.ngControl.reset();
-    }
-
-    ngAfterContentInit(): void {
-        if (!this.input) {
-            throw Error('KbqSelectSearch does not work without kbqInput');
-        }
-
-        if (!this.input.ngControl) {
-            throw Error('KbqSelectSearch does not work without ngControl');
-        }
-
-        Promise.resolve().then(() => {
-            this.searchChangesSubscription = this.input.ngControl.valueChanges!.subscribe(() => {
-                this.isSearchChanged = true;
-            });
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.searchChangesSubscription.unsubscribe();
-    }
-
-    handleKeydown(event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
-        if (event.keyCode === ESCAPE) {
-            if (this.input.value) {
-                this.reset();
-                event.stopPropagation();
-            }
-        }
-
-        // tslint:disable-next-line:deprecation
-        if ([SPACE, HOME, END].includes(event.keyCode)) {
-            event.stopPropagation();
-        }
-    }
-}
-
-@Directive({
-    selector: '[kbq-select-search-empty-result]',
-    exportAs: 'kbqSelectSearchEmptyResult'
-})
-export class KbqSelectSearchEmptyResult {}
-
-
-@Directive({ selector: 'kbq-select-trigger, [kbq-select-trigger]' })
-export class KbqSelectTrigger {}
-
-@Directive({ selector: 'kbq-select-matcher, [kbq-select-matcher]' })
-export class KbqSelectMatcher {}
 
 
 /** @docs-private */
@@ -528,7 +450,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
     private withVirtualScroll: boolean;
 
     get isEmptySearchResult(): boolean {
-        return this.search && this.options.length === 0 && !!this.search.input.value;
+        return this.search && this.options.length === 0 && !!this.search.value();
     }
 
     get canShowCleaner(): boolean {

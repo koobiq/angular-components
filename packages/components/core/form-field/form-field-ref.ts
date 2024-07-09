@@ -3,7 +3,9 @@ import { InjectionToken } from '@angular/core';
 
 export interface KbqFormFieldRef {
     control: any;
+    canCleanerClearByEsc: boolean;
     shouldForward(str: string): boolean;
+    focusViaKeyboard(): void;
 }
 
 /**
