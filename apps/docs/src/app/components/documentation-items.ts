@@ -414,7 +414,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tags autocomplete',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['tag-autocomplete-types']
                 },
                 {
@@ -423,7 +423,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tags input',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['tag-input-types']
                 },
                 {

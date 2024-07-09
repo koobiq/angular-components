@@ -15,7 +15,15 @@ import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } 
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagList, KbqTagsModule, KbqTagInputEvent, KbqTag, KbqTagInput } from '@koobiq/components/tags';
+import {
+    KbqTagList,
+    KbqTagsModule,
+    KbqTagInputEvent,
+    KbqTag,
+    KbqTagInput,
+    KBQ_TAGS_DEFAULT_OPTIONS,
+    KbqTagsDefaultOptions
+} from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -212,9 +220,20 @@ export class DemoComponent implements AfterViewInit {
     }
 }
 
+@Component({
+    selector: 'tag-input-default-options-override',
+    templateUrl: './tag-input-default-options-override.template.html',
+    providers: [{
+        provide: KBQ_TAGS_DEFAULT_OPTIONS,
+        // tslint:disable-next-line: no-object-literal-type-assertion
+        useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
+    }]
+})
+
+export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
 
 @NgModule({
-    declarations: [DemoComponent],
+    declarations: [DemoComponent, TagInputDefaultOptionsOverrideComponent],
     imports: [
         BrowserAnimationsModule,
         BrowserModule,

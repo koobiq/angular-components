@@ -19,6 +19,7 @@ import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-o
 import { KbqTagList } from './tag-list.component';
 import { KbqTagTextControl } from './tag-text-control';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
+import { isBoolean } from '@koobiq/components/core';
 
 
 const KbqTagInputDefaultSeparators: { [key: number]: KbqTagSeparator } = {
@@ -136,6 +137,20 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private _addOnBlur: boolean = true;
 
+    /**
+     * Whether the tagEnd event will be emitted when the text pasted.
+     */
+    @Input('kbqTagInputAddOnPaste')
+    get addOnPaste(): boolean {
+        return this._addOnPaste;
+    }
+
+    set addOnPaste(value: boolean) {
+        this._addOnPaste = coerceBooleanProperty(value);
+    }
+
+    private _addOnPaste: boolean;
+
     /** Whether the input is disabled. */
     @Input()
     get disabled(): boolean {
@@ -174,6 +189,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this.setDefaultInputWidth();
 
         this._separators = this.defaultOptions.separators || KbqTagInputDefaultSeparators;
+        this._addOnPaste = isBoolean(this.defaultOptions.addOnPaste) ? this.defaultOptions.addOnPaste : true;
     }
 
     ngOnChanges() {
@@ -242,7 +258,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
         const data = $event.clipboardData.getData('text');
 
-        if (data && data.length === 0) { return; }
+        if (data && data.length === 0 || !this.addOnPaste) { return; }
 
         const items: string[] = [];
 

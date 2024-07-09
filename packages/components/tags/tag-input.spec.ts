@@ -126,6 +126,39 @@ describe('KbqTagInput', () => {
         });
     });
 
+    describe('[addOnPaste]', () => {
+        const clipboardEventData = {
+            clipboardData: {
+                getData: (_) => 'test test test'
+            },
+            preventDefault: () => {},
+            stopPropagation: () => {}
+        };
+
+        it('allows (tagEnd) when true', () => {
+            spyOn(testTagInput, 'add');
+
+            testTagInput.addOnPaste = true;
+            fixture.detectChanges();
+
+            // tslint:disable-next-line:no-object-literal-type-assertion
+            tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
+            expect(testTagInput.add).toHaveBeenCalled();
+        });
+
+        it('disallows (tagEnd) when false', () => {
+            spyOn(testTagInput, 'add');
+
+            testTagInput.addOnPaste = false;
+            fixture.detectChanges();
+
+
+            // tslint:disable-next-line:no-object-literal-type-assertion
+            tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
+            expect(testTagInput.add).not.toHaveBeenCalled();
+        });
+    });
+
     describe('[separatorKeyCodes]', () => {
         it('does not emit (tagEnd) when a non-separator key is pressed', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
@@ -224,6 +257,7 @@ describe('KbqTagInput', () => {
             <kbq-tag-list #tagList></kbq-tag-list>
             <input [kbqTagInputFor]="tagList"
                    [kbqTagInputAddOnBlur]="addOnBlur"
+                   [kbqTagInputAddOnPaste]="addOnPaste"
                    (kbqTagInputTokenEnd)="add($event)"
                    [placeholder]="placeholder"/>
         </kbq-form-field>
@@ -233,6 +267,7 @@ class TestTagInput {
     @ViewChild(KbqTagList, {static: false}) tagListInstance: KbqTagList;
 
     addOnBlur: boolean = false;
+    addOnPaste: boolean = false;
     placeholder = '';
 
     add(_: KbqTagInputEvent) {}

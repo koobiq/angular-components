@@ -2976,6 +2976,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tag"
     }
   },
+  "tags-autocomplete-onpaste-off": {
+    "packagePath": "components/tag/tags-autocomplete-onpaste-off",
+    "title": "Tags Autocomplete Onpaste Off",
+    "componentName": "TagsAutocompleteOnpasteOffExample",
+    "files": [
+      "tags-autocomplete-onpaste-off-example.ts",
+      "tags-autocomplete-onpaste-off-example.html",
+      "tags-autocomplete-onpaste-off-example.css"
+    ],
+    "selector": "tags-autocomplete-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-autocomplete-onpaste-off-example.ts",
+    "module": {
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
+    }
+  },
+  "tags-input-onpaste-off": {
+    "packagePath": "components/tag/tags-input-onpaste-off",
+    "title": "Tags Input Onpaste Off",
+    "componentName": "TagsInputOnpasteOffExample",
+    "files": [
+      "tags-input-onpaste-off-example.ts",
+      "tags-input-onpaste-off-example.html",
+      "tags-input-onpaste-off-example.css"
+    ],
+    "selector": "tags-input-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tags-input-onpaste-off-example.ts",
+    "module": {
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
+    }
+  },
   "text-area-overview": {
     "packagePath": "components/textarea/text-area-overview",
     "title": "Basic textarea",

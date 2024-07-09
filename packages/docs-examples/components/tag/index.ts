@@ -15,6 +15,8 @@ import { TagHugContentExample } from './tag-hug-content/tag-hug-content-example'
 import { TagInputExample } from './tag-input/tag-input-example';
 import { TagListExample } from './tag-list/tag-list-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
+import { TagsAutocompleteOnpasteOffExample } from './tags-autocomplete-onpaste-off/tags-autocomplete-onpaste-off-example';
+import { TagsInputOnpasteOffExample } from './tags-input-onpaste-off/tags-input-onpaste-off-example';
 
 
 export {
@@ -25,7 +27,9 @@ export {
     TagInputExample,
     TagListExample,
     TagAutocompleteExample,
-    TagAutocompleteOptionOperationsExample
+    TagAutocompleteOptionOperationsExample,
+    TagsInputOnpasteOffExample,
+    TagsAutocompleteOnpasteOffExample
 };
 
 const EXAMPLES = [
@@ -36,7 +40,9 @@ const EXAMPLES = [
     TagInputExample,
     TagListExample,
     TagAutocompleteExample,
-    TagAutocompleteOptionOperationsExample
+    TagAutocompleteOptionOperationsExample,
+    TagsInputOnpasteOffExample,
+    TagsAutocompleteOnpasteOffExample
 ];
 
 @NgModule({
