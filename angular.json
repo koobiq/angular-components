@@ -809,6 +809,35 @@
                 }
             }
         },
+        "dev-empty-state": {
+            "projectType": "application",
+            "root": "packages/components-dev/empty-state",
+            "sourceRoot": "packages/components-dev/empty-state",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/components-dev/empty-state",
+                        "tsConfig": "packages/components-dev/empty-state/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "main": "packages/components-dev/empty-state/main.ts",
+                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-empty-state:build"
+                    }
+                }
+            }
+        },
         "dev-form-field": {
             "projectType": "application",
             "root": "packages/components-dev/form-field",

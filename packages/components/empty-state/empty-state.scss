@@ -1,0 +1,84 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
+
+
+.kbq-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100%;
+
+    &.kbq-empty-state_normal {
+        padding:
+            kbq-css-variable(empty-state-size-normal-padding-top)
+            kbq-css-variable(empty-state-size-normal-padding-horizontal)
+            kbq-css-variable(empty-state-size-normal-padding-bottom);
+
+        & .kbq-empty-state-icon {
+            margin-bottom: kbq-css-variable(empty-state-size-normal-image-margin-bottom);
+        }
+
+        & .kbq-empty-state-text {
+            max-width: kbq-css-variable(empty-state-size-normal-max-width);
+        }
+
+        & .kbq-empty-state-title {
+            max-width: kbq-css-variable(empty-state-size-normal-max-width);
+
+            margin-bottom: kbq-css-variable(empty-state-size-normal-title-margin-bottom);
+        }
+
+        & .kbq-empty-state-actions {
+            max-width: kbq-css-variable(empty-state-size-normal-max-width);
+
+            margin-top: kbq-css-variable(empty-state-size-normal-actions-margin-top);
+        }
+
+        &.kbq-empty-state_align-center.kbq-empty-state_has-icon {
+            margin-bottom: kbq-css-variable(empty-state-size-normal-image-addon-height)
+        }
+    }
+
+    &.kbq-empty-state_big {
+        padding:
+            kbq-css-variable(empty-state-size-big-padding-top)
+            kbq-css-variable(empty-state-size-big-padding-horizontal)
+            kbq-css-variable(empty-state-size-big-padding-bottom);
+
+        & .kbq-empty-state-icon {
+            margin-bottom: kbq-css-variable(empty-state-size-big-image-margin-bottom);
+        }
+
+        & .kbq-empty-state-text {
+            max-width: kbq-css-variable(empty-state-size-big-max-width);
+        }
+
+        & .kbq-empty-state-title {
+            max-width: kbq-css-variable(empty-state-size-big-max-width);
+
+            margin-bottom: kbq-css-variable(empty-state-size-big-title-margin-bottom);
+        }
+
+        & .kbq-empty-state-actions {
+            max-width: kbq-css-variable(empty-state-size-big-max-width);
+
+            margin-top: kbq-css-variable(empty-state-size-big-actions-margin-top);
+        }
+
+        &.kbq-empty-state_align-center.kbq-empty-state_has-icon {
+            margin-bottom: kbq-css-variable(empty-state-size-big-image-addon-height)
+        }
+    }
+
+    &.kbq-empty-state_align-center {
+        justify-content: center;
+    }
+
+    &.kbq-empty-state_align-top {
+        justify-content: flex-start;
+    }
+}

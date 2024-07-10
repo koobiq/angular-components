@@ -683,6 +683,11 @@
         dd: map-get($tokens, 'description-list-#{$scheme}-description-color')
     );
 
+    $empty-state: (
+        title: map-get($tokens, 'empty-state-#{$scheme}-title'),
+        color: map-get($tokens, 'empty-state-#{$scheme}-color')
+    );
+
     $form-field: (
         default: (
             border: map-get($tokens, 'form-field-#{$scheme}-default-border-color'),
@@ -1922,6 +1927,7 @@
         datepicker: $datepicker,
         divider: $divider,
         dl: $dl,
+        empty-state: $empty-state,
         file-upload: $file-upload,
         form-field: $form-field,
         form-field-hint: $form-field-hint,
