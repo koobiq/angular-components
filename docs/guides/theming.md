@@ -282,7 +282,7 @@ yarn add --dev style-dictionary
 Если для светлой/темной темы необходимо применение стандартного и пользовательского отображения, то можно настроить это путём уточнения CSS-класса.
 
 #### Пример на Stackblitz
-Пример применения пользовательских тем можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
+Пример применения пользовательских тем можно найти [тут](https://stackblitz.com/edit/vaffk1-exk57x?file=src%2Fapp%2Fapp.component.html)
 
 ### Использование CSS-переменных
 В рамках дизайн-системы Koobiq помимо использования SCSS переменных, возможно использование [CSS переменных.](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
