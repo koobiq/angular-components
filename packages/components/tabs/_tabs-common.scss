@@ -24,8 +24,18 @@ $tokens: meta.module-variables(tokens) !default;
     $padding-horizontal: map.get($tokens, tabs-size-tab-item-padding-horizontal);
     $border-width: map.get($tokens, tabs-size-tab-item-focus-outline-width);
 
-    padding: calc(var(--kbq-tabs-size-tab-item-padding-vertical, $padding-vertical) - var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width))
-        calc(var(--kbq-tabs-size-tab-item-padding-horizontal, $padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width, $border-width));
+    padding: calc(
+            var(--kbq-tabs-size-tab-item-padding-vertical, $padding-vertical) - var(
+                    --kbq-tabs-size-tab-item-focus-outline-width,
+                    $border-width
+                )
+        )
+        calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal, $padding-horizontal) - var(
+                    --kbq-tabs-size-tab-item-focus-outline-width,
+                    $border-width
+                )
+        );
 
     border: {
         width: kbq-css-variable(tabs-size-tab-item-focus-outline-width);

@@ -38,8 +38,15 @@
         @include kbq-toggle-state($component, $type, states-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(toggle-#{$type}-states-focused-focus-outline, map.get($component, $type, states-focused, focus-outline));
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-focused-focus-outline, map.get($component, $type, states-focused, focus-outline));
+            border-color: kbq-css-variable(
+                toggle-#{$type}-states-focused-focus-outline,
+                map.get($component, $type, states-focused, focus-outline)
+            );
+            box-shadow: 0 0 0.1px 1px
+                kbq-css-variable(
+                    toggle-#{$type}-states-focused-focus-outline,
+                    map.get($component, $type, states-focused, focus-outline)
+                );
         }
     }
 
@@ -47,8 +54,15 @@
         @include kbq-toggle-state($component, $type, states-checked-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline, map.get($component, $type, states-checked-focused, focus-outline));
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline, map.get($component, $type, states-checked-focused, focus-outline));
+            border-color: kbq-css-variable(
+                toggle-#{$type}-states-checked-focused-focus-outline,
+                map.get($component, $type, states-checked-focused, focus-outline)
+            );
+            box-shadow: 0 0 0.1px 1px
+                kbq-css-variable(
+                    toggle-#{$type}-states-checked-focused-focus-outline,
+                    map.get($component, $type, states-checked-focused, focus-outline)
+                );
         }
     }
 

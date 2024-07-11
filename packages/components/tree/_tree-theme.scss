@@ -43,7 +43,10 @@
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: kbq-css-variable(tree-states-focused-focus-outline, map.get($tree-item, states-focused, focus-outline));
+            border-color: kbq-css-variable(
+                tree-states-focused-focus-outline,
+                map.get($tree-item, states-focused, focus-outline)
+            );
         }
 
         &.kbq-selected {

@@ -52,14 +52,20 @@
             .kbq-checkbox__frame {
                 border-color: kbq-css-variable(#{$base}-hover-border, map.get($style, checked-hover, border));
 
-                background-color: kbq-css-variable(#{$base}-hover-background, map.get($style, checked-hover, background));
+                background-color: kbq-css-variable(
+                    #{$base}-hover-background,
+                    map.get($style, checked-hover, background)
+                );
             }
         }
 
         & .kbq-checkbox-input.cdk-keyboard-focused {
             + .kbq-checkbox__frame {
                 border-color: kbq-css-variable(#{$base}-focused-border, map.get($style, checked-focused, border));
-                background-color: kbq-css-variable(#{$base}-focused-background, map.get($style, checked-focused, background));
+                background-color: kbq-css-variable(
+                    #{$base}-focused-background,
+                    map.get($style, checked-focused, background)
+                );
                 outline: kbq-css-variable(#{$base}-focused-outline, map.get($style, checked-focused, outline));
             }
         }

@@ -46,17 +46,26 @@
 
     .kbq-code-block__show-more {
         .bg-wrapper {
-            background: kbq-css-variable(#{$base}-collapse-button-expand-background, map.get($style, collapse, button-expand-background));
+            background: kbq-css-variable(
+                #{$base}-collapse-button-expand-background,
+                map.get($style, collapse, button-expand-background)
+            );
             opacity: 90%;
         }
     }
 
     & .kbq-code-block__show-more_expanded {
-        background: kbq-css-variable(#{$base}-collapse-expanded-background, map.get($style, collapse, expanded-background));
+        background: kbq-css-variable(
+            #{$base}-collapse-expanded-background,
+            map.get($style, collapse, expanded-background)
+        );
     }
 
     & .kbq-code-block__show-more_collapsed {
-        background: kbq-css-variable(#{$base}-collapse-collapsed-background, map.get($style, collapse, collapsed-background));
+        background: kbq-css-variable(
+            #{$base}-collapse-collapsed-background,
+            map.get($style, collapse, collapsed-background)
+        );
     }
 }
 
@@ -350,7 +359,8 @@
 
             .kbq-tab-body__wrapper {
                 border-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
-                box-shadow: inset 0 0 0.1 1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+                box-shadow: inset 0 0 0.1 1px
+                    kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
             }
         }
 
@@ -364,7 +374,10 @@
 
     .kbq-code-block-actionbar {
         .kbq-code-block-actionbar_less-contrast {
-            background-color: kbq-css-variable(code-block-actionbar-bg-less-contrast, map.get($code-block, actionbar, bg-less-contrast));
+            background-color: kbq-css-variable(
+                code-block-actionbar-bg-less-contrast,
+                map.get($code-block, actionbar, bg-less-contrast)
+            );
         }
 
         &.kbq-actionbar-block_floating {

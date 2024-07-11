@@ -24,10 +24,15 @@
 .kbq-alert.kbq-alert_normal {
     border-radius: kbq-css-variable(alert-size-normal-container-border-radius);
 
-    padding: kbq-css-variable(alert-size-normal-container-padding-top) kbq-css-variable(alert-size-normal-container-padding-right) kbq-css-variable(alert-size-normal-container-padding-bottom) kbq-css-variable(alert-size-normal-container-padding-left);
+    padding: kbq-css-variable(alert-size-normal-container-padding-top)
+        kbq-css-variable(alert-size-normal-container-padding-right)
+        kbq-css-variable(alert-size-normal-container-padding-bottom)
+        kbq-css-variable(alert-size-normal-container-padding-left);
 
     & .kbq-alert__icon {
-        margin: kbq-css-variable(alert-size-normal-no-title-icon-margin-top) kbq-css-variable(alert-size-normal-icon-margin-right) kbq-css-variable(alert-size-normal-icon-margin-bottom) kbq-css-variable(alert-size-normal-icon-margin-left);
+        margin: kbq-css-variable(alert-size-normal-no-title-icon-margin-top)
+            kbq-css-variable(alert-size-normal-icon-margin-right) kbq-css-variable(alert-size-normal-icon-margin-bottom)
+            kbq-css-variable(alert-size-normal-icon-margin-left);
 
         &.kbq-alert__icon_title {
             margin-top: kbq-css-variable(alert-size-normal-icon-margin-top);
@@ -40,7 +45,10 @@
     }
 
     & .kbq-alert__content {
-        padding: kbq-css-variable(alert-size-normal-content-padding-top) kbq-css-variable(alert-size-normal-content-padding-right) kbq-css-variable(alert-size-normal-content-padding-bottom) kbq-css-variable(alert-size-normal-content-padding-left);
+        padding: kbq-css-variable(alert-size-normal-content-padding-top)
+            kbq-css-variable(alert-size-normal-content-padding-right)
+            kbq-css-variable(alert-size-normal-content-padding-bottom)
+            kbq-css-variable(alert-size-normal-content-padding-left);
     }
 
     & .kbq-alert__title {
@@ -61,7 +69,9 @@
 .kbq-alert.kbq-alert_compact {
     border-radius: kbq-css-variable(alert-size-compact-container-border-radius);
 
-    padding: kbq-css-variable(alert-size-compact-container-padding-top) kbq-css-variable(alert-size-compact-container-padding-right) kbq-css-variable(alert-size-compact-container-padding-bottom)
+    padding: kbq-css-variable(alert-size-compact-container-padding-top)
+        kbq-css-variable(alert-size-compact-container-padding-right)
+        kbq-css-variable(alert-size-compact-container-padding-bottom)
         kbq-css-variable(alert-size-compact-container-padding-left);
 
     & .kbq-alert__icon {
@@ -81,7 +91,10 @@
     }
 
     & .kbq-alert__content {
-        padding: kbq-css-variable(alert-size-compact-content-padding-top) kbq-css-variable(alert-size-compact-content-padding-right) kbq-css-variable(alert-size-compact-content-padding-bottom) kbq-css-variable(alert-size-compact-content-padding-left);
+        padding: kbq-css-variable(alert-size-compact-content-padding-top)
+            kbq-css-variable(alert-size-compact-content-padding-right)
+            kbq-css-variable(alert-size-compact-content-padding-bottom)
+            kbq-css-variable(alert-size-compact-content-padding-left);
     }
 
     & .kbq-alert__title {

@@ -21,7 +21,10 @@
         & > tbody {
             & > tr {
                 &:hover td {
-                    background-color: kbq-css-variable(states-background-transparent-hover, map.get($states-background, transparent-hover));
+                    background-color: kbq-css-variable(
+                        states-background-transparent-hover,
+                        map.get($states-background, transparent-hover)
+                    );
                 }
 
                 & > th,

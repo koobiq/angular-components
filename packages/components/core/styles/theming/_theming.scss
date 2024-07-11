@@ -244,7 +244,10 @@
 }
 
 @function _theme_palette($tokens, $scheme, $name) {
-    @return kbq-palette(map.get($tokens, '#{$scheme}-#{$name}-palette'), map.get($tokens, '#{$scheme}-#{$name}-default'));
+    @return kbq-palette(
+        map.get($tokens, '#{$scheme}-#{$name}-palette'),
+        map.get($tokens, '#{$scheme}-#{$name}-default')
+    );
 }
 
 @function _theme_palette_neutral($tokens, $scheme) {

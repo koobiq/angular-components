@@ -42,6 +42,7 @@ const config = {
                 ],
             }
         ],
+        'scss/operator-no-newline-after': null,
     }
 };
 

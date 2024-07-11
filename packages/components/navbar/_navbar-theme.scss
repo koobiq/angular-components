@@ -56,7 +56,8 @@
 
             &:after {
                 display: block;
-                box-shadow: inset 0 0 0 2px kbq-css-variable(states-line-focus-theme, map.get($theme, states, line, focus-theme));
+                box-shadow: inset 0 0 0 2px
+                    kbq-css-variable(states-line-focus-theme, map.get($theme, states, line, focus-theme));
             }
         }
 

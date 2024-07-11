@@ -27,8 +27,13 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         // 4 buttons + margin
         $buttons-margin: calc(32 * 4) + 24px;
 
-        padding: kbq-css-variable(code-block-size-header-padding-vertical) calc(var(--kbq-code-block-size-header-padding-right, map.get($tokens, code-block-size-header-padding-right)) + $buttons-margin)
-            kbq-css-variable(code-block-size-header-padding-vertical) kbq-css-variable(code-block-size-header-padding-left);
+        padding: kbq-css-variable(code-block-size-header-padding-vertical)
+            calc(
+                var(--kbq-code-block-size-header-padding-right, map.get($tokens, code-block-size-header-padding-right)) +
+                    $buttons-margin
+            )
+            kbq-css-variable(code-block-size-header-padding-vertical)
+            kbq-css-variable(code-block-size-header-padding-left);
 
         border-width: $border-width $border-width 0 $border-width;
         border-style: solid;
@@ -46,7 +51,9 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 
     .kbq-code-block__code {
         > code {
-            padding: kbq-css-variable(code-block-size-with-header-content-padding-top) kbq-css-variable(code-block-size-with-header-content-padding-horizontal) kbq-css-variable(code-block-size-with-header-content-padding-bottom)
+            padding: kbq-css-variable(code-block-size-with-header-content-padding-top)
+                kbq-css-variable(code-block-size-with-header-content-padding-horizontal)
+                kbq-css-variable(code-block-size-with-header-content-padding-bottom)
                 kbq-css-variable(code-block-size-with-header-content-padding-horizontal);
 
             border-radius: $border-radius;
@@ -97,7 +104,8 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
             position: relative;
 
             & > code {
-                padding: kbq-css-variable(code-block-size-no-header-content-padding-vertical) kbq-css-variable(code-block-size-no-header-content-padding-horizontal);
+                padding: kbq-css-variable(code-block-size-no-header-content-padding-vertical)
+                    kbq-css-variable(code-block-size-no-header-content-padding-horizontal);
             }
 
             .hljs-ln-numbers {

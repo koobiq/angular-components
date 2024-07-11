@@ -24,7 +24,16 @@
         $lighter: rgba(255, 255, 255, 0.04);
         $darker: rgba(0, 0, 0, 0.04);
 
-        background: linear-gradient(135deg, $darker 10px, $lighter 10px, $lighter 20px, $darker 20px, $darker 30px, $lighter 31px) repeat;
+        background: linear-gradient(
+                135deg,
+                $darker 10px,
+                $lighter 10px,
+                $lighter 20px,
+                $darker 20px,
+                $darker 30px,
+                $lighter 31px
+            )
+            repeat;
         background-size: 32px 32px;
         animation: kbq-progress 1s linear infinite;
     }

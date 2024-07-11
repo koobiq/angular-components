@@ -33,7 +33,8 @@
     }
 
     .kbq-autocomplete-panel-above & {
-        border-radius: kbq-css-variable(autocomplete-size-panel-border-radius) kbq-css-variable(autocomplete-size-panel-border-radius) 0 0;
+        border-radius: kbq-css-variable(autocomplete-size-panel-border-radius)
+            kbq-css-variable(autocomplete-size-panel-border-radius) 0 0;
     }
 
     // We need to offset horizontal dividers by their height, because

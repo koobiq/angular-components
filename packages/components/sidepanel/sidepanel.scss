@@ -124,7 +124,9 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding: kbq-css-variable(sidepanel-size-header-padding-vertical) kbq-css-variable(sidepanel-size-header-padding-right) kbq-css-variable(sidepanel-size-header-padding-vertical) kbq-css-variable(sidepanel-size-header-padding-left);
+    padding: kbq-css-variable(sidepanel-size-header-padding-vertical)
+        kbq-css-variable(sidepanel-size-header-padding-right) kbq-css-variable(sidepanel-size-header-padding-vertical)
+        kbq-css-variable(sidepanel-size-header-padding-left);
 
     .kbq-sidepanel-close {
         margin-left: kbq-css-variable(sidepanel-size-close-button-margin-left);
@@ -159,7 +161,9 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding: kbq-css-variable(sidepanel-size-footer-padding-top) kbq-css-variable(sidepanel-size-footer-padding-horizontal) kbq-css-variable(sidepanel-size-footer-padding-bottom);
+    padding: kbq-css-variable(sidepanel-size-footer-padding-top)
+        kbq-css-variable(sidepanel-size-footer-padding-horizontal)
+        kbq-css-variable(sidepanel-size-footer-padding-bottom);
 
     .kbq-sidepanel-actions {
         display: flex;

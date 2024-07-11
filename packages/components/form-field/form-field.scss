@@ -45,7 +45,8 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-form-field_has-prefix {
         .kbq-input {
             padding-left: calc(
-                var(--kbq-form-field-size-icon-size, map.get($tokens, form-field-size-icon-size)) + var(--kbq-form-field-size-icon-margin-left, map.get($tokens, form-field-size-icon-margin-left)) +
+                var(--kbq-form-field-size-icon-size, map.get($tokens, form-field-size-icon-size)) +
+                    var(--kbq-form-field-size-icon-margin-left, map.get($tokens, form-field-size-icon-margin-left)) +
                     var(--kbq-form-field-size-icon-margin-right, map.get($tokens, form-field-size-icon-margin-right))
             );
         }
@@ -57,8 +58,15 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-form-field_has-suffix {
         .kbq-input {
             padding-right: calc(
-                var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size)) + var(--kbq-form-field-size-icon-button-margin-left, map.get($tokens, form-field-size-icon-button-margin-left)) +
-                    var(--kbq-form-field-size-icon-button-margin-right, map.get($tokens, form-field-size-icon-button-margin-right))
+                var(--kbq-form-field-size-icon-button-size, map.get($tokens, form-field-size-icon-button-size)) +
+                    var(
+                        --kbq-form-field-size-icon-button-margin-left,
+                        map.get($tokens, form-field-size-icon-button-margin-left)
+                    ) +
+                    var(
+                        --kbq-form-field-size-icon-button-margin-right,
+                        map.get($tokens, form-field-size-icon-button-margin-right)
+                    )
             );
         }
     }

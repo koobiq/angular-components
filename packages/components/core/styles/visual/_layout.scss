@@ -69,7 +69,10 @@
                 $suffix: '#{$i * 5}';
             }
 
-            $offsets: '.offset-#{$suffix}, ' + '.flex-offset-#{$suffix}, ' + '.layout-margin .flex-offset-#{$suffix}, ' + '.layout-margin .offset-#{$suffix}';
+            $offsets: '.offset-#{$suffix}, ' +
+                '.flex-offset-#{$suffix}, ' +
+                '.layout-margin .flex-offset-#{$suffix}, ' +
+                '.layout-margin .offset-#{$suffix}';
         }
 
         #{$offsets} {
@@ -92,7 +95,10 @@
                 $suffix: '#{$i}';
             }
 
-            $offsets: '.offset-#{$suffix}, ' + '.flex-offset-#{$suffix}, ' + '.layout-margin .flex-offset-#{$suffix}, ' + '.layout-margin .offset-#{$suffix}';
+            $offsets: '.offset-#{$suffix}, ' +
+                '.flex-offset-#{$suffix}, ' +
+                '.layout-margin .flex-offset-#{$suffix}, ' +
+                '.layout-margin .offset-#{$suffix}';
         }
 
         #{$offsets} {
@@ -111,7 +117,10 @@
                 $suffix: '#{$i}';
             }
 
-            $offsets: '.offset-#{$suffix}, ' + '.flex-offset-#{$suffix}, ' + '.layout-margin .flex-offset-#{$suffix}, ' + '.layout-margin .offset-#{$suffix}';
+            $offsets: '.offset-#{$suffix}, ' +
+                '.flex-offset-#{$suffix}, ' +
+                '.layout-margin .flex-offset-#{$suffix}, ' +
+                '.layout-margin .offset-#{$suffix}';
         }
 
         #{$offsets} {

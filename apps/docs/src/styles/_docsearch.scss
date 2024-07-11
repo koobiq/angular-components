@@ -108,7 +108,9 @@
     padding: 0 $size-s $size-xxl $size-s;
 
     @media (max-width: 768px) {
-        max-height: calc(var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height));
+        max-height: calc(
+            var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height)
+        );
     }
 }
 

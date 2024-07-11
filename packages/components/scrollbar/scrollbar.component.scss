@@ -404,7 +404,9 @@ html[data-overlayscrollbars~='viewport'] > body {
 /**
  * Display contents to bridge any flickering during deferred initialization.
  */
-[data-overlayscrollbars-contents]:not([data-overlayscrollbars-padding]):not([data-overlayscrollbars-viewport]):not([data-overlayscrollbars-content]) {
+[data-overlayscrollbars-contents]:not([data-overlayscrollbars-padding]):not([data-overlayscrollbars-viewport]):not(
+        [data-overlayscrollbars-content]
+    ) {
     display: contents;
 }
 

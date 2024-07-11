@@ -20,7 +20,10 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 @mixin kbq-css-font-variable($component, $component-property, $font-property, $font) {
-    #{$font-property}: var(--kbq-#{$component}-#{$font}#{$component-property}-#{$font-property}, map.get($tokens, #{$component}-#{$font}#{$component-property}-#{$font-property}));
+    #{$font-property}: var(
+        --kbq-#{$component}-#{$font}#{$component-property}-#{$font-property},
+        map.get($tokens, #{$component}-#{$font}#{$component-property}-#{$font-property})
+    );
 }
 
 @mixin kbq-typography-css-variables($component, $property) {

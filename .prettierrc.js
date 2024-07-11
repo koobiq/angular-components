@@ -11,12 +11,6 @@ const config = {
     singleQuote: true,
     overrides: [
         {
-            files: ['*.css', '*.scss'],
-            options: {
-                printWidth: 250,
-            }
-        },
-        {
             files: ['.component.html', '.page.html'],
             options: {
                 parser: 'angular'

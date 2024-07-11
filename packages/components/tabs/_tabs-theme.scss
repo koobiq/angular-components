@@ -33,7 +33,10 @@
     }
 
     &.cdk-keyboard-focused {
-        border-color: kbq-css-variable(tabs-tab-item-#{$type}-#{$sub-type}-states-focused-border-color, map.get($component, $type, $sub-type, states-focused, border-color));
+        border-color: kbq-css-variable(
+            tabs-tab-item-#{$type}-#{$sub-type}-states-focused-border-color,
+            map.get($component, $type, $sub-type, states-focused, border-color)
+        );
     }
 
     &.kbq-disabled {
@@ -54,7 +57,10 @@
         &.kbq-tab-group_filled {
             &.kbq-tab-group_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-background-background, map.get($tab-stack, filled, on-background, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-background-background,
+                        map.get($tab-stack, filled, on-background, background)
+                    );
                 }
 
                 & .kbq-tab-label {
@@ -64,7 +70,10 @@
 
             &.kbq-tab-group_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-surface-background, map.get($tab-stack, filled, on-surface, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-surface-background,
+                        map.get($tab-stack, filled, on-surface, background)
+                    );
                 }
 
                 & .kbq-tab-label {
@@ -76,7 +85,10 @@
         &.kbq-tab-group_transparent {
             &.kbq-tab-group_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-background-background, map.get($tab-stack, transparent, on-background, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-background-background,
+                        map.get($tab-stack, transparent, on-background, background)
+                    );
                 }
 
                 & .kbq-tab-label {
@@ -86,7 +98,10 @@
 
             &.kbq-tab-group_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-surface-background, map.get($tab-stack, transparent, on-surface, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-surface-background,
+                        map.get($tab-stack, transparent, on-surface, background)
+                    );
                 }
 
                 & .kbq-tab-label {
@@ -100,7 +115,10 @@
         &.kbq-tab-nav-bar_filled {
             &.kbq-tab-nav-bar_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-background-background, map.get($tab-stack, filled, on-background, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-background-background,
+                        map.get($tab-stack, filled, on-background, background)
+                    );
                 }
 
                 & .kbq-tab-link {
@@ -110,7 +128,10 @@
 
             &.kbq-tab-nav-bar_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-surface-background, map.get($tab-stack, filled, on-surface, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-filled-on-surface-background,
+                        map.get($tab-stack, filled, on-surface, background)
+                    );
                 }
 
                 & .kbq-tab-link {
@@ -122,7 +143,10 @@
         &.kbq-tab-nav-bar_transparent {
             &.kbq-tab-nav-bar_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-background-background, map.get($tab-stack, transparent, on-background, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-background-background,
+                        map.get($tab-stack, transparent, on-background, background)
+                    );
                 }
 
                 & .kbq-tab-link {
@@ -132,7 +156,10 @@
 
             &.kbq-tab-nav-bar_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-surface-background, map.get($tab-stack, transparent, on-surface, background));
+                    background: kbq-css-variable(
+                        tabs-tab-stack-transparent-on-surface-background,
+                        map.get($tab-stack, transparent, on-surface, background)
+                    );
                 }
 
                 & .kbq-tab-link {

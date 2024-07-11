@@ -13,7 +13,8 @@ $tokens: meta.module-variables(tokens) !default;
     $padding-horizontal: map.get($tokens, file-upload-size-single-container-padding-horizontal);
     $border-width: map.get($tokens, file-upload-size-single-container-border-width);
 
-    padding: calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width) calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
+    padding: calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
+        calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
 
     border-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
     border-width: kbq-css-variable(file-upload-size-single-container-border-width);

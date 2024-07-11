@@ -83,7 +83,8 @@
     align-items: center;
     justify-content: space-between;
 
-    padding: kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-right) kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-left);
+    padding: kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-right)
+        kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-left);
 
     & + .kbq-modal-body {
         padding-top: kbq-css-variable(modal-size-content-padding-top);
@@ -103,7 +104,9 @@
 
     max-height: calc(100vh - 260px);
 
-    padding: kbq-css-variable(modal-size-content-padding-top-without-header) kbq-css-variable(modal-size-content-padding-horizontal) kbq-css-variable(modal-size-content-padding-bottom) kbq-css-variable(modal-size-content-padding-horizontal);
+    padding: kbq-css-variable(modal-size-content-padding-top-without-header)
+        kbq-css-variable(modal-size-content-padding-horizontal) kbq-css-variable(modal-size-content-padding-bottom)
+        kbq-css-variable(modal-size-content-padding-horizontal);
 
     word-wrap: break-word;
 }
