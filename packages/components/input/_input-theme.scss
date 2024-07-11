@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-input-typography($config) {
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {

@@ -1,6 +1,5 @@
 @use '../../../styles/koobiq/default-theme/variables' as *;
 
-/* stylelint-disable no-descending-specificity */
 .kbq-docs-pre {
     position: relative;
 }
@@ -144,7 +143,6 @@
     scroll-behavior: smooth;
 }
 
-
 .docs-live-example {
     min-width: 0;
 
@@ -230,5 +228,3 @@
         }
     }
 }
-
-/* stylelint-enable no-descending-specificity */

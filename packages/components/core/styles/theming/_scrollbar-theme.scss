@@ -1,14 +1,12 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+
 @use 'sass:meta';
 @use 'sass:map';
 
 @use '../functions/string' as *;
 
-
 @mixin kbq-scrollbar($tokens) {
-    $border-width: calc(
-        (var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) -
-        var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width))) / 2
-    );
+    $border-width: calc((var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) - var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width))) / 2);
 
     //firefox
     @supports not selector(::-webkit-scrollbar) {
@@ -29,17 +27,13 @@
         }
     }
 
-    /* stylelint-disable no-descending-specificity */
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
         width: var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width));
         border-style: solid;
         border-width: $border-width;
 
-        border-radius: var(
-            --kbq-scrollbar-size-thumb-inset-border-radius,
-            map.get($tokens, scrollbar-size-thumb-border-radius)
-        );
+        border-radius: var(--kbq-scrollbar-size-thumb-inset-border-radius, map.get($tokens, scrollbar-size-thumb-border-radius));
 
         // these props are used to set the user-friendly thumb for long content.
         &:vertical {
@@ -56,7 +50,6 @@
         display: none;
     }
 }
-
 
 @mixin kbq-scrollbar-theme($theme) {
     $scrollbar: map.get(map.get($theme, components), scrollbar);

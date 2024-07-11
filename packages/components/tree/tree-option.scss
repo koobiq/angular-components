@@ -5,9 +5,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 .kbq-tree-option {
     @include common.kbq-no-select;
@@ -30,18 +28,9 @@ $tokens: meta.module-variables(tokens) !default;
     border-style: solid;
     border-color: transparent;
 
-    padding-top: calc(
-        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) -
-        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
-    );
-    padding-right: calc(
-        var(--kbq-tree-size-container-padding-right, $padding-right) -
-        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
-    );
-    padding-bottom: calc(
-        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) -
-        var(--kbq-tree-size-container-focus-outline-width, $outline-width)
-    );
+    padding-top: calc(var(--kbq-tree-size-container-padding-vertical, $padding-vertical) - var(--kbq-tree-size-container-focus-outline-width, $outline-width));
+    padding-right: calc(var(--kbq-tree-size-container-padding-right, $padding-right) - var(--kbq-tree-size-container-focus-outline-width, $outline-width));
+    padding-bottom: calc(var(--kbq-tree-size-container-padding-vertical, $padding-vertical) - var(--kbq-tree-size-container-focus-outline-width, $outline-width));
 
     gap: kbq-css-variable(tree-size-container-content-gap-horizontal);
 

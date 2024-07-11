@@ -84,7 +84,6 @@ The design tokens are also published as SASS variables.
 // Include Design Tokens
 @use './styles/default-theme/theme';
 
-
 @include visual.koobiq-visual();
 @include theming.kbq-core();
 
@@ -92,9 +91,8 @@ The design tokens are also published as SASS variables.
 @include theming.koobiq-typography();
 
 @mixin app-theme($theme) {
-
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
+    $background: map.get($theme, background);
+    $foreground: map.get($theme, foreground);
 
     background: theming.kbq-color($background, background);
     color: theming.kbq-color($foreground, text);
@@ -121,6 +119,5 @@ import {
     VerticalNavbarSizeStatesCollapsedWidth as closedWidth,
     VerticalNavbarSizeStatesExpandedWidth as openedWidth
 } from '@koobiq/design-tokens';
-
 
 ```

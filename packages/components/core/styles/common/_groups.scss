@@ -4,7 +4,6 @@
 @use '../tokens';
 @use '../common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 @mixin border-top-radius($radius) {
@@ -78,7 +77,6 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     flex-direction: column;
 
-    /* stylelint-disable no-descending-specificity */
     > .kbq-group-item {
         &:first-child:not(:last-child) {
             @include border-bottom-radius(0);
@@ -112,6 +110,4 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-group-item + .kbq-group-item {
         margin-top: calc(-1 * var(--kbq-button-size-border-width, #{map.get($tokens, button-size-border-width)}));
     }
-    /* stylelint-enable no-descending-specificity */
 }
-

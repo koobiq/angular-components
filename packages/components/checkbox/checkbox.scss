@@ -7,9 +7,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 .kbq-checkbox-checkmark,
 .kbq-checkbox-mixedmark {
@@ -49,13 +47,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     padding-bottom: kbq-css-variable(checkbox-size-normal-paddding-bottom);
 
-    padding-left: calc(
-        var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
-        var(
-            --kbq-checkbox-size-normal-horizontal-content-padding,
-            map.get($tokens, checkbox-size-normal-horizontal-content-padding)
-        )
-    );
+    padding-left: calc(var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) + var(--kbq-checkbox-size-normal-horizontal-content-padding, map.get($tokens, checkbox-size-normal-horizontal-content-padding)));
 
     vertical-align: top;
 }
@@ -112,14 +104,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-checkbox.kbq-checkbox_big {
     & .kbq-checkbox__layout {
-
-        padding-left: calc(
-            var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) +
-            var(
-                --kbq-checkbox-size-normal-horizontal-content-padding,
-                map.get($tokens, checkbox-size-normal-horizontal-content-padding)
-            )
-        );
+        padding-left: calc(var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) + var(--kbq-checkbox-size-normal-horizontal-content-padding, map.get($tokens, checkbox-size-normal-horizontal-content-padding)));
     }
 
     & .kbq-checkbox__inner-container {
@@ -154,19 +139,10 @@ $tokens: meta.module-variables(tokens) !default;
     }
 }
 
-/* stylelint-disable no-descending-specificity */
 .kbq-checkbox_label-before {
     .kbq-checkbox__layout {
-
         padding-left: 0;
-        padding-right: calc(
-            var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width))
-            +
-            var(
-                --kbq-checkbox-size-normal-horizontal-content-padding,
-                map.get($tokens, checkbox-size-normal-horizontal-content-padding)
-            )
-        );
+        padding-right: calc(var(--kbq-checkbox-size-normal-width, map.get($tokens, checkbox-size-normal-width)) + var(--kbq-checkbox-size-normal-horizontal-content-padding, map.get($tokens, checkbox-size-normal-horizontal-content-padding)));
     }
 
     .kbq-checkbox__inner-container {

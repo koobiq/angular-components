@@ -4,7 +4,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-tag-list {
@@ -62,16 +61,7 @@ $tokens: meta.module-variables(tokens) !default;
         $padding-vertical: map.get($tokens, tag-input-size-padding-vertical);
         $border-width: map.get($tokens, form-field-size-border-width);
 
-        padding:
-            calc(
-                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
-                var(--kbq-form-field-size-border-width, $border-width)
-            )
-            kbq-css-variable(tag-input-size-padding-right)
-            calc(
-                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) -
-                var(--kbq-form-field-size-border-width, $border-width)
-            )
-            kbq-css-variable(tag-input-size-padding-left);
+        padding: calc(var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) - var(--kbq-form-field-size-border-width, $border-width)) kbq-css-variable(tag-input-size-padding-right)
+            calc(var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) - var(--kbq-form-field-size-border-width, $border-width)) kbq-css-variable(tag-input-size-padding-left);
     }
 }

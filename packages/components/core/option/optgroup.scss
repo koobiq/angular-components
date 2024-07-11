@@ -4,7 +4,6 @@
 @use '../styles/common/vendor-prefixes';
 @use '../styles/tokens';
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-optgroup-label {

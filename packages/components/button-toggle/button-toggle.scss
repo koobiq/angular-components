@@ -6,7 +6,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-button-toggle-group {
@@ -19,9 +18,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     border-radius: kbq-css-variable(button-toggle-size-container-border-radius);
 
-    padding:
-        kbq-css-variable(button-toggle-size-container-padding-vertical)
-        kbq-css-variable(button-toggle-size-container-padding-horizontal);
+    padding: kbq-css-variable(button-toggle-size-container-padding-vertical) kbq-css-variable(button-toggle-size-container-padding-horizontal);
 
     .kbq-button-toggle {
         display: flex;
@@ -41,13 +38,10 @@ $tokens: meta.module-variables(tokens) !default;
         > .kbq-button-icon {
             border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
-            padding:
-                calc(var(--kbq-button-toggle-size-item-padding-vertical, $padding-vertical) - $outline-width)
-                calc(var(--kbq-button-toggle-size-item-padding-horizontal, $padding-horizontal) - $outline-width);
+            padding: calc(var(--kbq-button-toggle-size-item-padding-vertical, $padding-vertical) - $outline-width) calc(var(--kbq-button-toggle-size-item-padding-horizontal, $padding-horizontal) - $outline-width);
 
             & .kbq-button-wrapper {
                 width: 100%;
-
             }
 
             .kbq-button-toggle-wrapper {
@@ -77,7 +71,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 }
 
-/* stylelint-disable no-descending-specificity */
 .kbq-button-toggle_vertical {
     flex-direction: column;
 
@@ -92,5 +85,3 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 }
-
-/* stylelint-enable no-descending-specificity */

@@ -6,19 +6,14 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-button {
     @extend %kbq-button-base;
 
     // base padding + compensation (4px) - border-width (2px)
-    padding-left: calc(
-        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px
-    );
-    padding-right: calc(
-        var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px
-    );
+    padding-left: calc(var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px);
+    padding-right: calc(var(--kbq-button-size-horizontal-padding, map.get($tokens, button-size-horizontal-padding)) + 4px);
 
     &.kbq-button-icon_left {
         padding-left: kbq-css-variable(button-size-horizontal-padding);

@@ -2,25 +2,8 @@
 @use 'sass:meta';
 @use 'sass:string';
 
-
-@function kbq-typography-level(
-    $font-size,
-    $line-height: $font-size,
-    $letter-spacing: normal,
-    $font-weight: normal,
-    $font-family: null,
-    $text-transform: null,
-    $font-feature-settings: null
-) {
-    @return (
-        font-size: $font-size,
-        line-height: $line-height,
-        font-weight: $font-weight,
-        font-family: $font-family,
-        letter-spacing: $letter-spacing,
-        text-transform: $text-transform,
-        font-feature-settings: $font-feature-settings
-    );
+@function kbq-typography-level($font-size, $line-height: $font-size, $letter-spacing: normal, $font-weight: normal, $font-family: null, $text-transform: null, $font-feature-settings: null) {
+    @return (font-size: $font-size, line-height: $line-height, font-weight: $font-weight, font-family: $font-family, letter-spacing: $letter-spacing, text-transform: $text-transform, font-feature-settings: $font-feature-settings);
 }
 
 @function _kbq-get-type-value($config, $level, $name) {
@@ -55,7 +38,7 @@
 @function kbq-font-family($config, $level: null) {
     $font-family: map.get($config, font-family);
 
-    @if $level != null {
+    @if $level {
         $font-family: _kbq-get-type-value($config, $level, font-family);
     }
 

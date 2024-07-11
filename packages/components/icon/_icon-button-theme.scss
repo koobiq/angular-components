@@ -3,7 +3,6 @@
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-icon-button-theme($theme) {
     $icon-button: map.get($theme, components, icon-button);
 
@@ -34,8 +33,7 @@
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-ontrast-state-active, map.get($icon-button, contrast, state-active));
+                color: kbq-css-variable(icon-button-ontrast-state-active, map.get($icon-button, contrast, state-active));
             }
 
             &:not(.kbq-disabled):hover {
@@ -43,8 +41,7 @@
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-ontrast-state-disabled, map.get($icon-button, contrast, state-disabled));
+                color: kbq-css-variable(icon-button-ontrast-state-disabled, map.get($icon-button, contrast, state-disabled));
             }
         }
 
@@ -53,18 +50,15 @@
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-ade-contrast-state-active, map.get($icon-button, fade-contrast, state-active));
+                color: kbq-css-variable(icon-button-ade-contrast-state-active, map.get($icon-button, fade-contrast, state-active));
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(
-                    icon-button-ade-contrast-state-hover, map.get($icon-button, fade-contrast, state-hover));
+                color: kbq-css-variable(icon-button-ade-contrast-state-hover, map.get($icon-button, fade-contrast, state-hover));
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-ade-contrast-state-disabled, map.get($icon-button, fade-contrast, state-disabled));
+                color: kbq-css-variable(icon-button-ade-contrast-state-disabled, map.get($icon-button, fade-contrast, state-disabled));
             }
         }
 
@@ -98,8 +92,7 @@
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-uccess-state-disabled, map.get($icon-button, success, state-disabled));
+                color: kbq-css-variable(icon-button-uccess-state-disabled, map.get($icon-button, success, state-disabled));
             }
         }
 

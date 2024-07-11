@@ -56,7 +56,6 @@
 @use '../highlight/highlight-theme' as *;
 @use '../../dl/dl-theme' as *;
 
-
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
@@ -112,11 +111,11 @@
 }
 
 @mixin koobiq-typography($tokens, $config: null, $md-config: null) {
-    @if $config == null {
+    @if not $config {
         $config: kbq-typography-config($tokens);
     }
 
-    @if $md-config == null {
+    @if not $md-config {
         $md-config: kbq-markdown-typography-config($tokens);
     }
 

@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin _icon($left-icon, $right-icon) {
     .kbq-icon {
         color: $left-icon;
@@ -27,10 +26,7 @@
     color: kbq-css-variable(#{$base-path}-foreground, map.get($style, foreground));
     background: kbq-css-variable(#{$base-path}-background, map.get($style, background));
 
-    @include _icon(
-        kbq-css-variable(#{$base-path}-left-icon, map.get($style, left-icon)),
-        kbq-css-variable(#{$base-path}-right-icon, map.get($style, right-icon))
-    );
+    @include _icon(kbq-css-variable(#{$base-path}-left-icon, map.get($style, left-icon)), kbq-css-variable(#{$base-path}-right-icon, map.get($style, right-icon)));
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
@@ -44,14 +40,9 @@
 
     &.kbq-disabled {
         color: kbq-css-variable(#{$base-path}-states-disabled-foreground, map.get($style, states-disabled-foreground));
-        background: kbq-css-variable(
-            #{$base-path}-states-disabled-background, map.get($style, states-disabled-background)
-        );
+        background: kbq-css-variable(#{$base-path}-states-disabled-background, map.get($style, states-disabled-background));
 
-        @include _icon(
-            kbq-css-variable(#{$base-path}-states-disabled-left-icon, map.get($style, states-disabled-left-icon)),
-            kbq-css-variable(#{$base-path}-states-disabled-right-icon, map.get($style, states-disabled-right-icon))
-        );
+        @include _icon(kbq-css-variable(#{$base-path}-states-disabled-left-icon, map.get($style, states-disabled-left-icon)), kbq-css-variable(#{$base-path}-states-disabled-right-icon, map.get($style, states-disabled-right-icon)));
     }
 }
 

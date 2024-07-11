@@ -5,7 +5,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-sidepanel-container_top,
@@ -96,7 +95,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 }
 
-/* stylelint-disable */
 .kbq-sidepanel-wrapper {
     display: flex;
     flex: 1;
@@ -108,7 +106,6 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     flex: 0 0 auto;
 }
-/* stylelint-enable */
 
 .kbq-sidepanel-content {
     display: flex;
@@ -127,11 +124,7 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding:
-        kbq-css-variable(sidepanel-size-header-padding-vertical)
-        kbq-css-variable(sidepanel-size-header-padding-right)
-        kbq-css-variable(sidepanel-size-header-padding-vertical)
-        kbq-css-variable(sidepanel-size-header-padding-left);
+    padding: kbq-css-variable(sidepanel-size-header-padding-vertical) kbq-css-variable(sidepanel-size-header-padding-right) kbq-css-variable(sidepanel-size-header-padding-vertical) kbq-css-variable(sidepanel-size-header-padding-left);
 
     .kbq-sidepanel-close {
         margin-left: kbq-css-variable(sidepanel-size-close-button-margin-left);
@@ -166,10 +159,7 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding:
-        kbq-css-variable(sidepanel-size-footer-padding-top)
-        kbq-css-variable(sidepanel-size-footer-padding-horizontal)
-        kbq-css-variable(sidepanel-size-footer-padding-bottom);
+    padding: kbq-css-variable(sidepanel-size-footer-padding-top) kbq-css-variable(sidepanel-size-footer-padding-horizontal) kbq-css-variable(sidepanel-size-footer-padding-bottom);
 
     .kbq-sidepanel-actions {
         display: flex;
@@ -177,11 +167,11 @@ $tokens: meta.module-variables(tokens) !default;
         flex-direction: row;
         flex: 1;
 
-        &[align="left"] {
+        &[align='left'] {
             justify-content: start;
         }
 
-        &[align="right"] {
+        &[align='right'] {
             justify-content: flex-end;
         }
 

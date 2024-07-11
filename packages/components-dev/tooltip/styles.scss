@@ -1,8 +1,9 @@
 @use 'sass:meta';
+@use 'sass:map';
+
 @use '../../components/core/styles/tokens';
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
-
 
 $tokens: meta.module-variables(tokens);
 $theme: theming.kbq-light-theme($tokens);
@@ -11,7 +12,6 @@ $theme: theming.kbq-light-theme($tokens);
     width: 485px;
     max-width: 485px;
 }
-
 
 .left-padding {
     padding-left: 32px;
@@ -37,7 +37,7 @@ app {
     }
 
     .red {
-        color: map-get(map-get($theme, error), default);
+        color: map.get(map.get($theme, error), default);
     }
 
     .container {

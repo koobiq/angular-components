@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 @use '../dist/components';
 
 @use '../dist/components/core/styles/visual';
@@ -20,12 +22,10 @@
 
 @use '../styles/hot-keys';
 
-
 @include components.kbq-core();
 
 @include visual.body-html();
 @include visual.layouts-for-breakpoint();
-
 
 // Include all typography for the components.
 @mixin docs-typography($tokens, $config, $md-config) {
@@ -61,8 +61,8 @@
 }
 
 @mixin kbq-docs-theme($theme) {
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
+    $background: map.get($theme, background);
+    $foreground: map.get($theme, foreground);
 
     background: components.kbq-color($background, bg);
     color: components.kbq-color($foreground, contrast);
@@ -70,4 +70,3 @@
     @include koobiq-theme($theme);
     @include docs-components-theme($theme);
 }
-

@@ -3,21 +3,16 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-icon-item {
     box-sizing: border-box;
 
     border-radius: 50%;
 
     &.kbq-icon-item_normal {
-        padding:
-            kbq-css-variable(icon-item-size-normal-vertical-padding)
-            kbq-css-variable(icon-item-size-normal-horizontal-padding);
+        padding: kbq-css-variable(icon-item-size-normal-vertical-padding) kbq-css-variable(icon-item-size-normal-horizontal-padding);
     }
 
     &.kbq-icon-item_big {
-        padding:
-            kbq-css-variable(icon-item-size-big-vertical-padding)
-            kbq-css-variable(icon-item-size-big-horizontal-padding);
+        padding: kbq-css-variable(icon-item-size-big-vertical-padding) kbq-css-variable(icon-item-size-big-horizontal-padding);
     }
 }

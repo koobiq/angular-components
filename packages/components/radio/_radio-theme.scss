@@ -4,22 +4,17 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-radio-state($component, $type, $state-name) {
     $state: map.get($component, $type, $state-name);
 
     & .kbq-radio-button__outer-circle {
-        border-color: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-border, map.get($state, outer-circle-border));
-        background: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-background, map.get($state, outer-circle-background));
-        box-shadow: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-shadow, map.get($state, outer-circle-shadow));
+        border-color: kbq-css-variable(radio-#{$type}-#{$state-name}-outer-circle-border, map.get($state, outer-circle-border));
+        background: kbq-css-variable(radio-#{$type}-#{$state-name}-outer-circle-background, map.get($state, outer-circle-background));
+        box-shadow: kbq-css-variable(radio-#{$type}-#{$state-name}-outer-circle-shadow, map.get($state, outer-circle-shadow));
     }
 
     & .kbq-radio-button__inner-circle {
-        background: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-inner-circle-background, map.get($state, inner-circle-background));
+        background: kbq-css-variable(radio-#{$type}-#{$state-name}-inner-circle-background, map.get($state, inner-circle-background));
     }
 }
 

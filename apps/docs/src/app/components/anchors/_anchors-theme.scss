@@ -1,11 +1,12 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 @use '../dist/components/core/styles/common';
 
-
 @mixin kbq-docs-anchors-theme($theme) {
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
 
     $shadow: theming.kbq-color($foreground, text-less-contrast);
 
@@ -33,13 +34,13 @@
             }
         }
 
-        &.docs-anchors__element_active{
+        &.docs-anchors__element_active {
             @include box-shadow(inset 3px 0 0 #363949);
         }
     }
 }
 
-@mixin box-shadow ($shadow) {
+@mixin box-shadow($shadow) {
     -webkit-box-shadow: $shadow;
     -moz-box-shadow: $shadow;
     -o-box-shadow: $shadow;

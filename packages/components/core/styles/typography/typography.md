@@ -30,8 +30,8 @@ $fonts: (
     )
 );
 
-$font-family:   map-get(map-get($fonts, base), font-family);
-$font-family-mono:   map-get(map-get($fonts, mono), font-family);
+$font-family: map.get(map.get($fonts, base), font-family);
+$font-family-mono: map.get(map.get($fonts, mono), font-family);
 
 $typography: kbq-typography-config(
     $font-family,

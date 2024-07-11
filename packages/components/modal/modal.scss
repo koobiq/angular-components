@@ -5,7 +5,6 @@
 
 @use './modal-confirm';
 
-
 .kbq-modal {
     box-sizing: border-box;
 
@@ -84,11 +83,7 @@
     align-items: center;
     justify-content: space-between;
 
-    padding:
-        kbq-css-variable(modal-size-header-padding-vertical)
-        kbq-css-variable(modal-size-header-padding-right)
-        kbq-css-variable(modal-size-header-padding-vertical)
-        kbq-css-variable(modal-size-header-padding-left);
+    padding: kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-right) kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-left);
 
     & + .kbq-modal-body {
         padding-top: kbq-css-variable(modal-size-content-padding-top);
@@ -102,31 +97,23 @@
     overflow: hidden;
 }
 
-/* stylelint-disable no-descending-specificity */
 .kbq-modal-body {
     display: block;
     overflow-y: auto;
 
     max-height: calc(100vh - 260px);
 
-    padding:
-        kbq-css-variable(modal-size-content-padding-top-without-header)
-        kbq-css-variable(modal-size-content-padding-horizontal)
-        kbq-css-variable(modal-size-content-padding-bottom)
-        kbq-css-variable(modal-size-content-padding-horizontal);
+    padding: kbq-css-variable(modal-size-content-padding-top-without-header) kbq-css-variable(modal-size-content-padding-horizontal) kbq-css-variable(modal-size-content-padding-bottom) kbq-css-variable(modal-size-content-padding-horizontal);
 
     word-wrap: break-word;
 }
-/* stylelint-enable no-descending-specificity */
 
 .kbq-modal-footer,
 .kbq-confirm-footer {
     display: flex;
     align-items: center;
 
-    padding:
-        kbq-css-variable(modal-size-footer-padding-vertical)
-        kbq-css-variable(modal-size-footer-padding-horizontal);
+    padding: kbq-css-variable(modal-size-footer-padding-vertical) kbq-css-variable(modal-size-footer-padding-horizontal);
 
     gap: kbq-css-variable(modal-size-footer-content-gap-horizontal);
 }

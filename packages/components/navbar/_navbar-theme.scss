@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-navbar-item($component, $state-name) {
     $state: map.get($component, $state-name);
 
@@ -27,7 +26,6 @@
         color: kbq-css-variable(navbar-item-#{$state-name}-icon-right, map.get($state, icon-right)) !important;
     }
 }
-
 
 @mixin kbq-navbar-theme($theme) {
     $navbar: map.get($theme, components, navbar);
@@ -58,10 +56,8 @@
 
             &:after {
                 display: block;
-                box-shadow: inset 0 0 0 2px kbq-css-variable(
-                    states-line-focus-theme, map.get($theme, states, line, focus-theme)
-                )
-            };
+                box-shadow: inset 0 0 0 2px kbq-css-variable(states-line-focus-theme, map.get($theme, states, line, focus-theme));
+            }
         }
 
         &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
