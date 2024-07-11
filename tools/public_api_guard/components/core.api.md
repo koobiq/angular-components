@@ -2147,12 +2147,14 @@ export enum ThemePalette {
 }
 
 // @public (undocumented)
-export class ThemeService<T extends KbqTheme | null = KbqTheme> {
+export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
     constructor(rendererFactory: RendererFactory2);
     // (undocumented)
     current: BehaviorSubject<T>;
     // (undocumented)
     getTheme(): T;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     protected renderer: Renderer2;
     // (undocumented)
