@@ -296,4 +296,4 @@ yarn add --dev style-dictionary
 - 4 Используйте CSS-переменные вместо объявленных ранее токенов.
 
 #### Пример на Stackblitz
-Пример применения CSS-переменных можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
+Пример применения CSS-переменных можно найти [тут](https://stackblitz.com/edit/vaffk1-fhhiz7?file=src%2Fstyles.scss)
