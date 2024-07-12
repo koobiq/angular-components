@@ -1011,6 +1011,186 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-dropdown"
     }
   },
+  "empty-state-actions": {
+    "packagePath": "components/empty-state/empty-state-actions",
+    "title": "empty-state-actions",
+    "componentName": "EmptyStateActionsExample",
+    "files": [
+      "empty-state-actions-example.ts",
+      "empty-state-actions-example.html",
+      "empty-state-actions-example.css"
+    ],
+    "selector": "empty-state-actions-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-actions-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-actions2": {
+    "packagePath": "components/empty-state/empty-state-actions2",
+    "title": "empty-state-actions2",
+    "componentName": "EmptyStateActions2Example",
+    "files": [
+      "empty-state-actions2-example.ts",
+      "empty-state-actions2-example.html",
+      "empty-state-actions2-example.css"
+    ],
+    "selector": "empty-state-actions2-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-actions2-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-align": {
+    "packagePath": "components/empty-state/empty-state-align",
+    "title": "empty-state-align",
+    "componentName": "EmptyStateAlignExample",
+    "files": [
+      "empty-state-align-example.ts",
+      "empty-state-align-example.html",
+      "empty-state-align-example.css"
+    ],
+    "selector": "empty-state-align-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-align-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-big": {
+    "packagePath": "components/empty-state/empty-state-big",
+    "title": "empty-state-big",
+    "componentName": "EmptyStateBigExample",
+    "files": [
+      "empty-state-big-example.ts",
+      "empty-state-big-example.html",
+      "empty-state-big-example.css"
+    ],
+    "selector": "empty-state-big-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-big-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-content": {
+    "packagePath": "components/empty-state/empty-state-content",
+    "title": "empty-state-content",
+    "componentName": "EmptyStateContentExample",
+    "files": [
+      "empty-state-content-example.ts",
+      "empty-state-content-example.html",
+      "empty-state-content-example.css"
+    ],
+    "selector": "empty-state-content-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-content-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-default": {
+    "packagePath": "components/empty-state/empty-state-default",
+    "title": "empty-state-default",
+    "componentName": "EmptyStateDefaultExample",
+    "files": [
+      "empty-state-default-example.ts",
+      "empty-state-default-example.html",
+      "empty-state-default-example.css"
+    ],
+    "selector": "empty-state-default-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-default-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-error": {
+    "packagePath": "components/empty-state/empty-state-error",
+    "title": "empty-state-error",
+    "componentName": "EmptyStateErrorExample",
+    "files": [
+      "empty-state-error-example.ts",
+      "empty-state-error-example.html",
+      "empty-state-error-example.css"
+    ],
+    "selector": "empty-state-error-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-error-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-icon": {
+    "packagePath": "components/empty-state/empty-state-icon",
+    "title": "empty-state-icon",
+    "componentName": "EmptyStateIconExample",
+    "files": [
+      "empty-state-icon-example.ts",
+      "empty-state-icon-example.html",
+      "empty-state-icon-example.css"
+    ],
+    "selector": "empty-state-icon-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-icon-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-text-only": {
+    "packagePath": "components/empty-state/empty-state-text-only",
+    "title": "empty-state-text-only",
+    "componentName": "EmptyStateTextOnlyExample",
+    "files": [
+      "empty-state-text-only-example.ts",
+      "empty-state-text-only-example.html",
+      "empty-state-text-only-example.css"
+    ],
+    "selector": "empty-state-text-only-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-text-only-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
+  "empty-state-title": {
+    "packagePath": "components/empty-state/empty-state-title",
+    "title": "empty-state-title",
+    "componentName": "EmptyStateTitleExample",
+    "files": [
+      "empty-state-title-example.ts",
+      "empty-state-title-example.html",
+      "empty-state-title-example.css"
+    ],
+    "selector": "empty-state-title-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-title-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/empty-state",
+      "importPath": "koobiq-docs-examples-components-empty-state"
+    }
+  },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
     "title": "File upload with Control Value Accessor",
