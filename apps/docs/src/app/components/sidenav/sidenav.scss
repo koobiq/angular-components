@@ -1,7 +1,6 @@
 @use '../../../styles/koobiq/default-theme/variables' as *;
 
-
-@mixin transition ($transition) {
+@mixin transition($transition) {
     -webkit-transition: $transition;
     -moz-transition: $transition;
     -o-transition: $transition;
@@ -31,10 +30,6 @@
 
     gap: $size-m;
     padding: $size-xl $size-l $size-xl $size-xxl;
-
-    .docs-sidenav__header-logo {
-
-    }
 }
 
 .docs-sidenav__menu {
@@ -58,7 +53,7 @@
         }
 
         .docs-sidenav__category-icon {
-            @include transition(transform 225ms cubic-bezier(0.4, 0.0, 0.2, 1));
+            @include transition(transform 225ms cubic-bezier(0.4, 0, 0.2, 1));
 
             &.mc_collapsed {
                 transform: rotate(-90deg);

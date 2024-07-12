@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-timezone-option-theme($theme) {
     $timezone: map.get(map.get($theme, components), timezone);
 

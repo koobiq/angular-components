@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-textarea-typography($config) {
     .kbq-textarea {
         @include kbq-typography-css-variables(textarea, default);

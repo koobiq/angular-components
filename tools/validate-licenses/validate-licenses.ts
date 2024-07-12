@@ -10,6 +10,7 @@ type PackageID = string;
 const licensesWhitelist: License[] = [
     // Regular valid open source licenses.
     'MIT',
+    'MIT-0',
     'ISC',
     'Apache-2.0',
     'BlueOak-1.0.0',

@@ -127,8 +127,8 @@ $dark: theming.kbq-dark-theme($tokens);
 
 ```scss
 @mixin app-theme($theme) {
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
+    $background: map.get($theme, background);
+    $foreground: map.get($theme, foreground);
 
     background: components.kbq-color($background, background);
     color: components.kbq-color($foreground, text);

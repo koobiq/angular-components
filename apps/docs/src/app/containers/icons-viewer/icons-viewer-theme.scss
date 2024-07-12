@@ -1,17 +1,18 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-icons-viewer-theme($theme) {
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
-    $states-background: map-get(map-get($theme, states), background);
-    $line: map-get($theme, line);
+    $foreground: map.get($theme, foreground);
+    $background: map.get($theme, background);
+    $states-background: map.get(map.get($theme, states), background);
+    $line: map.get($theme, line);
 
-    $theme: map-get($theme, theme);
+    $theme: map.get($theme, theme);
 
     .docs-icons-viewer__header {
-        background: map-get($background, bg);
+        background: map.get($background, bg);
     }
 
     .docs-icons-viewer__header-text {
@@ -19,12 +20,11 @@
     }
 
     .docs-icons-viewer__table-cell {
-        background: map-get($background, bg);
-        border-color: map-get($line, contrast-fade);
-
+        background: map.get($background, bg);
+        border-color: map.get($line, contrast-fade);
 
         > .docs-icons-viewer__table-cell-name {
-            color: map-get($foreground, text-less-contrast);
+            color: map.get($foreground, text-less-contrast);
         }
 
         &:focus {
@@ -32,16 +32,16 @@
         }
 
         &:hover {
-            background: map-get($states-background, transparent-hover);
+            background: map.get($states-background, transparent-hover);
         }
 
         &:active {
-            background: map-get($states-background, transparent-active);
+            background: map.get($states-background, transparent-active);
         }
     }
 
     .icon-preview-modal__preview-area {
-        background: map-get($background, background-under);
+        background: map.get($background, background-under);
     }
 }
 
@@ -62,9 +62,5 @@
 
     .docs-icons-viewer__table-empty-results {
         @include typography.kbq-typography-level-to-styles($config, display-3);
-    }
-
-    .kbq-modal icon-preview-modal {
-
     }
 }

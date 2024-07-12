@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-tab-item-state($component, $type, $sub-type, $style-name) {
     $style: map.get($component, $type, $sub-type, $style-name);
 

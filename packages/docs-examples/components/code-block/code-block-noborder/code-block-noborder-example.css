@@ -5,7 +5,7 @@
 .code-block_no-border .kbq-tab-body__wrapper {
     border: none;
 
-    .kbq-code-block__code>code {
+    .kbq-code-block__code > code {
         padding: 0 0;
     }
 }

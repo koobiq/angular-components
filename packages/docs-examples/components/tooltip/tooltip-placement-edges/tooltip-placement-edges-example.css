@@ -5,7 +5,7 @@
     height: 90px;
     width: 90px;
 
-    border: 1px solid #B3B3B2;
+    border: 1px solid #b3b3b2;
     border-radius: 8px;
 }
 
@@ -23,11 +23,11 @@
 
     content: '';
 
-    background: #338FCB;
+    background: #338fcb;
 }
 
 .tooltip-example__trigger.kbq-tooltip_open:after {
-    background: #CB3C33;
+    background: #cb3c33;
 }
 
 .tooltip-example__trigger_topLeft {
@@ -38,7 +38,6 @@
 .tooltip-example__trigger_topLeft:after {
     left: 12px;
 }
-
 
 .tooltip-example__trigger_topRight {
     top: -8px;

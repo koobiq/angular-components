@@ -24,7 +24,10 @@ jobs:
         run: yarn run check-api
 
       - name: Spell Checking
-        run: yarn run cspell:md --no-progress
+        run: yarn run cspell --no-progress
+
+      - name: Stylelint
+        run: yarn run stylelint
 
       - name: Unit
         run: |

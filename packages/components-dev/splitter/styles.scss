@@ -1,6 +1,5 @@
 @use '../main';
 
-
 .container {
     margin: 8px;
 }
@@ -24,28 +23,26 @@
 }
 
 div[kbq-splitter-area] {
-    background: #c5c0c0
+    background: #c5c0c0;
 }
 
 // custom color
 kbq-splitter.custom-color > kbq-gutter {
-    background-color: #03A9F4;
+    background-color: #03a9f4;
     color: white;
+}
+
+// custom gutter image
+kbq-splitter.custom-gutter > kbq-gutter {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
 }
 
 kbq-splitter.custom-color > kbq-gutter:hover {
     background-color: #8bc34a;
     color: black;
 }
-
-/* stylelint-disable no-descending-specificity */
-// custom gutter image
-kbq-splitter.custom-gutter > kbq-gutter {
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-}
-/* stylelint-enable no-descending-specificity */
 
 kbq-splitter.custom-gutter > kbq-gutter > i {
     display: none;
