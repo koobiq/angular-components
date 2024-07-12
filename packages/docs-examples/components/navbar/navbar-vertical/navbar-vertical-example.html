@@ -21,7 +21,7 @@
     <kbq-vertical-navbar #verticalNavbar>
         <kbq-navbar-container>
             <a kbq-navbar-item
-               bento
+               class="kbq-navbar-margined"
                #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"
                [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
                [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened">
@@ -52,6 +52,7 @@
 
             <kbq-navbar-item
                 #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"
+                class="kbq-navbar-margined"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
                 [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened">
 
