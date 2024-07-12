@@ -1,3 +1,10 @@
+# 17.0.0-rc.9 (2024-07-10)
+
+### Koobiq
+
+ * bug fix  **checkbox:** added background to pseudo ([#DS-2643](https://github.com/koobiq/angular-components/issues/issue/DS-2643)) ([#126](https://github.com/koobiq/angular-components/issues/126)) ([1887d9d](https://github.com/koobiq/angular-components/commit/1887d9df0932b47e8948abfc7a27e3bac063dcc3))
+ * feature  **docs:** moved sitemap.xml and robots.txt to root ([#127](https://github.com/koobiq/angular-components/issues/127)) ([846c4a4](https://github.com/koobiq/angular-components/commit/846c4a4032a2db7e90def27130fe1fa023e62b01))
+
 # 17.0.0-rc.8 (2024-07-09)
 
 ### Koobiq
