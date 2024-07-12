@@ -17,15 +17,18 @@
     }
 
     text-align: left;
+    align-items: flex-start;
 
-    & > .kbq-icon:first-child {
-        align-self: flex-start;
-
-        margin-top: kbq-css-variable(list-size-container-padding-vertical);
+    & > .kbq-icon:first-child:before {
+        align-self: center;
+        display: flex;
+        height: 20px; // Потому что высота строки справа = 20px
+        width: 16px;
+        align-items: center;
     }
 
     & .kbq-dropdown-item__caption {
-        padding-top: kbq-css-variable(list-size-container-content-gap-vertical);
+        padding-top: kbq-css-variable(size-3xs);
     }
 }
 

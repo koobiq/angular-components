@@ -3,14 +3,13 @@
 
 @use '../styles/common/vendor-prefixes';
 @use '../styles/tokens';
-
+@use '../styles/common/tokens' as *;
 
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-optgroup-label {
-    padding-left: var(--kbq-optgroup-size-padding-left, map.get($tokens, optgroup-size-padding-left));
+    padding-left: kbq-css-variable(size-m);
 
     @include vendor-prefixes.user-select(none);
-
     cursor: default;
 }
