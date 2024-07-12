@@ -15,7 +15,7 @@
     <button kbq-dropdown-item>Отмененные</button>
 </kbq-dropdown>
 
-<kbq-dropdown
+<kbq-dropdown [hasBackdrop]="false"
     #horizontalNavbarProfile="kbqDropdown">
 
     <button kbq-dropdown-item>Настройки</button>
@@ -108,9 +108,10 @@
                 [kbqTooltip]="'Профиль'"
                 [kbqTrigger]="'hover'"
                 [kbqPlacement]="popUpPlacements.BottomLeft"
-
+                class="kbq-navbar-margined"
                 #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
                 [kbqDropdownTriggerFor]="horizontalNavbarProfile"
+                [collapsable]="false"
                 [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened">
                 <i kbq-icon="mc-user_16"></i>
             </kbq-navbar-item>

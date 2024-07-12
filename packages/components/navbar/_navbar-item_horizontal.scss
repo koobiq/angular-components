@@ -57,6 +57,21 @@
         }
     }
 
+    &.kbq-navbar-margined {
+        min-height: kbq-css-variable(size-5xl);
+        min-width: kbq-css-variable(size-3xl);
+
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: kbq-css-variable(size-s);
+        margin-right: kbq-css-variable(size-s);
+
+        &:after {
+            right: 0;
+            left: 0;
+        }
+    }
+
     &.kbq-navbar-bento {
         min-width: 44px;
 
