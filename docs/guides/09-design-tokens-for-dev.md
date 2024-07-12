@@ -2,7 +2,6 @@
 
 To describe the tokens, we use [Style-Dictionary](https://amzn.github.io/style-dictionary/#/architecture)
 
-
 1. Add Design Tokens to project
 
 Copy the contents of the design-tokens folder to the style folder of your project.
@@ -44,13 +43,10 @@ For example, to the default-theme folder
     -- main.ts
 ```
 
-
-
 2. Create build script
 
 ```javascript
 const buildTokens = require('@koobiq/tokens-builder/build');
-
 
 const koobiqTokensProps = '../node_modules/@koobiq/design-tokens/web/properties/**/*.json5';
 const koobiqTokensComponents = '../node_modules/@koobiq/design-tokens/web/components/**/*.json5';
@@ -58,20 +54,15 @@ const koobiqTokensComponents = '../node_modules/@koobiq/design-tokens/web/compon
 buildTokens([
     {
         name: 'default-theme',
-        buildPath: [
-            koobiqTokensProps,
-            koobiqTokensComponents
-        ],
-        outputPath: 'src/styles/default-theme/'
-    }
+        buildPath: [koobiqTokensProps, koobiqTokensComponents],
+        outputPath: 'src/styles/default-theme/',
+    },
 ]);
-
 ```
 
-3. Usage: SASS ```styles.scss```
+3. Usage: SASS `styles.scss`
 
 The design tokens are also published as SASS variables.
-
 
 ```scss
 @use './styles/fonts';
@@ -102,12 +93,10 @@ The design tokens are also published as SASS variables.
 
 .theme-default {
     &.color-blue {
-
         // Include all theme styles for the koobiq components.
         @include app-theme($default-light-theme);
     }
 }
-
 ```
 
 3. Usage: TypeScript
@@ -117,7 +106,6 @@ TypeScript type declarations are also published.
 ```typescript
 import {
     VerticalNavbarSizeStatesCollapsedWidth as closedWidth,
-    VerticalNavbarSizeStatesExpandedWidth as openedWidth
+    VerticalNavbarSizeStatesExpandedWidth as openedWidth,
 } from '@koobiq/design-tokens';
-
 ```

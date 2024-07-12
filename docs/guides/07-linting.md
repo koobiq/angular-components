@@ -1,3 +1,3 @@
 # Linting
 
-* in progress
+-   in progress

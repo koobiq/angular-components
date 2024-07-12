@@ -14,4 +14,4 @@ updates:
     groups:
       dev-dependencies:
         patterns:
-          - "*"
+          - '*'
