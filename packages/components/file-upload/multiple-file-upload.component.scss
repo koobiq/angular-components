@@ -6,6 +6,7 @@
 
 $tokens: meta.module-variables(tokens) !default;
 
+// todo нужно рефакторить со стилями тут сложно
 .kbq-multiple-file-upload .kbq-file-upload {
     border-radius: kbq-css-variable(file-upload-size-multiple-big-container-border-radius);
     border-width: kbq-css-variable(file-upload-size-multiple-big-container-border-width);
