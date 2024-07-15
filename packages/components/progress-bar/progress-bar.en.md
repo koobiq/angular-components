@@ -11,32 +11,40 @@ A `<kbq-progress-bar>` element can be used on its own to create a horizontal pro
 ### Props
 
 #### value
+
 Displaying length of progress bar depends on this property  
 The range of value is [0, 100]  
 Default: 0
 
 This will fill 30% of the hole progress bar
+
 ```html
 <kbq-progress-bar [value]="30"></kbq-progress-bar>
 ```
+
 <!-- example(progress-bar-overview) -->
 
 #### mode
+
 Enum ('determinate', 'indeterminate')  
-Default: 'determinate'  
+Default: 'determinate'
 
 To show indeterminate progress
+
 ```html
 <kbq-progress-bar [mode]="'indeterminate'"></kbq-progress-bar>
 ```
+
 Or for determinate progress
+
 ```html
 <kbq-progress-bar [mode]="'determinate'" [value]="30"></kbq-progress-bar>
 ```
+
 <!-- example(progress-bar-indeterminate) -->
 
-
 #### color
+
 Enum ('primary', 'secondary', 'error')  
 Default: 'primary'  
 Set theming of element
@@ -48,5 +56,6 @@ Set theming of element
 ```
 
 ### Theming
+
 The color of a `<kbq-progress-bar>` can be changed by using the `color` property. By default, it
 use the theme's `primary` color. This can be changed to `'secondary'` or `'error'`.

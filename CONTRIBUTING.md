@@ -5,7 +5,7 @@
 If you find a bug/issue in the source code or a mistake in the documentation,
 you can help us by
 [creating an issue](https://github.com/koobiq/angular-components/issues/new)
-here on GitHub. 
+here on GitHub.
 
 Please provide an issue reproduction. Screenshots are also
 helpful.
@@ -14,14 +14,14 @@ helpful.
 
 Before you submit your pull request (PR) consider the following guidelines:
 
-- Fork Koobiq into your namespace by using the fork button on github.
-- Make your changes in a new git branch: `git checkout -b my-fix-branch master`
-- Create your bugfix/feature including appropriate tests.
-- Test your changes with our supported browsers.
-- Run unit tests and ensure that all tests pass.
-- Push your branch to GitHub.
-- Create a new pull request from your branch against the angular-components:master
-  branch.
+-   Fork Koobiq into your namespace by using the fork button on github.
+-   Make your changes in a new git branch: `git checkout -b my-fix-branch master`
+-   Create your bugfix/feature including appropriate tests.
+-   Test your changes with our supported browsers.
+-   Run unit tests and ensure that all tests pass.
+-   Push your branch to GitHub.
+-   Create a new pull request from your branch against the angular-components:master
+    branch.
 
 ## Commit message guidelines
 
@@ -34,10 +34,11 @@ Before you submit your pull request (PR) consider the following guidelines:
   │                          elements|forms|http|language-service|localize|platform-browser|
   │                          platform-browser-dynamic|platform-server|router|service-worker|
   │                          upgrade|zone.js|packaging|changelog|dev-infra|docs-infra|migrations|
-  │                          
+  │
   │
   └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
 ```
+
 Each commit message consists of a `type`, `scope` and `subject` (message).  
 The `type` and `subject` are mandatory, the `scope` is optional in some specific
 cases. Format: `<type>(<scope>): <subject>`
@@ -46,17 +47,17 @@ cases. Format: `<type>(<scope>): <subject>`
 
 Must be one of the following:
 
-- **feat**: A new feature
-- **fix**: A bug fix
-- **docs**: Documentation only changes
-- **style**: Changes that do not affect the meaning of the code (white-space,
-  formatting, missing semi-colons, etc)
-- **refactor**: A code change that neither fixes a bug nor adds a feature
-- **test**: Adding missing tests or correcting existing tests
-- **ci**: Changes that affect the CI
-- **build**: Changes that affect the build system like npm scripts or
-  angular-cli related changes
-- **chore**: Other changes that don't modify src or test files
+-   **feat**: A new feature
+-   **fix**: A bug fix
+-   **docs**: Documentation only changes
+-   **style**: Changes that do not affect the meaning of the code (white-space,
+    formatting, missing semi-colons, etc)
+-   **refactor**: A code change that neither fixes a bug nor adds a feature
+-   **test**: Adding missing tests or correcting existing tests
+-   **ci**: Changes that affect the CI
+-   **build**: Changes that affect the build system like npm scripts or
+    angular-cli related changes
+-   **chore**: Other changes that don't modify src or test files
 
 ### Scope
 
@@ -100,7 +101,7 @@ BREAKING CHANGE: The method has been removed.
 Describe reasons.
 ```
 
-##  Code reviews and PRs
+## Code reviews and PRs
 
 ### Open PR
 
@@ -125,4 +126,3 @@ must review this PR before the process can be continued (in most cases at least
 2 codeowners will review and approve).
 
 ### Merge-ready
-

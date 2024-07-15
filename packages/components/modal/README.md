@@ -1,6 +1,5 @@
 The dialog is currently divided into 3 modes - `default`, `confirm box`, `custom`.
 
-
 #### Using service to create Confirm Mode
 
 ```ts
@@ -18,14 +17,16 @@ showConfirm() {
 
 ```ts
 let dialogRef = modalService.open({
-    kbqComponent: CustomComponent
+    kbqComponent: CustomComponent,
 });
 ```
 
 ```ts
-@Component({/* ... */})
+@Component({
+    /* ... */
+})
 export class CustomComponent {
-    constructor(private dialogRef: KbqModalRef) { }
+    constructor(private dialogRef: KbqModalRef) {}
 
     closeDialog() {
         this.modal.destroy({ data: 'this the result data' });

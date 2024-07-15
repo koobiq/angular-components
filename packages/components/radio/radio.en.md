@@ -3,12 +3,12 @@
 <!-- example(radio-overview) -->
 
 ### Radio groups
+
 Radio-buttons should typically be placed inside of an `<kbq-radio-group>` unless the DOM structure
 would make that impossible (e.g., radio-buttons inside of table cells). The radio-group has a
 `value` property that reflects the currently selected radio-button inside of the group.
 
 Individual radio-buttons inside of a radio-group will inherit the `name` of the group.
-
 
 ### Use with @angular/forms
 
@@ -16,6 +16,7 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 and `ReactiveFormsModule`.
 
 ### Accessibility
+
 The `<kbq-radio-button>` uses an internal `<input type="radio">` to provide an accessible experience.
 This internal radio button receives focus and is automatically labelled by the text content of the
 `<kbq-radio-button>` element.

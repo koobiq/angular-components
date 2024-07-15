@@ -11,18 +11,24 @@ const config = {
     singleQuote: true,
     overrides: [
         {
+            files: ['*.yml'],
+            options: {
+                tabWidth: 2,
+            },
+        },
+        {
             files: ['.component.html', '.page.html'],
             options: {
-                parser: 'angular'
-            }
+                parser: 'angular',
+            },
         },
         {
             files: ['*.html'],
             options: {
                 parser: 'html',
-                singleQuote: false
-            }
-        }
+                singleQuote: false,
+            },
+        },
     ],
     plugins: ['@ianvs/prettier-plugin-sort-imports'],
     importOrderParserPlugins: ['typescript', 'decorators-legacy'],
@@ -36,8 +42,8 @@ const config = {
         '<THIRD_PARTY_MODULES>',
         '',
         '^[./]',
-        ''
-    ]
+        '',
+    ],
 };
 
 module.exports = config;
