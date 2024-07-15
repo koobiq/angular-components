@@ -50,6 +50,20 @@
                 bottom: kbq-css-variable(size-s);
                 left: kbq-css-variable(size-s);
             }
+
+            &.kbq-navbar-margined {
+                height: kbq-css-variable(size-3xl);
+
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-top: kbq-css-variable(size-s);
+                margin-bottom: kbq-css-variable(size-s);
+
+                &:after {
+                    top: 0;
+                    bottom: 0;
+                }
+            }
         }
 
         &.kbq-navbar-item_has-nested {
