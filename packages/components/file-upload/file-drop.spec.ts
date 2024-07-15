@@ -2,15 +2,16 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent, dispatchEvent } from '@koobiq/cdk/testing';
-
+import { dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFileDropDirective } from './file-drop';
 import { KbqFile } from './file-upload';
 
-
-export const createFile = (name: string, type?: string): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry>} => ({
+export const createFile = (
+    name: string,
+    type?: string,
+): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry> } => ({
     kind: 'file',
-    webkitGetAsEntry: () => createFSFile(name, type)
+    webkitGetAsEntry: () => createFSFile(name, type),
 });
 
 const createFSFile = (name: string, type = '') => {
@@ -21,8 +22,8 @@ const createFSFile = (name: string, type = '') => {
         fullPath: name,
         isDirectory: false,
         isFile: true,
-        file: (successCb) => successCb(file)
-    }
+        file: (successCb) => successCb(file),
+    };
 };
 
 describe('FileDropDirective', () => {
@@ -31,7 +32,7 @@ describe('FileDropDirective', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SimpleDNDComponent, KbqFileDropDirective]
+            declarations: [SimpleDNDComponent, KbqFileDropDirective],
         }).compileComponents();
     });
 
@@ -90,13 +91,13 @@ describe('FileDropDirective', () => {
         expect(component.onDrop).not.toHaveBeenCalled();
     });
 
-
     it('FileDropDirective: drop folder', fakeAsync(() => {
         const event = new CustomEvent('CustomEvent');
         event.initCustomEvent('drop');
         const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeFiles = [
-            createFSFile('test1'), createFSFile('test2')
+            createFSFile('test1'),
+            createFSFile('test2'),
         ];
 
         const fakeDirectoryItem = {
@@ -105,9 +106,9 @@ describe('FileDropDirective', () => {
                 isDirectory: true,
                 isFile: false,
                 createReader: () => ({
-                    readEntries: (successCb) => successCb(fakeFiles)
-                })
-            })
+                    readEntries: (successCb) => successCb(fakeFiles),
+                }),
+            }),
         };
         (event as any).dataTransfer = { items: [fakeDirectoryItem] };
         spyOn(component, 'onDrop').and.callThrough();
@@ -126,7 +127,7 @@ describe('FileDropDirective', () => {
 });
 
 @Component({
-    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
+    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>',
 })
 class SimpleDNDComponent {
     files: KbqFile[];

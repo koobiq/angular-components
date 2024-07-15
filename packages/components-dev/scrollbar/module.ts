@@ -1,22 +1,18 @@
 import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-    KbqScrollbarModule,
-    KbqScrollbarEvents,
-    KbqScrollbarOptions
-} from '@koobiq/components/scrollbar';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     options: KbqScrollbarOptions;
     events: KbqScrollbarEvents = {
-        initialized: (...args) => this.onInitialize(args)
+        initialized: (...args) => this.onInitialize(args),
     };
 
     scrollCounter = 0;
@@ -26,9 +22,9 @@ export class DemoComponent {
     onScroll([instance, args]) {
         console.log(instance, args);
         this.scrollCounter++;
-    };
+    }
 
-    onInitialize($event)  {
+    onInitialize($event) {
         console.log($event);
     }
 
@@ -50,11 +46,10 @@ export class DemoComponent {
                     `;
 }
 
-
 /* tslint:disable:max-classes-per-file */
 @NgModule({
     declarations: [DemoComponent],
     imports: [BrowserModule, KbqScrollbarModule, KbqButtonModule],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

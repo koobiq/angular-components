@@ -10,20 +10,20 @@ export enum PopUpPlacements {
     LeftBottom = 'leftBottom',
     Bottom = 'bottom',
     BottomLeft = 'bottomLeft',
-    BottomRight = 'bottomRight'
+    BottomRight = 'bottomRight',
 }
 
 export enum PopUpVisibility {
     Initial = 'initial',
     Visible = 'visible',
-    Hidden = 'hidden'
+    Hidden = 'hidden',
 }
 
 export enum PopUpTriggers {
     Click = 'click',
     Focus = 'focus',
     Hover = 'hover',
-    Keydown = 'keydown'
+    Keydown = 'keydown',
 }
 
 export enum PopUpSizes {
@@ -31,5 +31,5 @@ export enum PopUpSizes {
     Medium = 'medium',
     // Normal is deprecated and will be deleted in 16.x
     Normal = 'medium',
-    Large = 'large'
+    Large = 'large',
 }

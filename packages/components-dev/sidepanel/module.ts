@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component, Inject,
-    NgModule,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, NgModule, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,20 +11,19 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
     KBQ_SIDEPANEL_DATA,
+    KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelService,
-    KbqSidepanelModule,
-    KbqSidepanelSize
+    KbqSidepanelSize,
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
 
 // tslint:disable:no-console
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class SidepanelDemoComponent {
     themePalette = ThemePalette;
@@ -51,8 +44,10 @@ export class SidepanelDemoComponent {
             position: this.position,
             size: this.size,
             data: {
-                openComponentSidepanel: () => { this.openComponentSidepanel(); }
-            }
+                openComponentSidepanel: () => {
+                    this.openComponentSidepanel();
+                },
+            },
         });
     }
 
@@ -60,15 +55,14 @@ export class SidepanelDemoComponent {
         this.sidepanelService.open(this.template, {
             position: this.position,
             size: this.size,
-            hasBackdrop: this.modalState
+            hasBackdrop: this.modalState,
         });
     }
 }
 
 @Component({
     selector: 'example-sidepanel',
-    template: `
-        <kbq-sidepanel-header [closeable]="true">
+    template: ` <kbq-sidepanel-header [closeable]="true">
             Sidepanel Component Content Sidepanel Component Content Sidepanel Component Content
         </kbq-sidepanel-header>
 
@@ -90,8 +84,8 @@ export class SidepanelDemoComponent {
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>`,
     host: {
-        class: 'layout-column flex'
-    }
+        class: 'layout-column flex',
+    },
 })
 export class ExampleSidepanelComponent {
     themePalette = ThemePalette;
@@ -108,7 +102,7 @@ export class ExampleSidepanelComponent {
 @NgModule({
     declarations: [
         SidepanelDemoComponent,
-        ExampleSidepanelComponent
+        ExampleSidepanelComponent,
     ],
     imports: [
         BrowserModule,
@@ -121,10 +115,10 @@ export class ExampleSidepanelComponent {
         KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
-        KbqDropdownModule
+        KbqDropdownModule,
     ],
     bootstrap: [
-        SidepanelDemoComponent
-    ]
+        SidepanelDemoComponent,
+    ],
 })
 export class DemoModule {}

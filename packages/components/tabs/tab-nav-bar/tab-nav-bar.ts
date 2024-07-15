@@ -11,7 +11,7 @@ import {
     OnDestroy,
     QueryList,
     Renderer2,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     CanDisable,
@@ -19,18 +19,18 @@ import {
     HasTabIndex,
     HasTabIndexCtor,
     mixinDisabled,
-    mixinTabIndex
+    mixinTabIndex,
 } from '@koobiq/components/core';
 import { delay } from 'rxjs/operators';
-
 
 // Boilerplate for applying mixins to KbqTabLink.
 /** @docs-private */
 export class KbqTabLinkBase {}
 
 /** @docs-private */
-export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor &
-    typeof KbqTabLinkBase = mixinTabIndex(mixinDisabled(KbqTabLinkBase));
+export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqTabLinkBase = mixinTabIndex(
+    mixinDisabled(KbqTabLinkBase),
+);
 
 /**
  * Link inside of a `kbq-tab-nav-bar`.
@@ -48,8 +48,8 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor &
         '[class.kbq-disabled]': 'disabled',
 
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null'
-    }
+        '[attr.disabled]': 'disabled || null',
+    },
 })
 export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex {
     vertical = false;
@@ -72,7 +72,7 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     constructor(
         public elementRef: ElementRef,
         private readonly focusMonitor: FocusMonitor,
-        private readonly renderer: Renderer2
+        private readonly renderer: Renderer2,
     ) {
         super();
 
@@ -108,7 +108,6 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     }
 }
 
-
 /**
  * Navigation component matching the styles of the tab group header.
  */
@@ -122,10 +121,10 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
         '[class.kbq-tab-nav-bar_filled]': '!transparent',
         '[class.kbq-tab-nav-bar_transparent]': 'transparent',
         '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
-        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface'
+        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface',
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqTabNav implements AfterContentInit {
     vertical = false;
@@ -142,7 +141,7 @@ export class KbqTabNav implements AfterContentInit {
     ngAfterContentInit(): void {
         this.links.changes
             .pipe(delay(0))
-            .subscribe((links) => links.forEach((link) => link.vertical = this.vertical));
+            .subscribe((links) => links.forEach((link) => (link.vertical = this.vertical)));
 
         this.links.notifyOnChanges();
     }

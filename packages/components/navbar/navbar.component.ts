@@ -12,29 +12,20 @@ import {
     Input,
     OnDestroy,
     QueryList,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import {
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    TAB,
-    isHorizontalMovement,
-    isVerticalMovement
-} from '@koobiq/cdk/keycodes';
+import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith, takeUntil } from 'rxjs/operators';
-
 import {
     KbqNavbarFocusableItem,
     KbqNavbarFocusableItemEvent,
     KbqNavbarItem,
-    KbqNavbarRectangleElement
+    KbqNavbarRectangleElement,
 } from './navbar-item.component';
 
-
 export type KbqNavbarContainerPositionType = 'left' | 'right';
-
 
 @Directive()
 export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
@@ -71,36 +62,31 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     constructor(
         protected changeDetectorRef: ChangeDetectorRef,
         elementRef: ElementRef,
-        private focusMonitor: FocusMonitor
+        private focusMonitor: FocusMonitor,
     ) {
         this.focusMonitorSubscription = this.focusMonitor.monitor(elementRef).subscribe((focusOrigin) => {
-           this.keyManager.setFocusOrigin(focusOrigin);
+            this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
 
     ngAfterContentInit(): void {
-        this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems)
-        .withTypeAhead();
+        this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
-        this.keyManager.tabOut
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(() => {
-                this.tabIndex = -1;
+        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+            this.tabIndex = -1;
 
-                setTimeout(() => {
-                    this.tabIndex = 0;
-                    this.changeDetectorRef.markForCheck();
-                });
+            setTimeout(() => {
+                this.tabIndex = 0;
+                this.changeDetectorRef.markForCheck();
             });
+        });
 
-        this.focusableItems.changes
-            .pipe(startWith(null), takeUntil(this.destroyed))
-            .subscribe(() => {
-                this.resetOptions();
+        this.focusableItems.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+            this.resetOptions();
 
-                // Check to see if we need to update our tab index
-                this.updateTabIndex();
-            });
+            // Check to see if we need to update our tab index
+            this.updateTabIndex();
+        });
     }
 
     ngOnDestroy() {
@@ -115,7 +101,9 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     }
 
     focus(): void {
-        if (this.focusableItems.length === 0) { return; }
+        if (this.focusableItems.length === 0) {
+            return;
+        }
 
         this.keyManager.setFirstItemActive();
     }
@@ -146,17 +134,15 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     }
 
     private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges
-            .subscribe((event) => {
-                const index: number = this.focusableItems.toArray().indexOf(event.item);
+        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
+            const index: number = this.focusableItems.toArray().indexOf(event.item);
 
-                if (this.isValidIndex(index)) {
-                    this.keyManager.updateActiveItem(index);
-                }
-            });
+            if (this.isValidIndex(index)) {
+                this.keyManager.updateActiveItem(index);
+            }
+        });
 
-        this.optionBlurSubscription = this.optionBlurChanges
-            .subscribe(() => this.blur());
+        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
     }
 
     private updateTabIndex(): void {
@@ -172,12 +158,11 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     }
 }
 
-
 @Directive({
     selector: 'kbq-navbar-container',
     host: {
-        class: 'kbq-navbar-container'
-    }
+        class: 'kbq-navbar-container',
+    },
 })
 export class KbqNavbarContainer {}
 
@@ -188,7 +173,7 @@ export class KbqNavbarContainer {}
         './navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss'
+        './navbar-divider.scss',
     ],
     host: {
         class: 'kbq-navbar',
@@ -200,10 +185,10 @@ export class KbqNavbarContainer {}
 
         '(keydown)': 'onKeyDown($event)',
 
-        '(window:resize)': 'resizeStream.next($event)'
+        '(window:resize)': 'resizeStream.next($event)',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
     @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
@@ -220,8 +205,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private get totalItemsWidth(): number {
-        return this.rectangleElements
-            .reduce((acc, item) => acc + item.getOuterElementWidth(), 0);
+        return this.rectangleElements.reduce((acc, item) => acc + item.getOuterElementWidth(), 0);
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
@@ -236,7 +220,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     constructor(
         private elementRef: ElementRef,
         changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
+        focusMonitor: FocusMonitor,
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 
@@ -248,14 +232,11 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     ngAfterContentInit(): void {
         this.setItemsState();
 
-        this.rectangleElements.changes
-            .subscribe(this.setItemsState);
+        this.rectangleElements.changes.subscribe(this.setItemsState);
 
         super.ngAfterContentInit();
 
-        this.keyManager
-            .withVerticalOrientation(false)
-            .withHorizontalOrientation('ltr');
+        this.keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');
     }
 
     ngAfterViewInit(): void {
@@ -301,7 +282,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         } else {
             this.expandItems(collapseDelta);
         }
-    }
+    };
 
     private eventFromInput(event: KeyboardEvent): boolean {
         return !!(event.target as HTMLElement).attributes.getNamedItem('kbqinput');
@@ -322,14 +303,15 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private collapseItems(collapseDelta: number) {
         let delta = collapseDelta;
 
-        const unCollapsedItems = this.collapsableItems
-            .filter((item) => !item.collapsed);
+        const unCollapsedItems = this.collapsableItems.filter((item) => !item.collapsed);
 
         for (const item of unCollapsedItems) {
             item.collapsed = true;
             delta -= item.getTitleWidth();
 
-            if (delta < 0) { break; }
+            if (delta < 0) {
+                break;
+            }
         }
     }
 
@@ -347,7 +329,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private setItemsState = () => {
-        Promise.resolve()
-            .then(() => this.rectangleElements?.forEach((item) => item.horizontal = true));
-    }
+        Promise.resolve().then(() => this.rectangleElements?.forEach((item) => (item.horizontal = true)));
+    };
 }

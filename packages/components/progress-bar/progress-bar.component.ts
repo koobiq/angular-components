@@ -1,13 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation,
-    ElementRef,
-    Input,
-    Directive
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
-
 
 export type ProgressBarMode = 'determinate' | 'indeterminate';
 
@@ -22,22 +14,24 @@ export class KbqProgressBarBase {
 }
 
 /** @docs-private */
-export const KbqProgressBarMixinBase:
-    CanColorCtor & typeof KbqProgressBarBase = mixinColor(KbqProgressBarBase, KbqComponentColors.Theme);
+export const KbqProgressBarMixinBase: CanColorCtor & typeof KbqProgressBarBase = mixinColor(
+    KbqProgressBarBase,
+    KbqComponentColors.Theme,
+);
 
 @Directive({
     selector: '[kbq-progress-bar-text]',
     host: {
-        class: 'kbq-progress-bar-text'
-    }
+        class: 'kbq-progress-bar-text',
+    },
 })
 export class KbqProgressBarText {}
 
 @Directive({
     selector: '[kbq-progress-bar-caption]',
     host: {
-        class: 'kbq-progress-bar-caption'
-    }
+        class: 'kbq-progress-bar-caption',
+    },
 })
 export class KbqProgressBarCaption {}
 
@@ -52,8 +46,8 @@ export class KbqProgressBarCaption {}
         '[attr.id]': 'id',
         class: 'kbq-progress-bar',
         '[class.kbq-progress-bar_determinate]': 'mode === "determinate"',
-        '[class.kbq-progress-bar_indeterminate]': 'mode === "indeterminate"'
-    }
+        '[class.kbq-progress-bar_indeterminate]': 'mode === "indeterminate"',
+    },
 })
 export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor {
     @Input() id: string = `kbq-progress-bar-${idIterator++}`;

@@ -1,11 +1,12 @@
-import { fakeAsync, TestBed, flush, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import {
     KBQ_LOCALE_DATA,
-    KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE,
-    KbqFormattersModule, KbqLocaleService,
-    KbqRoundDecimalPipe
+    KBQ_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
+    KbqLocaleService,
+    KbqRoundDecimalPipe,
 } from '@koobiq/components/core';
-
 
 // tslint:disable:no-magic-numbers
 describe('KbqRoundDecimalPipe', () => {
@@ -16,8 +17,8 @@ describe('KbqRoundDecimalPipe', () => {
             imports: [KbqFormattersModule],
             providers: [
                 { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
-                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService, deps: [KBQ_LOCALE_ID, KBQ_LOCALE_DATA] }
-            ]
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService, deps: [KBQ_LOCALE_ID, KBQ_LOCALE_DATA] },
+            ],
         }).compileComponents();
 
         pipe = TestBed.inject(KbqRoundDecimalPipe);
@@ -84,29 +85,36 @@ describe('KbqRoundDecimalPipe', () => {
                 localeService.current.formatters.number.rounding.thousand,
                 localeService.current.formatters.number.rounding.million,
                 localeService.current.formatters.number.rounding.billion,
-                localeService.current.formatters.number.rounding.trillion
+                localeService.current.formatters.number.rounding.trillion,
             ];
 
             expect(pipe.transform(betweenOneAndThousand))
-                .withContext(locale).toEqual(betweenOneAndThousand.toLocaleString(locale));
+                .withContext(locale)
+                .toEqual(betweenOneAndThousand.toLocaleString(locale));
 
-            const isNumberWithFraction = !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
+            const isNumberWithFraction =
+                !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
                 Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)[1]);
             expect(isNumberWithFraction).withContext(locale).toBeTruthy();
 
             expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3]))
-                .withContext(locale).toBeTruthy();
+                .withContext(locale)
+                .toBeTruthy();
 
-            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1])).withContext(locale).toBeTruthy();
+            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1]))
+                .withContext(locale)
+                .toBeTruthy();
 
-            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2])).withContext(locale).toBeTruthy();
+            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2]))
+                .withContext(locale)
+                .toBeTruthy();
         });
     }));
 
     /*
-    * 2 * 10^3 - number in the interval of [1500...2500)
-    * 2,0 * 10^3 - number in the interval of [1950...2050)
-    */
+     * 2 * 10^3 - number in the interval of [1500...2500)
+     * 2,0 * 10^3 - number in the interval of [1950...2050)
+     */
     it('should handle 2k and 2,0k case', fakeAsync(() => {
         localeService.setLocale('en-US');
         flush();

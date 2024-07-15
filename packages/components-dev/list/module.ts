@@ -1,7 +1,7 @@
 // tslint:disable:no-console
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule } from '@angular/forms';
+import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -14,12 +14,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     popUpPlacements = PopUpPlacements;
@@ -38,7 +37,7 @@ export class DemoComponent {
         debounceTime(3000),
         switchMap(() => {
             return of(this.typesOfShoes);
-        })
+        }),
     );
 
     constructor(private clipboard: Clipboard) {}
@@ -57,10 +56,9 @@ export class DemoComponent {
     }
 }
 
-
 @NgModule({
     declarations: [
-        DemoComponent
+        DemoComponent,
     ],
     imports: [
         BrowserModule,
@@ -71,10 +69,10 @@ export class DemoComponent {
         KbqToolTipModule,
         KbqDropdownModule,
         KbqIconModule,
-        KbqTitleModule
+        KbqTitleModule,
     ],
     bootstrap: [
-        DemoComponent
-    ]
+        DemoComponent,
+    ],
 })
 export class DemoModule {}

@@ -13,16 +13,15 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
-    defaultCompareValues, defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule
+    KbqTreeModule,
+    defaultCompareValues,
+    defaultCompareViewValues,
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-
 import { FileFlatNode, FileNode } from '../tree-select/module';
-
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',
@@ -40,9 +39,8 @@ const OPTIONS = [
     'Blagoveshchensk',
     'Bologoye',
     'Bryansk',
-    'Veliky Novgorod'
+    'Veliky Novgorod',
 ];
-
 
 export function buildFileTree(value: any, level: number): FileNode[] {
     const data: any[] = [];
@@ -74,44 +72,43 @@ export const DATA_OBJECT = {
         Woods: 'jpg',
         PhotoBoothLibrary: {
             Contents: 'dir',
-            Pictures_2: 'dir'
-        }
+            Pictures_2: 'dir',
+        },
     },
     Documents: {
         Pictures_3: 'Pictures',
         angular: {
             src1: {
                 core: 'ts',
-                compiler: 'ts'
-            }
+                compiler: 'ts',
+            },
         },
         material2: {
             src2: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts'
-            }
-        }
+                input: 'ts',
+            },
+        },
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf'
+        October: 'pdf',
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app'
+        Webstorm: 'app',
     },
-    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
+    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app',
 };
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     placeholder = 'PlaceHolder PlaceHolder PlaceHolder PlaceHolder PlaceHolder';
@@ -132,7 +129,7 @@ export class DemoComponent {
         'Blagoveshchensk',
         'Bologoye',
         'Bryansk',
-        'Veliky Novgorod'
+        'Veliky Novgorod',
     ];
 
     emptyMultipleValue = [];
@@ -160,13 +157,16 @@ export class DemoComponent {
     numberValue: number | null = null;
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue,
-            defaultCompareValues, defaultCompareViewValues, this.isDisabled
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            defaultCompareValues,
+            defaultCompareViewValues,
+            this.isDisabled,
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -187,33 +187,32 @@ export class DemoComponent {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 
     private isDisabled = (node: FileFlatNode): boolean => {
         return node.name === 'November';
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -232,8 +231,8 @@ export class DemoComponent {
         KbqTreeModule,
         KbqTreeSelectModule,
         KbqPseudoCheckboxModule,
-        KbqAutocompleteModule
+        KbqAutocompleteModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

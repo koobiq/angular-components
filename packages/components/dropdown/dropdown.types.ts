@@ -1,13 +1,7 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
-import {
-    EventEmitter,
-    InjectionToken,
-    TemplateRef
-} from '@angular/core';
-
+import { EventEmitter, InjectionToken, TemplateRef } from '@angular/core';
 import { KbqDropdownContent } from './dropdown-content.directive';
-
 
 export type DropdownPositionX = 'before' | 'after';
 
@@ -39,7 +33,6 @@ export interface KbqDropdownPanel {
     setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;
 }
 
-
 /** Default `kbq-dropdown` options that can be overridden. */
 // tslint:disable-next-line:naming-convention
 export interface KbqDropdownDefaultOptions {
@@ -68,13 +61,14 @@ export interface KbqDropdownDefaultOptions {
  */
 export const KBQ_DROPDOWN_PANEL = new InjectionToken<KbqDropdownPanel>('KBQ_DROPDOWN_PANEL');
 
-
 /** Injection token to be used to override the default options for `kbq-dropdown`. */
-export const KBQ_DROPDOWN_DEFAULT_OPTIONS =
-    new InjectionToken<KbqDropdownDefaultOptions>('kbq-dropdown-default-options', {
+export const KBQ_DROPDOWN_DEFAULT_OPTIONS = new InjectionToken<KbqDropdownDefaultOptions>(
+    'kbq-dropdown-default-options',
+    {
         providedIn: 'root',
-        factory: KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY
-    });
+        factory: KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY,
+    },
+);
 
 /** @docs-private */
 // tslint:disable-next-line:naming-convention
@@ -85,6 +79,6 @@ export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOption
         xPosition: 'after',
         yPosition: 'below',
         backdropClass: 'cdk-overlay-transparent-backdrop',
-        hasBackdrop: false
+        hasBackdrop: false,
     };
 }

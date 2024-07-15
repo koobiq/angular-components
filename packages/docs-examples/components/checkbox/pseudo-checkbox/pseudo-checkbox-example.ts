@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Pseudo checkbox
  */
@@ -8,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'pseudo-checkbox-example',
     templateUrl: 'pseudo-checkbox-example.html',
     styleUrls: ['pseudo-checkbox-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class PseudoCheckboxExample {}

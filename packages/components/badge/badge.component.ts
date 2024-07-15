@@ -12,10 +12,9 @@ import {
     QueryList,
     Renderer2,
     SkipSelf,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
-
 
 export enum KbqBadgeColors {
     FadeContrast = 'fade-contrast',
@@ -27,17 +26,16 @@ export enum KbqBadgeColors {
     Theme = 'theme',
     Success = 'success',
     Warning = 'warning',
-    Error = 'error'
+    Error = 'error',
 }
 
 @Directive({
     selector: '[kbq-badge-caption]',
     host: {
-        class: 'kbq-badge-caption'
-    }
+        class: 'kbq-badge-caption',
+    },
 })
 export class KbqBadgeCaption {}
-
 
 export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     const COMMENT_NODE = 8;
@@ -51,12 +49,11 @@ export const rightIconClassName = 'kbq-icon_right';
 export const badgeLeftIconClassName = 'kbq-badge-icon_left';
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
-
 @Directive({
-    selector: 'kbq-badge'
+    selector: 'kbq-badge',
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
-    @ContentChildren((forwardRef(() => KbqIcon))) icons: QueryList<KbqIcon>;
+    @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
 
     nativeElement: HTMLElement;
 
@@ -65,7 +62,7 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     constructor(
         elementRef: ElementRef,
         private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef
+        @SkipSelf() private cdr: ChangeDetectorRef,
     ) {
         this.nativeElement = elementRef.nativeElement;
     }
@@ -79,12 +76,12 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
 
         const twoIcons = 2;
-        const filteredNodesWithoutComments = getNodesWithoutComments(
-            this.nativeElement.childNodes as NodeList
-        );
+        const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
 
-        const currentIsIconButtonValue = !!this.icons.length &&
-            this.icons.length === filteredNodesWithoutComments.length && this.icons.length <= twoIcons;
+        const currentIsIconButtonValue =
+            !!this.icons.length &&
+            this.icons.length === filteredNodesWithoutComments.length &&
+            this.icons.length <= twoIcons;
 
         if (currentIsIconButtonValue !== this.isIconButton) {
             this.isIconButton = currentIsIconButtonValue;
@@ -92,14 +89,13 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         }
 
         if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons.map((item) => item.getHostElement())
+            this.icons
+                .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
                     this.renderer.removeClass(iconHostElement, leftIconClassName);
                     this.renderer.removeClass(iconHostElement, rightIconClassName);
 
-                    const iconIndex = filteredNodesWithoutComments.findIndex(
-                        (node) => node === iconHostElement
-                    );
+                    const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === iconHostElement);
 
                     if (iconIndex === 0) {
                         this.renderer.addClass(iconHostElement, leftIconClassName);
@@ -112,10 +108,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
                     }
                 });
         }
-
     }
 }
-
 
 @Component({
     selector: 'kbq-badge',
@@ -128,8 +122,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         '[class.kbq-badge_compact]': 'compact',
         '[class.kbq-badge-filled]': '!outline',
         '[class.kbq-badge-outline]': 'outline',
-        '[class]': 'badgeColor'
-    }
+        '[class]': 'badgeColor',
+    },
 })
 export class KbqBadge {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

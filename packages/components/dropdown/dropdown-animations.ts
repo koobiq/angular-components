@@ -1,14 +1,13 @@
 import {
-    trigger,
+    animate,
+    AnimationTriggerMetadata,
+    group,
+    query,
     state,
     style,
-    animate,
     transition,
-    query,
-    group,
-    AnimationTriggerMetadata
+    trigger,
 } from '@angular/animations';
-
 
 /**
  * Animations used by the kbq-dropdown component.
@@ -27,17 +26,22 @@ export const kbqDropdownAnimations: {
      * delay to display the ripple.
      */
     transformDropdown: trigger('transformDropdown', [
-        state('void', style({
-            opacity: 0,
-            transform: 'scale(0.8)'
-        })),
-        transition('void => enter', group([
-            query('.kbq-dropdown__content', animate('0ms linear', style({opacity: 1}))),
-            animate('0ms cubic-bezier(0, 0, 0.2, 1)', style({transform: 'scale(1)'}))
-        ])),
-        transition('* => void', animate('50ms 25ms linear', style({opacity: 0})))
+        state(
+            'void',
+            style({
+                opacity: 0,
+                transform: 'scale(0.8)',
+            }),
+        ),
+        transition(
+            'void => enter',
+            group([
+                query('.kbq-dropdown__content', animate('0ms linear', style({ opacity: 1 }))),
+                animate('0ms cubic-bezier(0, 0, 0.2, 1)', style({ transform: 'scale(1)' })),
+            ]),
+        ),
+        transition('* => void', animate('50ms 25ms linear', style({ opacity: 0 }))),
     ]),
-
 
     /**
      * This animation fades in the background color and content of the dropdown panel
@@ -45,12 +49,12 @@ export const kbqDropdownAnimations: {
      */
     fadeInItems: trigger('fadeInItems', [
         // now. Remove next time we do breaking changes.
-        state('showing', style({opacity: 1})),
+        state('showing', style({ opacity: 1 })),
         transition('void => *', [
-            style({opacity: 0}),
-            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)')
-        ])
-    ])
+            style({ opacity: 0 }),
+            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)'),
+        ]),
+    ]),
 };
 
 export const fadeInItems = kbqDropdownAnimations.fadeInItems;

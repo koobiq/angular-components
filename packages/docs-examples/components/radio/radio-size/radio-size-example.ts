@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Radio size
  */
@@ -8,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'radio-size-example',
     templateUrl: 'radio-size-example.html',
     styleUrls: ['radio-size-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class RadioSizeExample {}

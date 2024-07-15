@@ -6,16 +6,11 @@ import {
     Input,
     Output,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
-
-import {
-    KbqCodeBlockConfiguration,
-    KbqCodeFile
-} from './code-block.types';
-
+import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 
 @Component({
     selector: 'kbq-actionbar-block',
@@ -23,10 +18,10 @@ import {
     styleUrls: ['./actionbar.component.scss'],
     host: {
         class: 'kbq-code-block-actionbar',
-        '[class.kbq-code-block-actionbar_less-contrast]': 'lessContrast'
+        '[class.kbq-code-block-actionbar_less-contrast]': 'lessContrast',
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqActionBarComponent implements AfterViewInit {
     @ViewChild('copyTooltip') copyTooltip: KbqTooltipTrigger;
@@ -48,13 +43,11 @@ export class KbqActionBarComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.copyTooltipText = this.config.copyTooltip;
 
-        this.copyTooltip.visibleChange
-            .pipe(filter((state) => !state))
-            .subscribe(() => {
-                if (this.copyTooltipText === this.config.copiedTooltip) {
-                    this.copyTooltipText = this.config.copyTooltip;
-                }
-            });
+        this.copyTooltip.visibleChange.pipe(filter((state) => !state)).subscribe(() => {
+            if (this.copyTooltipText === this.config.copiedTooltip) {
+                this.copyTooltipText = this.config.copyTooltip;
+            }
+        });
     }
 
     onCopy() {

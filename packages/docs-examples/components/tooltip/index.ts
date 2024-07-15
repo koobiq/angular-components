@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { TooltipExtendedExample } from './tooltip-extended/tooltip-extended-example';
 import { TooltipLongExample } from './tooltip-long/tooltip-long-example';
 import { TooltipMultipleLinesExample } from './tooltip-multiple-lines/tooltip-multiple-lines-example';
@@ -12,14 +11,13 @@ import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-exam
 import { TooltipPlacementCenterExample } from './tooltip-placement-center/tooltip-placement-center-example';
 import { TooltipPlacementEdgesExample } from './tooltip-placement-edges/tooltip-placement-edges-example';
 
-
 export {
-    TooltipOverviewExample,
     TooltipExtendedExample,
-    TooltipMultipleLinesExample,
     TooltipLongExample,
+    TooltipMultipleLinesExample,
+    TooltipOverviewExample,
     TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample
+    TooltipPlacementEdgesExample,
 };
 
 const EXAMPLES = [
@@ -28,7 +26,7 @@ const EXAMPLES = [
     TooltipMultipleLinesExample,
     TooltipLongExample,
     TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample
+    TooltipPlacementEdgesExample,
 ];
 
 @NgModule({
@@ -37,9 +35,9 @@ const EXAMPLES = [
         A11yModule,
         KbqButtonModule,
         KbqToolTipModule,
-        CdkScrollableModule
+        CdkScrollableModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class TooltipExamplesModule {}

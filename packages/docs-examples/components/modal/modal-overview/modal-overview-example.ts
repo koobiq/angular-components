@@ -2,7 +2,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
-
 /**
  * @title Basic Modal
  */
@@ -10,7 +9,7 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-overview-example',
     templateUrl: 'modal-overview-example.html',
     styleUrls: ['modal-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ModalOverviewExample {
     constructor(private modalService: KbqModalService) {}
@@ -19,10 +18,10 @@ export class ModalOverviewExample {
         this.modalService.confirm({
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent   : 'Save changes?',
-            kbqOkText    : 'Save',
+            kbqContent: 'Save changes?',
+            kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk      : () => console.log('OK')
+            kbqOnOk: () => console.log('OK'),
         });
     }
 
@@ -30,22 +29,23 @@ export class ModalOverviewExample {
         this.modalService.success({
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent   : 'All changes are saved!',
-            kbqOkText    : 'ОК',
+            kbqContent: 'All changes are saved!',
+            kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk      : () => console.log('OK')
+            kbqOnOk: () => console.log('OK'),
         });
     }
 
     showDeleteModal() {
         this.modalService.delete({
-            kbqContent   : 'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
-            kbqOkText    : 'Delete',
+            kbqContent:
+                'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
+            kbqOkText: 'Delete',
             kbqCancelText: 'Cancel',
-            kbqWidth     : '480px',
+            kbqWidth: '480px',
             kbqMaskClosable: true,
-            kbqOnOk      : () => console.log('Delete'),
-            kbqOnCancel  : () => console.log('Cancel')
+            kbqOnOk: () => console.log('Delete'),
+            kbqOnCancel: () => console.log('Cancel'),
         });
     }
 }

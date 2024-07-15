@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 
-
 interface ICheckbox {
     name: string;
     checked: boolean;
 }
-
 
 /**
  * @title Indeterminate checkbox
@@ -14,7 +12,7 @@ interface ICheckbox {
     selector: 'checkbox-indeterminate-example',
     templateUrl: 'checkbox-indeterminate-example.html',
     styleUrls: ['checkbox-indeterminate-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CheckboxIndeterminateExample {
     parentIndeterminate = true;
@@ -23,7 +21,7 @@ export class CheckboxIndeterminateExample {
     fruits: ICheckbox[] = [
         { name: 'Apples', checked: true },
         { name: 'Bananas', checked: false },
-        { name: 'Grapes', checked: false }
+        { name: 'Grapes', checked: false },
     ];
 
     constructor(private ref: ChangeDetectorRef) {}
@@ -54,8 +52,7 @@ export class CheckboxIndeterminateExample {
         this.fruits.forEach((fruit) => {
             fruit.checked ? checked++ : unchecked++;
         });
-        this.parentIndeterminate = (checked !== length && unchecked !== length);
+        this.parentIndeterminate = checked !== length && unchecked !== length;
         this.parentChecked = this.parentIndeterminate || length === checked;
     }
 }
-

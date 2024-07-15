@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Pseudo link
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-disabled-example',
     templateUrl: 'link-disabled-example.html',
     styleUrls: ['link-disabled-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LinkDisabledExample {
     disabled = true;

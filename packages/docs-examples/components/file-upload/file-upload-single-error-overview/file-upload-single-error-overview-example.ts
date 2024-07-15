@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { KbqFileItem } from '@koobiq/components/file-upload';
 
-
 /**
  * @title file upload single error overview
  */
 @Component({
     selector: 'file-upload-single-error-overview-example',
     templateUrl: 'file-upload-single-error-overview-example.html',
-    styleUrls: ['file-upload-single-error-overview-example.css']
+    styleUrls: ['file-upload-single-error-overview-example.css'],
 })
 export class FileUploadSingleErrorOverviewExample {
     errors: string[] = [];
@@ -20,7 +19,7 @@ export class FileUploadSingleErrorOverviewExample {
 
         if (fileItem) {
             this.errors = [
-                someValidationLogic() || ''
+                someValidationLogic() || '',
             ].filter(Boolean);
         }
     }

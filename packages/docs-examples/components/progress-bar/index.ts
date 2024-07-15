@@ -4,19 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
-
 import { ProgressBarIndeterminateExample } from './progress-bar-indeterminate/progress-bar-indeterminate-example';
 import { ProgressBarOverviewExample } from './progress-bar-overview/progress-bar-overview-example';
 
-
-export {
-    ProgressBarIndeterminateExample,
-    ProgressBarOverviewExample
-};
+export { ProgressBarIndeterminateExample, ProgressBarOverviewExample };
 
 const EXAMPLES = [
     ProgressBarIndeterminateExample,
-    ProgressBarOverviewExample
+    ProgressBarOverviewExample,
 ];
 
 @NgModule({
@@ -25,9 +20,9 @@ const EXAMPLES = [
         FormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqProgressBarModule
+        KbqProgressBarModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class ProgressBarExamplesModule {}

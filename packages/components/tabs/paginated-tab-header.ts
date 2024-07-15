@@ -1,30 +1,29 @@
 /* tslint:disable:naming-convention */
-import { FocusKeyManager, FocusableOption } from '@angular/cdk/a11y';
+import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ENTER, SPACE, hasModifierKey } from '@angular/cdk/keycodes';
-import { Platform, normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
+import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
-    ChangeDetectorRef,
-    ElementRef,
-    NgZone,
-    Optional,
-    QueryList,
-    EventEmitter,
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
-    OnDestroy,
+    ChangeDetectorRef,
     Directive,
+    ElementRef,
+    EventEmitter,
     Inject,
-    Input
+    Input,
+    NgZone,
+    OnDestroy,
+    Optional,
+    QueryList,
 } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { merge, of as observableOf, Subject, timer, fromEvent } from 'rxjs';
+import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
@@ -81,7 +80,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     private _selectedIndex = 0;
 
-
     /** Tracks which element has focus; used for keyboard navigation */
     get focusIndex(): number {
         return this.keyManager ? this.keyManager.activeItemIndex! : 0;
@@ -89,7 +87,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** When the focus index is set, we must manually send focus to the correct label */
     set focusIndex(value: number) {
-        if (!this.isValidIndex(value) || this.focusIndex === value || !this.keyManager) { return; }
+        if (!this.isValidIndex(value) || this.focusIndex === value || !this.keyManager) {
+            return;
+        }
 
         this.keyManager.setActiveItem(value);
     }
@@ -171,7 +171,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         private ngZone: NgZone,
         private platform: Platform,
         @Optional() private dir: Directionality,
-        @Optional() @Inject(ANIMATION_MODULE_TYPE) public animationMode?: string
+        @Optional() @Inject(ANIMATION_MODULE_TYPE) public animationMode?: string,
     ) {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
         ngZone.runOutsideAngular(() => {
@@ -201,8 +201,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             this.updatePagination();
         };
 
-        this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items)
-            .withHorizontalOrientation(this.getLayoutDirection());
+        this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
+            this.getLayoutDirection(),
+        );
 
         this.keyManager.updateActiveItem(this._selectedIndex);
 
@@ -218,10 +219,12 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                 // We need to defer this to give the browser some time to recalculate
                 // the element dimensions. The call has to be wrapped in `NgZone.run`,
                 // because the viewport change handler runs outside of Angular.
-                this.ngZone.run(() => Promise.resolve().then(() => {
-                    this.updateScrollPosition();
-                    realign();
-                }));
+                this.ngZone.run(() =>
+                    Promise.resolve().then(() => {
+                        this.updateScrollPosition();
+                        realign();
+                    }),
+                );
 
                 this.keyManager.withHorizontalOrientation(this.getLayoutDirection());
             });
@@ -229,12 +232,10 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // If there is a change in the focus key manager we need to emit the `indexFocused`
         // event in order to provide a public event that notifies about focus changes. Also we realign
         // the tabs container by scrolling the new focused tab into the visible section.
-        this.keyManager.change
-            .pipe(takeUntil(this.destroyed))
-            .subscribe((newFocusIndex) => {
-                this.indexFocused.emit(newFocusIndex);
-                this.setTabFocus(newFocusIndex);
-            });
+        this.keyManager.change.pipe(takeUntil(this.destroyed)).subscribe((newFocusIndex) => {
+            this.indexFocused.emit(newFocusIndex);
+            this.setTabFocus(newFocusIndex);
+        });
     }
 
     ngAfterContentChecked(): void {
@@ -271,7 +272,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     handleKeydown(event: KeyboardEvent) {
         // We don't handle any key bindings with a modifier key.
-        if (hasModifierKey(event)) { return; }
+        if (hasModifierKey(event)) {
+            return;
+        }
 
         // tslint:disable-next-line: deprecation
         const key = event.keyCode;
@@ -336,7 +339,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * providing a valid index and return true.
      */
     isValidIndex(index: number): boolean {
-        if (!this.items) { return true; }
+        if (!this.items) {
+            return true;
+        }
 
         const tab = this.items ? this.items.toArray()[index] : null;
 
@@ -376,7 +381,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** Performs the CSS transformation on the tab list that will cause the list to scroll. */
     updateTabScrollPosition() {
-        if (this.disablePagination) { return; }
+        if (this.disablePagination) {
+            return;
+        }
 
         const scrollDistance = this.scrollDistance;
         const translateX = this.getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
@@ -428,11 +435,15 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * should be called sparingly.
      */
     scrollToLabel(labelIndex: number) {
-        if (this.disablePagination) { return; }
+        if (this.disablePagination) {
+            return;
+        }
 
         const selectedLabel = this.items ? this.items.toArray()[labelIndex] : null;
 
-        if (!selectedLabel) { return; }
+        if (!selectedLabel) {
+            return;
+        }
 
         // The view length is the visible width of the tab labels.
         const viewLength = this.tabListContainer.nativeElement.offsetWidth;
@@ -518,7 +529,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         const lengthOfTabList = this.tabList.nativeElement.scrollWidth;
         const viewLength = this.tabListContainer.nativeElement.offsetWidth;
 
-        return (lengthOfTabList - viewLength) || 0;
+        return lengthOfTabList - viewLength || 0;
     }
 
     /** Stops the currently-running paginator interval.  */
@@ -534,7 +545,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     handlePaginatorPress(direction: ScrollDirection, mouseEvent?: MouseEvent) {
         // Don't start auto scrolling for right mouse button clicks. Note that we shouldn't have to
         // null check the `button`, but we do it so we don't break tests that use fake events.
-        if (mouseEvent && mouseEvent.button != null && mouseEvent.button !== 0) { return; }
+        if (mouseEvent && mouseEvent.button != null && mouseEvent.button !== 0) {
+            return;
+        }
 
         // Avoid overlapping timers.
         this.stopInterval();

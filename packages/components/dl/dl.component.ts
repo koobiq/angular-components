@@ -1,14 +1,6 @@
-import {
-    AfterContentInit,
-    Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
 
 @Component({
     selector: 'kbq-dl',
@@ -18,9 +10,9 @@ import { debounceTime } from 'rxjs/operators';
         class: 'kbq-dl',
         '[class.kbq-dl_vertical]': 'vertical',
         '[class.kbq-dl_wide]': 'wide',
-        '(window:resize)': 'resizeStream.next($event)'
+        '(window:resize)': 'resizeStream.next($event)',
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
     @Input() minWidth: number = 400;
@@ -35,7 +27,9 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     constructor(protected elementRef: ElementRef) {}
 
     ngAfterContentInit(): void {
-        if (this.vertical !== null) { return; }
+        if (this.vertical !== null) {
+            return;
+        }
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
@@ -50,16 +44,16 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
         const { width } = this.elementRef.nativeElement.getClientRects()[0];
 
         this.vertical = width <= this.minWidth;
-    }
+    };
 }
 
 @Component({
     selector: 'kbq-dt',
     template: '<ng-content></ng-content>',
     host: {
-        class: 'kbq-dt'
+        class: 'kbq-dt',
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqDtComponent {}
 
@@ -67,8 +61,8 @@ export class KbqDtComponent {}
     selector: 'kbq-dd',
     template: '<ng-content></ng-content>',
     host: {
-        class: 'kbq-dd'
+        class: 'kbq-dd',
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqDdComponent {}

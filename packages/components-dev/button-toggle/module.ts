@@ -4,26 +4,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { KbqButtonModule } from '../../components/button';
 import { KbqButtonToggleModule } from '../../components/button-toggle';
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ButtonToggleDemoComponent {
     modelResult: any;
     disabled: boolean;
 }
 
-
 @NgModule({
     declarations: [
-        ButtonToggleDemoComponent
+        ButtonToggleDemoComponent,
     ],
     imports: [
         BrowserModule,
@@ -32,11 +29,10 @@ export class ButtonToggleDemoComponent {
         KbqButtonToggleModule,
         KbqIconModule,
         FormsModule,
-        KbqTitleModule
+        KbqTitleModule,
     ],
     bootstrap: [
-        ButtonToggleDemoComponent
-    ]
+        ButtonToggleDemoComponent,
+    ],
 })
 export class DemoModule {}
-

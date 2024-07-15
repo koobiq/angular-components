@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title Fill and Style
  */
@@ -9,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'tag-fill-and-style-example',
     templateUrl: 'tag-fill-and-style-example.html',
     styleUrls: ['tag-fill-and-style-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TagFillAndStyleExample {
     colors = KbqComponentColors;

@@ -6,38 +6,33 @@ import {
     ElementRef,
     EventEmitter,
     Inject,
-    Input, OnDestroy,
+    Input,
+    OnDestroy,
     Optional,
     Output,
-    Renderer2, Self,
+    Renderer2,
+    Self,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService,
-    ruRULocaleData
-} from '@koobiq/components/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { ControlValueAccessor, FormControlStatus, NgControl } from '@angular/forms';
-
+import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import {
-    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileValidatorFn,
     KbqInputFile,
-    KbqInputFileLabel
+    KbqInputFileLabel,
+    isCorrectExtension,
 } from './file-upload';
-import { distinctUntilChanged } from 'rxjs/operators';
-
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel =
-    ruRULocaleData.fileUpload.single;
-
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = ruRULocaleData.fileUpload.single;
 
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
@@ -46,11 +41,12 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel =
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-single-file-upload'
-    }
+        class: 'kbq-single-file-upload',
+    },
 })
 export class KbqSingleFileUploadComponent
-    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor {
+    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor
+{
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
@@ -89,12 +85,12 @@ export class KbqSingleFileUploadComponent
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     cvaOnChange = (_: KbqFileItem | null) => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onTouched =  () => {};
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onTouched = () => {};
 
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
@@ -105,10 +101,9 @@ export class KbqSingleFileUploadComponent
         private renderer: Renderer2,
         @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileLabel,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
-        @Optional() @Self() public ngControl?: NgControl
+        @Optional() @Self() public ngControl?: NgControl,
     ) {
-        this.localeService?.changes
-            .subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();
@@ -123,9 +118,12 @@ export class KbqSingleFileUploadComponent
 
     ngAfterViewInit() {
         // FormControl specific errors update
-        this.statusChangeSubscription = this.ngControl?.statusChanges?.pipe(distinctUntilChanged())
+        this.statusChangeSubscription = this.ngControl?.statusChanges
+            ?.pipe(distinctUntilChanged())
             .subscribe((status: FormControlStatus) => {
-                if (this._file) { this._file.hasError = status === 'INVALID'; }
+                if (this._file) {
+                    this._file.hasError = status === 'INVALID';
+                }
                 this.errors = Object.values(this.ngControl?.errors || {});
                 this.cdr.markForCheck();
             });
@@ -147,11 +145,15 @@ export class KbqSingleFileUploadComponent
 
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
-    registerOnChange(fn: any): void { this.cvaOnChange = fn; }
+    registerOnChange(fn: any): void {
+        this.cvaOnChange = fn;
+    }
 
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
-    registerOnTouched(fn: any): void { this.onTouched = fn; }
+    registerOnTouched(fn: any): void {
+        this.onTouched = fn;
+    }
 
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
@@ -164,7 +166,9 @@ export class KbqSingleFileUploadComponent
     }
 
     onFileSelectedViaClick({ target }: Event): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         const files: FileList | null = (target as HTMLInputElement).files;
         if (files?.length) {
@@ -177,7 +181,9 @@ export class KbqSingleFileUploadComponent
     }
 
     deleteItem(event?: MouseEvent): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         event?.stopPropagation();
         this.file = null;
@@ -187,7 +193,9 @@ export class KbqSingleFileUploadComponent
     }
 
     onFileDropped(files: FileList | KbqFile[]): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         if (files?.length && isCorrectExtension(files[0], this.accept)) {
             this.file = this.mapToFileItem(files[0]);
@@ -203,29 +211,28 @@ export class KbqSingleFileUploadComponent
         this.getCaptionText();
 
         this.cdr.markForCheck();
-    }
+    };
 
     private mapToFileItem(file: File): KbqFileItem {
         return {
             file,
             hasError: this.validateFile(file),
             progress: new BehaviorSubject<number>(0),
-            loading: new BehaviorSubject<boolean>(false)
+            loading: new BehaviorSubject<boolean>(false),
         };
     }
 
     private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) { return; }
+        if (!this.customValidation?.length) {
+            return;
+        }
 
         this.errors = this.customValidation
-            .reduce(
-                (errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                    errors.push(validatorFn(file));
+            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
+                errors.push(validatorFn(file));
 
-                    return errors;
-                },
-                []
-            )
+                return errors;
+            }, [])
             .filter(Boolean) as string[];
 
         return !!this.errors.length;

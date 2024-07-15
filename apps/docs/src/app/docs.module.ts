@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -15,7 +14,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
-
 import { AnchorsModule } from './components/anchors/anchors.module';
 import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
 import { DocumentationItems } from './components/documentation-items';
@@ -58,12 +56,12 @@ import { APP_ROUTES } from './docs.module-routes';
 
         RouterModule.forRoot(APP_ROUTES, {
             scrollPositionRestoration: 'disabled',
-            onSameUrlNavigation: 'reload'
+            onSameUrlNavigation: 'reload',
         }),
 
         ComponentViewerModule,
         IconsViewerModule,
-        SidenavModule
+        SidenavModule,
     ],
     declarations: [DocsAppComponent, PageNotFoundComponent],
     providers: [
@@ -72,18 +70,18 @@ import { APP_ROUTES } from './docs.module-routes';
         IconItems,
         {
             provide: LocationStrategy,
-            useClass: PathLocationStrategy
+            useClass: PathLocationStrategy,
         },
         {
             provide: HIGHLIGHT_OPTIONS,
             useValue: {
                 fullLibraryLoader: () => import('highlight.js'),
                 lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'),
-                lineNumbers: true
-            }
+                lineNumbers: true,
+            },
         },
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
     ],
-    bootstrap: [DocsAppComponent]
+    bootstrap: [DocsAppComponent],
 })
 export class AppModule {}

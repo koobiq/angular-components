@@ -7,7 +7,7 @@ import {
     ElementRef,
     Input,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -15,13 +15,12 @@ import { KbqModalRef } from '@koobiq/components/modal';
 import { KbqToastService } from '@koobiq/components/toast';
 import { IconItem } from 'src/app/components/icons-items/icon-items';
 
-
 @Component({
     selector: 'icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',
     styleUrls: ['./icon-preview-modal.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconPreviewModalComponent implements AfterViewInit {
     @ViewChild('iconPreview') iconPreview: KbqIcon;
@@ -37,7 +36,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
         KbqComponentColors.Contrast,
         KbqComponentColors.ContrastFade,
         KbqComponentColors.Error,
-        KbqComponentColors.Success
+        KbqComponentColors.Success,
     ];
 
     selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
@@ -48,7 +47,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
         public modal: KbqModalRef,
         private http: HttpClient,
         private clipboard: Clipboard,
-        private toastService: KbqToastService
+        private toastService: KbqToastService,
     ) {}
 
     ngAfterViewInit(): void {
@@ -70,18 +69,19 @@ export class IconPreviewModalComponent implements AfterViewInit {
     }
 
     copySVG(): void {
-        this.http
-            .get(this.SVGLink, { responseType: 'text' })
-            .subscribe((data) => {
-                this.clipboard.copy(data);
-                this.showSuccessfullyCopiedToast();
-            });
+        this.http.get(this.SVGLink, { responseType: 'text' }).subscribe((data) => {
+            this.clipboard.copy(data);
+            this.showSuccessfullyCopiedToast();
+        });
     }
 
     getHexColor(): string {
-        if (!this.iconPreview) { return; }
+        if (!this.iconPreview) {
+            return;
+        }
 
-        const color = window.getComputedStyle(this.iconPreview.elementRef.nativeElement, null)
+        const color = window
+            .getComputedStyle(this.iconPreview.elementRef.nativeElement, null)
             .getPropertyValue('color');
 
         return color ? this.parseColor(color)?.toUpperCase() : '';
@@ -108,12 +108,9 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
         const arr: number[] = [];
 
-        color.match(/[\d+\.]+/g)
-            .forEach((substring: string) => arr.push(parseFloat(substring)));
+        color.match(/[\d+\.]+/g).forEach((substring: string) => arr.push(parseFloat(substring)));
 
         // tslint:disable-next-line: no-magic-numbers
-        return `${arr.slice(0, 3)
-            .map(toHex)
-            .join('')}`;
+        return `${arr.slice(0, 3).map(toHex).join('')}`;
     }
 }

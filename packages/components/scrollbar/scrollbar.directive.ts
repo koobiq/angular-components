@@ -1,11 +1,10 @@
 import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
 import { OverlayScrollbars } from 'overlayscrollbars';
-
+import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
 
 type Defer = [
     requestDefer: (callback: () => any, options?: boolean | IdleRequestOptions) => void,
-    cancelDefer: () => void
+    cancelDefer: () => void,
 ];
 
 const createDefer = (): Defer => {
@@ -34,12 +33,12 @@ const createDefer = (): Defer => {
             idleId = rIdle(
                 idleSupported
                     ? () => {
-                        clear();
-                        // inside idle its best practice to use rAF to change DOM for best performance
-                        rafId = requestAnimationFrame(callback);
-                    }
+                          clear();
+                          // inside idle its best practice to use rAF to change DOM for best performance
+                          rafId = requestAnimationFrame(callback);
+                      }
                     : callback,
-                typeof options === 'object' ? options : { timeout: 2233 }
+                typeof options === 'object' ? options : { timeout: 2233 },
             );
         },
         clear,
@@ -47,7 +46,7 @@ const createDefer = (): Defer => {
 };
 
 @Directive({
-  selector: '[kbqScrollbar]'
+    selector: '[kbqScrollbar]',
 })
 export class KbqScrollbarDirective implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
@@ -92,7 +91,7 @@ export class KbqScrollbarDirective implements OnDestroy {
 
     constructor(
         private ngZone: NgZone,
-        @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions
+        @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions,
     ) {
         const [requestDefer, cancelDefer] = createDefer();
         this.requestDefer = requestDefer;
@@ -105,7 +104,7 @@ export class KbqScrollbarDirective implements OnDestroy {
                 this.scrollbarInstance = OverlayScrollbars(
                     target,
                     this.options || this.scrollbarConfig || {},
-                    this.events || {}
+                    this.events || {},
                 );
             };
 

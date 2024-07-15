@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Divider
  */
@@ -8,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'divider-overview-example',
     templateUrl: 'divider-overview-example.html',
     styleUrls: ['divider-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DividerOverviewExample {}

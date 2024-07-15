@@ -4,21 +4,22 @@ import { KbqFileItem } from '@koobiq/components/file-upload';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-
 /**
  * @title Button's colors
  */
 @Component({
     selector: 'file-upload-indeterminate-loading-overview-example',
     templateUrl: 'file-upload-indeterminate-loading-overview-example.html',
-    styleUrls: ['file-upload-indeterminate-loading-overview-example.css']
+    styleUrls: ['file-upload-indeterminate-loading-overview-example.css'],
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     isLoading: boolean;
     themePalette = ThemePalette;
 
     onFileChange(file: KbqFileItem | null) {
-        if (!file) { return; }
+        if (!file) {
+            return;
+        }
 
         const fakeBackendResponse = timer(1500);
 
@@ -31,7 +32,9 @@ export class FileUploadIndeterminateLoadingOverviewExample {
     }
 
     onFilesChange(files: KbqFileItem[] | null) {
-        if (!files?.length) { return; }
+        if (!files?.length) {
+            return;
+        }
 
         const fakeBackendResponse = timer(1500);
 

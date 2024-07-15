@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Vertical form
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'vertical-form-example',
     templateUrl: 'vertical-form-example.html',
     styleUrls: ['vertical-form-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class VerticalFormExample {
     value: any;

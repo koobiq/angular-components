@@ -1,30 +1,28 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    OnDestroy,
-    ViewEncapsulation,
-    Inject,
-    Optional,
-    AfterViewInit,
-    HostListener,
     ContentChild,
-    ViewChild
+    ElementRef,
+    HostListener,
+    Inject,
+    OnDestroy,
+    Optional,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import {
     CanDisable,
     CanDisableCtor,
+    KBQ_TITLE_TEXT_REF,
     KbqTitleTextRef,
     mixinDisabled,
-    KBQ_TITLE_TEXT_REF
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
-
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
-
 
 // Boilerplate for applying mixins to KbqDropdownItem.
 /** @docs-private */
@@ -50,16 +48,18 @@ const KbqDropdownItemMixinBase: CanDisableCtor & typeof KbqDropdownItemBase = mi
         '[class.kbq-disabled]': 'disabled',
 
         '[attr.disabled]': 'disabled || null',
-        '[attr.tabindex]': 'getTabIndex()'
+        '[attr.tabindex]': 'getTabIndex()',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
-    ]
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem },
+    ],
 })
-export class KbqDropdownItem extends KbqDropdownItemMixinBase implements
-    KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy {
+export class KbqDropdownItem
+    extends KbqDropdownItemMixinBase
+    implements KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy
+{
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
@@ -79,7 +79,7 @@ export class KbqDropdownItem extends KbqDropdownItemMixinBase implements
     constructor(
         private elementRef: ElementRef<HTMLElement>,
         private focusMonitor: FocusMonitor,
-        @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel
+        @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel,
     ) {
         super();
     }

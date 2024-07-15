@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Directive } from '@angular/core';
 
-
 interface DocVersion {
     selected: boolean;
     url: string;
@@ -12,7 +11,7 @@ interface DocVersion {
 
 @Directive({
     exportAs: 'kbqDocVersionPicker',
-    selector: '[kbq-docs-version-picker]'
+    selector: '[kbq-docs-version-picker]',
 })
 export class VersionPickerDirective {
     selected: DocVersion;
@@ -21,30 +20,28 @@ export class VersionPickerDirective {
 
     constructor(
         private http: HttpClient,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
-        this.http
-            .get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' })
-            .subscribe((data) => {
-                Object.entries(data)
-                    .reverse()
-                    .forEach(([name, value], index) => {
-                        if (index === 1) {
-                            // tslint:disable-next-line:no-parameter-reassignment
-                            name += ' (последняя)';
-                            value.url = 'https://koobiq.io/';
-                        }
+        this.http.get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' }).subscribe((data) => {
+            Object.entries(data)
+                .reverse()
+                .forEach(([name, value], index) => {
+                    if (index === 1) {
+                        // tslint:disable-next-line:no-parameter-reassignment
+                        name += ' (последняя)';
+                        value.url = 'https://koobiq.io/';
+                    }
 
-                        // tslint:disable-next-line:no-magic-numbers
-                        if (name === 'next' || parseInt(name) >= 8) {
-                            this.versions.push({ name, selected: false, ...value });
-                        }
-                    });
+                    // tslint:disable-next-line:no-magic-numbers
+                    if (name === 'next' || parseInt(name) >= 8) {
+                        this.versions.push({ name, selected: false, ...value });
+                    }
+                });
 
-                this.setSelectedVersion();
+            this.setSelectedVersion();
 
-                this.changeDetectorRef.markForCheck();
-            });
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     goToVersion(version: DocVersion) {

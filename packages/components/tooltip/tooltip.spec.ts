@@ -1,11 +1,9 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 import { TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -17,7 +15,7 @@ describe('KbqTooltip', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqToolTipModule, NoopAnimationsModule],
-            declarations: [KbqTooltipTestWrapperComponent, KbqTooltipTestNewComponent, KbqTooltipDisabledComponent]
+            declarations: [KbqTooltipTestWrapperComponent, KbqTooltipTestNewComponent, KbqTooltipDisabledComponent],
         });
         TestBed.compileComponents();
     }));
@@ -168,19 +166,19 @@ describe('KbqTooltip', () => {
 
         <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
         <a #titleTemplate [kbqTooltip]="template">Show</a>
-    `
+    `,
 })
 class KbqTooltipTestNewComponent {
     @ViewChild('titleString', { static: false }) titleString: ElementRef;
     @ViewChild('titleString', {
         read: KbqTooltipTrigger,
-        static: false
+        static: false,
     })
     titleStringKbqTooltipDirective: KbqTooltipTrigger;
     @ViewChild('titleTemplate', { static: false }) titleTemplate: ElementRef;
     @ViewChild('titleTemplate', {
         read: KbqTooltipTrigger,
-        static: false
+        static: false,
     })
     titleTemplateKbqTooltipDirective: KbqTooltipTrigger;
 }
@@ -193,7 +191,7 @@ class KbqTooltipTestNewComponent {
 
         <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
         <span #visibleTrigger [kbqTooltip]="'VISIBLE'" [kbqVisible]="visible">Show</span>
-    `
+    `,
 })
 class KbqTooltipTestWrapperComponent {
     @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;
@@ -212,7 +210,7 @@ class KbqTooltipTestWrapperComponent {
         <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
         </span>
-    `
+    `,
 })
 class KbqTooltipDisabledComponent {
     @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;

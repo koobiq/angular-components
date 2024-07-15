@@ -1,20 +1,18 @@
 // tslint:disable:no-console
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-
 import { KbqButtonModule } from '../../components/button/';
 import { KbqToggleModule } from '../../components/toggle/';
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -35,10 +33,9 @@ export class DemoComponent {
     }
 }
 
-
 @NgModule({
     declarations: [
-        DemoComponent
+        DemoComponent,
     ],
     imports: [
         BrowserModule,
@@ -47,10 +44,10 @@ export class DemoComponent {
         KbqToggleModule,
         KbqButtonModule,
         KbqFormFieldModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     bootstrap: [
-        DemoComponent
-    ]
+        DemoComponent,
+    ],
 })
 export class DemoModule {}

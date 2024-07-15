@@ -8,30 +8,57 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
-import { TestBed, inject, waitForAsync, ComponentFixture, fakeAsync, flush, tick, discardPeriodicTasks } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+    ComponentFixture,
+    TestBed,
+    discardPeriodicTasks,
+    fakeAsync,
+    flush,
+    inject,
+    tick,
+    waitForAsync,
+} from '@angular/core/testing';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DOWN_ARROW, UP_ARROW, RIGHT_ARROW, LEFT_ARROW, ESCAPE } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
-import { Subject, Observable, merge, of } from 'rxjs';
+import { Observable, Subject, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { KbqTimezoneModule, KbqTimezoneGroup, KbqTimezoneSelect, KbqTimezoneOption, offsetFormatter } from './index';
-
+import { KbqTimezoneGroup, KbqTimezoneModule, KbqTimezoneOption, KbqTimezoneSelect, offsetFormatter } from './index';
 
 const longOptionText: string = [
-    'Gordon Freeman Town', 'Barney Calhoun Town', 'G-Man Town',
-    'Wallace Breen Town', 'Eli Vance Town', 'Isaac Kleiner Village',
-    'Father Grigori Town', 'GLaDOS', 'Chef Vortigaunt Town',
-    'Adrian Shephard Village', 'Nihilanth Town', 'Judith Mossman Village',
-    'Walter Bennet Village', 'city', 'village', 'city', 'village', 'city',
-    'city', 'village', 'city', 'village', 'city', 'village', 'city', 'village'
+    'Gordon Freeman Town',
+    'Barney Calhoun Town',
+    'G-Man Town',
+    'Wallace Breen Town',
+    'Eli Vance Town',
+    'Isaac Kleiner Village',
+    'Father Grigori Town',
+    'GLaDOS',
+    'Chef Vortigaunt Town',
+    'Adrian Shephard Village',
+    'Nihilanth Town',
+    'Judith Mossman Village',
+    'Walter Bennet Village',
+    'city',
+    'village',
+    'city',
+    'village',
+    'city',
+    'city',
+    'village',
+    'city',
+    'village',
+    'city',
+    'village',
+    'city',
+    'village',
 ].join(', ');
 
 const groupedZones: KbqTimezoneGroup[] = [
@@ -45,7 +72,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city1',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: 'city4, city5'
+                cities: 'city4, city5',
             },
             {
                 id: 'Europe/city7',
@@ -53,7 +80,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city7',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: 'city9, city22'
+                cities: 'city9, city22',
             },
             {
                 id: 'Europe/city17',
@@ -61,10 +88,10 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city17',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: longOptionText
-            }
-        ]
-    }
+                cities: longOptionText,
+            },
+        ],
+    },
 ];
 
 @Component({
@@ -77,8 +104,8 @@ const groupedZones: KbqTimezoneGroup[] = [
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
-                [panelClass]="panelClass">
-
+                [panelClass]="panelClass"
+            >
                 <kbq-optgroup *ngFor="let group of zones" [label]="group.countryName">
                     <kbq-timezone-option
                         *ngFor="let zone of group.zones"
@@ -90,7 +117,7 @@ const groupedZones: KbqTimezoneGroup[] = [
             </kbq-timezone-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `
+    `,
 })
 class BasicTimezoneSelect {
     zones: KbqTimezoneGroup[] = groupedZones;
@@ -102,18 +129,18 @@ class BasicTimezoneSelect {
     panelClass = ['custom-one', 'custom-two'];
     disabledFor = 'Europe/city7';
 
-    @ViewChild(KbqTimezoneSelect, {static: true}) select: KbqSelect;
+    @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqSelect;
     @ViewChildren(KbqTimezoneOption) options: QueryList<KbqTimezoneOption>;
 }
 
 @Component({
-   selector: 'select-with-search',
-   template: `
+    selector: 'select-with-search',
+    template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="mc-search_16"></i>
-                    <input kbqInput [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" type="text"/>
+                    <input kbqInput [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" type="text" />
                     <kbq-cleaner></kbq-cleaner>
                 </kbq-form-field>
 
@@ -121,7 +148,7 @@ class BasicTimezoneSelect {
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-                <ng-container *ngFor="let group of (options$ | async)">
+                <ng-container *ngFor="let group of options$ | async">
                     <kbq-timezone-option
                         *ngFor="let timezone of group.zones"
                         [timezone]="timezone"
@@ -129,7 +156,7 @@ class BasicTimezoneSelect {
                 </ng-container>
             </kbq-timezone-select>
         </kbq-form-field>
-    `
+    `,
 })
 class TimezoneSelectWithSearch {
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqTimezoneSelect;
@@ -142,13 +169,14 @@ class TimezoneSelectWithSearch {
     ngOnInit(): void {
         this.options$ = merge(
             of(groupedZones),
-            this.searchCtrl.valueChanges
-                .pipe(map(() => this.getFilteredOptions()))
+            this.searchCtrl.valueChanges.pipe(map(() => this.getFilteredOptions())),
         );
     }
 
     private getFilteredOptions(): KbqTimezoneGroup[] {
-        if (!this.searchCtrl.value) { return groupedZones; }
+        if (!this.searchCtrl.value) {
+            return groupedZones;
+        }
 
         return groupedZones
             .map((group) => {
@@ -156,7 +184,7 @@ class TimezoneSelectWithSearch {
                     const fields: string[] = [
                         offsetFormatter(zone.offset),
                         zone.city,
-                        zone.cities
+                        zone.cities,
                     ];
 
                     return fields.join(' ').toLowerCase().includes(this.searchCtrl.value.toLowerCase());
@@ -179,26 +207,27 @@ describe('KbqTimezoneSelect', () => {
 
     function configureTestingModule(declarations: any[]) {
         TestBed.configureTestingModule({
-           imports: [
-               KbqFormFieldModule,
-               KbqSelectModule,
-               KbqTimezoneModule,
-               KbqInputModule,
-               ReactiveFormsModule,
-               FormsModule,
-               NoopAnimationsModule
-           ],
-           declarations,
-           providers: [
-               { provide: Directionality, useFactory: () => dir = {value: 'ltr'} },
-               {
-                   provide: ScrollDispatcher, useFactory: () => ({
-                       scrolled: () => scrolledSubject.asObservable(),
-                       getAncestorScrollContainers: () => []
-                   })
-               }
-           ]
-       }).compileComponents();
+            imports: [
+                KbqFormFieldModule,
+                KbqSelectModule,
+                KbqTimezoneModule,
+                KbqInputModule,
+                ReactiveFormsModule,
+                FormsModule,
+                NoopAnimationsModule,
+            ],
+            declarations,
+            providers: [
+                { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
+                {
+                    provide: ScrollDispatcher,
+                    useFactory: () => ({
+                        scrolled: () => scrolledSubject.asObservable(),
+                        getAncestorScrollContainers: () => [],
+                    }),
+                },
+            ],
+        }).compileComponents();
 
         inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
             overlayContainer = oc;
@@ -321,13 +350,13 @@ describe('KbqTimezoneSelect', () => {
                 }));
 
                 it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
-                    const {control: formControl, select: selectInstance} = fixture.componentInstance;
+                    const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
                     expect(selectInstance.panelOpen).toBe(false);
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
-                    Object.defineProperty(event, 'altKey', {get: () => true});
+                    Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
                     flush();
@@ -337,13 +366,13 @@ describe('KbqTimezoneSelect', () => {
                 }));
 
                 it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
-                    const {control: formControl, select: selectInstance} = fixture.componentInstance;
+                    const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
                     expect(selectInstance.panelOpen).toBe(false);
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
-                    Object.defineProperty(event, 'altKey', {get: () => true});
+                    Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
                     flush();
@@ -464,7 +493,8 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     const optionInstances = fixture.componentInstance.options.toArray();
-                    const optionNodes: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-timezone-option');
+                    const optionNodes: NodeListOf<HTMLElement> =
+                        overlayContainerElement.querySelectorAll('kbq-timezone-option');
 
                     optionInstances[2].select();
                     fixture.detectChanges();
@@ -569,10 +599,8 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
                     flush();
 
-                    expect(overlayContainerElement.textContent)
-                        .toEqual('');
-                    expect(fixture.componentInstance.select.panelOpen)
-                        .toBe(false);
+                    expect(overlayContainerElement.textContent).toEqual('');
+                    expect(fixture.componentInstance.select.panelOpen).toBe(false);
 
                     fixture.componentInstance.control.enable();
                     fixture.detectChanges();
@@ -582,8 +610,7 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
                     flush();
 
-                    expect(overlayContainerElement.textContent)
-                        .toContain('RussiaUTC−02:00city1city4');
+                    expect(overlayContainerElement.textContent).toContain('RussiaUTC−02:00city1city4');
                     expect(fixture.componentInstance.select.panelOpen).toBe(true);
                 }));
             });
@@ -643,7 +670,7 @@ describe('KbqTimezoneSelect', () => {
             expect(options[1].nativeElement.innerText.replace(/[\r\n]/g, ' ')).toContain('UTC +04:00');
         }));
 
-        it('should clear search by esc', (() => {
+        it('should clear search by esc', () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -659,7 +686,7 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
 
             expect(inputElementDebug.nativeElement.value).toBe('');
-        }));
+        });
 
         it('should close list by esc if input is empty', () => {
             trigger.click();

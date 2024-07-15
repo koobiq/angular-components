@@ -1,9 +1,7 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqCard, KbqCardModule } from './index';
-
 
 describe('MсCard', () => {
     let fixture: ComponentFixture<TestApp>;
@@ -14,7 +12,7 @@ describe('MсCard', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqCardModule],
-            declarations: [TestApp]
+            declarations: [TestApp],
         });
 
         TestBed.compileComponents();
@@ -58,15 +56,9 @@ describe('MсCard', () => {
     });
 });
 
-
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-card [selected]="selected"
-                 [readonly]="readonly"
-                 (selectedChange)="increment()">
-        </kbq-card>
-    `
+    template: ` <kbq-card [selected]="selected" [readonly]="readonly" (selectedChange)="increment()"> </kbq-card> `,
 })
 class TestApp {
     readonly = false;

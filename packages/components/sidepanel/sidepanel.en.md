@@ -54,7 +54,6 @@ Afterwards you can access thr injected data using the `KBQ_SIDEPANEL_DATA` injec
 
 ```ts
 import { Component, Inject } from '@angular/core';
-
 import { KBQ_SIDEPANEL_DATA } from '@koobiq/components';
 
 @Component({

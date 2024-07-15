@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title Corner Cases
  */
@@ -9,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'tag-hug-content-example',
     templateUrl: 'tag-hug-content-example.html',
     styleUrls: ['tag-hug-content-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TagHugContentExample {
     colors = KbqComponentColors;

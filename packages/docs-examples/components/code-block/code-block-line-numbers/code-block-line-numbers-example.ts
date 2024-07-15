@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
   <breakfast_menu></breakfast_menu>
     <food></food>
@@ -12,7 +11,6 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
     </food>
   </breakfast_menu>`;
 
-
 /**
  * @title Basic code-block-line-numbers
  */
@@ -20,17 +18,19 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
     selector: 'code-block-line-numbers-example',
     templateUrl: 'code-block-line-numbers-example.html',
     styleUrls: ['code-block-line-numbers-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CodeBlockLineNumbersExample {
     files: KbqCodeFile[];
     lineNumbers = true;
 
     constructor() {
-        this.files = [{
-            filename: '',
-            content: codeXML,
-            language: 'xml'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeXML,
+                language: 'xml',
+            },
+        ];
     }
 }

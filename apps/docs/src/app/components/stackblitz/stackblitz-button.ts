@@ -1,11 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
-
 import { StackblitzWriter } from './stackblitz-writer';
 
 @Component({
@@ -14,9 +12,9 @@ import { StackblitzWriter } from './stackblitz-writer';
     styleUrls: ['./stackblitz-button.scss'],
     host: {
         class: 'docs-stackblitz-button',
-        '(click)': 'openStackBlitz()'
+        '(click)': 'openStackBlitz()',
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class StackblitzButton extends KbqLink {
     @Input()
@@ -43,7 +41,7 @@ export class StackblitzButton extends KbqLink {
         focusMonitor: FocusMonitor,
         changeDetector: ChangeDetectorRef,
         private stackBlitzWriter: StackblitzWriter,
-        private ngZone: NgZone
+        private ngZone: NgZone,
     ) {
         super(elementRef, focusMonitor, changeDetector);
     }
@@ -68,6 +66,6 @@ export class StackblitzButton extends KbqLink {
     imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
     exports: [StackblitzButton],
     declarations: [StackblitzButton],
-    providers: [StackblitzWriter]
+    providers: [StackblitzWriter],
 })
 export class StackblitzButtonModule {}

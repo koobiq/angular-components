@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Navbar
  */
@@ -8,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tabs-old-example',
     templateUrl: 'tabs-old-example.html',
     styleUrls: ['tabs-old-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TabsOldExample {}

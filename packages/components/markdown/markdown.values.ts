@@ -18,12 +18,12 @@ export const MARKDOWN_TAGS_TO_CLASS_ALIAS = [
     'ul',
     'pre',
     'code',
-    'img'
+    'img',
 ];
 
 // separating th and p to prevent it's conflict with thead and pre
 export const MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS = [
     'th',
-    'p'
+    'p',
 ];
 export const CLASS_PREFIX: string = 'kbq-markdown';

@@ -3,33 +3,31 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-
 import {
     KbqLoaderOverlay,
     KbqLoaderOverlayCaption,
     KbqLoaderOverlayIndicator,
-    KbqLoaderOverlayText
+    KbqLoaderOverlayText,
 } from './loader-overlay.component';
-
 
 @NgModule({
     imports: [
         CommonModule,
         A11yModule,
         PlatformModule,
-        KbqProgressSpinnerModule
+        KbqProgressSpinnerModule,
     ],
     declarations: [
         KbqLoaderOverlay,
         KbqLoaderOverlayIndicator,
         KbqLoaderOverlayText,
-        KbqLoaderOverlayCaption
+        KbqLoaderOverlayCaption,
     ],
     exports: [
         KbqLoaderOverlay,
         KbqLoaderOverlayIndicator,
         KbqLoaderOverlayText,
-        KbqLoaderOverlayCaption
-    ]
+        KbqLoaderOverlayCaption,
+    ],
 })
 export class KbqLoaderOverlayModule {}

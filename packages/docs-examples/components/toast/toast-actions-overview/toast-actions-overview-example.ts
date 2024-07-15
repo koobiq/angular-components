@@ -1,9 +1,8 @@
 /* tslint:disable:no-console */
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { KbqDropdown } from '@koobiq/components/dropdown';
+import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { take } from 'rxjs/operators';
-
 
 /**
  * @title Basic Toast
@@ -12,7 +11,7 @@ import { take } from 'rxjs/operators';
     selector: 'toast-actions-overview-example',
     templateUrl: 'toast-actions-overview-example.html',
     styleUrls: ['toast-actions-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ToastActionsOverviewExample {
     @ViewChild('dropdown') dropdown: KbqDropdown;
@@ -28,11 +27,14 @@ export class ToastActionsOverviewExample {
     }
 
     showManyActionToast(actions: TemplateRef<any>) {
-        const { ref } = this.toastService.show({
-            title: 'Заголовок',
-            caption: 'Подзаголовок, подробности',
-            actions
-        }, 0);
+        const { ref } = this.toastService.show(
+            {
+                title: 'Заголовок',
+                caption: 'Подзаголовок, подробности',
+                actions,
+            },
+            0,
+        );
         this.dropdown.closed.pipe(take(1)).subscribe(() => ref.instance.close());
     }
 }

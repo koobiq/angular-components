@@ -7,15 +7,15 @@ export const enUSFormattersData = {
                 thousand: 'K',
                 million: 'M',
                 billion: 'B',
-                trillion: 'T'
-            }
-        }
+                trillion: 'T',
+            },
+        },
     },
     input: {
         number: {
             groupSeparator: [','],
-            fractionSeparator: '.'
-        }
+            fractionSeparator: '.',
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -24,15 +24,15 @@ export const enUSFormattersData = {
             SI: {
                 abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };
 
 export const esLAFormattersData = {
@@ -44,17 +44,17 @@ export const esLAFormattersData = {
                 thousand: 'K',
                 million: 'M',
                 billion: 'MRD',
-                trillion: 'B'
-            }
-        }
+                trillion: 'B',
+            },
+        },
     },
     input: {
         number: {
             // nbsp is generated automatically and used by default in spec
             // tslint:disable-next-line:no-irregular-whitespace
             groupSeparator: [' ', ' '],
-            fractionSeparator: ','
-        }
+            fractionSeparator: ',',
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -63,15 +63,15 @@ export const esLAFormattersData = {
             SI: {
                 abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };
 
 export const faIRFormattersData = {
@@ -84,15 +84,15 @@ export const faIRFormattersData = {
                 million: 'میلیون',
                 billion: 'م',
                 trillion: 'تریلیون',
-                rtl: true
-            }
-        }
+                rtl: true,
+            },
+        },
     },
     input: {
         number: {
             groupSeparator: ['\u066C'],
-            fractionSeparator: '\u066B'
-        }
+            fractionSeparator: '\u066B',
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -101,15 +101,15 @@ export const faIRFormattersData = {
             SI: {
                 abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };
 
 export const ptBRFormattersData = {
@@ -121,15 +121,15 @@ export const ptBRFormattersData = {
                 thousand: 'mil',
                 million: 'mi',
                 billion: 'bi',
-                trillion: 'tri'
-            }
-        }
+                trillion: 'tri',
+            },
+        },
     },
     input: {
         number: {
             groupSeparator: ['.'],
-            fractionSeparator: ','
-        }
+            fractionSeparator: ',',
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -138,15 +138,15 @@ export const ptBRFormattersData = {
             SI: {
                 abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };
 
 export const ruRUFormattersData = {
@@ -158,9 +158,9 @@ export const ruRUFormattersData = {
                 thousand: 'К',
                 million: 'М',
                 billion: 'М',
-                trillion: 'Т'
-            }
-        }
+                trillion: 'Т',
+            },
+        },
     },
     input: {
         number: {
@@ -168,8 +168,8 @@ export const ruRUFormattersData = {
             // tslint:disable-next-line:no-irregular-whitespace
             groupSeparator: [' ', ' '],
             fractionSeparator: ',',
-            startFormattingFrom: 4
-        }
+            startFormattingFrom: 4,
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -178,15 +178,15 @@ export const ruRUFormattersData = {
             SI: {
                 abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };
 
 export const zhCNFormattersData = {
@@ -197,15 +197,15 @@ export const zhCNFormattersData = {
                 groupSeparator: '.',
                 tenThousand: '万',
                 oneHundredMillions: '亿',
-                trillion: '兆'
-            }
-        }
+                trillion: '兆',
+            },
+        },
     },
     input: {
         number: {
             groupSeparator: [','],
-            fractionSeparator: '.'
-        }
+            fractionSeparator: '.',
+        },
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -214,13 +214,13 @@ export const zhCNFormattersData = {
             SI: {
                 abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
                 base: 10,
-                power: 3
+                power: 3,
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
                 base: 2,
-                power: 10
-            }
-        }
-    }
+                power: 10,
+            },
+        },
+    },
 };

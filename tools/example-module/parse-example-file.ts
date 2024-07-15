@@ -1,7 +1,6 @@
 /* tslint:disable:import-name */
 import ts from 'typescript';
 
-
 interface ParsedMetadata {
     isPrimary: boolean;
     componentName: string;
@@ -26,7 +25,7 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
         if (node.kind === ts.SyntaxKind.ClassDeclaration) {
             const decorators = ts.getDecorators(node);
             const meta: any = {
-                componentName: node.name.text
+                componentName: node.name.text,
             };
 
             if (node.jsDoc && node.jsDoc.length) {
@@ -68,13 +67,10 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
                         // Since additional files can be also stylesheets, we need to properly parse
                         // the styleUrls metadata property.
                         if (propName === 'styleUrls' && ts.isArrayLiteralExpression(prop.initializer)) {
-                            meta[propName] = prop.initializer.elements
-                                .map((literal) => (literal as ts.StringLiteralLike).text
+                            meta[propName] = prop.initializer.elements.map(
+                                (literal) => (literal as ts.StringLiteralLike).text,
                             );
-                        } else if (
-                            ts.isStringLiteralLike(prop.initializer) ||
-                            ts.isIdentifier(prop.initializer)
-                        ) {
+                        } else if (ts.isStringLiteralLike(prop.initializer) || ts.isIdentifier(prop.initializer)) {
                             meta[propName] = prop.initializer.text;
                         }
                     }
@@ -91,6 +87,6 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
 
     return {
         primaryComponent: metas.find((m) => m.isPrimary),
-        secondaryComponents: metas.filter((m) => !m.isPrimary)
+        secondaryComponents: metas.filter((m) => !m.isPrimary),
     };
 }

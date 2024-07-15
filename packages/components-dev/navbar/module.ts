@@ -13,16 +13,14 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { KbqIconModule } from '../../components/icon';
-import { KbqNavbarModule, KbqNavbar } from '../../components/navbar';
-
+import { KbqNavbar, KbqNavbarModule } from '../../components/navbar';
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NavbarDemoComponent {
     popUpPlacements = PopUpPlacements;
@@ -36,7 +34,9 @@ export class NavbarDemoComponent {
     }
 
     set collapsedNavbarWidth(value: number) {
-        if (value < this.minNavbarWidth) { return; }
+        if (value < this.minNavbarWidth) {
+            return;
+        }
 
         this._collapsedNavbarWidth = value;
     }
@@ -52,7 +52,7 @@ export class NavbarDemoComponent {
     }
 
     onItemClick(event: MouseEvent) {
-        alert(`innerText: ${(<HTMLElement> event.target).innerText}`);
+        alert(`innerText: ${(<HTMLElement>event.target).innerText}`);
     }
 
     openModal() {
@@ -60,11 +60,10 @@ export class NavbarDemoComponent {
             kbqMaskClosable: true,
             kbqContent: 'content',
             kbqOkText: 'Ok',
-            kbqCancelText: 'Cancel'
+            kbqCancelText: 'Cancel',
         });
     }
 }
-
 
 @NgModule({
     declarations: [NavbarDemoComponent],
@@ -83,8 +82,8 @@ export class NavbarDemoComponent {
         KbqToolTipModule,
         KbqModalModule,
         KbqBadgeModule,
-        KbqDividerModule
+        KbqDividerModule,
     ],
-    bootstrap: [NavbarDemoComponent]
+    bootstrap: [NavbarDemoComponent],
 })
 export class DemoModule {}

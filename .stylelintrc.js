@@ -9,7 +9,7 @@ const config = {
     allowEmptyInput: true,
     extends: [
         'stylelint-config-recommended-scss',
-        'stylelint-prettier/recommended'
+        'stylelint-prettier/recommended',
     ],
     ignoreFiles: [
         '**/dist/**',
@@ -17,33 +17,33 @@ const config = {
     ],
     rules: {
         'rule-empty-line-before': [
-			'always-multi-line',
-			{
-				except: ['first-nested'],
-				ignore: ['after-comment'],
-			},
-		],
+            'always-multi-line',
+            {
+                except: ['first-nested'],
+                ignore: ['after-comment'],
+            },
+        ],
         'no-unknown-custom-properties': true,
         'no-descending-specificity': null,
         'selector-type-no-unknown': [
-			true,
-			{
-				ignore: ['custom-elements'],
+            true,
+            {
+                ignore: ['custom-elements'],
                 ignoreTypes: ['app'],
-			},
-		],
+            },
+        ],
         'font-family-no-missing-generic-family-keyword': [
             true,
             {
                 ignoreFontFamilies: [
                     'Inter',
                     'PT Mosaic Icons',
-                    'JetBrains Mono'
+                    'JetBrains Mono',
                 ],
-            }
+            },
         ],
         'scss/operator-no-newline-after': null,
-    }
+    },
 };
 
 module.exports = config;

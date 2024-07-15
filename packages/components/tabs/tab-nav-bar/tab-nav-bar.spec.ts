@@ -1,16 +1,10 @@
 // tslint:disable:no-magic-numbers
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
-import {
-    waitForAsync,
-    ComponentFixture,
-    TestBed
-} from '@angular/core/testing';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
-
 import { KbqTabLink, KbqTabNav, KbqTabsModule } from '../index';
-
 
 describe('KbqTabNavBar', () => {
     const dir: Direction = 'ltr';
@@ -23,17 +17,17 @@ describe('KbqTabNavBar', () => {
             declarations: [
                 SimpleTabNavBarTestApp,
                 TabLinkWithNgIf,
-                TabLinkWithTabIndexBinding
+                TabLinkWithTabIndexBinding,
             ],
             providers: [
                 {
                     provide: Directionality,
                     useFactory: () => ({
                         value: dir,
-                        change: dirChange.asObservable()
-                    })
-                }
-            ]
+                        change: dirChange.asObservable(),
+                    }),
+                },
+            ],
         });
 
         TestBed.compileComponents();
@@ -68,21 +62,13 @@ describe('KbqTabNavBar', () => {
 
             tabLink1.nativeElement.click();
             fixture.detectChanges();
-            expect(
-                tabLinkElements[0].classList.contains('kbq-selected')
-            ).toBeTruthy();
-            expect(
-                tabLinkElements[1].classList.contains('kbq-selected')
-            ).toBeFalsy();
+            expect(tabLinkElements[0].classList.contains('kbq-selected')).toBeTruthy();
+            expect(tabLinkElements[1].classList.contains('kbq-selected')).toBeFalsy();
 
             tabLink2.nativeElement.click();
             fixture.detectChanges();
-            expect(
-                tabLinkElements[0].classList.contains('kbq-selected')
-            ).toBeFalsy();
-            expect(
-                tabLinkElements[1].classList.contains('kbq-selected')
-            ).toBeTruthy();
+            expect(tabLinkElements[0].classList.contains('kbq-selected')).toBeFalsy();
+            expect(tabLinkElements[1].classList.contains('kbq-selected')).toBeTruthy();
         });
 
         it('should add the disabled class if disabled', () => {
@@ -120,12 +106,9 @@ describe('KbqTabNavBar', () => {
         });
 
         it('should make disabled links unclickable', () => {
-            const tabLinkElement = fixture.debugElement.query(By.css('a'))
-                .nativeElement;
+            const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
-            expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe(
-                'none'
-            );
+            expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe('none');
 
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
@@ -138,39 +121,35 @@ describe('KbqTabNavBar', () => {
         const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
         fixture.detectChanges();
 
-        const tabLink = fixture.debugElement
-            .query(By.directive(KbqTabLink))
-            .injector.get<KbqTabLink>(KbqTabLink);
+        const tabLink = fixture.debugElement.query(By.directive(KbqTabLink)).injector.get<KbqTabLink>(KbqTabLink);
 
-        expect(tabLink.tabIndex)
-            .withContext('Expected the tabIndex to be set to 0 by default.')
-            .toBe(0);
+        expect(tabLink.tabIndex).withContext('Expected the tabIndex to be set to 0 by default.').toBe(0);
 
         fixture.componentInstance.tabIndex = 3;
         fixture.detectChanges();
 
-        expect(tabLink.tabIndex)
-            .withContext('Expected the tabIndex to be have been set to 3.')
-            .toBe(3);
+        expect(tabLink.tabIndex).withContext('Expected the tabIndex to be have been set to 3.').toBe(3);
     });
 });
 
 @Component({
     selector: 'test-app',
     template: `
-    <nav kbq-tab-nav-bar>
-        <a kbq-tab-link
-            *ngFor="let tab of tabs; let index = index"
-            [active]="activeIndex === index"
-            [disabled]="disabled"
-            (click)="activeIndex = index">
-            Tab link {{label}}
-        </a>
-    </nav>
-  `
+        <nav kbq-tab-nav-bar>
+            <a
+                kbq-tab-link
+                *ngFor="let tab of tabs; let index = index"
+                [active]="activeIndex === index"
+                [disabled]="disabled"
+                (click)="activeIndex = index"
+            >
+                Tab link {{ label }}
+            </a>
+        </nav>
+    `,
 })
 class SimpleTabNavBarTestApp {
-    @ViewChild(KbqTabNav, {static: false}) tabNavBar: KbqTabNav;
+    @ViewChild(KbqTabNav, { static: false }) tabNavBar: KbqTabNav;
     @ViewChildren(KbqTabLink) tabLinks: QueryList<KbqTabLink>;
 
     label = '';
@@ -185,7 +164,7 @@ class SimpleTabNavBarTestApp {
         <nav kbq-tab-nav-bar>
             <a kbq-tab-link *ngIf="!isDestroyed">Link</a>
         </nav>
-    `
+    `,
 })
 class TabLinkWithNgIf {
     isDestroyed = false;
@@ -196,7 +175,7 @@ class TabLinkWithNgIf {
         <nav kbq-tab-nav-bar>
             <a kbq-tab-link [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
-    `
+    `,
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;

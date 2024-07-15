@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-
 import { LinkApplicationExample } from './link-application/link-application-example';
 import { LinkCaptionExample } from './link-caption/link-caption-example';
 import { LinkColorExample } from './link-color/link-color-example';
@@ -19,22 +18,21 @@ import { LinkPseudoExample } from './link-pseudo/link-pseudo-example';
 import { LinkTargetBlankExample } from './link-target-blank/link-target-blank-example';
 import { LinkVisitedExample } from './link-visited/link-visited-example';
 
-
 export {
-    LinkOverviewExample,
-    LinkPseudoExample,
-    LinkGeneralExample,
-    LinkExternalExample,
-    LinkTargetBlankExample,
     LinkApplicationExample,
-    LinkPrintExample,
-    LinkMultiLineExample,
-    LinkPrepositionsExample,
-    LinkIconsExample,
+    LinkCaptionExample,
     LinkColorExample,
-    LinkVisitedExample,
     LinkDisabledExample,
-    LinkCaptionExample
+    LinkExternalExample,
+    LinkGeneralExample,
+    LinkIconsExample,
+    LinkMultiLineExample,
+    LinkOverviewExample,
+    LinkPrepositionsExample,
+    LinkPrintExample,
+    LinkPseudoExample,
+    LinkTargetBlankExample,
+    LinkVisitedExample,
 };
 
 const EXAMPLES = [
@@ -51,7 +49,7 @@ const EXAMPLES = [
     LinkColorExample,
     LinkVisitedExample,
     LinkDisabledExample,
-    LinkCaptionExample
+    LinkCaptionExample,
 ];
 
 @NgModule({
@@ -59,9 +57,9 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqIconModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class LinkExamplesModule {}

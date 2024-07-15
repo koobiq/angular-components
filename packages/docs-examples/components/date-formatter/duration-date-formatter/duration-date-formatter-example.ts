@@ -6,12 +6,11 @@ import {
     DateFormatter,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService
+    KbqLocaleService,
 } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-
 
 /**
  * @title Basic progress duration-date-formatter
@@ -23,8 +22,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
     providers: [
         { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
         { provide: DateAdapter, useClass: LuxonDateAdapter },
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
-    ]
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
+    ],
 })
 export class DurationDateFormatterExample {
     formats = {
@@ -35,15 +34,15 @@ export class DurationDateFormatterExample {
                     minutesSeconds: '',
                     withMilliseconds: '',
                     hoursMinutesSeconds: '',
-                    hoursMinutes: ''
+                    hoursMinutes: '',
                 },
                 onlyMinutes: {
                     seconds: '',
                     minutesSeconds: '',
                     withMilliseconds: '',
                     hoursMinutesSeconds: '',
-                    hoursMinutes: ''
-                }
+                    hoursMinutes: '',
+                },
             },
             long: {
                 seconds: '',
@@ -69,7 +68,7 @@ export class DurationDateFormatterExample {
 
                 yearsMonth: '',
                 years: '',
-                yearsWithFract: ''
+                yearsWithFract: '',
             },
             short: {
                 secondsMilliseconds: '',
@@ -96,19 +95,17 @@ export class DurationDateFormatterExample {
 
                 yearsMonth: '',
                 years: '',
-                yearsWithFract: ''
-            }
-        }
+                yearsWithFract: '',
+            },
+        },
     };
 
     constructor(
         private adapter: DateAdapter<DateTime>,
         private formatter: DateFormatter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
     ) {
-        this.localeService.changes
-            .pipe(distinctUntilChanged(), delay(0))
-            .subscribe(this.onLocaleChange);
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 
     private onLocaleChange = (locale: string) => {
@@ -117,7 +114,7 @@ export class DurationDateFormatterExample {
         this.populateDurationShortest(locale);
         this.populateDurationLong(locale);
         this.populateDurationShort(locale);
-    }
+    };
 
     private populateDurationShortest(locale: string) {
         this.formatter.setLocale(locale);
@@ -157,9 +154,10 @@ export class DurationDateFormatterExample {
         long.minutesMoreThanHour = this.formatter.durationLong(start, start.plus({ hour: 2 }), ['minutes']);
 
         long.hoursMinutes = this.formatter.durationLong(start, start.plus({ hour: 1, minute: 21 }));
-        long.hoursMinutesMoreThanDay = this.formatter.durationLong(
-            start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours', 'minutes']
-        );
+        long.hoursMinutesMoreThanDay = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 20 }), [
+            'hours',
+            'minutes',
+        ]);
         long.hours = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
         long.daysHours = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 25 }));
@@ -171,15 +169,11 @@ export class DurationDateFormatterExample {
 
         long.monthsWeeks = this.formatter.durationLong(start, start.plus({ month: 1, day: 25 }));
         long.months = this.formatter.durationLong(start, start.plus({ month: 2 }), ['months']);
-        long.monthsWithFract = this.formatter.durationLong(
-            start, start.plus({ month: 1, day: 16 }), ['months'], true
-        );
+        long.monthsWithFract = this.formatter.durationLong(start, start.plus({ month: 1, day: 16 }), ['months'], true);
 
         long.yearsMonth = this.formatter.durationLong(start, start.plus({ year: 3, month: 11 }));
         long.years = this.formatter.durationLong(start, start.plus({ year: 5, month: 9 }), ['years']);
-        long.yearsWithFract = this.formatter.durationLong(
-            start, start.plus({ year: 5, month: 9 }), ['years'], true
-        );
+        long.yearsWithFract = this.formatter.durationLong(start, start.plus({ year: 5, month: 9 }), ['years'], true);
     }
 
     private populateDurationShort(locale: string) {
@@ -189,9 +183,10 @@ export class DurationDateFormatterExample {
         const now = this.adapter.today();
         const start = now.set({ day: 10, hour: 0, minute: 0, second: 0, millisecond: 0 });
 
-        short.secondsMilliseconds = this.formatter.durationShort(
-            start, start.plus({ second: 21, millisecond: 365 }), ['seconds', 'milliseconds']
-        );
+        short.secondsMilliseconds = this.formatter.durationShort(start, start.plus({ second: 21, millisecond: 365 }), [
+            'seconds',
+            'milliseconds',
+        ]);
         short.seconds = this.formatter.durationShort(start, start.plus({ second: 21, millisecond: 365 }));
 
         short.minutesSeconds = this.formatter.durationShort(start, start.plus({ minute: 1, second: 25 }));
@@ -200,7 +195,9 @@ export class DurationDateFormatterExample {
 
         short.hoursMinutes = this.formatter.durationShort(start, start.plus({ hour: 1, minute: 21 }));
         short.hoursMinutesMoreThanDay = this.formatter.durationShort(
-            start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours', 'minutes']
+            start,
+            start.plus({ day: 1, hour: 8, minute: 20 }),
+            ['hours', 'minutes'],
         );
         short.hours = this.formatter.durationShort(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
@@ -214,13 +211,14 @@ export class DurationDateFormatterExample {
         short.monthsWeeks = this.formatter.durationShort(start, start.plus({ month: 1, day: 25 }));
         short.months = this.formatter.durationShort(start, start.plus({ month: 2 }), ['months']);
         short.monthsWithFract = this.formatter.durationShort(
-            start, start.plus({ month: 2, day: 16 }), ['months'], true
+            start,
+            start.plus({ month: 2, day: 16 }),
+            ['months'],
+            true,
         );
 
         short.yearsMonth = this.formatter.durationShort(start, start.plus({ year: 3, month: 11 }));
         short.years = this.formatter.durationShort(start, start.plus({ year: 5, month: 9 }), ['years']);
-        short.yearsWithFract = this.formatter.durationShort(
-            start, start.plus({ year: 5, month: 9 }), ['years'], true
-        );
+        short.yearsWithFract = this.formatter.durationShort(start, start.plus({ year: 5, month: 9 }), ['years'], true);
     }
 }

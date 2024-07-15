@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Basic Splitter
  */
@@ -8,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'splitter-fixed-example',
     templateUrl: 'splitter-fixed-example.html',
     styleUrls: ['splitter-fixed-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class SplitterFixedExample {}

@@ -10,19 +10,14 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { NavbarOverviewExample } from './navbar-overview/navbar-overview-example';
 import { NavbarVerticalExample } from './navbar-vertical/navbar-vertical-example';
 
-
-export {
-    NavbarOverviewExample,
-    NavbarVerticalExample
-};
+export { NavbarOverviewExample, NavbarVerticalExample };
 
 const EXAMPLES = [
     NavbarOverviewExample,
-    NavbarVerticalExample
+    NavbarVerticalExample,
 ];
 
 @NgModule({
@@ -37,9 +32,9 @@ const EXAMPLES = [
         KbqBadgeModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqDividerModule
+        KbqDividerModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class NavbarExamplesModule {}

@@ -2,7 +2,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
-
 /**
  * @title Component Modal
  */
@@ -10,7 +9,7 @@ import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
     selector: 'modal-component-example',
     templateUrl: 'modal-component-example.html',
     styleUrls: ['modal-component-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ModalComponentExample {
     componentModal: KbqModalRef;
@@ -22,8 +21,8 @@ export class ModalComponentExample {
             kbqComponent: KbqModalCustomComponent,
             kbqComponentParams: {
                 title: 'Title',
-                subtitle: 'Subtitle'
-            }
+                subtitle: 'Subtitle',
+            },
         });
 
         this.componentModal.afterOpen.subscribe(() => {
@@ -56,13 +55,13 @@ export class ModalComponentExample {
             <button kbq-button [color]="'contrast'" (click)="destroyModal('save')">Save</button>
             <button kbq-button autofocus (click)="destroyModal('close')">Close</button>
         </div>
-  `
+    `,
 })
 export class KbqModalCustomComponent {
     @Input() title: string;
     @Input() subtitle: string;
 
-    constructor(private modal: KbqModalRef) { }
+    constructor(private modal: KbqModalRef) {}
 
     destroyModal(action: 'save' | 'close') {
         this.modal.destroy(action);

@@ -3,7 +3,7 @@ import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqButtonStyles, KbqButtonModule } from '@koobiq/components/button';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -11,12 +11,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     colors = KbqComponentColors;
@@ -28,25 +27,25 @@ export class DemoComponent {
             name: 'x',
             domains: [
                 { id: 10, name: 'ax' },
-                { id: 11, name: 'bx' }
-            ]
+                { id: 11, name: 'bx' },
+            ],
         },
         {
             id: 2,
             name: 'y',
             domains: [
                 { id: 20, name: 'ay' },
-                { id: 21, name: 'by' }
-            ]
+                { id: 21, name: 'by' },
+            ],
         },
         {
             id: 3,
             name: 'z',
             domains: [
                 { id: 30, name: 'az' },
-                { id: 31, name: 'bz' }
-            ]
-        }
+                { id: 31, name: 'bz' },
+            ],
+        },
     ];
 
     someValue = 'Lazy Value';
@@ -68,7 +67,7 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent
+        DemoComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -79,10 +78,10 @@ export class DemoComponent {
         KbqButtonModule,
         KbqDropdownModule,
         KbqTitleModule,
-        KbqDividerModule
+        KbqDividerModule,
     ],
     bootstrap: [
-        DemoComponent
-    ]
+        DemoComponent,
+    ],
 })
 export class DemoModule {}

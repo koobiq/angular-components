@@ -1,18 +1,15 @@
-import { Component, ViewEncapsulation, Input, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import {
     CanColor,
     CanColorCtor,
     CanDisable,
     CanDisableCtor,
+    KbqComponentColors,
     mixinColor,
     mixinDisabled,
-    KbqComponentColors
 } from '../../common-behaviors';
 
-
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
-
 
 // Boilerplate for applying mixins to KbqPseudoCheckbox.
 /** @docs-private */
@@ -21,11 +18,10 @@ export class KbqPseudoCheckboxBase {
 }
 
 /** @docs-private */
-export const KbqPseudoCheckboxMixinBase:
-    CanColorCtor &
-    CanDisableCtor &
-    typeof KbqPseudoCheckboxBase = mixinColor(mixinDisabled(KbqPseudoCheckboxBase), KbqComponentColors.Theme);
-
+export const KbqPseudoCheckboxMixinBase: CanColorCtor & CanDisableCtor & typeof KbqPseudoCheckboxBase = mixinColor(
+    mixinDisabled(KbqPseudoCheckboxBase),
+    KbqComponentColors.Theme,
+);
 
 /**
  * Component that shows a simplified checkbox without including any kind of "real" checkbox.
@@ -49,12 +45,12 @@ export const KbqPseudoCheckboxMixinBase:
         '[class.kbq-checkbox_big]': 'big',
         '[class.kbq-indeterminate]': 'state === "indeterminate"',
         '[class.kbq-checked]': 'state === "checked"',
-        '[class.kbq-disabled]': 'disabled'
+        '[class.kbq-disabled]': 'disabled',
     },
     preserveWhitespaces: false,
     inputs: ['color'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqPseudoCheckbox extends KbqPseudoCheckboxMixinBase implements CanColor, CanDisable {
     @Input() big: boolean = false;

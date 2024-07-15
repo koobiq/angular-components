@@ -1,11 +1,10 @@
-import { TemplateRef, InjectionToken } from '@angular/core';
-
+import { InjectionToken, TemplateRef } from '@angular/core';
 
 export enum KbqToastStyle {
     Contrast = 'contrast',
     Success = 'success',
     Warning = 'warning',
-    Error = 'error'
+    Error = 'error',
 }
 
 export enum KbqToastPosition {
@@ -15,7 +14,7 @@ export enum KbqToastPosition {
     BOTTOM_RIGHT = 'bottom-right',
     BOTTOM_LEFT = 'bottom-left',
     BOTTOM_CENTER = 'bottom-center',
-    CENTER = 'center'
+    CENTER = 'center',
 }
 
 export class KbqToastData {

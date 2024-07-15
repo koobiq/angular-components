@@ -10,22 +10,19 @@ import {
     OnChanges,
     OnDestroy,
     SimpleChanges,
+    ViewChild,
     ViewEncapsulation,
-    ViewChild
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
-import { merge, of as observableOf, Subscription } from 'rxjs';
-
+import { Subscription, merge, of as observableOf } from 'rxjs';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepicker } from './datepicker.component';
 
-
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
 @Directive({
-    selector: '[kbqDatepickerToggleIcon]'
+    selector: '[kbqDatepickerToggleIcon]',
 })
 export class KbqDatepickerToggleIcon {}
-
 
 @Component({
     selector: 'kbq-datepicker-toggle',
@@ -33,11 +30,11 @@ export class KbqDatepickerToggleIcon {}
     styleUrls: ['datepicker-toggle.scss'],
     host: {
         class: 'kbq-datepicker-toggle',
-        '[class.kbq-active]': 'datepicker && datepicker.opened'
+        '[class.kbq-active]': 'datepicker && datepicker.opened',
     },
     exportAs: 'kbqDatepickerToggle',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */
@@ -65,7 +62,10 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 
     private _disabled: boolean;
 
-    constructor(public intl: KbqDatepickerIntl, private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(
+        public intl: KbqDatepickerIntl,
+        private changeDetectorRef: ChangeDetectorRef,
+    ) {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.datepicker) {
@@ -91,20 +91,19 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     private watchStateChanges() {
         const datepickerDisabled = this.datepicker ? this.datepicker.disabledChange : observableOf<boolean>();
 
-        const inputDisabled = this.datepicker && this.datepicker.datepickerInput ?
-            this.datepicker.datepickerInput.disabledChange : observableOf<boolean>();
+        const inputDisabled =
+            this.datepicker && this.datepicker.datepickerInput
+                ? this.datepicker.datepickerInput.disabledChange
+                : observableOf<boolean>();
 
-        const datepickerToggled = this.datepicker ?
-            merge(this.datepicker.openedStream, this.datepicker.closedStream) :
-            observableOf<boolean>();
+        const datepickerToggled = this.datepicker
+            ? merge(this.datepicker.openedStream, this.datepicker.closedStream)
+            : observableOf<boolean>();
 
         this.stateChanges.unsubscribe();
 
-        this.stateChanges = merge(
-            this.intl.changes,
-            datepickerDisabled,
-            inputDisabled,
-            datepickerToggled
-        ).subscribe(() => this.changeDetectorRef.markForCheck());
+        this.stateChanges = merge(this.intl.changes, datepickerDisabled, inputDisabled, datepickerToggled).subscribe(
+            () => this.changeDetectorRef.markForCheck(),
+        );
     }
 }

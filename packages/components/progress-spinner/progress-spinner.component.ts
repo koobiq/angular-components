@@ -1,13 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation,
-    ElementRef,
-    Input,
-    Directive
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
-
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
@@ -21,16 +13,16 @@ const MAX_PERCENT = 100;
 @Directive({
     selector: '[kbq-progress-spinner-text]',
     host: {
-        class: 'kbq-progress-spinner-text'
-    }
+        class: 'kbq-progress-spinner-text',
+    },
 })
 export class KbqProgressSpinnerText {}
 
 @Directive({
     selector: '[kbq-progress-spinner-caption]',
     host: {
-        class: 'kbq-progress-spinner-caption'
-    }
+        class: 'kbq-progress-spinner-caption',
+    },
 })
 export class KbqProgressSpinnerCaption {}
 
@@ -40,8 +32,10 @@ export class KbqProgressSpinnerBase {
 }
 
 /** @docs-private */
-export const KbqProgressSpinnerMixinBase:
-    CanColorCtor & typeof KbqProgressSpinnerBase = mixinColor(KbqProgressSpinnerBase, KbqComponentColors.Theme);
+export const KbqProgressSpinnerMixinBase: CanColorCtor & typeof KbqProgressSpinnerBase = mixinColor(
+    KbqProgressSpinnerBase,
+    KbqComponentColors.Theme,
+);
 
 const MAX_DASH_ARRAY = 295;
 
@@ -56,8 +50,8 @@ const MAX_DASH_ARRAY = 295;
         class: 'kbq-progress-spinner',
         '[class.kbq-progress-spinner_big]': `size === 'big'`,
         '[class.kbq-progress-spinner_indeterminate]': `mode === 'indeterminate'`,
-        '[attr.id]': 'id'
-    }
+        '[attr.id]': 'id',
+    },
 })
 export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements CanColor {
     @Input() id: string = `kbq-progress-spinner-${id++}`;

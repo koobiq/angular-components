@@ -1,20 +1,18 @@
-
-
 export const ptBRLocaleData = {
-    select: { hiddenItemsText: '{{ number }} mais'},
+    select: { hiddenItemsText: '{{ number }} mais' },
     datepicker: {
-        placeholder: 'dd/mm/yyyy'
+        placeholder: 'dd/mm/yyyy',
     },
     timepicker: {
         placeholder: {
             full: 'hh:mm:ss',
-            short: 'hh:mm'
-        }
+            short: 'hh:mm',
+        },
     },
     fileUpload: {
         single: {
             captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
-            browseLink: 'escolher'
+            browseLink: 'escolher',
         },
         multiple: {
             captionText: 'Arrastar aqui ou {{ browseLink }}',
@@ -24,8 +22,8 @@ export const ptBRLocaleData = {
             title: 'Carregar arquivos',
             gridHeaders: {
                 file: 'Arquivo',
-                size: 'Tamanho'
-            }
-        }
-    }
+                size: 'Tamanho',
+            },
+        },
+    },
 };

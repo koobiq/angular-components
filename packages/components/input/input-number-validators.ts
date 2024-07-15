@@ -1,11 +1,10 @@
 import { Directive, forwardRef, Input, OnChanges, Provider, SimpleChanges } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
-
 export const MIN_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
     useExisting: forwardRef(() => MinValidator),
-    multi: true
+    multi: true,
 };
 
 /**
@@ -16,11 +15,10 @@ export const MIN_VALIDATOR: Provider = {
     selector: '[min][formControlName],[min][formControl],[min][ngModel]',
     providers: [MIN_VALIDATOR],
     host: {
-        '[attr.min]': 'min ? min : null'
-    }
+        '[attr.min]': 'min ? min : null',
+    },
 })
 export class MinValidator implements Validator, OnChanges {
-
     @Input() min: number;
     private validator: ValidatorFn;
     private onChange: () => void;
@@ -29,7 +27,9 @@ export class MinValidator implements Validator, OnChanges {
         if ('min' in changes) {
             this.createValidator();
 
-            if (this.onChange) { this.onChange(); }
+            if (this.onChange) {
+                this.onChange();
+            }
         }
     }
 
@@ -46,11 +46,10 @@ export class MinValidator implements Validator, OnChanges {
     }
 }
 
-
 export const MAX_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
     useExisting: forwardRef(() => MaxValidator),
-    multi: true
+    multi: true,
 };
 
 /**
@@ -61,12 +60,10 @@ export const MAX_VALIDATOR: Provider = {
     selector: '[max][formControlName],[max][formControl],[max][ngModel]',
     providers: [MAX_VALIDATOR],
     host: {
-        '[attr.max]': 'max ? max : null'
-    }
+        '[attr.max]': 'max ? max : null',
+    },
 })
-export class MaxValidator implements Validator,
-    OnChanges {
-
+export class MaxValidator implements Validator, OnChanges {
     @Input() max: number | string;
     private validator: ValidatorFn;
     private onChange: () => void;
@@ -75,7 +72,9 @@ export class MaxValidator implements Validator,
         if ('max' in changes) {
             this.createValidator();
 
-            if (this.onChange) { this.onChange(); }
+            if (this.onChange) {
+                this.onChange();
+            }
         }
     }
 

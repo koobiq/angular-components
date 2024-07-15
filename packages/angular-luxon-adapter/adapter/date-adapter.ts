@@ -1,20 +1,21 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
-import { KbqLocaleService, KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
 import { Info } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
-
 
 /** Configurable options for {@see LuxonDateAdapter}. */
 export type KbqLuxonDateAdapterOptions = LuxonDateAdapterOptions;
 
 /** InjectionToken for moment date adapter to configure options. */
 export const KBQ_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<KbqLuxonDateAdapterOptions>(
-    'KBQ_MOMENT_DATE_ADAPTER_OPTIONS', {
+    'KBQ_MOMENT_DATE_ADAPTER_OPTIONS',
+    {
         providedIn: 'root',
-        factory: KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY
-    });
+        factory: KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY,
+    },
+);
 
 /** @docs-private */
 // tslint:disable:naming-convention
@@ -34,14 +35,13 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
     constructor(
         @Inject(KBQ_DATE_LOCALE) dateLocale: string,
         @Optional() @Inject(KBQ_LUXON_DATE_ADAPTER_OPTIONS) protected readonly options?: LuxonDateAdapterOptions,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
     ) {
         super(dateLocale, options);
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes
-            .subscribe(this.setLocale);
+        this.localeService?.changes.subscribe(this.setLocale);
     }
 
     setLocale = (locale: string): void => {
@@ -57,12 +57,12 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
                 shortMonths: Info.monthsFormat('short', options),
                 narrowDaysOfWeek: Info.weekdaysFormat('narrow', options),
                 shortDaysOfWeek: Info.weekdaysFormat('short', options),
-                longDaysOfWeek: Info.weekdaysFormat('long', options)
+                longDaysOfWeek: Info.weekdaysFormat('long', options),
             };
 
             this.updateLocaleData(localeData);
         }
 
         this._localeChanges.next(locale);
-    }
+    };
 }

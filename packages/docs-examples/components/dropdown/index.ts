@@ -10,22 +10,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { DropdownNavigationWrapExample } from './dropdown-navigation-wrap/dropdown-navigation-wrap-example';
 import { DropdownNestedExample } from './dropdown-nested/dropdown-nested-example';
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 
-
-export {
-    DropdownNestedExample,
-    DropdownOverviewExample,
-    DropdownNavigationWrapExample
-};
+export { DropdownNavigationWrapExample, DropdownNestedExample, DropdownOverviewExample };
 
 const EXAMPLES = [
     DropdownNestedExample,
     DropdownOverviewExample,
-    DropdownNavigationWrapExample
+    DropdownNavigationWrapExample,
 ];
 
 @NgModule({
@@ -40,9 +34,9 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqInputModule,
         KbqTitleModule,
-        KbqDividerModule
+        KbqDividerModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class DropdownExamplesModule {}

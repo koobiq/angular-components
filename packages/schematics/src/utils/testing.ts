@@ -4,7 +4,7 @@ function createWorkspace(runner: SchematicTestRunner): Promise<UnitTestTree> {
     return runner.runExternalSchematic('@schematics/angular', 'workspace', {
         name: 'workspace',
         version: '17.0.0',
-        newProjectRoot: 'projects'
+        newProjectRoot: 'projects',
     });
 }
 
@@ -17,13 +17,13 @@ export async function createTestApp(runner: SchematicTestRunner, appOptions = {}
         '@schematics/angular',
         'application',
         { name: 'app', ...appOptions },
-        tree
+        tree,
     );
 
     return runner.runExternalSchematic(
         '@schematics/angular',
         'application',
         { name: 'second-app', ...appOptions },
-        tree
+        tree,
     );
 }

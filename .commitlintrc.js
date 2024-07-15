@@ -63,17 +63,37 @@ const scope_types = [
     'validation',
     'layout',
     'title',
-    'file-upload'
+    'file-upload',
 ];
 
-module.exports = {
+/**
+ * @see https://commitlint.js.org/reference/configuration
+ * @type {import('@commitlint/types').UserConfig}
+ */
+const config = {
     extends: ['@commitlint/config-conventional'],
     rules: {
         'type-enum': [
             2,
             'always',
-            ['feat', 'feature', 'fix', 'refactor', 'docs', 'build', 'test', 'ci', 'chore']
+            [
+                'feat',
+                'feature',
+                'fix',
+                'refactor',
+                'docs',
+                'build',
+                'test',
+                'ci',
+                'chore',
+            ],
         ],
-        'scope-enum': [ 2, 'always', scope_types]
-    }
+        'scope-enum': [
+            2,
+            'always',
+            scope_types,
+        ],
+    },
 };
+
+module.exports = config;

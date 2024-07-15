@@ -6,37 +6,23 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ContentChildren, ElementRef,
+    ContentChildren,
+    ElementRef,
     forwardRef,
     Input,
     QueryList,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    DOWN_ARROW,
-    UP_ARROW,
-    TAB,
-    isVerticalMovement,
-    isHorizontalMovement
-} from '@koobiq/cdk/keycodes';
+import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
-
-import {
-    KbqNavbarBento,
-    KbqNavbarItem,
-    KbqNavbarRectangleElement
-} from './navbar-item.component';
+import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
-
 
 @Component({
     selector: 'kbq-vertical-navbar',
     exportAs: 'KbqVerticalNavbar',
     template: `
-        <div class="kbq-vertical-navbar__container"
-             [class.kbq-collapsed]="!expanded"
-             [class.kbq-expanded]="expanded">
-
+        <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
             <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle"></ng-content>
         </div>
@@ -45,7 +31,7 @@ import { KbqFocusableComponent } from './navbar.component';
         './vertical-navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss'
+        './navbar-divider.scss',
     ],
     host: {
         class: 'kbq-vertical-navbar',
@@ -54,10 +40,10 @@ import { KbqFocusableComponent } from './navbar.component';
         '(focus)': 'focus()',
         '(blur)': 'blur()',
 
-        '(keydown)': 'onKeyDown($event)'
+        '(keydown)': 'onKeyDown($event)',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
@@ -85,12 +71,11 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     constructor(
         protected elementRef: ElementRef,
         changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
+        focusMonitor: FocusMonitor,
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 
-        this.animationDone
-            .subscribe(this.updateTooltipForItems);
+        this.animationDone.subscribe(this.updateTooltipForItems);
     }
 
     ngAfterContentInit(): void {
@@ -98,8 +83,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         this.updateExpandedStateForItems();
         this.updateTooltipForItems();
 
-        this.rectangleElements.changes
-            .subscribe(this.setItemsState);
+        this.rectangleElements.changes.subscribe(this.setItemsState);
 
         super.ngAfterContentInit();
 
@@ -141,14 +125,13 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
             item.collapsed = !this.expanded;
             setTimeout(() => item.button?.updateClassModifierForIcons());
         });
-    }
+    };
 
     private updateTooltipForItems = () => {
         this.items.forEach((item) => item.updateTooltip());
-    }
+    };
 
     private setItemsState = () => {
-        Promise.resolve()
-            .then(() => this.rectangleElements?.forEach((item) => item.vertical = true));
-    }
+        Promise.resolve().then(() => this.rectangleElements?.forEach((item) => (item.vertical = true)));
+    };
 }

@@ -12,25 +12,18 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
-
 import { PopoverCommonExample } from './popover-common/popover-common-example';
 import { PopoverPlacementCenterExample } from './popover-placement-center/popover-placement-center-example';
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 
-
-export {
-    PopoverCommonExample,
-    PopoverScrollExample,
-    PopoverPlacementCenterExample,
-    PopoverPlacementEdgesExample
-};
+export { PopoverCommonExample, PopoverPlacementCenterExample, PopoverPlacementEdgesExample, PopoverScrollExample };
 
 const EXAMPLES = [
     PopoverCommonExample,
     PopoverScrollExample,
     PopoverPlacementCenterExample,
-    PopoverPlacementEdgesExample
+    PopoverPlacementEdgesExample,
 ];
 
 @NgModule({
@@ -47,9 +40,9 @@ const EXAMPLES = [
         KbqInputModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class PopoverExamplesModule {}

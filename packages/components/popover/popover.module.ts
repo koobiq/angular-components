@@ -3,10 +3,12 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-
 import { KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger } from './popover-confirm.component';
-import { KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
-
+import {
+    KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    KbqPopoverComponent,
+    KbqPopoverTrigger,
+} from './popover.component';
 
 @NgModule({
     declarations: [KbqPopoverComponent, KbqPopoverTrigger, KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger],
@@ -14,7 +16,7 @@ import { KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqPopoverComponent, KbqP
     imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
-    ]
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
+    ],
 })
 export class KbqPopoverModule {}

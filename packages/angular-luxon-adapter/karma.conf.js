@@ -6,7 +6,7 @@ module.exports = function (config) {
         ...baseConfig,
 
         coverageReporter: {
-            dir: '../../dist/coverage/angular-luxon-adapter'
-        }
+            dir: '../../dist/coverage/angular-luxon-adapter',
+        },
     });
 };

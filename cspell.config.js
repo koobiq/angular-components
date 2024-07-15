@@ -13,17 +13,17 @@ const config = {
         '**/dist/**',
         '**/node_modules/**',
         '**/CHANGELOG.md',
-        '**/public_api_guard/**'
+        '**/public_api_guard/**',
     ],
     import: [
         'tools/cspell-locales/en.json',
-        'tools/cspell-locales/ru.json'
+        'tools/cspell-locales/ru.json',
     ],
     dictionaries: [
         'fonts',
         'fullstack',
         'markdown',
-        'software-terms'
+        'software-terms',
     ],
 };
 

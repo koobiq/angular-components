@@ -1,6 +1,5 @@
 import { Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
-
 import { addPackageToPackageJson } from '../utils/package-config';
 import * as messages from './messages';
 import { Schema } from './schema';
@@ -18,7 +17,7 @@ const VERSIONS = {
     LUXON: '^0.0.0',
     MARKED: '^0.0.0',
     OVERLAYSCROLLBARS: '^0.0.0',
-    NGX_HIGHLIGHTJS: '^0.0.0'
+    NGX_HIGHLIGHTJS: '^0.0.0',
 };
 
 /**

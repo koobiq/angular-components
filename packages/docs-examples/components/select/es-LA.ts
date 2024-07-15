@@ -141,6 +141,6 @@ export const esLALocaleDataSet = {
         'Engels',
         'Yuzhno-Sajalinsk',
         'Yakutsk',
-        'Yaroslavl'
-    ]
+        'Yaroslavl',
+    ],
 };

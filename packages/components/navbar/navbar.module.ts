@@ -4,21 +4,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import {
-    KbqNavbarFocusableItem,
+    KbqNavbarBento,
     KbqNavbarBrand,
     KbqNavbarDivider,
+    KbqNavbarFocusableItem,
     KbqNavbarItem,
     KbqNavbarLogo,
-    KbqNavbarTitle,
     KbqNavbarRectangleElement,
+    KbqNavbarTitle,
     KbqNavbarToggle,
-    KbqNavbarBento
 } from './navbar-item.component';
 import { KbqNavbar, KbqNavbarContainer } from './navbar.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
-
 
 @NgModule({
     imports: [
@@ -26,7 +24,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         A11yModule,
         PlatformModule,
         KbqIconModule,
-        KbqToolTipModule
+        KbqToolTipModule,
     ],
     exports: [
         KbqNavbar,
@@ -40,7 +38,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento
+        KbqNavbarBento,
     ],
     declarations: [
         KbqNavbar,
@@ -54,7 +52,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento
-    ]
+        KbqNavbarBento,
+    ],
 })
 export class KbqNavbarModule {}

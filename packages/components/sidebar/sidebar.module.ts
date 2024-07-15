@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
 import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened } from './sidebar.component';
-
 
 @NgModule({
     imports: [CommonModule],
     declarations: [
         KbqSidebarClosed,
         KbqSidebarOpened,
-        KbqSidebar
+        KbqSidebar,
     ],
     exports: [
         KbqSidebarClosed,
         KbqSidebarOpened,
-        KbqSidebar
-    ]
+        KbqSidebar,
+    ],
 })
 export class KbqSidebarModule {}

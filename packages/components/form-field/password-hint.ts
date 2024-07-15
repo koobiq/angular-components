@@ -9,14 +9,12 @@ import {
     Input,
     Optional,
     QueryList,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
-
 
 let nextPasswordHintUniqueId = 0;
 
@@ -26,14 +24,14 @@ export enum PasswordRules {
     LowerLatin,
     Digit,
     LatinAndSpecialSymbols,
-    Custom
+    Custom,
 }
 
 export const regExpPasswordValidator = {
     [PasswordRules.LowerLatin]: RegExp(/^(?=.*?[a-z])/),
     [PasswordRules.UpperLatin]: RegExp(/^(?=.*?[A-Z])/),
     [PasswordRules.Digit]: RegExp(/^(?=.*?[0-9])/),
-    [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/)
+    [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/),
 };
 
 export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHint>): boolean => {
@@ -43,10 +41,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
 @Component({
     selector: 'kbq-password-hint',
     template: `
-        <i class="kbq-password-hint__icon"
-           kbq-icon=""
-           [ngClass]="icon">
-        </i>
+        <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon"> </i>
 
         <span class="kbq-hint__text">
             <ng-content></ng-content>
@@ -59,10 +54,10 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         '[class.kbq-success]': 'checked',
         '[class.kbq-error]': 'hasError',
         '[class.kbq-hint_fill-text-off]': 'fillTextOff',
-        '[class.kbq-hint_compact]': 'compact'
+        '[class.kbq-hint_compact]': 'compact',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     @Input() id: string = `kbq-hint-${nextPasswordHintUniqueId++}`;
@@ -96,7 +91,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     constructor(
         elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any
+        @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any,
     ) {
         super(elementRef);
     }
@@ -126,16 +121,13 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
             throw Error(`Unknown [rule]=${this.rule}`);
         }
 
-        this.formField.control.stateChanges
-            .subscribe(this.checkValue);
+        this.formField.control.stateChanges.subscribe(this.checkValue);
 
-        (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule
-            .subscribe(() => {
-                this.checked = this.checkRule(this.control.value);
-                this.hasError = !this.checkRule(this.control.value);
-            });
+        (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
+            this.checked = this.checkRule(this.control.value);
+            this.hasError = !this.checkRule(this.control.value);
+        });
     }
-
 
     private checkValue = () => {
         if (this.control.focused && this.isValueChanged()) {
@@ -152,7 +144,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
         this.lastControlValue = this.control.value;
         this.changeDetectorRef.markForCheck();
-    }
+    };
 
     private checkLengthRule(value: string): boolean {
         return value.length >= this.min && value.length <= this.max;
@@ -160,7 +152,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
     private checkRegexRule = (value: string): boolean => {
         return !!this.regex?.test(value);
-    }
+    };
 
     private checkSpecialSymbolsRegexRule(value: string): boolean {
         return !!value && !this.regex?.test(value);

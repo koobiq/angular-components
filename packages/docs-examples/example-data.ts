@@ -2,7 +2,6 @@
 // examples are being compiled, the module file will be generated.
 import { EXAMPLE_COMPONENTS } from './example-module';
 
-
 /**
  * Example data with information about component name, selector, files used in
  * example, and path to examples.
@@ -24,9 +23,11 @@ export class ExampleData {
     componentNames: string[];
 
     constructor(example: string) {
-        if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) { return; }
+        if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
+            return;
+        }
 
-        const {componentName, files, selector, primaryFile, additionalComponents, title} =
+        const { componentName, files, selector, primaryFile, additionalComponents, title } =
             EXAMPLE_COMPONENTS[example];
         const exampleName = example.replace(/(?:^\w|\b\w)/g, (letter) => letter.toUpperCase());
 

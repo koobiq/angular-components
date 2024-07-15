@@ -1,32 +1,32 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ViewChild,
     ElementRef,
+    forwardRef,
     Input,
+    ViewChild,
     ViewEncapsulation,
-    forwardRef
 } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
-
 import { KbqTimezoneZone } from './timezone.models';
 import { offsetFormatter } from './timezone.utils';
-
 
 @Component({
     selector: 'kbq-timezone-option',
     exportAs: 'kbqTimezoneOption',
     host: {
-        class: 'kbq-timezone-option'
+        class: 'kbq-timezone-option',
     },
     templateUrl: 'timezone-option.component.html',
     styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
-        provide: KbqOption,
-        useExisting: forwardRef(() => KbqTimezoneOption)
-    }]
+    providers: [
+        {
+            provide: KbqOption,
+            useExisting: forwardRef(() => KbqTimezoneOption),
+        },
+    ],
 })
 export class KbqTimezoneOption extends KbqOption {
     @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;
@@ -47,11 +47,8 @@ export class KbqTimezoneOption extends KbqOption {
     private _timezone: KbqTimezoneZone;
 
     get viewValue(): string {
-        const cities: string = [this.timezone.city, this.timezone.cities]
-            .filter(Boolean)
-            .join(', ');
+        const cities: string = [this.timezone.city, this.timezone.cities].filter(Boolean).join(', ');
 
-        return [offsetFormatter(this.timezone.offset), cities]
-            .join(' ');
+        return [offsetFormatter(this.timezone.offset), cities].join(' ');
     }
 }

@@ -6,15 +6,13 @@ import { KbqDataSizePipe } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqLinkModule } from '@koobiq/components/link';
-
 import { KbqFileDropDirective } from './file-drop';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
-
 
 @NgModule({
     imports: [
@@ -29,17 +27,17 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqFormFieldModule,
         KbqEllipsisCenterModule,
         KbqDataSizePipe,
-        KbqLinkModule
+        KbqLinkModule,
     ],
     declarations: [
         KbqFileDropDirective,
         KbqSingleFileUploadComponent,
-        KbqMultipleFileUploadComponent
+        KbqMultipleFileUploadComponent,
     ],
     exports: [
         KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
-        KbqFileDropDirective
-    ]
+        KbqFileDropDirective,
+    ],
 })
 export class KbqFileUploadModule {}

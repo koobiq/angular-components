@@ -1,11 +1,6 @@
 /* tslint:disable:no-console no-reserved-keywords */
-import {
-    Component,
-    NgModule,
-    OnInit, ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -16,17 +11,16 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
+    FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    FlatTreeControl,
     KbqTreeModule,
     KbqTreeOption,
+    KbqTreeSelection,
     defaultCompareValues,
     defaultCompareViewValues,
-    KbqTreeSelection
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-
 
 export class FileNode {
     children: FileNode[];
@@ -77,44 +71,43 @@ export const DATA_OBJECT = {
         Woods: 'jpg',
         PhotoBoothLibrary: {
             Contents: 'dir',
-            Pictures_2: 'dir'
-        }
+            Pictures_2: 'dir',
+        },
     },
     Documents: {
         Pictures_3: 'Pictures',
         angular: {
             src1: {
                 core: 'ts',
-                compiler: 'ts'
-            }
+                compiler: 'ts',
+            },
         },
         material2: {
             src2: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts'
-            }
-        }
+                input: 'ts',
+            },
+        },
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf'
+        October: 'pdf',
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app'
+        Webstorm: 'app',
     },
-    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
+    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app',
 };
-
 
 @Component({
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent implements OnInit {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
@@ -137,13 +130,16 @@ export class DemoComponent implements OnInit {
     searchControl: UntypedFormControl = new UntypedFormControl();
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue,
-            defaultCompareValues, defaultCompareViewValues, this.isDisabled
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            defaultCompareValues,
+            defaultCompareViewValues,
+            this.isDisabled,
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -151,8 +147,7 @@ export class DemoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges
-            .subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
@@ -187,7 +182,9 @@ export class DemoComponent implements OnInit {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select.selectionModel.selected.includes(parent);
@@ -211,33 +208,32 @@ export class DemoComponent implements OnInit {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 
     private isDisabled = (node: FileFlatNode): boolean => {
         return node.name === 'November';
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -256,8 +252,8 @@ export class DemoComponent implements OnInit {
         KbqIconModule,
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
-        KbqTitleModule
+        KbqTitleModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

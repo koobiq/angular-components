@@ -1,8 +1,7 @@
 import { Component, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, ComponentFixtureAutoDetect, tick } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
-
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -10,32 +9,30 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     TestBed.configureTestingModule({
         imports: [
             KbqMarkdownModule,
-            ...imports
+            ...imports,
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers
-        ]
+            ...providers,
+        ],
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
 }
 
-
 // tslint:disable no-unnecessary-class
 @Component({
-    template: '<kbq-markdown [markdownText]="markdownText"></kbq-markdown>'
+    template: '<kbq-markdown [markdownText]="markdownText"></kbq-markdown>',
 })
 class KbqMarkdownWithAttribute {
     markdownText: string = '';
 }
 
 @Component({
-    template: '<kbq-markdown>## header test</kbq-markdown>'
+    template: '<kbq-markdown>## header test</kbq-markdown>',
 })
 class KbqMarkdownWithContent {}
-
 
 describe('KbqMarkdown', () => {
     describe('basic behaviors', () => {

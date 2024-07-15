@@ -3,27 +3,22 @@ import { ObserversModule } from '@angular/cdk/observers';
 import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import {
-    KbqButton,
-    KbqButtonCssStyler
-} from './button.component';
-
+import { KbqButton, KbqButtonCssStyler } from './button.component';
 
 @NgModule({
     imports: [
         CommonModule,
         A11yModule,
         PlatformModule,
-        ObserversModule
+        ObserversModule,
     ],
     exports: [
         KbqButton,
-        KbqButtonCssStyler
+        KbqButtonCssStyler,
     ],
     declarations: [
         KbqButton,
-        KbqButtonCssStyler
-    ]
+        KbqButtonCssStyler,
+    ],
 })
 export class KbqButtonModule {}

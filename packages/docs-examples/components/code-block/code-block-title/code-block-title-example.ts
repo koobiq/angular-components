@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeJs2 = `function askPassword(ok, fail) {
     if (password == "rockstar") ok();
     let password = prompt("Password?", '');
@@ -25,7 +24,6 @@ let user = {
 
 askPassword(user.loginOk, user.loginFail);`;
 
-
 /**
  * @title Basic code-block-title
  */
@@ -33,16 +31,18 @@ askPassword(user.loginOk, user.loginFail);`;
     selector: 'code-block-title-example',
     templateUrl: 'code-block-title-example.html',
     styleUrls: ['code-block-title-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CodeBlockTitleExample {
     files: KbqCodeFile[];
 
     constructor() {
-        this.files = [{
-            filename: 'Block Title',
-            content: codeJs2,
-            language: 'javascript'
-        }];
+        this.files = [
+            {
+                filename: 'Block Title',
+                content: codeJs2,
+                language: 'javascript',
+            },
+        ];
     }
 }

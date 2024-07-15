@@ -7,14 +7,12 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Observer } from 'rxjs';
-
 import { KbqCheckboxModule } from '../../components/checkbox';
 import { KbqFormFieldModule } from '../../components/form-field';
 import { KbqIconModule } from '../../components/icon';
 import { KbqInputModule } from '../../components/input/';
 import { KbqRadioModule } from '../../components/radio';
 import { KbqTabsModule } from '../../components/tabs/';
-
 
 export interface IExampleTab {
     label: string;
@@ -25,7 +23,7 @@ export interface IExampleTab {
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TabsDemoComponent {
     asyncTabs: Observable<IExampleTab[]>;
@@ -44,16 +42,13 @@ export class TabsDemoComponent {
 
     constructor() {
         this.asyncTabs = new Observable((observer: Observer<IExampleTab[]>) => {
-            setTimeout(
-                () => {
-                    observer.next([
-                        { label: 'First', content: 'Content 1' },
-                        { label: 'Second', content: 'Content 2' },
-                        { label: 'Third', content: 'Content 3' }
-                    ]);
-                },
-                this.timeout
-            );
+            setTimeout(() => {
+                observer.next([
+                    { label: 'First', content: 'Content 1' },
+                    { label: 'Second', content: 'Content 2' },
+                    { label: 'Third', content: 'Content 3' },
+                ]);
+            }, this.timeout);
         });
     }
 
@@ -82,7 +77,6 @@ export class TabsDemoComponent {
     }
 }
 
-
 @NgModule({
     declarations: [TabsDemoComponent],
     imports: [
@@ -97,8 +91,8 @@ export class TabsDemoComponent {
         KbqInputModule,
         KbqToolTipModule,
         KbqSelectModule,
-        KbqButtonModule
+        KbqButtonModule,
     ],
-    bootstrap: [TabsDemoComponent]
+    bootstrap: [TabsDemoComponent],
 })
 export class DemoModule {}

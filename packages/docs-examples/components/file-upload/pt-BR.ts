@@ -6,6 +6,6 @@ export const ptBRLocaleData = {
     title: 'Adicionar fotos',
     gridHeaders: {
         file: 'Arquivo',
-        size: 'Tamanho'
-    }
+        size: 'Tamanho',
+    },
 };

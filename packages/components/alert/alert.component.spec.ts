@@ -1,9 +1,7 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqAlert, KbqAlertModule } from './index';
-
 
 describe('MсAlert', () => {
     let fixture: ComponentFixture<TestApp>;
@@ -14,7 +12,7 @@ describe('MсAlert', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqAlertModule],
-            declarations: [TestApp]
+            declarations: [TestApp],
         });
 
         TestBed.compileComponents();
@@ -32,11 +30,8 @@ describe('MсAlert', () => {
     });
 });
 
-
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-alert></kbq-alert>
-    `
+    template: ` <kbq-alert></kbq-alert> `,
 })
 class TestApp {}

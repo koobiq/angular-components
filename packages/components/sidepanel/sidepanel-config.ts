@@ -1,6 +1,5 @@
 import { InjectionToken } from '@angular/core';
 
-
 /** Injection token that can be used to access the data that was passed in to a sidepanel. */
 export const KBQ_SIDEPANEL_DATA = new InjectionToken<any>('KbqSidepanelData');
 
@@ -8,13 +7,13 @@ export enum KbqSidepanelPosition {
     Right = 'right',
     Left = 'left',
     Top = 'top',
-    Bottom = 'bottom'
+    Bottom = 'bottom',
 }
 
 export enum KbqSidepanelSize {
     Small = 'small',
     Medium = 'medium',
-    Large = 'large'
+    Large = 'large',
 }
 
 export class KbqSidepanelConfig<D = any> {

@@ -4,15 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
-
 import { KbqButtonModule } from '../../components/button';
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     direction = Direction;
@@ -40,20 +38,19 @@ export class DemoComponent {
     }
 }
 
-
 @NgModule({
     declarations: [
-        DemoComponent
+        DemoComponent,
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         KbqSplitterModule,
         KbqButtonModule,
-        KbqSidebarModule
+        KbqSidebarModule,
     ],
     bootstrap: [
-        DemoComponent
-    ]
+        DemoComponent,
+    ],
 })
 export class DemoModule {}

@@ -7,17 +7,15 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
 import {
     KbqSidepanelActions,
     KbqSidepanelBody,
     KbqSidepanelClose,
     KbqSidepanelFooter,
-    KbqSidepanelHeader
+    KbqSidepanelHeader,
 } from './sidepanel-directives';
 import { KbqSidepanelService } from './sidepanel.service';
-
 
 @NgModule({
     imports: [
@@ -28,11 +26,11 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqButtonModule,
         KbqIconModule,
         KbqTitleModule,
-        A11yModule
+        A11yModule,
     ],
     providers: [
         KbqSidepanelService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
     ],
     declarations: [
         KbqSidepanelContainerComponent,
@@ -40,7 +38,7 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqSidepanelHeader,
         KbqSidepanelBody,
         KbqSidepanelFooter,
-        KbqSidepanelActions
+        KbqSidepanelActions,
     ],
     exports: [
         KbqSidepanelContainerComponent,
@@ -48,7 +46,7 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqSidepanelHeader,
         KbqSidepanelBody,
         KbqSidepanelFooter,
-        KbqSidepanelActions
-    ]
+        KbqSidepanelActions,
+    ],
 })
 export class KbqSidepanelModule {}

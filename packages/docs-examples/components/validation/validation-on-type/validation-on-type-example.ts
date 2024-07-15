@@ -2,7 +2,6 @@ import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 
-
 /**
  * @title validation-on-type
  */
@@ -10,7 +9,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'validation-on-type-example',
     templateUrl: 'validation-on-type-example.html',
     styleUrls: ['validation-on-type-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ValidationOnTypeExample {
     popUpPlacements = PopUpPlacements;
@@ -21,7 +20,7 @@ export class ValidationOnTypeExample {
 
     constructor() {
         this.checkOnFlyForm = new FormGroup({
-            folderName: new FormControl('')
+            folderName: new FormControl(''),
         });
     }
 

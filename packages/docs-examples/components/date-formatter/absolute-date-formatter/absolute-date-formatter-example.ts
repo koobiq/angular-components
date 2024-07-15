@@ -5,14 +5,13 @@ import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-
 /**
  * @title Basic progress absolute-date-formatter
  */
 @Component({
     selector: 'absolute-date-formatter-example',
     templateUrl: 'absolute-date-formatter-example.html',
-    styleUrls: ['absolute-date-formatter-example.css']
+    styleUrls: ['absolute-date-formatter-example.css'],
 })
 export class AbsoluteDateFormatterExample {
     formats = {
@@ -20,7 +19,7 @@ export class AbsoluteDateFormatterExample {
             long: {
                 date: {
                     currentYear: '',
-                    notCurrentYear: ''
+                    notCurrentYear: '',
                 },
                 dateTime: {
                     currentYear: '',
@@ -29,13 +28,13 @@ export class AbsoluteDateFormatterExample {
 
                     notCurrentYear: '',
                     notCurrentYearSeconds: '',
-                    notCurrentYearMilliseconds: ''
-                }
+                    notCurrentYearMilliseconds: '',
+                },
             },
             short: {
                 date: {
                     currentYear: '',
-                    notCurrentYear: ''
+                    notCurrentYear: '',
                 },
                 dateTime: {
                     currentYear: '',
@@ -44,20 +43,18 @@ export class AbsoluteDateFormatterExample {
 
                     notCurrentYear: '',
                     notCurrentYearSeconds: '',
-                    notCurrentYearMilliseconds: ''
-                }
-            }
-        }
+                    notCurrentYearMilliseconds: '',
+                },
+            },
+        },
     };
 
     constructor(
         private adapter: DateAdapter<DateTime>,
         private dateFormatter: DateFormatter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
     ) {
-        this.localeService.changes
-            .pipe(distinctUntilChanged(), delay(0))
-            .subscribe(this.onLocaleChange);
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 
     private onLocaleChange = (locale: string) => {
@@ -65,7 +62,7 @@ export class AbsoluteDateFormatterExample {
 
         this.populateAbsoluteLong();
         this.populateAbsoluteShort();
-    }
+    };
 
     private populateAbsoluteShort() {
         const now = this.adapter.today();
@@ -76,14 +73,16 @@ export class AbsoluteDateFormatterExample {
         short.date.notCurrentYear = this.dateFormatter.absoluteShortDate(now.minus({ years: 1 }));
 
         short.dateTime.currentYear = this.dateFormatter.absoluteShortDateTime(now);
-        short.dateTime.currentYearSeconds = this.dateFormatter.absoluteShortDateTime(now, {seconds: true});
-        short.dateTime.currentYearMilliseconds = this.dateFormatter.absoluteShortDateTime(now, {milliseconds: true});
+        short.dateTime.currentYearSeconds = this.dateFormatter.absoluteShortDateTime(now, { seconds: true });
+        short.dateTime.currentYearMilliseconds = this.dateFormatter.absoluteShortDateTime(now, { milliseconds: true });
 
         short.dateTime.notCurrentYear = this.dateFormatter.absoluteShortDateTime(now.minus({ years: 1 }));
-        short.dateTime.notCurrentYearSeconds = this.dateFormatter.absoluteShortDateTime(now.minus({ years: 1 }), {seconds: true});
-        short.dateTime.notCurrentYearMilliseconds = this.dateFormatter.absoluteShortDateTime(
-            now.minus({ years: 1 }), {milliseconds: true}
-        );
+        short.dateTime.notCurrentYearSeconds = this.dateFormatter.absoluteShortDateTime(now.minus({ years: 1 }), {
+            seconds: true,
+        });
+        short.dateTime.notCurrentYearMilliseconds = this.dateFormatter.absoluteShortDateTime(now.minus({ years: 1 }), {
+            milliseconds: true,
+        });
     }
 
     private populateAbsoluteLong() {
@@ -95,13 +94,15 @@ export class AbsoluteDateFormatterExample {
         long.date.notCurrentYear = this.dateFormatter.absoluteLongDate(now.minus({ years: 1 }));
 
         long.dateTime.currentYear = this.dateFormatter.absoluteLongDateTime(now);
-        long.dateTime.currentYearSeconds = this.dateFormatter.absoluteLongDateTime(now, {seconds: true});
-        long.dateTime.currentYearMilliseconds = this.dateFormatter.absoluteLongDateTime(now, {milliseconds: true});
+        long.dateTime.currentYearSeconds = this.dateFormatter.absoluteLongDateTime(now, { seconds: true });
+        long.dateTime.currentYearMilliseconds = this.dateFormatter.absoluteLongDateTime(now, { milliseconds: true });
 
         long.dateTime.notCurrentYear = this.dateFormatter.absoluteLongDateTime(now.minus({ years: 1 }));
-        long.dateTime.notCurrentYearSeconds = this.dateFormatter.absoluteLongDateTime(now.minus({ years: 1 }), {seconds: true});
-        long.dateTime.notCurrentYearMilliseconds = this.dateFormatter.absoluteLongDateTime(
-            now.minus({ years: 1 }), {milliseconds: true}
-        );
+        long.dateTime.notCurrentYearSeconds = this.dateFormatter.absoluteLongDateTime(now.minus({ years: 1 }), {
+            seconds: true,
+        });
+        long.dateTime.notCurrentYearMilliseconds = this.dateFormatter.absoluteLongDateTime(now.minus({ years: 1 }), {
+            milliseconds: true,
+        });
     }
 }

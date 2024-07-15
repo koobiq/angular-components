@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeTs = `class Greeter {
   @format("Hello, %s")
   greeting: string;
@@ -17,7 +16,6 @@ const codeTs = `class Greeter {
   }
 }`;
 
-
 /**
  * @title Basic code-block-stretch
  */
@@ -25,7 +23,7 @@ const codeTs = `class Greeter {
     selector: 'code-block-stretch-example',
     templateUrl: 'code-block-stretch-example.html',
     styleUrls: ['code-block-stretch-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CodeBlockStretchExample {
     files: KbqCodeFile[];
@@ -33,10 +31,12 @@ export class CodeBlockStretchExample {
     isFixedHeight = true;
 
     constructor() {
-        this.files = [{
-            filename: '',
-            content: codeTs,
-            language: 'typescript'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeTs,
+                language: 'typescript',
+            },
+        ];
     }
 }

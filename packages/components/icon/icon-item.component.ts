@@ -7,16 +7,10 @@ import {
     Inject,
     Input,
     Optional,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    CanColor,
-    KBQ_FORM_FIELD_REF,
-    KbqFormFieldRef
-} from '@koobiq/components/core';
-
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
-
 
 @Component({
     selector: `[kbq-icon-item]`,
@@ -30,11 +24,10 @@ import { KbqIcon } from './icon.component';
         '[class.kbq-icon-item_normal]': '!big',
         '[class.kbq-icon-item_big]': 'big',
         '[class.kbq-icon-item_fade-off]': '!fade',
-        '[class.kbq-icon-item_fade-on]': 'fade'
-    }
+        '[class.kbq-icon-item_fade-on]': 'fade',
+    },
 })
 export class KbqIconItem extends KbqIcon implements CanColor {
-
     override name = 'KbqIconItem';
 
     @Input() fade: boolean = false;
@@ -44,7 +37,7 @@ export class KbqIconItem extends KbqIcon implements CanColor {
         elementRef: ElementRef,
         @Attribute('kbq-icon-item') iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) formField: KbqFormFieldRef,
-        protected changeDetectorRef: ChangeDetectorRef
+        protected changeDetectorRef: ChangeDetectorRef,
     ) {
         super(elementRef, iconName, formField, changeDetectorRef);
     }

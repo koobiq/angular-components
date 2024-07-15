@@ -1,8 +1,7 @@
-import { Component  } from '@angular/core';
+import { Component } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { TimeFormats } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
-
 
 /**
  * @title Timepicker overview
@@ -10,7 +9,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'timepicker-validation-symbols-example',
     templateUrl: 'timepicker-validation-symbols-example.html',
-    styleUrls: ['timepicker-validation-symbols-example.css']
+    styleUrls: ['timepicker-validation-symbols-example.css'],
 })
 export class TimepickerValidationSymbolsExample {
     timeFormats = TimeFormats;

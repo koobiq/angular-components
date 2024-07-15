@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Pseudo link
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-visited-example',
     templateUrl: 'link-visited-example.html',
     styleUrls: ['link-visited-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LinkVisitedExample {
     visited = false;

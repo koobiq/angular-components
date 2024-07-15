@@ -1,14 +1,12 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { fakeAsync, inject, tick, TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
-import { dispatchMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-
+import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverModule } from './popover.module';
-
 
 // tslint:disable:no-magic-numbers
 // tslint:disable:max-line-length
@@ -22,17 +20,17 @@ describe('KbqPopover', () => {
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-            imports     : [KbqPopoverModule, NoopAnimationsModule],
+            imports: [KbqPopoverModule, NoopAnimationsModule],
             declarations: [
                 KbqPopoverTestComponent,
                 KbqPopoverConfirmTestComponent,
-                KbqPopoverConfirmWithProvidersTestComponent
-            ]
+                KbqPopoverConfirmWithProvidersTestComponent,
+            ],
         });
         TestBed.compileComponents();
     }));
 
-    beforeEach(inject([ OverlayContainer ], (oc: OverlayContainer) => {
+    beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
         overlayContainer = oc;
         overlayContainerElement = oc.getContainerElement();
     }));
@@ -87,7 +85,7 @@ describe('KbqPopover', () => {
 
             component.popoverVisibility = false;
             componentFixture.detectChanges();
-            tick(500);  // wait for next tick to hide
+            tick(500); // wait for next tick to hide
             componentFixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
@@ -160,50 +158,47 @@ describe('KbqPopover', () => {
         }));
 
         it('should open popover with keyboard when kbqTrigger = default', fakeAsync(() => {
-                const triggerElement = component.test7.nativeElement;
+            const triggerElement = component.test7.nativeElement;
 
-                [ENTER, SPACE].forEach((keyCode) => {
-                    dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
-                    tick();
-                    componentFixture.detectChanges();
+            [ENTER, SPACE].forEach((keyCode) => {
+                dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
+                tick();
+                componentFixture.detectChanges();
 
-                    let popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
-                    expect(popover).toBeTruthy();
-                    expect(triggerElement.classList).toContain('kbq-active');
+                let popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
+                expect(popover).toBeTruthy();
+                expect(triggerElement.classList).toContain('kbq-active');
 
-                    dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
-                    tick();
-                    componentFixture.detectChanges();
-                    popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
-                    expect(popover).not.toBeTruthy();
-                    expect(triggerElement.classList).not.toContain('kbq-active');
-                });
-            })
-        );
+                dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
+                tick();
+                componentFixture.detectChanges();
+                popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
+                expect(popover).not.toBeTruthy();
+                expect(triggerElement.classList).not.toContain('kbq-active');
+            });
+        }));
 
         it('should open popover with keyboard when kbqTrigger = default for elements other than button', fakeAsync(() => {
-                const triggerElement = component.test8.nativeElement;
+            const triggerElement = component.test8.nativeElement;
 
-                [ENTER, SPACE].forEach((keyCode) => {
-                    dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
-                    tick();
-                    componentFixture.detectChanges();
+            [ENTER, SPACE].forEach((keyCode) => {
+                dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
+                tick();
+                componentFixture.detectChanges();
 
-                    let popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
-                    expect(popover).toBeTruthy();
-                    expect(triggerElement.classList).toContain('kbq-active');
+                let popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
+                expect(popover).toBeTruthy();
+                expect(triggerElement.classList).toContain('kbq-active');
 
-                    dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
-                    tick();
-                    componentFixture.detectChanges();
-                    popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
-                    expect(popover).not.toBeTruthy();
-                    expect(triggerElement.classList).not.toContain('kbq-active');
-                });
-            })
-        );
+                dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
+                tick();
+                componentFixture.detectChanges();
+                popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
+                expect(popover).not.toBeTruthy();
+                expect(triggerElement.classList).not.toContain('kbq-active');
+            });
+        }));
     });
-
 
     describe('Check popover confirm', () => {
         beforeEach(() => {
@@ -221,7 +216,9 @@ describe('KbqPopover', () => {
             const button = componentFixture.debugElement.query(By.css('.kbq-popover-confirm button'));
             expect(button.nativeElement.textContent).toEqual('Да');
 
-            const confirmText = componentFixture.debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+            const confirmText = componentFixture.debugElement.query(
+                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+            );
             expect(confirmText.nativeElement.textContent).toEqual('Вы уверены, что хотите продолжить?');
         }));
 
@@ -233,7 +230,9 @@ describe('KbqPopover', () => {
             tick();
             componentFixture.detectChanges();
 
-            const confirmText = componentFixture.debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+            const confirmText = componentFixture.debugElement.query(
+                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+            );
             expect(confirmText.nativeElement.textContent).toEqual(expectedValue);
         }));
 
@@ -281,10 +280,11 @@ describe('KbqPopover', () => {
             const button = componentFixture.debugElement.query(By.css('.kbq-popover-confirm button'));
             expect(button.nativeElement.textContent).toEqual('provided button text');
 
-            const confirmText = componentFixture.debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+            const confirmText = componentFixture.debugElement.query(
+                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+            );
             expect(confirmText.nativeElement.textContent).toEqual('provided confirm text');
         }));
-
     });
 });
 
@@ -292,7 +292,15 @@ describe('KbqPopover', () => {
     selector: 'kbq-popover-test-component',
     template: `
         <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
-        <button #test2 kbqPopover [kbqTrigger]="'manual'" [kbqPopoverVisible]="popoverVisibility" kbqPopoverContent="_TEST2">_TEST2</button>
+        <button
+            #test2
+            kbqPopover
+            [kbqTrigger]="'manual'"
+            [kbqPopoverVisible]="popoverVisibility"
+            kbqPopoverContent="_TEST2"
+        >
+            _TEST2
+        </button>
         <button #test3 kbqPopover [kbqTrigger]="'focus'" [kbqPopoverContent]="'_TEST3'">_TEST3</button>
 
         <button #test4 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverHeader]="'_TEST4'">_TEST4</button>
@@ -301,7 +309,7 @@ describe('KbqPopover', () => {
 
         <button #test7 kbqPopover [kbqPopoverClass]="'_TEST7'" [kbqPopoverContent]="'_TEST7'">_TEST7</button>
         <button #test8 kbqPopover [kbqPopoverClass]="'_TEST8'" [kbqPopoverContent]="'_TEST8'">_TEST8</button>
-    `
+    `,
 })
 class KbqPopoverTestComponent {
     popoverVisibility: boolean = false;
@@ -316,7 +324,6 @@ class KbqPopoverTestComponent {
     @ViewChild('test7', { static: false }) test8: ElementRef;
 }
 
-
 @Component({
     selector: 'kbq-popover-test-component',
     template: `
@@ -324,7 +331,7 @@ class KbqPopoverTestComponent {
         <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
         <button #test10 kbqPopoverConfirm kbqPopoverConfirmButtonText="new button text">_TEST10</button>
         <button #test11 kbqPopoverConfirm (confirm)="onConfirm()">_TEST11</button>
-    `
+    `,
 })
 class KbqPopoverConfirmTestComponent {
     @ViewChild('test8', { static: false }) test8: ElementRef;
@@ -337,16 +344,13 @@ class KbqPopoverConfirmTestComponent {
     }
 }
 
-
 @Component({
     selector: 'kbq-popover-test-with-providers-component',
-    template: `
-        <button #test12 kbqPopoverConfirm>_TEST12</button>
-    `,
+    template: ` <button #test12 kbqPopoverConfirm>_TEST12</button> `,
     providers: [
-        {provide: KBQ_POPOVER_CONFIRM_TEXT, useValue: 'provided confirm text'},
-        {provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text'}
-    ]
+        { provide: KBQ_POPOVER_CONFIRM_TEXT, useValue: 'provided confirm text' },
+        { provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text' },
+    ],
 })
 class KbqPopoverConfirmWithProvidersTestComponent {
     @ViewChild('test12', { static: false }) test12: ElementRef;

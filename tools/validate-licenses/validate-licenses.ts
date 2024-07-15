@@ -1,6 +1,5 @@
-import * as path from 'node:path';
-
 import checker from 'license-checker';
+import * as path from 'node:path';
 import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;
@@ -29,7 +28,7 @@ const licensesWhitelist: License[] = [
     // Have a full copyright grant. Validated by opensource team.
     'Unlicense',
     '0BSD',
-    'CC0-1.0'
+    'CC0-1.0',
 ];
 
 // Name variations of SPDX licenses that some packages have.
@@ -39,7 +38,7 @@ const licenseReplacements: { [key: string]: License } = {
     'Apache 2.0': 'Apache-2.0',
 
     // BSD is BSD-2-clause by default.
-    BSD: 'BSD-2-Clause'
+    BSD: 'BSD-2-Clause',
 };
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
@@ -80,7 +79,7 @@ function isLicenseValid(licenses: License[]): boolean {
 const enum ReturnCode {
     Success = 0,
     Error = 1,
-    InvalidLicense = 2
+    InvalidLicense = 2,
 }
 
 // Main function that initializes the license checker and processes the results.
@@ -88,7 +87,7 @@ async function validateLicense(): Promise<ReturnCode> {
     try {
         const json = await new Promise<any>((resolve, reject) => {
             checker.init({ start: path.join(__dirname, '../../'), excludePrivatePackages: true }, (err, result) =>
-                err ? reject(err) : resolve(result)
+                err ? reject(err) : resolve(result),
             );
         });
 
@@ -101,7 +100,7 @@ async function validateLicense(): Promise<ReturnCode> {
                 id: key,
                 licenses: Array.isArray(json[key].licenses)
                     ? json[key].licenses.map(normalizeLicense)
-                    : [normalizeLicense(json[key].licenses)]
+                    : [normalizeLicense(json[key].licenses)],
             }))
             .filter((pkg) => !ignoredPackages.includes(pkg.id))
             .filter((pkg) => !isLicenseValid(pkg.licenses));

@@ -2,7 +2,6 @@
 /* tslint:disable:no-string-literal */
 import chalk from 'chalk';
 import { join } from 'path';
-
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
 import { CHANGELOG_FILE_NAME } from './constants';
 import { extractReleaseNotes } from './extract-release-notes';
@@ -10,14 +9,12 @@ import { GitClient } from './git/git-client';
 import { notify } from './notify-release';
 import { npmPublish } from './npm/npm-client';
 import { checkReleasePackage } from './release-output/check-packages';
-import { parseVersionName, Version } from './version-name/parse-version';
-
+import { Version, parseVersionName } from './version-name/parse-version';
 
 const { bold, cyan, green, italic, red } = chalk;
 
 // tslint:disable-next-line:naming-convention
 export class PublishReleaseCIGitlabTask extends BaseReleaseTask {
-
     /** Parsed current version of the project. */
     currentVersion: Version;
 
@@ -35,8 +32,12 @@ export class PublishReleaseCIGitlabTask extends BaseReleaseTask {
         this.packageJsonPath = join(config.projectDir, 'package.json');
 
         if (!this.currentVersion) {
-            console.error(red(`Cannot parse current version in ${italic('package.json')}. Please ` +
-                                  `make sure "${this.packageJson.version}" is a valid Semver version.`));
+            console.error(
+                red(
+                    `Cannot parse current version in ${italic('package.json')}. Please ` +
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
+                ),
+            );
             process.exit(1);
         }
     }
@@ -68,7 +69,9 @@ export class PublishReleaseCIGitlabTask extends BaseReleaseTask {
         const newVersionName = this.currentVersion.format();
 
         const extractedReleaseNotes = extractReleaseNotes(
-            join(this.config.projectDir, CHANGELOG_FILE_NAME), newVersionName);
+            join(this.config.projectDir, CHANGELOG_FILE_NAME),
+            newVersionName,
+        );
 
         if (!extractedReleaseNotes) {
             console.error(red(`  ✘   Could not find release notes in the changelog.`));
@@ -113,8 +116,12 @@ export class PublishReleaseCIGitlabTask extends BaseReleaseTask {
         // In case any release validation did not pass, abort the publishing because
         // the issues need to be resolved before publishing.
         if (hasFailed) {
-            console.error(red(`  ✘   Release output does not pass all release validations. Please fix ` +
-                `all failures or reach out to the team.`));
+            console.error(
+                red(
+                    `  ✘   Release output does not pass all release validations. Please fix ` +
+                        `all failures or reach out to the team.`,
+                ),
+            );
             process.exit(1);
         }
 

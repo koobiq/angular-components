@@ -1,12 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
-
 @Component({
     selector: 'kbq-long-component',
-    template: `
-        <p *ngFor="let item of longText">{{ item }}</p>
-    `
+    template: ` <p *ngFor="let item of longText">{{ item }}</p> `,
 })
 export class KbqLongComponent {
     longText: any = [];
@@ -19,7 +16,6 @@ export class KbqLongComponent {
     }
 }
 
-
 /**
  * @title Component Modal Scroll
  */
@@ -27,18 +23,18 @@ export class KbqLongComponent {
     selector: 'modal-scroll-example',
     template: `<button kbq-button (click)="createLongModal()">Open Modal</button>`,
     styleUrls: ['modal-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ModalScrollExample {
     constructor(private modalService: KbqModalService) {}
 
     createLongModal() {
         this.modalService.create({
-            kbqSize      : ModalSize.Small,
-            kbqTitle     : 'Modal Title',
-            kbqContent   : KbqLongComponent,
-            kbqOkText    : 'Yes',
-            kbqCancelText: 'No'
+            kbqSize: ModalSize.Small,
+            kbqTitle: 'Modal Title',
+            kbqContent: KbqLongComponent,
+            kbqOkText: 'Yes',
+            kbqCancelText: 'No',
         });
     }
 }

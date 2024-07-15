@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-
 import autoprefixer from 'autoprefixer';
+import fs from 'fs';
 import glob from 'glob';
+import path from 'path';
 import postcss from 'postcss';
 import * as sass from 'sass';
 
@@ -15,7 +14,7 @@ function writeScss({ src, dist }: { src: string; dist: string }) {
             verbose: true,
             //sourceMapIncludeSources: true,
             style: 'compressed',
-            loadPaths: ['node_modules']
+            loadPaths: ['node_modules'],
         });
 
         const relativePathToSrcFile = path.relative(src, file);

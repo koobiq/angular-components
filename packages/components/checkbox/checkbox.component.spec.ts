@@ -1,11 +1,9 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, flush } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-
 import { KBQ_CHECKBOX_CLICK_ACTION } from './checkbox-config';
 import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
-
 
 // tslint:disable no-empty
 // tslint:disable no-magic-numbers
@@ -27,8 +25,8 @@ describe('KbqCheckbox', () => {
                 CheckboxWithChangeEvent,
                 CheckboxWithFormControl,
                 CheckboxWithoutLabel,
-                CheckboxUsingViewChild
-            ]
+                CheckboxUsingViewChild,
+            ],
         });
 
         TestBed.compileComponents();
@@ -50,8 +48,8 @@ describe('KbqCheckbox', () => {
             checkboxNativeElement = checkboxDebugElement.nativeElement;
             checkboxInstance = checkboxDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
-            inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
-            labelElement = <HTMLLabelElement> checkboxNativeElement.querySelector('label');
+            inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+            labelElement = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
         });
 
         it('should add and remove the checked state', () => {
@@ -280,7 +278,7 @@ describe('KbqCheckbox', () => {
         });
 
         it('should project the checkbox content into the label element', () => {
-            const label = <HTMLLabelElement> checkboxNativeElement.querySelector('.kbq-checkbox-label');
+            const label = <HTMLLabelElement>checkboxNativeElement.querySelector('.kbq-checkbox-label');
             expect(label.textContent!.trim()).toBe('Simple checkbox');
         });
 
@@ -409,7 +407,6 @@ describe('KbqCheckbox', () => {
                 expect(checkboxNativeElement.classList.contains('kbq-primary')).toBe(false);
                 expect(checkboxNativeElement.classList.contains('kbq-accent')).toBe(true);
                 expect(checkboxNativeElement.classList.contains('custom-class')).toBe(true);
-
             });
         });
 
@@ -419,11 +416,11 @@ describe('KbqCheckbox', () => {
                 TestBed.configureTestingModule({
                     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
                     declarations: [
-                        SingleCheckbox
+                        SingleCheckbox,
                     ],
                     providers: [
-                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }
-                    ]
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' },
+                    ],
                 });
 
                 fixture = TestBed.createComponent(SingleCheckbox);
@@ -458,11 +455,11 @@ describe('KbqCheckbox', () => {
                 TestBed.configureTestingModule({
                     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
                     declarations: [
-                        SingleCheckbox
+                        SingleCheckbox,
                     ],
                     providers: [
-                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }
-                    ]
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' },
+                    ],
                 });
 
                 fixture = TestBed.createComponent(SingleCheckbox);
@@ -490,7 +487,6 @@ describe('KbqCheckbox', () => {
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
             }));
 
-
             it(`should not change 'checked' or 'indeterminate' on click if noop is set`, fakeAsync(() => {
                 testComponent.isChecked = true;
                 testComponent.isIndeterminate = true;
@@ -514,9 +510,7 @@ describe('KbqCheckbox', () => {
 
                 expect(inputElement.checked).toBe(false);
                 expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
-                expect(inputElement.indeterminate)
-                    .withContext('indeterminate should not change')
-                    .toBe(true);
+                expect(inputElement.indeterminate).withContext('indeterminate should not change').toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
             }));
         });
@@ -538,8 +532,8 @@ describe('KbqCheckbox', () => {
             checkboxNativeElement = checkboxDebugElement.nativeElement;
             checkboxInstance = checkboxDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
-            inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
-            labelElement = <HTMLLabelElement> checkboxNativeElement.querySelector('label');
+            inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+            labelElement = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
         });
 
         it('should emit the event to the change observable', () => {
@@ -588,7 +582,7 @@ describe('KbqCheckbox', () => {
             testComponent = fixture.debugElement.componentInstance;
             checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
             checkboxNativeElement = checkboxDebugElement.nativeElement;
-            inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
         });
 
         it('should preserve any given tabIndex', () => {
@@ -607,7 +601,6 @@ describe('KbqCheckbox', () => {
 
             expect(inputElement.tabIndex).toBe(13);
         });
-
     });
 
     describe('using ViewChild', () => {
@@ -626,7 +619,7 @@ describe('KbqCheckbox', () => {
 
         it('should toggle checkbox disabledness correctly', () => {
             const checkboxInstance = checkboxDebugElement.componentInstance;
-            const inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
+            const inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
             expect(checkboxInstance.disabled).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-disabled');
             expect(inputElement.tabIndex).toBe(0);
@@ -656,9 +649,9 @@ describe('KbqCheckbox', () => {
         });
 
         it('should assign a unique id to each checkbox', () => {
-            const [firstId, secondId] =
-                fixture.debugElement.queryAll(By.directive(KbqCheckbox))
-                    .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
+            const [firstId, secondId] = fixture.debugElement
+                .queryAll(By.directive(KbqCheckbox))
+                .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
 
             expect(firstId).toMatch(/kbq-checkbox-\d+-input/);
             expect(secondId).toMatch(/kbq-checkbox-\d+-input/);
@@ -679,7 +672,7 @@ describe('KbqCheckbox', () => {
             checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
             checkboxNativeElement = checkboxDebugElement.nativeElement;
             checkboxInstance = checkboxDebugElement.componentInstance;
-            inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
         });
 
         it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
@@ -724,7 +717,7 @@ describe('KbqCheckbox', () => {
             const checkboxNativeElement = checkboxDebugElement.nativeElement;
             testComponent = fixture.debugElement.componentInstance;
             checkboxInstance = checkboxDebugElement.componentInstance;
-            inputElement = <HTMLInputElement> checkboxNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
         });
 
         it('should validate with RequiredTrue validator', () => {
@@ -754,7 +747,7 @@ describe('KbqCheckbox', () => {
 
         it('should forward name value to input element', () => {
             const checkboxElement = fixture.debugElement.query(By.directive(KbqCheckbox));
-            const inputElement = <HTMLInputElement> checkboxElement.nativeElement.querySelector('input');
+            const inputElement = <HTMLInputElement>checkboxElement.nativeElement.querySelector('input');
 
             expect(inputElement.getAttribute('name')).toBe('test-name');
         });
@@ -773,7 +766,7 @@ describe('KbqCheckbox', () => {
             checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
             checkboxInstance = checkboxDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
-            inputElement = <HTMLInputElement> checkboxDebugElement.nativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>checkboxDebugElement.nativeElement.querySelector('input');
         });
 
         it('should toggle the disabled state', () => {
@@ -803,23 +796,20 @@ describe('KbqCheckbox', () => {
             const checkboxDebugEl = fixture.debugElement.query(By.directive(KbqCheckbox));
 
             testComponent = fixture.componentInstance;
-            checkboxInnerContainer = checkboxDebugEl
-                .query(By.css('.kbq-checkbox__inner-container')).nativeElement;
+            checkboxInnerContainer = checkboxDebugEl.query(By.css('.kbq-checkbox__inner-container')).nativeElement;
         });
 
         it('should remove margin for checkbox without a label', () => {
             fixture.detectChanges();
 
-            expect(checkboxInnerContainer.classList)
-                .toContain('kbq-checkbox__inner-container_no-side-margin');
+            expect(checkboxInnerContainer.classList).toContain('kbq-checkbox__inner-container_no-side-margin');
         });
 
         it('should not remove margin if initial label is set through binding', () => {
             testComponent.label = 'Some content';
             fixture.detectChanges();
 
-            expect(checkboxInnerContainer.classList)
-                .not.toContain('kbq-checkbox__inner-container_no-side-margin');
+            expect(checkboxInnerContainer.classList).not.toContain('kbq-checkbox__inner-container_no-side-margin');
         });
 
         it('should not add the "name" attribute if it is not passed in', () => {
@@ -831,28 +821,27 @@ describe('KbqCheckbox', () => {
             fixture.detectChanges();
             expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
         });
-
     });
 });
 
 /** Simple component for testing a single checkbox. */
 @Component({
-    template: `
-  <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
-    <kbq-checkbox
-        [id]="checkboxId"
-        [required]="isRequired"
-        [labelPosition]="labelPos"
-        [checked]="isChecked"
-        [(indeterminate)]="isIndeterminate"
-        [disabled]="isDisabled"
-        [color]="checkboxColor"
-        [value]="checkboxValue"
-        (click)="onCheckboxClick($event)"
-        (change)="onCheckboxChange($event)">
-      Simple checkbox
-    </kbq-checkbox>
-  </div>`
+    template: ` <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
+        <kbq-checkbox
+            [id]="checkboxId"
+            [required]="isRequired"
+            [labelPosition]="labelPos"
+            [checked]="isChecked"
+            [(indeterminate)]="isIndeterminate"
+            [disabled]="isDisabled"
+            [color]="checkboxColor"
+            [value]="checkboxValue"
+            (click)="onCheckboxClick($event)"
+            (change)="onCheckboxChange($event)"
+        >
+            Simple checkbox
+        </kbq-checkbox>
+    </div>`,
 })
 class SingleCheckbox {
     labelPos: 'before' | 'after' = 'after';
@@ -873,10 +862,10 @@ class SingleCheckbox {
 /** Simple component for testing an KbqCheckbox with ngModel in a form. */
 @Component({
     template: `
-    <form>
-      <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
-    </form>
-  `
+        <form>
+            <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
+        </form>
+    `,
 })
 class CheckboxWithFormDirectives {
     isGood: boolean = false;
@@ -884,7 +873,7 @@ class CheckboxWithFormDirectives {
 
 /** Simple component for testing an KbqCheckbox with required ngModel. */
 @Component({
-    template: `<kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>`
+    template: `<kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>`,
 })
 class CheckboxWithNgModel {
     isGood: boolean = false;
@@ -892,37 +881,29 @@ class CheckboxWithNgModel {
 }
 
 /** Simple test component with multiple checkboxes. */
-@Component(({
+@Component({
     template: `
-    <kbq-checkbox>Option 1</kbq-checkbox>
-    <kbq-checkbox>Option 2</kbq-checkbox>
-  `
-}))
-class MultipleCheckboxes {
-}
-
+        <kbq-checkbox>Option 1</kbq-checkbox>
+        <kbq-checkbox>Option 2</kbq-checkbox>
+    `,
+})
+class MultipleCheckboxes {}
 
 /** Simple test component with tabIndex */
 @Component({
-    template: `
-    <kbq-checkbox
-        [tabIndex]="customTabIndex"
-        [disabled]="isDisabled">
-    </kbq-checkbox>`
+    template: ` <kbq-checkbox [tabIndex]="customTabIndex" [disabled]="isDisabled"> </kbq-checkbox>`,
 })
 class CheckboxWithTabIndex {
     customTabIndex: number = 7;
     isDisabled: boolean = false;
 }
 
-
 /** Simple test component that accesses KbqCheckbox using ViewChild. */
 @Component({
-    template: `
-    <kbq-checkbox></kbq-checkbox>`
+    template: ` <kbq-checkbox></kbq-checkbox>`,
 })
 class CheckboxUsingViewChild {
-    @ViewChild(KbqCheckbox, {static: false}) checkbox;
+    @ViewChild(KbqCheckbox, { static: false }) checkbox;
 
     set isDisabled(value: boolean) {
         this.checkbox.disabled = value;
@@ -931,28 +912,25 @@ class CheckboxUsingViewChild {
 
 /** Simple test component with an aria-label set. */
 @Component({
-    template: `<kbq-checkbox aria-label="Super effective"></kbq-checkbox>`
+    template: `<kbq-checkbox aria-label="Super effective"></kbq-checkbox>`,
 })
-class CheckboxWithAriaLabel {
-}
+class CheckboxWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
 @Component({
-    template: `<kbq-checkbox aria-labelledby="some-id"></kbq-checkbox>`
+    template: `<kbq-checkbox aria-labelledby="some-id"></kbq-checkbox>`,
 })
-class CheckboxWithAriaLabelledby {
-}
+class CheckboxWithAriaLabelledby {}
 
 /** Simple test component with name attribute */
 @Component({
-    template: `<kbq-checkbox name="test-name"></kbq-checkbox>`
+    template: `<kbq-checkbox name="test-name"></kbq-checkbox>`,
 })
-class CheckboxWithNameAttribute {
-}
+class CheckboxWithNameAttribute {}
 
 /** Simple test component with change event */
 @Component({
-    template: `<kbq-checkbox (change)="lastEvent = $event"></kbq-checkbox>`
+    template: `<kbq-checkbox (change)="lastEvent = $event"></kbq-checkbox>`,
 })
 class CheckboxWithChangeEvent {
     lastEvent: KbqCheckboxChange;
@@ -960,7 +938,7 @@ class CheckboxWithChangeEvent {
 
 /** Test component with reactive forms */
 @Component({
-    template: `<kbq-checkbox [formControl]="formControl"></kbq-checkbox>`
+    template: `<kbq-checkbox [formControl]="formControl"></kbq-checkbox>`,
 })
 class CheckboxWithFormControl {
     formControl = new UntypedFormControl();
@@ -968,9 +946,8 @@ class CheckboxWithFormControl {
 
 /** Test component without label */
 @Component({
-    template: `<kbq-checkbox>{{ label }}</kbq-checkbox>`
+    template: `<kbq-checkbox>{{ label }}</kbq-checkbox>`,
 })
 class CheckboxWithoutLabel {
     label: string;
 }
-

@@ -3,15 +3,13 @@ import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
 import { promptAndGenerateChangelog } from './changelog';
 import { CHANGELOG_FILE_NAME } from './constants';
 import { GitClient } from './git/git-client';
 import { getGithubBranchCommitsUrl } from './git/github-urls';
 import { promptForNewVersion } from './prompt/new-version-prompt';
-import { parseVersionName, Version } from './version-name/parse-version';
-
+import { Version, parseVersionName } from './version-name/parse-version';
 
 const { green, yellow, red, cyan, bold, italic } = chalk;
 
@@ -51,14 +49,18 @@ export class StageReleaseTask extends BaseReleaseTask {
         this.currentVersion = parseVersionName(this.packageJson.version)!;
 
         if (!this.currentVersion) {
-            console.error(red(`Cannot parse current version in ${italic('package.json')}. Please ` +
-                                  `make sure "${this.packageJson.version}" is a valid Semver version.`));
+            console.error(
+                red(
+                    `Cannot parse current version in ${italic('package.json')}. Please ` +
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
+                ),
+            );
             process.exit(1);
         }
 
         this.githubApi = new Octokit({
             type: 'token',
-            token: config.repoToken
+            token: config.repoToken,
         });
     }
 
@@ -96,22 +98,28 @@ export class StageReleaseTask extends BaseReleaseTask {
         if (needsVersionBump) {
             this.updatePackageJsonVersion(newVersionName);
 
-            console.log(green(
-                `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
-                `${italic('package.json')}`));
+            console.log(
+                green(
+                    `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
+                        `${italic('package.json')}`,
+                ),
+            );
             console.log();
         }
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
         console.log();
-        console.log(green(`  ✓   Updated the changelog in ` +
-            `"${bold(CHANGELOG_FILE_NAME)}"`));
-        console.log(yellow(`  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
-            `changes that apply to the public library release. When done, proceed to the prompt below.`));
+        console.log(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
+        console.log(
+            yellow(
+                `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
+                    `changes that apply to the public library release. When done, proceed to the prompt below.`,
+            ),
+        );
         console.log();
 
-        if (!await this.promptConfirm('Do you want to proceed and commit the changes?')) {
+        if (!(await this.promptConfirm('Do you want to proceed and commit the changes?'))) {
             console.log();
             console.log(yellow('Aborting release staging...'));
             process.exit(0);
@@ -128,7 +136,7 @@ export class StageReleaseTask extends BaseReleaseTask {
 
     /** Updates the version of the project package.json and writes the changes to disk. */
     private updatePackageJsonVersion(newVersionName: string) {
-        const newPackageJson = {...this.packageJson, version: newVersionName};
+        const newPackageJson = { ...this.packageJson, version: newVersionName };
         writeFileSync(this.packageJsonPath, `${JSON.stringify(newPackageJson, null, this.tabSpaces)}\n`);
     }
 
@@ -136,38 +144,43 @@ export class StageReleaseTask extends BaseReleaseTask {
     private async verifyPassingGithubStatus(expectedPublishBranch: string) {
         const commitRef = this.git.getLocalCommitSha('HEAD');
         const { repoOwner, repoName } = this.config;
-        const githubCommitsUrl =
-            getGithubBranchCommitsUrl(repoOwner, repoName, expectedPublishBranch);
-        const {state} = (await this.githubApi.repos.getCombinedStatusForRef({
-            owner: repoOwner,
-            repo: repoName,
-            ref: commitRef
-        })).data;
+        const githubCommitsUrl = getGithubBranchCommitsUrl(repoOwner, repoName, expectedPublishBranch);
+        const { state } = (
+            await this.githubApi.repos.getCombinedStatusForRef({
+                owner: repoOwner,
+                repo: repoName,
+                ref: commitRef,
+            })
+        ).data;
 
         if (state === 'failure') {
             console.error(
-                red(`  ✘   Cannot stage release. Commit "${commitRef}" does not pass all github ` +
-                    `status checks. Please make sure this commit passes all checks before re-running.`));
+                red(
+                    `  ✘   Cannot stage release. Commit "${commitRef}" does not pass all github ` +
+                        `status checks. Please make sure this commit passes all checks before re-running.`,
+                ),
+            );
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.info(green(
-                    `  ⚠   Upstream commit is failing CI checks, but status has been ` +
-                    `forcibly ignored.`));
+                console.info(
+                    green(`  ⚠   Upstream commit is failing CI checks, but status has been ` + `forcibly ignored.`),
+                );
 
                 return;
             }
             process.exit(1);
         } else if (state === 'pending') {
             console.error(
-                red(`  ✘   Commit "${commitRef}" still has pending github statuses that ` +
-                    `need to succeed before staging a release.`));
+                red(
+                    `  ✘   Commit "${commitRef}" still has pending github statuses that ` +
+                        `need to succeed before staging a release.`,
+                ),
+            );
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.info(green(
-                    `  ⚠   Upstream commit is pending CI, but status has been ` +
-                    `forcibly ignored.`));
+                console.info(green(`  ⚠   Upstream commit is pending CI, but status has been ` + `forcibly ignored.`));
 
                 return;
             }

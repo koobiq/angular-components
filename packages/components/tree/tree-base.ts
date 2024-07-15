@@ -3,7 +3,9 @@ import {
     AfterContentChecked,
     ChangeDetectorRef,
     ContentChildren,
+    Directive,
     ElementRef,
+    Inject,
     Input,
     IterableChangeRecord,
     IterableDiffer,
@@ -11,16 +13,14 @@ import {
     OnDestroy,
     OnInit,
     QueryList,
+    TrackByFunction,
     ViewChild,
     ViewContainerRef,
-    TrackByFunction,
-    Inject,
-    forwardRef, Directive
+    forwardRef,
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { BehaviorSubject, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';
 import { KbqTreeNodeOutlet } from './outlet';
@@ -28,9 +28,8 @@ import {
     getTreeControlMissingError,
     getTreeMissingMatchingNodeDefError,
     getTreeMultipleDefaultNodeDefsError,
-    getTreeNoValidDataSourceError
+    getTreeNoValidDataSourceError,
 } from './tree-errors';
-
 
 @Directive()
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
@@ -91,7 +90,10 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
     private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
-    constructor(protected differs: IterableDiffers, protected changeDetectorRef: ChangeDetectorRef) {}
+    constructor(
+        protected differs: IterableDiffers,
+        protected changeDetectorRef: ChangeDetectorRef,
+    ) {}
 
     ngOnInit() {
         this.dataDiffer = this.differs.find([]).create(this.trackBy);
@@ -136,27 +138,27 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         data: T[] | ReadonlyArray<T>,
         dataDiffer: IterableDiffer<T> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
-        parentData?: T
+        parentData?: T,
     ) {
         const changes = dataDiffer.diff(data);
 
-        if (!changes) { return; }
+        if (!changes) {
+            return;
+        }
 
-        changes.forEachOperation((
-            item: IterableChangeRecord<T>,
-            adjustedPreviousIndex: number | null,
-            currentIndex: number | null
-        ) => {
-            if (item.previousIndex == null) {
-                this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
-            } else if (currentIndex == null) {
-                viewContainer.remove(adjustedPreviousIndex!);
-                this.levels.delete(item.item);
-            } else {
-                const view = viewContainer.get(adjustedPreviousIndex!);
-                viewContainer.move(view!, currentIndex);
-            }
-        });
+        changes.forEachOperation(
+            (item: IterableChangeRecord<T>, adjustedPreviousIndex: number | null, currentIndex: number | null) => {
+                if (item.previousIndex == null) {
+                    this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
+                } else if (currentIndex == null) {
+                    viewContainer.remove(adjustedPreviousIndex!);
+                    this.levels.delete(item.item);
+                } else {
+                    const view = viewContainer.get(adjustedPreviousIndex!);
+                    viewContainer.move(view!, currentIndex);
+                }
+            },
+        );
 
         this.changeDetectorRef.detectChanges();
     }
@@ -168,11 +170,15 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * definition.
      */
     getNodeDef(data: T, i: number): KbqTreeNodeDef<T> {
-        if (this.nodeDefs.length === 1) { return this.nodeDefs.first; }
+        if (this.nodeDefs.length === 1) {
+            return this.nodeDefs.first;
+        }
 
         const nodeDef = this.nodeDefs.find((def) => def.when && def.when(i, data)) || this.defaultNodeDef;
 
-        if (!nodeDef) { throw getTreeMissingMatchingNodeDefError(); }
+        if (!nodeDef) {
+            throw getTreeMissingMatchingNodeDefError();
+        }
 
         return nodeDef;
     }
@@ -253,18 +259,21 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         }
 
         // Remove the all dataNodes if there is now no data source
-        if (!dataSource) { this.nodeOutlet.viewContainer.clear(); }
+        if (!dataSource) {
+            this.nodeOutlet.viewContainer.clear();
+        }
 
         this._dataSource = dataSource;
 
-        if (this.nodeDefs) { this.observeRenderChanges(); }
+        if (this.nodeDefs) {
+            this.observeRenderChanges();
+        }
     }
 }
 
-
 @Directive({
     selector: 'kbq-tree-node',
-    exportAs: 'kbqTreeNode'
+    exportAs: 'kbqTreeNode',
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     /**
@@ -295,7 +304,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
     constructor(
         protected elementRef: ElementRef,
-        @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>
+        @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>,
     ) {
         KbqTreeNode.mostRecentTreeNode = this;
     }

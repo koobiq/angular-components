@@ -5,20 +5,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqFormsModule, PopUpPlacements, KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
-
 /* tslint:disable:no-trailing-whitespace */
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
 })
 export class DemoComponent {
     placement = PopUpPlacements.Top;
@@ -38,13 +37,13 @@ export class DemoComponent {
         BUTTON: 'button',
         INPUT: 'input',
         ICON: 'icon',
-        EXTENDED: 'extended'
+        EXTENDED: 'extended',
     };
 
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
-        HOVER: 'hover'
+        HOVER: 'hover',
     };
 
     selectedElement: string = 'button';
@@ -64,7 +63,9 @@ export class DemoComponent {
         const newStage = this.tooltipActiveStage + direction;
 
         // tslint:disable-next-line:no-magic-numbers
-        if (newStage < 1 || newStage > 3) { return; }
+        if (newStage < 1 || newStage > 3) {
+            return;
+        }
 
         this.tooltipActiveStage += direction;
     }
@@ -123,8 +124,8 @@ export class DemoComponent {
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqSelectModule,
-        KbqIconModule
+        KbqIconModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

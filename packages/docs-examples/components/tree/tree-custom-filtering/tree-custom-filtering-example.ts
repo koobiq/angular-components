@@ -2,11 +2,10 @@
 import { Component } from '@angular/core';
 import {
     FlatTreeControl,
+    FlatTreeControlFilter,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    FlatTreeControlFilter
 } from '@koobiq/components/tree';
-
 
 export class FileNode {
     children: FileNode[];
@@ -59,17 +58,17 @@ export const DATA_OBJECT = {
                     'aria-describer': 'ts',
                     'aria-describer.spec': 'ts',
                     'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts'
+                    'aria-reference.spec': 'ts',
                 },
                 'focus monitor': {
                     'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts'
-                }
-            }
+                    'focus-monitor.spec': 'ts',
+                },
+            },
         },
         documentation: {
             source: '',
-            tools: ''
+            tools: '',
         },
         mosaic: {
             autocomplete: '',
@@ -77,38 +76,37 @@ export const DATA_OBJECT = {
             'button-toggle': '',
             index: 'ts',
             package: 'json',
-            version: 'ts'
+            version: 'ts',
         },
         'mosaic-dev': {
             alert: '',
-            badge: ''
+            badge: '',
         },
         'mosaic-examples': '',
         'mosaic-moment-adapter': '',
         README: 'md',
         'tsconfig.build': 'json',
-        wallabyTest: 'ts'
+        wallabyTest: 'ts',
     },
     scripts: {
         deploy: {
             'cleanup-preview': 'ts',
             'publish-artifacts': 'sh',
             'publish-docs': 'sh',
-            'publish-docs-preview': 'ts'
+            'publish-docs-preview': 'ts',
         },
-        'tsconfig.deploy': 'json'
+        'tsconfig.deploy': 'json',
     },
-    tests: ''
+    tests: '',
 };
 
 function hasFilteredDescendant<T>(dataNode: T, filteredNodes: T[], control: FlatTreeControl<T>) {
-    const filteredViewValues = filteredNodes
-        .map((node: any) => control.getViewValue(node));
+    const filteredViewValues = filteredNodes.map((node: any) => control.getViewValue(node));
 
-    return control
-        .getDescendants(dataNode)
-        .filter((node) => filteredViewValues.includes(control.getViewValue(node)))
-        .length > 0;
+    return (
+        control.getDescendants(dataNode).filter((node) => filteredViewValues.includes(control.getViewValue(node)))
+            .length > 0
+    );
 }
 
 export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
@@ -119,29 +117,27 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
     handle(value: string | null): T[] {
         const result: Set<T> = new Set();
 
-        const foundedNodes =  this.control.dataNodes
-            .filter((node: any) => {
-                return this.control.compareViewValues(this.control.getViewValue(node), value);
-            });
+        const foundedNodes = this.control.dataNodes.filter((node: any) => {
+            return this.control.compareViewValues(this.control.getViewValue(node), value);
+        });
 
         foundedNodes.forEach((filteredNode) => {
-            this.control.getParents(filteredNode, [])
-                .forEach((node) => result.add(node));
+            this.control.getParents(filteredNode, []).forEach((node) => result.add(node));
 
             result.add(filteredNode);
 
             if (this.control.isExpandable(filteredNode)) {
                 const childNodeLevel = this.control.getLevel(filteredNode) + 1;
 
-                this.control.getDescendants(filteredNode)
-                    .forEach((childNode) => {
-                        if (
-                            this.control.getLevel(childNode) === childNodeLevel &&
-                            (!this.control.isExpandable(childNode) || !hasFilteredDescendant<T>(childNode, foundedNodes, this.control))
-                        ) {
-                            result.add(childNode);
-                        }
-                    });
+                this.control.getDescendants(filteredNode).forEach((childNode) => {
+                    if (
+                        this.control.getLevel(childNode) === childNodeLevel &&
+                        (!this.control.isExpandable(childNode) ||
+                            !hasFilteredDescendant<T>(childNode, foundedNodes, this.control))
+                    ) {
+                        result.add(childNode);
+                    }
+                });
             }
         });
 
@@ -157,7 +153,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
 @Component({
     selector: 'tree-custom-filtering-example',
     templateUrl: 'tree-custom-filtering-example.html',
-    styleUrls: ['tree-custom-filtering-example.css']
+    styleUrls: ['tree-custom-filtering-example.css'],
 })
 export class TreeCustomFilteringExample {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -169,16 +165,15 @@ export class TreeCustomFilteringExample {
     filterValue: string = '';
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
         );
-        this.treeControl.setFilters(
-            new CustomTreeControlFilter<FileFlatNode>(this.treeControl)
-        );
+        this.treeControl.setFilters(new CustomTreeControlFilter<FileFlatNode>(this.treeControl));
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -189,7 +184,9 @@ export class TreeCustomFilteringExample {
         this.treeControl.filterNodes(value);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) { return nodeData.expandable; }
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
 
     private transformer = (node: FileNode, level: number, parent: any) => {
         const flatNode = new FileFlatNode();
@@ -201,27 +198,27 @@ export class TreeCustomFilteringExample {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 }

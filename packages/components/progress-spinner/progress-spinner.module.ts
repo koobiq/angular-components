@@ -1,28 +1,22 @@
 import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import {
-    KbqProgressSpinner,
-    KbqProgressSpinnerCaption,
-    KbqProgressSpinnerText
-} from './progress-spinner.component';
-
+import { KbqProgressSpinner, KbqProgressSpinnerCaption, KbqProgressSpinnerText } from './progress-spinner.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        PlatformModule
+        PlatformModule,
     ],
     declarations: [
         KbqProgressSpinner,
         KbqProgressSpinnerText,
-        KbqProgressSpinnerCaption
+        KbqProgressSpinnerCaption,
     ],
     exports: [
         KbqProgressSpinner,
         KbqProgressSpinnerText,
-        KbqProgressSpinnerCaption
-    ]
+        KbqProgressSpinnerCaption,
+    ],
 })
 export class KbqProgressSpinnerModule {}

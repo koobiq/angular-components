@@ -10,13 +10,12 @@ import {
     Inject,
     NgZone,
     Optional,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
 
 @Directive({
     selector: '[kbq-title]',
@@ -24,8 +23,8 @@ import { debounceTime } from 'rxjs/operators';
     host: {
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
-        '(window:resize)': 'resizeStream.next($event)'
-    }
+        '(window:resize)': 'resizeStream.next($event)',
+    },
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     get isOverflown(): boolean {
@@ -67,7 +66,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         focusMonitor: FocusMonitor,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef
+        @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef,
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
@@ -79,7 +78,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
-            .subscribe(() => this.disabled = !this.isOverflown);
+            .subscribe(() => (this.disabled = !this.isOverflown));
 
         this.mutationSubscription = this.createMutationObserver()
             .pipe(throttleTime(this.debounceInterval))
@@ -88,10 +87,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                 this.content = this.viewValue;
             });
 
-        this.focusMonitorSubscription = this.focusMonitor.monitor(this.elementRef).subscribe(
-            (origin) => (origin === 'keyboard')
-                ? this.handleElementEnter() : this.hideTooltip()
-        );
+        this.focusMonitorSubscription = this.focusMonitor
+            .monitor(this.elementRef)
+            .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.hideTooltip()));
     }
 
     ngOnDestroy() {
@@ -113,11 +111,12 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     private createMutationObserver(): Observable<MutationRecord[]> {
         return new Observable((observer) => {
-            const mutationObserver = new MutationObserver(
-                (mutations) => observer.next(mutations)
-            );
+            const mutationObserver = new MutationObserver((mutations) => observer.next(mutations));
             mutationObserver.observe(this.parent, {
-                characterData: true, attributes: false, childList: true, subtree: true
+                characterData: true,
+                attributes: false,
+                childList: true,
+                subtree: true,
             });
 
             return () => mutationObserver.disconnect();

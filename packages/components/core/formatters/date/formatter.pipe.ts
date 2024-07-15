@@ -1,16 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeOptions } from '@koobiq/date-formatter';
-
 import { DateAdapter } from '../../datetime';
-
 import { DateFormatter } from './formatter';
-
 
 @Pipe({ name: 'absoluteLongDate' })
 export class AbsoluteDateFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, currYear?: boolean): string {
@@ -24,7 +21,7 @@ export class AbsoluteDateFormatterPipe<D> implements PipeTransform {
 export class AbsoluteDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, options?: DateTimeOptions): string {
@@ -38,7 +35,7 @@ export class AbsoluteDateTimeFormatterPipe<D> implements PipeTransform {
 export class AbsoluteDateShortFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, currYear?: boolean): string {
@@ -52,7 +49,7 @@ export class AbsoluteDateShortFormatterPipe<D> implements PipeTransform {
 export class AbsoluteShortDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, options?: DateTimeOptions): string {
@@ -66,7 +63,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> implements PipeTransform {
 export class RelativeDateFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string): string {
@@ -80,7 +77,7 @@ export class RelativeDateFormatterPipe<D> implements PipeTransform {
 export class RelativeDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, options?: DateTimeOptions): string {
@@ -94,7 +91,7 @@ export class RelativeDateTimeFormatterPipe<D> implements PipeTransform {
 export class RelativeShortDateFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string): string {
@@ -108,7 +105,7 @@ export class RelativeShortDateFormatterPipe<D> implements PipeTransform {
 export class RelativeShortDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform(value: D | string, options?: DateTimeOptions): string {
@@ -122,7 +119,7 @@ export class RelativeShortDateTimeFormatterPipe<D> implements PipeTransform {
 export class RangeDateFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform([value1, value2]: D[] | string[]): string {
@@ -137,7 +134,7 @@ export class RangeDateFormatterPipe<D> implements PipeTransform {
 export class RangeShortDateFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform([value1, value2]: D[] | string[]): string {
@@ -152,7 +149,7 @@ export class RangeShortDateFormatterPipe<D> implements PipeTransform {
 export class RangeDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
@@ -167,7 +164,7 @@ export class RangeDateTimeFormatterPipe<D> implements PipeTransform {
 export class RangeMiddleDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
@@ -182,7 +179,7 @@ export class RangeMiddleDateTimeFormatterPipe<D> implements PipeTransform {
 export class RangeShortDateTimeFormatterPipe<D> implements PipeTransform {
     constructor(
         private adapter: DateAdapter<D>,
-        private formatter: DateFormatter<D>
+        private formatter: DateFormatter<D>,
     ) {}
 
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {

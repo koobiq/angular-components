@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Navbar
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tabs-with-scroll-example',
     templateUrl: 'tabs-with-scroll-example.html',
     styleUrls: ['tabs-with-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TabsWithScrollExample {
     tabs: number[];

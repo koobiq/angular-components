@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Basic Input
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'input-number-overview-example',
     templateUrl: 'input-number-overview-example.html',
     styleUrls: ['input-number-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class InputNumberOverviewExample {
     value = '';

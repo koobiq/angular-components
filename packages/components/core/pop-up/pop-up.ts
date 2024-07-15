@@ -1,9 +1,7 @@
 import { AnimationEvent } from '@angular/animations';
 import { ChangeDetectorRef, Directive, EventEmitter, OnDestroy, TemplateRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-
 import { PopUpVisibility } from './constants';
-
 
 @Directive()
 // tslint:disable-next-line:naming-convention
@@ -48,18 +46,15 @@ export abstract class KbqPopUp implements OnDestroy {
 
         this.closeOnInteraction = true;
 
-        this.showTimeoutId = setTimeout(
-            () => {
-                this.showTimeoutId = undefined;
+        this.showTimeoutId = setTimeout(() => {
+            this.showTimeoutId = undefined;
 
-                this.visibility = PopUpVisibility.Visible;
-                this.visibleChange.emit(true);
-                // Mark for check so if any parent component has set the
-                // ChangeDetectionStrategy to OnPush it will be checked anyways
-                this.markForCheck();
-            },
-            delay
-        );
+            this.visibility = PopUpVisibility.Visible;
+            this.visibleChange.emit(true);
+            // Mark for check so if any parent component has set the
+            // ChangeDetectionStrategy to OnPush it will be checked anyways
+            this.markForCheck();
+        }, delay);
     }
 
     /**
@@ -74,20 +69,17 @@ export abstract class KbqPopUp implements OnDestroy {
             clearTimeout(this.showTimeoutId);
         }
 
-        this.hideTimeoutId = setTimeout(
-            () => {
-                this.hideTimeoutId = undefined;
-                this.visibility = PopUpVisibility.Hidden;
+        this.hideTimeoutId = setTimeout(() => {
+            this.hideTimeoutId = undefined;
+            this.visibility = PopUpVisibility.Hidden;
 
-                this.visibleChange.emit(false);
-                this.onHideSubject.next();
+            this.visibleChange.emit(false);
+            this.onHideSubject.next();
 
-                // Mark for check so if any parent component has set the
-                // ChangeDetectionStrategy to OnPush it will be checked anyways
-                this.markForCheck();
-            },
-            delay
-        );
+            // Mark for check so if any parent component has set the
+            // ChangeDetectionStrategy to OnPush it will be checked anyways
+            this.markForCheck();
+        }, delay);
     }
 
     isVisible(): boolean {
@@ -98,7 +90,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMap = {
             [`${this.prefix}_placement-${placement}`]: true,
             [customClass]: !!customClass,
-            ...classMap
+            ...classMap,
         };
     }
 

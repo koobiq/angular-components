@@ -17,7 +17,7 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
         ? {
               // tslint:disable:no-magic-numbers
               releaseTitle: matches[1],
-              releaseNotes: matches[2].trim()
+              releaseNotes: matches[2].trim(),
           }
         : null;
 }

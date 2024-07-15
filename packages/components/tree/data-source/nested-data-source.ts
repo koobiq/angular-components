@@ -1,7 +1,6 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 
 /**
  * Data source for nested tree.
@@ -10,7 +9,6 @@ import { map } from 'rxjs/operators';
  * or collapse. The expansion/collapsion will be handled by TreeControl and each non-leaf node.
  */
 export class KbqTreeNestedDataSource<T> extends DataSource<T> {
-
     get data() {
         return this._data.value;
     }
@@ -23,12 +21,10 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
     private _data = new BehaviorSubject<T[]>([]);
 
     connect(collectionViewer: CollectionViewer): Observable<T[]> {
-        return merge(...[collectionViewer.viewChange, this._data as any])
-            .pipe(map(() => this.data));
+        return merge(...[collectionViewer.viewChange, this._data as any]).pipe(map(() => this.data));
     }
 
     disconnect() {
         // no op
     }
 }
-

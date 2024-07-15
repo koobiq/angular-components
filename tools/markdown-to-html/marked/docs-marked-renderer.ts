@@ -3,7 +3,7 @@ import { basename, extname } from 'path';
 import {
     CLASS_PREFIX,
     MARKDOWN_TAGS_TO_CLASS_ALIAS,
-    MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS
+    MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS,
 } from '../../../packages/components/markdown/markdown.values';
 
 /** Regular expression that matches example comments. */
@@ -12,7 +12,7 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 function setTargetBlank(content: string): string {
     return content.replace(
         new RegExp(`href=".[^"]*"`, 'g'), // .[^"]* - any symbol except "
-        (match: string) => `${match} target="_blank"`
+        (match: string) => `${match} target="_blank"`,
     );
 }
 
@@ -21,16 +21,13 @@ function createTagNameStringAliaser(classPrefix: string) {
         let str = setImageCaption(content);
 
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
-            str = str.replace(
-                new RegExp(`<${tag}`, 'g'),
-                (_match: string) => `<${tag} class="${classPrefix}__${tag}"`
-            );
+            str = str.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => `<${tag} class="${classPrefix}__${tag}"`);
         });
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             str = str.replace(
                 new RegExp(`<${tag}\s*>`, 'g'),
-                (_match: string) => `<${tag} class="${classPrefix}__${tag}">`
+                (_match: string) => `<${tag} class="${classPrefix}__${tag}">`,
             );
         });
 
@@ -45,12 +42,10 @@ function setImageCaption(content: string): string {
     while (html.includes('<img', pos)) {
         const imgIndex = html.indexOf('<img', pos);
         const captionIndex = html.indexOf('>', imgIndex) + 1;
-        html = [html.slice(0, captionIndex), '<em>', html.slice(captionIndex)]
-            .join('');
+        html = [html.slice(0, captionIndex), '<em>', html.slice(captionIndex)].join('');
 
         const captionEndIndex = html.indexOf('</', captionIndex);
-        html = [html.slice(0, captionEndIndex), '</em>', html.slice(captionEndIndex)]
-            .join('');
+        html = [html.slice(0, captionEndIndex), '</em>', html.slice(captionEndIndex)].join('');
 
         pos = imgIndex + 1;
     }
@@ -67,7 +62,9 @@ const tagNameStringAliaser = createTagNameStringAliaser(CLASS_PREFIX);
 export class DocsMarkdownRenderer extends Renderer {
     /** Set of fragment links discovered in the currently rendered file. */
 
-    constructor() { super(); }
+    constructor() {
+        super();
+    }
 
     /**
      * Transforms a Markdown heading into the corresponding HTML output. In our case, we
@@ -95,7 +92,7 @@ export class DocsMarkdownRenderer extends Renderer {
         // We only want to fix up markdown links that are relative and do not refer to guides already.
         // Otherwise we always map the link to the "guides/" path.
         if (!href.startsWith('http') && !href.startsWith('#') && href.includes('guides/')) {
-            return super.link(`guide/${ basename(href, extname(href)) }`, title, text);
+            return super.link(`guide/${basename(href, extname(href))}`, title, text);
         }
 
         // Keep track of all fragments discovered in a file.

@@ -2,12 +2,9 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { DocsAppTestingModule } from '../../testing/testing-module';
-
 import { DocsLiveExample } from './docs-live-example';
 import { DocsLiveExampleModule } from './docs-live-example-module';
-
 
 describe('docs-live-example', () => {
     let http: HttpTestingController;
@@ -15,7 +12,7 @@ describe('docs-live-example', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleModule, DocsAppTestingModule],
-            declarations: [DocViewerTestComponent]
+            declarations: [DocViewerTestComponent],
         }).compileComponents();
     }));
 
@@ -46,7 +43,6 @@ describe('docs-live-example', () => {
         expect(docViewer.componentInstance.textContent).toBe('my docs page');
     });
 
-
     it('should correct hash based links', () => {
         const fixture = TestBed.createComponent(DocViewerTestComponent);
         fixture.componentInstance.documentUrl = `//koobiq.io/doc-with-links.html`;
@@ -63,8 +59,7 @@ describe('docs-live-example', () => {
 
 @Component({
     selector: 'test',
-    template: `
-        <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`
+    template: ` <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`,
 })
 class DocViewerTestComponent {
     documentUrl = '//koobiq.io/simple-doc.html';
@@ -76,5 +71,5 @@ const FAKE_DOCS = {
       <div>Check out this example:</div>
       <div koobiq-docs-example="some-example"></div>`,
     '//koobiq.io/doc-with-links.html': `<a href="#test">Test link</a>`,
-    '//koobiq.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`
+    '//koobiq.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
 };

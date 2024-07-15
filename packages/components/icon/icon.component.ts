@@ -1,23 +1,23 @@
 import {
     AfterContentInit,
     Attribute,
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     Inject,
     Input,
     Optional,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     CanColor,
     CanColorCtor,
-    mixinColor,
-    KbqComponentColors,
     KBQ_FORM_FIELD_REF,
-    KbqFormFieldRef
+    KbqComponentColors,
+    KbqFormFieldRef,
+    mixinColor,
 } from '@koobiq/components/core';
-
 
 /** @docs-private */
 export class KbqIconBase {
@@ -25,9 +25,10 @@ export class KbqIconBase {
 }
 
 /** @docs-private */
-export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase =
-    mixinColor(KbqIconBase, KbqComponentColors.ContrastFade);
-
+export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
+    KbqIconBase,
+    KbqComponentColors.ContrastFade,
+);
 
 @Component({
     selector: '[kbq-icon]',
@@ -38,8 +39,8 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase =
     inputs: ['color'],
     host: {
         class: 'mc kbq-icon',
-        '[class.kbq-error]': 'color === "error" || hasError'
-    }
+        '[class.kbq-error]': 'color === "error" || hasError',
+    },
 })
 export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentInit {
     @Input() small = false;
@@ -47,13 +48,13 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
 
     hasError: boolean = false;
 
-    protected name = 'KbqIcon'
+    protected name = 'KbqIcon';
 
     constructor(
         elementRef: ElementRef,
         @Attribute('kbq-icon') protected iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef,
-        protected changeDetectorRef: ChangeDetectorRef
+        protected changeDetectorRef: ChangeDetectorRef,
     ) {
         super(elementRef);
 
@@ -67,7 +68,9 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     }
 
     updateMaxHeight() {
-        if (this.name !== 'KbqIcon') { return; }
+        if (this.name !== 'KbqIcon') {
+            return;
+        }
 
         const size = parseInt(this.iconName?.split('_')[1]);
 
@@ -78,8 +81,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
 
     ngAfterContentInit(): void {
         if (this.autoColor) {
-            this.formField.control?.stateChanges
-                .subscribe(this.updateState);
+            this.formField.control?.stateChanges.subscribe(this.updateState);
 
             this.updateState();
         }
@@ -91,5 +93,5 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
         this.hasError = this.formField.shouldForward('invalid');
 
         this.changeDetectorRef.markForCheck();
-    }
+    };
 }

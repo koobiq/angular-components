@@ -10,7 +10,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-
 import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-selection-overview/tree-select-child-selection-overview-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
 import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-lazyload-example';
@@ -18,14 +17,13 @@ import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overvi
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
 import { TreeSelectSearchOverviewExample } from './tree-select-search-overview/tree-select-search-overview-example';
 
-
 export {
-    TreeSelectOverviewExample,
-    TreeSelectMultipleOverviewExample,
     TreeSelectChildSelectionOverviewExample,
-    TreeSelectSearchOverviewExample,
+    TreeSelectFooterOverviewExample,
     TreeSelectLazyloadExample,
-    TreeSelectFooterOverviewExample
+    TreeSelectMultipleOverviewExample,
+    TreeSelectOverviewExample,
+    TreeSelectSearchOverviewExample,
 };
 
 const EXAMPLES = [
@@ -34,7 +32,7 @@ const EXAMPLES = [
     TreeSelectChildSelectionOverviewExample,
     TreeSelectSearchOverviewExample,
     TreeSelectLazyloadExample,
-    TreeSelectFooterOverviewExample
+    TreeSelectFooterOverviewExample,
 ];
 
 @NgModule({
@@ -51,9 +49,9 @@ const EXAMPLES = [
         KbqIconModule,
         KbqProgressSpinnerModule,
         KbqPseudoCheckboxModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class TreeSelectExamplesModule {}

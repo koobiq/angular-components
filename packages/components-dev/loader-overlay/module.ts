@@ -6,15 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-
 import { KbqLoaderOverlayModule } from '../../components/loader-overlay';
-
 
 @Component({
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['../main.scss', 'styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LoaderOverlayDemoComponent {
     themePalette = ThemePalette;
@@ -25,7 +23,6 @@ export class LoaderOverlayDemoComponent {
     loading = true;
 }
 
-
 @NgModule({
     imports: [
         BrowserModule,
@@ -33,9 +30,9 @@ export class LoaderOverlayDemoComponent {
         CommonModule,
         KbqButtonModule,
         KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule
+        KbqLoaderOverlayModule,
     ],
     declarations: [LoaderOverlayDemoComponent],
-    bootstrap: [LoaderOverlayDemoComponent]
+    bootstrap: [LoaderOverlayDemoComponent],
 })
 export class DemoModule {}

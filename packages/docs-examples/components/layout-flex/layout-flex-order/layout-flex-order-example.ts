@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Flex layout
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'layout-flex-order-example',
     templateUrl: 'layout-flex-order-example.html',
     styleUrls: ['layout-flex-order-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LayoutFlexOrderExample {
     selectedFirstBlockOrder: string = 'flex-order-0';
@@ -25,6 +24,6 @@ export class LayoutFlexOrderExample {
         'flex-order-6',
         'flex-order-7',
         'flex-order-8',
-        'flex-order-9'
+        'flex-order-9',
     ];
 }

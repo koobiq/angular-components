@@ -1,17 +1,15 @@
 import {
-    Input,
-    Component,
-    ViewEncapsulation,
-    ChangeDetectionStrategy,
     AfterContentChecked,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
+    Component,
     ElementRef,
-    ViewChild
+    Input,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
 import { KbqMarkdownService } from './markdown.service';
-
 
 @Component({
     selector: 'kbq-markdown',
@@ -22,10 +20,10 @@ import { KbqMarkdownService } from './markdown.service';
         <div class="markdown-output" [innerHtml]="resultHtml"></div>
     `,
     host: {
-        class: 'kbq-markdown'
+        class: 'kbq-markdown',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqMarkdown implements AfterContentChecked {
     @ViewChild('contentWrapper') contentWrapper: ElementRef;
@@ -50,7 +48,7 @@ export class KbqMarkdown implements AfterContentChecked {
     constructor(
         private markdownService: KbqMarkdownService,
         private sanitizer: DomSanitizer,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) {}
 
     ngAfterContentChecked(): void {

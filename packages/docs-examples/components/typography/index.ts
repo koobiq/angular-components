@@ -1,22 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
 import { TypographyOverviewExample } from './typography-overview/typography-overview-example';
 
-
-export {
-    TypographyOverviewExample
-};
+export { TypographyOverviewExample };
 
 const EXAMPLES = [
-    TypographyOverviewExample
+    TypographyOverviewExample,
 ];
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class TypographyExamplesModule {}

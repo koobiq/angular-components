@@ -1,14 +1,15 @@
 /* tslint:disable:no-console */
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
-    NgModule,
-    Component,
-    ViewEncapsulation,
-    TemplateRef,
     ChangeDetectionStrategy,
+    Component,
     ElementRef,
-    ViewChild
+    NgModule,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,33 +25,25 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import {
-    KbqToastData,
-    KbqToastModule,
-    KbqToastService,
-    KbqToastComponent
-} from '@koobiq/components/toast';
+import { KbqToastComponent, KbqToastData, KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { KbqButtonModule } from '../../components/button';
-import { OverlayContainer } from '@angular/cdk/overlay';
-
 
 @Component({
     selector: 'kbq-new-toast',
     template: '<div>MyToastComponent</div>',
     host: {
-        class: 'my-toast'
+        class: 'my-toast',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class MyToastComponent extends KbqToastComponent {
     constructor(
         readonly data: KbqToastData,
         readonly service: KbqToastService,
         elementRef: ElementRef,
-        focusMonitor: FocusMonitor
+        focusMonitor: FocusMonitor,
     ) {
         super(data, service, elementRef, focusMonitor);
 
@@ -58,12 +51,11 @@ export class MyToastComponent extends KbqToastComponent {
     }
 }
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ToastDemoComponent {
     themePalette = ThemePalette;
@@ -82,7 +74,7 @@ export class ToastDemoComponent {
         private toastService: KbqToastService,
         private modalService: KbqModalService,
         private sidepanelService: KbqSidepanelService,
-        private overlayRef: OverlayContainer
+        private overlayRef: OverlayContainer,
     ) {
         console.log('overlayRef: ', overlayRef);
         console.log('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
@@ -93,7 +85,7 @@ export class ToastDemoComponent {
     openTemplateSidepanel() {
         this.sidepanelService.open(this.template, {
             position: this.position,
-            hasBackdrop: this.modalState
+            hasBackdrop: this.modalState,
         });
 
         console.log('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
@@ -107,7 +99,7 @@ export class ToastDemoComponent {
         this.modalService.create({
             kbqTitle,
             kbqContent,
-            kbqWidth: 400
+            kbqWidth: 400,
         });
     }
 
@@ -117,7 +109,7 @@ export class ToastDemoComponent {
 @NgModule({
     declarations: [
         ToastDemoComponent,
-        MyToastComponent
+        MyToastComponent,
     ],
     imports: [
         BrowserModule,
@@ -137,8 +129,8 @@ export class ToastDemoComponent {
         KbqPopoverModule,
         KbqToolTipModule,
         KbqOptionModule,
-        KbqSelectModule
+        KbqSelectModule,
     ],
-    bootstrap: [ToastDemoComponent]
+    bootstrap: [ToastDemoComponent],
 })
 export class DemoModule {}

@@ -6,12 +6,11 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 
-
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -24,12 +23,12 @@ export class DemoComponent {
         'Apple',
         'Banana',
         'Tomato',
-        'Крякать как уточка'
+        'Крякать как уточка',
     ];
 
     selectionList = [
         { name: 'Yes', value: 'true', selected: false },
-        { name: 'No', value: 'false', selected: true }
+        { name: 'No', value: 'false', selected: true },
     ];
 
     onChange($event: KbqRadioChange) {
@@ -43,8 +42,8 @@ export class DemoComponent {
         BrowserModule,
         FormsModule,
         KbqFormFieldModule,
-        KbqRadioModule
+        KbqRadioModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

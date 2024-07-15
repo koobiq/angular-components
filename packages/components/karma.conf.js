@@ -6,7 +6,7 @@ module.exports = function (config) {
         ...baseConfig,
 
         coverageReporter: {
-            dir: '../../dist/coverage/components'
-        }
+            dir: '../../dist/coverage/components',
+        },
     });
 };

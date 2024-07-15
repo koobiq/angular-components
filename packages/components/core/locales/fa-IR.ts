@@ -1,20 +1,18 @@
-
-
 export const faIRLocaleData = {
-    select: { hiddenItemsText: '{{ number }} بیشتر'},
+    select: { hiddenItemsText: '{{ number }} بیشتر' },
     datepicker: {
-        placeholder: 'روز/ ماه/سال'
+        placeholder: 'روز/ ماه/سال',
     },
     timepicker: {
         placeholder: {
             full: 'ثانیه:دقیقه:ساعت',
-            short: 'دقیقه:ساعت'
-        }
+            short: 'دقیقه:ساعت',
+        },
     },
     fileUpload: {
         single: {
             captionText: 'فایل را به اینجا بکشید یا {{ browseLink }}',
-            browseLink: 'انتخاب کنید'
+            browseLink: 'انتخاب کنید',
         },
         multiple: {
             captionText: 'به اینجا بکشید یا {{ browseLink }}',
@@ -24,8 +22,8 @@ export const faIRLocaleData = {
             title: 'فایل ها را آپلود کنید',
             gridHeaders: {
                 file: 'فایل',
-                size: 'اندازه'
-            }
-        }
-    }
+                size: 'اندازه',
+            },
+        },
+    },
 };

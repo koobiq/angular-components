@@ -4,11 +4,9 @@ import { execSync, ExecSyncOptions } from 'child_process';
 import { readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import { join } from 'path';
-
 import { GitClient } from './git/git-client';
 import { Version } from './version-name/parse-version';
 import { getAllowedPublishBranches } from './version-name/publish-branches';
-
 
 const { red, italic, yellow, green } = chalk;
 const { prompt } = inquirer;
@@ -36,7 +34,10 @@ export class BaseReleaseTask {
     /** Serialized package.json of the specified project. */
     packageJson: any;
 
-    constructor(public git: GitClient, public config: IReleaseTaskConfig) {
+    constructor(
+        public git: GitClient,
+        public config: IReleaseTaskConfig,
+    ) {
         this.packageJsonPath = join(config.projectDir, 'package.json');
         this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
     }
@@ -58,8 +59,9 @@ export class BaseReleaseTask {
         // exit and let the user decide which branch they want to release from.
         if (allowedBranches.length !== 1) {
             console.warn(yellow('  ✘   You are not on an allowed publish branch.'));
-            console.warn(yellow(`      Please switch to one of the following branches: ` +
-                `${allowedBranches.join(', ')}`));
+            console.warn(
+                yellow(`      Please switch to one of the following branches: ` + `${allowedBranches.join(', ')}`),
+            );
             process.exit(0);
         }
 
@@ -68,10 +70,8 @@ export class BaseReleaseTask {
         const defaultPublishBranch = allowedBranches[0];
 
         if (!this.git.checkoutBranch(defaultPublishBranch)) {
-            console.error(red(`  ✘   Could not switch to the "${italic(defaultPublishBranch)}" ` +
-                `branch.`));
-            console.error(red(`      Please ensure that the branch exists or manually switch to the ` +
-                `branch.`));
+            console.error(red(`  ✘   Could not switch to the "${italic(defaultPublishBranch)}" ` + `branch.`));
+            console.error(red(`      Please ensure that the branch exists or manually switch to the ` + `branch.`));
             process.exit(1);
         }
 
@@ -104,11 +104,13 @@ export class BaseReleaseTask {
 
     /** Prompts the user with a confirmation question and a specified message. */
     protected async promptConfirm(message: string): Promise<boolean> {
-        return (await prompt<{ result: boolean }>({
-            type: 'confirm',
-            name: 'result',
-            message
-        })).result;
+        return (
+            await prompt<{ result: boolean }>({
+                type: 'confirm',
+                name: 'result',
+                message,
+            })
+        ).result;
     }
 
     /**
@@ -126,7 +128,7 @@ export class BaseReleaseTask {
     /** Builds all release packages that should be published. */
     protected runReleaseCommands(commandType: LifecycleStage) {
         const binDir = join(this.config.projectDir, 'node_modules/.bin');
-        const spawnOptions: ExecSyncOptions = {cwd: binDir, stdio: 'inherit'};
+        const spawnOptions: ExecSyncOptions = { cwd: binDir, stdio: 'inherit' };
         const preReleaseCommands = this.packageJson?.release?.hooks?.[commandType] ?? [];
 
         for (const command of preReleaseCommands) {

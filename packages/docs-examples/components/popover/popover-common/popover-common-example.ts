@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title popover-common
  */
@@ -8,12 +7,12 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'popover-common-example',
     templateUrl: 'popover-common-example.html',
     styleUrls: ['popover-common-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class PopoverCommonExample {
     ELEMENTS = {
         BUTTON: 'button',
-        LINK: 'link'
+        LINK: 'link',
     };
     selectedElement: string = this.ELEMENTS.BUTTON;
 }

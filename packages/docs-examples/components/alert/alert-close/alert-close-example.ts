@@ -3,7 +3,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title Alert Close
  */
@@ -13,13 +12,13 @@ import { KbqComponentColors } from '@koobiq/components/core';
     styleUrls: ['alert-close-example.css'],
     animations: [
         trigger('hideShowAnimator', [
-            state('true' , style({ opacity: 1, display: '' })),
+            state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
+            transition('true => false', animate('.2s')),
+        ]),
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class AlertCloseExample {
     colors = KbqComponentColors;

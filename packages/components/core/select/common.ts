@@ -1,39 +1,26 @@
 /* tslint:disable:no-empty */
 
-import {
-    AfterContentInit,
-    Directive,
-    Inject,
-    OnDestroy,
-    Optional
-} from '@angular/core';
-import {
-    END,
-    HOME,
-    SPACE,
-    ESCAPE
-} from '@koobiq/cdk/keycodes';
+import { AfterContentInit, Directive, Inject, OnDestroy, Optional } from '@angular/core';
+import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
 
-
 @Directive({
     selector: 'kbq-select-trigger, [kbq-select-trigger]',
-    standalone: true
+    standalone: true,
 })
 export class KbqSelectTrigger {}
 
 @Directive({
     selector: 'kbq-select-matcher, [kbq-select-matcher]',
-    standalone: true
+    standalone: true,
 })
 export class KbqSelectMatcher {}
-
 
 @Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',
     host: { class: 'kbq-select__footer' },
-    standalone: true
+    standalone: true,
 })
 export class KbqSelectFooter {}
 
@@ -42,8 +29,8 @@ export class KbqSelectFooter {}
     exportAs: 'kbqSelectSearch',
     standalone: true,
     host: {
-        '(keydown)': 'handleKeydown($event)'
-    }
+        '(keydown)': 'handleKeydown($event)',
+    },
 })
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     searchChangesSubscription: Subscription = new Subscription();
@@ -109,6 +96,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
 @Directive({
     selector: '[kbq-select-search-empty-result]',
     exportAs: 'kbqSelectSearchEmptyResult',
-    standalone: true
+    standalone: true,
 })
 export class KbqSelectSearchEmptyResult {}

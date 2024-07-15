@@ -9,17 +9,10 @@ import {
     Input,
     OnDestroy,
     Optional,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    CanColor,
-    toBoolean,
-    KBQ_FORM_FIELD_REF,
-    KbqFormFieldRef
-} from '@koobiq/components/core';
-
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef, toBoolean } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
-
 
 @Component({
     selector: `[kbq-icon-button]`,
@@ -35,8 +28,8 @@ import { KbqIcon } from './icon.component';
         '[attr.disabled]': 'disabled',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_small]': 'small'
-    }
+        '[class.kbq-icon-button_small]': 'small',
+    },
 })
 export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
     @Input() small = false;
@@ -69,14 +62,14 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
 
     private _disabled: boolean;
 
-    override name = 'KbqIconButton'
+    override name = 'KbqIconButton';
 
     constructor(
         elementRef: ElementRef,
         @Attribute('kbq-icon-button') iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) formField: KbqFormFieldRef,
         protected changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
+        private focusMonitor: FocusMonitor,
     ) {
         super(elementRef, iconName, formField, changeDetectorRef);
 

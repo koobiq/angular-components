@@ -10,26 +10,20 @@ import {
     OnChanges,
     OnDestroy,
     Optional,
-    Self
+    Self,
 } from '@angular/core';
-import {
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    mixinErrorState
+    mixinErrorState,
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-
 import { getKbqInputUnsupportedTypeError } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
 
 const KBQ_INPUT_INVALID_TYPES = [
     'button',
@@ -40,7 +34,7 @@ const KBQ_INPUT_INVALID_TYPES = [
     'radio',
     'range',
     'reset',
-    'submit'
+    'submit',
 ];
 
 let nextUniqueId = 0;
@@ -58,13 +52,12 @@ export class KbqInputBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
+        public ngControl: NgControl,
     ) {}
 }
 
 /** @docs-private */
 export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = mixinErrorState(KbqInputBase);
-
 
 @Directive({
     selector: `input[kbqInput]`,
@@ -78,15 +71,19 @@ export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = 
         '[attr.disabled]': 'disabled || null',
         '[required]': 'required',
         '(blur)': 'onBlur()',
-        '(focus)': 'focusChanged(true)'
+        '(focus)': 'focusChanged(true)',
     },
-    providers: [{
-        provide: KbqFormFieldControl, useExisting: KbqInput
-    }]
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInput,
+        },
+    ],
 })
-export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck,
-    CanUpdateErrorState, OnChanges {
-
+export class KbqInput
+    extends KbqInputMixinBase
+    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges
+{
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -122,7 +119,7 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
         'datetime-local',
         'month',
         'time',
-        'week'
+        'week',
     ].filter((t) => getSupportedInputTypes().has(t));
 
     /**
@@ -131,7 +128,9 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
      */
     @Input()
     get disabled(): boolean {
-        if (this.ngControl && this.ngControl.disabled !== null) { return this.ngControl.disabled; }
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            return this.ngControl.disabled;
+        }
 
         return this._disabled;
     }
@@ -228,7 +227,7 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         defaultErrorStateMatcher: ErrorStateMatcher,
-        @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any
+        @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
     ) {
         super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
@@ -337,6 +336,6 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
 @Directive({
     selector: 'input[kbqInputMonospace]',
     exportAs: 'KbqInputMonospace',
-    host: { class: 'kbq-input_monospace' }
+    host: { class: 'kbq-input_monospace' },
 })
 export class KbqInputMono {}

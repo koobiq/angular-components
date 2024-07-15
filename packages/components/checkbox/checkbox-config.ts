@@ -1,6 +1,5 @@
 import { InjectionToken } from '@angular/core';
 
-
 /**
  * Checkbox click action when user click on input element.
  * noop: Do not toggle checked or indeterminate.
@@ -13,5 +12,4 @@ export type KbqCheckboxClickAction = 'noop' | 'check' | 'check-indeterminate' | 
 /**
  * Injection token that can be used to specify the checkbox click behavior.
  */
-export const KBQ_CHECKBOX_CLICK_ACTION =
-    new InjectionToken<KbqCheckboxClickAction>('kbq-checkbox-click-action');
+export const KBQ_CHECKBOX_CLICK_ACTION = new InjectionToken<KbqCheckboxClickAction>('kbq-checkbox-click-action');

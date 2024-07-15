@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, NgModule, OnDestroy } from '@angular/core';
+import { Component, NgModule, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-
 
 const INTERVAL: number = 300;
 const STEP: number = 4;
@@ -14,7 +13,7 @@ const MAX_PERCENT: number = 100;
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss']
+    styleUrls: ['../main.scss', './styles.scss'],
 })
 export class ProgressSpinnerDemoComponent implements OnDestroy {
     colors = KbqComponentColors;
@@ -24,7 +23,7 @@ export class ProgressSpinnerDemoComponent implements OnDestroy {
     intervalId: number;
 
     constructor() {
-        setInterval(() => this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP), INTERVAL);
+        setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
     }
 
     ngOnDestroy() {
@@ -32,19 +31,18 @@ export class ProgressSpinnerDemoComponent implements OnDestroy {
     }
 }
 
-
 @NgModule({
     declarations: [
-        ProgressSpinnerDemoComponent
+        ProgressSpinnerDemoComponent,
     ],
     imports: [
         CommonModule,
         BrowserModule,
         KbqProgressSpinnerModule,
-        FormsModule
+        FormsModule,
     ],
     bootstrap: [
-        ProgressSpinnerDemoComponent
-    ]
+        ProgressSpinnerDemoComponent,
+    ],
 })
 export class DemoModule {}

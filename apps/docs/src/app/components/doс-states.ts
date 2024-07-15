@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-
 export enum DocsNavbarState {
     opened,
-    closed
+    closed,
 }
 
 @Injectable()
@@ -60,7 +59,7 @@ export class DocStates {
     checkHeaderOverflow = () => {
         this.isHeaderOverflown = this.currentHeaderScrollContainer.scrollTop > this.currentHeader.offsetHeight;
         this.viewerTopOverflown.next(this.currentHeaderScrollContainer.scrollTop > 0);
-    }
+    };
 
     registerNavbarScrollContainer(element: HTMLElement) {
         this.navbarScrollContainer = element;
@@ -73,5 +72,5 @@ export class DocStates {
 
     checkNavbarOverflow = () => {
         this.navbarTopOverflown.next(this.navbarScrollContainer.scrollTop > 0);
-    }
+    };
 }

@@ -1,8 +1,6 @@
 /* tslint:disable:naming-convention */
 import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
-
 import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
-
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<string>('KbqNumberFormatterOptions');
 
@@ -10,9 +8,8 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
     minimumIntegerDigits: 1,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 3
+    maximumFractionDigits: 3,
 };
-
 
 function isEmpty(value: any): boolean {
     return value == null || value === '' || value !== value;
@@ -65,7 +62,6 @@ interface RoundDecimalOptions {
     rtl?: boolean;
 }
 
-
 // tslint:disable:no-magic-numbers
 const ROUNDING_UNITS = {
     thousand: 1e3,
@@ -73,7 +69,7 @@ const ROUNDING_UNITS = {
     million: 1e6,
     oneHundredMillions: 100 * 1e6,
     billion: 1e9,
-    trillion: 1e12
+    trillion: 1e12,
 };
 
 const intervalsConfig = {
@@ -83,8 +79,8 @@ const intervalsConfig = {
         { startRange: ROUNDING_UNITS.thousand, endRange: ROUNDING_UNITS.tenThousand, precision: 1 },
         { startRange: ROUNDING_UNITS.tenThousand, endRange: ROUNDING_UNITS.million },
         { startRange: ROUNDING_UNITS.million, endRange: ROUNDING_UNITS.million * 10, precision: 1 },
-        { startRange: ROUNDING_UNITS.million * 10, endRange: ROUNDING_UNITS.billion }
-    ]
+        { startRange: ROUNDING_UNITS.million * 10, endRange: ROUNDING_UNITS.billion },
+    ],
 };
 // tslint:enable:no-magic-numbers
 
@@ -132,19 +128,17 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     return result;
 }
 
-
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqNumber', pure: false })
 export class KbqDecimalPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
+        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo,
     ) {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
-        this.localeService?.changes
-            .subscribe((newId: string) => this.id = newId);
+        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 
     /**
@@ -162,7 +156,9 @@ export class KbqDecimalPipe implements PipeTransform {
      * When not supplied, uses the value of `KBQ_LOCALE_ID`, which is `ru` by default.
      */
     transform(value: any, digitsInfo?: string, locale?: string): string | null {
-        if (isEmpty(value)) { return null; }
+        if (isEmpty(value)) {
+            return null;
+        }
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
@@ -174,7 +170,7 @@ export class KbqDecimalPipe implements PipeTransform {
 
         const options: NumberFormatOptions = {
             ...this.options,
-            ...parsedDigitsInfo
+            ...parsedDigitsInfo,
         };
 
         if (this.isSpecialFormatForRULocale(currentLocale, value, parsedDigitsInfo?.useGrouping)) {
@@ -208,12 +204,11 @@ export class KbqTableNumberPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
+        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo,
     ) {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
-        this.localeService?.changes
-            .subscribe((newId: string) => this.id = newId);
+        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 
     /**
@@ -231,7 +226,9 @@ export class KbqTableNumberPipe implements PipeTransform {
      * When not supplied, uses the value of `KBQ_LOCALE_ID`, which is `ru` by default.
      */
     transform(value: any, digitsInfo?: string, locale?: string): string | null {
-        if (isEmpty(value)) { return null; }
+        if (isEmpty(value)) {
+            return null;
+        }
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
@@ -243,7 +240,7 @@ export class KbqTableNumberPipe implements PipeTransform {
 
         const options: NumberFormatOptions = {
             ...this.options,
-            ...parsedDigitsInfo
+            ...parsedDigitsInfo,
         };
 
         try {
@@ -270,19 +267,19 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqRoundNumber', pure: false })
 export class KbqRoundDecimalPipe implements PipeTransform {
-
     roundingOptions: RoundDecimalOptions;
 
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
     ) {
-        this.localeService?.changes
-            .subscribe((newId: string) => this.id = newId);
+        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 
     transform(value: any, locale?: string): any {
-        if (isEmpty(value)) { return null; }
+        if (isEmpty(value)) {
+            return null;
+        }
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
         this.roundingOptions = this.localeService.locales[currentLocale].formatters.number.rounding;
@@ -290,35 +287,39 @@ export class KbqRoundDecimalPipe implements PipeTransform {
         try {
             const num = strToNumber(value);
             const unit = this.calculateUnit(num);
-            if (!unit) { return Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(num); }
+            if (!unit) {
+                return Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(num);
+            }
 
             let parts: { num?: number; fraction?: number } = {};
 
             if (intervalsConfig.supportedLanguages.includes(currentLocale)) {
-                intervalsConfig.intervals
-                    .find(({ startRange, endRange, precision }) => {
-                        const within = isWithin(startRange, endRange, num);
-                        if (within) {
-                            if (precision) {
-                                parts = unit === 'thousand' ?
-                                    this.calculatePartsForThousands(num) :
-                                    {
-                                        num: Math.trunc(num / ROUNDING_UNITS[unit]),
-                                        fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
-                                    };
-                            } else {
-                                parts = { num: Math.round(num / ROUNDING_UNITS[unit]) };
-                            }
+                intervalsConfig.intervals.find(({ startRange, endRange, precision }) => {
+                    const within = isWithin(startRange, endRange, num);
+                    if (within) {
+                        if (precision) {
+                            parts =
+                                unit === 'thousand'
+                                    ? this.calculatePartsForThousands(num)
+                                    : {
+                                          num: Math.trunc(num / ROUNDING_UNITS[unit]),
+                                          fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit]),
+                                      };
+                        } else {
+                            parts = { num: Math.round(num / ROUNDING_UNITS[unit]) };
                         }
+                    }
 
-                        return within;
-                    });
+                    return within;
+                });
             }
 
-            parts = parts.num ? parts : {
-                num: Math.trunc(num / ROUNDING_UNITS[unit]),
-                fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
-            };
+            parts = parts.num
+                ? parts
+                : {
+                      num: Math.trunc(num / ROUNDING_UNITS[unit]),
+                      fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit]),
+                  };
             Object.keys(parts).forEach((key) => {
                 parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
             });
@@ -335,7 +336,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
     private calculateDecimal(num: number, divider: number) {
         /* tslint:disable-next-line:no-magic-numbers */
-        return Math.round(num / divider % 1 * 10);
+        return Math.round(((num / divider) % 1) * 10);
     }
 
     /**
@@ -358,7 +359,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
         const localizedOptions = Object.keys(this.roundingOptions);
 
         Object.keys(ROUNDING_UNITS).every((key) => {
-            if (!localizedOptions.includes(key)) { return true; }
+            if (!localizedOptions.includes(key)) {
+                return true;
+            }
             if (num / ROUNDING_UNITS[key] >= 1) {
                 currentUnit = key;
 

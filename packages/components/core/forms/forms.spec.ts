@@ -6,9 +6,7 @@ import { KbqFormElement, KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
-
 const classWithMargin = 'kbq-form-row_margin';
-
 
 @Component({
     template: `
@@ -16,7 +14,7 @@ const classWithMargin = 'kbq-form-row_margin';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
@@ -25,7 +23,7 @@ const classWithMargin = 'kbq-form-row_margin';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
@@ -34,16 +32,15 @@ const classWithMargin = 'kbq-form-row_margin';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
             </div>
         </form>
-    `
+    `,
 })
 class HorizontalForm {}
-
 
 @Component({
     template: `
@@ -51,7 +48,7 @@ class HorizontalForm {}
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
@@ -60,7 +57,7 @@ class HorizontalForm {}
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
@@ -69,13 +66,13 @@ class HorizontalForm {}
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Подпись поля</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input name="input" kbqInput />
 
                     <kbq-hint>Подсказка под полем</kbq-hint>
                 </kbq-form-field>
             </div>
         </form>
-    `
+    `,
 })
 class VerticalForm {}
 
@@ -85,9 +82,9 @@ xdescribe('Forms', () => {
             imports: [
                 KbqFormsModule,
                 KbqInputModule,
-                KbqFormFieldModule
+                KbqFormFieldModule,
             ],
-            declarations: [HorizontalForm, VerticalForm]
+            declarations: [HorizontalForm, VerticalForm],
         }).compileComponents();
     }));
 

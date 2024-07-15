@@ -141,6 +141,6 @@ export const ptBRLocaleDataSet = {
         'Engels',
         'Iujno-Sakhalinsk',
         'Iacutsk',
-        'Iaroslavl'
-    ]
+        'Iaroslavl',
+    ],
 };

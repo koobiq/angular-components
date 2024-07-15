@@ -14,11 +14,10 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
-
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -27,7 +26,10 @@ import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/com
 let uniqueAutocompleteIdCounter = 0;
 
 export class KbqAutocompleteSelectedEvent {
-    constructor(public source: KbqAutocomplete, public option: KbqOption) {}
+    constructor(
+        public source: KbqAutocomplete,
+        public option: KbqOption,
+    ) {}
 }
 
 /** Default `kbq-autocomplete` options that can be overridden. */
@@ -37,11 +39,13 @@ export interface KbqAutocompleteDefaultOptions {
 }
 
 /** Injection token to be used to override the default options for `kbq-autocomplete`. */
-export const KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS =
-    new InjectionToken<KbqAutocompleteDefaultOptions>('kbq-autocomplete-default-options', {
+export const KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<KbqAutocompleteDefaultOptions>(
+    'kbq-autocomplete-default-options',
+    {
         providedIn: 'root',
-        factory: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY
-    });
+        factory: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY,
+    },
+);
 
 export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefaultOptions {
     return { autoActiveFirstOption: true };
@@ -53,13 +57,16 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss'],
     host: {
-        class: 'kbq-autocomplete'
+        class: 'kbq-autocomplete',
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
-        provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqAutocomplete
-    }]
+    providers: [
+        {
+            provide: KBQ_OPTION_PARENT_COMPONENT,
+            useExisting: KbqAutocomplete,
+        },
+    ],
 })
 export class KbqAutocomplete implements AfterContentInit {
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
@@ -71,9 +78,9 @@ export class KbqAutocomplete implements AfterContentInit {
     /** Whether the autocomplete panel should be visible, depending on option length. */
     showPanel: boolean = false;
 
-    @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
 
-    @ViewChild('panel', {static: false}) panel: ElementRef;
+    @ViewChild('panel', { static: false }) panel: ElementRef;
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
@@ -109,8 +116,7 @@ export class KbqAutocomplete implements AfterContentInit {
 
     set classList(value: string) {
         if (value && value.length) {
-            value.split(' ')
-                .forEach((className) => this._classList[className.trim()] = true);
+            value.split(' ').forEach((className) => (this._classList[className.trim()] = true));
 
             this.elementRef.nativeElement.className = '';
         }
@@ -157,7 +163,7 @@ export class KbqAutocomplete implements AfterContentInit {
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef<HTMLElement>,
-        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions
+        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions,
     ) {
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
     }
@@ -195,4 +201,3 @@ export class KbqAutocomplete implements AfterContentInit {
         this.keyManager.onKeydown(event);
     }
 }
-

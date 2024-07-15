@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-
 import { outputFileSync } from 'fs-extra';
 
 type VersionInfo = {
@@ -16,8 +15,8 @@ function getNPMVersions(): Versions {
     const versions = {
         next: {
             version: 'Next',
-            url: 'https://next.koobiq.io'
-        }
+            url: 'https://next.koobiq.io',
+        },
     };
 
     // Regular expression to match versions like x.y.z, x.y.z-rc.n, x.y.z-beta.n, etc.
@@ -47,7 +46,7 @@ function getNPMVersions(): Versions {
             versions[majorVersion] = {
                 version,
                 date,
-                url: `https://v${majorVersion}.koobiq.io/`
+                url: `https://v${majorVersion}.koobiq.io/`,
             };
         }
     });

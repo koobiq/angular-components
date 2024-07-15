@@ -8,11 +8,10 @@ import {
     KbqTagInput,
     KbqTagInputEvent,
     KbqTagList,
-    KbqTagsDefaultOptions
+    KbqTagsDefaultOptions,
 } from '@koobiq/components/tags';
 import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 
 /**
  * @title Tags Autocomplete Onpaste Off
@@ -22,16 +21,18 @@ import { map } from 'rxjs/operators';
     templateUrl: 'tags-autocomplete-onpaste-off-example.html',
     styleUrls: ['tags-autocomplete-onpaste-off-example.css'],
     // turn off tag add on paste with InjectionToken
-    providers: [{
-        provide: KBQ_TAGS_DEFAULT_OPTIONS,
-        // tslint:disable-next-line: no-object-literal-type-assertion
-        useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
-    }]
+    providers: [
+        {
+            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+            // tslint:disable-next-line: no-object-literal-type-assertion
+            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions,
+        },
+    ],
 })
 export class TagsAutocompleteOnpasteOffExample {
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
     @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('tagInput', {read: KbqTagInput, static: false}) tagInputDirective: KbqTagInput;
+    @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;
     @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
 
     control = new FormControl();
@@ -46,33 +47,36 @@ export class TagsAutocompleteOnpasteOffExample {
     get canCreate(): boolean {
         const cleanedValue: string = (this.control.value || '').trim();
 
-        return !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))]
-            .every((tag) => tag !== cleanedValue);
+        return (
+            !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
+        );
     }
 
     ngAfterViewInit(): void {
         this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable()
-                .pipe(map((selectedTags: KbqTag[]) => {
+            this.tagList.tagChanges.asObservable().pipe(
+                map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag: any) => tag.value);
 
                     return this.allTags.filter((tag) => !values.includes(tag));
-                })),
-            this.control.valueChanges
-                .pipe(map((value: any) => {
-                    const typedText = ((value?.new) ? value.value : value)?.trim();
+                }),
+            ),
+            this.control.valueChanges.pipe(
+                map((value: any) => {
+                    const typedText = (value?.new ? value.value : value)?.trim();
 
-                    this.filteredTagsByInput = typedText ?
-                        this.filter(typedText) : this.allTags.slice();
+                    this.filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
 
-                    const inputAndSelectionTagsDiff = this.filteredTagsByInput
-                        .filter((tag) => !this.selectedTags.includes(tag));
+                    const inputAndSelectionTagsDiff = this.filteredTagsByInput.filter(
+                        (tag) => !this.selectedTags.includes(tag),
+                    );
 
                     // check for scenario where duplicate exists but also can create/select other tags
                     this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
 
                     return inputAndSelectionTagsDiff;
-                }))
+                }),
+            ),
         );
     }
 
@@ -82,7 +86,7 @@ export class TagsAutocompleteOnpasteOffExample {
         if (!target || target.tagName !== 'KBQ-OPTION') {
             const mcTagEvent: KbqTagInputEvent = {
                 input: this.tagInput.nativeElement,
-                value : this.tagInput.nativeElement.value
+                value: this.tagInput.nativeElement.value,
             };
 
             this.onCreate(mcTagEvent);
@@ -139,7 +143,8 @@ export class TagsAutocompleteOnpasteOffExample {
     private filter(value: string): string[] {
         const filterValue = value.toLowerCase();
 
-        return [...new Set(this.allTags.concat(this.selectedTags))]
-            .filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
+        return [...new Set(this.allTags.concat(this.selectedTags))].filter(
+            (tag) => tag.toLowerCase().indexOf(filterValue) === 0,
+        );
     }
 }

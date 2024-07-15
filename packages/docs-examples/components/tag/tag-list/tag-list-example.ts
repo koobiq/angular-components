@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Basic tag list
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tag-list-example',
     templateUrl: 'tag-list-example.html',
     styleUrls: ['tag-list-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TagListExample {
     simpleTags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];

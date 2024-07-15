@@ -2,15 +2,13 @@ import { Component } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-
 import { KbqProgressSpinnerModule } from './index';
-
 
 // tslint:disable no-magic-numbers
 const percentPairs = [
     [40, 0.4],
     [-50, 0],
-    [140, 1]
+    [140, 1],
 ];
 // tslint:enable no-magic-numbers
 
@@ -18,7 +16,7 @@ describe('KbqProgressSpinner', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqProgressSpinnerModule],
-            declarations: [TestApp]
+            declarations: [TestApp],
         });
 
         TestBed.compileComponents();
@@ -34,9 +32,9 @@ describe('KbqProgressSpinner', () => {
                 testComponent.color = ThemePalette[key];
                 fixture.detectChanges();
 
-                expect(
-                    progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${ThemePalette[key]}`)
-                ).toBe(true);
+                expect(progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${ThemePalette[key]}`)).toBe(
+                    true,
+                );
             }
         });
     });
@@ -45,7 +43,9 @@ describe('KbqProgressSpinner', () => {
         const fixture = TestBed.createComponent(TestApp);
         const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.default'));
 
-        expect(progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${KbqComponentColors.Theme}`)).toBe(true);
+        expect(progressSpinnerDebugElement.nativeElement.classList.contains(`kbq-${KbqComponentColors.Theme}`)).toBe(
+            true,
+        );
     });
 
     it('should return percentage', () => {
@@ -117,19 +117,13 @@ describe('KbqProgressSpinner', () => {
     });
 });
 
-
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-progress-spinner
-             class="first"
-             [id]="id"
-             [color]="color"
-             [value]="value"
-             [mode]="mode">
+        <kbq-progress-spinner class="first" [id]="id" [color]="color" [value]="value" [mode]="mode">
         </kbq-progress-spinner>
         <kbq-progress-spinner class="default"></kbq-progress-spinner>
-    `
+    `,
 })
 class TestApp {
     color: ThemePalette;

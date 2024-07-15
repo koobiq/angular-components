@@ -3,19 +3,21 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter, Input, NgZone, OnDestroy,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnDestroy,
     Output,
-    ViewChild, ViewEncapsulation
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
-
+import { KbqScrollbarDirective } from './scrollbar.directive';
 import {
+    KbqScrollbarEventListenerArgs,
     KbqScrollbarEvents,
     KbqScrollbarOptions,
     KbqScrollbarTarget,
-    KbqScrollbarEventListenerArgs,
 } from './scrollbar.types';
-import { KbqScrollbarDirective } from './scrollbar.directive';
-
 
 const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     (Object.keys(emits) as (keyof KbqScrollbarEvents)[]).reduce<KbqScrollbarEvents>(
@@ -29,7 +31,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             ];
             return obj;
         },
-        {}
+        {},
     );
 
 @Component({
@@ -37,7 +39,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     exportAs: 'kbqScrollbar',
     host: {
         'data-overlayscrollbars-initialize': '',
-        'class': 'kbq-scrollbar-component'
+        class: 'kbq-scrollbar-component',
     },
     template: `
         <div
@@ -46,13 +48,14 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             [options]="options"
             [events]="mergeEvents()"
             [defer]="defer"
-            #content>
+            #content
+        >
             <ng-content></ng-content>
         </div>
     `,
     styleUrls: ['./scrollbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Element that is being overflowed */
@@ -80,7 +83,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
 
     constructor(
         private ngZone: NgZone,
-        private targetElement: ElementRef<HTMLElement>
+        private targetElement: ElementRef<HTMLElement>,
     ) {}
 
     ngAfterViewInit() {
@@ -90,9 +93,10 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
                     target: this.targetElement.nativeElement,
                     elements: {
                         viewport: this.contentElement.nativeElement,
-                        content: this.contentElement.nativeElement
-                    }
-                });
+                        content: this.contentElement.nativeElement,
+                    },
+                },
+            );
         }
     }
 
@@ -108,7 +112,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     mergeEvents(): KbqScrollbarEvents {
         const defaultListeners: KbqScrollbarEvents = {
             initialized: (...args) => this.dispatchEventIfHasObservers(this.onInitialize, args),
-            updated: (...args) =>  this.dispatchEventIfHasObservers(this.onUpdate, args),
+            updated: (...args) => this.dispatchEventIfHasObservers(this.onUpdate, args),
             destroyed: (...args) => this.dispatchEventIfHasObservers(this.onDestroy, args),
             scroll: (...args) => this.dispatchEventIfHasObservers(this.onScroll, args),
         };

@@ -29,7 +29,7 @@ require('@koobiq/tokens-builder/formats/variables.js')(StyleDictionary);
 function buildTokens(themeConfig) {
     StyleDictionary.registerFileHeader({
         name: 'customHeader',
-        fileHeader: () => [`Do not edit directly`]
+        fileHeader: () => [`Do not edit directly`],
     });
 
     // ==== Run build ====
@@ -73,9 +73,9 @@ for (const skin of [kbq]) {
             buildPath: [
                 koobiqTokensProps,
                 `apps/docs/src/styles/${skin}/${theme}/properties/**/*.json5`,
-                koobiqTokensComponents
+                koobiqTokensComponents,
             ],
-            outputPath: `apps/docs/src/styles/${skin}/${theme}/`
+            outputPath: `apps/docs/src/styles/${skin}/${theme}/`,
         });
     }
 }

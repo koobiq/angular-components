@@ -4,17 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
-
 import { KbqButtonModule, KbqButtonStyles } from '../../components/button';
 import { KbqIconModule } from '../../components/icon';
 import { KbqLinkModule } from '../../components/link';
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     colors = KbqComponentColors;
@@ -22,7 +20,6 @@ export class DemoComponent {
     alertStyles = KbqAlertStyles;
     style = KbqButtonStyles;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -32,8 +29,8 @@ export class DemoComponent {
         KbqAlertModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

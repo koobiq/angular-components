@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
+import { RouterModule } from '@angular/router';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-
-import { WelcomeComponent } from './welcome.component';
-import { RouterModule } from '@angular/router';
 import { AnchorsModule } from '../anchors/anchors.module';
+import { WelcomeComponent } from './welcome.component';
 
 @NgModule({
     imports: [
@@ -17,6 +15,6 @@ import { AnchorsModule } from '../anchors/anchors.module';
         RouterModule,
     ],
     exports: [WelcomeComponent],
-    declarations: [WelcomeComponent]
+    declarations: [WelcomeComponent],
 })
 export class WelcomeModule {}

@@ -1,6 +1,6 @@
 // tslint:disable:no-console
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
@@ -11,19 +11,45 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent implements OnInit {
     options = [
-        'One', 'Two', 'Three', 'Four', 'Five', 'Longest text (0123456789 qwertyuiopasdfghjklzxcvbnm)', 'Волгоград',
-        'Воронеж', 'Ейск', 'Екабпилс', 'Екатеринбург', 'Екатериновка', 'Екатеринославка', 'Екаша', 'Екибастуз',
-        'Екпинди', 'Елань', 'Елец', 'Казань', 'Краснодар', 'Красноярск', 'Москва', 'Нижний Новгород', 'Новосибирск',
-        'Омск', 'Пермь', 'Ростов-на-Дону',  'Самара', 'Санкт-Петербург', 'Уфа', 'Челябинск'
+        'One',
+        'Two',
+        'Three',
+        'Four',
+        'Five',
+        'Longest text (0123456789 qwertyuiopasdfghjklzxcvbnm)',
+        'Волгоград',
+        'Воронеж',
+        'Ейск',
+        'Екабпилс',
+        'Екатеринбург',
+        'Екатериновка',
+        'Екатеринославка',
+        'Екаша',
+        'Екибастуз',
+        'Екпинди',
+        'Елань',
+        'Елец',
+        'Казань',
+        'Краснодар',
+        'Красноярск',
+        'Москва',
+        'Нижний Новгород',
+        'Новосибирск',
+        'Омск',
+        'Пермь',
+        'Ростов-на-Дону',
+        'Самара',
+        'Санкт-Петербург',
+        'Уфа',
+        'Челябинск',
     ];
 
     filteredOptions: Observable<string[]>;
@@ -35,11 +61,10 @@ export class DemoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.filteredOptions = this.formControl.valueChanges
-            .pipe(
-                startWith(''),
-                map((value) => this.filter(value))
-            );
+        this.filteredOptions = this.formControl.valueChanges.pipe(
+            startWith(''),
+            map((value) => this.filter(value)),
+        );
     }
 
     private filter(value: string): string[] {
@@ -48,7 +73,6 @@ export class DemoComponent implements OnInit {
         return this.options.filter((option) => option.toLowerCase().includes(filterValue));
     }
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -62,8 +86,8 @@ export class DemoComponent implements OnInit {
         KbqButtonModule,
         KbqFormFieldModule,
         KbqIconModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

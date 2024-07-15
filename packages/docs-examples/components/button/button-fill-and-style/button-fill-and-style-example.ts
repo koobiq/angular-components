@@ -2,7 +2,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title Fill and Style
  */
@@ -10,7 +9,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'button-fill-and-style-example',
     templateUrl: 'button-fill-and-style-example.html',
     styleUrls: ['button-fill-and-style-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ButtonFillAndStyleExample {
     colors = KbqComponentColors;

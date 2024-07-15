@@ -17,27 +17,25 @@ import {
     QueryList,
     Self,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, mixinColor } from '@koobiq/components/core';
-import { EMPTY, merge, Subject } from 'rxjs';
+import { EMPTY, Subject, merge } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
-
 import { KbqCleaner } from './cleaner';
 import { KbqFormFieldControl } from './form-field-control';
 import {
     getKbqFormFieldMissingControlError,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
+    getKbqFormFieldYouCanNotUseCleanerInNumberInputError,
 } from './form-field-errors';
 import { KbqHint } from './hint';
-import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
+import { KbqPasswordHint, hasPasswordStrengthError } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
-
 
 let nextUniqueId = 0;
 
@@ -61,7 +59,7 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
         '../input/input.scss',
         '../timepicker/timepicker.scss',
         '../datepicker/datepicker-input.scss',
-        '../textarea/textarea.scss'
+        '../textarea/textarea.scss',
     ],
     host: {
         class: 'kbq-form-field',
@@ -84,18 +82,19 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
 
         '(keydown)': 'onKeyDown($event)',
         '(mouseenter)': 'onHoverChanged(true)',
-        '(mouseleave)': 'onHoverChanged(false)'
+        '(mouseleave)': 'onHoverChanged(false)',
     },
     inputs: ['color'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }
-    ]
+        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField },
+    ],
 })
-export class KbqFormField extends KbqFormFieldMixinBase implements
-    AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy {
-
+export class KbqFormField
+    extends KbqFormFieldMixinBase
+    implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy
+{
     @ContentChild(KbqFormFieldControl, { static: false }) control: KbqFormFieldControl<any>;
     @ContentChild(KbqStepper, { static: false }) stepper: KbqStepper;
     @ContentChild(KbqCleaner, { static: false }) cleaner: KbqCleaner | null;
@@ -146,8 +145,7 @@ export class KbqFormField extends KbqFormFieldMixinBase implements
     }
 
     get canShowCleaner(): boolean {
-        return this.hasCleaner &&
-        this.control?.ngControl
+        return this.hasCleaner && this.control?.ngControl
             ? this.control.ngControl.value && !this.control.disabled
             : false;
     }
@@ -157,15 +155,13 @@ export class KbqFormField extends KbqFormFieldMixinBase implements
     }
 
     get canShowStepper(): boolean {
-        return this.hasStepper &&
-            !this.disabled &&
-            (this.control?.focused || this.hovered);
+        return this.hasStepper && !this.disabled && (this.control?.focused || this.hovered);
     }
 
     constructor(
         public elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
+        private focusMonitor: FocusMonitor,
     ) {
         super(elementRef);
 
@@ -185,15 +181,13 @@ export class KbqFormField extends KbqFormFieldMixinBase implements
         }
 
         // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control.stateChanges
-            .pipe(startWith())
-            .subscribe((state: any) => {
-                if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                    this.control.ngControl?.control?.setErrors({ passwordStrength: true });
-                }
+        this.control.stateChanges.pipe(startWith()).subscribe((state: any) => {
+            if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
+                this.control.ngControl?.control?.setErrors({ passwordStrength: true });
+            }
 
-                this.changeDetectorRef.markForCheck();
-            });
+            this.changeDetectorRef.markForCheck();
+        });
 
         if (this.hasStepper) {
             this.stepper.connectTo((this.control as any).numberInput);
@@ -294,26 +288,27 @@ export class KbqFormField extends KbqFormFieldMixinBase implements
 @Directive({
     selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
     exportAs: 'kbqFormFieldWithoutBorders',
-    host: { class: 'kbq-form-field_without-borders' }
+    host: { class: 'kbq-form-field_without-borders' },
 })
 export class KbqFormFieldWithoutBorders {}
-
 
 @Directive({
     selector: '[kbqInput], [kbqTextarea]',
     exportAs: 'KbqTrim',
-    host: { class: 'kbq-trim' }
+    host: { class: 'kbq-trim' },
 })
 export class KbqTrim {
     private original: (fn: any) => void;
 
     constructor(
         @Attribute('no-trim') private readonly noTrim: boolean,
-        @Optional() @Self() private ngControl: NgControl
+        @Optional() @Self() private ngControl: NgControl,
     ) {
         this.noTrim = coerceBooleanProperty(noTrim);
 
-        if (this.noTrim || !this.ngControl?.valueAccessor) { return; }
+        if (this.noTrim || !this.ngControl?.valueAccessor) {
+            return;
+        }
 
         this.original = this.ngControl.valueAccessor.registerOnChange;
 
@@ -321,12 +316,14 @@ export class KbqTrim {
     }
 
     trim(value) {
-        if (this.noTrim) { return value; }
+        if (this.noTrim) {
+            return value;
+        }
 
         return typeof value === 'string' ? value.trim() : value;
     }
 
     private registerOnChange = (fn) => {
         return this.original.call(this.ngControl.valueAccessor, (value) => fn(this.trim(value)));
-    }
+    };
 }

@@ -1,7 +1,6 @@
 // tslint:disable:no-magic-numbers
 import { toBoolean } from '../utils';
 
-
 describe('[Core]::utils', () => {
     it('should work for null values', () => {
         expect(toBoolean(null)).toBe(false);

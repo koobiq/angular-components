@@ -5,22 +5,18 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
-
 import { LayoutFlexAlignmentExample } from './layout-flex-alignment/layout-flex-alignment-example';
-import {
-    LayoutFlexBehaviourModifiersExample
-} from './layout-flex-behaviour-modifiers/layout-flex-behaviour-modifiers-example';
+import { LayoutFlexBehaviourModifiersExample } from './layout-flex-behaviour-modifiers/layout-flex-behaviour-modifiers-example';
 import { LayoutFlexOffsetsExample } from './layout-flex-offsets/layout-flex-offsets-example';
 import { LayoutFlexOrderExample } from './layout-flex-order/layout-flex-order-example';
 import { LayoutFlexOverviewExample } from './layout-flex-overview/layout-flex-overview-example';
 
-
 export {
-    LayoutFlexOverviewExample,
     LayoutFlexAlignmentExample,
     LayoutFlexBehaviourModifiersExample,
     LayoutFlexOffsetsExample,
-    LayoutFlexOrderExample
+    LayoutFlexOrderExample,
+    LayoutFlexOverviewExample,
 };
 
 const EXAMPLES = [
@@ -28,7 +24,7 @@ const EXAMPLES = [
     LayoutFlexAlignmentExample,
     LayoutFlexBehaviourModifiersExample,
     LayoutFlexOffsetsExample,
-    LayoutFlexOrderExample
+    LayoutFlexOrderExample,
 ];
 
 @NgModule({
@@ -38,9 +34,9 @@ const EXAMPLES = [
         KbqRadioModule,
         KbqSelectModule,
         KbqFormFieldModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class FlexLayoutExamplesModule {}

@@ -1,7 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-
 import { koobiqVersion, koobiqVersionFull } from '../../version';
 import { NavbarProperty, NavbarPropertyParameters } from '../navbar/navbar-property';
 
@@ -10,9 +8,9 @@ import { NavbarProperty, NavbarPropertyParameters } from '../navbar/navbar-prope
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.scss'],
     host: {
-        class: 'docs-footer'
+        class: 'docs-footer',
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class FooterComponent {
     version = koobiqVersion;
@@ -35,24 +33,24 @@ export class FooterComponent {
                 name: 'Интерфейс',
                 value: 'Русский',
                 id: 'ru-RU',
-                selected: false
+                selected: false,
             },
             {
                 name: 'Interface',
                 value: 'English',
                 id: 'en-US',
-                selected: false
-            }
+                selected: false,
+            },
         ],
         updateTemplate: false,
-        updateSelected: true
+        updateSelected: true,
     };
 
     private examplesLanguageProperty: NavbarPropertyParameters = {
         property: 'docs_examples-language',
         data: [],
         updateTemplate: false,
-        updateSelected: true
+        updateSelected: true,
     };
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
@@ -61,7 +59,7 @@ export class FooterComponent {
             ...localeService.locales.items
                 // exclude fa-IR (DS-2219)
                 .filter((item) => item.id !== 'fa-IR')
-                .map((item) => ({ id: item.id, value: item.name, selected: false }))
+                .map((item) => ({ id: item.id, value: item.name, selected: false })),
         );
 
         this.docsLanguageSwitch = new NavbarProperty(this.docsLanguageProperty);

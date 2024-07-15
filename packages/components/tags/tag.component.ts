@@ -16,7 +16,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
@@ -25,16 +25,15 @@ import {
     CanColorCtor,
     CanDisable,
     CanDisableCtor,
+    KBQ_TITLE_TEXT_REF,
+    KbqComponentColors,
+    KbqTitleTextRef,
     mixinColor,
     mixinDisabled,
-    KBQ_TITLE_TEXT_REF,
-    KbqTitleTextRef,
-    KbqComponentColors
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 
 // tslint:disable-next-line:naming-convention
 export interface KbqTagEvent {
@@ -43,9 +42,12 @@ export interface KbqTagEvent {
 
 /** Event object emitted by KbqTag when selected or deselected. */
 export class KbqTagSelectionChange {
-    constructor(public source: KbqTag, public selected: boolean, public isUserInput = false) {}
+    constructor(
+        public source: KbqTag,
+        public selected: boolean,
+        public isUserInput = false,
+    ) {}
 }
-
 
 const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
 
@@ -55,7 +57,7 @@ const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
  */
 @Directive({
     selector: 'kbq-tag-avatar, [kbqTagAvatar]',
-    host: { class: 'kbq-tag-avatar' }
+    host: { class: 'kbq-tag-avatar' },
 })
 export class KbqTagAvatar {}
 
@@ -65,7 +67,7 @@ export class KbqTagAvatar {}
  */
 @Directive({
     selector: 'kbq-tag-trailing-icon, [kbqTagTrailingIcon]',
-    host: { class: 'kbq-tag-trailing-icon' }
+    host: { class: 'kbq-tag-trailing-icon' },
 })
 export class KbqTagTrailingIcon {}
 
@@ -75,9 +77,10 @@ export class KbqTagBase {
 }
 
 /** @docs-private */
-export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase =
-    mixinColor(mixinDisabled(KbqTagBase), KbqComponentColors.ContrastFade);
-
+export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase = mixinColor(
+    mixinDisabled(KbqTagBase),
+    KbqComponentColors.ContrastFade,
+);
 
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
@@ -101,14 +104,16 @@ export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase 
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'focus()',
-        '(blur)': 'blur()'
+        '(blur)': 'blur()',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
 })
-export class KbqTag extends KbqTagMixinBase
-    implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef {
+export class KbqTag
+    extends KbqTagMixinBase
+    implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef
+{
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
 
@@ -137,8 +142,7 @@ export class KbqTag extends KbqTagMixinBase
     @ContentChild(forwardRef(() => KbqTagRemove), { static: false }) removeIcon: KbqTagRemove;
 
     /** Emitted when the tag is selected or deselected. */
-    @Output() readonly selectionChange: EventEmitter<KbqTagSelectionChange> =
-        new EventEmitter<KbqTagSelectionChange>();
+    @Output() readonly selectionChange: EventEmitter<KbqTagSelectionChange> = new EventEmitter<KbqTagSelectionChange>();
 
     /** Emitted when the tag is destroyed. */
     @Output() readonly destroyed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
@@ -166,9 +170,7 @@ export class KbqTag extends KbqTagMixinBase
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     @Input()
     get value(): any {
-        return this._value !== undefined
-            ? this._value
-            : this.elementRef.nativeElement.textContent;
+        return this._value !== undefined ? this._value : this.elementRef.nativeElement.textContent;
     }
 
     set value(value: any) {
@@ -235,7 +237,7 @@ export class KbqTag extends KbqTagMixinBase
     constructor(
         public elementRef: ElementRef,
         public changeDetectorRef: ChangeDetectorRef,
-        private _ngZone: NgZone
+        private _ngZone: NgZone,
     ) {
         super(elementRef);
 
@@ -276,9 +278,9 @@ export class KbqTag extends KbqTagMixinBase
                 this.elementRef.nativeElement.hasAttribute(attr) ||
                 this.elementRef.nativeElement.tagName.toLowerCase() === attr
             ) {
-                    (this.elementRef.nativeElement as HTMLElement).classList.add(attr);
+                (this.elementRef.nativeElement as HTMLElement).classList.add(attr);
 
-                    return;
+                return;
             }
         }
         (this.elementRef.nativeElement as HTMLElement).classList.add('kbq-standard-tag');
@@ -318,7 +320,9 @@ export class KbqTag extends KbqTagMixinBase
 
     /** Allows for programmatic focusing of the tag. */
     focus(): void {
-        if (!this.selectable) { return; }
+        if (!this.selectable) {
+            return;
+        }
 
         if (!this.hasFocus) {
             this.elementRef.nativeElement.focus();
@@ -353,7 +357,9 @@ export class KbqTag extends KbqTagMixinBase
     }
 
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         // tslint:disable-next-line: deprecation
         switch (event.keyCode) {
@@ -397,7 +403,7 @@ export class KbqTag extends KbqTagMixinBase
         this.selectionChange.emit({
             source: this,
             isUserInput,
-            selected: this._selected
+            selected: this._selected,
         });
     }
 }
@@ -419,8 +425,8 @@ export class KbqTag extends KbqTagMixinBase
         class: 'kbq-tag-remove kbq-tag-trailing-icon',
         '[attr.tabindex]': '-1',
         '(click)': 'handleClick($event)',
-        '(focus)': 'focus($event)'
-    }
+        '(focus)': 'focus($event)',
+    },
 })
 export class KbqTagRemove {
     constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}

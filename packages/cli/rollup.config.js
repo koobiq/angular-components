@@ -6,7 +6,7 @@ const { terser } = require('rollup-plugin-terser');
 const path = require('path');
 const pckg = require('./package.json');
 
-const getRootPath = root => path.resolve(__dirname, '.', root, '.');
+const getRootPath = (root) => path.resolve(__dirname, '.', root, '.');
 
 const onwarn = (warning, warn) => {
     // typescript tslib
@@ -36,15 +36,15 @@ const external = [
     'chalk',
     'conventional-changelog',
     'conventional-changelog-core',
-    'conventional-changelog-angular'
+    'conventional-changelog-angular',
 ];
 
-const createPlugins = tsconfig => [
+const createPlugins = (tsconfig) => [
     json(),
     resolve(),
     commonjs(),
     typescript({ tsconfig, tsconfigOverride: { compilerOptions: { module: 'esnext' } } }),
-    terser()
+    terser(),
 ];
 
 module.exports = {
@@ -53,7 +53,7 @@ module.exports = {
     onwarn,
     external: [...external],
     watch: {
-        include: getRootPath('**')
+        include: getRootPath('**'),
     },
-    plugins: createPlugins(getRootPath('tsconfig.json'))
+    plugins: createPlugins(getRootPath('tsconfig.json')),
 };

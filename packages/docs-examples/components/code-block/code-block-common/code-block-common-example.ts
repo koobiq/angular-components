@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeTs = `class Greeter {
   @format("Hello, %s")
   greeting: string;
@@ -46,7 +45,6 @@ body {
     box-sizing:border-box;
 }`;
 
-
 /**
  * @title Basic code-block
  */
@@ -54,7 +52,7 @@ body {
     selector: 'code-block-common-example',
     templateUrl: 'code-block-common-example.html',
     styleUrls: ['code-block-common-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CodeBlockCommonExample {
     files: KbqCodeFile[];
@@ -65,18 +63,18 @@ export class CodeBlockCommonExample {
                 filename: 'HTML',
                 content: codeHTML,
                 language: 'html',
-                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.html'
+                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.html',
             },
             {
                 filename: 'TS',
                 content: codeTs,
-                language: 'typescript'
+                language: 'typescript',
             },
             {
                 filename: 'CSS',
                 content: codeCSS,
-                language: 'css'
-            }
+                language: 'css',
+            },
         ];
     }
 }

@@ -3,7 +3,6 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { switchMap, timer } from 'rxjs';
 
-
 /**
  * @title Toast Hide Strategies overview
  */
@@ -23,25 +22,30 @@ export class ToastHideOverviewExample {
         this.toastService.show({
             title: 'Доступно обновление агента',
             caption: 'Версия 2.03.15 от 15 мая 2022',
-            actions
+            actions,
         });
     }
 
     showPermanentToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
         this.progress = true;
-        const { ref } = this.toastService.show({
+        const { ref } = this.toastService.show(
+            {
                 title: 'Импорт файлов',
                 caption: '12,1 МБ из 85 МБ — осталось 15 мин  ',
                 closeButton: false,
                 content,
-                actions
-            }, 0);
-        timer(2000).pipe(
-            switchMap(() => {
-                this.progress = false;
-                return timer(550);
-            })
-        ).subscribe(() => ref.instance.close());
+                actions,
+            },
+            0,
+        );
+        timer(2000)
+            .pipe(
+                switchMap(() => {
+                    this.progress = false;
+                    return timer(550);
+                }),
+            )
+            .subscribe(() => ref.instance.close());
     }
 
     showWarningToast(actions: TemplateRef<any>) {

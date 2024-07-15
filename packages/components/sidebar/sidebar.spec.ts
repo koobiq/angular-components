@@ -4,9 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
-
 
 describe('Sidebar', () => {
     beforeEach(waitForAsync(() => {
@@ -15,9 +13,9 @@ describe('Sidebar', () => {
                 NoopAnimationsModule,
                 FormsModule,
                 ReactiveFormsModule,
-                KbqSidebarModule
+                KbqSidebarModule,
             ],
-            declarations: [SimpleSidebar]
+            declarations: [SimpleSidebar],
         });
 
         TestBed.compileComponents();
@@ -114,7 +112,6 @@ describe('Sidebar', () => {
     });
 });
 
-
 @Component({
     template: `
         <div *ngIf="showContainer">
@@ -122,12 +119,13 @@ describe('Sidebar', () => {
                 #sidebarRef="kbqSidebar"
                 [position]="position"
                 [opened]="state"
-                (stateChanged)="onStateChanged($event)">
+                (stateChanged)="onStateChanged($event)"
+            >
                 <div kbq-sidebar-opened>kbq-sidebar-opened</div>
                 <div kbq-sidebar-closed>kbq-sidebar-closed</div>
             </kbq-sidebar>
         </div>
-  `
+    `,
 })
 class SimpleSidebar {
     showContainer: boolean = true;

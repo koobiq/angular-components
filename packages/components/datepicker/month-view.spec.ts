@@ -4,10 +4,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateTime } from 'luxon';
-
 import { KbqCalendarBody } from './calendar-body.component';
 import { KbqMonthView } from './month-view.component';
-
 
 describe('KbqMonthView', () => {
     beforeEach(waitForAsync(() => {
@@ -20,8 +18,8 @@ describe('KbqMonthView', () => {
                 // Test components.
                 StandardMonthView,
                 MonthViewWithDateFilter,
-                MonthViewWithDateClass
-            ]
+                MonthViewWithDateClass,
+            ],
         });
 
         TestBed.compileComponents();
@@ -112,23 +110,18 @@ describe('KbqMonthView', () => {
             expect(cells[1].classList).toContain('even');
         });
     });
-
 });
 
-
 @Component({
-    template: `
-        <kbq-month-view [(activeDate)]="date" [(selected)]="selected"></kbq-month-view>`
+    template: ` <kbq-month-view [(activeDate)]="date" [(selected)]="selected"></kbq-month-view>`,
 })
 class StandardMonthView {
     date = DateTime.local(2017, 1, 5);
     selected = DateTime.local(2017, 1, 10);
 }
 
-
 @Component({
-    template: `
-        <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter"></kbq-month-view>`
+    template: ` <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter"></kbq-month-view>`,
 })
 class MonthViewWithDateFilter {
     activeDate = DateTime.local(2017, 1, 1);
@@ -139,8 +132,7 @@ class MonthViewWithDateFilter {
 }
 
 @Component({
-    template: `
-        <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass"></kbq-month-view>`
+    template: ` <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass"></kbq-month-view>`,
 })
 class MonthViewWithDateClass {
     activeDate = DateTime.local(2017, 1, 1);

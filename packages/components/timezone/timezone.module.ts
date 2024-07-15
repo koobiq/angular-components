@@ -7,13 +7,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneOptionTooltip } from './timezone-option.directive';
 import { KbqTimezoneSelect, KbqTimezoneSelectTrigger } from './timezone-select.component';
 import { UtcOffsetPipe } from './utc-offset.pipe';
-
 
 @NgModule({
     imports: [
@@ -25,7 +23,7 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqIconModule,
         KbqTagsModule,
         KbqToolTipModule,
-        KbqHighlightModule
+        KbqHighlightModule,
     ],
     declarations: [
         UtcOffsetPipe,
@@ -33,13 +31,13 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
-        KbqTimezoneSelectTrigger
+        KbqTimezoneSelectTrigger,
     ],
     exports: [
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
-        KbqTimezoneSelectTrigger
-    ]
+        KbqTimezoneSelectTrigger,
+    ],
 })
 export class KbqTimezoneModule {}

@@ -2,14 +2,12 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxonDateAdapter, KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
-
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerModule } from './datepicker-module';
-
 
 describe('KbqCalendarHeader', () => {
     let adapter: LuxonDateAdapter;
@@ -18,13 +16,13 @@ describe('KbqCalendarHeader', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
-                KbqDatepickerModule
+                KbqDatepickerModule,
             ],
             declarations: [StandardCalendar],
             providers: [
                 KbqDatepickerIntl,
-                { provide: DateAdapter, useClass: LuxonDateAdapter }
-            ]
+                { provide: DateAdapter, useClass: LuxonDateAdapter },
+            ],
         });
 
         TestBed.compileComponents();
@@ -74,13 +72,13 @@ describe('KbqCalendarHeader', () => {
 });
 
 @Component({
-    template: `
-        <kbq-calendar
-            [startAt]="startDate"
-            [(selected)]="selected"
-            (yearSelected)="selectedYear=$event"
-            (monthSelected)="selectedMonth=$event">
-        </kbq-calendar>`
+    template: ` <kbq-calendar
+        [startAt]="startDate"
+        [(selected)]="selected"
+        (yearSelected)="selectedYear = $event"
+        (monthSelected)="selectedMonth = $event"
+    >
+    </kbq-calendar>`,
 })
 class StandardCalendar {
     selected: DateTime;

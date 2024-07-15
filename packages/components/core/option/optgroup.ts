@@ -1,7 +1,5 @@
-import { Component, ViewEncapsulation, Input, ChangeDetectionStrategy } from '@angular/core';
-
-import { mixinDisabled, CanDisable, CanDisableCtor } from '../common-behaviors';
-
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { CanDisable, CanDisableCtor, mixinDisabled } from '../common-behaviors';
 
 /** @docs-private */
 export class KbqOptgroupBase {}
@@ -24,8 +22,8 @@ let uniqueOptgroupIdCounter = 0;
     inputs: ['disabled'],
     host: {
         class: 'kbq-optgroup',
-        '[class.kbq-disabled]': 'disabled'
-    }
+        '[class.kbq-disabled]': 'disabled',
+    },
 })
 export class KbqOptgroup extends KbqOptgroupMixinBase implements CanDisable {
     @Input() label: string;

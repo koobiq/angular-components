@@ -5,25 +5,23 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     protected readonly colors = KbqComponentColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
         KbqTableModule,
-        KbqButtonModule
+        KbqButtonModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

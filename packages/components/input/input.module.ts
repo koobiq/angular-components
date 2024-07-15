@@ -4,12 +4,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { KbqInput, KbqInputMono } from './input';
 import { KbqNumberInput } from './input-number';
 import { MaxValidator, MinValidator } from './input-number-validators';
 import { KbqInputPassword } from './input-password';
-
 
 @NgModule({
     imports: [
@@ -17,7 +15,7 @@ import { KbqInputPassword } from './input-password';
         A11yModule,
         KbqCommonModule,
         FormsModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: [
         KbqInput,
@@ -25,7 +23,7 @@ import { KbqInputPassword } from './input-password';
         KbqInputPassword,
         KbqInputMono,
         MinValidator,
-        MaxValidator
+        MaxValidator,
     ],
     exports: [
         KbqInput,
@@ -33,7 +31,7 @@ import { KbqInputPassword } from './input-password';
         KbqInputPassword,
         KbqInputMono,
         MinValidator,
-        MaxValidator
-    ]
+        MaxValidator,
+    ],
 })
 export class KbqInputModule {}

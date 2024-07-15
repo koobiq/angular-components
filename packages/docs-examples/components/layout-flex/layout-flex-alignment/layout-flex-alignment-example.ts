@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Flex layout
  */
@@ -8,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'layout-flex-alignment-example',
     templateUrl: 'layout-flex-alignment-example.html',
     styleUrls: ['layout-flex-alignment-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LayoutFlexAlignmentExample {
     layoutHorizontalAlignment: string = '-start';

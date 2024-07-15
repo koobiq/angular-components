@@ -3,12 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { KbqMarkdownService } from 'packages/components/markdown';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss']
+    styleUrls: ['../main.scss', './styles.scss'],
 })
 export class DemoComponent {
     markdownText: string = `
@@ -54,13 +53,12 @@ Please make sure to update tests as appropriate.
     }
 }
 
-
 @NgModule({
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
-        KbqMarkdownModule
+        KbqMarkdownModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

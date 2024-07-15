@@ -3,14 +3,13 @@ import { DateAdapter } from '@koobiq/components/core';
 import { TimeFormats } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
 
-
 /**
  * @title Timepicker overview
  */
 @Component({
     selector: 'timepicker-variations-example',
     templateUrl: 'timepicker-variations-example.html',
-    styleUrls: ['timepicker-variations-example.css']
+    styleUrls: ['timepicker-variations-example.css'],
 })
 export class TimepickerVariationsExample {
     value: DateTime;

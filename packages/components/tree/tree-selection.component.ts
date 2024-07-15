@@ -18,64 +18,71 @@ import {
     Optional,
     Output,
     QueryList,
-    ViewChild, ViewContainerRef,
-    ViewEncapsulation
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
+// tslint:disable-next-line:rxjs-no-internal
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import {
-    hasModifierKey,
+    DOWN_ARROW,
     END,
     ENTER,
+    hasModifierKey,
     HOME,
+    isCopy,
+    isSelectAll,
+    isVerticalMovement,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
     SPACE,
-    DOWN_ARROW,
-    UP_ARROW,
     TAB,
-    isCopy,
-    isSelectAll, isVerticalMovement
+    UP_ARROW,
 } from '@koobiq/cdk/keycodes';
-import {
-    CanDisable,
-    getKbqSelectNonArrayValueError,
-    HasTabIndex,
-    MultipleMode
-} from '@koobiq/components/core';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-// tslint:disable-next-line:rxjs-no-internal
+import { CanDisable, getKbqSelectNonArrayValueError, HasTabIndex, MultipleMode } from '@koobiq/components/core';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay, takeUntil } from 'rxjs/operators';
-
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeBase } from './tree-base';
 import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } from './tree-option.component';
 
-
 export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqTreeSelection),
-    multi: true
+    multi: true,
 };
 
 export class KbqTreeSelectAllEvent<T> {
-    constructor(public source: KbqTreeSelection, public options: T[]) {}
+    constructor(
+        public source: KbqTreeSelection,
+        public options: T[],
+    ) {}
 }
 
 export class KbqTreeCopyEvent<T> {
-    constructor(public source: KbqTreeSelection, public option: T) {}
+    constructor(
+        public source: KbqTreeSelection,
+        public option: T,
+    ) {}
 }
 
 export class KbqTreeNavigationChange<T> {
-    constructor(public source: KbqTreeSelection, public option: T) {}
+    constructor(
+        public source: KbqTreeSelection,
+        public option: T,
+    ) {}
 }
 
 export class KbqTreeSelectionChange<T> {
-    constructor(public source: KbqTreeSelection, public option: T) {}
+    constructor(
+        public source: KbqTreeSelection,
+        public option: T,
+    ) {}
 }
 
 // tslint:disable-next-line:naming-convention
@@ -83,7 +90,6 @@ interface SelectionModelOption {
     id: number | string;
     value: string;
 }
-
 
 @Component({
     selector: 'kbq-tree-selection',
@@ -100,19 +106,20 @@ interface SelectionModelOption {
         '(focus)': 'focus($event)',
 
         '(keydown)': 'onKeyDown($event)',
-        '(window:resize)': 'updateScrollSize()'
+        '(window:resize)': 'updateScrollSize()',
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         KBQ_SELECTION_TREE_VALUE_ACCESSOR,
         { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
-    ]
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection },
+    ],
 })
-export class KbqTreeSelection extends KbqTreeBase<any>
-    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex {
-
+export class KbqTreeSelection
+    extends KbqTreeBase<any>
+    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex
+{
     renderedOptions = new QueryList<KbqTreeOption>();
 
     keyManager: FocusKeyManager<KbqTreeOption>;
@@ -226,7 +233,7 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         differs: IterableDiffers,
         changeDetectorRef: ChangeDetectorRef,
         @Attribute('multiple') multiple: MultipleMode,
-        @Optional() private clipboard: Clipboard
+        @Optional() private clipboard: Clipboard,
     ) {
         super(differs, changeDetectorRef);
 
@@ -245,61 +252,49 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     ngAfterContentInit(): void {
-        this.unorderedOptions.changes
-            .subscribe(this.updateRenderedOptions);
+        this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)
             .withHorizontalOrientation(null);
 
-        this.keyManager.change
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => {
-                if (this.keyManager.activeItem) {
-                    this.emitNavigationEvent(this.keyManager.activeItem);
+        this.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+            if (this.keyManager.activeItem) {
+                this.emitNavigationEvent(this.keyManager.activeItem);
 
-                    // todo need check this logic
-                    if (this.autoSelect && !this.keyManager.activeItem.disabled) {
-                        this.updateOptionsFocus();
-                    }
+                // todo need check this logic
+                if (this.autoSelect && !this.keyManager.activeItem.disabled) {
+                    this.updateOptionsFocus();
                 }
+            }
+        });
+
+        this.keyManager.tabOut.pipe(takeUntil(this.destroy)).subscribe(() => this.allowFocusEscape());
+
+        this.selectionModel.changed.pipe(takeUntil(this.destroy)).subscribe(() => {
+            this.onChange(this.getSelectedValues());
+
+            this.renderedOptions.notifyOnChanges();
+        });
+
+        this.renderedOptions.changes.pipe(takeUntil(this.destroy), delay(0, this.scheduler)).subscribe((options) => {
+            this.resetOptions();
+
+            // Check to see if we need to update our tab index
+            this.updateTabIndex();
+
+            const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
+
+            options.forEach((option) => {
+                if (selectedValues.includes(option.value)) {
+                    option.select(false);
+                } else {
+                    option.deselect();
+                }
+
+                option.markForCheck();
             });
-
-        this.keyManager.tabOut
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => this.allowFocusEscape());
-
-        this.selectionModel.changed
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => {
-                this.onChange(this.getSelectedValues());
-
-                this.renderedOptions.notifyOnChanges();
-            });
-
-        this.renderedOptions.changes
-            .pipe(
-                takeUntil(this.destroy),
-                delay(0, this.scheduler)
-            )
-            .subscribe((options) => {
-                this.resetOptions();
-
-                // Check to see if we need to update our tab index
-                this.updateTabIndex();
-
-                const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
-
-                options.forEach((option) => {
-                    if (selectedValues.includes(option.value)) {
-                        option.select(false);
-                    } else {
-                        option.deselect();
-                    }
-
-                    option.markForCheck();
-                });
-            });
+        });
     }
 
     ngOnDestroy(): void {
@@ -310,7 +305,9 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     focus($event): void {
-        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption($event)) { return; }
+        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption($event)) {
+            return;
+        }
 
         this.keyManager.setFocusOrigin('keyboard');
         this.keyManager.setFirstItemActive();
@@ -382,13 +379,17 @@ export class KbqTreeSelection extends KbqTreeBase<any>
 
         if (this.keyManager.activeItem && isVerticalMovement(event)) {
             this.setSelectedOptionsByKey(
-                this.keyManager.activeItem, hasModifierKey(event, 'shiftKey'), hasModifierKey(event, 'ctrlKey')
+                this.keyManager.activeItem,
+                hasModifierKey(event, 'shiftKey'),
+                hasModifierKey(event, 'ctrlKey'),
             );
         }
     }
 
     updateScrollSize(): void {
-        if (!this.renderedOptions.first) { return; }
+        if (!this.renderedOptions.first) {
+            return;
+        }
 
         this.keyManager.withScrollSize(Math.floor(this.getHeight() / this.renderedOptions.first.getHeight()));
     }
@@ -399,7 +400,9 @@ export class KbqTreeSelection extends KbqTreeBase<any>
 
             this.emitChangeEvent(option);
         } else if (ctrlKey) {
-            if (!this.canDeselectLast(option)) { return; }
+            if (!this.canDeselectLast(option)) {
+                return;
+            }
         } else if (this.autoSelect) {
             this.selectionModel.clear();
             this.selectionModel.toggle(option.data);
@@ -416,7 +419,9 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
         } else if (ctrlKey) {
-            if (!this.canDeselectLast(option)) { return; }
+            if (!this.canDeselectLast(option)) {
+                return;
+            }
             this.selectionModel.toggle(option.data);
             this.keyManager.setActiveItem(option);
         } else if (this.autoSelect) {
@@ -433,7 +438,7 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         const options = this.renderedOptions.toArray();
 
         let fromIndex = this.keyManager.previousActiveItemIndex;
-        let toIndex = this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex;
+        let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
 
         const selectedOptionState = options[fromIndex]?.selected;
 
@@ -476,7 +481,7 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         data: KbqTreeOption[],
         dataDiffer: IterableDiffer<KbqTreeOption> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
-        parentData?: KbqTreeOption
+        parentData?: KbqTreeOption,
     ): void {
         super.renderNodeChanges(data, dataDiffer, viewContainer, parentData);
 
@@ -494,19 +499,19 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     selectAllOptions(): void {
-        const optionsToSelect = this.renderedOptions
-            .filter((option) => !option.disabled);
+        const optionsToSelect = this.renderedOptions.filter((option) => !option.disabled);
 
         const hasDeselectedOptions = optionsToSelect.some((option) => !option.selected);
 
-        optionsToSelect
-            .forEach((option) => option.setSelected(hasDeselectedOptions));
+        optionsToSelect.forEach((option) => option.setSelected(hasDeselectedOptions));
 
         this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, optionsToSelect));
     }
 
     copyActiveOption(): void {
-        if (!this.keyManager.activeItem) { return; }
+        if (!this.keyManager.activeItem) {
+            return;
+        }
 
         const option = this.keyManager.activeItem;
 
@@ -558,12 +563,9 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     setOptionsFromValues(values: any[]): void {
         this.selectionModel.clear();
 
-        const valuesToSelect = values.reduce(
-            (result, value) => {
-                return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
-            },
-            []
-        );
+        const valuesToSelect = values.reduce((result, value) => {
+            return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
+        }, []);
 
         this.selectionModel.select(...valuesToSelect);
     }
@@ -621,7 +623,7 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         this.renderedOptions.notifyOnChanges();
 
         this.updateScrollSize();
-    }
+    };
 
     private getSortedNodes(viewContainer: ViewContainerRef) {
         const array: KbqTreeOption[] = [];
@@ -664,21 +666,17 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges
-            .subscribe((event) => {
-                const index: number = this.renderedOptions.toArray().indexOf(event.option as KbqTreeOption);
+        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
+            const index: number = this.renderedOptions.toArray().indexOf(event.option as KbqTreeOption);
 
-                this.renderedOptions
-                    .filter((option) => option.hasFocus)
-                    .forEach((option) => option.hasFocus = false);
+            this.renderedOptions.filter((option) => option.hasFocus).forEach((option) => (option.hasFocus = false));
 
-                if (this.isValidIndex(index)) {
-                    this.keyManager.updateActiveItem(index);
-                }
-            });
+            if (this.isValidIndex(index)) {
+                this.keyManager.updateActiveItem(index);
+            }
+        });
 
-        this.optionBlurSubscription = this.optionBlurChanges
-            .subscribe(() => this.blur());
+        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
     }
 
     /**
@@ -700,9 +698,7 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     private updateOptionsFocus() {
-        this.renderedOptions
-            .filter((option) => option.hasFocus)
-            .forEach((option) => option.hasFocus = false);
+        this.renderedOptions.filter((option) => option.hasFocus).forEach((option) => (option.hasFocus = false));
     }
 
     private canDeselectLast(option: KbqTreeOption): boolean {
@@ -710,7 +706,9 @@ export class KbqTreeSelection extends KbqTreeBase<any>
     }
 
     private isFocusReceivedFromNestedOption($event: FocusEvent) {
-        if (!$event || !$event.relatedTarget) { return false; }
+        if (!$event || !$event.relatedTarget) {
+            return false;
+        }
 
         return ($event.relatedTarget as HTMLElement).classList.contains('kbq-tree-option');
     }

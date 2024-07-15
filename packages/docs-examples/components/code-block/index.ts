@@ -5,7 +5,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
 import { CodeBlockCommonExample } from './code-block-common/code-block-common-example';
 import { CodeBlockCutExample } from './code-block-cut/code-block-cut-example';
 import { CodeBlockLineNumbersExample } from './code-block-line-numbers/code-block-line-numbers-example';
@@ -18,19 +17,18 @@ import { CodeBlockTabsWithOverflowExample } from './code-block-tabs-with-overflo
 import { CodeBlockTabsExample } from './code-block-tabs/code-block-tabs-example';
 import { CodeBlockTitleExample } from './code-block-title/code-block-title-example';
 
-
 export {
     CodeBlockCommonExample,
-    CodeBlockStretchExample,
-    CodeBlockSingleLineExample,
+    CodeBlockCutExample,
+    CodeBlockLineNumbersExample,
     CodeBlockLineWrapExample,
+    CodeBlockNoborderExample,
+    CodeBlockSingleLineExample,
+    CodeBlockStretchExample,
+    CodeBlockStylingExample,
     CodeBlockTabsExample,
     CodeBlockTabsWithOverflowExample,
     CodeBlockTitleExample,
-    CodeBlockCutExample,
-    CodeBlockStylingExample,
-    CodeBlockNoborderExample,
-    CodeBlockLineNumbersExample
 };
 
 const EXAMPLES = [
@@ -44,7 +42,7 @@ const EXAMPLES = [
     CodeBlockCutExample,
     CodeBlockStylingExample,
     CodeBlockNoborderExample,
-    CodeBlockLineNumbersExample
+    CodeBlockLineNumbersExample,
 ];
 
 @NgModule({
@@ -54,9 +52,9 @@ const EXAMPLES = [
         KbqToggleModule,
         KbqButtonModule,
         KbqSidepanelModule,
-        FormsModule
+        FormsModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class CodeBlockExamplesModule {}

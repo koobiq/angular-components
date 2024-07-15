@@ -6,17 +6,15 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     value = '';
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -25,8 +23,8 @@ export class DemoComponent {
         FormsModule,
         KbqInputModule,
         KbqFormFieldModule,
-        KbqFormsModule
+        KbqFormsModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

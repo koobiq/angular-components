@@ -5,22 +5,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTimezoneModule } from '@koobiq/components/timezone';
-
 import { TimezoneOverviewExample } from './timezone-overview/timezone-overview-example';
 import { TimezoneSearchOverviewExample } from './timezone-search-overview/timezone-search-overview-example';
 import { TimezoneTriggerOverviewExample } from './timezone-trigger-overview/timezone-trigger-overview-example';
 
-
-export {
-    TimezoneOverviewExample,
-    TimezoneSearchOverviewExample,
-    TimezoneTriggerOverviewExample
-};
+export { TimezoneOverviewExample, TimezoneSearchOverviewExample, TimezoneTriggerOverviewExample };
 
 const EXAMPLES = [
     TimezoneOverviewExample,
     TimezoneSearchOverviewExample,
-    TimezoneTriggerOverviewExample
+    TimezoneTriggerOverviewExample,
 ];
 
 @NgModule({
@@ -31,9 +25,9 @@ const EXAMPLES = [
         KbqTimezoneModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class TimezoneExamplesModule {}

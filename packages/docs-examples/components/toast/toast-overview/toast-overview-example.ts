@@ -2,7 +2,6 @@
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
-
 /**
  * @title Basic Toast
  */
@@ -10,7 +9,7 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
     selector: 'toast-overview-example',
     templateUrl: 'toast-overview-example.html',
     styleUrls: ['toast-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ToastOverviewExample {
     constructor(private toastService: KbqToastService) {}
@@ -21,7 +20,7 @@ export class ToastOverviewExample {
             title: 'Доступно обновление агента',
             caption: 'Версия 2.03.15 от 15 мая 2022',
             actions,
-            closeButton: true
+            closeButton: true,
         });
     }
 }

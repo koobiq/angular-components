@@ -6,10 +6,9 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeOption,
-    KbqTreeSelection
+    KbqTreeSelection,
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange } from '@koobiq/components/tree-select';
-
 
 export class FileNode {
     children: FileNode[];
@@ -62,17 +61,17 @@ export const DATA_OBJECT = {
                     'aria-describer': 'ts',
                     'aria-describer.spec': 'ts',
                     'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts'
+                    'aria-reference.spec': 'ts',
                 },
                 'focus monitor': {
                     'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts'
-                }
-            }
+                    'focus-monitor.spec': 'ts',
+                },
+            },
         },
         documentation: {
             source: '',
-            tools: ''
+            tools: '',
         },
         mosaic: {
             autocomplete: '',
@@ -80,28 +79,28 @@ export const DATA_OBJECT = {
             'button-toggle': '',
             index: 'ts',
             package: 'json',
-            version: 'ts'
+            version: 'ts',
         },
         'components-dev': {
             alert: '',
-            badge: ''
+            badge: '',
         },
         'koobiq-examples': '',
         'koobiq-moment-adapter': '',
         README: 'md',
         'tsconfig.build': 'json',
-        wallabyTest: 'ts'
+        wallabyTest: 'ts',
     },
     scripts: {
         deploy: {
             'cleanup-preview': 'ts',
             'publish-artifacts': 'sh',
             'publish-docs': 'sh',
-            'publish-docs-preview': 'ts'
+            'publish-docs-preview': 'ts',
         },
-        'tsconfig.deploy': 'json'
+        'tsconfig.deploy': 'json',
     },
-    tests: ''
+    tests: '',
 };
 
 /**
@@ -111,7 +110,7 @@ export const DATA_OBJECT = {
     selector: 'tree-select-child-selection-overview-example',
     templateUrl: 'tree-select-child-selection-overview-example.html',
     styleUrls: ['tree-select-child-selection-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TreeSelectChildSelectionOverviewExample {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
@@ -127,12 +126,13 @@ export class TreeSelectChildSelectionOverviewExample {
     @ViewChild(KbqTreeSelection) selection: KbqTreeSelection;
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
@@ -153,7 +153,9 @@ export class TreeSelectChildSelectionOverviewExample {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select.selectionModel.selected.includes(parent);
@@ -177,25 +179,25 @@ export class TreeSelectChildSelectionOverviewExample {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 }

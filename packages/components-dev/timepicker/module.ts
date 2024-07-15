@@ -1,17 +1,13 @@
 /* tslint:disable:no-magic-numbers */
-import {
-    Component, Inject,
-    NgModule,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    ValidatorFn
+    ValidatorFn,
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +20,6 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 
-
 export function customValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => ({ customValidator: { value: control.value } });
 }
@@ -33,7 +28,7 @@ export function customValidator(): ValidatorFn {
     selector: 'app',
     styleUrls: ['../main.scss', 'styles.scss'],
     templateUrl: 'template.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TimepickerDemoComponent {
     TimeFormats = TimeFormats;
@@ -56,11 +51,11 @@ export class TimepickerDemoComponent {
     constructor(
         private fb: UntypedFormBuilder,
         private adapter: DateAdapter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
+        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService,
     ) {
-
         this.languageList = this.localeService.locales.items;
-        this.selectedLanguage = this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
+        this.selectedLanguage =
+            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
 
         this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
         this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 10, 0);
@@ -70,7 +65,7 @@ export class TimepickerDemoComponent {
         this.ngModelValue = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
 
         this.testForm = this.fb.group({
-            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 10, 0)]
+            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 10, 0)],
         });
 
         this.reactiveFormControlValue.valueChanges.subscribe((value) => {
@@ -109,9 +104,8 @@ export class TimepickerDemoComponent {
         KbqLuxonDateModule,
         ReactiveFormsModule,
         KbqRadioModule,
-        KbqLocaleServiceModule
+        KbqLocaleServiceModule,
     ],
-    bootstrap: [TimepickerDemoComponent]
+    bootstrap: [TimepickerDemoComponent],
 })
 export class DemoModule {}
-

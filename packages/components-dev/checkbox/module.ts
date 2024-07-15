@@ -4,16 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqPseudoCheckboxModule, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-
 import { KbqCheckboxModule } from '../../components/checkbox';
-
 
 /* tslint:disable:no-trailing-whitespace */
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -35,8 +33,8 @@ export class DemoComponent {
         FormsModule,
         KbqFormFieldModule,
         KbqCheckboxModule,
-        KbqPseudoCheckboxModule
+        KbqPseudoCheckboxModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

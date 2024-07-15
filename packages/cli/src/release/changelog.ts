@@ -3,19 +3,17 @@
 /* tslint:disable:import-name*/
 import chalk from 'chalk';
 import conventionalChangelog from 'conventional-changelog';
+import { createReadStream, createWriteStream, readFileSync } from 'fs';
+import { join } from 'path';
+import { Readable } from 'stream';
 // @ts-ignore
 import writerOpts from 'conventional-changelog-angular/writer-opts.js';
 // @ts-ignore
 import * as changelogCompare from 'conventional-changelog-writer/lib/util.js';
-import { createReadStream, createWriteStream, readFileSync } from 'fs';
 import inquirer from 'inquirer';
 // tslint:disable-next-line:match-default-export-name
 import merge2 from 'merge2';
-import { join } from 'path';
-import { Readable } from 'stream';
-
 import { IReleaseTaskConfig } from './base-release-task';
-
 
 const { yellow, bold } = chalk;
 const { prompt } = inquirer;
@@ -26,7 +24,7 @@ const { prompt } = inquirer;
  */
 const enum CommitNote {
     Deprecation = 'DEPRECATED',
-    BreakingChange = 'BREAKING CHANGE'
+    BreakingChange = 'BREAKING CHANGE',
 }
 
 /** Interface that describes a package in the changelog. */
@@ -43,7 +41,6 @@ export async function promptAndGenerateChangelog(changelogPath: string, config: 
     await prependChangelogFromLatestTag(changelogPath, releaseName, config);
 }
 
-
 /**
  * Writes the changelog from the latest Semver tag to the current HEAD.
  * @param changelogPath Path to the changelog file.
@@ -53,25 +50,26 @@ export async function promptAndGenerateChangelog(changelogPath: string, config: 
 export async function prependChangelogFromLatestTag(
     changelogPath: string,
     releaseName: string,
-    config: IReleaseTaskConfig
+    config: IReleaseTaskConfig,
 ) {
     const angularPresetWriterOptions = await writerOpts;
     const outputStream: Readable = conventionalChangelog(
         {
             preset: 'angular',
             pkg: {
-                path: join(config.projectDir, 'package.json')
-            }
+                path: join(config.projectDir, 'package.json'),
+            },
         } /* core options */,
-        { title: releaseName }, /* context options */
+        { title: releaseName } /* context options */,
         undefined,
-        {   /* commit parser options */
+        {
+            /* commit parser options */
             // Expansion of the convention-changelog-angular preset to extract the package
             // name from the commit message.
             headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
-            headerCorrespondence: ['type', 'package', 'scope', 'subject']
+            headerCorrespondence: ['type', 'package', 'scope', 'subject'],
         },
-        createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, config) /* writer options */
+        createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, config) /* writer options */,
     );
 
     // Stream for reading the existing changelog. This is necessary because we want to
@@ -89,21 +87,23 @@ export async function prependChangelogFromLatestTag(
         // Wait for the previous changelog to be completely read because otherwise we would
         // read and write from the same source which causes the content to be thrown off.
         previousChangelogStream.on('end', () => {
-            mergedCompleteChangelog.pipe(createWriteStream(changelogPath))
+            mergedCompleteChangelog
+                .pipe(createWriteStream(changelogPath))
                 .once('error', reject)
                 .once('finish', resolve);
         });
-
     });
 }
 
 /** Prompts the terminal for a changelog release name. */
 export async function promptChangelogReleaseName(): Promise<string> {
-    return (await prompt<{releaseName: string}>({
-        type: 'input',
-        name: 'releaseName',
-        message: 'What should be the name of the release?'
-    })).releaseName;
+    return (
+        await prompt<{ releaseName: string }>({
+            type: 'input',
+            name: 'releaseName',
+            message: 'What should be the name of the release?',
+        })
+    ).releaseName;
 }
 
 // tslint:disable-next-line:max-func-body-length
@@ -122,7 +122,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
         // because the Angular preset changes every commit note to a breaking change note. Since we
         // have a custom note type for deprecations, we need to keep track of the original type.
         transform: (commit: any, context: any) => {
-            commit.notes.forEach((n: any) => n.type = n.title);
+            commit.notes.forEach((n: any) => (n.type = n.title));
 
             return presetWriterOptions.transform(commit, context);
         },
@@ -131,7 +131,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
         // See: conventional-changelog/tree/master/packages/conventional-changelog-writer
         finalizeContext: (context: any) => {
             const packageNames = context.packageData.release.packages.map((path: string) => path.split('/').pop());
-            const packageGroups: {[packageName: string]: IChangelogPackage} = {};
+            const packageGroups: { [packageName: string]: IChangelogPackage } = {};
 
             context.commitGroups.forEach((group: any) => {
                 group.commits.forEach((commit: any) => {
@@ -158,7 +158,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     const type = getTypeOfCommitGroupDescription(group.title);
 
                     if (!packageGroups[packageName]) {
-                        packageGroups[packageName] = {commits: [], breakingChanges: [], deprecations: []};
+                        packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
                     }
 
                     const packageGroup = packageGroups[packageName];
@@ -176,25 +176,21 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     });
 
                     if (typeof commit.subject === 'string') {
-
                         if (context.packageData.bugs.url) {
                             const urlIssue = `${context.packageData.bugs.url}/issue/`;
                             commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
-
                                 return `[#${issue}](${urlIssue}${issue})`;
                             });
                         }
                     }
 
-                    packageGroup.commits.push({...commit, type});
+                    packageGroup.commits.push({ ...commit, type });
 
                     return;
                 });
             });
 
-            const sortedPackageGroupNames = Object
-                .keys(packageGroups)
-                .sort(preferredOrderComparator(packageNames));
+            const sortedPackageGroupNames = Object.keys(packageGroups).sort(preferredOrderComparator(packageNames));
 
             context.linkReferences = !config.withoutReferences;
             context.packageGroups = sortedPackageGroupNames.map((pkgName) => {
@@ -205,12 +201,12 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     title: preparePackageName(pkgName),
                     commits: packageGroup.commits.sort(commitSortFunction),
                     breakingChanges: packageGroup.breakingChanges,
-                    deprecations: packageGroup.deprecations
+                    deprecations: packageGroup.deprecations,
                 };
             });
 
             return context;
-        }
+        },
     };
 }
 
@@ -258,8 +254,6 @@ function getTypeOfCommitGroupDescription(description: string): string {
 function preparePackageName(name: string): string {
     return name
         .split('-')
-        .map((part) => (
-            `${part.charAt(0).toUpperCase()}${part.slice(1)}`
-        ))
+        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
         .join(' ');
 }

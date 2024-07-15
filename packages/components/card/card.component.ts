@@ -1,17 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    Output,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    EventEmitter,
     Input,
     OnDestroy,
-    EventEmitter,
-    ViewEncapsulation
+    Output,
+    ViewEncapsulation,
 } from '@angular/core';
 import { SPACE } from '@koobiq/cdk/keycodes';
 import { CanColorCtor, mixinColor } from '@koobiq/components/core';
-
 
 /** @docs-private */
 export class KbqCardBase {
@@ -20,7 +19,6 @@ export class KbqCardBase {
 
 /** @docs-private */
 export const KbqCardBaseMixin: CanColorCtor & typeof KbqCardBase = mixinColor(KbqCardBase);
-
 
 @Component({
     selector: 'kbq-card',
@@ -35,8 +33,8 @@ export const KbqCardBaseMixin: CanColorCtor & typeof KbqCardBase = mixinColor(Kb
         '[class.kbq-selected]': 'selected',
         '[attr.tabindex]': 'tabIndex',
         '(keydown)': 'onKeyDown($event)',
-        '(click)': 'onClick($event)'
-    }
+        '(click)': 'onClick($event)',
+    },
 })
 export class KbqCard extends KbqCardBaseMixin implements OnDestroy {
     @Input()
@@ -59,7 +57,10 @@ export class KbqCard extends KbqCardBaseMixin implements OnDestroy {
 
     private _tabIndex: number | null = 0;
 
-    constructor(elementRef: ElementRef, private _focusMonitor: FocusMonitor) {
+    constructor(
+        elementRef: ElementRef,
+        private _focusMonitor: FocusMonitor,
+    ) {
         super(elementRef);
 
         this._focusMonitor.monitor(this.elementRef.nativeElement, false);

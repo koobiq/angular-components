@@ -1,22 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
-
+import { SplitterDynamicDataExample } from './splitter-dynamic-data/splitter-dynamic-data-example';
 import { SplitterFixedExample } from './splitter-fixed/splitter-fixed-example';
 import { SplitterNestedExample } from './splitter-nested/splitter-nested-example';
 import { SplitterOverviewExample } from './splitter-overview/splitter-overview-example';
 import { SplitterVerticalExample } from './splitter-vertical/splitter-vertical-example';
-import { SplitterDynamicDataExample } from './splitter-dynamic-data/splitter-dynamic-data-example';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { CommonModule } from '@angular/common';
-
 
 export {
-    SplitterOverviewExample,
+    SplitterDynamicDataExample,
     SplitterFixedExample,
-    SplitterVerticalExample,
     SplitterNestedExample,
-    SplitterDynamicDataExample
+    SplitterOverviewExample,
+    SplitterVerticalExample,
 };
 
 const EXAMPLES = [
@@ -24,7 +22,7 @@ const EXAMPLES = [
     SplitterFixedExample,
     SplitterVerticalExample,
     SplitterNestedExample,
-    SplitterDynamicDataExample
+    SplitterDynamicDataExample,
 ];
 
 @NgModule({
@@ -32,9 +30,9 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqSplitterModule,
-        KbqButtonModule
+        KbqButtonModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class SplitterExamplesModule {}

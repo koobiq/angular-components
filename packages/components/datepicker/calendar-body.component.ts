@@ -4,12 +4,11 @@ import {
     Component,
     EventEmitter,
     Input,
-    Output,
-    ViewEncapsulation,
     OnChanges,
-    SimpleChanges
+    Output,
+    SimpleChanges,
+    ViewEncapsulation,
 } from '@angular/core';
-
 
 /**
  * Extra CSS classes that can be associated with a calendar cell.
@@ -25,10 +24,9 @@ export class KbqCalendarCell {
         public value: number,
         public displayValue: string,
         public enabled: boolean,
-        public cssClasses?: KbqCalendarCellCssClasses
+        public cssClasses?: KbqCalendarCellCssClasses,
     ) {}
 }
-
 
 /**
  * An internal component used to display calendar data in a table.
@@ -40,10 +38,10 @@ export class KbqCalendarCell {
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
     host: {
-        class: 'kbq-calendar__body'
+        class: 'kbq-calendar__body',
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */

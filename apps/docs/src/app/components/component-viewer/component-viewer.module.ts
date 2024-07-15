@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -10,7 +9,6 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { CopyButtonModule } from 'src/app/components/copy-button/copy-button';
-
 import { AnchorsModule } from '../anchors/anchors.module';
 import { DocExampleViewerModule } from '../doc-example-viewer/doc-example-viewer-module';
 import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
@@ -24,7 +22,7 @@ import {
     ComponentApiComponent,
     ComponentExamplesComponent,
     ComponentOverviewComponent,
-    ComponentViewerComponent
+    ComponentViewerComponent,
 } from './component-viewer.component';
 
 @NgModule({
@@ -44,7 +42,7 @@ import {
         SidenavModule,
         NavbarModule,
         KbqIconModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
     declarations: [
         ComponentViewerComponent,
@@ -54,8 +52,8 @@ import {
         ComponentExamplesComponent,
 
         CdkOverviewComponent,
-        CdkApiComponent
+        CdkApiComponent,
     ],
-    providers: [DocumentationItems, KbqSidepanelService]
+    providers: [DocumentationItems, KbqSidepanelService],
 })
 export class ComponentViewerModule {}

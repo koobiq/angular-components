@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { ButtonContentExample } from './button-content/button-content-example';
 import { ButtonFillAndStyleExample } from './button-fill-and-style/button-fill-and-style-example';
 import { ButtonFillContentExample } from './button-fill-content/button-fill-content-example';
@@ -12,15 +11,14 @@ import { ButtonHugContentExample } from './button-hug-content/button-hug-content
 import { ButtonLoadingStateExample } from './button-loading-state/button-loading-state-example';
 import { ButtonOverviewExample } from './button-overview/button-overview-example';
 
-
 export {
-    ButtonOverviewExample,
-    ButtonFillAndStyleExample,
     ButtonContentExample,
+    ButtonFillAndStyleExample,
     ButtonFillContentExample,
     ButtonFixedContentExample,
     ButtonHugContentExample,
-    ButtonLoadingStateExample
+    ButtonLoadingStateExample,
+    ButtonOverviewExample,
 };
 
 const EXAMPLES = [
@@ -30,7 +28,7 @@ const EXAMPLES = [
     ButtonFillContentExample,
     ButtonFixedContentExample,
     ButtonHugContentExample,
-    ButtonLoadingStateExample
+    ButtonLoadingStateExample,
 ];
 
 @NgModule({
@@ -38,9 +36,9 @@ const EXAMPLES = [
         FormsModule,
         KbqButtonModule,
         KbqCheckboxModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class ButtonExamplesModule {}

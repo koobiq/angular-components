@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
-
 /**
  * @title Timepicker range
  */
 @Component({
     selector: 'timepicker-range-example',
     templateUrl: 'timepicker-range-example.html',
-    styleUrls: ['timepicker-range-example.css']
+    styleUrls: ['timepicker-range-example.css'],
 })
 export class TimepickerRangeExample {
     format = 'HH:mm:ss';

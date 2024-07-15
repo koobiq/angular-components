@@ -1,41 +1,40 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChildren,
     Directive,
     ElementRef,
-    OnDestroy,
-    ViewEncapsulation,
-    Renderer2,
-    QueryList,
-    ContentChildren,
-    AfterContentInit,
-    SkipSelf,
+    forwardRef,
     Input,
-    forwardRef, ViewChild
+    OnDestroy,
+    QueryList,
+    Renderer2,
+    SkipSelf,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
-    mixinColor,
-    mixinTabIndex,
     CanColor,
-    CanDisable,
     CanColorCtor,
+    CanDisable,
     HasTabIndexCtor,
+    KBQ_TITLE_TEXT_REF,
     KbqComponentColors,
     KbqTitleTextRef,
-    KBQ_TITLE_TEXT_REF,
+    mixinColor,
+    mixinTabIndex,
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-
 
 export enum KbqButtonStyles {
     Filled = 'filled',
     Outline = 'outline',
-    Transparent = 'transparent'
+    Transparent = 'transparent',
 }
-
 
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';
@@ -53,17 +52,21 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     selector: '[kbq-button]',
     host: {
         '[class.kbq-button]': '!isIconButton',
-        '[class.kbq-button-icon]': 'isIconButton'
-    }
+        '[class.kbq-button-icon]': 'isIconButton',
+    },
 })
 export class KbqButtonCssStyler implements AfterContentInit {
-    @ContentChildren((forwardRef(() => KbqIcon))) icons: QueryList<KbqIcon>;
+    @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
 
     nativeElement: HTMLElement;
 
     isIconButton: boolean = false;
 
-    constructor(elementRef: ElementRef, private renderer: Renderer2, @SkipSelf() private cdr: ChangeDetectorRef) {
+    constructor(
+        elementRef: ElementRef,
+        private renderer: Renderer2,
+        @SkipSelf() private cdr: ChangeDetectorRef,
+    ) {
         this.nativeElement = elementRef.nativeElement;
     }
 
@@ -74,7 +77,8 @@ export class KbqButtonCssStyler implements AfterContentInit {
     updateClassModifierForIcons() {
         this.renderer.removeClass(this.nativeElement, buttonLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, buttonRightIconClassName);
-        this.icons.map((item) => item.getHostElement())
+        this.icons
+            .map((item) => item.getHostElement())
             .forEach((iconHostElement) => {
                 this.renderer.removeClass(iconHostElement, leftIconClassName);
                 this.renderer.removeClass(iconHostElement, rightIconClassName);
@@ -82,11 +86,13 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
         const twoIcons = 2;
         const filteredNodesWithoutComments = getNodesWithoutComments(
-            this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList
+            this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList,
         );
 
-        const currentIsIconButtonValue = !!this.icons.length &&
-            this.icons.length === filteredNodesWithoutComments.length && this.icons.length <= twoIcons;
+        const currentIsIconButtonValue =
+            !!this.icons.length &&
+            this.icons.length === filteredNodesWithoutComments.length &&
+            this.icons.length <= twoIcons;
 
         if (currentIsIconButtonValue !== this.isIconButton) {
             this.isIconButton = currentIsIconButtonValue;
@@ -94,11 +100,10 @@ export class KbqButtonCssStyler implements AfterContentInit {
         }
 
         if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons.map((item) => item.getHostElement())
+            this.icons
+                .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
-                    const iconIndex = filteredNodesWithoutComments.findIndex(
-                        (node) => node === iconHostElement
-                    );
+                    const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === iconHostElement);
 
                     if (iconIndex === 0) {
                         this.renderer.addClass(iconHostElement, leftIconClassName);
@@ -120,9 +125,9 @@ export class KbqButtonBase {
 }
 
 /** @docs-private */
-export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor &
-    typeof KbqButtonBase = mixinTabIndex(mixinColor(KbqButtonBase, KbqComponentColors.ContrastFade));
-
+export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButtonBase = mixinTabIndex(
+    mixinColor(KbqButtonBase, KbqComponentColors.ContrastFade),
+);
 
 @Component({
     selector: '[kbq-button]',
@@ -138,11 +143,11 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor &
         '[class]': 'kbqStyle',
 
         '(focus)': 'onFocus($event)',
-        '(blur)': 'onBlur()'
+        '(blur)': 'onBlur()',
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
-    ]
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton },
+    ],
 })
 export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
     hasFocus: boolean = false;
@@ -173,7 +178,11 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
 
     private _disabled: boolean = false;
 
-    constructor(elementRef: ElementRef, private focusMonitor: FocusMonitor, private styler: KbqButtonCssStyler) {
+    constructor(
+        elementRef: ElementRef,
+        private focusMonitor: FocusMonitor,
+        private styler: KbqButtonCssStyler,
+    ) {
         super(elementRef);
 
         this.runFocusMonitor();
@@ -229,4 +238,3 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 }
-

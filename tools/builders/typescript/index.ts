@@ -1,10 +1,8 @@
-import { exec, ExecOptions } from 'child_process';
-import { statSync } from 'fs';
-import { join } from 'path';
-
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
-
+import { ExecOptions, exec } from 'child_process';
+import { statSync } from 'fs';
+import { join } from 'path';
 import { ITypescriptBuilderOptions } from './schema';
 
 export async function executeCommand(command: string, cwd?: string): Promise<string> {
@@ -12,7 +10,7 @@ export async function executeCommand(command: string, cwd?: string): Promise<str
 
     const options: ExecOptions = {
         cwd: cwd || process.cwd(),
-        maxBuffer
+        maxBuffer,
     };
 
     return new Promise((resolve, reject) => {
@@ -39,7 +37,7 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
         context.logger.error('No tsconfig.json file found for compiling. Please provide it via the tsConfig option.');
 
         return {
-            success: false
+            success: false,
         };
     }
 
@@ -53,12 +51,12 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
         context.logger.error(error);
 
         return {
-            success: false
+            success: false,
         };
     }
 
     return {
-        success: true
+        success: true,
     };
 }
 

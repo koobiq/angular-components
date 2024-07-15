@@ -2,22 +2,22 @@
 import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup,
     FormsModule,
     NgForm,
     ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     ValidatorFn,
-    Validators
+    Validators,
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LuxonDateAdapter, KBQ_LUXON_DATE_FORMATS } from '@koobiq/angular-luxon-adapter/adapter';
+import { KBQ_LUXON_DATE_FORMATS, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, ThemePalette, KBQ_DATE_FORMATS, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { DateAdapter, KBQ_DATE_FORMATS, KBQ_DATE_LOCALE, ThemePalette } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -29,7 +29,6 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-
 
 export class FileNode {
     children: FileNode[];
@@ -53,37 +52,36 @@ export const DATA_OBJECT = {
         Woods: 'jpg',
         PhotoBoothLibrary: {
             Contents: 'dir',
-            Pictures_2: 'dir'
-        }
+            Pictures_2: 'dir',
+        },
     },
     Documents: {
         Pictures_3: 'Pictures',
         angular: {
             src: {
                 core: 'ts',
-                compiler: 'ts'
-            }
+                compiler: 'ts',
+            },
         },
         material2: {
             src: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts'
-            }
-        }
+                input: 'ts',
+            },
+        },
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf'
+        October: 'pdf',
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app'
-    }
+        Webstorm: 'app',
+    },
 };
-
 
 /**
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
@@ -112,9 +110,8 @@ export function buildFileTree(value: any, level: number): FileNode[] {
     return data;
 }
 
-
 export function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
         const allowed = loginRegex.test(control.value);
 
         return allowed ? null : { ldapLogin: { value: control.value } };
@@ -130,14 +127,14 @@ export function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         { provide: KBQ_DATE_LOCALE, useValue: 'en' },
         {
             provide: KBQ_DATE_FORMATS,
-            useFactory: () => ({ ...KBQ_LUXON_DATE_FORMATS, dateInput: 'yyyy-MM-dd' })
+            useFactory: () => ({ ...KBQ_LUXON_DATE_FORMATS, dateInput: 'yyyy-MM-dd' }),
         },
         {
             provide: DateAdapter,
             useFactory: (locale: string) => new LuxonDateAdapter(locale),
-            deps: [KBQ_DATE_LOCALE]
-        }
-    ]
+            deps: [KBQ_DATE_LOCALE],
+        },
+    ],
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -163,14 +160,11 @@ export class DemoComponent {
     reactiveFormControl: UntypedFormGroup;
 
     formWithCustomValidator = new UntypedFormGroup({
-        login: new UntypedFormControl(
-            '',
-            [
-                Validators.required,
-                ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)
-            ]
-        ),
-        password: new UntypedFormControl('', Validators.required)
+        login: new UntypedFormControl('', [
+            Validators.required,
+            ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/),
+        ]),
+        password: new UntypedFormControl('', Validators.required),
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -188,13 +182,17 @@ export class DemoComponent {
     formControlTags: UntypedFormControl;
     formControlTagInputFormControl: UntypedFormControl;
 
-    constructor(private formBuilder: UntypedFormBuilder, public changeDetectorRef: ChangeDetectorRef) {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+    constructor(
+        private formBuilder: UntypedFormBuilder,
+        public changeDetectorRef: ChangeDetectorRef,
+    ) {
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -204,12 +202,13 @@ export class DemoComponent {
             time: new UntypedFormControl(null, Validators.required),
             date: new UntypedFormControl(null, Validators.required),
             reactiveInputValue: new UntypedFormControl('', [
-                Validators.required, Validators.pattern('[a-zA-Z]*')
+                Validators.required,
+                Validators.pattern('[a-zA-Z]*'),
             ]),
             reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTypeaheadValue: new UntypedFormControl([], Validators.required),
-            tagInputFormControl: new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')])
+            tagInputFormControl: new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')]),
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
@@ -324,29 +323,28 @@ export class DemoComponent {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -367,8 +365,8 @@ export class DemoComponent {
         KbqFormFieldModule,
         KbqIconModule,
         KbqDatepickerModule,
-        KbqTimepickerModule
+        KbqTimepickerModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

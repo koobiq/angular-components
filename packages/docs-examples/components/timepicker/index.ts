@@ -10,25 +10,23 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { TimepickerOverviewExample } from './timepicker-overview/timepicker-overview-example';
 import { TimepickerRangeExample } from './timepicker-range/timepicker-range-example';
 import { TimepickerValidationSymbolsExample } from './timepicker-validation-symbols/timepicker-validation-symbols-example';
 import { TimepickerVariationsExample } from './timepicker-variations/timepicker-variations-example';
 
-
 export {
     TimepickerOverviewExample,
     TimepickerRangeExample,
+    TimepickerValidationSymbolsExample,
     TimepickerVariationsExample,
-    TimepickerValidationSymbolsExample
 };
 
 const EXAMPLES = [
     TimepickerOverviewExample,
     TimepickerRangeExample,
     TimepickerVariationsExample,
-    TimepickerValidationSymbolsExample
+    TimepickerValidationSymbolsExample,
 ];
 
 @NgModule({
@@ -43,10 +41,9 @@ const EXAMPLES = [
         KbqInputModule,
         KbqFormFieldModule,
         KbqIconModule,
-        KbqRadioModule
+        KbqRadioModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
-export class TimepickerExamplesModule {
-}
+export class TimepickerExamplesModule {}

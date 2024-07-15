@@ -7,22 +7,20 @@ import {
     ElementRef,
     EventEmitter,
     Inject,
-    Input, OnDestroy,
+    Input,
+    OnDestroy,
     Optional,
     Output,
-    Renderer2, Self,
+    Renderer2,
+    Self,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    CanDisable,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    ruRULocaleData
-} from '@koobiq/components/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
-
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -30,11 +28,8 @@ import {
     KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel,
-    isCorrectExtension
+    isCorrectExtension,
 } from './file-upload';
-import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
-
 
 let nextMultipleFileUploadUniqueId = 0;
 
@@ -48,10 +43,8 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
     [k: string | number | symbol]: unknown;
 }
 
-
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
     ruRULocaleData.fileUpload.multiple;
-
 
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
@@ -60,10 +53,12 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-multiple-file-upload'
-    }
+        class: 'kbq-multiple-file-upload',
+    },
 })
-export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor {
+export class KbqMultipleFileUploadComponent
+    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor
+{
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
@@ -110,13 +105,12 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     cvaOnChange = (_: KbqFileItem[]) => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onTouched =  () => {};
-
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onTouched = () => {};
 
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
@@ -131,10 +125,9 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
         private renderer: Renderer2,
         @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileMultipleLabel,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
-        @Optional() @Self() public ngControl?: NgControl
+        @Optional() @Self() public ngControl?: NgControl,
     ) {
-        this.localeService?.changes
-            .subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();
@@ -171,11 +164,15 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
 
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
-    registerOnChange(fn: any): void { this.cvaOnChange = fn; }
+    registerOnChange(fn: any): void {
+        this.cvaOnChange = fn;
+    }
 
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
-    registerOnTouched(fn: any): void { this.onTouched = fn; }
+    registerOnTouched(fn: any): void {
+        this.onTouched = fn;
+    }
 
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
@@ -188,11 +185,13 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     }
 
     onFileSelectedViaClick({ target }: Event) {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         this.files = [
             ...this.files,
-            ...this.mapToFileItem((target as HTMLInputElement).files)
+            ...this.mapToFileItem((target as HTMLInputElement).files),
         ];
         this.onTouched();
         /* even if the user selects the same file,
@@ -201,14 +200,18 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     }
 
     onFileDropped(files: FileList | KbqFile[]) {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         this.files = [...this.files, ...this.mapToFileItem(files)];
         this.onTouched();
     }
 
     deleteFile(index: number, event?: MouseEvent) {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         event?.stopPropagation();
         this.files.splice(index, 1);
@@ -226,16 +229,18 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
+            { header: '', cssClass: 'action' },
         ];
 
         this.getCaptionText();
 
         this.cdr.markForCheck();
-    }
+    };
 
     private mapToFileItem(files: FileList | KbqFile[] | null): KbqFileItem[] {
-        if (!files) { return []; }
+        if (!files) {
+            return [];
+        }
 
         return Array.from(files)
             .filter((file) => isCorrectExtension(file, this.accept))
@@ -243,24 +248,26 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
                 file,
                 hasError: this.validateFile(file),
                 loading: new BehaviorSubject<boolean>(false),
-                progress: new BehaviorSubject<number>(0)
+                progress: new BehaviorSubject<number>(0),
             }));
     }
 
     private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) { return; }
+        if (!this.customValidation?.length) {
+            return;
+        }
 
-        const errorsPerFile = this.customValidation.reduce(
-            (errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
+        const errorsPerFile = this.customValidation
+            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
                 errors.push(validatorFn(file));
 
                 return errors;
-            },
-            []).filter(Boolean) as string[];
+            }, [])
+            .filter(Boolean) as string[];
 
         this.errors = [
             ...this.errors,
-            ...errorsPerFile
+            ...errorsPerFile,
         ];
 
         return !!errorsPerFile.length;
@@ -272,7 +279,7 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
+            { header: '', cssClass: 'action' },
         ];
 
         this.getCaptionText();
@@ -281,7 +288,6 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     private getCaptionText() {
         this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
         this.separatedCaptionTextWhenSelected = this.config.captionTextWhenSelected.split('{{ browseLink }}');
-        this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize
-            .split('{{ browseLink }}');
+        this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize.split('{{ browseLink }}');
     }
 }

@@ -1,8 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { getZonesGroupedByCountry, KbqTimezoneGroup, KbqTimezoneZone } from '@koobiq/components/timezone';
-
+import { KbqTimezoneGroup, KbqTimezoneZone, getZonesGroupedByCountry } from '@koobiq/components/timezone';
 import { timezones } from '../mock';
-
 
 /**
  * @title Timezone trigger overview
@@ -11,7 +9,7 @@ import { timezones } from '../mock';
     selector: 'timezone-trigger-overview-example',
     templateUrl: 'timezone-trigger-overview-example.html',
     styleUrls: ['timezone-trigger-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TimezoneTriggerOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -19,13 +17,15 @@ export class TimezoneTriggerOverviewExample {
     readonly data: KbqTimezoneGroup[] = [];
 
     constructor() {
-        const zones: KbqTimezoneZone[] = timezones
-            .map(({ associatedZones, ...zone }) => ({
-                ...zone,
-                cities: Array.isArray(associatedZones)
-                    ? associatedZones.map(({city}) => city).sort().join(', ')
-                    : ''
-            }));
+        const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
+            ...zone,
+            cities: Array.isArray(associatedZones)
+                ? associatedZones
+                      .map(({ city }) => city)
+                      .sort()
+                      .join(', ')
+                : '',
+        }));
 
         this.data = getZonesGroupedByCountry(zones, 'Другие страны');
     }

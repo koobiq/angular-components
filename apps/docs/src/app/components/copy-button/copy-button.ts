@@ -6,21 +6,20 @@ import {
     Component,
     Input,
     NgModule,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-
 
 @Component({
     selector: 'copy-button',
     templateUrl: './copy-button.html',
     styleUrls: ['./copy-button.scss'],
     host: {
-        class: 'kbq-docs-copy-button'
+        class: 'kbq-docs-copy-button',
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CopyButton {
     @Input() contentToCopy: string;
@@ -30,28 +29,29 @@ export class CopyButton {
 
     isLabelSuccessVisible = false;
 
-    constructor(private clipboard: Clipboard, private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(
+        private clipboard: Clipboard,
+        private changeDetectorRef: ChangeDetectorRef,
+    ) {}
 
     copyContent(): void {
-        if (!this.contentToCopy) { return; }
+        if (!this.contentToCopy) {
+            return;
+        }
 
         this.clipboard.copy(this.contentToCopy);
         this.isLabelSuccessVisible = true;
 
-        setTimeout(
-            () => {
-                this.isLabelSuccessVisible = false;
-                this.changeDetectorRef.markForCheck();
-            },
-            this.successLabelDisplayDelay
-        );
+        setTimeout(() => {
+            this.isLabelSuccessVisible = false;
+            this.changeDetectorRef.markForCheck();
+        }, this.successLabelDisplayDelay);
     }
 }
-
 
 @NgModule({
     imports: [CommonModule, KbqIconModule, KbqLinkModule],
     exports: [CopyButton],
-    declarations: [CopyButton]
+    declarations: [CopyButton],
 })
 export class CopyButtonModule {}

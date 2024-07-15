@@ -6,20 +6,19 @@ import {
     ElementRef,
     Input,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { shareReplay } from 'rxjs/operators';
-
 
 @Component({
     selector: 'docs-example-source',
     templateUrl: 'docs-example-source.html',
     styleUrls: ['docs-example-source.scss'],
     host: {
-        class: 'docs-example-source'
+        class: 'docs-example-source',
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DocsExampleSource {
     @ViewChild('code') code: ElementRef;
@@ -27,7 +26,9 @@ export class DocsExampleSource {
     /** The URL of the document to display. */
     @Input()
     set url(url: string) {
-        if (!url) { return; }
+        if (!url) {
+            return;
+        }
 
         this.fetchDocument(url);
     }
@@ -36,7 +37,7 @@ export class DocsExampleSource {
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private http: HttpClient
+        private http: HttpClient,
     ) {}
 
     private setLineNumbers() {
@@ -54,10 +55,7 @@ export class DocsExampleSource {
     }
 
     private fetchDocument(url: string) {
-        this.http
-            .get(url, { responseType: 'text' })
-            .pipe(shareReplay(1))
-            .subscribe(this.updateDocument);
+        this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1)).subscribe(this.updateDocument);
     }
 
     /**
@@ -69,5 +67,5 @@ export class DocsExampleSource {
         this.code.nativeElement.innerHTML = rawDocument;
 
         this.setLineNumbers();
-    }
+    };
 }

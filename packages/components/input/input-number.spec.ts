@@ -1,29 +1,22 @@
 /* tslint:disable */
 import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    ComponentFixtureAutoDetect,
-    flush
-} from '@angular/core/testing';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@koobiq/cdk/keycodes';
-import {
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/cdk/testing';
-import {
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError,
-    KbqFormFieldModule
-} from '@koobiq/components/form-field';
-
-import { KbqInput, KbqInputModule, KbqNumberInput } from './index';
+import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
-
+import {
+    KbqFormFieldModule,
+    getKbqFormFieldYouCanNotUseCleanerInNumberInputError,
+} from '@koobiq/components/form-field';
+import { KbqInput, KbqInputModule, KbqNumberInput } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -35,26 +28,25 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             KbqInputModule,
             KbqLocaleServiceModule,
             KbqFormFieldModule,
-            ...imports
+            ...imports,
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers
-        ]
+            ...providers,
+        ],
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
 }
 
-
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" type="number">
+            <input kbqInput [(ngModel)]="value" type="number" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
@@ -63,10 +55,10 @@ class KbqNumberInputTestComponent {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [formControl]="formControl" type="number">
+            <input kbqInput [formControl]="formControl" type="number" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputWithFormControl {
     formControl = new UntypedFormControl(10);
@@ -76,18 +68,18 @@ class KbqNumberInputWithFormControl {
     template: `
         <form [formGroup]="reactiveForm" novalidate>
             <kbq-form-field>
-                <input kbqInput formControlName="reactiveInputValue" type="number">
+                <input kbqInput formControlName="reactiveInputValue" type="number" />
                 <kbq-stepper></kbq-stepper>
             </kbq-form-field>
         </form>
-    `
+    `,
 })
 class KbqNumberInputWithFormControlName {
     reactiveForm: UntypedFormGroup;
 
     constructor(private formBuilder: UntypedFormBuilder) {
         this.reactiveForm = this.formBuilder.group({
-            reactiveInputValue: new UntypedFormControl(10)
+            reactiveInputValue: new UntypedFormControl(10),
         });
     }
 }
@@ -95,10 +87,10 @@ class KbqNumberInputWithFormControlName {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" type="number" max="10" min="3" step="0.5" big-step="2">
+            <input kbqInput [(ngModel)]="value" type="number" max="10" min="3" step="0.5" big-step="2" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputMaxMinStep {
     value: number | null = null;
@@ -107,10 +99,18 @@ class KbqNumberInputMaxMinStep {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" type="number" [max]="max" [min]="min" [step]="step" [bigStep]="bigStep">
+            <input
+                kbqInput
+                [(ngModel)]="value"
+                type="number"
+                [max]="max"
+                [min]="min"
+                [step]="step"
+                [bigStep]="bigStep"
+            />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputMaxMinStepInput {
     value: number | null = null;
@@ -123,25 +123,31 @@ class KbqNumberInputMaxMinStepInput {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" type="number">
+            <input kbqInput [(ngModel)]="value" type="number" />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputWithCleaner {
     value: number = 0;
 }
 
-
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput type="number" [(ngModel)]="value"
-                   [max]="max" [min]="min" [step]="step" [bigStep]="bigStep" [withThousandSeparator]="withMask"
-            >
+            <input
+                kbqInput
+                type="number"
+                [(ngModel)]="value"
+                [max]="max"
+                [min]="min"
+                [step]="step"
+                [bigStep]="bigStep"
+                [withThousandSeparator]="withMask"
+            />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `
+    `,
 })
 class KbqNumberInputWithMask {
     value: number | null = null;
@@ -153,8 +159,7 @@ class KbqNumberInputWithMask {
 
     @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
 
-    constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
-    }
+    constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
 
 describe('KbqNumberInput', () => {
@@ -746,7 +751,7 @@ describe('KbqNumberInput', () => {
                 spyOn(mockEvent, 'preventDefault');
                 fixture.detectChanges();
 
-                minuses.forEach(minus => {
+                minuses.forEach((minus) => {
                     mockEvent.keyCode = minus;
                     inputElementDebug.triggerEventHandler('keydown', mockEvent);
                     fixture.detectChanges();
@@ -768,7 +773,7 @@ describe('KbqNumberInput', () => {
                 fixture.detectChanges();
                 flush();
 
-                minuses.forEach(minus => {
+                minuses.forEach((minus) => {
                     mockEvent.keyCode = minus;
                     mockEvent.key = '-';
                     inputElementDebug.triggerEventHandler('keydown', mockEvent);
@@ -778,7 +783,7 @@ describe('KbqNumberInput', () => {
                 });
                 expect(mockEvent.preventDefault).toHaveBeenCalledTimes(minuses.length);
             }));
-        })
+        });
     });
 
     describe('truncate to bounds', () => {
@@ -1023,14 +1028,12 @@ describe('KbqNumberInput', () => {
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
             flush();
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '1.234.567,89'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '1.234.567,89',
+                },
+            });
             fixture.detectChanges();
 
             fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
@@ -1039,5 +1042,5 @@ describe('KbqNumberInput', () => {
 
             expect(inputElement.value).toBe('1 234 567,89');
         }));
-    })
+    });
 });

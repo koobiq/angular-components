@@ -1,6 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-
 // @ts-ignore
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -15,9 +14,8 @@ const localeDataSet = {
     'es-LA': esLALocaleDataSet,
     'pt-BR': ptBRLocaleDataSet,
     'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
+    'fa-IR': faIRLocaleDataSet,
 };
-
 
 /**
  * @title Basic Select
@@ -26,7 +24,7 @@ const localeDataSet = {
     selector: 'select-multiple-overview-example',
     templateUrl: 'select-multiple-overview-example.html',
     styleUrls: ['select-multiple-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class SelectMultipleOverviewExample {
     selected = [];
@@ -34,12 +32,11 @@ export class SelectMultipleOverviewExample {
     options: string[] = [];
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes
-            .subscribe(this.update)
+        this.localeService.changes.subscribe(this.update);
     }
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
         this.selected = [];
-    }
+    };
 }

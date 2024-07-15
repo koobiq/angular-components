@@ -7,18 +7,18 @@ export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
         type,
         false,
         false,
-        window, /* view */
+        window /* view */,
         0,
-        x, /* screenX */
-        y, /* screenY */
-        x, /* clientX */
-        y, /* clientY */
+        x /* screenX */,
+        y /* screenY */,
+        x /* clientX */,
+        y /* clientY */,
         false,
         false,
         false,
         false,
-        button, /* button */
-        null
+        button /* button */,
+        null,
     );
 
     return event;
@@ -37,7 +37,7 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0) {
     // Most of the browsers don't have a "initTouchEvent" method that can be used to define
     // the touch details.
     Object.defineProperties(event, {
-        touches: { value: [touchDetails] }
+        touches: { value: [touchDetails] },
     });
 
     return event;
@@ -60,7 +60,7 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
     Object.defineProperties(event, {
         keyCode: { get: () => keyCode },
         key: { get: () => key },
-        target: { get: () => target }
+        target: { get: () => target },
     });
 
     return event;

@@ -1,14 +1,7 @@
-import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    Directive,
-    forwardRef,
-    Inject,
-    Optional,
-    Self
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Directive, forwardRef, Inject, Optional, Self } from '@angular/core';
 import {
     AbstractControl,
+    FormControlDirective,
     FormControlName,
     FormGroupDirective,
     NG_VALIDATORS,
@@ -19,16 +12,9 @@ import {
     ValidationErrors,
     Validator,
     ValidatorFn,
-    FormControlDirective
 } from '@angular/forms';
-import {
-    KbqValidationOptions,
-    KBQ_VALIDATION
-} from '@koobiq/components/core';
-
-
+import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
 import { KbqFormFieldControl } from './form-field-control';
-
 
 @Directive({
     selector: `
@@ -41,7 +27,7 @@ import { KbqFormFieldControl } from './form-field-control';
         kbq-tree-select,
         kbq-tag-list
     `,
-    exportAs: 'KbqValidate'
+    exportAs: 'KbqValidate',
 })
 export class KbqValidateDirective implements AfterContentInit {
     get isNgModel(): boolean {
@@ -75,7 +61,7 @@ export class KbqValidateDirective implements AfterContentInit {
         @Optional() private parentForm: NgForm,
         @Optional() private parentFormGroup: FormGroupDirective,
         @Optional() @Inject(KBQ_VALIDATION) private mcValidation: KbqValidationOptions,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) {}
 
     ngAfterContentInit() {
@@ -85,7 +71,9 @@ export class KbqValidateDirective implements AfterContentInit {
     }
 
     setValidState(control: AbstractControl, validator: ValidatorFn): void {
-        if (!control) { return; }
+        if (!control) {
+            return;
+        }
 
         control.clearValidators();
         control.updateValueAndValidity({ emitEvent: false });
@@ -98,7 +86,9 @@ export class KbqValidateDirective implements AfterContentInit {
      * - if control has focus validation will be prevented
      */
     setMosaicValidation(): void {
-        if (!this.validationControl) { return; }
+        if (!this.validationControl) {
+            return;
+        }
 
         if (this.parent?.onSubmit) {
             // tslint:disable-next-line: no-unbound-method
@@ -118,7 +108,9 @@ export class KbqValidateDirective implements AfterContentInit {
     }
 
     setMosaicValidationForModelControl() {
-        if (!this.rawValidators) { return; }
+        if (!this.rawValidators) {
+            return;
+        }
 
         this.rawValidators.forEach((validator: Validator) => {
             // tslint:disable-next-line: no-unbound-method
@@ -127,14 +119,18 @@ export class KbqValidateDirective implements AfterContentInit {
             if (validator instanceof RequiredValidator) {
                 // changed required validation logic
                 validator.validate = (control: AbstractControl): ValidationErrors | null => {
-                    if (this.hasNotSubmittedParent) { return null; }
+                    if (this.hasNotSubmittedParent) {
+                        return null;
+                    }
 
                     return originalValidate.call(validator, control);
                 };
             } else {
                 // changed all other validation logic
                 validator.validate = (control: AbstractControl): ValidationErrors | null => {
-                    if (this.formFieldControl.focused) { return null; }
+                    if (this.formFieldControl.focused) {
+                        return null;
+                    }
 
                     return originalValidate.call(validator, control);
                 };
@@ -152,17 +148,20 @@ export class KbqValidateDirective implements AfterContentInit {
         }
 
         // check dynamic updates
-        this.validationControl.statusChanges!
-            .subscribe(() => {
-                // changed required validation logic
-                if (this.validationControl.invalid && (this.hasNotSubmittedParent) && this.validationControl.errors!.required) {
-                    this.setValidState(this.validationControl, this.validationControl.validator);
-                }
+        this.validationControl.statusChanges!.subscribe(() => {
+            // changed required validation logic
+            if (
+                this.validationControl.invalid &&
+                this.hasNotSubmittedParent &&
+                this.validationControl.errors!.required
+            ) {
+                this.setValidState(this.validationControl, this.validationControl.validator);
+            }
 
-                // changed all other validation logic
-                if (this.validationControl.invalid && this.formFieldControl.focused) {
-                    this.setValidState(this.validationControl, this.validationControl.validator);
-                }
-            });
+            // changed all other validation logic
+            if (this.validationControl.invalid && this.formFieldControl.focused) {
+                this.setValidState(this.validationControl, this.validationControl.validator);
+            }
+        });
     }
 }

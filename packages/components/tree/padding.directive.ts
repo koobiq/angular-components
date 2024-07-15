@@ -1,29 +1,18 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Input,
-    OnDestroy,
-    Optional,
-    Renderer2
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Optional, Renderer2 } from '@angular/core';
 import { TreeSizeIndentLevel } from '@koobiq/design-tokens';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
-
 
 /** Regex used to split a string on its CSS units. */
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
-
 @Directive({
     selector: '[kbqTreeNodePadding]',
-    exportAs: 'kbqTreeNodePadding'
+    exportAs: 'kbqTreeNodePadding',
 })
 export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
     get level(): number {
@@ -67,10 +56,9 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
         private renderer: Renderer2,
         private element: ElementRef<HTMLElement>,
         private option: KbqTreeOption,
-        @Optional() private dir: Directionality
+        @Optional() private dir: Directionality,
     ) {
-        this.dir?.change?.pipe(takeUntil(this.destroyed))
-            .subscribe(() => this.setPadding());
+        this.dir?.change?.pipe(takeUntil(this.destroyed)).subscribe(() => this.setPadding());
     }
 
     ngAfterViewInit(): void {
@@ -84,13 +72,14 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
     }
 
     paddingIndent(): string | null {
-        const nodeLevel = (this.treeNode.data && this.tree.treeControl.getLevel)
-            ? this.tree.treeControl.getLevel(this.treeNode.data)
-            : 0;
+        const nodeLevel =
+            this.treeNode.data && this.tree.treeControl.getLevel
+                ? this.tree.treeControl.getLevel(this.treeNode.data)
+                : 0;
 
         const level = this.level || nodeLevel;
 
-        return level > 0 ? `${(level * this._indent) + this.leftPadding}px` : `${this.leftPadding}px`;
+        return level > 0 ? `${level * this._indent + this.leftPadding}px` : `${this.leftPadding}px`;
     }
 
     /**

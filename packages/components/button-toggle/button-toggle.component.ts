@@ -17,13 +17,12 @@ import {
     Optional,
     Output,
     QueryList,
+    ViewChild,
     ViewEncapsulation,
-    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getNodesWithoutComments, KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
-
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -36,7 +35,7 @@ export type ToggleType = 'checkbox' | 'radio';
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqButtonToggleGroup),
-    multi: true
+    multi: true,
 };
 
 /** Change event object emitted by MсButtonToggle. */
@@ -45,7 +44,7 @@ export class KbqButtonToggleChange {
         /** The MсButtonToggle that emits the event. */
         public source: KbqButtonToggle,
         /** The value assigned to the MсButtonToggle. */
-        public value: any
+        public value: any,
     ) {}
 }
 
@@ -55,12 +54,11 @@ export class KbqButtonToggleChange {
     providers: [KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
     host: {
         class: 'kbq-button-toggle-group',
-        '[class.kbq-button-toggle_vertical]': 'vertical'
+        '[class.kbq-button-toggle_vertical]': 'vertical',
     },
-    exportAs: 'kbqButtonToggleGroup'
+    exportAs: 'kbqButtonToggleGroup',
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-
     /** Whether the toggle group is vertical. */
     @Input()
     get vertical(): boolean {
@@ -92,7 +90,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get selected(): any {
         const selected = this.selectionModel.selected;
 
-        return this.multiple ? selected : (selected[0] || null);
+        return this.multiple ? selected : selected[0] || null;
     }
 
     /** Whether multiple button toggles can be selected. */
@@ -117,7 +115,9 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
 
-        if (!this.buttonToggles) { return; }
+        if (!this.buttonToggles) {
+            return;
+        }
 
         this.buttonToggles.forEach((toggle) => toggle.markForCheck());
     }
@@ -270,7 +270,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     /** Clears the selected toggles. */
     private clearSelection() {
         this.selectionModel.clear();
-        this.buttonToggles.forEach((toggle) => toggle.checked = false);
+        this.buttonToggles.forEach((toggle) => (toggle.checked = false));
     }
 
     /** Selects a value if there's a toggle that corresponds to it. */
@@ -299,7 +299,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [class.kbq-selected]="checked"
             [disabled]="disabled"
             [tabIndex]="tabIndex || 0"
-            (click)="onToggleClick()">
+            (click)="onToggleClick()"
+        >
             <div class="kbq-button-toggle-wrapper" #kbqTitleText>
                 <ng-content></ng-content>
             </div>
@@ -310,8 +311,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-button-toggle',
-        '[class]': '"kbq-button-toggle" + iconType'
-    }
+        '[class]': '"kbq-button-toggle" + iconType',
+    },
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
@@ -368,7 +369,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
         @Optional() public buttonToggleGroup: KbqButtonToggleGroup,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
-        private element: ElementRef
+        private element: ElementRef,
     ) {}
 
     ngOnInit() {
@@ -385,7 +386,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
     ngAfterContentInit(): void {
         if (this.icons.length) {
             const nodesWithoutComments = getNodesWithoutComments(
-                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
+                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList,
             ).length;
             this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
         }
@@ -410,7 +411,9 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
 
     /** Checks the button toggle due to an interaction with the underlying native button. */
     onToggleClick() {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         const newChecked = this.isSingleSelector ? true : !this._checked;
 

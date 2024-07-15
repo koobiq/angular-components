@@ -6,98 +6,84 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
-import { KbqCodeFile, KBQ_CODE_BLOCK_CONFIGURATION, KbqCodeBlockModule } from '../../components/code-block';
-
-import {
-    codeTs,
-    codeJs2,
-    codeHTML,
-    codeCs,
-    codeHTML3,
-    codeJson,
-    codeXML,
-    text,
-    codeCSS
-} from './code-files-example';
-
+import { KBQ_CODE_BLOCK_CONFIGURATION, KbqCodeBlockModule, KbqCodeFile } from '../../components/code-block';
+import { codeCSS, codeCs, codeHTML, codeHTML3, codeJs2, codeJson, codeTs, codeXML, text } from './code-files-example';
 
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
 })
 export class DemoComponent {
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     themePalette = ThemePalette;
     files: KbqCodeFile[];
     files4: KbqCodeFile[];
-
 
     constructor() {
         this.files = [
             {
                 filename: 'types.ts',
                 content: codeTs,
-                language: 'typescript'
+                language: 'typescript',
             },
             {
                 filename: 'index.html',
                 content: codeHTML,
                 language: 'html',
-                link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
+                link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html',
             },
             {
                 filename: 'menu.xml',
                 content: codeXML,
-                language: 'xml'
+                language: 'xml',
             },
             {
                 filename: 'app.js',
                 content: codeJs2,
                 language: 'javascript',
-                link: 'https://stackblitz.com/edit/js-aux7gf?file=index.js'
+                link: 'https://stackblitz.com/edit/js-aux7gf?file=index.js',
             },
             {
                 filename: 'Text.txt',
                 content: text,
-                language: 'txt'
+                language: 'txt',
             },
             {
                 filename: 'response.json',
                 content: codeJson,
-                language: 'json'
+                language: 'json',
             },
             {
                 filename: 'class',
                 content: codeCs,
-                language: 'csharp'
+                language: 'csharp',
             },
             {
                 filename: 'smallHtml',
                 content: codeHTML3,
-                language: 'html'
+                language: 'html',
             },
             {
                 filename: 'styles.css',
                 content: codeCSS,
-                language: 'css'
+                language: 'css',
             },
             {
                 filename: 'app',
                 content: codeJs2,
-                language: 'javascript'
-            }
+                language: 'javascript',
+            },
         ];
 
         this.files4 = [
             {
                 filename: '',
                 content: codeJs2,
-                language: 'javascript'
-            }
+                language: 'javascript',
+            },
         ];
     }
 }
@@ -111,21 +97,23 @@ export class DemoComponent {
         KbqToggleModule,
         KbqButtonModule,
         KbqSidepanelModule,
-        FormsModule
+        FormsModule,
     ],
-    providers: [{
-        provide: KBQ_CODE_BLOCK_CONFIGURATION,
-        useValue: {
-            softWrapOnTooltip: 'Включить перенос по словам',
-            softWrapOffTooltip: 'Выключить перенос по словам',
-            downloadTooltip: 'Скачать',
-            copiedTooltip: '✓ Скопировано',
-            copyTooltip: 'Скопировать',
-            viewAllText: 'Показать все',
-            viewLessText: 'Свернуть',
-            openExternalSystemTooltip: 'Открыть во внешней системе'
-        }
-    }],
-    bootstrap: [DemoComponent]
+    providers: [
+        {
+            provide: KBQ_CODE_BLOCK_CONFIGURATION,
+            useValue: {
+                softWrapOnTooltip: 'Включить перенос по словам',
+                softWrapOffTooltip: 'Выключить перенос по словам',
+                downloadTooltip: 'Скачать',
+                copiedTooltip: '✓ Скопировано',
+                copyTooltip: 'Скопировать',
+                viewAllText: 'Показать все',
+                viewLessText: 'Свернуть',
+                openExternalSystemTooltip: 'Открыть во внешней системе',
+            },
+        },
+    ],
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

@@ -1,28 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
-
-import {
-    ButtonToggleAlignmentOverviewExample
-} from './button-toggle-alignment-overview/button-toggle-alignment-overview-example';
-import {
-    ButtonToggleDisabledAllOverviewExample
-} from './button-toggle-disabled-all-overview/button-toggle-disabled-all-overview-example';
+import { ButtonToggleAlignmentOverviewExample } from './button-toggle-alignment-overview/button-toggle-alignment-overview-example';
+import { ButtonToggleDisabledAllOverviewExample } from './button-toggle-disabled-all-overview/button-toggle-disabled-all-overview-example';
 import { ButtonToggleDisabledPartialOverviewExample } from './button-toggle-disabled-partial-overview/button-toggle-disabled-partial-overview-example';
 import { ButtonToggleOverviewExample } from './button-toggle-overview/button-toggle-overview-example';
-import {
-    ButtonToggleTooltipOverviewExample
-} from './button-toggle-tooltip-overview/button-toggle-tooltip-overview-example';
-
+import { ButtonToggleTooltipOverviewExample } from './button-toggle-tooltip-overview/button-toggle-tooltip-overview-example';
 
 export {
-    ButtonToggleOverviewExample,
-    ButtonToggleTooltipOverviewExample,
     ButtonToggleAlignmentOverviewExample,
     ButtonToggleDisabledAllOverviewExample,
-    ButtonToggleDisabledPartialOverviewExample
+    ButtonToggleDisabledPartialOverviewExample,
+    ButtonToggleOverviewExample,
+    ButtonToggleTooltipOverviewExample,
 };
 
 const EXAMPLES = [
@@ -30,7 +22,7 @@ const EXAMPLES = [
     ButtonToggleTooltipOverviewExample,
     ButtonToggleAlignmentOverviewExample,
     ButtonToggleDisabledAllOverviewExample,
-    ButtonToggleDisabledPartialOverviewExample
+    ButtonToggleDisabledPartialOverviewExample,
 ];
 
 @NgModule({
@@ -39,9 +31,9 @@ const EXAMPLES = [
         FormsModule,
         ReactiveFormsModule,
         KbqButtonToggleModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: EXAMPLES,
 })
 export class ButtonToggleExamplesModule {}

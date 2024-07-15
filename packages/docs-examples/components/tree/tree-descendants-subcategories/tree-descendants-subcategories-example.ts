@@ -3,9 +3,11 @@ import { Component, ViewChild } from '@angular/core';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
-    KbqTreeFlattener, KbqTreeOption, KbqTreeSelection, KbqTreeSelectionChange
+    KbqTreeFlattener,
+    KbqTreeOption,
+    KbqTreeSelection,
+    KbqTreeSelectionChange,
 } from '@koobiq/components/tree';
-
 
 export class FileNode {
     children: FileNode[];
@@ -58,17 +60,17 @@ export const DATA_OBJECT = {
                     'aria-describer': 'ts',
                     'aria-describer.spec': 'ts',
                     'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts'
+                    'aria-reference.spec': 'ts',
                 },
                 'focus monitor': {
                     'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts'
-                }
-            }
+                    'focus-monitor.spec': 'ts',
+                },
+            },
         },
         documentation: {
             source: '',
-            tools: ''
+            tools: '',
         },
         koobiq: {
             autocomplete: '',
@@ -76,30 +78,29 @@ export const DATA_OBJECT = {
             'button-toggle': '',
             index: 'ts',
             package: 'json',
-            version: 'ts'
+            version: 'ts',
         },
         'koobiq-dev': {
             alert: '',
-            badge: ''
+            badge: '',
         },
         'koobiq-examples': '',
         'koobiq-moment-adapter': '',
         README: 'md',
         'tsconfig.build': 'json',
-        wallabyTest: 'ts'
+        wallabyTest: 'ts',
     },
     scripts: {
         deploy: {
             'cleanup-preview': 'ts',
             'publish-artifacts': 'sh',
             'publish-docs': 'sh',
-            'publish-docs-preview': 'ts'
+            'publish-docs-preview': 'ts',
         },
-        'tsconfig.deploy': 'json'
+        'tsconfig.deploy': 'json',
     },
-    tests: ''
+    tests: '',
 };
-
 
 abstract class TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -110,7 +111,10 @@ abstract class TreeParams {
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren,
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -128,7 +132,7 @@ abstract class TreeParams {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 
     isExpandable = (node: FileFlatNode) => node.expandable;
 
@@ -144,7 +148,7 @@ abstract class TreeParams {
         flatNode.expandable = !!node.children?.length;
 
         return flatNode;
-    }
+    };
 }
 
 /**
@@ -153,7 +157,7 @@ abstract class TreeParams {
 @Component({
     selector: 'tree-descendants-subcategories-example',
     templateUrl: 'tree-descendants-subcategories-example.html',
-    styleUrls: ['tree-descendants-subcategories-example.css']
+    styleUrls: ['tree-descendants-subcategories-example.css'],
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -165,7 +169,9 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
 
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
-    constructor() { super(); }
+    constructor() {
+        super();
+    }
 
     onSelectionChange($event: KbqTreeSelectionChange<KbqTreeOption>) {
         const option: KbqTreeOption = $event.option;
@@ -178,7 +184,9 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.tree.selectionModel.selected.includes(parent);

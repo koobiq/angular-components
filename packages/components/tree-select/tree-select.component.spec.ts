@@ -14,57 +14,49 @@ import {
     OnInit,
     QueryList,
     ViewChild,
-    ViewChildren
+    ViewChildren,
 } from '@angular/core';
-import {
-    waitForAsync,
-    ComponentFixture,
-    fakeAsync,
-    flush,
-    inject,
-    TestBed,
-    tick
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import {
     ControlValueAccessor,
-    UntypedFormControl,
-    UntypedFormGroup,
     FormGroupDirective,
     FormsModule,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
-    Validators
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
+    A,
     DOWN_ARROW,
     END,
     ENTER,
+    ESCAPE,
     HOME,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
     TAB,
     UP_ARROW,
-    A,
-    ESCAPE
 } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    wrappedErrorMessage
+    wrappedErrorMessage,
 } from '@koobiq/cdk/testing';
 import {
     ErrorStateMatcher,
+    KbqPseudoCheckboxModule,
+    KbqPseudoCheckboxState,
+    ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
-    KbqPseudoCheckboxModule,
-    KbqPseudoCheckboxState,
-    ThemePalette
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -75,11 +67,11 @@ import {
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelectionChange
+    KbqTreeSelectionChange,
 } from '@koobiq/components/tree';
-import { Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from './index';
 
 const TREE_DATA = {
     rootNode_1: 'app',
@@ -87,35 +79,35 @@ const TREE_DATA = {
         Sun: 'png',
         Woods: 'jpg',
         Photo_Booth_Library: {
-          Contents: 'dir',
-          Pictures: 'dir'
-        }
+            Contents: 'dir',
+            Pictures: 'dir',
+        },
     },
     Documents: {
-      angular: {
-        src: {
-          core: 'ts',
-          compiler: 'ts'
-        }
-      },
-      material2: {
-        src: {
-          button: 'ts',
-          checkbox: 'ts',
-          input: 'ts'
-        }
-      }
+        angular: {
+            src: {
+                core: 'ts',
+                compiler: 'ts',
+            },
+        },
+        material2: {
+            src: {
+                button: 'ts',
+                checkbox: 'ts',
+                input: 'ts',
+            },
+        },
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf'
+        October: 'pdf',
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app'
-    }
+        Webstorm: 'app',
+    },
 };
 
 const TREE_DATA_RESET = {
@@ -123,11 +115,11 @@ const TREE_DATA_RESET = {
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf'
+        October: 'pdf',
     },
     'Null-option': null,
     'Falsy-option': false,
-    'Undefined-option': undefined
+    'Undefined-option': undefined,
 };
 
 class FileNode {
@@ -184,7 +176,7 @@ function buildFileTreeWithValues(value: any, level: number): FileNode[] {
         if (v === null || v === false || v === undefined) {
             node.value = v;
         } else if (typeof v === 'object') {
-                 node.children = buildFileTree(v, level + 1);
+            node.children = buildFileTree(v, level + 1);
         } else {
             node.value = v;
         }
@@ -194,9 +186,6 @@ function buildFileTreeWithValues(value: any, level: number): FileNode[] {
 
     return data;
 }
-
-import { KbqTreeSelectModule, KbqTreeSelect, KbqTreeSelectChange } from './index';
-
 
 /** The debounce interval when typing letters to select an option. */
 const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
@@ -225,7 +214,6 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
     return observableOf(node.children);
 };
 
-
 @Component({
     selector: 'basic-select',
     template: `
@@ -235,11 +223,9 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                 placeholder="Food"
                 [formControl]="control"
                 [tabIndex]="tabIndexOverride"
-                [panelClass]="panelClass">
-
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+                [panelClass]="panelClass"
+            >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -247,8 +233,8 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
-                        [disabled]="node.name === 'Downloads'">
-
+                        [disabled]="node.name === 'Downloads'"
+                    >
                         <i kbq-icon="mc-angle-down-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -256,7 +242,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `
+    `,
 })
 class BasicTreeSelect {
     control = new UntypedFormControl();
@@ -271,7 +257,7 @@ class BasicTreeSelect {
     tabIndexOverride: number;
     panelClass = ['custom-one', 'custom-two'];
 
-    @ViewChild(KbqTreeSelect, {static: true}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: true }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     constructor() {
@@ -291,12 +277,12 @@ class BasicTreeSelect {
     selector: 'basic-events',
     template: `
         <kbq-form-field>
-            <kbq-tree-select (openedChange)="openedChangeListener($event)"
-                            (opened)="openedListener()"
-                            (closed)="closedListener()">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+            <kbq-tree-select
+                (openedChange)="openedChangeListener($event)"
+                (opened)="openedListener()"
+                (closed)="closedListener()"
+            >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -304,15 +290,15 @@ class BasicTreeSelect {
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
-                        [disabled]="node.name === 'Downloads'">
-
+                        [disabled]="node.name === 'Downloads'"
+                    >
                         <i kbq-icon="mc-angle-down-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicEvents {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -343,13 +329,8 @@ class BasicEvents {
     selector: 'ng-model-select',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                placeholder="Food"
-                ngModel
-                [disabled]="isDisabled">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+            <kbq-tree-select placeholder="Food" ngModel [disabled]="isDisabled">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -361,7 +342,7 @@ class BasicEvents {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class NgModelSelect {
     isDisabled: boolean;
@@ -371,7 +352,7 @@ class NgModelSelect {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     constructor() {
@@ -391,12 +372,8 @@ class NgModelSelect {
     selector: 'many-selects',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                placeholder="First">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select placeholder="First">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -410,12 +387,8 @@ class NgModelSelect {
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-tree-select
-                placeholder="Second">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select placeholder="Second">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -427,7 +400,7 @@ class NgModelSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class ManySelects {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -453,21 +426,13 @@ class ManySelects {
     template: `
         <div *ngIf="isShowing">
             <kbq-form-field>
-                <kbq-tree-select
-                    placeholder="Food I want to eat right now"
-                    [formControl]="control">
-
-                    <kbq-tree-selection
-                        [dataSource]="dataSource"
-                        [treeControl]="treeControl">
-
+                <kbq-tree-select placeholder="Food I want to eat right now" [formControl]="control">
+                    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                             {{ treeControl.getViewValue(node) }}
                         </kbq-tree-option>
 
-                        <kbq-tree-option
-                                                        *kbqTreeNodeDef="let node; when: hasChild"
-                            kbqTreeNodePadding>
+                        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                             <i kbq-icon="mc-angle-S_16" kbqTreeNodeToggle></i>
                             {{ treeControl.getViewValue(node) }}
                         </kbq-tree-option>
@@ -475,7 +440,7 @@ class ManySelects {
                 </kbq-tree-select>
             </kbq-form-field>
         </div>
-    `
+    `,
 })
 class NgIfSelect {
     isShowing = false;
@@ -487,7 +452,7 @@ class NgIfSelect {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -509,23 +474,20 @@ class NgIfSelect {
             <kbq-tree-select [formControl]="control">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="mc-search_16"></i>
-                    <input kbqInput [formControl]="searchControl" type="text"/>
+                    <input kbqInput [formControl]="searchControl" type="text" />
                     <kbq-cleaner></kbq-cleaner>
                 </kbq-form-field>
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
@@ -536,7 +498,7 @@ class SelectWithSearch implements OnInit {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     searchControl: UntypedFormControl = new UntypedFormControl();
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -555,26 +517,20 @@ class SelectWithSearch implements OnInit {
     selector: 'select-with-change-event',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                (selectionChange)="changeListener($event)">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select (selectionChange)="changeListener($event)">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                                                *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <i kbq-icon="mc-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithChangeEvent {
     changeListener = jasmine.createSpy('KbqTreeSelect change listener');
@@ -601,30 +557,26 @@ class SelectWithChangeEvent {
     selector: 'select-init-without-options',
     template: `
         <kbq-form-field>
-            <kbq-tree-select  [(ngModel)]="selected" placeholder="Food I want to eat right now" [formControl]="control">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select [(ngModel)]="selected" placeholder="Food I want to eat right now" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <i kbq-icon="mc-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectInitWithoutOptions {
     control = new UntypedFormControl('rootNode_1');
     selected = '';
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -647,18 +599,19 @@ class SelectInitWithoutOptions {
 
 @Component({
     selector: 'custom-select-accessor',
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select></kbq-tree-select>
-        </kbq-form-field>`,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: CustomSelectAccessor,
-        multi: true
-    }]
+    template: ` <kbq-form-field>
+        <kbq-tree-select></kbq-tree-select>
+    </kbq-form-field>`,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: CustomSelectAccessor,
+            multi: true,
+        },
+    ],
 })
 class CustomSelectAccessor implements ControlValueAccessor {
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     writeValue: (value?: any) => void = () => {};
     registerOnChange: (changeFn?: (value: any) => void) => void = () => {};
@@ -667,17 +620,18 @@ class CustomSelectAccessor implements ControlValueAccessor {
 
 @Component({
     selector: 'comp-with-custom-select',
-    template: `
-        <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: CustomSelectAccessor,
-        multi: true
-    }]
+    template: ` <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: CustomSelectAccessor,
+            multi: true,
+        },
+    ],
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
-    @ViewChild(CustomSelectAccessor, {static: true}) customAccessor: CustomSelectAccessor;
+    @ViewChild(CustomSelectAccessor, { static: true }) customAccessor: CustomSelectAccessor;
 }
 
 @Component({
@@ -687,7 +641,7 @@ class CompWithCustomSelect {
             <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
         </kbq-form-field>
         <throws-error-on-init></throws-error-on-init>
-    `
+    `,
 })
 class SelectWithErrorSibling {
     value: string;
@@ -695,7 +649,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: ''
+    template: '',
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -709,10 +663,7 @@ class ThrowsErrorOnInit implements OnInit {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -724,7 +675,7 @@ class ThrowsErrorOnInit implements OnInit {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectOnPush {
     control = new UntypedFormControl();
@@ -753,10 +704,7 @@ class BasicSelectOnPush {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -768,7 +716,7 @@ class BasicSelectOnPush {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectOnPushPreselected {
     control = new UntypedFormControl('rootNode_1');
@@ -795,15 +743,8 @@ class BasicSelectOnPushPreselected {
     selector: 'multi-select',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [multiple]="true"
-                placeholder="Food"
-                [formControl]="control">
-
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select [multiple]="true" placeholder="Food" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -815,7 +756,7 @@ class BasicSelectOnPushPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class MultiSelect {
     control = new UntypedFormControl();
@@ -825,7 +766,7 @@ class MultiSelect {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     constructor() {
@@ -843,10 +784,9 @@ class MultiSelect {
 
 @Component({
     selector: 'select-with-plain-tabindex',
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select></kbq-tree-select>
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <kbq-tree-select></kbq-tree-select>
+    </kbq-form-field>`,
 })
 class EmptySelect {}
 
@@ -856,7 +796,7 @@ class EmptySelect {}
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect"></kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectEarlyAccessSibling {}
 
@@ -865,10 +805,7 @@ class SelectEarlyAccessSibling {}
     template: `
         <kbq-form-field>
             <kbq-tree-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -880,7 +817,7 @@ class SelectEarlyAccessSibling {}
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -908,10 +845,7 @@ class BasicSelectInitiallyHidden {
     template: `
         <kbq-form-field>
             <kbq-tree-select>
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -923,7 +857,7 @@ class BasicSelectInitiallyHidden {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectNoPlaceholder {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -949,10 +883,7 @@ class BasicSelectNoPlaceholder {
     template: `
         <kbq-form-field [color]="theme">
             <kbq-tree-select placeholder="Food">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -964,10 +895,10 @@ class BasicSelectNoPlaceholder {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithTheming {
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     theme: ThemePalette;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -993,10 +924,7 @@ class BasicSelectWithTheming {
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1008,7 +936,7 @@ class BasicSelectWithTheming {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class ResetValuesSelect {
     control = new UntypedFormControl();
@@ -1037,10 +965,7 @@ class ResetValuesSelect {
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1052,7 +977,7 @@ class ResetValuesSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class FalsyValueSelect {
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
@@ -1084,7 +1009,7 @@ class FalsyValueSelect {
                 <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
             </kbq-form-field>
         </form>
-    `
+    `,
 })
 class InvalidSelectInForm {
     value: any;
@@ -1095,10 +1020,7 @@ class InvalidSelectInForm {
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
                 <kbq-tree-select placeholder="Food" formControlName="food">
-                    <kbq-tree-selection
-                        [dataSource]="dataSource"
-                        [treeControl]="treeControl">
-
+                    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                             {{ treeControl.getViewValue(node) }}
                         </kbq-tree-option>
@@ -1112,15 +1034,15 @@ class InvalidSelectInForm {
                 <!--<kbq-error>This field is required</kbq-error>-->
             </kbq-form-field>
         </form>
-    `
+    `,
 })
 class SelectInsideFormGroup {
-    @ViewChild(FormGroupDirective, {static: false}) formGroupDirective: FormGroupDirective;
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     formControl = new UntypedFormControl('', Validators.required);
     formGroup = new UntypedFormGroup({
-        food: this.formControl
+        food: this.formControl,
     });
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1151,10 +1073,7 @@ class SelectInsideFormGroup {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1166,7 +1085,7 @@ class SelectInsideFormGroup {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
@@ -1195,10 +1114,7 @@ class BasicSelectWithoutForms {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1210,12 +1126,12 @@ class BasicSelectWithoutForms {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'Pictures';
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -1241,10 +1157,7 @@ class BasicSelectWithoutFormsPreselected {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFoods" [multiple]="true">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1256,12 +1169,12 @@ class BasicSelectWithoutFormsPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -1289,10 +1202,7 @@ class BasicSelectWithoutFormsMultiple {
                 <kbq-select-trigger>
                     {{ select.triggerValue?.split('').reverse().join('') }}
                 </kbq-select-trigger>
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1304,7 +1214,7 @@ class BasicSelectWithoutFormsMultiple {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithCustomTrigger {
     control = new UntypedFormControl();
@@ -1331,14 +1241,8 @@ class SelectWithCustomTrigger {
     selector: 'ng-model-compare-with',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [ngModel]="selected"
-                (ngModelChange)="setFoodByCopy($event)"
-                [compareWith]="comparator">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+            <kbq-tree-select [ngModel]="selected" (ngModelChange)="setFoodByCopy($event)" [compareWith]="comparator">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1350,13 +1254,13 @@ class SelectWithCustomTrigger {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class NgModelCompareWithSelect {
     selected: { name: string; type: string } = { name: 'rootNode_1', type: 'app' };
     comparator: ((f1: any, f2: any) => boolean) | null;
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1405,10 +1309,7 @@ class NgModelCompareWithSelect {
 @Component({
     template: `
         <kbq-tree-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
-            <kbq-tree-selection
-                [dataSource]="dataSource"
-                [treeControl]="treeControl">
-
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                     {{ treeControl.getViewValue(node) }}
                 </kbq-tree-option>
@@ -1419,10 +1320,10 @@ class NgModelCompareWithSelect {
                 </kbq-tree-option>
             </kbq-tree-selection>
         </kbq-tree-select>
-    `
+    `,
 })
 class CustomErrorBehaviorSelect {
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     control = new UntypedFormControl();
 
@@ -1450,10 +1351,7 @@ class CustomErrorBehaviorSelect {
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1465,12 +1363,12 @@ class CustomErrorBehaviorSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SingleSelectWithPreselectedArrayValues {
     selectedFood: string | null;
 
-    @ViewChild(KbqTreeSelect, {static: false}) select: KbqTreeSelect;
+    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1497,15 +1395,12 @@ class SingleSelectWithPreselectedArrayValues {
             <!--<kbq-label>Select a thing</kbq-label>-->
 
             <kbq-tree-select [placeholder]="placeholder">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option>A thing</kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1519,37 +1414,26 @@ class SelectWithFormFieldLabel {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [multiple]="true"
-                [formControl]="control"
-                (selectionChange)="onSelectionChange($event)"
-            >
-
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl">
-                    <kbq-tree-option
-                        #option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding>
-
+            <kbq-tree-select [multiple]="true" [formControl]="control" (selectionChange)="onSelectionChange($event)">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option #option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)"></kbq-pseudo-checkbox>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        #option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding>
-
+                    <kbq-tree-option #option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)"></kbq-pseudo-checkbox>
-                        <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbqTreeNodeToggle
+                        ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
 })
 class ChildSelection {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1613,7 +1497,9 @@ class ChildSelection {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select.selectionModel.selected.includes(parent);
@@ -1652,16 +1538,18 @@ describe('KbqTreeSelect', () => {
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
-                KbqPseudoCheckboxModule
+                KbqPseudoCheckboxModule,
             ],
             declarations,
             providers: [
-                { provide: Directionality, useFactory: () => dir = { value: 'ltr' } },
-                { provide: ScrollDispatcher, useFactory: () => ({
-                        scrolled: () => scrolledSubject.asObservable()
-                    })
-                }
-            ]
+                { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
+                {
+                    provide: ScrollDispatcher,
+                    useFactory: () => ({
+                        scrolled: () => scrolledSubject.asObservable(),
+                    }),
+                },
+            ],
         }).compileComponents();
 
         inject([OverlayContainer], (oc: OverlayContainer) => {
@@ -1681,7 +1569,7 @@ describe('KbqTreeSelect', () => {
                 BasicEvents,
                 MultiSelect,
                 SelectWithFormFieldLabel,
-                SelectWithChangeEvent
+                SelectWithChangeEvent,
             ]);
         }));
 
@@ -1724,15 +1612,11 @@ describe('KbqTreeSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
-                    expect(options[0].selected)
-                        .withContext('Expected first option to be selected.')
-                        .toBe(true);
+                    expect(options[0].selected).withContext('Expected first option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from first option to have been set on the model.')
@@ -1742,9 +1626,7 @@ describe('KbqTreeSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
                     // Note that the third option is skipped, because it is disabled.
-                    expect(options[3].selected)
-                        .withContext('Expected fourth option to be selected.')
-                        .toBe(true);
+                    expect(options[3].selected).withContext('Expected fourth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from fourth option to have been set on the model.')
@@ -1752,9 +1634,7 @@ describe('KbqTreeSelect', () => {
 
                     dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1765,9 +1645,7 @@ describe('KbqTreeSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     fixture.componentInstance.select.open();
                     fixture.detectChanges();
@@ -1791,15 +1669,11 @@ describe('KbqTreeSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
-                    expect(options[0].selected)
-                        .withContext('Expected first option to be selected.')
-                        .toBe(true);
+                    expect(options[0].selected).withContext('Expected first option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from first option to have been set on the model.')
@@ -1809,9 +1683,7 @@ describe('KbqTreeSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
                     // Note that the third option is skipped, because it is disabled.
-                    expect(options[3].selected)
-                        .withContext('Expected fourth option to be selected.')
-                        .toBe(true);
+                    expect(options[3].selected).withContext('Expected fourth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from fourth option to have been set on the model.')
@@ -1819,9 +1691,7 @@ describe('KbqTreeSelect', () => {
 
                     dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1831,13 +1701,9 @@ describe('KbqTreeSelect', () => {
                 it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
                     const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1845,25 +1711,17 @@ describe('KbqTreeSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
-                    expect(formControl.value)
-                        .withContext('Expected value not to have changed.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected value not to have changed.').toBeFalsy();
                 }));
 
                 it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
                     const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1871,13 +1729,9 @@ describe('KbqTreeSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
-                    expect(formControl.value)
-                        .withContext('Expected value not to have changed.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected value not to have changed.').toBeFalsy();
                 }));
 
                 it('should close when pressing ALT + DOWN_ARROW', fakeAsync(() => {
@@ -1885,9 +1739,7 @@ describe('KbqTreeSelect', () => {
 
                     selectInstance.open();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1895,13 +1747,9 @@ describe('KbqTreeSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(event.defaultPrevented)
-                        .withContext('Expected default action to be prevented.')
-                        .toBe(true);
+                    expect(event.defaultPrevented).withContext('Expected default action to be prevented.').toBe(true);
                 }));
 
                 it('should close when pressing ALT + UP_ARROW', fakeAsync(() => {
@@ -1909,9 +1757,7 @@ describe('KbqTreeSelect', () => {
 
                     selectInstance.open();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1919,29 +1765,21 @@ describe('KbqTreeSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(event.defaultPrevented)
-                        .withContext('Expected default action to be prevented.')
-                        .toBe(true);
+                    expect(event.defaultPrevented).withContext('Expected default action to be prevented.').toBe(true);
                 }));
 
                 xit('should be able to select options by typing on a closed select', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
                     tick(200);
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1950,85 +1788,61 @@ describe('KbqTreeSelect', () => {
                     dispatchEvent(select, createKeyboardEvent('keydown', 69, undefined, 'e'));
                     tick(200);
 
-                    expect(options[5].selected)
-                        .withContext('Expected sixth option to be selected.')
-                        .toBe(true);
+                    expect(options[5].selected).withContext('Expected sixth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from sixth option to have been set on the model.')
                         .toBe(options[5].value);
                 }));
 
-                it(
-                    'should open the panel when pressing a vertical arrow key on a closed multiple select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should open the panel when pressing a vertical arrow key on a closed multiple select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        multiFixture.detectChanges();
+                    multiFixture.detectChanges();
+                    multiFixture.detectChanges();
 
-                        select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+                    select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
 
-                        const initialValue = instance.control.value;
+                    const initialValue = instance.control.value;
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be closed.')
-                            .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
-                        const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                        tick(10);
+                    const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                    tick(10);
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be open.')
-                            .toBe(true);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be open.').toBe(true);
 
-                        expect(instance.control.value)
-                            .withContext('Expected value to stay the same.')
-                            .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
 
-                        expect(event.defaultPrevented)
-                            .withContext('Expected default to be prevented.')
-                            .toBe(true);
-                    })
-                );
+                    expect(event.defaultPrevented).withContext('Expected default to be prevented.').toBe(true);
+                }));
 
-                it(
-                    'should open the panel when pressing a horizontal arrow key on closed multiple select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should open the panel when pressing a horizontal arrow key on closed multiple select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+                    multiFixture.detectChanges();
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
 
-                        const initialValue = instance.control.value;
+                    const initialValue = instance.control.value;
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be closed.')
-                            .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
-                        const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-                        tick(10);
+                    const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+                    tick(10);
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be open.')
-                            .toBe(true);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be open.').toBe(true);
 
-                        expect(instance.control.value)
-                            .withContext('Expected value to stay the same.')
-                            .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
 
-                        expect(event.defaultPrevented)
-                            .withContext('Expected default to be prevented.')
-                            .toBe(true);
-                    })
-                );
+                    expect(event.defaultPrevented).withContext('Expected default to be prevented.').toBe(true);
+                }));
 
                 it('should do nothing when typing on a closed multi-select', fakeAsync(() => {
                     fixture.destroy();
@@ -2041,108 +1855,84 @@ describe('KbqTreeSelect', () => {
 
                     const initialValue = instance.control.value;
 
-                    expect(instance.select.panelOpen)
-                        .withContext('Expected panel to be closed.')
-                        .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
                     tick(10);
 
-                    expect(instance.select.panelOpen)
-                        .withContext('Expected panel to stay closed.')
-                        .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to stay closed.').toBe(false);
 
-                    expect(instance.control.value)
-                        .withContext('Expected value to stay the same.')
-                        .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
                 }));
 
                 it('should do nothing if the key manager did not change the active item', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
 
-                    expect(formControl.value)
-                        .withContext('Expected form control value to be empty.')
-                        .toBeNull();
+                    expect(formControl.value).withContext('Expected form control value to be empty.').toBeNull();
 
-                    expect(formControl.pristine)
-                        .withContext('Expected form control to be clean.')
-                        .toBe(true);
+                    expect(formControl.pristine).withContext('Expected form control to be clean.').toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', 16); // Press a random key.
                     flush();
 
-                    expect(formControl.value)
-                        .withContext('Expected form control value to stay empty.')
-                        .toBeNull();
+                    expect(formControl.value).withContext('Expected form control value to stay empty.').toBeNull();
 
-                    expect(formControl.pristine)
-                        .withContext('Expected form control to stay clean.')
-                        .toBe(true);
+                    expect(formControl.pristine).withContext('Expected form control to stay clean.').toBe(true);
                 }));
 
-                it(
-                    'should continue from the selected option when the value is set programmatically',
-                    fakeAsync(() => {
-                        const formControl = fixture.componentInstance.control;
+                it('should continue from the selected option when the value is set programmatically', fakeAsync(() => {
+                    const formControl = fixture.componentInstance.control;
 
-                        formControl.setValue('Pictures');
+                    formControl.setValue('Pictures');
 
-                        dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                        tick(10);
+                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                    tick(10);
 
-                        expect(formControl.value).toBe('Documents');
-                        expect(fixture.componentInstance.select.tree.keyManager.activeItem!.value)
-                            .toBe('Documents');
-                    })
-                );
+                    expect(formControl.value).toBe('Documents');
+                    expect(fixture.componentInstance.select.tree.keyManager.activeItem!.value).toBe('Documents');
+                }));
 
-                it(
-                    'should focus preselected option when select is being opened',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should focus preselected option when select is being opened', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        multiFixture.detectChanges();
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    multiFixture.detectChanges();
 
-                        multiFixture.componentInstance.control.setValue(['Applications']);
+                    multiFixture.componentInstance.control.setValue(['Applications']);
 
-                        multiFixture.componentInstance.select.open();
-                        multiFixture.detectChanges();
-                        tick(10);
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    tick(10);
 
-                        const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
-                        expect(document.activeElement).toBe(options[4]);
-                    })
-                );
+                    const options: NodeListOf<HTMLElement> =
+                        overlayContainerElement.querySelectorAll('kbq-tree-option');
+                    expect(document.activeElement).toBe(options[4]);
+                }));
 
-                it(
-                    'should not shift focus when the selected options are updated programmatically in a multi select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should not shift focus when the selected options are updated programmatically in a multi select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        multiFixture.detectChanges();
-                        multiFixture.detectChanges();
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    multiFixture.detectChanges();
+                    multiFixture.detectChanges();
 
-                        multiFixture.componentInstance.select.open();
-                        multiFixture.detectChanges();
-                        flush();
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
 
-                        const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+                    const options: NodeListOf<HTMLElement> =
+                        overlayContainerElement.querySelectorAll('kbq-tree-option');
 
-                        options[2].focus();
-                        expect(document.activeElement)
-                            .withContext('Expected third option to be focused.')
-                            .toBe(options[2]);
+                    options[2].focus();
+                    expect(document.activeElement).withContext('Expected third option to be focused.').toBe(options[2]);
 
-                        multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
-                        tick(10);
+                    multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
+                    tick(10);
 
-                        expect(document.activeElement)
-                            .withContext('Expected fourth option to remain focused.')
-                            .toBe(options[2]);
-                    })
-                );
+                    expect(document.activeElement)
+                        .withContext('Expected fourth option to remain focused.')
+                        .toBe(options[2]);
+                }));
 
                 it('should not cycle through the options if the control is disabled', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
@@ -2153,9 +1943,7 @@ describe('KbqTreeSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     tick(10);
 
-                    expect(formControl.value)
-                        .withContext('Expected value to remain unchanged.')
-                        .toBe('eggs-5');
+                    expect(formControl.value).withContext('Expected value to remain unchanged.').toBe('eggs-5');
                 }));
 
                 it('should not wrap selection after reaching the end of the options', fakeAsync(() => {
@@ -2166,16 +1954,12 @@ describe('KbqTreeSelect', () => {
                         tick(10);
                     });
 
-                    expect(lastOption.selected)
-                        .withContext('Expected last option to be selected.')
-                        .toBe(true);
+                    expect(lastOption.selected).withContext('Expected last option to be selected.').toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     tick(10);
 
-                    expect(lastOption.selected)
-                        .withContext('Expected last option to stay selected.')
-                        .toBe(true);
+                    expect(lastOption.selected).withContext('Expected last option to stay selected.').toBe(true);
                 }));
 
                 it('should not open a multiple select when tabbing through', fakeAsync(() => {
@@ -2198,60 +1982,58 @@ describe('KbqTreeSelect', () => {
                         .toBe(false);
                 }));
 
-                xit('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                xit('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
+                    const multiFixture = TestBed.createComponent(MultiSelect);
 
-                        const event = createKeyboardEvent('keydown', DOWN_ARROW);
-                        Object.defineProperty(event, 'shiftKey', { get: () => true });
+                    const event = createKeyboardEvent('keydown', DOWN_ARROW);
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
 
-                        // multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+                    // multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
 
-                        multiFixture.componentInstance.select.open();
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
+
+                    expect(multiFixture.componentInstance.select.value).toBeFalsy();
+
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1']);
+
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1', 'tacos-2']);
+                }));
+
+                xit('should toggle the previous option when pressing shift + UP_ARROW on a multi-select', fakeAsync(() => {
+                    fixture.destroy();
+
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const event = createKeyboardEvent('keydown', UP_ARROW);
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
+
+                    // Move focus down first.
+                    for (let i = 0; i < 5; i++) {
+                        dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                         multiFixture.detectChanges();
-                        flush();
+                    }
 
-                        expect(multiFixture.componentInstance.select.value).toBeFalsy();
+                    expect(multiFixture.componentInstance.select.value).toBeFalsy();
 
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1']);
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['chips-4']);
 
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1', 'tacos-2']);
-                    }));
-
-                xit('should toggle the previous option when pressing shift + UP_ARROW on a multi-select',
-                    fakeAsync(() => {
-                        fixture.destroy();
-
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const event = createKeyboardEvent('keydown', UP_ARROW);
-                        Object.defineProperty(event, 'shiftKey', { get: () => true });
-
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
-
-                        multiFixture.componentInstance.select.open();
-                        multiFixture.detectChanges();
-                        flush();
-
-                        // Move focus down first.
-                        for (let i = 0; i < 5; i++) {
-                            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                            multiFixture.detectChanges();
-                        }
-
-                        expect(multiFixture.componentInstance.select.value).toBeFalsy();
-
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['chips-4']);
-
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
-                    }));
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
+                }));
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
                     const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
@@ -2263,8 +2045,7 @@ describe('KbqTreeSelect', () => {
                 it('should consider the selection a result of a user action when closed', fakeAsync(() => {
                     const option = fixture.componentInstance.options.first;
                     const spy = jasmine.createSpy('option selection spy');
-                    const subscription =
-                        option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
+                    const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     tick(10);
@@ -2279,42 +2060,35 @@ describe('KbqTreeSelect', () => {
 
                     fixture.componentInstance.select.focus();
 
-                    expect(document.activeElement)
-                        .withContext('Expected select element to be focused.')
-                        .toBe(select);
+                    expect(document.activeElement).withContext('Expected select element to be focused.').toBe(select);
                 }));
 
                 // todo тех долг
-                xit('should restore focus to the trigger after selecting an option in multi-select mode',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                xit('should restore focus to the trigger after selecting an option in multi-select mode', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        flush();
+                    multiFixture.detectChanges();
+                    flush();
 
-                        select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
-                        instance.select.open();
-                        multiFixture.detectChanges();
-                        flush();
+                    select = multiFixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+                    instance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
 
-                        // Ensure that the select isn't focused to begin with.
-                        select.blur();
-                        tick(10);
-                        expect(document.activeElement)
-                            .withContext('Expected trigger not to be focused.')
-                            .not.toBe(select);
+                    // Ensure that the select isn't focused to begin with.
+                    select.blur();
+                    tick(10);
+                    expect(document.activeElement).withContext('Expected trigger not to be focused.').not.toBe(select);
 
-                        const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
-                        option.click();
-                        tick(10);
+                    const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+                    option.click();
+                    tick(10);
 
-                        expect(document.activeElement)
-                            .withContext('Expected trigger to be focused.')
-                            .toBe(select);
-                    }));
+                    expect(document.activeElement).withContext('Expected trigger to be focused.').toBe(select);
+                }));
             });
 
             describe('for options', () => {
@@ -2544,33 +2318,26 @@ describe('KbqTreeSelect', () => {
                 expect(event.defaultPrevented).toBe(true);
             }));
 
-            it(
-                'should not consider itself as blurred if the trigger loses focus while the panel is still open',
-                fakeAsync(() => {
-                    const selectElement = fixture.nativeElement.querySelector('.kbq-tree-select');
-                    const selectInstance = fixture.componentInstance.select;
+            it('should not consider itself as blurred if the trigger loses focus while the panel is still open', fakeAsync(() => {
+                const selectElement = fixture.nativeElement.querySelector('.kbq-tree-select');
+                const selectInstance = fixture.componentInstance.select;
 
-                    dispatchFakeEvent(selectElement, 'focus');
-                    fixture.detectChanges();
+                dispatchFakeEvent(selectElement, 'focus');
+                fixture.detectChanges();
 
-                    /* tslint:disable-next-line:deprecation */
-                    expect(selectInstance.focused)
-                        .withContext('Expected select to be focused.')
-                        .toBe(true);
+                /* tslint:disable-next-line:deprecation */
+                expect(selectInstance.focused).withContext('Expected select to be focused.').toBe(true);
 
-                    selectInstance.open();
-                    fixture.detectChanges();
-                    flush();
-                    dispatchFakeEvent(selectElement, 'blur');
-                    fixture.detectChanges();
-                    tick(10);
+                selectInstance.open();
+                fixture.detectChanges();
+                flush();
+                dispatchFakeEvent(selectElement, 'blur');
+                fixture.detectChanges();
+                tick(10);
 
-                    /* tslint:disable-next-line:deprecation */
-                    expect(selectInstance.focused)
-                        .withContext('Expected select element to remain focused.')
-                        .toBe(true);
-                })
-            );
+                /* tslint:disable-next-line:deprecation */
+                expect(selectInstance.focused).withContext('Expected select element to remain focused.').toBe(true);
+            }));
         });
 
         describe('selection logic', () => {
@@ -2614,8 +2381,9 @@ describe('KbqTreeSelect', () => {
                 fixture.autoDetectChanges();
                 expect(option.classList).toContain('kbq-selected');
                 expect(fixture.componentInstance.options.first.selected).toBe(true);
-                expect(fixture.componentInstance.select.selectedValues)
-                    .toBe(fixture.componentInstance.options.first.value);
+                expect(fixture.componentInstance.select.selectedValues).toBe(
+                    fixture.componentInstance.options.first.value,
+                );
             }));
 
             xit('should be able to select an option using the KbqTreeOption API', fakeAsync(() => {
@@ -2624,7 +2392,8 @@ describe('KbqTreeSelect', () => {
                 flush();
 
                 const optionInstances = fixture.componentInstance.options.toArray();
-                const optionNodes: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+                const optionNodes: NodeListOf<HTMLElement> =
+                    overlayContainerElement.querySelectorAll('kbq-tree-option');
 
                 optionInstances[1].select();
                 fixture.detectChanges();
@@ -2697,9 +2466,7 @@ describe('KbqTreeSelect', () => {
                     .withContext('Expected first option to no longer be selected')
                     .toBe(false);
 
-                expect(optionInstances[1].selected)
-                    .withContext('Expected second option to be selected')
-                    .toBe(true);
+                expect(optionInstances[1].selected).withContext('Expected second option to be selected').toBe(true);
             }));
 
             xit('should remove selection if option has been removed', fakeAsync(() => {
@@ -2714,9 +2481,7 @@ describe('KbqTreeSelect', () => {
                 firstOption.click();
                 fixture.detectChanges();
 
-                expect(select.selected)
-                    .withContext('Expected first option to be selected.')
-                    .toBe(select.options.first);
+                expect(select.selected).withContext('Expected first option to be selected.').toBe(select.options.first);
 
                 fixture.componentInstance.dataSource.data = [];
                 fixture.detectChanges();
@@ -2766,31 +2531,26 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll(
-                    'kbq-tree-option'
-                );
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
                 options[8].click();
                 fixture.detectChanges();
                 flush();
 
                 expect(trigger.textContent).toContain('Potatoes');
-                expect(fixture.componentInstance.select.selected)
-                    .toBe(fixture.componentInstance.options.last);
+                expect(fixture.componentInstance.select.selected).toBe(fixture.componentInstance.options.last);
             }));
 
             xit('should update the trigger when the selected option label is changed', fakeAsync(() => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
-                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim())
-                    .toBe('Pizza');
+                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim()).toBe('Pizza');
 
                 fixture.componentInstance.dataSource.data[1].name = 'Calzone';
                 fixture.detectChanges();
                 flush();
 
-                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim())
-                    .toBe('Calzone');
+                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim()).toBe('Calzone');
             }));
 
             it('should not select disabled options', fakeAsync(() => {
@@ -2828,48 +2588,44 @@ describe('KbqTreeSelect', () => {
                 subscription.unsubscribe();
             }));
 
-            xit('should handle accessing `optionSelectionChanges` before the options are initialized',
-                fakeAsync(() => {
-                    fixture.destroy();
-                    fixture = TestBed.createComponent(BasicTreeSelect);
+            xit('should handle accessing `optionSelectionChanges` before the options are initialized', fakeAsync(() => {
+                fixture.destroy();
+                fixture = TestBed.createComponent(BasicTreeSelect);
 
-                    const spy = jasmine.createSpy('option selection spy');
-                    let subscription: Subscription;
+                const spy = jasmine.createSpy('option selection spy');
+                let subscription: Subscription;
 
-                    expect(fixture.componentInstance.select.options).toBeFalsy();
-                    expect(() => {
-                        subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
-                    }).not.toThrow();
+                expect(fixture.componentInstance.select.options).toBeFalsy();
+                expect(() => {
+                    subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
+                }).not.toThrow();
 
-                    fixture.detectChanges();
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+                fixture.detectChanges();
+                trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
-                    option.click();
-                    fixture.detectChanges();
-                    flush();
+                const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+                option.click();
+                fixture.detectChanges();
+                flush();
 
-                    expect(spy).toHaveBeenCalledWith(jasmine.any(KbqTreeSelectionChange));
+                expect(spy).toHaveBeenCalledWith(jasmine.any(KbqTreeSelectionChange));
 
-                    /* tslint:disable-next-line:no-unnecessary-type-assertion */
-                    subscription!.unsubscribe();
-                }));
+                /* tslint:disable-next-line:no-unnecessary-type-assertion */
+                subscription!.unsubscribe();
+            }));
 
             it('should scroll to selected element on panel open', fakeAsync(() => {
                 const dataMock = Array(30)
                     .fill('option')
-                    .reduce(
-                        (accum, value, index) => {
-                            accum[`${value}-${index}`] = `${value}-${index}`;
+                    .reduce((accum, value, index) => {
+                        accum[`${value}-${index}`] = `${value}-${index}`;
 
-                            return accum;
-                        },
-                        {}
-                    );
+                        return accum;
+                    }, {});
                 fixture.componentInstance.dataSource.data = buildFileTree(dataMock, 0);
 
                 trigger.click();
@@ -2886,16 +2642,15 @@ describe('KbqTreeSelect', () => {
                 const {
                     bottom: elementBottom,
                     height: elementHeight,
-                    top: elementTop
+                    top: elementTop,
                 } = options[options.length - 1].getBoundingClientRect();
-                const {
-                    top: containerTop,
-                    bottom: containerBottom
-                } = fixture.componentInstance.select.panel.nativeElement.getBoundingClientRect();
+                const { top: containerTop, bottom: containerBottom } =
+                    fixture.componentInstance.select.panel.nativeElement.getBoundingClientRect();
 
-                const isInView = elementTop <= containerTop
-                    ? containerTop - elementTop <= elementHeight
-                    : elementBottom - containerBottom <= elementHeight;
+                const isInView =
+                    elementTop <= containerTop
+                        ? containerTop - elementTop <= elementHeight
+                        : elementBottom - containerBottom <= elementHeight;
                 expect(isInView).toBeTruthy();
             }));
 
@@ -2913,7 +2668,7 @@ describe('KbqTreeSelect', () => {
                     const option: HTMLElement = overlayContainerElement.querySelectorAll('kbq-tree-option')[0];
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
-                        altKey: { get: () => true }
+                        altKey: { get: () => true },
                     });
 
                     dispatchEvent(option, keyBoardEvent);
@@ -3029,13 +2784,11 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const options =
-                    overlayContainerElement.querySelectorAll('kbq-tree-option');
+                const options = overlayContainerElement.querySelectorAll('kbq-tree-option');
                 expect(options[1].classList)
                     .withContext(`Expected option w/ the old value not to be selected.`)
                     .not.toContain('kbq-selected');
             }));
-
 
             it('should clear the selection when the control is reset', fakeAsync(() => {
                 fixture.componentInstance.control.setValue('pizza-1');
@@ -3143,18 +2896,17 @@ describe('KbqTreeSelect', () => {
                     .toEqual(true);
             }));
 
-            xit('should not set the control to dirty when the value changes programmatically',
-                fakeAsync(() => {
-                    expect(fixture.componentInstance.control.dirty)
-                        .withContext(`Expected control to start out pristine.`)
-                        .toEqual(false);
+            xit('should not set the control to dirty when the value changes programmatically', fakeAsync(() => {
+                expect(fixture.componentInstance.control.dirty)
+                    .withContext(`Expected control to start out pristine.`)
+                    .toEqual(false);
 
-                    fixture.componentInstance.control.setValue('pizza-1');
+                fixture.componentInstance.control.setValue('pizza-1');
 
-                    expect(fixture.componentInstance.control.dirty)
-                        .withContext(`Expected control to stay pristine after programmatic change.`)
-                        .toEqual(false);
-                }));
+                expect(fixture.componentInstance.control.dirty)
+                    .withContext(`Expected control to stay pristine after programmatic change.`)
+                    .toEqual(false);
+            }));
         });
 
         describe('disabled behavior', () => {
@@ -3236,9 +2988,7 @@ describe('KbqTreeSelect', () => {
                 }
 
                 // <option index * height> - <panel height> = 16 * 32 - 224 = 288
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 16th option.')
-                    .toBe(288);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 16th option.').toBe(288);
             }));
 
             it('should scroll up to the active option', fakeAsync(() => {
@@ -3252,9 +3002,7 @@ describe('KbqTreeSelect', () => {
                 }
 
                 // <option index * height> = 9 * 32 = 432
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 9th option.')
-                    .toBe(288);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 9th option.').toBe(288);
             }));
 
             it('should scroll top the top when pressing HOME', fakeAsync(() => {
@@ -3263,16 +3011,12 @@ describe('KbqTreeSelect', () => {
                     fixture.detectChanges();
                 }
 
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled down.')
-                    .toBeGreaterThan(0);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled down.').toBeGreaterThan(0);
 
                 dispatchKeyboardEvent(host, 'keydown', HOME);
                 fixture.detectChanges();
 
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled to the top')
-                    .toBe(0);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled to the top').toBe(0);
             }));
 
             it('should scroll to the bottom of the panel when pressing END', fakeAsync(() => {
@@ -3280,9 +3024,7 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
 
                 // <option amount> * <option height> - <panel height> = 30 * 32 - 228 = 736
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled to the bottom')
-                    .toBe(732);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled to the bottom').toBe(732);
             }));
 
             it('should scroll to the active option when typing', fakeAsync(() => {
@@ -3295,11 +3037,8 @@ describe('KbqTreeSelect', () => {
                 flush();
 
                 // <option index * height> - <panel height> = 16 * 32 - 224 = 288
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 16th option.')
-                    .toBe(288);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 16th option.').toBe(288);
             }));
-
         });
 
         describe('Events', () => {
@@ -3527,7 +3266,7 @@ describe('KbqTreeSelect', () => {
             const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
             expect(value.nativeElement.textContent)
                 .withContext(`Expected trigger to be populated by the control's initial value.`)
-                 .toContain('rootNode_1');
+                .toContain('rootNode_1');
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
             expect(pane.style.minWidth).toEqual('300px');
@@ -3602,13 +3341,14 @@ describe('KbqTreeSelect', () => {
             tick();
             flush();
 
-            const optionsTexts = fixture.debugElement.queryAll(By.css('kbq-tree-option'))
+            const optionsTexts = fixture.debugElement
+                .queryAll(By.css('kbq-tree-option'))
                 .map((el) => el.nativeElement.innerText);
 
             expect(optionsTexts).toEqual(['Applications']);
         }));
 
-        it('should clear search by esc', (() => {
+        it('should clear search by esc', () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -3624,7 +3364,7 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(inputElementDebug.nativeElement.value).toBe('');
-        }));
+        });
 
         it('should close list by esc if input is empty', () => {
             trigger.click();
@@ -3671,9 +3411,7 @@ describe('KbqTreeSelect', () => {
                 .withContext(`Expected option ID to have the correct prefix.`)
                 .toContain('kbq-tree-option');
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(options[1].id);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(options[1].id);
 
             document.body.click();
             fixture.detectChanges();
@@ -3688,27 +3426,25 @@ describe('KbqTreeSelect', () => {
                 .withContext(`Expected option ID to have the correct prefix.`)
                 .toContain('kbq-tree-option');
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(firstOptionID);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(firstOptionID);
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(options[1].id);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(options[1].id);
         }));
     });
 
     describe('with a sibling component that throws an error', () => {
-        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([
-            SelectWithErrorSibling,
-            ThrowsErrorOnInit
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqTreeSelectTestingModule([
+                SelectWithErrorSibling,
+                ThrowsErrorOnInit,
+            ])));
 
         it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
             // Note that this test can be considered successful if the error being thrown didn't
             // end up crashing the testing setup altogether.
-            expect(() => TestBed.createComponent(SelectWithErrorSibling).detectChanges())
-                .toThrowError(new RegExp('Oh no!', 'g'));
+            expect(() => TestBed.createComponent(SelectWithErrorSibling).detectChanges()).toThrowError(
+                new RegExp('Oh no!', 'g'),
+            );
         }));
     });
 
@@ -3784,7 +3520,6 @@ describe('KbqTreeSelect', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(BasicSelectWithTheming);
             fixture.detectChanges();
-
         });
 
         it('should transfer the theme to the select panel', () => {
@@ -3827,7 +3562,6 @@ describe('KbqTreeSelect', () => {
         }));
 
         describe('comparing by value', () => {
-
             xit('should have a selection', fakeAsync(() => {
                 const selectedOption = instance.select.selected as KbqTreeOption;
                 expect(selectedOption.value).toEqual('rootNode_1');
@@ -3877,19 +3611,20 @@ describe('KbqTreeSelect', () => {
             it('should throw an error when using a non-function comparator', fakeAsync(() => {
                 instance.useNullComparator();
 
-                expect(() => { fixture.detectChanges(); }).toThrowError(
-                    wrappedErrorMessage(getKbqSelectNonFunctionValueError())
-                );
+                expect(() => {
+                    fixture.detectChanges();
+                }).toThrowError(wrappedErrorMessage(getKbqSelectNonFunctionValueError()));
             }));
         });
     });
-
 
     describe(`when the select's value is accessed on initialization`, () => {
         beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([SelectEarlyAccessSibling])));
 
         it('should not throw when trying to access the selected value on init', fakeAsync(() => {
-            expect(() => { TestBed.createComponent(SelectEarlyAccessSibling).detectChanges(); }).not.toThrow();
+            expect(() => {
+                TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
+            }).not.toThrow();
         }));
     });
 
@@ -3910,81 +3645,59 @@ describe('KbqTreeSelect', () => {
         }));
 
         it('should not set the invalid class on a clean select', fakeAsync(() => {
-            expect(testComponent.formGroup.untouched)
-                .withContext('Expected the form to be untouched.')
-                .toBe(true);
+            expect(testComponent.formGroup.untouched).withContext('Expected the form to be untouched.').toBe(true);
 
-            expect(testComponent.formControl.invalid)
-                .withContext('Expected form control to be invalid.')
-                .toBe(false);
+            expect(testComponent.formControl.invalid).withContext('Expected form control to be invalid.').toBe(false);
 
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should not appear as invalid if it becomes touched', fakeAsync(() => {
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should not have the invalid class when the select becomes valid', fakeAsync(() => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').not.toContain('kbq-invalid');
 
             testComponent.formControl.setValue('pizza-1');
             fixture.detectChanges();
             flush();
 
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should appear as invalid when the parent form group is submitted', fakeAsync(() => {
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').toContain('kbq-invalid');
         }));
 
         // todo fix
         xit('should render the error messages when the parent form is submitted', fakeAsync(() => {
             const debugEl = fixture.debugElement.nativeElement;
 
-            expect(debugEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected no error messages')
-                .toBe(0);
+            expect(debugEl.querySelectorAll('kbq-error').length).withContext('Expected no error messages').toBe(0);
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
 
-            expect(debugEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected one error message')
-                .toBe(1);
+            expect(debugEl.querySelectorAll('kbq-error').length).withContext('Expected one error message').toBe(1);
         }));
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
+                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true),
             };
 
             fixture.destroy();
@@ -3996,10 +3709,10 @@ describe('KbqTreeSelect', () => {
                     KbqTreeSelectModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule
+                    NoopAnimationsModule,
                 ],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
+                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -4046,9 +3759,10 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('with preselected array values', () => {
-        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([
-            SingleSelectWithPreselectedArrayValues
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqTreeSelectTestingModule([
+                SingleSelectWithPreselectedArrayValues,
+            ])));
 
         it('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
@@ -4064,10 +3778,11 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('with custom value accessor', () => {
-        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([
-            CompWithCustomSelect,
-            CustomSelectAccessor
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqTreeSelectTestingModule([
+                CompWithCustomSelect,
+                CustomSelectAccessor,
+            ])));
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
@@ -4105,10 +3820,11 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('with OnPush', () => {
-        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([
-            BasicSelectOnPush,
-            BasicSelectOnPushPreselected
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqTreeSelectTestingModule([
+                BasicSelectOnPush,
+                BasicSelectOnPushPreselected,
+            ])));
 
         it('should set the trigger text based on the value when initialized', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectOnPushPreselected);
@@ -4238,18 +3954,15 @@ describe('KbqTreeSelect', () => {
             expect(trigger.textContent).toContain('Falsy-option');
         }));
 
-        it(
-            'should not consider the reset values as selected when resetting the form control',
-            fakeAsync(() => {
-                fixture.componentInstance.control.reset();
-                tick(1);
+        it('should not consider the reset values as selected when resetting the form control', fakeAsync(() => {
+            fixture.componentInstance.control.reset();
+            tick(1);
 
-                expect(fixture.componentInstance.control.value).toBeUndefined();
-                expect(fixture.componentInstance.select.selected).toBeFalsy();
-                expect(trigger.textContent).not.toContain('Null');
-                expect(trigger.textContent).not.toContain('Undefined-option');
-            })
-        );
+            expect(fixture.componentInstance.control.value).toBeUndefined();
+            expect(fixture.componentInstance.select.selected).toBeFalsy();
+            expect(trigger.textContent).not.toContain('Null');
+            expect(trigger.textContent).not.toContain('Undefined-option');
+        }));
     });
 
     describe('without Angular forms', () => {
@@ -4259,7 +3972,7 @@ describe('KbqTreeSelect', () => {
             configureKbqTreeSelectTestingModule([
                 BasicSelectWithoutForms,
                 BasicSelectWithoutFormsPreselected,
-                BasicSelectWithoutFormsMultiple
+                BasicSelectWithoutFormsMultiple,
             ]);
 
             fixture = TestBed.createComponent(BasicSelectWithoutForms);
@@ -4343,7 +4056,6 @@ describe('KbqTreeSelect', () => {
             expect(trigger.textContent).not.toContain('rootNode_1');
         }));
 
-
         it('should reflect the preselected value', fakeAsync(() => {
             fixture = TestBed.createComponent(BasicSelectWithoutFormsPreselected);
 
@@ -4352,7 +4064,6 @@ describe('KbqTreeSelect', () => {
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
             fixture.detectChanges();
             tick(600);
-
 
             expect(trigger.textContent).toContain('Pictures');
             trigger.click();
@@ -4440,8 +4151,7 @@ describe('KbqTreeSelect', () => {
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
 
-            expect(document.activeElement)
-                .toBe(options[0]);
+            expect(document.activeElement).toBe(options[0]);
 
             select.blur(); // Blur manually since the programmatic click might not do it.
             document.body.click();
@@ -4475,14 +4185,15 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('positioning', () => {
-        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([
-            BasicTreeSelect,
-            MultiSelect
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqTreeSelectTestingModule([
+                BasicTreeSelect,
+                MultiSelect,
+            ])));
 
-        beforeEach((inject([ViewportRuler], (vr: ViewportRuler) => {
+        beforeEach(inject([ViewportRuler], (vr: ViewportRuler) => {
             viewportRuler = vr;
-        })));
+        }));
 
         let fixture: ComponentFixture<BasicTreeSelect>;
         let trigger: HTMLElement;
@@ -4503,9 +4214,7 @@ describe('KbqTreeSelect', () => {
          * @param index The index of the option.
          * @param selectInstance Instance of the `kbq-select` component to check against.
          */
-        function checkTriggerAlignedWithOption(index: number, selectInstance =
-            fixture.componentInstance.select): void {
-
+        function checkTriggerAlignedWithOption(index: number, selectInstance = fixture.componentInstance.select): void {
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
             const triggerTop: number = trigger.getBoundingClientRect().top;
             const overlayTop: number = overlayPane.getBoundingClientRect().top;
@@ -4516,9 +4225,9 @@ describe('KbqTreeSelect', () => {
 
             // Extra trigger height beyond the font size caused by the fact that the line-height is
             // greater than 1em.
-            const triggerExtraLineSpaceAbove = (1 - triggerLineHeightEm) * triggerFontSize / 2;
-            const topDifference = Math.floor(optionTop) -
-                Math.floor(triggerTop - triggerFontSize - triggerExtraLineSpaceAbove);
+            const triggerExtraLineSpaceAbove = ((1 - triggerLineHeightEm) * triggerFontSize) / 2;
+            const topDifference =
+                Math.floor(optionTop) - Math.floor(triggerTop - triggerFontSize - triggerExtraLineSpaceAbove);
 
             // Expect the coordinates to be within a pixel of each other. We can't rely on comparing
             // the exact value, because different browsers report the various sizes with slight (< 1px)
@@ -4549,42 +4258,36 @@ describe('KbqTreeSelect', () => {
                 formField.style.left = '20px';
             }));
 
-            xit('should align the first option with trigger text if no option is selected',
-                fakeAsync(() => {
-                    // We shouldn't push it too far down for this one, because the default may
-                    // end up being too much when running the tests on mobile browsers.
-                    formField.style.top = '100px';
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+            xit('should align the first option with trigger text if no option is selected', fakeAsync(() => {
+                // We shouldn't push it too far down for this one, because the default may
+                // end up being too much when running the tests on mobile browsers.
+                formField.style.top = '100px';
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
 
-                    // The panel should be scrolled to 0 because centering the option is not possible.
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
-                    checkTriggerAlignedWithOption(0);
-                }));
+                // The panel should be scrolled to 0 because centering the option is not possible.
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
+                checkTriggerAlignedWithOption(0);
+            }));
 
-            xit('should align a selected option too high to be centered with the trigger text',
-                fakeAsync(() => {
-                    // Select the second option, because it can't be scrolled any further downward
-                    fixture.componentInstance.control.setValue('pizza-1');
-                    fixture.detectChanges();
+            xit('should align a selected option too high to be centered with the trigger text', fakeAsync(() => {
+                // Select the second option, because it can't be scrolled any further downward
+                fixture.componentInstance.control.setValue('pizza-1');
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
 
-                    // The panel should be scrolled to 0 because centering the option is not possible.
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
-                    checkTriggerAlignedWithOption(1);
-                }));
+                // The panel should be scrolled to 0 because centering the option is not possible.
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
+                checkTriggerAlignedWithOption(1);
+            }));
 
             xit('should align a selected option in the middle with the trigger text', fakeAsync(() => {
                 // Select the fifth option, which has enough space to scroll to the center
@@ -4638,197 +4341,185 @@ describe('KbqTreeSelect', () => {
                 formField.style.left = '20px';
             }));
 
-            xit('should adjust position of centered option if there is little space above',
-                fakeAsync(() => {
-                    const selectMenuHeight = 256;
-                    const selectMenuViewportPadding = 8;
-                    const selectItemHeight = 48;
-                    const selectedIndex = 4;
-                    const fontSize = 16;
-                    const lineHeightEm = 1.125;
-                    const expectedExtraScroll = 5;
+            xit('should adjust position of centered option if there is little space above', fakeAsync(() => {
+                const selectMenuHeight = 256;
+                const selectMenuViewportPadding = 8;
+                const selectItemHeight = 48;
+                const selectedIndex = 4;
+                const fontSize = 16;
+                const lineHeightEm = 1.125;
+                const expectedExtraScroll = 5;
 
-                    // Trigger element height.
-                    const triggerHeight = fontSize * lineHeightEm;
+                // Trigger element height.
+                const triggerHeight = fontSize * lineHeightEm;
 
-                    // Ideal space above selected item in order to center it.
-                    const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+                // Ideal space above selected item in order to center it.
+                const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
 
-                    // Actual space above selected item.
-                    const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+                // Actual space above selected item.
+                const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
 
-                    // Ideal scroll position to center.
-                    const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+                // Ideal scroll position to center.
+                const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
 
-                    // Top-most select-position that allows for perfect centering.
-                    const topMostPositionForPerfectCentering =
-                        idealSpaceAboveSelectedItem + selectMenuViewportPadding +
-                        (selectItemHeight - triggerHeight) / 2;
+                // Top-most select-position that allows for perfect centering.
+                const topMostPositionForPerfectCentering =
+                    idealSpaceAboveSelectedItem + selectMenuViewportPadding + (selectItemHeight - triggerHeight) / 2;
 
-                    // Position of select relative to top edge of kbq-form-field.
-                    const formFieldTopSpace =
-                        trigger.getBoundingClientRect().top - formField.getBoundingClientRect().top;
+                // Position of select relative to top edge of kbq-form-field.
+                const formFieldTopSpace = trigger.getBoundingClientRect().top - formField.getBoundingClientRect().top;
 
-                    const formFieldTop =
-                        topMostPositionForPerfectCentering - formFieldTopSpace - expectedExtraScroll;
+                const formFieldTop = topMostPositionForPerfectCentering - formFieldTopSpace - expectedExtraScroll;
 
-                    formField.style.top = `${formFieldTop}px`;
+                formField.style.top = `${formFieldTop}px`;
 
-                    // Select an option in the middle of the list
-                    fixture.componentInstance.control.setValue('chips-4');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option in the middle of the list
+                fixture.componentInstance.control.setValue('chips-4');
+                fixture.detectChanges();
+                flush();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
 
-                    expect(Math.ceil(scrollContainer.scrollTop))
-                        .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
-                        .toEqual(Math.ceil(idealScrollTop + 5));
+                expect(Math.ceil(scrollContainer.scrollTop))
+                    .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
+                    .toEqual(Math.ceil(idealScrollTop + 5));
 
-                    checkTriggerAlignedWithOption(4);
-                }));
+                checkTriggerAlignedWithOption(4);
+            }));
 
-            xit('should adjust position of centered option if there is little space below',
-                fakeAsync(() => {
-                    const selectMenuHeight = 256;
-                    const selectMenuViewportPadding = 8;
-                    const selectItemHeight = 48;
-                    const selectedIndex = 4;
-                    const fontSize = 16;
-                    const lineHeightEm = 1.125;
-                    const expectedExtraScroll = 5;
+            xit('should adjust position of centered option if there is little space below', fakeAsync(() => {
+                const selectMenuHeight = 256;
+                const selectMenuViewportPadding = 8;
+                const selectItemHeight = 48;
+                const selectedIndex = 4;
+                const fontSize = 16;
+                const lineHeightEm = 1.125;
+                const expectedExtraScroll = 5;
 
-                    // Trigger element height.
-                    const triggerHeight = fontSize * lineHeightEm;
+                // Trigger element height.
+                const triggerHeight = fontSize * lineHeightEm;
 
-                    // Ideal space above selected item in order to center it.
-                    const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+                // Ideal space above selected item in order to center it.
+                const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
 
-                    // Actual space above selected item.
-                    const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+                // Actual space above selected item.
+                const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
 
-                    // Ideal scroll position to center.
-                    const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+                // Ideal scroll position to center.
+                const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
 
-                    // Bottom-most select-position that allows for perfect centering.
-                    const bottomMostPositionForPerfectCentering =
-                        idealSpaceAboveSelectedItem + selectMenuViewportPadding +
-                        (selectItemHeight - triggerHeight) / 2;
+                // Bottom-most select-position that allows for perfect centering.
+                const bottomMostPositionForPerfectCentering =
+                    idealSpaceAboveSelectedItem + selectMenuViewportPadding + (selectItemHeight - triggerHeight) / 2;
 
-                    // Position of select relative to bottom edge of kbq-form-field:
-                    const formFieldBottomSpace =
-                        formField.getBoundingClientRect().bottom - trigger.getBoundingClientRect().bottom;
+                // Position of select relative to bottom edge of kbq-form-field:
+                const formFieldBottomSpace =
+                    formField.getBoundingClientRect().bottom - trigger.getBoundingClientRect().bottom;
 
-                    const formFieldBottom =
-                        bottomMostPositionForPerfectCentering - formFieldBottomSpace - expectedExtraScroll;
+                const formFieldBottom =
+                    bottomMostPositionForPerfectCentering - formFieldBottomSpace - expectedExtraScroll;
 
-                    // Push the select to a position with not quite enough space on the bottom to open
-                    // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
-                    formField.style.bottom = `${formFieldBottom}px`;
+                // Push the select to a position with not quite enough space on the bottom to open
+                // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
+                formField.style.bottom = `${formFieldBottom}px`;
 
-                    // Select an option in the middle of the list
-                    fixture.componentInstance.control.setValue('chips-4');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option in the middle of the list
+                fixture.componentInstance.control.setValue('chips-4');
+                fixture.detectChanges();
+                flush();
 
-                    fixture.detectChanges();
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-tree-select__panel')!;
 
-                    // Scroll should adjust by the difference between the bottom space available
-                    // (56px from the bottom of the screen - 8px padding = 48px)
-                    // and the height of the panel below the option (113px).
-                    // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
-                    const difference = Math.ceil(scrollContainer.scrollTop) -
-                        Math.ceil(idealScrollTop - expectedExtraScroll);
+                // Scroll should adjust by the difference between the bottom space available
+                // (56px from the bottom of the screen - 8px padding = 48px)
+                // and the height of the panel below the option (113px).
+                // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
+                const difference =
+                    Math.ceil(scrollContainer.scrollTop) - Math.ceil(idealScrollTop - expectedExtraScroll);
 
-                    // Note that different browser/OS combinations report the different dimensions with
-                    // slight deviations (< 1px). We round the expectation and check that the values
-                    // are within a pixel of each other to avoid flakes.
-                    expect(Math.abs(difference) < 2)
-                        .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
-                        .toBe(true);
+                // Note that different browser/OS combinations report the different dimensions with
+                // slight deviations (< 1px). We round the expectation and check that the values
+                // are within a pixel of each other to avoid flakes.
+                expect(Math.abs(difference) < 2)
+                    .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
+                    .toBe(true);
 
-                    checkTriggerAlignedWithOption(4);
-                }));
+                checkTriggerAlignedWithOption(4);
+            }));
 
-            xit('should fall back to "above" positioning if scroll adjustment will not help',
-                fakeAsync(() => {
-                    // Push the select to a position with not enough space on the bottom to open
-                    formField.style.bottom = '56px';
-                    fixture.detectChanges();
+            xit('should fall back to "above" positioning if scroll adjustment will not help', fakeAsync(() => {
+                // Push the select to a position with not enough space on the bottom to open
+                formField.style.bottom = '56px';
+                fixture.detectChanges();
 
-                    // Select an option that cannot be scrolled any farther upward
-                    fixture.componentInstance.control.setValue('coke-0');
-                    fixture.detectChanges();
+                // Select an option that cannot be scrolled any farther upward
+                fixture.componentInstance.control.setValue('coke-0');
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const overlayPane = document.querySelector('.cdk-overlay-pane')!;
-                    const triggerBottom: number = trigger.getBoundingClientRect().bottom;
-                    const overlayBottom: number = overlayPane.getBoundingClientRect().bottom;
-                    const scrollContainer = overlayPane.querySelector('.kbq-tree-select__panel')!;
+                const overlayPane = document.querySelector('.cdk-overlay-pane')!;
+                const triggerBottom: number = trigger.getBoundingClientRect().bottom;
+                const overlayBottom: number = overlayPane.getBoundingClientRect().bottom;
+                const scrollContainer = overlayPane.querySelector('.kbq-tree-select__panel')!;
 
-                    // Expect no scroll to be attempted
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
+                // Expect no scroll to be attempted
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
 
-                    const difference = Math.floor(overlayBottom) - Math.floor(triggerBottom);
+                const difference = Math.floor(overlayBottom) - Math.floor(triggerBottom);
 
-                    // Check that the values are within a pixel of each other. This avoids sub-pixel
-                    // deviations between OS and browser versions.
-                    expect(Math.abs(difference) < 2)
-                        .withContext(`Expected trigger bottom to align with overlay bottom.`)
-                        .toEqual(true);
+                // Check that the values are within a pixel of each other. This avoids sub-pixel
+                // deviations between OS and browser versions.
+                expect(Math.abs(difference) < 2)
+                    .withContext(`Expected trigger bottom to align with overlay bottom.`)
+                    .toEqual(true);
 
-                    expect(fixture.componentInstance.select.transformOrigin)
-                        .withContext(`Expected panel animation to originate at the bottom.`)
-                        .toContain(`bottom`);
-                }));
+                expect(fixture.componentInstance.select.transformOrigin)
+                    .withContext(`Expected panel animation to originate at the bottom.`)
+                    .toContain(`bottom`);
+            }));
 
-            xit('should fall back to "below" positioning if scroll adjustment won\'t help',
-                fakeAsync(() => {
-                    // Push the select to a position with not enough space on the top to open
-                    formField.style.top = '85px';
+            xit('should fall back to "below" positioning if scroll adjustment won\'t help', fakeAsync(() => {
+                // Push the select to a position with not enough space on the top to open
+                formField.style.top = '85px';
 
-                    // Select an option that cannot be scrolled any farther downward
-                    fixture.componentInstance.control.setValue('sushi-7');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option that cannot be scrolled any farther downward
+                fixture.componentInstance.control.setValue('sushi-7');
+                fixture.detectChanges();
+                flush();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const overlayPane = document.querySelector('.cdk-overlay-pane')!;
-                    const triggerTop: number = trigger.getBoundingClientRect().top;
-                    const overlayTop: number = overlayPane.getBoundingClientRect().top;
-                    const scrollContainer = overlayPane.querySelector('.kbq-tree-select__panel')!;
+                const overlayPane = document.querySelector('.cdk-overlay-pane')!;
+                const triggerTop: number = trigger.getBoundingClientRect().top;
+                const overlayTop: number = overlayPane.getBoundingClientRect().top;
+                const scrollContainer = overlayPane.querySelector('.kbq-tree-select__panel')!;
 
-                    // Expect scroll to remain at the max scroll position
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel to be at max scroll.`)
-                        .toEqual(128);
+                // Expect scroll to remain at the max scroll position
+                expect(scrollContainer.scrollTop).withContext(`Expected panel to be at max scroll.`).toEqual(128);
 
-                    expect(Math.floor(overlayTop))
-                        .withContext(`Expected trigger top to align with overlay top.`)
-                        .toEqual(Math.floor(triggerTop));
+                expect(Math.floor(overlayTop))
+                    .withContext(`Expected trigger top to align with overlay top.`)
+                    .toEqual(Math.floor(triggerTop));
 
-                    expect(fixture.componentInstance.select.transformOrigin)
-                        .withContext(`Expected panel animation to originate at the top.`)
-                        .toContain(`top`);
-                }));
+                expect(fixture.componentInstance.select.transformOrigin)
+                    .withContext(`Expected panel animation to originate at the top.`)
+                    .toContain(`top`);
+            }));
         });
 
         describe('limited space to open horizontally', () => {
@@ -4836,7 +4527,6 @@ describe('KbqTreeSelect', () => {
                 formField.style.position = 'absolute';
                 formField.style.top = '200px';
             }));
-
 
             xit('should stay within the viewport when overflowing on the left in ltr', fakeAsync(() => {
                 formField.style.left = '100px';
@@ -4895,7 +4585,6 @@ describe('KbqTreeSelect', () => {
                     .toBeGreaterThan(0);
             }));
 
-
             xit('should keep the position within the viewport on repeat openings', fakeAsync(() => {
                 formField.style.left = '-100px';
                 trigger.click();
@@ -4953,7 +4642,6 @@ describe('KbqTreeSelect', () => {
             options.forEach((option) => {
                 expect(option.querySelector('kbq-pseudo-checkbox')).not.toBeNull();
             });
-
         }));
 
         it('should be able to select multiple values', fakeAsync(() => {
@@ -5006,41 +4694,53 @@ describe('KbqTreeSelect', () => {
             flush();
 
             const expandableNode = fixture.componentInstance.treeControl.dataNodes.find(
-                (node) => node.name === 'Downloads');
+                (node) => node.name === 'Downloads',
+            );
             fixture.componentInstance.treeControl.expand(expandableNode!);
 
             fixture.detectChanges();
             flush();
 
-            const optionsExpanded: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+            const optionsExpanded: NodeListOf<HTMLElement> =
+                overlayContainerElement.querySelectorAll('kbq-tree-option');
 
             optionsExpanded[5].click();
 
             fixture.detectChanges();
             flush();
 
-            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim()))
-                .toEqual(['rootNode_1', 'Documents', 'Applications', 'November']);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
+                'rootNode_1',
+                'Documents',
+                'Applications',
+                'November',
+            ]);
 
             fixture.componentInstance.treeControl.collapse(expandableNode!);
 
             fixture.detectChanges();
             flush();
 
-            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim()))
-                .toEqual(['rootNode_1', 'Documents', 'Applications', 'November']);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
+                'rootNode_1',
+                'Documents',
+                'Applications',
+                'November',
+            ]);
 
             optionsExpanded[2].click();
             tick(100);
             fixture.detectChanges();
             flush();
 
-            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim()))
-                .toEqual(['rootNode_1', 'Applications', 'November']);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
+                'rootNode_1',
+                'Applications',
+                'November',
+            ]);
         }));
 
         it('should be able to set the selected value by taking an array', fakeAsync(() => {
-
             trigger.click();
             testInstance.control.setValue(['rootNode_1', 'Applications']);
             fixture.detectChanges();
@@ -5158,19 +4858,18 @@ describe('KbqTreeSelect', () => {
             expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'pizza-1', 'steak-0']);
         }));
 
-        xit('should sort the values that get set via the model based on the panel order',
-            fakeAsync(() => {
-                trigger.click();
-                fixture.detectChanges();
+        xit('should sort the values that get set via the model based on the panel order', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
 
-                testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
-                fixture.detectChanges();
-                flush();
+            testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            flush();
 
-                // expect(trigger.querySelector('.kbq-select__match-list')!.textContent.trim())
-                //     .toContain('Steak, Pizza, Tacos');
-                expect(trigger.textContent).toContain('Steak, Pizza, Tacos');
-            }));
+            // expect(trigger.querySelector('.kbq-select__match-list')!.textContent.trim())
+            //     .toContain('Steak, Pizza, Tacos');
+            expect(trigger.textContent).toContain('Steak, Pizza, Tacos');
+        }));
 
         xit('should reverse sort the values, that get set via the model in rtl', fakeAsync(() => {
             dir.value = 'rtl';
@@ -5271,7 +4970,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5298,7 +4997,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5329,7 +5028,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5348,7 +5047,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
             expect(options.every((option) => option.selected)).toBe(true);
 

@@ -1,8 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { EventEmitter, TemplateRef, Type } from '@angular/core';
 
-
-export type OnClickCallback<T> = ((instance: T) => (false | void | {}) | Promise<false | void | {}>);
+export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
 
 // Different modal styles we have supported
 export type ModalType = 'default' | 'confirm' | 'custom';
@@ -13,7 +12,7 @@ export type ConfirmType = 'confirm' | 'success' | 'warn';
 export enum ModalSize {
     Small = 'small',
     Medium = 'medium',
-    Large = 'large'
+    Large = 'large',
 }
 
 // Public options for using by service
@@ -75,5 +74,5 @@ export interface IModalButtonOptions<T = any> {
     autoFocus?: boolean;
     kbqModalMainAction?: boolean;
 
-    onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<(void | {})>;
+    onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<void | {}>;
 }

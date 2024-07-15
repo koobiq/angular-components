@@ -4,7 +4,6 @@ import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
 import { promptAndGenerateChangelog } from './changelog';
 import { CHANGELOG_FILE_NAME } from './constants';
@@ -12,8 +11,7 @@ import { extractReleaseNotes } from './extract-release-notes';
 import { GitClient } from './git/git-client';
 import { promptForNewVersion } from './prompt/new-version-prompt';
 import { promptForUpstreamRemote } from './prompt/upstream-remote-prompt';
-import { parseVersionName, Version } from './version-name/parse-version';
-
+import { Version, parseVersionName } from './version-name/parse-version';
 
 const { green, yellow, red, cyan, bold, italic } = chalk;
 
@@ -34,8 +32,12 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         this.currentVersion = parseVersionName(this.packageJson.version)!;
 
         if (!this.currentVersion) {
-            console.error(red(`Cannot parse current version in ${italic('package.json')}. Please ` +
-                                  `make sure "${this.packageJson.version}" is a valid Semver version.`));
+            console.error(
+                red(
+                    `Cannot parse current version in ${italic('package.json')}. Please ` +
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
+                ),
+            );
             process.exit(1);
         }
 
@@ -64,27 +66,33 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         const publishBranch = this.git.getCurrentBranch();
 
         this.verifyLocalCommitsMatchUpstream(publishBranch);
-       // await this.verifyPassingGithubStatus(publishBranch);
+        // await this.verifyPassingGithubStatus(publishBranch);
 
         if (needsVersionBump) {
             this.updatePackageJsonVersion(newVersionName);
 
-            console.log(green(
-                `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
-                `${italic('package.json')}`));
+            console.log(
+                green(
+                    `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
+                        `${italic('package.json')}`,
+                ),
+            );
             console.log();
         }
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
         console.log();
-        console.log(green(`  ✓   Updated the changelog in ` +
-            `"${bold(CHANGELOG_FILE_NAME)}"`));
-        console.log(yellow(`  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
-            `changes that apply to the public library release. When done, proceed to the prompt below.`));
+        console.log(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
+        console.log(
+            yellow(
+                `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
+                    `changes that apply to the public library release. When done, proceed to the prompt below.`,
+            ),
+        );
         console.log();
 
-        if (!await this.promptConfirm('Do you want to proceed and commit the changes?')) {
+        if (!(await this.promptConfirm('Do you want to proceed and commit the changes?'))) {
             console.log();
             console.log(yellow('Aborting release staging...'));
             process.exit(0);
@@ -101,7 +109,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
         // Extract the release notes for the new version from the changelog file.
         const extractedReleaseNotes = extractReleaseNotes(
-            join(this.config.projectDir, CHANGELOG_FILE_NAME), newVersionName);
+            join(this.config.projectDir, CHANGELOG_FILE_NAME),
+            newVersionName,
+        );
 
         if (!extractedReleaseNotes) {
             console.error(red(`  ✘   Could not find release notes in the changelog.`));
@@ -127,8 +137,12 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             const expectedSha = this.git.getLocalCommitSha('HEAD');
 
             if (this.git.getShaOfLocalTag(tagName) !== expectedSha) {
-                console.error(red(`  ✘   Tag "${tagName}" already exists locally, but does not refer ` +
-                    `to the version bump commit. Please delete the tag if you want to proceed.`));
+                console.error(
+                    red(
+                        `  ✘   Tag "${tagName}" already exists locally, but does not refer ` +
+                            `to the version bump commit. Please delete the tag if you want to proceed.`,
+                    ),
+                );
                 process.exit(1);
             }
 
@@ -150,8 +164,12 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         // The remote tag SHA is empty if the tag does not exist in the remote repository.
         if (remoteTagSha) {
             if (remoteTagSha !== expectedSha) {
-                console.error(red(`  ✘   Tag "${tagName}" already exists on the remote, but does not ` +
-                    `refer to the version bump commit.`));
+                console.error(
+                    red(
+                        `  ✘   Tag "${tagName}" already exists on the remote, but does not ` +
+                            `refer to the version bump commit.`,
+                    ),
+                );
                 console.error(red(`      Please delete the tag on the remote if you want to proceed.`));
                 process.exit(1);
             }
@@ -163,8 +181,11 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
         if (!this.git.pushTagToRemote(tagName, upstreamRemote)) {
             console.error(red(`  ✘   Could not push the "${tagName}" tag upstream.`));
-            console.error(red(`      Please make sure you have permission to push to the ` +
-                `"${this.git.remoteGitUrl}" remote.`));
+            console.error(
+                red(
+                    `      Please make sure you have permission to push to the ` + `"${this.git.remoteGitUrl}" remote.`,
+                ),
+            );
             process.exit(1);
         }
 
@@ -172,8 +193,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     }
 
     private async getProjectUpstreamRemote() {
-        const remoteName = this.git.hasRemote('upstream') ?
-            'upstream' : await promptForUpstreamRemote(this.git.getAvailableRemotes());
+        const remoteName = this.git.hasRemote('upstream')
+            ? 'upstream'
+            : await promptForUpstreamRemote(this.git.getAvailableRemotes());
 
         console.info(green(`  ✓   Using the "${remoteName}" remote for pushing changes upstream.`));
 
@@ -182,7 +204,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
     /** Updates the version of the project package.json and writes the changes to disk. */
     private updatePackageJsonVersion(newVersionName: string) {
-        const newPackageJson = {...this.packageJson, version: newVersionName};
+        const newPackageJson = { ...this.packageJson, version: newVersionName };
         writeFileSync(this.packageJsonPath, `${JSON.stringify(newPackageJson, null, this.tabSpaces)}\n`);
     }
 

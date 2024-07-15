@@ -4,25 +4,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     colors = KbqBadgeColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
         KbqIconModule,
-        KbqBadgeModule
+        KbqBadgeModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

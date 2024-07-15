@@ -6,6 +6,6 @@ export const esLALocaleData = {
     title: 'Agregar fotos',
     gridHeaders: {
         file: 'Archivo',
-        size: 'Tamaño'
-    }
+        size: 'Tamaño',
+    },
 };

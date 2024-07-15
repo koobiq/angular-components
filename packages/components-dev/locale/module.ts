@@ -8,21 +8,19 @@ import {
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule,
-    ThemePalette
+    ThemePalette,
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-
 import { KbqIconModule } from '../../components/icon';
 import { KbqNavbarModule } from '../../components/navbar';
-
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LocaleDemoComponent {
     themePalette = ThemePalette;
@@ -30,21 +28,19 @@ export class LocaleDemoComponent {
     languages;
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.languages = this.localeService.locales.items
-            .map((item) => ({ ...item, selected: false }));
+        this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
 
         this.selectLanguage(this.languages[0]);
     }
 
     selectLanguage(language) {
-        this.languages.forEach((item) => item.selected = false);
+        this.languages.forEach((item) => (item.selected = false));
         this.selectedLanguage = language;
         this.selectedLanguage.selected = true;
 
         this.localeService.setLocale(this.selectedLanguage.id);
     }
 }
-
 
 @NgModule({
     imports: [
@@ -58,9 +54,9 @@ export class LocaleDemoComponent {
         KbqDropdownModule,
         KbqFormFieldModule,
         KbqOptionModule,
-        KbqSelectModule
+        KbqSelectModule,
     ],
     declarations: [LocaleDemoComponent],
-    bootstrap: [LocaleDemoComponent]
+    bootstrap: [LocaleDemoComponent],
 })
 export class DemoModule {}

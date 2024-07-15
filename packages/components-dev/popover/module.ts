@@ -13,16 +13,14 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
-
 import { KbqIconModule } from '../../components/icon/';
-
 
 /* tslint:disable:no-trailing-whitespace */
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
 })
 export class DemoComponent {
     @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
@@ -43,20 +41,20 @@ export class DemoComponent {
         INPUT: 'input',
         ICON: 'icon',
         RADIO_GROUP: 'radio-group',
-        LINK: 'link'
+        LINK: 'link',
     };
 
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
         HOVER: 'hover',
-        CUSTOM: 'custom'
+        CUSTOM: 'custom',
     };
 
     SIZE = {
         LARGE: 'large',
         MEDIUM: 'medium',
-        SMALL: 'small'
+        SMALL: 'small',
     };
 
     selectedElement: string = this.ELEMENTS.BUTTON;
@@ -87,7 +85,9 @@ export class DemoComponent {
         const newStage = this.popoverActiveStage + direction;
 
         // tslint:disable-next-line:no-magic-numbers
-        if (newStage < 1 || newStage > 3) { return; }
+        if (newStage < 1 || newStage > 3) {
+            return;
+        }
 
         this.popoverActiveStage += direction;
     }
@@ -153,8 +153,8 @@ export class DemoComponent {
         KbqSplitterModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqLinkModule
+        KbqLinkModule,
     ],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

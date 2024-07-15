@@ -18,7 +18,6 @@ import {
     EventEmitter,
     Inject,
     Input,
-    isDevMode,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -32,31 +31,27 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation
+    ViewEncapsulation,
+    isDevMode,
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
+    A,
+    BACKSPACE,
+    DELETE,
     DOWN_ARROW,
     END,
     ENTER,
+    ESCAPE,
     HOME,
     LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
     RIGHT_ARROW,
     SPACE,
-    UP_ARROW,
-    A,
     TAB,
-    ESCAPE,
-    PAGE_UP,
-    PAGE_DOWN,
-    BACKSPACE,
-    DELETE
+    UP_ARROW,
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
@@ -66,31 +61,29 @@ import {
     ErrorStateMatcher,
     HasTabIndex,
     HasTabIndexCtor,
+    KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_SELECT_SCROLL_STRATEGY,
+    KbqLocaleService,
     KbqOptgroup,
     KbqOption,
+    KbqOptionBase,
     KbqOptionSelectionChange,
-    mixinDisabled,
-    mixinErrorState,
-    mixinTabIndex,
-    kbqSelectAnimations,
-
+    KbqSelectFooter,
+    KbqSelectMatcher,
+    KbqSelectSearch,
+    KbqSelectTrigger,
+    KbqVirtualOption,
     SELECT_PANEL_INDENT_PADDING_X,
     SELECT_PANEL_PADDING_X,
     SELECT_PANEL_VIEWPORT_PADDING,
-    KBQ_SELECT_SCROLL_STRATEGY,
-
     getKbqSelectDynamicMultipleError,
-    getKbqSelectNonFunctionValueError,
     getKbqSelectNonArrayValueError,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    KbqVirtualOption,
-    KbqOptionBase,
-    KbqSelectFooter,
-    KbqSelectTrigger,
-    KbqSelectMatcher,
-    KbqSelectSearch
+    getKbqSelectNonFunctionValueError,
+    kbqSelectAnimations,
+    mixinDisabled,
+    mixinErrorState,
+    mixinTabIndex,
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -107,14 +100,15 @@ import {
 } from 'rxjs/operators';
 import { SizeXxs } from '@koobiq/design-tokens';
 
-
 let nextUniqueId = 0;
 
 /** Change event object that is emitted when the select value has changed. */
 export class KbqSelectChange {
-    constructor(public source: KbqSelect, public value: any) {}
+    constructor(
+        public source: KbqSelect,
+        public value: any,
+    ) {}
 }
-
 
 /** @docs-private */
 export class KbqSelectBase {
@@ -130,14 +124,13 @@ export class KbqSelectBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
+        public ngControl: NgControl,
     ) {}
 }
 
 /** @docs-private */
-const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor &
-    typeof KbqSelectBase = mixinTabIndex(mixinDisabled(mixinErrorState(KbqSelectBase)));
-
+const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor & typeof KbqSelectBase =
+    mixinTabIndex(mixinDisabled(mixinErrorState(KbqSelectBase)));
 
 @Component({
     selector: 'kbq-select',
@@ -160,21 +153,32 @@ const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorState
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
 
-        '(window:resize)': 'calculateHiddenItems()'
+        '(window:resize)': 'calculateHiddenItems()',
     },
     animations: [
         kbqSelectAnimations.transformPanel,
-        kbqSelectAnimations.fadeInContent
+        kbqSelectAnimations.fadeInContent,
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect }
-    ]
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
+    ],
 })
-export class KbqSelect extends KbqSelectMixinBase implements
-    AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable,
-    HasTabIndex, KbqFormFieldControl<any>, CanUpdateErrorState {
-
+export class KbqSelect
+    extends KbqSelectMixinBase
+    implements
+        AfterContentInit,
+        AfterViewInit,
+        OnChanges,
+        OnDestroy,
+        OnInit,
+        DoCheck,
+        ControlValueAccessor,
+        CanDisable,
+        HasTabIndex,
+        KbqFormFieldControl<any>,
+        CanUpdateErrorState
+{
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
 
@@ -221,14 +225,14 @@ export class KbqSelect extends KbqSelectMixinBase implements
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
-        }
+            overlayY: 'bottom',
+        },
     ];
 
     /**
@@ -288,28 +292,31 @@ export class KbqSelect extends KbqSelectMixinBase implements
                 ...this.options.map((option) => option.onSelectionChange),
                 ...this.selectionModel.selected.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
-                    switchMap((list: QueryList<KbqOption>) => merge(
-                        ...list.map((option) => option.onSelectionChange))
-                    )
-                )
+                    switchMap((list: QueryList<KbqOption>) => merge(...list.map((option) => option.onSelectionChange))),
+                ),
             );
         }
 
-        return this._ngZone.onStable
-            .asObservable()
-            .pipe(take(1), switchMap(() => this.optionSelectionChanges));
+        return this._ngZone.onStable.asObservable().pipe(
+            take(1),
+            switchMap(() => this.optionSelectionChanges),
+        );
     }) as Observable<KbqOptionSelectionChange>;
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> =
-        this.openedChange.pipe(filter((o) => o), map(() => {}));
+    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+        filter((o) => o),
+        map(() => {}),
+    );
 
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> =
-        this.openedChange.pipe(filter((o) => !o), map(() => {}));
+    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+        filter((o) => !o),
+        map(() => {}),
+    );
 
     /** Event emitted when the selected value has been changed by the user. */
     @Output() readonly selectionChange: EventEmitter<KbqSelectChange> = new EventEmitter<KbqSelectChange>();
@@ -466,17 +473,23 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     get triggerValue(): string {
-        if (this.empty) { return ''; }
+        if (this.empty) {
+            return '';
+        }
 
         return this.selectionModel.selected[0].viewValue;
     }
 
     get triggerValues(): KbqOptionBase[] {
-        if (this.empty) { return []; }
+        if (this.empty) {
+            return [];
+        }
 
         const selectedOptions = this.selectionModel.selected;
 
-        if (this.isRtl()) { selectedOptions.reverse(); }
+        if (this.isRtl()) {
+            selectedOptions.reverse();
+        }
 
         return selectedOptions;
     }
@@ -486,13 +499,11 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     get firstSelected(): KbqOptionBase | null {
-        return this.selectionModel.selected
-            .filter((option) => !option.disabled)[0] || null;
+        return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
     }
 
     get firstFiltered(): boolean {
-        return !this.options
-            .find((option: KbqOption) => option === this.firstSelected);
+        return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
 
     private closeSubscription = Subscription.EMPTY;
@@ -520,12 +531,11 @@ export class KbqSelect extends KbqSelectMixinBase implements
         @Optional() private readonly parentFormField: KbqFormField,
         @Self() @Optional() ngControl: NgControl,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes
-            .subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -544,60 +554,53 @@ export class KbqSelect extends KbqSelectMixinBase implements
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
         // https://github.com/angular/angular/issues/24084
-        this.panelDoneAnimatingStream
-            .pipe(distinctUntilChanged(), takeUntil(this.destroy))
-            .subscribe(() => {
-                if (this.panelOpen) {
-                    this.scrollTop = 0;
+        this.panelDoneAnimatingStream.pipe(distinctUntilChanged(), takeUntil(this.destroy)).subscribe(() => {
+            if (this.panelOpen) {
+                this.scrollTop = 0;
 
-                    if (this.search) { this.search.focus(); }
-
-                    this.openedChange.emit(true);
-                } else {
-                    this.openedChange.emit(false);
-                    this._changeDetectorRef.markForCheck();
+                if (this.search) {
+                    this.search.focus();
                 }
-            });
 
-        merge(
-            this.optionSelectionChanges,
-            this.visibleChanges
-        ).pipe(takeUntil(this.destroy), distinctUntilChanged())
-            .subscribe(
-                () => setTimeout(() => this.calculateHiddenItems(), 0)
-            );
+                this.openedChange.emit(true);
+            } else {
+                this.openedChange.emit(false);
+                this._changeDetectorRef.markForCheck();
+            }
+        });
+
+        merge(this.optionSelectionChanges, this.visibleChanges)
+            .pipe(takeUntil(this.destroy), distinctUntilChanged())
+            .subscribe(() => setTimeout(() => this.calculateHiddenItems(), 0));
     }
 
     ngAfterContentInit() {
         this.withVirtualScroll = !!this.cdkVirtualForOf;
         this.initKeyManager();
 
-        this.selectionModel.changed
-            .pipe(takeUntil(this.destroy))
-            .subscribe((event) => {
-                event.added.forEach((option) => option.select());
-                event.removed.forEach((option) => option.deselect());
-            });
+        this.selectionModel.changed.pipe(takeUntil(this.destroy)).subscribe((event) => {
+            event.added.forEach((option) => option.select());
+            event.removed.forEach((option) => option.deselect());
+        });
 
-        this.options.changes
-            .pipe(startWith(null), takeUntil(this.destroy))
-            .subscribe(() => {
-                this.resetOptions();
-                this.initializeSelection();
-            });
+        this.options.changes.pipe(startWith(null), takeUntil(this.destroy)).subscribe(() => {
+            this.resetOptions();
+            this.initializeSelection();
+        });
     }
 
     ngAfterViewInit(): void {
-        this.tags.changes
-            .subscribe(() => {
-                setTimeout(() => this.calculateHiddenItems(), 0);
-            });
+        this.tags.changes.subscribe(() => {
+            setTimeout(() => this.calculateHiddenItems(), 0);
+        });
     }
 
     ngDoCheck() {
         this.visibleChanges.next(this.isVisible());
 
-        if (this.ngControl) { this.updateErrorState(); }
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -636,7 +639,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
     onTouched = () => {};
 
     resetSearch(): void {
-        if (!this.search) { return; }
+        if (!this.search) {
+            return;
+        }
 
         this.search.reset();
         /*
@@ -658,7 +663,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     /** Opens the overlay panel. */
     open(): void {
-        if (this.disabled || !this.options?.length || this.panelOpen) { return; }
+        if (this.disabled || !this.options?.length || this.panelOpen) {
+            return;
+        }
 
         this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
@@ -672,7 +679,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
         this._changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this._ngZone.onStable.asObservable()
+        this._ngZone.onStable
+            .asObservable()
             .pipe(take(1))
             .subscribe(() => {
                 this.scrollActiveOptionIntoView();
@@ -691,7 +699,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this.panelOpen) { return; }
+        if (!this.panelOpen) {
+            return;
+        }
 
         // the order of calls is important
         this.resetSearch();
@@ -755,7 +765,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);
@@ -797,22 +809,17 @@ export class KbqSelect extends KbqSelectMixinBase implements
      * Callback that is invoked when the overlay panel has been attached.
      */
     onAttached(): void {
-        this.overlayDir.positionChange
-            .pipe(take(1))
-            .subscribe(() => {
-                this._changeDetectorRef.detectChanges();
-                this.setOverlayPosition();
-                this.optionsContainer.nativeElement.scrollTop = this.scrollTop;
+        this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
+            this._changeDetectorRef.detectChanges();
+            this.setOverlayPosition();
+            this.optionsContainer.nativeElement.scrollTop = this.scrollTop;
 
-                this.updateScrollSize();
-            });
+            this.updateScrollSize();
+        });
 
-        this.options.changes
-            .pipe(delay(1))
-            .subscribe(() => this.setOverlayPosition());
+        this.options.changes.pipe(delay(1)).subscribe(() => this.setOverlayPosition());
 
-        this.closeSubscription = this.closingActions()
-            .subscribe(() => this.close());
+        this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
 
     /** Returns the theme to be used on the panel. */
@@ -841,7 +848,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     calculateHiddenItems(): void {
-        if (this.customTrigger || this.empty || !this.multiple) { return; }
+        if (this.customTrigger || this.empty || !this.multiple) {
+            return;
+        }
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
@@ -859,14 +868,14 @@ export class KbqSelect extends KbqSelectMixinBase implements
             const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
-            if (itemsCounterShowed && (totalItemsWidth < matcherWidth)) {
+            if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
                 this.hiddenItems = 0;
                 this._changeDetectorRef.detectChanges();
             }
 
             if (
                 totalVisibleItemsWidth === matcherListWidth ||
-                (totalVisibleItemsWidth + itemsCounterWidth) < matcherListWidth
+                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
             ) {
                 this._changeDetectorRef.markForCheck();
 
@@ -891,43 +900,42 @@ export class KbqSelect extends KbqSelectMixinBase implements
         this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
 
         this._changeDetectorRef.markForCheck();
-    }
+    };
 
     private isVisible(): boolean {
         return this.elementRef.nativeElement.offsetTop < this.elementRef.nativeElement.offsetHeight;
     }
 
     private currentOverlayPosition(): number {
-        const element = this.overlayDir.overlayRef.hostElement
+        const element = this.overlayDir.overlayRef.hostElement;
 
-        return Array.from(this.overlayContainer.getContainerElement().childNodes)
-            .findIndex((node) => {
-                return ((node as HTMLElement).firstChild as HTMLElement).id == (element.firstChild as HTMLElement).id;
-            });
+        return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((node) => {
+            return ((node as HTMLElement).firstChild as HTMLElement).id == (element.firstChild as HTMLElement).id;
+        });
     }
 
     private modalOverlayPosition(): number {
-        return Array.from(this.overlayContainer.getContainerElement().childNodes)
-            .findIndex((childNode) => (childNode as HTMLElement).classList.contains('kbq-modal-overlay'));
+        return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((childNode) =>
+            (childNode as HTMLElement).classList.contains('kbq-modal-overlay'),
+        );
     }
 
     private closingActions() {
-
         // used for calling toggle on select from outside of component
-        const outsidePointerEvents = this.overlayDir.overlayRef!.outsidePointerEvents()
+        const outsidePointerEvents = this.overlayDir
+            .overlayRef!.outsidePointerEvents()
             .pipe(delay(0))
-            .pipe(filter(() => {
-                if (this.overlayContainer.getContainerElement().childElementCount > 1) {
-                    return this.currentOverlayPosition() > this.modalOverlayPosition();
-                }
+            .pipe(
+                filter(() => {
+                    if (this.overlayContainer.getContainerElement().childElementCount > 1) {
+                        return this.currentOverlayPosition() > this.modalOverlayPosition();
+                    }
 
-                return true;
-            }));
+                    return true;
+                }),
+            );
 
-        return merge(
-            outsidePointerEvents,
-            this.overlayDir.overlayRef!.detachments()
-        );
+        return merge(outsidePointerEvents, this.overlayDir.overlayRef!.detachments());
     }
 
     private getHeightOfOptionsContainer(): number {
@@ -935,11 +943,11 @@ export class KbqSelect extends KbqSelectMixinBase implements
     }
 
     private updateScrollSize(): void {
-        if (!this.options.first) { return; }
+        if (!this.options.first) {
+            return;
+        }
 
-        this.keyManager.withScrollSize(
-            Math.floor(this.getHeightOfOptionsContainer() / this.options.first.getHeight())
-        );
+        this.keyManager.withScrollSize(Math.floor(this.getHeightOfOptionsContainer() / this.options.first.getHeight()));
     }
 
     private getTotalItemsWidthInMatcher(): number {
@@ -989,7 +997,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
-        if (isArrowKey && event.altKey || keyCode === ESCAPE || keyCode === TAB) {
+        if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
             // Close the select on ALT + arrow key to match the native <select>
             event.preventDefault();
             this.close();
@@ -1028,8 +1036,13 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
             this.keyManager.onKeydown(event);
 
-            if (this._multiple && isArrowKey && event.shiftKey && this.keyManager.activeItem &&
-                this.keyManager.activeItemIndex !== previouslyFocusedIndex) {
+            if (
+                this._multiple &&
+                isArrowKey &&
+                event.shiftKey &&
+                this.keyManager.activeItem &&
+                this.keyManager.activeItemIndex !== previouslyFocusedIndex
+            ) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
 
@@ -1083,7 +1096,7 @@ export class KbqSelect extends KbqSelectMixinBase implements
     private getCorrespondOption(value: any): KbqOptionBase | undefined {
         return [
             ...this.options.toArray(),
-            ...this.previousSelectionModelSelected
+            ...this.previousSelectionModelSelected,
         ].find((option: KbqOptionBase) => {
             try {
                 // Treat null as a special reset value.
@@ -1110,9 +1123,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
             this.selectionModel.select(correspondingOption);
         } else if (this.withVirtualScroll) {
             const source = this.cdkVirtualForOf?.cdkVirtualForOf;
-            const correspondingOptionVirtual = source instanceof Array
-                ? source.find((item) => this.compareWith(item, value))
-                : undefined;
+            const correspondingOptionVirtual =
+                source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
                 const kbqVirtualOption = new KbqVirtualOption(correspondingOptionVirtual, this.disabled);
@@ -1133,37 +1145,33 @@ export class KbqSelect extends KbqSelectMixinBase implements
             .withVerticalOrientation()
             .withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
-        this.keyManager.change
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => {
-                if (this.panelOpen && this.panel) {
-                    this.scrollActiveOptionIntoView();
-                } else if (!this.panelOpen && !this.multiple && this.keyManager.activeItem) {
-                    this.keyManager.activeItem.selectViaInteraction();
-                }
-            });
+        this.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+            if (this.panelOpen && this.panel) {
+                this.scrollActiveOptionIntoView();
+            } else if (!this.panelOpen && !this.multiple && this.keyManager.activeItem) {
+                this.keyManager.activeItem.selectViaInteraction();
+            }
+        });
     }
 
     /** Drops current option subscriptions and IDs and resets from scratch. */
     private resetOptions(): void {
         const changedOrDestroyed = merge(this.options.changes, this.destroy);
 
-        this.optionSelectionChanges
-            .pipe(takeUntil(changedOrDestroyed))
-            .subscribe((event) => {
-                this.onSelect(event.source, event.isUserInput);
+        this.optionSelectionChanges.pipe(takeUntil(changedOrDestroyed)).subscribe((event) => {
+            this.onSelect(event.source, event.isUserInput);
 
-                if (this.search && this.search.isSearchChanged) {
-                    Promise.resolve().then(() => this.keyManager.updateActiveItem(0));
+            if (this.search && this.search.isSearchChanged) {
+                Promise.resolve().then(() => this.keyManager.updateActiveItem(0));
 
-                    this.search.isSearchChanged = false;
-                }
+                this.search.isSearchChanged = false;
+            }
 
-                if (event.isUserInput && !this.multiple && this.panelOpen) {
-                    this.close();
-                    this.focus();
-                }
-            });
+            if (event.isUserInput && !this.multiple && this.panelOpen) {
+                this.close();
+                this.focus();
+            }
+        });
 
         // Listen to changes in the internal state of the options and react accordingly.
         // Handles cases like the labels of the selected options changing.
@@ -1224,9 +1232,8 @@ export class KbqSelect extends KbqSelectMixinBase implements
         if (this.multiple) {
             const options = this.options.toArray();
 
-            this.selectionModel.sort((a, b) => this.sortComparator ?
-                this.sortComparator(a, b, options) :
-                a.value - b.value
+            this.selectionModel.sort((a, b) =>
+                this.sortComparator ? this.sortComparator(a, b, options) : a.value - b.value,
             );
             this.stateChanges.next();
         }
@@ -1287,14 +1294,14 @@ export class KbqSelect extends KbqSelectMixinBase implements
         let offsetX: number = SELECT_PANEL_PADDING_X;
         let overlayMaxWidth: number;
 
-
         // Invert the offset in LTR.
-        if (!isRtl) { offsetX *= -1; }
+        if (!isRtl) {
+            offsetX *= -1;
+        }
 
         // Determine if select overflows on either side.
         const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - windowWidth
-            + (isRtl ? 0 : paddingWidth);
+        const rightOverflow = overlayRect.right + offsetX - windowWidth + (isRtl ? 0 : paddingWidth);
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0 || rightOverflow > 0) {
@@ -1360,27 +1367,21 @@ export class KbqSelect extends KbqSelectMixinBase implements
 
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
-        this._renderer.setStyle(
-            triggerClone.querySelector('.kbq-select__match-hidden-text'),
-            'display',
-            'block'
-        );
+        this._renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
         this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
         let totalVisibleItemsWidth: number = 0;
-        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>)
-            .forEach((item) => {
-                if (item.offsetTop < item.offsetHeight) {
-                    totalVisibleItemsWidth += this.getItemWidth(item);
-                    visibleItemsCount++;
-                }
-            });
+        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>).forEach((item) => {
+            if (item.offsetTop < item.offsetHeight) {
+                totalVisibleItemsWidth += this.getItemWidth(item);
+                visibleItemsCount++;
+            }
+        });
 
         triggerClone.remove();
 
         return [totalVisibleItemsWidth, visibleItemsCount];
-
     }
 
     private buildTriggerClone(): HTMLDivElement {

@@ -11,18 +11,18 @@ const examplesDirExamples = 'packages/components/**/examples.*.md';
 
 const markdownDocsKoobiq = docTask('markdown-docs-koobiq', {
     source: examplesDirComponents,
-    dest: 'dist/docs-content/overviews'
+    dest: 'dist/docs-content/overviews',
 });
 const markdownDocsCdk = docTask('markdown-docs-cdk', { source: examplesDirCdk, dest: 'dist/docs-content/cdk' });
 const markdownDocsExamples: () => {} = docTask('markdown-docs-koobiq', {
     source: examplesDirExamples,
-    dest: 'dist/docs-content/examples'
+    dest: 'dist/docs-content/examples',
 });
 
 const docsContent = async () => {
     for (const task of [markdownDocsKoobiq, markdownDocsCdk, markdownDocsExamples]) {
         await task();
     }
-}
+};
 
 docsContent();

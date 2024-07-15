@@ -1,12 +1,10 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
-
 import { KbqTitleDirective } from './title.directive';
-
 
 describe('KbqTitleDirective', () => {
     let fixture: ComponentFixture<any>;
@@ -18,13 +16,12 @@ describe('KbqTitleDirective', () => {
             declarations: [
                 KbqTitleDirective,
                 BaseKbqTitleComponent,
-                WithParamsKbqTitleComponent
+                WithParamsKbqTitleComponent,
             ],
             providers: [
-                KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER
-            ]
+                KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
+            ],
         });
-
     });
 
     describe('on html elements', () => {
@@ -65,7 +62,6 @@ describe('KbqTitleDirective', () => {
         }));
     });
 
-
     describe('on html elements with complex structure and params', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(WithParamsKbqTitleComponent);
@@ -96,18 +92,24 @@ describe('KbqTitleDirective', () => {
 });
 
 @Component({
-    styles: [`.parent {
-        display: inline-block;
-        flex-grow: 1;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }`],
+    styles: [
+        `
+            .parent {
+                display: inline-block;
+                flex-grow: 1;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        `,
+    ],
     template: `
         <div id="parent1" class="parent" style="max-width: 150px;" kbq-title>{{ longValue }}</div>
         <div id="parent2" class="parent" style="max-width: 600px;" kbq-title>{{ defaultValue }}</div>
-        <div id="parent3" class="parent" style="max-width: 600px;" kbq-title><span>{{ longValue }}</span></div>
-    `
+        <div id="parent3" class="parent" style="max-width: 600px;" kbq-title>
+            <span>{{ longValue }}</span>
+        </div>
+    `,
 })
 class BaseKbqTitleComponent {
     defaultValue = 'Just a text';
@@ -115,23 +117,26 @@ class BaseKbqTitleComponent {
 }
 
 @Component({
-    styles: [`
-        .parent {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            box-sizing: border-box;
-            position: relative;
-            max-width: 100%;
-        }
+    styles: [
+        `
+            .parent {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                box-sizing: border-box;
+                position: relative;
+                max-width: 100%;
+            }
 
-        .child {
-            display: inline-block;
-            flex-grow: 1;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }`],
+            .child {
+                display: inline-block;
+                flex-grow: 1;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        `,
+    ],
     template: `
         <div id="parent1" style="max-width: 150px" kbq-title>
             <div class="parent" #kbqTitleContainer>
@@ -144,11 +149,9 @@ class BaseKbqTitleComponent {
                 <div class="child" #kbqTitleText>{{ defaultValue }}</div>
             </div>
         </div>
-    `
+    `,
 })
 class WithParamsKbqTitleComponent {
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
 }
-
-

@@ -1,10 +1,14 @@
 // todo пока не делаем, перенесено из материала, но у нас в доках таких простых списков нет.
 import {
-    AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, QueryList,
-    ViewEncapsulation
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChildren,
+    ElementRef,
+    QueryList,
+    ViewEncapsulation,
 } from '@angular/core';
 import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
-
 
 @Component({
     selector: 'kbq-list',
@@ -12,22 +16,21 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
     template: '<ng-content></ng-content>',
     styleUrls: ['./list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class KbqList {}
-
 
 @Component({
     selector: 'kbq-list-item, a[kbq-list-item]',
     host: {
         class: 'kbq-list-item',
         '(focus)': 'handleFocus()',
-        '(blur)': 'handleBlur()'
+        '(blur)': 'handleBlur()',
     },
     templateUrl: './list-item.html',
     encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqListItem implements AfterContentInit {
     @ContentChildren(KbqLine) lines: QueryList<KbqLine>;

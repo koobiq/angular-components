@@ -2,7 +2,6 @@
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
-
 /**
  * @title Basic Toast
  */
@@ -10,7 +9,7 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
     selector: 'toast-report-overview-example',
     templateUrl: 'toast-report-overview-example.html',
     styleUrls: ['toast-report-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ToastReportOverviewExample {
     constructor(private toastService: KbqToastService) {}

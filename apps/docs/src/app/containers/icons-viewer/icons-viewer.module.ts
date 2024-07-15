@@ -15,15 +15,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { IconItems } from 'src/app/components/icons-items/icon-items';
-
 import { AnchorsModule } from '../../components/anchors/anchors.module';
 import { FooterModule } from '../../components/footer/footer.module';
 import { NavbarModule } from '../../components/navbar';
 import { SidenavModule } from '../../components/sidenav/sidenav.module';
-
 import { IconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
 import { IconsViewerComponent } from './icons-viewer.component';
-
 
 @NgModule({
     imports: [
@@ -47,16 +44,16 @@ import { IconsViewerComponent } from './icons-viewer.component';
         SidenavModule,
         NavbarModule,
         KbqButtonModule,
-        AnchorsModule
+        AnchorsModule,
     ],
     exports: [
         IconsViewerComponent,
-        IconPreviewModalComponent
+        IconPreviewModalComponent,
     ],
     declarations: [
         IconsViewerComponent,
-        IconPreviewModalComponent
+        IconPreviewModalComponent,
     ],
-    providers: [IconItems, KbqToastService]
+    providers: [IconItems, KbqToastService],
 })
 export class IconsViewerModule {}

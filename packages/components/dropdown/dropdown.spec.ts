@@ -19,42 +19,40 @@ import {
     TemplateRef,
     Type,
     ViewChild,
-    ViewChildren
+    ViewChildren,
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
 import {
+    MockNgZone,
     createKeyboardEvent,
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    MockNgZone,
-    patchElementFocus
+    patchElementFocus,
 } from '@koobiq/cdk/testing';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
-
 import {
+    DropdownPositionX,
+    DropdownPositionY,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
-    NESTED_PANEL_TOP_PADDING,
-    NESTED_PANEL_LEFT_PADDING,
     KbqDropdown,
+    KbqDropdownContent,
     KbqDropdownItem,
     KbqDropdownModule,
     KbqDropdownPanel,
     KbqDropdownTrigger,
-    DropdownPositionX,
-    DropdownPositionY,
-    KbqDropdownContent
+    NESTED_PANEL_LEFT_PADDING,
+    NESTED_PANEL_TOP_PADDING,
 } from './index';
-
 
 const PANEL_SELECTOR = '.kbq-dropdown__panel';
 const ITEM_SELECTOR = '[kbq-dropdown-item]';
@@ -66,13 +64,15 @@ describe('KbqDropdown', () => {
     let overlayContainerElement: HTMLElement;
     let focusMonitor: FocusMonitor;
 
-    function createComponent<T>(component: Type<T>,
-                                providers: Provider[] = [],
-                                declarations: any[] = []): ComponentFixture<T> {
+    function createComponent<T>(
+        component: Type<T>,
+        providers: Provider[] = [],
+        declarations: any[] = [],
+    ): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [KbqDropdownModule, NoopAnimationsModule],
             declarations: [component, ...declarations],
-            providers
+            providers,
         }).compileComponents();
 
         inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
@@ -110,7 +110,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         fixture.componentInstance.trigger.open();
 
-        const backdrop = <HTMLElement> overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+        const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
         backdrop.click();
         fixture.detectChanges();
         tick(500);
@@ -185,7 +185,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         tick(500);
 
-        const backdrop = <HTMLElement> overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+        const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
 
         expect(backdrop.classList).toContain('custom-backdrop');
     }));
@@ -357,33 +357,31 @@ describe('KbqDropdown', () => {
     it('should set the panel direction based on the trigger direction', () => {
         const fixture = createComponent(
             SimpleDropdown,
-            [{ provide: Directionality, useFactory: () => ({value: 'rtl'})}],
-            []
+            [{ provide: Directionality, useFactory: () => ({ value: 'rtl' }) }],
+            [],
         );
 
         fixture.detectChanges();
         fixture.componentInstance.trigger.open();
         fixture.detectChanges();
 
-        const boundingBox =
-            overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+        const boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
     });
 
     it('should update the panel direction if the trigger direction changes', () => {
-        const dirProvider = {value: 'rtl'};
+        const dirProvider = { value: 'rtl' };
         const fixture = createComponent(
             SimpleDropdown,
-            [{ provide: Directionality, useFactory: () => dirProvider}],
-            []
+            [{ provide: Directionality, useFactory: () => dirProvider }],
+            [],
         );
 
         fixture.detectChanges();
         fixture.componentInstance.trigger.open();
         fixture.detectChanges();
 
-        let boundingBox =
-            overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+        let boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
 
         fixture.componentInstance.trigger.close();
@@ -391,19 +389,16 @@ describe('KbqDropdown', () => {
 
         dirProvider.value = 'ltr';
         fixture.componentInstance.trigger.open();
-        (fixture.componentInstance.trigger.dropdown as KbqDropdown).animationDone
-            .pipe(first())
-            .subscribe({
-                next: undefined,
-                error: undefined,
-                complete: () => {
-                    fixture.detectChanges();
+        (fixture.componentInstance.trigger.dropdown as KbqDropdown).animationDone.pipe(first()).subscribe({
+            next: undefined,
+            error: undefined,
+            complete: () => {
+                fixture.detectChanges();
 
-                    boundingBox =
-                        overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
-                    expect(boundingBox.getAttribute('dir')).toEqual('ltr');
-                }
-            });
+                boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+                expect(boundingBox.getAttribute('dir')).toEqual('ltr');
+            },
+        });
     });
 
     it('should transfer any custom classes from the host to the overlay', () => {
@@ -478,14 +473,14 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(
             SimpleDropdown,
             [
-                { provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject}) },
+                { provide: ScrollDispatcher, useFactory: () => ({ scrolled: () => scrolledSubject }) },
                 {
                     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
                     deps: [Overlay],
-                    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
-                }
+                    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+                },
             ],
-            []
+            [],
         );
 
         fixture.detectChanges();
@@ -511,8 +506,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         const panel = document.querySelector(PANEL_SELECTOR)! as HTMLElement;
-        const items: HTMLElement[] =
-            Array.from(panel.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
+        const items: HTMLElement[] = Array.from(panel.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
 
         items.forEach(patchElementFocus);
 
@@ -603,17 +597,11 @@ describe('KbqDropdown', () => {
 
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR)!;
 
-            expect(panel)
-                .withContext('Expected panel to be defined')
-                .toBeTruthy();
+            expect(panel).withContext('Expected panel to be defined').toBeTruthy();
 
-            expect(panel.textContent)
-                .withContext('Expected panel to have correct content')
-                .toContain('Another item');
+            expect(panel.textContent).withContext('Expected panel to have correct content').toContain('Another item');
 
-            expect(fixture.componentInstance.trigger.opened)
-                .withContext('Expected dropdown to be open')
-                .toBe(true);
+            expect(fixture.componentInstance.trigger.opened).withContext('Expected dropdown to be open').toBe(true);
         }));
 
         it('should detach the lazy content when the dropdown is closed', fakeAsync(() => {
@@ -639,17 +627,13 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             const trigger = fixture.componentInstance.trigger;
 
-            expect(trigger.opened)
-                .withContext('Expected dropdown to start off closed')
-                .toBe(false);
+            expect(trigger.opened).withContext('Expected dropdown to start off closed').toBe(false);
 
             trigger.open();
             fixture.detectChanges();
             tick(500);
 
-            expect(trigger.opened)
-                .withContext('Expected dropdown to be open')
-                .toBe(true);
+            expect(trigger.opened).withContext('Expected dropdown to be open').toBe(true);
 
             trigger.close();
             fixture.detectChanges();
@@ -660,16 +644,17 @@ describe('KbqDropdown', () => {
             tick(500);
             fixture.detectChanges();
 
-            expect(trigger.opened)
-                .withContext('Expected dropdown to be closed')
-                .toBe(false);
+            expect(trigger.opened).withContext('Expected dropdown to be closed').toBe(false);
         }));
 
         it('should focus the first dropdown item when opening a lazy dropdown via keyboard', fakeAsync(() => {
             let zone: MockNgZone;
-            const fixture = createComponent(SimpleLazyDropdown, [{
-                provide: NgZone, useFactory: () => zone = new MockNgZone()
-            }]);
+            const fixture = createComponent(SimpleLazyDropdown, [
+                {
+                    provide: NgZone,
+                    useFactory: () => (zone = new MockNgZone()),
+                },
+            ]);
 
             fixture.detectChanges();
 
@@ -685,9 +670,7 @@ describe('KbqDropdown', () => {
 
             const item = document.querySelector(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`)!;
 
-            expect(document.activeElement)
-                .withContext('Expected first item to be focused')
-                .toBe(item);
+            expect(document.activeElement).withContext('Expected first item to be focused').toBe(item);
         }));
 
         it('should be able to open the same dropdown with a different context', fakeAsync(() => {
@@ -783,7 +766,6 @@ describe('KbqDropdown', () => {
     });
 
     describe('fallback positions', () => {
-
         it('should fall back to "before" mode if "after" mode would not fit on screen', () => {
             const fixture = createComponent(SimpleDropdown, [], []);
             fixture.detectChanges();
@@ -912,10 +894,9 @@ describe('KbqDropdown', () => {
             readonly fixture: ComponentFixture<T>;
             readonly trigger: HTMLElement;
 
-            constructor(ctor: new() => T, inputs: { [key: string]: any } = {}) {
+            constructor(ctor: new () => T, inputs: { [key: string]: any } = {}) {
                 this.fixture = createComponent(ctor);
-                Object.keys(inputs)
-                    .forEach((key) => (this.fixture.componentInstance as any)[key] = inputs[key]);
+                Object.keys(inputs).forEach((key) => ((this.fixture.componentInstance as any)[key] = inputs[key]));
                 this.fixture.detectChanges();
                 this.trigger = this.fixture.componentInstance.triggerEl.nativeElement;
             }
@@ -945,7 +926,7 @@ describe('KbqDropdown', () => {
         let subject: OverlapSubject<OverlapDropdown>;
         describe('explicitly overlapping', () => {
             beforeEach(() => {
-                subject = new OverlapSubject(OverlapDropdown, {overlapTriggerY: true});
+                subject = new OverlapSubject(OverlapDropdown, { overlapTriggerY: true });
             });
 
             it('positions the overlay below the trigger', () => {
@@ -960,7 +941,7 @@ describe('KbqDropdown', () => {
 
         describe('not overlapping', () => {
             beforeEach(() => {
-                subject = new OverlapSubject(OverlapDropdown, {overlapTriggerY: false});
+                subject = new OverlapSubject(OverlapDropdown, { overlapTriggerY: false });
             });
 
             it('positions the overlay below the trigger', () => {
@@ -1016,8 +997,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should emit a close event when the backdrop is clicked', () => {
-            const backdrop = overlayContainerElement
-                .querySelector('.cdk-overlay-backdrop') as HTMLElement;
+            const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
             backdrop.click();
             fixture.detectChanges();
@@ -1056,7 +1036,6 @@ describe('KbqDropdown', () => {
 
             expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(0);
         });
-
     });
 
     describe('nested dropdown', () => {
@@ -1064,9 +1043,12 @@ describe('KbqDropdown', () => {
         let instance: NestedDropdown;
         let overlay: HTMLElement;
         const compileTestComponent = (direction: Direction = 'ltr') => {
-            fixture = createComponent(NestedDropdown, [{
-                provide: Directionality, useFactory: () => ({value: direction})
-            }]);
+            fixture = createComponent(NestedDropdown, [
+                {
+                    provide: Directionality,
+                    useFactory: () => ({ value: direction }),
+                },
+            ]);
 
             fixture.detectChanges();
             instance = fixture.componentInstance;
@@ -1138,9 +1120,7 @@ describe('KbqDropdown', () => {
             compileTestComponent();
             instance.rootTriggerEl.nativeElement.click();
             fixture.detectChanges();
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
             const levelOneTrigger = overlay.querySelector('#level-one-trigger')!;
@@ -1153,17 +1133,13 @@ describe('KbqDropdown', () => {
             expect(levelOneTrigger.classList)
                 .withContext('Expected the trigger to be highlighted')
                 .toContain('kbq-dropdown-item_highlighted');
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
 
             dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
             expect(levelOneTrigger.classList)
                 .withContext('Expected the trigger to not be highlighted')
                 .not.toContain('kbq-dropdown-item-highlighted');
@@ -1194,9 +1170,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
         }));
 
         it('should close nested dropdown when hovering over disabled sibling item', fakeAsync(() => {
@@ -1211,9 +1185,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
 
             items[1].componentInstance.disabled = true;
             fixture.detectChanges();
@@ -1223,9 +1195,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
         }));
 
         it('should not open nested dropdown when hovering over disabled trigger', fakeAsync(() => {
@@ -1234,9 +1204,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const item = fixture.debugElement.query(By.directive(KbqDropdownItem));
 
@@ -1258,9 +1226,7 @@ describe('KbqDropdown', () => {
             instance.rootTriggerEl.nativeElement.click();
             fixture.detectChanges();
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const levelOneTrigger = overlay.querySelector('#level-one-trigger')! as HTMLElement;
 
@@ -1269,9 +1235,7 @@ describe('KbqDropdown', () => {
 
             const panels = overlay.querySelectorAll(PANEL_SELECTOR);
 
-            expect(panels.length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(panels.length).withContext('Expected two open dropdowns').toBe(2);
 
             dispatchKeyboardEvent(panels[1], 'keydown', LEFT_ARROW);
             fixture.detectChanges();
@@ -1284,9 +1248,7 @@ describe('KbqDropdown', () => {
             compileTestComponent('rtl');
             instance.rootTriggerEl.nativeElement.click();
             fixture.detectChanges();
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const levelOneTrigger = overlay.querySelector('#level-one-trigger')! as HTMLElement;
 
@@ -1295,9 +1257,7 @@ describe('KbqDropdown', () => {
 
             const panels = overlay.querySelectorAll(PANEL_SELECTOR);
 
-            expect(panels.length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(panels.length).withContext('Expected two open dropdowns').toBe(2);
 
             dispatchKeyboardEvent(panels[1], 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -1355,9 +1315,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected no open dropdowns')
-                .toBe(0);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected no open dropdowns').toBe(0);
         }));
 
         it('should shift focus between the nested dropdowns', fakeAsync(() => {
@@ -1414,10 +1372,8 @@ describe('KbqDropdown', () => {
             const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
             const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
 
-            expect(Math.round(triggerRect.right))
-                .toBe(Math.round(panelRect.left) + NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top))
-                .toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
+            expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left) + NESTED_PANEL_LEFT_PADDING);
+            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
         });
 
         it('should fall back to aligning to the left edge of the trigger in ltr', () => {
@@ -1434,10 +1390,8 @@ describe('KbqDropdown', () => {
             const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
             const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
 
-            expect(Math.round(triggerRect.left))
-                .toBe(Math.round(panelRect.right) - NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top))
-                .toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
+            expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right) - NESTED_PANEL_LEFT_PADDING);
+            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
         });
 
         it('should position the nested dropdown to the left edge of the trigger in rtl', () => {
@@ -1474,10 +1428,8 @@ describe('KbqDropdown', () => {
             const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
             const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
 
-            expect(Math.round(triggerRect.right))
-                .toBe(Math.round(panelRect.left) - NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top))
-                .toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
+            expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left) - NESTED_PANEL_LEFT_PADDING);
+            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
         }));
 
         it('should close all of the dropdowns when an item is clicked', fakeAsync(() => {
@@ -1493,17 +1445,13 @@ describe('KbqDropdown', () => {
 
             const dropdowns = overlay.querySelectorAll(PANEL_SELECTOR);
 
-            expect(dropdowns.length)
-                .withContext('Expected three open dropdowns')
-                .toBe(3);
+            expect(dropdowns.length).withContext('Expected three open dropdowns').toBe(3);
 
             (dropdowns[2].querySelector('[kbq-dropdown-item]')! as HTMLElement).click();
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected no open dropdowns')
-                .toBe(0);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected no open dropdowns').toBe(0);
         }));
 
         it('should close all of the dropdowns when the user tabs away', fakeAsync(() => {
@@ -1519,17 +1467,13 @@ describe('KbqDropdown', () => {
 
             const dropdowns = overlay.querySelectorAll(PANEL_SELECTOR);
 
-            expect(dropdowns.length)
-                .withContext('Expected three open dropdowns')
-                .toBe(3);
+            expect(dropdowns.length).withContext('Expected three open dropdowns').toBe(3);
 
             dispatchKeyboardEvent(dropdowns[dropdowns.length - 1], 'keydown', TAB);
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected no open dropdowns')
-                .toBe(0);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected no open dropdowns').toBe(0);
         }));
 
         it('should close all of the dropdowns when the root is closed programmatically', fakeAsync(() => {
@@ -1545,17 +1489,13 @@ describe('KbqDropdown', () => {
 
             const dropdowns = overlay.querySelectorAll(PANEL_SELECTOR);
 
-            expect(dropdowns.length)
-                .withContext('Expected three open dropdowns')
-                .toBe(3);
+            expect(dropdowns.length).withContext('Expected three open dropdowns').toBe(3);
 
             instance.rootTrigger.close();
             fixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected no open dropdowns')
-                .toBe(0);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected no open dropdowns').toBe(0);
         }));
 
         it('should toggle a nested dropdown when its trigger is added after init', fakeAsync(() => {
@@ -1563,9 +1503,7 @@ describe('KbqDropdown', () => {
             instance.rootTriggerEl.nativeElement.click();
             fixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             instance.showLazy = true;
             fixture.detectChanges();
@@ -1581,9 +1519,7 @@ describe('KbqDropdown', () => {
                 .withContext('Expected the trigger to be highlighted')
                 .toContain('kbq-dropdown-item_highlighted');
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
         }));
 
         it('should prevent the default mousedown action if the dropdown item opens a nested dropdown', () => {
@@ -1593,7 +1529,7 @@ describe('KbqDropdown', () => {
 
             const event = createMouseEvent('mousedown');
 
-            Object.defineProperty(event, 'buttons', {get: () => 1});
+            Object.defineProperty(event, 'buttons', { get: () => 1 });
             event.preventDefault = jasmine.createSpy('preventDefault spy');
 
             dispatchMouseEvent(overlay.querySelector('[kbq-dropdown-item]')!, 'mousedown', 0, 0, event);
@@ -1610,16 +1546,12 @@ describe('KbqDropdown', () => {
             repeaterFixture.componentInstance.rootTriggerEl.nativeElement.click();
             repeaterFixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
             repeaterFixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
         }));
 
         it('should be able to trigger the same nested dropdown from different triggers', fakeAsync(() => {
@@ -1630,26 +1562,20 @@ describe('KbqDropdown', () => {
             repeaterFixture.componentInstance.rootTriggerEl.nativeElement.click();
             repeaterFixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const triggers = overlay.querySelectorAll('.level-one-trigger');
 
             dispatchMouseEvent(triggers[0], 'mouseenter');
             repeaterFixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
 
             dispatchMouseEvent(triggers[1], 'mouseenter');
             repeaterFixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
         }));
 
         it('should close the initial dropdown if the user moves away while animating', fakeAsync(() => {
@@ -1660,9 +1586,7 @@ describe('KbqDropdown', () => {
             repeaterFixture.componentInstance.rootTriggerEl.nativeElement.click();
             repeaterFixture.detectChanges();
             tick(500);
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected one open dropdown')
-                .toBe(1);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
             const triggers = overlay.querySelectorAll('.level-one-trigger');
 
@@ -1673,68 +1597,52 @@ describe('KbqDropdown', () => {
             repeaterFixture.detectChanges();
             tick(500);
 
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
         }));
 
-        it(
-            'should be able to open a nested dropdown through an item that is not a direct descendant of the panel',
-            fakeAsync(() => {
-                const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
+        it('should be able to open a nested dropdown through an item that is not a direct descendant of the panel', fakeAsync(() => {
+            const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
 
-                overlay = overlayContainerElement;
+            overlay = overlayContainerElement;
 
-                nestedFixture.detectChanges();
-                nestedFixture.componentInstance.rootTriggerEl.nativeElement.click();
-                nestedFixture.detectChanges();
-                tick(500);
-                expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                    .withContext('Expected one open dropdown')
-                    .toBe(1);
+            nestedFixture.detectChanges();
+            nestedFixture.componentInstance.rootTriggerEl.nativeElement.click();
+            nestedFixture.detectChanges();
+            tick(500);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
-                dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
-                nestedFixture.detectChanges();
-                tick(500);
+            dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
+            nestedFixture.detectChanges();
+            tick(500);
 
-                expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                    .withContext('Expected two open dropdowns')
-                    .toBe(2);
-            })
-        );
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
+        }));
 
-        it(
-            'should not close when hovering over a dropdown item inside a nested dropdown panel that is declared inside the root dropdown',
-            fakeAsync(() => {
-                const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
+        it('should not close when hovering over a dropdown item inside a nested dropdown panel that is declared inside the root dropdown', fakeAsync(() => {
+            const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
 
-                overlay = overlayContainerElement;
+            overlay = overlayContainerElement;
 
-                nestedFixture.detectChanges();
-                nestedFixture.componentInstance.rootTriggerEl.nativeElement.click();
-                nestedFixture.detectChanges();
-                tick(500);
-                expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                    .withContext('Expected one open dropdown')
-                    .toBe(1);
+            nestedFixture.detectChanges();
+            nestedFixture.componentInstance.rootTriggerEl.nativeElement.click();
+            nestedFixture.detectChanges();
+            tick(500);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected one open dropdown').toBe(1);
 
-                dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
-                nestedFixture.detectChanges();
-                tick(500);
+            dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
+            nestedFixture.detectChanges();
+            tick(500);
 
-                expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                    .withContext('Expected two open dropdowns')
-                    .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
 
-                dispatchMouseEvent(overlay.querySelector('.level-two-item')!, 'mouseenter');
-                nestedFixture.detectChanges();
-                tick(500);
+            dispatchMouseEvent(overlay.querySelector('.level-two-item')!, 'mouseenter');
+            nestedFixture.detectChanges();
+            tick(500);
 
-                expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                    .withContext('Expected two open dropdowns to remain')
-                    .toBe(2);
-            })
-        );
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
+                .withContext('Expected two open dropdowns to remain')
+                .toBe(2);
+        }));
 
         it('should not re-focus a child dropdown trigger when hovering another trigger', fakeAsync(() => {
             compileTestComponent();
@@ -1749,9 +1657,7 @@ describe('KbqDropdown', () => {
             dispatchMouseEvent(levelOneTrigger, 'mouseenter');
             fixture.detectChanges();
             tick();
-            expect(overlay.querySelectorAll(PANEL_SELECTOR).length)
-                .withContext('Expected two open dropdowns')
-                .toBe(2);
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).withContext('Expected two open dropdowns').toBe(2);
 
             dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
             fixture.detectChanges();
@@ -1761,7 +1667,6 @@ describe('KbqDropdown', () => {
                 .withContext('Expected focus not to be returned to the initial trigger.')
                 .not.toBe(levelOneTrigger);
         }));
-
     });
 
     describe('with KbqTitle directive', () => {
@@ -1771,13 +1676,12 @@ describe('KbqDropdown', () => {
             fixture = createComponent(
                 DropdownWithTooltip,
                 [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER],
-                [KbqTitleDirective]
+                [KbqTitleDirective],
             );
             fixture.detectChanges();
             fixture.componentInstance.trigger.open();
             fixture.detectChanges();
         });
-
 
         it('should display tooltip if text is overflown', fakeAsync(() => {
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
@@ -1802,7 +1706,6 @@ describe('KbqDropdown', () => {
 
             expect(tooltipInstance).toBeNull();
         }));
-
 
         it('should display tooltip if text is complex and overflown', fakeAsync(() => {
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
@@ -1835,10 +1738,12 @@ describe('KbqDropdown default overrides', () => {
         TestBed.configureTestingModule({
             imports: [KbqDropdownModule, NoopAnimationsModule],
             declarations: [SimpleDropdown],
-            providers: [{
-                provide: KBQ_DROPDOWN_DEFAULT_OPTIONS,
-                useValue: {overlapTriggerY: true, xPosition: 'before', yPosition: 'above'}
-            }]
+            providers: [
+                {
+                    provide: KBQ_DROPDOWN_DEFAULT_OPTIONS,
+                    useValue: { overlapTriggerY: true, xPosition: 'before', yPosition: 'above' },
+                },
+            ],
         }).compileComponents();
     }));
 
@@ -1861,22 +1766,22 @@ describe('KbqDropdown default overrides', () => {
             class="custom-one custom-two"
             (closed)="closeCallback($event)"
             [backdropClass]="backdropClass"
-            [hasBackdrop]="true">
-
-            <button kbq-dropdown-item> Item </button>
-            <button kbq-dropdown-item disabled> Disabled </button>
+            [hasBackdrop]="true"
+        >
+            <button kbq-dropdown-item>Item</button>
+            <button kbq-dropdown-item disabled>Disabled</button>
             <button kbq-dropdown-item>
                 <i class="kbq-icon">unicorn</i>
                 Item with an icon
             </button>
-            <button *ngFor="let item of extraItems" kbq-dropdown-item> {{item}} </button>
+            <button *ngFor="let item of extraItems" kbq-dropdown-item>{{ item }}</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class SimpleDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
-    @ViewChild(KbqDropdown, {static: false}) dropdown: KbqDropdown;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdown, { static: false }) dropdown: KbqDropdown;
     @ViewChildren(KbqDropdownItem) items: QueryList<KbqDropdownItem>;
     extraItems: string[] = [];
     closeCallback = jasmine.createSpy('dropdown closed callback', (name: string | undefined) => name);
@@ -1887,13 +1792,13 @@ class SimpleDropdown {
     template: `
         <button [kbqDropdownTriggerFor]="dropdown" #triggerEl>Toggle dropdown</button>
         <kbq-dropdown [xPosition]="xPosition" [yPosition]="yPosition" #dropdown="kbqDropdown">
-            <button kbq-dropdown-item> Positioned Content </button>
+            <button kbq-dropdown-item>Positioned Content</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class PositionedDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
     xPosition: DropdownPositionX = 'before';
     yPosition: DropdownPositionY = 'above';
 }
@@ -1908,14 +1813,14 @@ interface TestableDropdown {
     template: `
         <button [kbqDropdownTriggerFor]="dropdown" #triggerEl>Toggle dropdown</button>
         <kbq-dropdown [overlapTriggerY]="overlapTriggerY" #dropdown="kbqDropdown">
-            <button kbq-dropdown-item> Not overlapped Content</button>
+            <button kbq-dropdown-item>Not overlapped Content</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class OverlapDropdown implements TestableDropdown {
     @Input() overlapTriggerY: boolean;
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -1926,7 +1831,7 @@ class OverlapDropdown implements TestableDropdown {
             <ng-content></ng-content>
         </ng-template>
     `,
-    exportAs: 'appCustomDropdown'
+    exportAs: 'appCustomDropdown',
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
     direction: Direction;
@@ -1936,7 +1841,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     overlapTriggerY = true;
     parent: KbqDropdownPanel;
 
-    @ViewChild(TemplateRef, {static: false}) templateRef: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
     @Output() closed = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
     backdropClass: string;
     hasBackdrop: boolean;
@@ -1954,48 +1859,52 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     template: `
         <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <custom-dropdown #dropdown="appCustomDropdown">
-            <button kbq-dropdown-item> Custom Content </button>
+            <button kbq-dropdown-item>Custom Content</button>
         </custom-dropdown>
-    `
+    `,
 })
 class CustomDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
 }
 
 @Component({
     template: `
-        <button
-            [kbqDropdownTriggerFor]="root"
-            #rootTrigger="kbqDropdownTrigger"
-            #rootTriggerEl>Toggle dropdown
-        </button>
+        <button [kbqDropdownTriggerFor]="root" #rootTrigger="kbqDropdownTrigger" #rootTriggerEl>Toggle dropdown</button>
 
-        <button
-            [kbqDropdownTriggerFor]="levelTwo"
-            #alternateTrigger="kbqDropdownTrigger">Toggle alternate dropdown
+        <button [kbqDropdownTriggerFor]="levelTwo" #alternateTrigger="kbqDropdownTrigger">
+            Toggle alternate dropdown
         </button>
 
         <kbq-dropdown #root="kbqDropdown" (closed)="rootCloseCallback($event)" [hasBackdrop]="true">
-            <button kbq-dropdown-item
-                    id="level-one-trigger"
-                    [kbqDropdownTriggerFor]="levelOne"
-                    #levelOneTrigger="kbqDropdownTrigger">One
+            <button
+                kbq-dropdown-item
+                id="level-one-trigger"
+                [kbqDropdownTriggerFor]="levelOne"
+                #levelOneTrigger="kbqDropdownTrigger"
+            >
+                One
             </button>
             <button kbq-dropdown-item>Two</button>
-            <button kbq-dropdown-item
-                    *ngIf="showLazy"
-                    id="lazy-trigger"
-                    [kbqDropdownTriggerFor]="lazy"
-                    #lazyTrigger="kbqDropdownTrigger">Three
+            <button
+                kbq-dropdown-item
+                *ngIf="showLazy"
+                id="lazy-trigger"
+                [kbqDropdownTriggerFor]="lazy"
+                #lazyTrigger="kbqDropdownTrigger"
+            >
+                Three
             </button>
         </kbq-dropdown>
 
         <kbq-dropdown #levelOne="kbqDropdown" (closed)="levelOneCloseCallback($event)" [hasBackdrop]="true">
             <button kbq-dropdown-item>Four</button>
-            <button kbq-dropdown-item
-                    id="level-two-trigger"
-                    [kbqDropdownTriggerFor]="levelTwo"
-                    #levelTwoTrigger="kbqDropdownTrigger">Five
+            <button
+                kbq-dropdown-item
+                id="level-two-trigger"
+                [kbqDropdownTriggerFor]="levelTwo"
+                #levelTwoTrigger="kbqDropdownTrigger"
+            >
+                Five
             </button>
             <button kbq-dropdown-item>Six</button>
         </kbq-dropdown>
@@ -2011,25 +1920,25 @@ class CustomDropdown {
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class NestedDropdown {
-    @ViewChild('root', {static: false}) rootDropdown: KbqDropdown;
-    @ViewChild('rootTrigger', {static: false}) rootTrigger: KbqDropdownTrigger;
-    @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef<HTMLElement>;
-    @ViewChild('alternateTrigger', {static: false}) alternateTrigger: KbqDropdownTrigger;
+    @ViewChild('root', { static: false }) rootDropdown: KbqDropdown;
+    @ViewChild('rootTrigger', { static: false }) rootTrigger: KbqDropdownTrigger;
+    @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef<HTMLElement>;
+    @ViewChild('alternateTrigger', { static: false }) alternateTrigger: KbqDropdownTrigger;
     readonly rootCloseCallback = jasmine.createSpy('root dropdown closed callback');
 
-    @ViewChild('levelOne', {static: false}) levelOneDropdown: KbqDropdown;
-    @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: KbqDropdownTrigger;
+    @ViewChild('levelOne', { static: false }) levelOneDropdown: KbqDropdown;
+    @ViewChild('levelOneTrigger', { static: false }) levelOneTrigger: KbqDropdownTrigger;
     readonly levelOneCloseCallback = jasmine.createSpy('level one dropdown closed callback');
 
-    @ViewChild('levelTwo', {static: false}) levelTwoDropdown: KbqDropdown;
-    @ViewChild('levelTwoTrigger', {static: false}) levelTwoTrigger: KbqDropdownTrigger;
+    @ViewChild('levelTwo', { static: false }) levelTwoDropdown: KbqDropdown;
+    @ViewChild('levelTwoTrigger', { static: false }) levelTwoTrigger: KbqDropdownTrigger;
     readonly levelTwoCloseCallback = jasmine.createSpy('level one dropdown closed callback');
 
-    @ViewChild('lazy', {static: false}) lazyDropdown: KbqDropdown;
-    @ViewChild('lazyTrigger', {static: false}) lazyTrigger: KbqDropdownTrigger;
+    @ViewChild('lazy', { static: false }) lazyDropdown: KbqDropdown;
+    @ViewChild('lazyTrigger', { static: false }) lazyTrigger: KbqDropdownTrigger;
     showLazy = false;
 }
 
@@ -2041,7 +1950,9 @@ class NestedDropdown {
                 kbq-dropdown-item
                 class="level-one-trigger"
                 *ngFor="let item of items"
-                [kbqDropdownTriggerFor]="levelOne">{{item}}
+                [kbqDropdownTriggerFor]="levelOne"
+            >
+                {{ item }}
             </button>
         </kbq-dropdown>
 
@@ -2049,15 +1960,14 @@ class NestedDropdown {
             <button kbq-dropdown-item>Four</button>
             <button kbq-dropdown-item>Five</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class NestedDropdownRepeater {
-    @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef<HTMLElement>;
+    @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef<HTMLElement>;
     // @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: KbqDropdownTrigger;
 
     items = ['one', 'two', 'three'];
 }
-
 
 @Component({
     template: `
@@ -2070,12 +1980,11 @@ class NestedDropdownRepeater {
                 <button kbq-dropdown-item class="level-two-item">Two</button>
             </kbq-dropdown>
         </kbq-dropdown>
-    `
+    `,
 })
 class NestedDropdownDeclaredInsideParentDropdown {
-    @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef;
+    @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef;
 }
-
 
 @Component({
     template: `
@@ -2086,39 +1995,41 @@ class NestedDropdownDeclaredInsideParentDropdown {
                 <button kbq-dropdown-item>Another item</button>
             </ng-template>
         </kbq-dropdown>
-    `
+    `,
 })
 class SimpleLazyDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
     @ViewChildren(KbqDropdownItem) items: QueryList<KbqDropdownItem>;
 }
-
 
 @Component({
     template: `
         <button
             [kbqDropdownTriggerFor]="dropdown"
-            [kbqDropdownTriggerData]="{label: 'one'}"
-            #triggerOne="kbqDropdownTrigger">One
+            [kbqDropdownTriggerData]="{ label: 'one' }"
+            #triggerOne="kbqDropdownTrigger"
+        >
+            One
         </button>
         <button
             [kbqDropdownTriggerFor]="dropdown"
-            [kbqDropdownTriggerData]="{label: 'two'}"
-            #triggerTwo="kbqDropdownTrigger">Two
+            [kbqDropdownTriggerData]="{ label: 'two' }"
+            #triggerTwo="kbqDropdownTrigger"
+        >
+            Two
         </button>
         <kbq-dropdown #dropdown="kbqDropdown">
             <ng-template let-label="label" kbqDropdownContent>
-                <button kbq-dropdown-item>{{label}}</button>
+                <button kbq-dropdown-item>{{ label }}</button>
             </ng-template>
         </kbq-dropdown>
-    `
+    `,
 })
 class LazyDropdownWithContext {
-    @ViewChild('triggerOne', {static: false}) triggerOne: KbqDropdownTrigger;
-    @ViewChild('triggerTwo', {static: false}) triggerTwo: KbqDropdownTrigger;
+    @ViewChild('triggerOne', { static: false }) triggerOne: KbqDropdownTrigger;
+    @ViewChild('triggerTwo', { static: false }) triggerTwo: KbqDropdownTrigger;
 }
-
 
 @Component({
     template: `
@@ -2130,30 +2041,28 @@ class LazyDropdownWithContext {
         <kbq-dropdown #two="kbqDropdown">
             <button kbq-dropdown-item>Two</button>
         </kbq-dropdown>
-    `
+    `,
 })
 class DynamicPanelDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('one', {static: false}) first: KbqDropdown;
-    @ViewChild('two', {static: false}) second: KbqDropdown;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('one', { static: false }) first: KbqDropdown;
+    @ViewChild('two', { static: false }) second: KbqDropdown;
 }
-
 
 @Component({
     template: `
         <button [kbqDropdownTriggerFor]="dropdown" #triggerEl>Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button #item kbq-dropdown-item> Item </button>
+            <button #item kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class OnPushContainer {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild(KbqDropdownItem, {read: ElementRef}) itemRef: ElementRef<HTMLElement>;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild(KbqDropdownItem, { read: ElementRef }) itemRef: ElementRef<HTMLElement>;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
 }
-
 
 @Component({
     template: `
@@ -2178,11 +2087,11 @@ class OnPushContainer {
                 </div>
             </button>
         </kbq-dropdown>
-    `
+    `,
 })
 class DropdownWithTooltip implements TestableDropdown {
-    @ViewChild(KbqDropdownTrigger, {static: false}) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
 
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;

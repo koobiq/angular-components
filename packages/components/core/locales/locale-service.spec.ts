@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { KbqLocaleService } from './locale-service';
 
 describe('KbqLocaleService', () => {
@@ -7,7 +6,7 @@ describe('KbqLocaleService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [KbqLocaleService]
+            providers: [KbqLocaleService],
         });
         service = TestBed.inject(KbqLocaleService);
     });

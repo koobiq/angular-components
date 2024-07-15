@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Tab list with selection by index
  */
@@ -8,13 +7,13 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tab-active-tab-index-example',
     templateUrl: 'tab-active-tab-index-example.html',
     styleUrls: ['tab-active-tab-index-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TabActiveTabIndexExample {
     tabs = [
         { tabId: 'files', icon: 'mc-folder-opened_16' },
         { tabId: 'settings', icon: 'mc-gear_16' },
-        { tabId: 'tasks', icon: 'mc-hamburger_16'  }
+        { tabId: 'tasks', icon: 'mc-hamburger_16' },
     ];
 
     selectedTabIndex = this.tabs.findIndex(({ tabId }) => tabId === 'settings');

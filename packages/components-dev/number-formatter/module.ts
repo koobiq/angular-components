@@ -8,18 +8,17 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
-    KbqLocaleServiceModule
+    KbqLocaleServiceModule,
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
-
 @Component({
     selector: 'app',
     templateUrl: './demo-template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DemoComponent {
     value = 1000.123;
@@ -27,16 +26,16 @@ export class DemoComponent {
     locales: any[];
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
-
-        this.locales = this.localeService.locales.items
-            .map((item) => ({ ...item, selected: item.id === this.localeService.id }));
+        this.locales = this.localeService.locales.items.map((item) => ({
+            ...item,
+            selected: item.id === this.localeService.id,
+        }));
     }
 
     selectLanguage(lang: any) {
         this.localeService.setLocale(lang.id);
     }
 }
-
 
 @NgModule({
     imports: [
@@ -47,9 +46,9 @@ export class DemoComponent {
         KbqInputModule,
         KbqFormFieldModule,
         FormsModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     declarations: [DemoComponent],
-    bootstrap: [DemoComponent]
+    bootstrap: [DemoComponent],
 })
 export class DemoModule {}

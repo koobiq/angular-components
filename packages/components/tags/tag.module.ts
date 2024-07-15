@@ -2,12 +2,10 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ENTER } from '@koobiq/cdk/keycodes';
-
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagInput } from './tag-input';
 import { KbqTagList } from './tag-list.component';
 import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.component';
-
 
 @NgModule({
     imports: [CommonModule, PlatformModule],
@@ -17,7 +15,7 @@ import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.co
         KbqTagInput,
         KbqTagTrailingIcon,
         KbqTagAvatar,
-        KbqTagRemove
+        KbqTagRemove,
     ],
     declarations: [
         KbqTagList,
@@ -25,12 +23,14 @@ import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.co
         KbqTagInput,
         KbqTagTrailingIcon,
         KbqTagAvatar,
-        KbqTagRemove
+        KbqTagRemove,
     ],
-    providers: [{
-        provide: KBQ_TAGS_DEFAULT_OPTIONS,
-        // tslint:disable-next-line: no-object-literal-type-assertion
-        useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
-    }]
+    providers: [
+        {
+            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+            // tslint:disable-next-line: no-object-literal-type-assertion
+            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions,
+        },
+    ],
 })
 export class KbqTagsModule {}

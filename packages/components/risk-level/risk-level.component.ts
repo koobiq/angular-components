@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    ViewEncapsulation
-} from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 export enum KbqRiskLevelColors {
     FadeContrast = 'fade-contrast',
@@ -14,9 +8,8 @@ export enum KbqRiskLevelColors {
 
     Success = 'success',
     Warning = 'warning',
-    Error = 'error'
+    Error = 'error',
 }
-
 
 @Component({
     selector: 'kbq-risk-level',
@@ -28,8 +21,8 @@ export enum KbqRiskLevelColors {
         class: 'kbq-risk-level',
         '[class.kbq-risk-level_filled]': '!outline',
         '[class.kbq-risk-level_outline]': 'outline',
-        '[class]': 'riskLevelColor'
-    }
+        '[class]': 'riskLevelColor',
+    },
 })
 export class KbqRiskLevel {
     @Input() outline: boolean = false;

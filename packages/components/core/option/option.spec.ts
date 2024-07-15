@@ -1,21 +1,18 @@
 import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqOption, KbqOptionModule } from './index';
 
-
-@Component({ template: `<kbq-option [disabled]="disabled"></kbq-option>`})
+@Component({ template: `<kbq-option [disabled]="disabled"></kbq-option>` })
 class OptionWithDisable {
     disabled: boolean;
 }
 
 describe('KbqOption component', () => {
-
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqOptionModule],
-            declarations: [OptionWithDisable]
+            declarations: [OptionWithDisable],
         }).compileComponents();
     }));
 
@@ -23,10 +20,9 @@ describe('KbqOption component', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
         fixture.detectChanges();
 
-        const optionInstance: KbqOption =
-            fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const completeSpy = jasmine.createSpy('complete spy');
-        const subscription = optionInstance.stateChanges.subscribe({complete: completeSpy});
+        const subscription = optionInstance.stateChanges.subscribe({ complete: completeSpy });
 
         fixture.destroy();
         expect(completeSpy).toHaveBeenCalled();
@@ -37,8 +33,7 @@ describe('KbqOption component', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
         fixture.detectChanges();
 
-        const optionInstance: KbqOption =
-            fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
 
         optionInstance.select();
         expect(optionInstance.selected).toBe(true);
@@ -59,8 +54,7 @@ describe('KbqOption component', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
         fixture.detectChanges();
 
-        const optionInstance: KbqOption =
-            fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
+        const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
 
         optionInstance.deselect();
         expect(optionInstance.selected).toBe(false);

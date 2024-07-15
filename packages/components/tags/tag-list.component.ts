@@ -18,29 +18,22 @@ import {
     Output,
     QueryList,
     Self,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
 import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    mixinErrorState
+    mixinErrorState,
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
-
 import { KbqTagTextControl } from './tag-text-control';
 import { KbqTag, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
-
 
 /** @docs-private */
 export class KbqTagListBase {
@@ -55,22 +48,23 @@ export class KbqTagListBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
+        public ngControl: NgControl,
     ) {}
 }
 
 /** @docs-private */
 export const KbqTagListMixinBase: CanUpdateErrorStateCtor & typeof KbqTagListBase = mixinErrorState(KbqTagListBase);
 
-
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
 
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
-    constructor(public source: KbqTagList, public value: any) {}
+    constructor(
+        public source: KbqTagList,
+        public value: any,
+    ) {}
 }
-
 
 @Component({
     selector: 'kbq-tag-list',
@@ -87,15 +81,23 @@ export class KbqTagListChange {
 
         '(focus)': 'focus()',
         '(blur)': 'blur()',
-        '(keydown)': 'keydown($event)'
+        '(keydown)': 'keydown($event)',
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }]
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
 })
-export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldControl<any>,
-    ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
-
+export class KbqTagList
+    extends KbqTagListMixinBase
+    implements
+        KbqFormFieldControl<any>,
+        ControlValueAccessor,
+        AfterContentInit,
+        DoCheck,
+        OnInit,
+        OnDestroy,
+        CanUpdateErrorState
+{
     readonly controlType: string = 'tag-list';
 
     /** Combined stream of all of the child tags' selection change events. */
@@ -305,8 +307,9 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     @ContentChildren(KbqTag, {
         // Need to use `descendants: true`,
         // Ivy will no longer match indirect descendants if it's left as false.
-        descendants: true
-    }) tags: QueryList<KbqTag>;
+        descendants: true,
+    })
+    tags: QueryList<KbqTag>;
 
     private _value: any;
 
@@ -352,7 +355,7 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
         @Optional() private dir: Directionality,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
-        @Optional() @Self() ngControl: NgControl
+        @Optional() @Self() ngControl: NgControl,
     ) {
         super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
@@ -375,46 +378,44 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
 
         // Prevents the tag list from capturing focus and redirecting
         // it back to the first tag when the user tabs out.
-        this.keyManager.tabOut
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(() => {
-                this._tabIndex = -1;
+        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+            this._tabIndex = -1;
 
-                setTimeout(() => {
-                    this._tabIndex = this.userTabIndex || 0;
-                    this.changeDetectorRef.markForCheck();
-                });
+            setTimeout(() => {
+                this._tabIndex = this.userTabIndex || 0;
+                this.changeDetectorRef.markForCheck();
             });
+        });
 
         // When the list changes, re-subscribe
-        this.tags.changes
-            .pipe(startWith(null), takeUntil(this.destroyed))
-            .subscribe(() => {
-                if (this.disabled) {
-                    // Since this happens after the content has been
-                    // checked, we need to defer it to the next tick.
-                    Promise.resolve().then(() => { this.syncTagsDisabledState(); });
-                }
-
-                this.resetTags();
-
-                // Reset tags selected/deselected status
-                this.initializeSelection();
-
-                // Check to see if we need to update our tab index
-                this.updateTabIndex();
-
-                // Check to see if we have a destroyed tag and need to refocus
-                this.updateFocusForDestroyedTags();
-
-                // Defer setting the value in order to avoid the "Expression
-                // has changed after it was checked" errors from Angular.
+        this.tags.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+            if (this.disabled) {
+                // Since this happens after the content has been
+                // checked, we need to defer it to the next tick.
                 Promise.resolve().then(() => {
-                    this.tagChanges.emit(this.tags.toArray());
-                    this.stateChanges.next();
-                    this.propagateTagsChanges();
+                    this.syncTagsDisabledState();
                 });
+            }
+
+            this.resetTags();
+
+            // Reset tags selected/deselected status
+            this.initializeSelection();
+
+            // Check to see if we need to update our tab index
+            this.updateTabIndex();
+
+            // Check to see if we have a destroyed tag and need to refocus
+            this.updateFocusForDestroyedTags();
+
+            // Defer setting the value in order to avoid the "Expression
+            // has changed after it was checked" errors from Angular.
+            Promise.resolve().then(() => {
+                this.tagChanges.emit(this.tags.toArray());
+                this.stateChanges.next();
+                this.propagateTagsChanges();
             });
+        });
 
         this.propagateSelectableToChildren();
     }
@@ -453,8 +454,9 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
 
         // todo need rethink about it
         if (this.ngControl && inputElement.ngControl?.statusChanges) {
-            inputElement.ngControl.statusChanges
-                .subscribe(() => this.ngControl.control!.setErrors(inputElement.ngControl!.errors));
+            inputElement.ngControl.statusChanges.subscribe(() =>
+                this.ngControl.control!.setErrors(inputElement.ngControl!.errors),
+            );
         }
     }
 
@@ -496,7 +498,9 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
      * are no eligible tags.
      */
     focus(): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         // TODO: ARIA says this should focus the first `selected` tag if any are selected.
         // Focus on first element if there's no tagInput inside tag-list
@@ -534,7 +538,7 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
             if (event.keyCode === HOME) {
                 this.keyManager.setFirstItemActive();
                 event.preventDefault();
-            // tslint:disable-next-line: deprecation
+                // tslint:disable-next-line: deprecation
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
@@ -649,7 +653,6 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
      * @returns Tag that has the corresponding value.
      */
     private selectValue(value: any, isUserInput: boolean = true): KbqTag | undefined {
-
         const correspondingTag = this.tags.find((tag) => {
             return tag.value != null && this._compareWith(tag.value, value);
         });
@@ -791,37 +794,34 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
 
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
-        this.tagFocusSubscription = this.tagFocusChanges
-            .subscribe((event) => {
-                const tagIndex: number = this.tags.toArray().indexOf(event.tag);
+        this.tagFocusSubscription = this.tagFocusChanges.subscribe((event) => {
+            const tagIndex: number = this.tags.toArray().indexOf(event.tag);
 
-                if (this.isValidIndex(tagIndex)) {
-                    this.keyManager.updateActiveItem(tagIndex);
-                }
+            if (this.isValidIndex(tagIndex)) {
+                this.keyManager.updateActiveItem(tagIndex);
+            }
 
-                this.stateChanges.next();
-            });
+            this.stateChanges.next();
+        });
 
-        this.tagBlurSubscription = this.tagBlurChanges
-            .subscribe(() => {
-                this.blur();
-                this.stateChanges.next();
-            });
+        this.tagBlurSubscription = this.tagBlurChanges.subscribe(() => {
+            this.blur();
+            this.stateChanges.next();
+        });
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveSubscription = this.tagRemoveChanges
-            .subscribe((event) => {
-                const tag = event.tag;
-                const tagIndex = this.tags.toArray().indexOf(event.tag);
+        this.tagRemoveSubscription = this.tagRemoveChanges.subscribe((event) => {
+            const tag = event.tag;
+            const tagIndex = this.tags.toArray().indexOf(event.tag);
 
-                // In case the tag that will be removed is currently focused, we temporarily store
-                // the index in order to be able to determine an appropriate sibling tag that will
-                // receive focus.
-                if (this.isValidIndex(tagIndex) && tag.hasFocus) {
-                    this.lastDestroyedTagIndex = tagIndex;
-                }
-            });
+            // In case the tag that will be removed is currently focused, we temporarily store
+            // the index in order to be able to determine an appropriate sibling tag that will
+            // receive focus.
+            if (this.isValidIndex(tagIndex) && tag.hasFocus) {
+                this.lastDestroyedTagIndex = tagIndex;
+            }
+        });
     }
 
     /** Checks whether an event comes from inside a tag element. */
@@ -829,7 +829,9 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
         let currentElement = event.target as HTMLElement | null;
 
         while (currentElement && currentElement !== this.elementRef.nativeElement) {
-            if (currentElement.classList.contains('kbq-tag')) { return true; }
+            if (currentElement.classList.contains('kbq-tag')) {
+                return true;
+            }
 
             currentElement = currentElement.parentElement;
         }
@@ -863,8 +865,7 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
 
     private propagateSelectableToChildren(): void {
         if (this.tags) {
-            this.tags.forEach((tag) => tag.tagListSelectable = this._selectable);
+            this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
     }
 }
-

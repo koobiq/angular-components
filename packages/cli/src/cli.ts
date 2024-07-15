@@ -2,7 +2,6 @@
 import { program } from 'commander';
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
-
 import { PublishReleaseCITask } from './release/publish-release-ci';
 import { PublishReleaseFromDistTask } from './release/publish-release-from-dist';
 import { PublishReleaseCIGithubTask } from './release/publish-release-github-ci';
@@ -18,7 +17,7 @@ enum CommandTypes {
     PublishCi = 'publish-ci',
     PublishDist = 'publish-dist',
     PublishCIGitlab = 'publish-ci-gitlab',
-    PublishCIGithub = 'publish-ci-github'
+    PublishCIGithub = 'publish-ci-github',
 }
 
 export const runCliCommands = () => {

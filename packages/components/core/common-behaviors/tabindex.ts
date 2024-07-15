@@ -1,8 +1,6 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-
 import { AbstractConstructor, Constructor } from './constructor';
 import { CanDisable } from './disabled';
-
 
 // tslint:disable-next-line:naming-convention
 export interface HasTabIndex {
@@ -12,7 +10,10 @@ export interface HasTabIndex {
 export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
 /** Mixin to augment a directive with a `tabIndex` property. */
-export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
+export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(
+    base: T,
+    defaultTabIndex?: number,
+): HasTabIndexCtor & T;
 
 export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaultTabIndex = 0): HasTabIndexCtor & T {
     return class extends base implements HasTabIndex {

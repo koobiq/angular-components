@@ -1,17 +1,14 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
 import { CanDisable, CanDisableCtor, mixinDisabled } from '@koobiq/components/core';
-
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
-
 
 /** @docs-private */
 export class KbqTreeNodeToggleBase {}
 
-
 /** @docs-private */
-export const KbqTreeNodeToggleMixinBase:
-    CanDisableCtor & typeof KbqTreeNodeToggleBase = mixinDisabled(KbqTreeNodeToggleBase);
+export const KbqTreeNodeToggleMixinBase: CanDisableCtor & typeof KbqTreeNodeToggleBase =
+    mixinDisabled(KbqTreeNodeToggleBase);
 
 /** @docs-private */
 @Directive()
@@ -33,15 +30,19 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
         return this.tree.treeControl.isExpanded(this.node);
     }
 
-    constructor(private tree: KbqTreeBase<T>, private treeNode: KbqTreeNode<T>) {
+    constructor(
+        private tree: KbqTreeBase<T>,
+        private treeNode: KbqTreeNode<T>,
+    ) {
         super();
 
-        this.tree.treeControl.filterValue
-            .subscribe((value) => this.disabled = !!value?.length);
+        this.tree.treeControl.filterValue.subscribe((value) => (this.disabled = !!value?.length));
     }
 
     toggle(event: Event): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         this.recursive
             ? this.tree.treeControl.toggleDescendants(this.treeNode.data)
@@ -50,7 +51,6 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
         event.stopPropagation();
     }
 }
-
 
 @Component({
     selector: 'kbq-tree-node-toggle',
@@ -63,21 +63,20 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 
         '[attr.disabled]': 'disabled || null',
 
-        '(click)': 'toggle($event)'
+        '(click)': 'toggle($event)',
     },
     inputs: ['disabled'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
-
 
 @Directive({
     selector: '[kbq-tree-node-toggle], [kbqTreeNodeToggle]',
     exportAs: 'kbqTreeNodeToggle',
     host: {
         '[attr.disabled]': 'disabled || null',
-        '(click)': 'toggle($event)'
-    }
+        '(click)': 'toggle($event)',
+    },
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

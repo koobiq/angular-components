@@ -1,31 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import {
     KbqGutterDirective,
     KbqGutterGhostDirective,
     KbqSplitterAreaDirective,
-    KbqSplitterComponent
+    KbqSplitterComponent,
 } from './splitter.component';
-
 
 @NgModule({
     imports: [
         CommonModule,
-        KbqIconModule
+        KbqIconModule,
     ],
     exports: [
         KbqGutterDirective,
         KbqSplitterAreaDirective,
-        KbqSplitterComponent
+        KbqSplitterComponent,
     ],
     declarations: [
         KbqGutterDirective,
         KbqGutterGhostDirective,
         KbqSplitterAreaDirective,
-        KbqSplitterComponent
-    ]
+        KbqSplitterComponent,
+    ],
 })
-export class KbqSplitterModule {
-}
+export class KbqSplitterModule {}

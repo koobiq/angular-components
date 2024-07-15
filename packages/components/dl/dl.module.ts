@@ -2,29 +2,23 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { PlatformModule } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import {
-    KbqDlComponent,
-    KbqDtComponent,
-    KbqDdComponent
-} from './dl.component';
-
+import { KbqDdComponent, KbqDlComponent, KbqDtComponent } from './dl.component';
 
 @NgModule({
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule
+        PlatformModule,
     ],
     exports: [
         KbqDlComponent,
         KbqDtComponent,
-        KbqDdComponent
+        KbqDdComponent,
     ],
     declarations: [
         KbqDlComponent,
         KbqDtComponent,
-        KbqDdComponent
-    ]
+        KbqDdComponent,
+    ],
 })
 export class KbqDlModule {}

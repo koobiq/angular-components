@@ -16,5 +16,4 @@ import 'core-js/es/regexp';
 import 'core-js/es/set';
 import 'core-js/es/string';
 import 'core-js/es/symbol';
-
 import 'zone.js';

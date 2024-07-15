@@ -18,67 +18,68 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
 } from '@angular/core';
 import {
-    waitForAsync,
     ComponentFixture,
+    TestBed,
+    discardPeriodicTasks,
     fakeAsync,
     flush,
     inject,
-    TestBed,
     tick,
-    discardPeriodicTasks
+    waitForAsync,
 } from '@angular/core/testing';
 import {
     ControlValueAccessor,
-    UntypedFormControl,
-    UntypedFormGroup,
     FormGroupDirective,
     FormsModule,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
-    Validators
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
+    A,
     DOWN_ARROW,
     END,
     ENTER,
+    ESCAPE,
     HOME,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
     TAB,
     UP_ARROW,
-    A, ESCAPE
 } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    wrappedErrorMessage, dispatchMouseEvent
+    dispatchMouseEvent,
+    wrappedErrorMessage,
 } from '@koobiq/cdk/testing';
 import {
     ErrorStateMatcher,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqVirtualOption,
+    ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
-    ThemePalette, KbqVirtualOption
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, merge, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-
 import { KbqSelectModule } from './index';
 import { KbqSelect } from './select.component';
-
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -98,51 +99,182 @@ function finishInit(fixture: ComponentFixture<any>) {
 /** The debounce interval when typing letters to select an option. */
 const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
 
-const OPTIONS  =
-    ['Abakan', 'Almetyevsk', 'Anadyr', 'Anapa', 'Arkhangelsk', 'Astrakhan', 'Barnaul', 'Belgorod', 'Beslan',
-    'Biysk', 'Birobidzhan', 'Blagoveshchensk', 'Bologoye', 'Bryansk', 'Veliky Novgorod',
-    'Veliky Ustyug', 'Vladivostok', 'Vladikavkaz', 'Vladimir', 'Volgograd', 'Vologda', 'Vorkuta',
-    'Voronezh', 'Gatchina', 'Gdov', 'Gelendzhik', 'Gorno-Altaysk', 'Grozny', 'Gudermes',
-    'Gus-Khrustalny', 'Dzerzhinsk', 'Dmitrov', 'Dubna', 'Yeysk', 'Yekaterinburg', 'Yelabuga', 'Yelets',
-    'Yessentuki', 'Zlatoust', 'Ivanovo', 'Izhevsk', 'Irkutsk', 'Yoshkar-Ola', 'Kazan', 'Kaliningrad',
-    'Kaluga', 'Kemerovo', 'Kislovodsk', 'Komsomolsk-on-Amur', 'Kotlas', 'Krasnodar', 'Krasnoyarsk', 'Kurgan',
-    'Kursk', 'Kyzyl', 'Leninogorsk', 'Lensk', 'Lipetsk', 'Luga', 'Lyuban', 'Lyubertsy', 'Magadan', 'Maykop',
-    'Makhachkala', 'Miass', 'Mineralnye Vody', 'Mirny', 'Moscow', 'Murmansk', 'Murom', 'Mytishchi',
-    'Naberezhnye Chelny', 'Nadym', 'Nalchik', 'Nazran', 'Naryan-Mar', 'Nakhodka', 'Nizhnevartovsk',
-    'Nizhnekamsk', 'Nizhny Novgorod', 'Nizhny Tagil', 'Novokuznetsk', 'Novosibirsk', 'Novy Urengoy',
-    'Norilsk', 'Obninsk', 'Oktyabrsky', 'Omsk', 'Orenburg', 'Orekhovo-Zuyevo', 'Oryol', 'Penza', 'Perm',
-    'Petrozavodsk', 'Petropavlovsk-Kamchatsky', 'Podolsk', 'Pskov', 'Pyatigorsk', 'Rostov-on-Don', 'Rybinsk',
-    'Ryazan', 'Salekhard', 'Samara', 'Saint Petersburg', 'Saransk', 'Saratov', 'Severodvinsk', 'Smolensk',
-    'Sol-Iletsk', 'Sochi', 'Stavropol', 'Surgut', 'Syktyvkar', 'Tambov', 'Tver', 'Tobolsk', 'Tolyatti', 'Tomsk',
-    'Tuapse', 'Tula', 'Tynda', 'Tyumen', 'Ulan-Ude', 'Ulyanovsk', 'Ufa', 'Khabarovsk', 'Khanty-Mansiysk',
-    'Chebarkul', 'Cheboksary', 'Chelyabinsk', 'Cherepovets', 'Cherkessk', 'Chistopol', 'Chita', 'Shadrinsk',
-    'Shatura', 'Shuya', 'Elista', 'Engels', 'Yuzhno-Sakhalinsk', 'Yakutsk', 'Yaroslavl'];
-
+const OPTIONS = [
+    'Abakan',
+    'Almetyevsk',
+    'Anadyr',
+    'Anapa',
+    'Arkhangelsk',
+    'Astrakhan',
+    'Barnaul',
+    'Belgorod',
+    'Beslan',
+    'Biysk',
+    'Birobidzhan',
+    'Blagoveshchensk',
+    'Bologoye',
+    'Bryansk',
+    'Veliky Novgorod',
+    'Veliky Ustyug',
+    'Vladivostok',
+    'Vladikavkaz',
+    'Vladimir',
+    'Volgograd',
+    'Vologda',
+    'Vorkuta',
+    'Voronezh',
+    'Gatchina',
+    'Gdov',
+    'Gelendzhik',
+    'Gorno-Altaysk',
+    'Grozny',
+    'Gudermes',
+    'Gus-Khrustalny',
+    'Dzerzhinsk',
+    'Dmitrov',
+    'Dubna',
+    'Yeysk',
+    'Yekaterinburg',
+    'Yelabuga',
+    'Yelets',
+    'Yessentuki',
+    'Zlatoust',
+    'Ivanovo',
+    'Izhevsk',
+    'Irkutsk',
+    'Yoshkar-Ola',
+    'Kazan',
+    'Kaliningrad',
+    'Kaluga',
+    'Kemerovo',
+    'Kislovodsk',
+    'Komsomolsk-on-Amur',
+    'Kotlas',
+    'Krasnodar',
+    'Krasnoyarsk',
+    'Kurgan',
+    'Kursk',
+    'Kyzyl',
+    'Leninogorsk',
+    'Lensk',
+    'Lipetsk',
+    'Luga',
+    'Lyuban',
+    'Lyubertsy',
+    'Magadan',
+    'Maykop',
+    'Makhachkala',
+    'Miass',
+    'Mineralnye Vody',
+    'Mirny',
+    'Moscow',
+    'Murmansk',
+    'Murom',
+    'Mytishchi',
+    'Naberezhnye Chelny',
+    'Nadym',
+    'Nalchik',
+    'Nazran',
+    'Naryan-Mar',
+    'Nakhodka',
+    'Nizhnevartovsk',
+    'Nizhnekamsk',
+    'Nizhny Novgorod',
+    'Nizhny Tagil',
+    'Novokuznetsk',
+    'Novosibirsk',
+    'Novy Urengoy',
+    'Norilsk',
+    'Obninsk',
+    'Oktyabrsky',
+    'Omsk',
+    'Orenburg',
+    'Orekhovo-Zuyevo',
+    'Oryol',
+    'Penza',
+    'Perm',
+    'Petrozavodsk',
+    'Petropavlovsk-Kamchatsky',
+    'Podolsk',
+    'Pskov',
+    'Pyatigorsk',
+    'Rostov-on-Don',
+    'Rybinsk',
+    'Ryazan',
+    'Salekhard',
+    'Samara',
+    'Saint Petersburg',
+    'Saransk',
+    'Saratov',
+    'Severodvinsk',
+    'Smolensk',
+    'Sol-Iletsk',
+    'Sochi',
+    'Stavropol',
+    'Surgut',
+    'Syktyvkar',
+    'Tambov',
+    'Tver',
+    'Tobolsk',
+    'Tolyatti',
+    'Tomsk',
+    'Tuapse',
+    'Tula',
+    'Tynda',
+    'Tyumen',
+    'Ulan-Ude',
+    'Ulyanovsk',
+    'Ufa',
+    'Khabarovsk',
+    'Khanty-Mansiysk',
+    'Chebarkul',
+    'Cheboksary',
+    'Chelyabinsk',
+    'Cherepovets',
+    'Cherkessk',
+    'Chistopol',
+    'Chita',
+    'Shadrinsk',
+    'Shatura',
+    'Shuya',
+    'Elista',
+    'Engels',
+    'Yuzhno-Sakhalinsk',
+    'Yakutsk',
+    'Yaroslavl',
+];
 
 @Component({
     selector: 'basic-select',
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
-            <kbq-select placeholder="Food" [formControl]="control" [required]="isRequired"
-                        [tabIndex]="tabIndexOverride" [panelClass]="panelClass">
+            <kbq-select
+                placeholder="Food"
+                [formControl]="control"
+                [required]="isRequired"
+                [tabIndex]="tabIndexOverride"
+                [panelClass]="panelClass"
+            >
                 <kbq-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
                     {{ food.viewValue }}
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `
+    `,
 })
 class BasicSelect {
     foods: any[] = [
@@ -153,7 +285,7 @@ class BasicSelect {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
+        { value: 'sushi-7', viewValue: 'Sushi' },
     ];
     control = new UntypedFormControl();
     isRequired: boolean;
@@ -173,24 +305,26 @@ class BasicSelect {
             <kbq-select
                 (openedChange)="openedChangeListener($event)"
                 (opened)="openedListener()"
-                (closed)="closedListener()">
-
+                (closed)="closedListener()"
+            >
                 <kbq-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
                     {{ food.viewValue }}
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicEvents {
     foods: any[] = [
@@ -201,7 +335,7 @@ class BasicEvents {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
+        { value: 'sushi-7', viewValue: 'Sushi' },
     ];
 
     @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
@@ -216,22 +350,20 @@ class BasicEvents {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" ngModel [disabled]="isDisabled">
-                <kbq-option *ngFor="let food of foods"
-                            [value]="food.value">{{ food.viewValue }}
-                </kbq-option>
+                <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class NgModelSelect {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
+        { value: 'tacos-2', viewValue: 'Tacos' },
     ];
     isDisabled: boolean;
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
 }
 
@@ -250,10 +382,9 @@ class NgModelSelect {
                 <kbq-option [value]="'four'">four</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
-class ManySelects {
-}
+class ManySelects {}
 
 @Component({
     selector: 'ng-if-select',
@@ -267,18 +398,18 @@ class ManySelects {
                 </kbq-select>
             </kbq-form-field>
         </div>
-    `
+    `,
 })
 class NgIfSelect {
     isShowing = false;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
+        { value: 'tacos-2', viewValue: 'Tacos' },
     ];
     control = new UntypedFormControl('pizza-1');
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
 @Component({
@@ -288,18 +419,20 @@ class NgIfSelect {
             <kbq-select (selectionChange)="changeListener($event)">
                 <kbq-option *ngFor="let food of foods" [value]="food">{{ food }}</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithChangeEvent {
     foods: string[] = [
@@ -310,7 +443,7 @@ class SelectWithChangeEvent {
         'chips-4',
         'eggs-5',
         'pasta-6',
-        'sushi-7'
+        'sushi-7',
     ];
 
     changeListener = jasmine.createSpy('KbqSelect change listener');
@@ -322,29 +455,28 @@ class SelectWithChangeEvent {
         <kbq-form-field>
             <kbq-select #select [(value)]="singleSelectedWithSearch">
                 <kbq-form-field kbqSelectSearch>
-                    <input
-                        kbqInput
-                        [formControl]="searchCtrl"
-                        type="text" />
+                    <input kbqInput [formControl]="searchCtrl" type="text" />
                 </kbq-form-field>
 
                 <kbq-option *ngFor="let option of options$ | async" [value]="option">{{ option }}</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
-                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                        {{ option.viewValue }}
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithSearch {
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 
     singleSelectedWithSearch = 'Moscow';
 
@@ -356,35 +488,34 @@ class SelectWithSearch {
     ngOnInit(): void {
         this.options$ = merge(
             of(OPTIONS),
-            this.searchCtrl.valueChanges
-                .pipe(map((value) => this.getFilteredOptions(value)))
+            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value))),
         );
     }
 
     private getFilteredOptions(value): string[] {
-        const searchFilter = (value && value.new) ? value.value : value;
+        const searchFilter = value && value.new ? value.value : value;
 
         return searchFilter
-            ? this.options.filter((option) =>
-                option.toLowerCase().includes((searchFilter.toLowerCase())))
+            ? this.options.filter((option) => option.toLowerCase().includes(searchFilter.toLowerCase()))
             : this.options;
     }
 }
 
 @Component({
     selector: 'custom-select-accessor',
-    template: `
-        <kbq-form-field>
-            <kbq-select></kbq-select>
-        </kbq-form-field>`,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: CustomSelectAccessor,
-        multi: true
-    }]
+    template: ` <kbq-form-field>
+        <kbq-select></kbq-select>
+    </kbq-form-field>`,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: CustomSelectAccessor,
+            multi: true,
+        },
+    ],
 })
 class CustomSelectAccessor implements ControlValueAccessor {
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 
     writeValue: (value?: any) => void = () => {};
     registerOnChange: (changeFn?: (value: any) => void) => void = () => {};
@@ -393,17 +524,18 @@ class CustomSelectAccessor implements ControlValueAccessor {
 
 @Component({
     selector: 'comp-with-custom-select',
-    template: `
-        <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: CustomSelectAccessor,
-        multi: true
-    }]
+    template: ` <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: CustomSelectAccessor,
+            multi: true,
+        },
+    ],
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
-    @ViewChild(CustomSelectAccessor, {static: true}) customAccessor: CustomSelectAccessor;
+    @ViewChild(CustomSelectAccessor, { static: true }) customAccessor: CustomSelectAccessor;
 }
 
 @Component({
@@ -413,7 +545,7 @@ class CompWithCustomSelect {
             <kbq-select [(ngModel)]="value"></kbq-select>
         </kbq-form-field>
         <throws-error-on-init></throws-error-on-init>
-    `
+    `,
 })
 class SelectWithErrorSibling {
     value: string;
@@ -421,7 +553,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: ''
+    template: '',
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -440,13 +572,13 @@ class ThrowsErrorOnInit implements OnInit {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectOnPush {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
+        { value: 'tacos-2', viewValue: 'Tacos' },
     ];
     control = new UntypedFormControl();
 }
@@ -462,13 +594,13 @@ class BasicSelectOnPush {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectOnPushPreselected {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
+        { value: 'tacos-2', viewValue: 'Tacos' },
     ];
     control = new UntypedFormControl('pizza-1');
 }
@@ -477,24 +609,23 @@ class BasicSelectOnPushPreselected {
     selector: 'multi-select',
     template: `
         <kbq-form-field>
-            <kbq-select multiple placeholder="Food" [formControl]="control"
-                       [sortComparator]="sortComparator">
-                <kbq-option *ngFor="let food of foods"
-                           [value]="food.value">{{ food.viewValue }}
-                </kbq-option>
+            <kbq-select multiple placeholder="Food" [formControl]="control" [sortComparator]="sortComparator">
+                <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class MultiSelect {
     foods: any[] = [
@@ -505,11 +636,11 @@ class MultiSelect {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
+        { value: 'sushi-7', viewValue: 'Sushi' },
     ];
     control = new UntypedFormControl();
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
     sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
@@ -518,24 +649,29 @@ class MultiSelect {
     selector: 'multi-select-narrow',
     template: `
         <kbq-form-field>
-            <kbq-select multiple placeholder="Food" [formControl]="control" style="width: 100px;"
-                       [sortComparator]="sortComparator">
-                <kbq-option *ngFor="let food of foods"
-                           [value]="food.value">{{ food.viewValue }}
-                </kbq-option>
+            <kbq-select
+                multiple
+                placeholder="Food"
+                [formControl]="control"
+                style="width: 100px;"
+                [sortComparator]="sortComparator"
+            >
+                <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class MultiSelectNarrow {
     foods: any[] = [
@@ -546,21 +682,20 @@ class MultiSelectNarrow {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
+        { value: 'sushi-7', viewValue: 'Sushi' },
     ];
     control = new UntypedFormControl();
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
     sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
 
 @Component({
     selector: 'select-with-plain-tabindex',
-    template: `
-        <kbq-form-field>
-            <kbq-select [tabIndex]="5"></kbq-select>
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <kbq-select [tabIndex]="5"></kbq-select>
+    </kbq-form-field>`,
 })
 class SelectWithPlainTabindex {}
 
@@ -571,10 +706,9 @@ class SelectWithPlainTabindex {}
             <kbq-select #select="kbqSelect"></kbq-select>
         </kbq-form-field>
         <div *ngIf="select.selected"></div>
-    `
+    `,
 })
-class SelectEarlyAccessSibling {
-}
+class SelectEarlyAccessSibling {}
 
 @Component({
     selector: 'basic-select-initially-hidden',
@@ -584,7 +718,7 @@ class SelectEarlyAccessSibling {
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -598,25 +732,23 @@ class BasicSelectInitiallyHidden {
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
-class BasicSelectNoPlaceholder {
-}
+class BasicSelectNoPlaceholder {}
 
 @Component({
     selector: 'basic-select-with-theming',
     template: `
         <kbq-form-field [color]="theme">
             <kbq-select placeholder="Food">
-                <kbq-option [value]="'steak'-0">Steak</kbq-option>
-                <kbq-option [value]="'pizza'-1">Pizza</kbq-option>
-
+                <kbq-option [value]="'steak' - 0">Steak</kbq-option>
+                <kbq-option [value]="'pizza' - 1">Pizza</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithTheming {
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     theme: ThemePalette;
 }
 
@@ -630,18 +762,20 @@ class BasicSelectWithTheming {
                 </kbq-option>
                 <kbq-option>None</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class ResetValuesSelect {
     foods: any[] = [
@@ -650,39 +784,39 @@ class ResetValuesSelect {
         { value: 'tacos-2', viewValue: 'Tacos' },
         { value: false, viewValue: 'Falsy' },
         { viewValue: 'Undefined' },
-        { value: null, viewValue: 'Null' }
+        { value: null, viewValue: 'Null' },
     ];
     control = new UntypedFormControl();
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
 @Component({
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
-                <kbq-option *ngFor="let food of foods"
-                           [value]="food.value">{{ food.viewValue }}
-                </kbq-option>
+                <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
 
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class FalsyValueSelect {
     foods: any[] = [
         { value: 0, viewValue: 'Steak' },
-        { value: 1, viewValue: 'Pizza' }
+        { value: 1, viewValue: 'Pizza' },
     ];
     control = new UntypedFormControl();
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
@@ -698,10 +832,10 @@ class FalsyValueSelect {
                         {{ pokemon.viewValue }}
                     </kbq-option>
                 </kbq-optgroup>
-                <kbq-option [value]="'mime'-11">Mr. Mime</kbq-option>
+                <kbq-option [value]="'mime' - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithGroups {
     control = new UntypedFormControl();
@@ -711,8 +845,8 @@ class SelectWithGroups {
             pokemon: [
                 { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
                 { value: 'oddish-1', viewValue: 'Oddish' },
-                { value: 'bellsprout-2', viewValue: 'Bellsprout' }
-            ]
+                { value: 'bellsprout-2', viewValue: 'Bellsprout' },
+            ],
         },
         {
             name: 'Water',
@@ -720,27 +854,27 @@ class SelectWithGroups {
             pokemon: [
                 { value: 'squirtle-3', viewValue: 'Squirtle' },
                 { value: 'psyduck-4', viewValue: 'Psyduck' },
-                { value: 'horsea-5', viewValue: 'Horsea' }
-            ]
+                { value: 'horsea-5', viewValue: 'Horsea' },
+            ],
         },
         {
             name: 'Fire',
             pokemon: [
                 { value: 'charmander-6', viewValue: 'Charmander' },
                 { value: 'vulpix-7', viewValue: 'Vulpix' },
-                { value: 'flareon-8', viewValue: 'Flareon' }
-            ]
+                { value: 'flareon-8', viewValue: 'Flareon' },
+            ],
         },
         {
             name: 'Psychic',
             pokemon: [
                 { value: 'mew-9', viewValue: 'Mew' },
-                { value: 'mewtwo-10', viewValue: 'Mewtwo' }
-            ]
-        }
+                { value: 'mewtwo-10', viewValue: 'Mewtwo' },
+            ],
+        },
     ];
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
 }
 
@@ -756,14 +890,16 @@ class SelectWithGroups {
                 </kbq-optgroup>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithGroupsAndNgContainer {
     control = new UntypedFormControl();
-    pokemonTypes = [{
-        name: 'Grass',
-        pokemon: [{ value: 'bulbasaur-0', viewValue: 'Bulbasaur' }]
-    }];
+    pokemonTypes = [
+        {
+            name: 'Grass',
+            pokemon: [{ value: 'bulbasaur-0', viewValue: 'Bulbasaur' }],
+        },
+    ];
 }
 
 @Component({
@@ -773,7 +909,7 @@ class SelectWithGroupsAndNgContainer {
                 <kbq-select [(ngModel)]="value"></kbq-select>
             </kbq-form-field>
         </form>
-    `
+    `,
 })
 class InvalidSelectInForm {
     value: any;
@@ -784,21 +920,21 @@ class InvalidSelectInForm {
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
                 <kbq-select placeholder="Food" formControlName="food">
-                    <kbq-option [value]="'steak'-0">Steak</kbq-option>
-                    <kbq-option [value]="'pizza'-1">Pizza</kbq-option>
+                    <kbq-option [value]="'steak' - 0">Steak</kbq-option>
+                    <kbq-option [value]="'pizza' - 1">Pizza</kbq-option>
                 </kbq-select>
 
                 <!--<kbq-error>This field is required</kbq-error>-->
             </kbq-form-field>
         </form>
-    `
+    `,
 })
 class SelectInsideFormGroup {
-    @ViewChild(FormGroupDirective, {static: false}) formGroupDirective: FormGroupDirective;
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     formControl = new UntypedFormControl('', Validators.required);
     formGroup = new UntypedFormGroup({
-        food: this.formControl
+        food: this.formControl,
     });
     submitResult: string;
 
@@ -817,17 +953,17 @@ class SelectInsideFormGroup {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'sandwich-2', viewValue: 'Sandwich' }
+        { value: 'sandwich-2', viewValue: 'Sandwich' },
     ];
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 
     avoidCollisionMockTarget() {}
 }
@@ -841,16 +977,16 @@ class BasicSelectWithoutForms {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'pizza-1';
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' }
+        { value: 'pizza-1', viewValue: 'Pizza' },
     ];
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
 @Component({
@@ -862,17 +998,17 @@ class BasicSelectWithoutFormsPreselected {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'sandwich-2', viewValue: 'Sandwich' }
+        { value: 'sandwich-2', viewValue: 'Sandwich' },
     ];
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
 @Component({
@@ -888,12 +1024,12 @@ class BasicSelectWithoutFormsMultiple {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithCustomTrigger {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' }
+        { value: 'pizza-1', viewValue: 'Pizza' },
     ];
     control = new UntypedFormControl();
 }
@@ -902,33 +1038,34 @@ class SelectWithCustomTrigger {
     selector: 'ng-model-compare-with',
     template: `
         <kbq-form-field>
-            <kbq-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)"
-                       [compareWith]="comparator">
+            <kbq-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)" [compareWith]="comparator">
                 <kbq-option *ngFor="let food of foods" [value]="food">{{ food.viewValue }}</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class NgModelCompareWithSelect {
-    foods: ({ value: string; viewValue: string })[] = [
+    foods: { value: string; viewValue: string }[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
+        { value: 'tacos-2', viewValue: 'Tacos' },
     ];
     selectedFood: { value: string; viewValue: string } = { value: 'pizza-1', viewValue: 'Pizza' };
     comparator: ((f1: any, f2: any) => boolean) | null = this.compareByValue;
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
 
     useCompareByValue() {
@@ -963,14 +1100,14 @@ class NgModelCompareWithSelect {
                 {{ food.viewValue }}
             </kbq-option>
         </kbq-select>
-    `
+    `,
 })
 class CustomErrorBehaviorSelect {
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     control = new UntypedFormControl();
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' }
+        { value: 'pizza-1', viewValue: 'Pizza' },
     ];
     errorStateMatcher: ErrorStateMatcher;
 }
@@ -979,23 +1116,21 @@ class CustomErrorBehaviorSelect {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(ngModel)]="selectedFoods">
-                <kbq-option *ngFor="let food of foods"
-                           [value]="food.value">{{ food.viewValue }}
-                </kbq-option>
+                <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SingleSelectWithPreselectedArrayValues {
     foods: any[] = [
         { value: ['steak-0', 'steak-1'], viewValue: 'Steak' },
         { value: ['pizza-1', 'pizza-2'], viewValue: 'Pizza' },
-        { value: ['tacos-2', 'tacos-3'], viewValue: 'Tacos' }
+        { value: ['tacos-2', 'tacos-3'], viewValue: 'Tacos' },
     ];
 
     selectedFoods = this.foods[1].value;
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
 }
 
@@ -1009,7 +1144,7 @@ class SingleSelectWithPreselectedArrayValues {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithoutOptionCentering {
     foods: any[] = [
@@ -1020,11 +1155,11 @@ class SelectWithoutOptionCentering {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
+        { value: 'sushi-7', viewValue: 'Sushi' },
     ];
     control = new UntypedFormControl('pizza-1');
 
-    @ViewChild(KbqSelect, {static: false}) select: KbqSelect;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
 }
 
@@ -1037,7 +1172,7 @@ class SelectWithoutOptionCentering {
                 <kbq-option [value]="'thing'">A thing</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1049,24 +1184,30 @@ class SelectWithFormFieldLabel {
         <kbq-form-field>
             <kbq-select>
                 <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value2'">Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text</kbq-option>
+                <kbq-option style="max-width: 200px;" [value]="'value2'"
+                    >Long long long long Long long long long Long long long long Long long long long Long long long long
+                    Long long long long text</kbq-option
+                >
                 <kbq-option style="max-width: 200px;" [value]="'value3'">{{ changingLabel }}</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class SelectWithLongOptionText {
-    changingLabel: string = 'Changed Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text';
+    changingLabel: string =
+        'Changed Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text';
     counter: number = 0;
 
     changeLabel(): void {
@@ -1086,18 +1227,20 @@ class SelectWithLongOptionText {
                 <kbq-option [value]="'value5'">Not long text</kbq-option>
                 <kbq-option [value]="'value6'">Not long text</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false"
-                            [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
-                        <i kbq-icon="mc-close-S_16" kbqTagRemove
-                           *ngIf="!option.disabled && !select.disabled"
-                           (click)="select.onRemoveMatcherItem(option, $event)">
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            *ngIf="!option.disabled && !select.disabled"
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        >
                         </i>
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class MultiSelectWithCustomizedTagContent {
     @ViewChild('select') kbqSelect: KbqSelect;
@@ -1112,10 +1255,7 @@ class MultiSelectWithCustomizedTagContent {
         <kbq-form-field>
             <kbq-select [multiple]="true" [(value)]="values" [style]="style">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
-
-                    <kbq-option
-                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
-                        [value]="option">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -1123,7 +1263,7 @@ class MultiSelectWithCustomizedTagContent {
                 <kbq-cleaner></kbq-cleaner>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
 class CdkVirtualScrollViewportSelect<T = string> {
     itemSize = 32;
@@ -1137,8 +1277,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
     @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
     options: any[] = OPTIONS.sort();
 
-    constructor(public scrollDispatcher: ScrollDispatcher) {
-    }
+    constructor(public scrollDispatcher: ScrollDispatcher) {}
 }
 
 @Component({
@@ -1147,10 +1286,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
         <kbq-form-field>
             <kbq-select [multiple]="true" [(value)]="values" [style]="style">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
-
-                    <kbq-option
-                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
-                        [value]="option">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option.name }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -1171,13 +1307,20 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 <kbq-cleaner></kbq-cleaner>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
 })
-class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewportSelect<{id: number, name: string }> {
-    values: any[] = [{id: 3, name: "Anapa"}, {id: 55, name: "Lyubertsy"}, {id: 114, name: "Tomsk" }];
+class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewportSelect<{
+    id: number;
+    name: string;
+}> {
+    values: any[] = [
+        { id: 3, name: 'Anapa' },
+        { id: 55, name: 'Lyubertsy' },
+        { id: 114, name: 'Tomsk' },
+    ];
 
-    options: {id: number, name: string }[] = OPTIONS.sort().map((option, index) => {
-        return {id: index, name: option, active: true }
+    options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+        return { id: index, name: option, active: true };
     });
 
     constructor(public scrollDispatcher: ScrollDispatcher) {
@@ -1208,18 +1351,19 @@ describe('KbqSelect', () => {
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
-                ScrollingModule
+                ScrollingModule,
             ],
             declarations,
             providers: [
-                { provide: Directionality, useFactory: () => dir = { value: 'ltr' } },
+                { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
                 {
-                    provide: ScrollDispatcher, useFactory: () => ({
+                    provide: ScrollDispatcher,
+                    useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
                         getAncestorScrollContainers: () => [],
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }).compileComponents();
 
         inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
@@ -1242,7 +1386,7 @@ describe('KbqSelect', () => {
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
                 SelectWithFormFieldLabel,
-                SelectWithChangeEvent
+                SelectWithChangeEvent,
             ]);
         }));
 
@@ -1287,15 +1431,11 @@ describe('KbqSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
-                    expect(options[0].selected)
-                        .withContext('Expected first option to be selected.')
-                        .toBe(true);
+                    expect(options[0].selected).withContext('Expected first option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from first option to have been set on the model.')
@@ -1305,9 +1445,7 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
                     // Note that the third option is skipped, because it is disabled.
-                    expect(options[3].selected)
-                        .withContext('Expected fourth option to be selected.')
-                        .toBe(true);
+                    expect(options[3].selected).withContext('Expected fourth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from fourth option to have been set on the model.')
@@ -1316,9 +1454,7 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
                     flush();
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1329,9 +1465,7 @@ describe('KbqSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     fixture.componentInstance.select.open();
                     fixture.detectChanges();
@@ -1354,15 +1488,11 @@ describe('KbqSelect', () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
-                    expect(options[0].selected)
-                        .withContext('Expected first option to be selected.')
-                        .toBe(true);
+                    expect(options[0].selected).withContext('Expected first option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from first option to have been set on the model.')
@@ -1372,9 +1502,7 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
                     // Note that the third option is skipped, because it is disabled.
-                    expect(options[3].selected)
-                        .withContext('Expected fourth option to be selected.')
-                        .toBe(true);
+                    expect(options[3].selected).withContext('Expected fourth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from fourth option to have been set on the model.')
@@ -1383,9 +1511,7 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
                     flush();
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1395,13 +1521,9 @@ describe('KbqSelect', () => {
                 it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
                     const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1409,25 +1531,17 @@ describe('KbqSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
-                    expect(formControl.value)
-                        .withContext('Expected value not to have changed.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected value not to have changed.').toBeFalsy();
                 }));
 
                 it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
                     const { control: formControl, select: selectInstance } = fixture.componentInstance;
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1435,13 +1549,9 @@ describe('KbqSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
-                    expect(formControl.value)
-                        .withContext('Expected value not to have changed.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected value not to have changed.').toBeFalsy();
                 }));
 
                 it('should should close when pressing ALT + DOWN_ARROW', fakeAsync(() => {
@@ -1449,9 +1559,7 @@ describe('KbqSelect', () => {
 
                     selectInstance.open();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1459,13 +1567,9 @@ describe('KbqSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(event.defaultPrevented)
-                        .withContext('Expected default action to be prevented.')
-                        .toBe(true);
+                    expect(event.defaultPrevented).withContext('Expected default action to be prevented.').toBe(true);
                 }));
 
                 it('should should close when pressing ALT + UP_ARROW', fakeAsync(() => {
@@ -1473,9 +1577,7 @@ describe('KbqSelect', () => {
 
                     selectInstance.open();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be open.')
-                        .toBe(true);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be open.').toBe(true);
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
                     Object.defineProperty(event, 'altKey', { get: () => true });
@@ -1483,29 +1585,21 @@ describe('KbqSelect', () => {
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(selectInstance.panelOpen)
-                        .withContext('Expected select to be closed.')
-                        .toBe(false);
+                    expect(selectInstance.panelOpen).withContext('Expected select to be closed.').toBe(false);
 
-                    expect(event.defaultPrevented)
-                        .withContext('Expected default action to be prevented.')
-                        .toBe(true);
+                    expect(event.defaultPrevented).withContext('Expected default action to be prevented.').toBe(true);
                 }));
 
                 it('should be able to select options by typing on a closed select', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options.toArray();
 
-                    expect(formControl.value)
-                        .withContext('Expected no initial value.')
-                        .toBeFalsy();
+                    expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
                     tick(200);
 
-                    expect(options[1].selected)
-                        .withContext('Expected second option to be selected.')
-                        .toBe(true);
+                    expect(options[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from second option to have been set on the model.')
@@ -1514,78 +1608,58 @@ describe('KbqSelect', () => {
                     dispatchEvent(select, createKeyboardEvent('keydown', 69, undefined, 'e'));
                     tick(200);
 
-                    expect(options[5].selected)
-                        .withContext('Expected sixth option to be selected.')
-                        .toBe(true);
+                    expect(options[5].selected).withContext('Expected sixth option to be selected.').toBe(true);
 
                     expect(formControl.value)
                         .withContext('Expected value from sixth option to have been set on the model.')
                         .toBe(options[5].value);
                 }));
 
-                it('should open the panel when pressing a vertical arrow key on a closed multiple select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should open the panel when pressing a vertical arrow key on a closed multiple select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
-                        const initialValue = instance.control.value;
+                    const initialValue = instance.control.value;
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be closed.')
-                            .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
-                        const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                        flush();
+                    const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                    flush();
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be open.')
-                            .toBe(true);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be open.').toBe(true);
 
-                        expect(instance.control.value)
-                            .withContext('Expected value to stay the same.')
-                            .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
 
-                        expect(event.defaultPrevented)
-                            .withContext('Expected default to be prevented.')
-                            .toBe(true);
-                    }));
+                    expect(event.defaultPrevented).withContext('Expected default to be prevented.').toBe(true);
+                }));
 
-                it('should open the panel when pressing a horizontal arrow key on closed multiple select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should open the panel when pressing a horizontal arrow key on closed multiple select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
-                        const initialValue = instance.control.value;
+                    const initialValue = instance.control.value;
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be closed.')
-                            .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
-                        const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-                        flush();
+                    const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+                    flush();
 
-                        expect(instance.select.panelOpen)
-                            .withContext('Expected panel to be open.')
-                            .toBe(true);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be open.').toBe(true);
 
-                        expect(instance.control.value)
-                            .withContext('Expected value to stay the same.')
-                            .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
 
-                        expect(event.defaultPrevented)
-                            .withContext('Expected default to be prevented.')
-                            .toBe(true);
-                    }));
+                    expect(event.defaultPrevented).withContext('Expected default to be prevented.').toBe(true);
+                }));
 
                 it('should do nothing when typing on a closed multi-select', fakeAsync(() => {
                     fixture.destroy();
@@ -1598,80 +1672,68 @@ describe('KbqSelect', () => {
 
                     const initialValue = instance.control.value;
 
-                    expect(instance.select.panelOpen)
-                        .withContext('Expected panel to be closed.')
-                        .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to be closed.').toBe(false);
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
                     flush();
 
-                    expect(instance.select.panelOpen)
-                        .withContext('Expected panel to stay closed.')
-                        .toBe(false);
+                    expect(instance.select.panelOpen).withContext('Expected panel to stay closed.').toBe(false);
 
-                    expect(instance.control.value)
-                        .withContext('Expected value to stay the same.')
-                        .toBe(initialValue);
+                    expect(instance.control.value).withContext('Expected value to stay the same.').toBe(initialValue);
                 }));
 
                 it('should do nothing if the key manager did not change the active item', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
 
-                    expect(formControl.value)
-                        .withContext('Expected form control value to be empty.')
-                        .toBeNull();
+                    expect(formControl.value).withContext('Expected form control value to be empty.').toBeNull();
 
-                    expect(formControl.pristine)
-                        .withContext('Expected form control to be clean.')
-                        .toBe(true);
+                    expect(formControl.pristine).withContext('Expected form control to be clean.').toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', 16); // Press a random key.
 
-                    expect(formControl.value)
-                        .withContext('Expected form control value to stay empty.')
-                        .toBeNull();
+                    expect(formControl.value).withContext('Expected form control value to stay empty.').toBeNull();
 
-                    expect(formControl.pristine)
-                        .withContext('Expected form control to stay clean.')
-                        .toBe(true);
+                    expect(formControl.pristine).withContext('Expected form control to stay clean.').toBe(true);
                 }));
 
-                it('should continue from the selected option when the value is set programmatically',
+                it('should continue from the selected option when the value is set programmatically', fakeAsync(() => {
+                    const formControl = fixture.componentInstance.control;
+
+                    formControl.setValue('eggs-5');
+
+                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                    flush();
+
+                    expect(formControl.value).toBe('pasta-6');
+                    expect(fixture.componentInstance.options.toArray()[6].selected).toBe(true);
+                }));
+
+                xit(
+                    'should not shift focus when the selected options are updated programmatically ' +
+                        'in a multi select',
                     fakeAsync(() => {
-                        const formControl = fixture.componentInstance.control;
+                        fixture.destroy();
 
-                        formControl.setValue('eggs-5');
+                        const multiFixture = TestBed.createComponent(MultiSelect);
 
-                        dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                        flush();
+                        multiFixture.detectChanges();
+                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+                        multiFixture.componentInstance.select.open();
 
-                        expect(formControl.value).toBe('pasta-6');
-                        expect(fixture.componentInstance.options.toArray()[6].selected).toBe(true);
-                    }));
+                        const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
-                xit('should not shift focus when the selected options are updated programmatically ' +
-                    'in a multi select', fakeAsync(() => {
-                    fixture.destroy();
+                        options[3].focus();
+                        expect(document.activeElement)
+                            .withContext('Expected fourth option to be focused.')
+                            .toBe(options[3]);
 
-                    const multiFixture = TestBed.createComponent(MultiSelect);
+                        multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
 
-                    multiFixture.detectChanges();
-                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
-                    multiFixture.componentInstance.select.open();
-
-                    const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
-
-                    options[3].focus();
-                    expect(document.activeElement)
-                        .withContext('Expected fourth option to be focused.')
-                        .toBe(options[3]);
-
-                    multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
-
-                    expect(document.activeElement)
-                        .withContext('Expected fourth option to remain focused.')
-                        .toBe(options[3]);
-                }));
+                        expect(document.activeElement)
+                            .withContext('Expected fourth option to remain focused.')
+                            .toBe(options[3]);
+                    }),
+                );
 
                 it('should not cycle through the options if the control is disabled', fakeAsync(() => {
                     const formControl = fixture.componentInstance.control;
@@ -1682,9 +1744,7 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     flush();
 
-                    expect(formControl.value)
-                        .withContext('Expected value to remain unchanged.')
-                        .toBe('eggs-5');
+                    expect(formControl.value).withContext('Expected value to remain unchanged.').toBe('eggs-5');
                 }));
 
                 it('should not wrap selection after reaching the end of the options', fakeAsync(() => {
@@ -1694,16 +1754,12 @@ describe('KbqSelect', () => {
                         dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     });
 
-                    expect(lastOption.selected)
-                        .withContext('Expected last option to be selected.')
-                        .toBe(true);
+                    expect(lastOption.selected).withContext('Expected last option to be selected.').toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     flush();
 
-                    expect(lastOption.selected)
-                        .withContext('Expected last option to stay selected.')
-                        .toBe(true);
+                    expect(lastOption.selected).withContext('Expected last option to stay selected.').toBe(true);
                 }));
 
                 it('should not open a multiple select when tabbing through', fakeAsync(() => {
@@ -1726,63 +1782,61 @@ describe('KbqSelect', () => {
                         .toBe(false);
                 }));
 
-                it('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                it('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const event = createKeyboardEvent('keydown', DOWN_ARROW);
-                        Object.defineProperty(event, 'shiftKey', { get: () => true });
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const event = createKeyboardEvent('keydown', DOWN_ARROW);
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
 
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+                    multiFixture.autoDetectChanges();
+                    multiFixture.detectChanges();
+
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
+
+                    expect(multiFixture.componentInstance.select.value).toBeFalsy();
+
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1']);
+
+                    dispatchEvent(select, event);
+                    flush();
+
+                    expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1', 'tacos-2']);
+                }));
+
+                xit('should toggle the previous option when pressing shift + UP_ARROW on a multi-select', fakeAsync(() => {
+                    fixture.destroy();
+
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const event = createKeyboardEvent('keydown', UP_ARROW);
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
+                    multiFixture.componentInstance.select.open();
+                    multiFixture.detectChanges();
+                    flush();
+
+                    // Move focus down first.
+                    for (let i = 0; i < 5; i++) {
+                        dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                         multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
-                        multiFixture.autoDetectChanges();
-                        multiFixture.detectChanges();
+                    }
 
-                        multiFixture.componentInstance.select.open();
-                        multiFixture.detectChanges();
-                        flush();
+                    expect(multiFixture.componentInstance.select.value).toBeFalsy();
 
-                        expect(multiFixture.componentInstance.select.value).toBeFalsy();
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['chips-4']);
 
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1']);
-
-                        dispatchEvent(select, event);
-                        flush();
-
-                        expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1', 'tacos-2']);
-                    }));
-
-                xit('should toggle the previous option when pressing shift + UP_ARROW on a multi-select',
-                    fakeAsync(() => {
-                        fixture.destroy();
-
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const event = createKeyboardEvent('keydown', UP_ARROW);
-                        Object.defineProperty(event, 'shiftKey', { get: () => true });
-
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
-
-                        multiFixture.componentInstance.select.open();
-                        multiFixture.detectChanges();
-                        flush();
-
-                        // Move focus down first.
-                        for (let i = 0; i < 5; i++) {
-                            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                            multiFixture.detectChanges();
-                        }
-
-                        expect(multiFixture.componentInstance.select.value).toBeFalsy();
-
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['chips-4']);
-
-                        dispatchEvent(select, event);
-                        expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
-                    }));
+                    dispatchEvent(select, event);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
+                }));
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
                     const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
@@ -1794,8 +1848,7 @@ describe('KbqSelect', () => {
                 it('should consider the selection a result of a user action when closed', fakeAsync(() => {
                     const option = fixture.componentInstance.options.first;
                     const spy = jasmine.createSpy('option selection spy');
-                    const subscription =
-                        option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
+                    const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     expect(spy).toHaveBeenCalledWith(true);
@@ -1809,34 +1862,27 @@ describe('KbqSelect', () => {
 
                     fixture.componentInstance.select.focus();
 
-                    expect(document.activeElement)
-                        .withContext('Expected select element to be focused.')
-                        .toBe(select);
+                    expect(document.activeElement).withContext('Expected select element to be focused.').toBe(select);
                 }));
 
-                xit('should restore focus to the trigger after selecting an option in multi-select mode',
-                    fakeAsync(() => {
-                        fixture.destroy();
+                xit('should restore focus to the trigger after selecting an option in multi-select mode', fakeAsync(() => {
+                    fixture.destroy();
 
-                        const multiFixture = TestBed.createComponent(MultiSelect);
-                        const instance = multiFixture.componentInstance;
+                    const multiFixture = TestBed.createComponent(MultiSelect);
+                    const instance = multiFixture.componentInstance;
 
-                        multiFixture.detectChanges();
-                        select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
-                        instance.select.open();
+                    multiFixture.detectChanges();
+                    select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
+                    instance.select.open();
 
-                        // Ensure that the select isn't focused to begin with.
-                        select.blur();
-                        expect(document.activeElement)
-                            .withContext('Expected trigger not to be focused.')
-                            .not.toBe(select);
+                    // Ensure that the select isn't focused to begin with.
+                    select.blur();
+                    expect(document.activeElement).withContext('Expected trigger not to be focused.').not.toBe(select);
 
-                        const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
-                        option.click();
-                        expect(document.activeElement)
-                            .withContext('Expected trigger to be focused.')
-                            .toBe(select);
-                    }));
+                    const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+                    option.click();
+                    expect(document.activeElement).withContext('Expected trigger to be focused.').toBe(select);
+                }));
             });
 
             describe('for options', () => {
@@ -1854,7 +1900,6 @@ describe('KbqSelect', () => {
 
                     options = overlayContainerElement.querySelectorAll('kbq-option');
                 }));
-
 
                 afterEach(fakeAsync(() => flush()));
 
@@ -2075,30 +2120,28 @@ describe('KbqSelect', () => {
                     .toBeGreaterThan(0);
             }));
 
-            it('should not consider itself as blurred if the trigger loses focus while the ' +
-                'panel is still open', fakeAsync(() => {
-                const selectElement = fixture.nativeElement.querySelector('.kbq-select');
-                const selectInstance = fixture.componentInstance.select;
+            it(
+                'should not consider itself as blurred if the trigger loses focus while the ' + 'panel is still open',
+                fakeAsync(() => {
+                    const selectElement = fixture.nativeElement.querySelector('.kbq-select');
+                    const selectInstance = fixture.componentInstance.select;
 
-                dispatchFakeEvent(selectElement, 'focus');
-                fixture.detectChanges();
+                    dispatchFakeEvent(selectElement, 'focus');
+                    fixture.detectChanges();
 
-                /* tslint:disable-next-line:deprecation */
-                expect(selectInstance.focused)
-                    .withContext('Expected select to be focused.')
-                    .toBe(true);
+                    /* tslint:disable-next-line:deprecation */
+                    expect(selectInstance.focused).withContext('Expected select to be focused.').toBe(true);
 
-                selectInstance.open();
-                fixture.detectChanges();
-                flush();
-                dispatchFakeEvent(selectElement, 'blur');
-                fixture.detectChanges();
+                    selectInstance.open();
+                    fixture.detectChanges();
+                    flush();
+                    dispatchFakeEvent(selectElement, 'blur');
+                    fixture.detectChanges();
 
-                /* tslint:disable-next-line:deprecation */
-                expect(selectInstance.focused)
-                    .withContext('Expected select element to remain focused.')
-                    .toBe(true);
-            }));
+                    /* tslint:disable-next-line:deprecation */
+                    expect(selectInstance.focused).withContext('Expected select element to remain focused.').toBe(true);
+                }),
+            );
         });
 
         describe('selection logic', () => {
@@ -2138,8 +2181,7 @@ describe('KbqSelect', () => {
 
                 expect(option.classList).toContain('kbq-selected');
                 expect(fixture.componentInstance.options.first.selected).toBe(true);
-                expect(fixture.componentInstance.select.selected)
-                    .toBe(fixture.componentInstance.options.first);
+                expect(fixture.componentInstance.select.selected).toBe(fixture.componentInstance.options.first);
             }));
 
             it('should be able to select an option using the KbqOption API', fakeAsync(() => {
@@ -2220,9 +2262,7 @@ describe('KbqSelect', () => {
                     .withContext('Expected first option to no longer be selected')
                     .toBe(false);
 
-                expect(optionInstances[1].selected)
-                    .withContext('Expected second option to be selected')
-                    .toBe(true);
+                expect(optionInstances[1].selected).withContext('Expected second option to be selected').toBe(true);
             }));
 
             it('should display the selected option in the trigger', fakeAsync(() => {
@@ -2269,23 +2309,20 @@ describe('KbqSelect', () => {
                 flush();
 
                 expect(trigger.textContent).toContain('Potatoes');
-                expect(fixture.componentInstance.select.selected)
-                    .toBe(fixture.componentInstance.options.last);
+                expect(fixture.componentInstance.select.selected).toBe(fixture.componentInstance.options.last);
             }));
 
             it('should update the trigger when the selected option label is changed', fakeAsync(() => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
-                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim())
-                    .toBe('Pizza');
+                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim()).toBe('Pizza');
 
                 fixture.componentInstance.foods[1].viewValue = 'Calzone';
                 fixture.detectChanges();
                 flush();
 
-                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim())
-                    .toBe('Calzone');
+                expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim()).toBe('Calzone');
             }));
 
             it('should not select disabled options', fakeAsync(() => {
@@ -2345,37 +2382,36 @@ describe('KbqSelect', () => {
                 subscription.unsubscribe();
             }));
 
-            it('should handle accessing `optionSelectionChanges` before the options are initialized',
-                fakeAsync(() => {
-                    fixture.destroy();
-                    fixture = TestBed.createComponent(BasicSelect);
+            it('should handle accessing `optionSelectionChanges` before the options are initialized', fakeAsync(() => {
+                fixture.destroy();
+                fixture = TestBed.createComponent(BasicSelect);
 
-                    const spy = jasmine.createSpy('option selection spy');
-                    let subscription: Subscription;
+                const spy = jasmine.createSpy('option selection spy');
+                let subscription: Subscription;
 
-                    expect(fixture.componentInstance.select.options).toBeFalsy();
-                    expect(() => {
-                        subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
-                    }).not.toThrow();
+                expect(fixture.componentInstance.select.options).toBeFalsy();
+                expect(() => {
+                    subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
+                }).not.toThrow();
 
-                    fixture.detectChanges();
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+                fixture.detectChanges();
+                trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
-                    option.click();
-                    fixture.detectChanges();
-                    tick();
-                    flush();
+                const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+                option.click();
+                fixture.detectChanges();
+                tick();
+                flush();
 
-                    expect(spy).toHaveBeenCalledWith(jasmine.any(KbqOptionSelectionChange));
+                expect(spy).toHaveBeenCalledWith(jasmine.any(KbqOptionSelectionChange));
 
-                    /* tslint:disable-next-line:no-unnecessary-type-assertion */
-                    subscription!.unsubscribe();
-                }));
+                /* tslint:disable-next-line:no-unnecessary-type-assertion */
+                subscription!.unsubscribe();
+            }));
 
             it('should focus itself after list closed by KeyBoard events', fakeAsync(() => {
                 const closeAndFocusKeys: number[] = [TAB, ESCAPE, DOWN_ARROW, UP_ARROW];
@@ -2390,14 +2426,14 @@ describe('KbqSelect', () => {
                     const option: HTMLElement = overlayContainerElement.querySelector('.kbq-option.kbq-active');
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
-                        altKey: { get: () => true }
+                        altKey: { get: () => true },
                     });
 
                     dispatchEvent(option, keyBoardEvent);
 
                     fixture.detectChanges();
                     flush();
-                })
+                });
 
                 // Double it, since open and close events are involved
                 expect(selectInstance.focus).toHaveBeenCalledTimes(closeAndFocusKeys.length * 2);
@@ -2429,8 +2465,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const options =
-                    overlayContainerElement.querySelectorAll('kbq-option');
+                const options = overlayContainerElement.querySelectorAll('kbq-option');
                 expect(options[1].classList)
                     .withContext(`Expected option with the control's initial value to be selected.`)
                     .toContain('kbq-selected');
@@ -2452,12 +2487,10 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const options =
-                    overlayContainerElement.querySelectorAll('kbq-option');
+                const options = overlayContainerElement.querySelectorAll('kbq-option');
                 expect(options[1].classList)
                     .withContext(`Expected option with the control's new value to be selected.`)
-                    .toContain(
-                    'kbq-selected');
+                    .toContain('kbq-selected');
             }));
 
             it('should update the form value when the view changes', fakeAsync(() => {
@@ -2499,13 +2532,11 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const options =
-                    overlayContainerElement.querySelectorAll('kbq-option');
+                const options = overlayContainerElement.querySelectorAll('kbq-option');
                 expect(options[1].classList)
                     .withContext(`Expected option w/ the old value not to be selected.`)
                     .not.toContain('kbq-selected');
             }));
-
 
             it('should clear the selection when the control is reset', fakeAsync(() => {
                 fixture.componentInstance.control.setValue('pizza-1');
@@ -2613,19 +2644,18 @@ describe('KbqSelect', () => {
                     .toEqual(true);
             }));
 
-            it('should not set the control to dirty when the value changes programmatically',
-                fakeAsync(() => {
-                    expect(fixture.componentInstance.control.dirty)
-                        .withContext(`Expected control to start out pristine.`)
-                        .toEqual(false);
+            it('should not set the control to dirty when the value changes programmatically', fakeAsync(() => {
+                expect(fixture.componentInstance.control.dirty)
+                    .withContext(`Expected control to start out pristine.`)
+                    .toEqual(false);
 
-                    fixture.componentInstance.control.setValue('pizza-1');
+                fixture.componentInstance.control.setValue('pizza-1');
 
-                    expect(fixture.componentInstance.control.dirty)
-                        .withContext(`Expected control to stay pristine after programmatic change.`)
-                        .toEqual(false);
-                    flush();
-                }));
+                expect(fixture.componentInstance.control.dirty)
+                    .withContext(`Expected control to stay pristine after programmatic change.`)
+                    .toEqual(false);
+                flush();
+            }));
 
             xit('should set an asterisk after the label if control is required', fakeAsync(() => {
                 let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
@@ -2731,9 +2761,7 @@ describe('KbqSelect', () => {
                     flush();
                 }
 
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 16th option.')
-                    .toBe(336);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 16th option.').toBe(336);
             }));
 
             it('should scroll up to the active option', fakeAsync(() => {
@@ -2748,9 +2776,7 @@ describe('KbqSelect', () => {
                     flush();
                 }
 
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 9th option.')
-                    .toBe(208);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 9th option.').toBe(208);
             }));
 
             it('should skip option group labels', fakeAsync(() => {
@@ -2773,9 +2799,7 @@ describe('KbqSelect', () => {
 
                 // Note that we press down 5 times, but it will skip
                 // 3 options because the second group is disabled.
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 9th option.')
-                    .toBe(158);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 9th option.').toBe(158);
             }));
 
             it('should scroll top the top when pressing HOME', fakeAsync(() => {
@@ -2785,17 +2809,13 @@ describe('KbqSelect', () => {
                     flush();
                 }
 
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled down.')
-                    .toBeGreaterThan(0);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled down.').toBeGreaterThan(0);
 
                 dispatchKeyboardEvent(host, 'keydown', HOME);
                 fixture.detectChanges();
                 flush();
 
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled to the top')
-                    .toBe(0);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled to the top').toBe(0);
             }));
 
             it('should scroll to the bottom of the panel when pressing END', fakeAsync(() => {
@@ -2803,9 +2823,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                expect(panel.scrollTop)
-                    .withContext('Expected panel to be scrolled to the bottom')
-                    .toBe(704);
+                expect(panel.scrollTop).withContext('Expected panel to be scrolled to the bottom').toBe(704);
             }));
 
             it('should scroll to the active option when typing', fakeAsync(() => {
@@ -2817,9 +2835,7 @@ describe('KbqSelect', () => {
                 }
                 flush();
 
-                expect(panel.scrollTop)
-                    .withContext('Expected scroll to be at the 16th option.')
-                    .toBe(336);
+                expect(panel.scrollTop).withContext('Expected scroll to be at the 16th option.').toBe(336);
             }));
         });
 
@@ -2939,13 +2955,14 @@ describe('KbqSelect', () => {
             flush();
             tick(1);
 
-            const optionsTexts = fixture.debugElement.queryAll(By.css('kbq-option'))
+            const optionsTexts = fixture.debugElement
+                .queryAll(By.css('kbq-option'))
                 .map((el) => el.nativeElement.innerText);
 
             expect(optionsTexts).toEqual(['Kaluga', 'Luga']);
         }));
 
-        it('should clear search by esc', (() => {
+        it('should clear search by esc', () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -2961,7 +2978,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(inputElementDebug.nativeElement.value).toBe('');
-        }));
+        });
 
         it('should close list by esc if input is empty', () => {
             trigger.click();
@@ -3036,8 +3053,7 @@ describe('KbqSelect', () => {
             flush();
 
             fixture.detectChanges();
-            const trigger =
-                fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
             expect(getComputedStyle(trigger).getPropertyValue('cursor'))
                 .withContext(`Expected cursor to be default arrow on disabled control.`)
                 .toEqual('default');
@@ -3130,13 +3146,9 @@ describe('KbqSelect', () => {
         it('should set the option id properly', fakeAsync(() => {
             const firstOptionID = options[0].id;
 
-            expect(options[0].id)
-                .withContext(`Expected option ID to have the correct prefix.`)
-                .toContain('kbq-option');
+            expect(options[0].id).withContext(`Expected option ID to have the correct prefix.`).toContain('kbq-option');
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(options[1].id);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(options[1].id);
 
             document.body.click();
             tick(1);
@@ -3149,25 +3161,20 @@ describe('KbqSelect', () => {
             flush();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
-            expect(options[0].id)
-                .withContext(`Expected option ID to have the correct prefix.`)
-                .toContain('kbq-option');
+            expect(options[0].id).withContext(`Expected option ID to have the correct prefix.`).toContain('kbq-option');
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(firstOptionID);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(firstOptionID);
 
-            expect(options[0].id)
-                .withContext(`Expected option IDs to be unique.`)
-                .not.toEqual(options[1].id);
+            expect(options[0].id).withContext(`Expected option IDs to be unique.`).not.toEqual(options[1].id);
         }));
     });
 
     describe('with a sibling component that throws an error', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            SelectWithErrorSibling,
-            ThrowsErrorOnInit
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                SelectWithErrorSibling,
+                ThrowsErrorOnInit,
+            ])));
 
         it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
             // Note that this test can be considered successful if the error being thrown didn't
@@ -3288,7 +3295,6 @@ describe('KbqSelect', () => {
         }));
 
         describe('comparing by value', () => {
-
             it('should have a selection', fakeAsync(() => {
                 const selectedOption = instance.select.selected as KbqOption;
                 expect(selectedOption.value.value).toEqual('pizza-1');
@@ -3368,62 +3374,44 @@ describe('KbqSelect', () => {
         }));
 
         it('should not set the invalid class on a clean select', fakeAsync(() => {
-            expect(testComponent.formGroup.untouched)
-                .withContext('Expected the form to be untouched.')
-                .toBe(true);
+            expect(testComponent.formGroup.untouched).withContext('Expected the form to be untouched.').toBe(true);
 
-            expect(testComponent.formControl.invalid)
-                .withContext('Expected form control to be invalid.')
-                .toBe(false);
+            expect(testComponent.formControl.invalid).withContext('Expected form control to be invalid.').toBe(false);
 
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should not appear as invalid if it becomes touched', fakeAsync(() => {
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
             flush();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should not have the invalid class when the select becomes valid', fakeAsync(() => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').not.toContain('kbq-invalid');
 
             testComponent.formControl.setValue('pizza-1');
             fixture.detectChanges();
             flush();
 
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
         }));
 
         it('should appear as invalid when the parent form group is submitted', fakeAsync(() => {
-            expect(select.classList)
-                .withContext('Expected select not to appear invalid.')
-                .not.toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select not to appear invalid.').not.toContain('kbq-invalid');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
             flush();
 
-            expect(select.classList)
-                .withContext('Expected select to appear invalid.')
-                .toContain('kbq-invalid');
+            expect(select.classList).withContext('Expected select to appear invalid.').toContain('kbq-invalid');
         }));
 
         it('should set proper form group validation state on ngSubmit handler, without setTimeout', fakeAsync(() => {
@@ -3438,21 +3426,17 @@ describe('KbqSelect', () => {
         xit('should render the error messages when the parent form is submitted', fakeAsync(() => {
             const debugEl = fixture.debugElement.nativeElement;
 
-            expect(debugEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected no error messages')
-                .toBe(0);
+            expect(debugEl.querySelectorAll('kbq-error').length).withContext('Expected no error messages').toBe(0);
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
 
-            expect(debugEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected one error message')
-                .toBe(1);
+            expect(debugEl.querySelectorAll('kbq-error').length).withContext('Expected one error message').toBe(1);
         }));
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
+                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true),
             };
 
             fixture.destroy();
@@ -3460,7 +3444,7 @@ describe('KbqSelect', () => {
             TestBed.resetTestingModule().configureTestingModule({
                 imports: [KbqSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
+                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -3497,9 +3481,10 @@ describe('KbqSelect', () => {
     });
 
     describe('with preselected array values', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            SingleSelectWithPreselectedArrayValues
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                SingleSelectWithPreselectedArrayValues,
+            ])));
 
         xit('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
@@ -3514,10 +3499,11 @@ describe('KbqSelect', () => {
     });
 
     describe('with custom value accessor', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            CompWithCustomSelect,
-            CustomSelectAccessor
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                CompWithCustomSelect,
+                CustomSelectAccessor,
+            ])));
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
@@ -3556,10 +3542,11 @@ describe('KbqSelect', () => {
     });
 
     describe('with OnPush', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            BasicSelectOnPush,
-            BasicSelectOnPushPreselected
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                BasicSelectOnPush,
+                BasicSelectOnPushPreselected,
+            ])));
 
         xit('should set the trigger text based on the value when initialized', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectOnPushPreselected);
@@ -3689,24 +3676,24 @@ describe('KbqSelect', () => {
             expect(trigger.textContent).toContain('Falsy');
         }));
 
-        xit('should not consider the reset values as selected when resetting the form control',
-            fakeAsync(() => {
-                fixture.componentInstance.control.reset();
-                fixture.detectChanges();
+        xit('should not consider the reset values as selected when resetting the form control', fakeAsync(() => {
+            fixture.componentInstance.control.reset();
+            fixture.detectChanges();
 
-                expect(fixture.componentInstance.control.value).toBeNull();
-                expect(fixture.componentInstance.select.selected).toBeFalsy();
-                expect(trigger.textContent).not.toContain('Null');
-                expect(trigger.textContent).not.toContain('Undefined');
+            expect(fixture.componentInstance.control.value).toBeNull();
+            expect(fixture.componentInstance.select.selected).toBeFalsy();
+            expect(trigger.textContent).not.toContain('Null');
+            expect(trigger.textContent).not.toContain('Undefined');
         }));
     });
 
     describe('without Angular forms', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            BasicSelectWithoutForms,
-            BasicSelectWithoutFormsPreselected,
-            BasicSelectWithoutFormsMultiple
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                BasicSelectWithoutForms,
+                BasicSelectWithoutFormsPreselected,
+                BasicSelectWithoutFormsMultiple,
+            ])));
 
         it('should set the value when options are clicked', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
@@ -3857,9 +3844,7 @@ describe('KbqSelect', () => {
 
             const select = fixture.debugElement.nativeElement.querySelector('kbq-select');
 
-            expect(document.activeElement)
-                .withContext('Expected trigger to be focused.')
-                .toBe(select);
+            expect(document.activeElement).withContext('Expected trigger to be focused.').toBe(select);
         }));
 
         xit('should not restore focus to the host element when clicking outside', fakeAsync(() => {
@@ -3881,9 +3866,7 @@ describe('KbqSelect', () => {
             tick();
             flush();
 
-            expect(document.activeElement)
-                .withContext('Expected trigger not to be focused.')
-                .not.toBe(select);
+            expect(document.activeElement).withContext('Expected trigger not to be focused.').not.toBe(select);
         }));
 
         it('should update the data binding before emitting the change event', fakeAsync(() => {
@@ -3908,13 +3891,13 @@ describe('KbqSelect', () => {
             expect(instance.selectedFood).toBe('steak-0');
             expect(spy).toHaveBeenCalledWith('steak-0');
         }));
-
     });
 
     describe('with option centering disabled', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            SelectWithoutOptionCentering
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                SelectWithoutOptionCentering,
+            ])));
 
         let fixture: ComponentFixture<SelectWithoutOptionCentering>;
         let trigger: HTMLElement;
@@ -3926,32 +3909,30 @@ describe('KbqSelect', () => {
             flush();
         }));
 
-        it('should not align the active option with the trigger if centering is disabled',
-            fakeAsync(() => {
-                trigger.click();
-                fixture.detectChanges();
-                flush();
+        it('should not align the active option with the trigger if centering is disabled', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
 
-                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
+            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
-                // The panel should be scrolled to 0 because centering the option disabled.
-                expect(scrollContainer.scrollTop)
-                    .withContext(`Expected panel not to be scrolled.`)
-                    .toEqual(0);
-                // The trigger should contain 'Pizza' because it was preselected
-                expect(trigger.textContent).toContain('Pizza');
-                // The selected index should be 1 because it was preselected
-                expect(fixture.componentInstance.options.toArray()[1].selected).toBe(true);
-                flush();
-            }));
+            // The panel should be scrolled to 0 because centering the option disabled.
+            expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
+            // The trigger should contain 'Pizza' because it was preselected
+            expect(trigger.textContent).toContain('Pizza');
+            // The selected index should be 1 because it was preselected
+            expect(fixture.componentInstance.options.toArray()[1].selected).toBe(true);
+            flush();
+        }));
     });
 
     describe('positioning', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([
-            BasicSelect,
-            MultiSelect,
-            SelectWithGroups
-        ])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([
+                BasicSelect,
+                MultiSelect,
+                SelectWithGroups,
+            ])));
 
         let fixture: ComponentFixture<BasicSelect>;
         let trigger: HTMLElement;
@@ -3969,9 +3950,7 @@ describe('KbqSelect', () => {
          * @param index The index of the option.
          * @param selectInstance Instance of the `kbq-select` component to check against.
          */
-        function checkTriggerAlignedWithOption(index: number, selectInstance =
-            fixture.componentInstance.select): void {
-
+        function checkTriggerAlignedWithOption(index: number, selectInstance = fixture.componentInstance.select): void {
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
             const triggerTop: number = trigger.getBoundingClientRect().top;
             const overlayTop: number = overlayPane.getBoundingClientRect().top;
@@ -3982,9 +3961,9 @@ describe('KbqSelect', () => {
 
             // Extra trigger height beyond the font size caused by the fact that the line-height is
             // greater than 1em.
-            const triggerExtraLineSpaceAbove = (1 - triggerLineHeightEm) * triggerFontSize / 2;
-            const topDifference = Math.floor(optionTop) -
-                Math.floor(triggerTop - triggerFontSize - triggerExtraLineSpaceAbove);
+            const triggerExtraLineSpaceAbove = ((1 - triggerLineHeightEm) * triggerFontSize) / 2;
+            const topDifference =
+                Math.floor(optionTop) - Math.floor(triggerTop - triggerFontSize - triggerExtraLineSpaceAbove);
 
             // Expect the coordinates to be within a pixel of each other. We can't rely on comparing
             // the exact value, because different browsers report the various sizes with slight (< 1px)
@@ -4015,44 +3994,38 @@ describe('KbqSelect', () => {
                 formField.style.left = '20px';
             }));
 
-            xit('should align the first option with trigger text if no option is selected',
-                fakeAsync(() => {
-                    // We shouldn't push it too far down for this one, because the default may
-                    // end up being too much when running the tests on mobile browsers.
-                    formField.style.top = '100px';
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+            xit('should align the first option with trigger text if no option is selected', fakeAsync(() => {
+                // We shouldn't push it too far down for this one, because the default may
+                // end up being too much when running the tests on mobile browsers.
+                formField.style.top = '100px';
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
-                    // The panel should be scrolled to 0 because centering the option is not possible.
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
+                // The panel should be scrolled to 0 because centering the option is not possible.
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
 
-                    checkTriggerAlignedWithOption(0);
-                }));
+                checkTriggerAlignedWithOption(0);
+            }));
 
-            xit('should align a selected option too high to be centered with the trigger text',
-                fakeAsync(() => {
-                    // Select the second option, because it can't be scrolled any further downward
-                    fixture.componentInstance.control.setValue('pizza-1');
-                    fixture.detectChanges();
+            xit('should align a selected option too high to be centered with the trigger text', fakeAsync(() => {
+                // Select the second option, because it can't be scrolled any further downward
+                fixture.componentInstance.control.setValue('pizza-1');
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
-                    // The panel should be scrolled to 0 because centering the option is not possible.
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
+                // The panel should be scrolled to 0 because centering the option is not possible.
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
 
-                    checkTriggerAlignedWithOption(1);
-                }));
+                checkTriggerAlignedWithOption(1);
+            }));
 
             xit('should align a selected option in the middle with the trigger text', fakeAsync(() => {
                 // Select the fifth option, which has enough space to scroll to the center
@@ -4102,7 +4075,9 @@ describe('KbqSelect', () => {
             xit('should account for preceding label groups when aligning the option', fakeAsync(() => {
                 // Test is off-by-one on edge for some reason, but verified that it looks correct through
                 // manual testing.
-                if (platform.EDGE) { return; }
+                if (platform.EDGE) {
+                    return;
+                }
 
                 fixture.destroy();
 
@@ -4143,197 +4118,185 @@ describe('KbqSelect', () => {
                 formField.style.left = '20px';
             }));
 
-            xit('should adjust position of centered option if there is little space above',
-                fakeAsync(() => {
-                    const selectMenuHeight = 256;
-                    const selectMenuViewportPadding = 8;
-                    const selectItemHeight = 48;
-                    const selectedIndex = 4;
-                    const fontSize = 16;
-                    const lineHeightEm = 1.125;
-                    const expectedExtraScroll = 5;
+            xit('should adjust position of centered option if there is little space above', fakeAsync(() => {
+                const selectMenuHeight = 256;
+                const selectMenuViewportPadding = 8;
+                const selectItemHeight = 48;
+                const selectedIndex = 4;
+                const fontSize = 16;
+                const lineHeightEm = 1.125;
+                const expectedExtraScroll = 5;
 
-                    // Trigger element height.
-                    const triggerHeight = fontSize * lineHeightEm;
+                // Trigger element height.
+                const triggerHeight = fontSize * lineHeightEm;
 
-                    // Ideal space above selected item in order to center it.
-                    const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+                // Ideal space above selected item in order to center it.
+                const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
 
-                    // Actual space above selected item.
-                    const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+                // Actual space above selected item.
+                const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
 
-                    // Ideal scroll position to center.
-                    const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+                // Ideal scroll position to center.
+                const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
 
-                    // Top-most select-position that allows for perfect centering.
-                    const topMostPositionForPerfectCentering =
-                        idealSpaceAboveSelectedItem + selectMenuViewportPadding +
-                        (selectItemHeight - triggerHeight) / 2;
+                // Top-most select-position that allows for perfect centering.
+                const topMostPositionForPerfectCentering =
+                    idealSpaceAboveSelectedItem + selectMenuViewportPadding + (selectItemHeight - triggerHeight) / 2;
 
-                    // Position of select relative to top edge of kbq-form-field.
-                    const formFieldTopSpace =
-                        trigger.getBoundingClientRect().top - formField.getBoundingClientRect().top;
+                // Position of select relative to top edge of kbq-form-field.
+                const formFieldTopSpace = trigger.getBoundingClientRect().top - formField.getBoundingClientRect().top;
 
-                    const formFieldTop =
-                        topMostPositionForPerfectCentering - formFieldTopSpace - expectedExtraScroll;
+                const formFieldTop = topMostPositionForPerfectCentering - formFieldTopSpace - expectedExtraScroll;
 
-                    formField.style.top = `${formFieldTop}px`;
+                formField.style.top = `${formFieldTop}px`;
 
-                    // Select an option in the middle of the list
-                    fixture.componentInstance.control.setValue('chips-4');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option in the middle of the list
+                fixture.componentInstance.control.setValue('chips-4');
+                fixture.detectChanges();
+                flush();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
-                    expect(Math.ceil(scrollContainer.scrollTop))
-                        .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
-                        .toEqual(Math.ceil(idealScrollTop + 5));
+                expect(Math.ceil(scrollContainer.scrollTop))
+                    .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
+                    .toEqual(Math.ceil(idealScrollTop + 5));
 
-                    checkTriggerAlignedWithOption(4);
-                }));
+                checkTriggerAlignedWithOption(4);
+            }));
 
-            xit('should adjust position of centered option if there is little space below',
-                fakeAsync(() => {
-                    const selectMenuHeight = 256;
-                    const selectMenuViewportPadding = 8;
-                    const selectItemHeight = 48;
-                    const selectedIndex = 4;
-                    const fontSize = 16;
-                    const lineHeightEm = 1.125;
-                    const expectedExtraScroll = 5;
+            xit('should adjust position of centered option if there is little space below', fakeAsync(() => {
+                const selectMenuHeight = 256;
+                const selectMenuViewportPadding = 8;
+                const selectItemHeight = 48;
+                const selectedIndex = 4;
+                const fontSize = 16;
+                const lineHeightEm = 1.125;
+                const expectedExtraScroll = 5;
 
-                    // Trigger element height.
-                    const triggerHeight = fontSize * lineHeightEm;
+                // Trigger element height.
+                const triggerHeight = fontSize * lineHeightEm;
 
-                    // Ideal space above selected item in order to center it.
-                    const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+                // Ideal space above selected item in order to center it.
+                const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
 
-                    // Actual space above selected item.
-                    const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+                // Actual space above selected item.
+                const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
 
-                    // Ideal scroll position to center.
-                    const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+                // Ideal scroll position to center.
+                const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
 
-                    // Bottom-most select-position that allows for perfect centering.
-                    const bottomMostPositionForPerfectCentering =
-                        idealSpaceAboveSelectedItem + selectMenuViewportPadding +
-                        (selectItemHeight - triggerHeight) / 2;
+                // Bottom-most select-position that allows for perfect centering.
+                const bottomMostPositionForPerfectCentering =
+                    idealSpaceAboveSelectedItem + selectMenuViewportPadding + (selectItemHeight - triggerHeight) / 2;
 
-                    // Position of select relative to bottom edge of kbq-form-field:
-                    const formFieldBottomSpace =
-                        formField.getBoundingClientRect().bottom - trigger.getBoundingClientRect().bottom;
+                // Position of select relative to bottom edge of kbq-form-field:
+                const formFieldBottomSpace =
+                    formField.getBoundingClientRect().bottom - trigger.getBoundingClientRect().bottom;
 
-                    const formFieldBottom =
-                        bottomMostPositionForPerfectCentering - formFieldBottomSpace - expectedExtraScroll;
+                const formFieldBottom =
+                    bottomMostPositionForPerfectCentering - formFieldBottomSpace - expectedExtraScroll;
 
-                    // Push the select to a position with not quite enough space on the bottom to open
-                    // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
-                    formField.style.bottom = `${formFieldBottom}px`;
+                // Push the select to a position with not quite enough space on the bottom to open
+                // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
+                formField.style.bottom = `${formFieldBottom}px`;
 
-                    // Select an option in the middle of the list
-                    fixture.componentInstance.control.setValue('chips-4');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option in the middle of the list
+                fixture.componentInstance.control.setValue('chips-4');
+                fixture.detectChanges();
+                flush();
 
-                    fixture.detectChanges();
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
+                const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
-                    // Scroll should adjust by the difference between the bottom space available
-                    // (56px from the bottom of the screen - 8px padding = 48px)
-                    // and the height of the panel below the option (113px).
-                    // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
-                    const difference = Math.ceil(scrollContainer.scrollTop) -
-                        Math.ceil(idealScrollTop - expectedExtraScroll);
+                // Scroll should adjust by the difference between the bottom space available
+                // (56px from the bottom of the screen - 8px padding = 48px)
+                // and the height of the panel below the option (113px).
+                // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
+                const difference =
+                    Math.ceil(scrollContainer.scrollTop) - Math.ceil(idealScrollTop - expectedExtraScroll);
 
-                    // Note that different browser/OS combinations report the different dimensions with
-                    // slight deviations (< 1px). We round the expectation and check that the values
-                    // are within a pixel of each other to avoid flakes.
-                    expect(Math.abs(difference) < 2)
-                        .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
-                        .toBe(true);
+                // Note that different browser/OS combinations report the different dimensions with
+                // slight deviations (< 1px). We round the expectation and check that the values
+                // are within a pixel of each other to avoid flakes.
+                expect(Math.abs(difference) < 2)
+                    .withContext(`Expected panel to adjust scroll position to fit in viewport.`)
+                    .toBe(true);
 
-                    checkTriggerAlignedWithOption(4);
-                }));
+                checkTriggerAlignedWithOption(4);
+            }));
 
-            xit('should fall back to "above" positioning if scroll adjustment will not help',
-                fakeAsync(() => {
-                    // Push the select to a position with not enough space on the bottom to open
-                    formField.style.bottom = '56px';
-                    fixture.detectChanges();
+            xit('should fall back to "above" positioning if scroll adjustment will not help', fakeAsync(() => {
+                // Push the select to a position with not enough space on the bottom to open
+                formField.style.bottom = '56px';
+                fixture.detectChanges();
 
-                    // Select an option that cannot be scrolled any farther upward
-                    fixture.componentInstance.control.setValue('coke-0');
-                    fixture.detectChanges();
+                // Select an option that cannot be scrolled any farther upward
+                fixture.componentInstance.control.setValue('coke-0');
+                fixture.detectChanges();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const overlayPane = document.querySelector('.cdk-overlay-pane')!;
-                    const triggerBottom: number = trigger.getBoundingClientRect().bottom;
-                    const overlayBottom: number = overlayPane.getBoundingClientRect().bottom;
-                    const scrollContainer = overlayPane.querySelector('.kbq-select__panel')!;
+                const overlayPane = document.querySelector('.cdk-overlay-pane')!;
+                const triggerBottom: number = trigger.getBoundingClientRect().bottom;
+                const overlayBottom: number = overlayPane.getBoundingClientRect().bottom;
+                const scrollContainer = overlayPane.querySelector('.kbq-select__panel')!;
 
-                    // Expect no scroll to be attempted
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel not to be scrolled.`)
-                        .toEqual(0);
+                // Expect no scroll to be attempted
+                expect(scrollContainer.scrollTop).withContext(`Expected panel not to be scrolled.`).toEqual(0);
 
-                    const difference = Math.floor(overlayBottom) - Math.floor(triggerBottom);
+                const difference = Math.floor(overlayBottom) - Math.floor(triggerBottom);
 
-                    // Check that the values are within a pixel of each other. This avoids sub-pixel
-                    // deviations between OS and browser versions.
-                    expect(Math.abs(difference) < 2)
-                        .withContext(`Expected trigger bottom to align with overlay bottom.`)
-                        .toEqual(true);
+                // Check that the values are within a pixel of each other. This avoids sub-pixel
+                // deviations between OS and browser versions.
+                expect(Math.abs(difference) < 2)
+                    .withContext(`Expected trigger bottom to align with overlay bottom.`)
+                    .toEqual(true);
 
-                    expect(fixture.componentInstance.select.transformOrigin)
-                        .withContext(`Expected panel animation to originate at the bottom.`)
-                        .toContain(`bottom`);
-                }));
+                expect(fixture.componentInstance.select.transformOrigin)
+                    .withContext(`Expected panel animation to originate at the bottom.`)
+                    .toContain(`bottom`);
+            }));
 
-            xit('should fall back to "below" positioning if scroll adjustment won\'t help',
-                fakeAsync(() => {
-                    // Push the select to a position with not enough space on the top to open
-                    formField.style.top = '85px';
+            xit('should fall back to "below" positioning if scroll adjustment won\'t help', fakeAsync(() => {
+                // Push the select to a position with not enough space on the top to open
+                formField.style.top = '85px';
 
-                    // Select an option that cannot be scrolled any farther downward
-                    fixture.componentInstance.control.setValue('sushi-7');
-                    fixture.detectChanges();
-                    flush();
+                // Select an option that cannot be scrolled any farther downward
+                fixture.componentInstance.control.setValue('sushi-7');
+                fixture.detectChanges();
+                flush();
 
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
+                trigger.click();
+                fixture.detectChanges();
+                flush();
 
-                    const overlayPane = document.querySelector('.cdk-overlay-pane')!;
-                    const triggerTop: number = trigger.getBoundingClientRect().top;
-                    const overlayTop: number = overlayPane.getBoundingClientRect().top;
-                    const scrollContainer = overlayPane.querySelector('.kbq-select__panel')!;
+                const overlayPane = document.querySelector('.cdk-overlay-pane')!;
+                const triggerTop: number = trigger.getBoundingClientRect().top;
+                const overlayTop: number = overlayPane.getBoundingClientRect().top;
+                const scrollContainer = overlayPane.querySelector('.kbq-select__panel')!;
 
-                    // Expect scroll to remain at the max scroll position
-                    expect(scrollContainer.scrollTop)
-                        .withContext(`Expected panel to be at max scroll.`)
-                        .toEqual(128);
+                // Expect scroll to remain at the max scroll position
+                expect(scrollContainer.scrollTop).withContext(`Expected panel to be at max scroll.`).toEqual(128);
 
-                    expect(Math.floor(overlayTop))
-                        .withContext(`Expected trigger top to align with overlay top.`)
-                        .toEqual(Math.floor(triggerTop));
+                expect(Math.floor(overlayTop))
+                    .withContext(`Expected trigger top to align with overlay top.`)
+                    .toEqual(Math.floor(triggerTop));
 
-                    expect(fixture.componentInstance.select.transformOrigin)
-                        .withContext(`Expected panel animation to originate at the top.`)
-                        .toContain(`top`);
-                }));
+                expect(fixture.componentInstance.select.transformOrigin)
+                    .withContext(`Expected panel animation to originate at the top.`)
+                    .toContain(`top`);
+            }));
         });
 
         /*describe('limited space to open horizontally', () => {
@@ -4495,7 +4458,9 @@ describe('KbqSelect', () => {
                 // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
                 // successfully constrain its size. As such, skip assertions in environments where the
                 // window size has changed since the start of the test.
-                if (window.innerHeight > startingWindowHeight) { return; }
+                if (window.innerHeight > startingWindowHeight) {
+                    return;
+                }
 
                 trigger.click();
                 fixture.detectChanges();
@@ -4523,7 +4488,8 @@ describe('KbqSelect', () => {
                 flush();
 
                 const triggerLeft: number = trigger.getBoundingClientRect().left;
-                const firstOptionLeft = document.querySelector('.cdk-overlay-pane kbq-option')!
+                const firstOptionLeft = document
+                    .querySelector('.cdk-overlay-pane kbq-option')!
                     .getBoundingClientRect().left;
 
                 // Each option is 32px wider than the trigger, so it must be adjusted 16px
@@ -4542,7 +4508,8 @@ describe('KbqSelect', () => {
                 flush();
 
                 const triggerRight: number = trigger.getBoundingClientRect().right;
-                const firstOptionRight = document.querySelector('.cdk-overlay-pane kbq-option')!
+                const firstOptionRight = document
+                    .querySelector('.cdk-overlay-pane kbq-option')!
                     .getBoundingClientRect().right;
 
                 // Each option is 32px wider than the trigger, so it must be adjusted 16px
@@ -4572,7 +4539,8 @@ describe('KbqSelect', () => {
                 flush();
 
                 const triggerLeft: number = trigger.getBoundingClientRect().left;
-                const firstOptionLeft = document.querySelector('.cdk-overlay-pane kbq-option')!
+                const firstOptionLeft = document
+                    .querySelector('.cdk-overlay-pane kbq-option')!
                     .getBoundingClientRect().left;
 
                 // 44px accounts for the checkbox size, margin and the panel's padding.
@@ -4588,7 +4556,8 @@ describe('KbqSelect', () => {
                 flush();
 
                 const triggerRight: number = trigger.getBoundingClientRect().right;
-                const firstOptionRight = document.querySelector('.cdk-overlay-pane kbq-option')!
+                const firstOptionRight = document
+                    .querySelector('.cdk-overlay-pane kbq-option')!
                     .getBoundingClientRect().right;
 
                 // 44px accounts for the checkbox size, margin and the panel's padding.
@@ -4621,7 +4590,8 @@ describe('KbqSelect', () => {
                 groupFixture.whenStable().then(() => {
                     const group = document.querySelector('.cdk-overlay-pane kbq-optgroup')!;
                     const triggerLeft: number = trigger.getBoundingClientRect().left;
-                    const selectedOptionLeft = group.querySelector('kbq-option.kbq-selected')!
+                    const selectedOptionLeft = group
+                        .querySelector('kbq-option.kbq-selected')!
                         .getBoundingClientRect().left;
 
                     // 32px is the 16px default padding plus 16px of padding when an option is in a group.
@@ -4642,7 +4612,9 @@ describe('KbqSelect', () => {
 
                 const group = document.querySelector('.cdk-overlay-pane kbq-optgroup')!;
                 const triggerRight = trigger.getBoundingClientRect().right;
-                const selectedOptionRight = group.querySelector('kbq-option.kbq-selected')!.getBoundingClientRect().right;
+                const selectedOptionRight = group
+                    .querySelector('kbq-option.kbq-selected')!
+                    .getBoundingClientRect().right;
 
                 // 32px is the 16px default padding plus 16px of padding when an option is in a group.
                 expect(Math.floor(selectedOptionRight))
@@ -4650,22 +4622,21 @@ describe('KbqSelect', () => {
                     .toEqual(Math.floor(triggerRight + 32));
             }));
 
-            xit('should not adjust if all options are within a group, except the selected one',
-                fakeAsync(() => {
-                    groupFixture.componentInstance.control.setValue('mime-11');
-                    groupFixture.detectChanges();
+            xit('should not adjust if all options are within a group, except the selected one', fakeAsync(() => {
+                groupFixture.componentInstance.control.setValue('mime-11');
+                groupFixture.detectChanges();
 
-                    trigger.click();
-                    groupFixture.detectChanges();
-                    flush();
+                trigger.click();
+                groupFixture.detectChanges();
+                flush();
 
-                    const selected = document.querySelector('.cdk-overlay-pane kbq-option.kbq-selected')!;
-                    const selectedOptionLeft = selected.getBoundingClientRect().left;
-                    const triggerLeft = trigger.getBoundingClientRect().left;
+                const selected = document.querySelector('.cdk-overlay-pane kbq-option.kbq-selected')!;
+                const selectedOptionLeft = selected.getBoundingClientRect().left;
+                const triggerLeft = trigger.getBoundingClientRect().left;
 
-                    // 16px is the default option padding
-                    expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
-                }));
+                // 16px is the default option padding
+                expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
+            }));
 
             xit('should align the first option to the trigger, if nothing is selected', fakeAsync(() => {
                 // Push down the form field so there is space for the item to completely align.
@@ -4702,7 +4673,8 @@ describe('KbqSelect', () => {
     });
 
     describe('with multiple selection', () => {
-        beforeEach(waitForAsync(() => configureKbqSelectTestingModule([MultiSelect, MultiSelectWithCustomizedTagContent, MultiSelectNarrow])));
+        beforeEach(waitForAsync(() =>
+            configureKbqSelectTestingModule([MultiSelect, MultiSelectWithCustomizedTagContent, MultiSelectNarrow])));
 
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
@@ -4762,16 +4734,21 @@ describe('KbqSelect', () => {
             options[5].click();
             fixture.detectChanges();
 
-            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim()))
-                .toEqual(['Steak', 'Tacos', 'Eggs']);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
+                'Steak',
+                'Tacos',
+                'Eggs',
+            ]);
 
             options[2].click();
             tick(100);
             fixture.detectChanges();
             flush();
 
-            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim()))
-                .toEqual(['Steak', 'Eggs']);
+            expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
+                'Steak',
+                'Eggs',
+            ]);
         }));
 
         it('should be able to set the selected value by taking an array', fakeAsync(() => {
@@ -4882,19 +4859,18 @@ describe('KbqSelect', () => {
             expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'pizza-1', 'steak-0']);
         }));
 
-        xit('should sort the values that get set via the model based on the panel order',
-            fakeAsync(() => {
-                trigger.click();
-                fixture.detectChanges();
+        xit('should sort the values that get set via the model based on the panel order', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
 
-                testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
-                fixture.detectChanges();
-                flush();
+            testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            flush();
 
-                // expect(trigger.querySelector('.kbq-select__match-list')!.textContent.trim())
-                //     .toContain('Steak, Pizza, Tacos');
-                expect(trigger.textContent).toContain('Steak, Pizza, Tacos');
-            }));
+            // expect(trigger.querySelector('.kbq-select__match-list')!.textContent.trim())
+            //     .toContain('Steak, Pizza, Tacos');
+            expect(trigger.textContent).toContain('Steak, Pizza, Tacos');
+        }));
 
         xit('should reverse sort the values, that get set via the model in rtl', fakeAsync(() => {
             dir.value = 'rtl';
@@ -4958,7 +4934,7 @@ describe('KbqSelect', () => {
             fixture.componentInstance.foods = [
                 { value: null, viewValue: 'Steak' },
                 { value: 'pizza-1', viewValue: 'Pizza' },
-                { value: null, viewValue: 'Tacos' }
+                { value: null, viewValue: 'Tacos' },
             ];
 
             fixture.detectChanges();
@@ -5001,7 +4977,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5028,7 +5004,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5059,7 +5035,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
         });
 
@@ -5078,7 +5054,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7'
+                'sushi-7',
             ]);
             expect(options.every((option) => option.selected)).toBe(true);
 
@@ -5095,12 +5071,14 @@ describe('KbqSelect', () => {
         });
 
         it('should allow providing custom tag content', fakeAsync(() => {
-            let fixtureCustomizedContent: ComponentFixture<MultiSelectWithCustomizedTagContent>
+            let fixtureCustomizedContent: ComponentFixture<MultiSelectWithCustomizedTagContent>;
             fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
             const componentInstance = fixtureCustomizedContent.componentInstance;
             fixtureCustomizedContent.detectChanges();
 
-            trigger = fixtureCustomizedContent.debugElement.query(By.css('.kbq-select__trigger_multiple')).nativeElement;
+            trigger = fixtureCustomizedContent.debugElement.query(
+                By.css('.kbq-select__trigger_multiple'),
+            ).nativeElement;
             fixtureCustomizedContent.detectChanges();
 
             trigger.click();
@@ -5110,9 +5088,9 @@ describe('KbqSelect', () => {
             expect(
                 componentInstance.kbqSelect.tags
                     .map((tag) => tag.nativeElement?.textContent)
-                    .every((tagTextContent) => tagTextContent!.includes(componentInstance.customizedTextToken))
+                    .every((tagTextContent) => tagTextContent!.includes(componentInstance.customizedTextToken)),
             ).toEqual(true);
-        }))
+        }));
 
         it('should hide tags if tags container is overflown', fakeAsync(() => {
             let fixtureTest = TestBed.createComponent(MultiSelectNarrow);
@@ -5138,7 +5116,7 @@ describe('KbqSelect', () => {
             flush();
 
             expect(componentInstance.select.hiddenItems).not.toBeFalsy();
-        }))
+        }));
 
         // todo need fix later
         xit('should compute hidden items correctly', fakeAsync(() => {
@@ -5171,7 +5149,7 @@ describe('KbqSelect', () => {
             tick();
             flush();
             expect(componentInstance.select.hiddenItems).toEqual(2);
-        }))
+        }));
     });
 
     describe('option tooltip', () => {
@@ -5194,7 +5172,7 @@ describe('KbqSelect', () => {
                 const idx = this.elements.indexOf(target);
 
                 if (idx > -1) {
-                    this.elements.splice(idx, 1)
+                    this.elements.splice(idx, 1);
                 }
             }
 
@@ -5233,7 +5211,7 @@ describe('KbqSelect', () => {
             tick();
             fixture.detectChanges();
 
-            const tooltips = document.querySelectorAll('.kbq-tooltip__content')
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(0);
             flush();
         }));
@@ -5252,7 +5230,7 @@ describe('KbqSelect', () => {
 
             discardPeriodicTasks();
 
-            const tooltips = document.querySelectorAll('.kbq-tooltip__content')
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toEqual(options[1].textContent);
             flush();
@@ -5272,8 +5250,7 @@ describe('KbqSelect', () => {
             tick();
             fixture.detectChanges();
 
-
-            let tooltips = document.querySelectorAll('.kbq-tooltip__content')
+            let tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toEqual(options[2].textContent);
 
@@ -5282,7 +5259,7 @@ describe('KbqSelect', () => {
 
             tick(500);
 
-            tooltips = document.querySelectorAll('.kbq-tooltip__content')
+            tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toEqual(options[2].textContent);
 
@@ -5303,7 +5280,7 @@ describe('KbqSelect', () => {
                     NoopAnimationsModule,
                     ScrollingModule,
                 ],
-                declarations: [CdkVirtualScrollViewportSelect, CdkVirtualScrollViewportSelectOptionAsObject]
+                declarations: [CdkVirtualScrollViewportSelect, CdkVirtualScrollViewportSelectOptionAsObject],
             }).compileComponents();
 
             inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
@@ -5343,18 +5320,19 @@ describe('KbqSelect', () => {
             fixture.autoDetectChanges();
             flush();
 
-            const selectedOptions: string[] = testInstance.select.selectionModel.selected
-                .map((option) => option.value);
+            const selectedOptions: string[] = testInstance.select.selectionModel.selected.map((option) => option.value);
 
             testInstance.select.options.changes.pipe(take(1)).subscribe(() => {
-                const currentOptions: NodeListOf<HTMLElement> | undefined = overlayContainerElement.querySelectorAll('kbq-option');
-                const currentSelectedOptions: string[] = testInstance.select.selectionModel.selected
-                    .map((option) => option.value);
+                const currentOptions: NodeListOf<HTMLElement> | undefined =
+                    overlayContainerElement.querySelectorAll('kbq-option');
+                const currentSelectedOptions: string[] = testInstance.select.selectionModel.selected.map(
+                    (option) => option.value,
+                );
 
                 expect(options?.length).not.toEqual(currentOptions.length);
                 expect(selectedOptions.length).toEqual(currentSelectedOptions.length);
                 expect(selectedOptions).toEqual(currentSelectedOptions);
-            })
+            });
 
             // simulate option removal for detection checks
             testInstance.options = testInstance.options.filter((option) => option !== selectedOptions[2]);
@@ -5363,7 +5341,7 @@ describe('KbqSelect', () => {
             tick(1);
         }));
 
-        it ('should render tags for non-rendered KbqOptions/values', fakeAsync(() => {
+        it('should render tags for non-rendered KbqOptions/values', fakeAsync(() => {
             const selectMatcher = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
             testInstance.values = [OPTIONS[0], OPTIONS[OPTIONS.length - 1]];
             fixture.detectChanges();
@@ -5381,7 +5359,7 @@ describe('KbqSelect', () => {
             expect((testInstance.select.selected as any[])[1]).toBeInstanceOf(KbqVirtualOption);
         }));
 
-        it ('should calculate hidden items with virtual options', fakeAsync(() => {
+        it('should calculate hidden items with virtual options', fakeAsync(() => {
             let triggerEl: HTMLElement;
             triggerEl = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
@@ -5432,13 +5410,13 @@ describe('KbqSelect', () => {
             options.forEach((option) => {
                 option.click();
                 tick();
-            })
+            });
             fixture.autoDetectChanges();
             flush();
 
             const hiddenItemBeforeRenderedOptionsChange = fixture.componentInstance.select.hiddenItems;
 
-            testInstance.viewport.setRenderedRange({start: options.length + 1, end: options.length * 2 + 1 });
+            testInstance.viewport.setRenderedRange({ start: options.length + 1, end: options.length * 2 + 1 });
             // finishInit(fixture);
             fixture.autoDetectChanges();
             tick(1);
@@ -5447,7 +5425,7 @@ describe('KbqSelect', () => {
             options.forEach((option) => {
                 option.click();
                 tick();
-            })
+            });
 
             expect(testInstance.select.hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
         }));

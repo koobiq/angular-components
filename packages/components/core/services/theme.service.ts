@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Subscription, pairwise } from 'rxjs';
 
-
 export interface KbqTheme {
     name: string;
     className: string;
@@ -12,13 +11,13 @@ export const KbqDefaultThemes: KbqTheme[] = [
     {
         name: 'light',
         className: 'kbq-theme-light',
-        selected: true
+        selected: true,
     },
     {
         name: 'dark',
         className: 'kbq-theme-dark',
-        selected: false
-    }
+        selected: false,
+    },
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -33,9 +32,7 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     constructor(private rendererFactory: RendererFactory2) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
 
-        this.subscription = this.current
-            .pipe(pairwise())
-            .subscribe(this.update);
+        this.subscription = this.current.pipe(pairwise()).subscribe(this.update);
     }
 
     ngOnDestroy() {
@@ -70,5 +67,5 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
             this.renderer.addClass(document.body, current.className);
             current.selected = true;
         }
-    }
+    };
 }

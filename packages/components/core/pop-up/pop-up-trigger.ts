@@ -5,33 +5,22 @@ import {
     ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
     Overlay,
+    OverlayConfig,
     OverlayRef,
     ScrollDispatcher,
-    OverlayConfig
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    NgZone,
-    TemplateRef,
-    Type,
-    ViewContainerRef
-} from '@angular/core';
+import { Directive, ElementRef, EventEmitter, NgZone, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { delay as rxDelay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
+import { distinctUntilChanged, delay as rxDelay, takeUntil } from 'rxjs/operators';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
     POSITION_PRIORITY_STRATEGY,
-    POSITION_TO_CSS_MAP
+    POSITION_TO_CSS_MAP,
 } from '../overlay/overlay-position-map';
-
 import { PopUpPlacements, PopUpTriggers } from './constants';
-
 
 @Directive()
 // tslint:disable-next-line:naming-convention
@@ -82,7 +71,7 @@ export abstract class KbqPopUpTrigger<T> {
         protected scrollDispatcher: ScrollDispatcher,
         protected hostView: ViewContainerRef,
         protected scrollStrategy,
-        protected direction?: Directionality
+        protected direction?: Directionality,
     ) {
         this.availablePositions = POSITION_MAP;
     }
@@ -149,7 +138,8 @@ export abstract class KbqPopUpTrigger<T> {
     }
 
     handleKeydown(event: KeyboardEvent) {
-        if (this.isOpen && event.keyCode === ESCAPE) { // tslint:disable-line
+        if (this.isOpen && event.keyCode === ESCAPE) {
+            // tslint:disable-line
             this.hide();
         }
     }
@@ -159,7 +149,9 @@ export abstract class KbqPopUpTrigger<T> {
     }
 
     show(delay: number = this.enterDelay): void {
-        if (this.disabled || this.instance) { return; }
+        if (this.disabled || this.instance) {
+            return;
+        }
 
         this.overlayRef = this.createOverlay();
         this.subscribeOnClosingActions();
@@ -169,21 +161,17 @@ export abstract class KbqPopUpTrigger<T> {
 
         this.instance = this.overlayRef.attach(this.portal).instance;
 
-        this.instance.afterHidden()
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(this.detach);
+        this.instance.afterHidden().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
 
         this.updateClassMap();
 
         this.updateData();
 
-        this.instance.visibleChange
-            .pipe(takeUntil(this.destroyed), distinctUntilChanged())
-            .subscribe((value) => {
-                this.visible = value;
-                this.visibleChange.emit(value);
-                this.isOpen = value;
-            });
+        this.instance.visibleChange.pipe(takeUntil(this.destroyed), distinctUntilChanged()).subscribe((value) => {
+            this.visible = value;
+            this.visibleChange.emit(value);
+            this.isOpen = value;
+        });
 
         this.updatePosition();
 
@@ -202,11 +190,13 @@ export abstract class KbqPopUpTrigger<T> {
         }
 
         this.instance = null;
-    }
+    };
 
     /** Create the overlay config and position strategy */
     createOverlay(): OverlayRef {
-        if (this.overlayRef) { return this.overlayRef; }
+        if (this.overlayRef) {
+            return this.overlayRef;
+        }
 
         // Create connected position strategy that listens for scroll events to reposition.
         const strategy = this.overlay
@@ -218,28 +208,26 @@ export abstract class KbqPopUpTrigger<T> {
             .withLockedPosition()
             .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
 
-        strategy.positionChanges
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(this.onPositionChange);
+        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
             direction: this.direction,
             positionStrategy: strategy,
-            scrollStrategy: this.scrollStrategy()
+            scrollStrategy: this.scrollStrategy(),
         });
 
         this.subscribeOnClosingActions();
 
-        this.overlayRef.detachments()
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(this.detach);
+        this.overlayRef.detachments().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
 
         return this.overlayRef;
     }
 
     onPositionChange = ($event: ConnectedOverlayPositionChange): void => {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
         let newPlacement = this.placement;
 
@@ -247,8 +235,10 @@ export abstract class KbqPopUpTrigger<T> {
 
         Object.keys(this.availablePositions).some((key) => {
             if (
-                originX === this.availablePositions[key].originX && originY === this.availablePositions[key].originY &&
-                overlayX === this.availablePositions[key].overlayX && overlayY === this.availablePositions[key].overlayY
+                originX === this.availablePositions[key].originX &&
+                originY === this.availablePositions[key].originY &&
+                overlayX === this.availablePositions[key].overlayX &&
+                overlayY === this.availablePositions[key].overlayY
             ) {
                 newPlacement = key as PopUpPlacements;
 
@@ -263,14 +253,13 @@ export abstract class KbqPopUpTrigger<T> {
         this.updateClassMap(newPlacement);
 
         this.instance.detectChanges();
-    }
+    };
 
     initListeners() {
         this.clearListeners();
 
         if (this.trigger.includes(PopUpTriggers.Click)) {
-            this.listeners
-                .set(...this.createListener('click', this.show));
+            this.listeners.set(...this.createListener('click', this.show));
         }
 
         if (this.trigger.includes(PopUpTriggers.Hover)) {
@@ -286,16 +275,14 @@ export abstract class KbqPopUpTrigger<T> {
         }
 
         if (this.trigger.includes(PopUpTriggers.Keydown)) {
-            this.listeners
-                .set('keydown', (event) => {
-                    if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode)) {
-                        this.show();
-                    }
-                })
+            this.listeners.set('keydown', (event) => {
+                if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode)) {
+                    this.show();
+                }
+            });
         }
 
-        this.listeners
-            .forEach(this.addEventListener);
+        this.listeners.forEach(this.addEventListener);
     }
 
     /** Updates the position of the current popover. */
@@ -351,17 +338,17 @@ export abstract class KbqPopUpTrigger<T> {
                 this.triggerName = name;
 
                 return listener.call(this);
-            }
+            },
         ];
     }
 
     private addEventListener = (listener: EventListener, event: string) => {
         this.elementRef.nativeElement.addEventListener(event, listener);
-    }
+    };
 
     private removeEventListener = (listener: EventListener, event: string) => {
         this.elementRef.nativeElement.removeEventListener(event, listener);
-    }
+    };
 
     private subscribeOnClosingActions() {
         this.closingActionsSubscription?.unsubscribe();
@@ -370,7 +357,9 @@ export abstract class KbqPopUpTrigger<T> {
             .pipe(takeUntil(this.destroyed))
             .pipe(rxDelay(0))
             .subscribe((event) => {
-                if (event?.type === 'click' &&  event.kbqPopoverPreventHide) { return; }
+                if (event?.type === 'click' && event.kbqPopoverPreventHide) {
+                    return;
+                }
 
                 this.hide();
             });

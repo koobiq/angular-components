@@ -1,7 +1,5 @@
 import { Observable } from 'rxjs';
-
 import { KbqModalComponent } from './modal.component';
-
 
 /**
  * API class that public to users to handle the modal instance.

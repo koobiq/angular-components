@@ -1,25 +1,23 @@
 import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss']
+    styleUrls: ['../main.scss'],
 })
 export class DemoComponent {}
-
 
 /* tslint:disable:max-classes-per-file */
 @NgModule({
     declarations: [
-        DemoComponent
+        DemoComponent,
     ],
     imports: [
-        BrowserModule
+        BrowserModule,
     ],
     bootstrap: [
-        DemoComponent
-    ]
+        DemoComponent,
+    ],
 })
 export class DemoModule {}

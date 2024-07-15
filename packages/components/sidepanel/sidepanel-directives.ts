@@ -1,17 +1,6 @@
-import {
-    Component,
-    Directive,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnInit,
-    Optional,
-    SimpleChanges
-} from '@angular/core';
-
+import { Component, Directive, ElementRef, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
-
 
 /**
  * Button that will close the current sidepanel.
@@ -20,8 +9,8 @@ import { KbqSidepanelService } from './sidepanel.service';
     selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
         '(click)': 'sidepanelRef.close(sidepanelResult)',
-        class: 'kbq-sidepanel-close'
-    }
+        class: 'kbq-sidepanel-close',
+    },
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
@@ -31,7 +20,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
         private elementRef: ElementRef<HTMLElement>,
-        private sidepanelService: KbqSidepanelService
+        private sidepanelService: KbqSidepanelService,
     ) {}
 
     ngOnInit() {
@@ -67,17 +56,13 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
             <ng-content></ng-content>
         </div>
 
-        <button *ngIf="closeable"
-                kbq-button
-                kbq-sidepanel-close
-                [color]="'contrast'"
-                [kbqStyle]="'transparent'">
+        <button *ngIf="closeable" kbq-button kbq-sidepanel-close [color]="'contrast'" [kbqStyle]="'transparent'">
             <i kbq-icon="mc-close-L_16" [color]="'contrast'"></i>
         </button>
     `,
     host: {
-        class: 'kbq-sidepanel-header'
-    }
+        class: 'kbq-sidepanel-header',
+    },
 })
 export class KbqSidepanelHeader {
     @Input() closeable: boolean;
@@ -89,8 +74,8 @@ export class KbqSidepanelHeader {
 @Directive({
     selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody',
     host: {
-        class: 'kbq-sidepanel-body kbq-scrollbar'
-    }
+        class: 'kbq-sidepanel-body kbq-scrollbar',
+    },
 })
 export class KbqSidepanelBody {}
 
@@ -100,8 +85,8 @@ export class KbqSidepanelBody {}
 @Directive({
     selector: 'kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter',
     host: {
-        class: 'kbq-sidepanel-footer'
-    }
+        class: 'kbq-sidepanel-footer',
+    },
 })
 export class KbqSidepanelFooter {}
 
@@ -111,8 +96,8 @@ export class KbqSidepanelFooter {}
 @Directive({
     selector: 'kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions',
     host: {
-        class: 'kbq-sidepanel-actions'
-    }
+        class: 'kbq-sidepanel-actions',
+    },
 })
 export class KbqSidepanelActions {}
 
@@ -128,7 +113,5 @@ function getClosestSidepanel(element: ElementRef<HTMLElement>, openSidepanels: K
         parent = parent.parentElement;
     }
 
-    return parent ?
-        openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) :
-        null;
+    return parent ? openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) : null;
 }
