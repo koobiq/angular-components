@@ -4,9 +4,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-navbar-item.kbq-vertical {
-
     & .kbq-navbar-item__container {
         gap: kbq-css-variable(size-m);
     }
