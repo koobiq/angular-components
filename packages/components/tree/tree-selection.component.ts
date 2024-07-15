@@ -317,6 +317,12 @@ export class KbqTreeSelection extends KbqTreeBase<any>
         this.keyManager.setFocusOrigin('program');
     }
 
+    highlightSelectedOption(): void {
+        this.renderedOptions
+            .find((item) => item.data === this.selectionModel.selected[0])
+            ?.focus();
+    }
+
     blur() {
         if (!this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
             this.keyManager.setActiveItem(-1);
