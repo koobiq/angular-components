@@ -54,7 +54,7 @@ export interface IModalButtonOptions<T = any> {
     // (undocumented)
     loading?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
     // (undocumented)
-    onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<(void | {})>;
+    onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<void | {}>;
     // (undocumented)
     shape?: string;
     // (undocumented)
@@ -403,7 +403,7 @@ export enum ModalSize {
 export type ModalType = 'default' | 'confirm' | 'custom';
 
 // @public (undocumented)
-export type OnClickCallback<T> = ((instance: T) => (false | void | {}) | Promise<false | void | {}>);
+export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
 
 // (No @packageDocumentation comment for this package)
 
