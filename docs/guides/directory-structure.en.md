@@ -3,14 +3,14 @@ The top-level directory structure:
 ```
 ├─ docs ····················· Project documentation & guides
 ├─ scripts ·················· Public sh scripts
-├─ packages ··················Public packages & source code for components
+├─ packages ················· Public packages & source code for components
 ├─ tests ···················· Configs for tests
-├─ tools ···················· infrastructure/build scripts 
-├─ commitlint.config.js ······ scope-enum declaration
-├─ gulpfile.js ··············· Gulp tasks config
+├─ tools ···················· infrastructure/build scripts
+├─ commitlint.config.js ····· scope-enum declaration
+├─ gulpfile.js ·············· Gulp tasks config
 ├─ wallaby.js ··············· Wallaby/Webpack config
 └─ package.json ············· Project config
-``` 
+```
 
 ### packages
 

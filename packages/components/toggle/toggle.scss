@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-toggle {

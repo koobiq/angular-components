@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use './tokens' as *;
 
-
 @mixin popup-params($theme) {
     $popup: map.get($theme, components, popup);
 

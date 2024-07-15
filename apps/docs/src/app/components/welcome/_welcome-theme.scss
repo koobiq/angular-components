@@ -1,25 +1,26 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-welcome-theme($theme) {
-    $foreground: map-get($theme, foreground);
+    $foreground: map.get($theme, foreground);
 
     .docs-footer__label {
-        color: map-get($foreground, contrast-secondary);
+        color: map.get($foreground, contrast-secondary);
     }
 
     .docs-welcome__category-item-title {
-        color: map-get($foreground, contrast-secondary);
+        color: map.get($foreground, contrast-secondary);
     }
 
     .docs-welcome__category-item:hover {
         .docs-welcome__category-item-title {
-            color: map-get($theme, states, foreground, theme-hover);
+            color: map.get($theme, states, foreground, theme-hover);
         }
     }
 
     .docs-welcome__category-item:focus {
-        border-color: map-get(map-get($theme, states), focused-color);
+        border-color: map.get(map.get($theme, states), focused-color);
     }
 }
 
@@ -31,7 +32,9 @@
         letter-spacing: normal;
         font-weight: 700;
         text-transform: none;
-        font-feature-settings: "ss01" on, "ss04" on;
+        font-feature-settings:
+            'ss01' on,
+            'ss04' on;
     }
 
     .docs-welcome__description {

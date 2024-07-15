@@ -1,6 +1,5 @@
 @use '../main';
 
-
 .dev-row {
     display: flex;
 
@@ -34,7 +33,6 @@
     flex-direction: row;
 }
 
-
 .simple-content {
     padding: 8px;
 }
@@ -45,7 +43,7 @@
 }
 
 .footer-button {
-    margin-left: 16px!important;
+    margin-left: 16px !important;
 }
 
 .lines {

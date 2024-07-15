@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-toast($component, $style-name) {
     $style: map.get($component, $style-name);
 
@@ -20,7 +19,6 @@
         color: kbq-css-variable(toast-#{$style-name}-container-text, map.get($style, text));
     }
 }
-
 
 @mixin kbq-toast-theme($theme) {
     $toast: map.get($theme, components, toast);

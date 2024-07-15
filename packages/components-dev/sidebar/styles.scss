@@ -1,6 +1,5 @@
 @use '../main';
 
-
 app {
     display: block;
 }
@@ -19,10 +18,6 @@ app {
     background-color: antiquewhite;
 }
 
-.kbq-sidebar {
-
-}
-
 .kbq-sidebar-opened {
     background-color: #6fba53;
 }
@@ -30,4 +25,3 @@ app {
 .kbq-sidebar-closed {
     background-color: darkgray;
 }
-

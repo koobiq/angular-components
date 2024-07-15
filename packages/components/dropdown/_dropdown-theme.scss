@@ -5,7 +5,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-dropdown-item-state($component, $style-name) {
     $state: map.get($component, $style-name);
 

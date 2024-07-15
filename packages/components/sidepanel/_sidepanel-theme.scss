@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-sidepanel-theme($theme) {
     $sidepanel: map.get($theme, components, sidepanel);
 

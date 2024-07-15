@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-link-geometry($tokens) {
     display: inline;
 
@@ -45,7 +44,6 @@
         }
     }
 
-    /* stylelint-disable no-descending-specificity */
     &.kbq-link_big {
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
@@ -57,7 +55,6 @@
             }
         }
     }
-
 
     &.kbq-link_pseudo {
         &.kbq-text-only,
@@ -72,7 +69,6 @@
             border-bottom-color: transparent;
         }
     }
-    /* stylelint-enable no-descending-specificity */
 }
 
 @mixin kbq-link-state($component, $state-name) {
@@ -145,7 +141,7 @@
                 }
 
                 &::after {
-                    content: ":\a" attr(print);
+                    content: ':\a' attr(print);
                     white-space: pre;
                 }
             }

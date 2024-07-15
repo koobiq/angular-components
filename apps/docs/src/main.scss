@@ -10,11 +10,7 @@
 @use './styles/docsearch';
 
 .docs {
-    @include theme-kbq.docs-typography(
-        tokens.$tokens,
-        tokens.$typography-config,
-        tokens.$markdown-typography-config
-    );
+    @include theme-kbq.docs-typography(tokens.$tokens, tokens.$typography-config, tokens.$markdown-typography-config);
 
     &.theme-light {
         @include hljs-light-theme();

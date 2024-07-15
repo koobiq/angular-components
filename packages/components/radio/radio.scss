@@ -4,7 +4,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-radio-group {
@@ -47,7 +46,10 @@ $tokens: meta.module-variables(tokens) !default;
 
     padding-left: calc(
         var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) +
-        var(--kbq-radio-size-normal-horizontal-content-padding, map.get($tokens, radio-size-normal-horizontal-content-padding))
+            var(
+                --kbq-radio-size-normal-horizontal-content-padding,
+                map.get($tokens, radio-size-normal-horizontal-content-padding)
+            )
     );
     padding-right: 0;
 
@@ -110,11 +112,13 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-radio-label-content {
         padding-left: calc(
             var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) +
-            var(--kbq-radio-size-big-horizontal-content-padding, map.get($tokens, radio-size-big-horizontal-content-padding))
+                var(
+                    --kbq-radio-size-big-horizontal-content-padding,
+                    map.get($tokens, radio-size-big-horizontal-content-padding)
+                )
         );
 
         .kbq-radio-button__outer-circle {
-            
             top: var(--kbq-radio-size-big-top, map.get($tokens, radio-size-big-top));
 
             width: kbq-css-variable(radio-size-big-outer-size);

@@ -3,7 +3,6 @@ description: Common setup steps used by our workflows
 runs:
   using: composite
   steps:
-
     - name: Build packages
       shell: bash
       run: .github/workflows/actions/build-packages/entrypoint.sh

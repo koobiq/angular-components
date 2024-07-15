@@ -1,6 +1,5 @@
 @use '../main';
 
-
 .dev-container {
     width: 50%;
     min-height: 140px;
@@ -14,7 +13,7 @@
     padding: 10px;
     width: 100%;
     text-align: center;
-    border-top: 1px solid #B3B3B3;
+    border-top: 1px solid #b3b3b3;
 
     * {
         flex: 1;
@@ -24,4 +23,3 @@
 .kbq-tree-select__panel .kbq-select__footer.kbq-select__footer_icon {
     padding-left: 4px;
 }
-

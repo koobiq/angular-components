@@ -2,98 +2,104 @@
 
 @use 'typography-utils' as *;
 
-
 @function kbq-typography-config($tokens) {
     $font-family: map.get($tokens, font-family-base);
     $typography: map.get(map.get($tokens, koobiq), typography);
 
     $config: (
         //legacy will be deleted
-        display-1:              map.get($typography, display-1),
-        display-2:              map.get($typography, display-2),
-        display-3:              map.get($typography, display-3),
-
-        display-1-strong:       map.get($typography, display-1-strong),
-        display-2-strong:       map.get($typography, display-2-strong),
-        display-3-strong:       map.get($typography, display-3-strong),
-
-        headline:               map.get($typography, headline),
-        subheading:             map.get($typography, subheading),
-        title:                  map.get($typography, title),
-
-        body:                   map.get($typography, body),
-        body-strong:            map.get($typography, body-strong),
-        body-caps:              map.get($typography, body-caps),
-        body-mono:              map.get($typography, body-mono),
-        body-mono-strong:       map.get($typography, body-mono-strong),
-        body-tabular:           map.get($typography, body-tabular),
-
-        caption:                map.get($typography, caption),
-        caption-strong:         map.get($typography, caption-strong),
-        caption-caps:           map.get($typography, caption-caps),
-        caption-mono:           map.get($typography, caption-mono),
-        caption-mono-strong:    map.get($typography, caption-mono-strong),
-        caption-tabular:        map.get($typography, caption-tabular),
-
+        display-1: map.get($typography, display-1),
+        display-2: map.get($typography, display-2),
+        display-3: map.get($typography, display-3),
+        display-1-strong: map.get($typography, display-1-strong),
+        display-2-strong: map.get($typography, display-2-strong),
+        display-3-strong: map.get($typography, display-3-strong),
+        headline: map.get($typography, headline),
+        subheading: map.get($typography, subheading),
+        title: map.get($typography, title),
+        body: map.get($typography, body),
+        body-strong: map.get($typography, body-strong),
+        body-caps: map.get($typography, body-caps),
+        body-mono: map.get($typography, body-mono),
+        body-mono-strong: map.get($typography, body-mono-strong),
+        body-tabular: map.get($typography, body-tabular),
+        caption: map.get($typography, caption),
+        caption-strong: map.get($typography, caption-strong),
+        caption-caps: map.get($typography, caption-caps),
+        caption-mono: map.get($typography, caption-mono),
+        caption-mono-strong: map.get($typography, caption-mono-strong),
+        caption-tabular: map.get($typography, caption-tabular),
         //small-text:             map.get($typography, small-text),
-        extra-small-text:       map.get($typography, extra-small-text),
-        extra-small-text-caps:  map.get($typography, extra-small-text-caps),
-        extra-small-text-mono:  map.get($typography, extra-small-text-mono),
-        extra-small-text-strong:map.get($typography, extra-small-text-strong),
-
+        extra-small-text: map.get($typography, extra-small-text),
+        extra-small-text-caps: map.get($typography, extra-small-text-caps),
+        extra-small-text-mono: map.get($typography, extra-small-text-mono),
+        extra-small-text-strong: map.get($typography, extra-small-text-strong),
         //new
-        display-big:             map.get($typography, display-big),
-        display-normal:          map.get($typography, display-normal),
-        display-compact:         map.get($typography, display-compact),
-
-        display-big-strong:      map.get($typography, display-big-strong),
-        display-normal-strong:   map.get($typography, display-normal-strong),
-        display-compact-strong:  map.get($typography, display-compact-strong),
-
-        text-big:                map.get($typography, text-big),
-        text-big-strong:         map.get($typography, text-big-strong),
-        text-normal:             map.get($typography, text-normal),
-        text-normal-strong:      map.get($typography, text-normal-strong),
-        text-compact:            map.get($typography, text-compact),
-        text-compact-strong:     map.get($typography, text-compact-strong),
-        caps-big:                map.get($typography, caps-big),
-        caps-big-strong:         map.get($typography, caps-big-strong),
-        caps-normal:             map.get($typography, caps-normal),
-        caps-normal-strong:      map.get($typography, caps-normal-strong),
-        caps-compact:            map.get($typography, caps-compact),
-        caps-compact-strong:     map.get($typography, caps-compact-strong),
-        mono-big:                map.get($typography, mono-big),
-        mono-big-strong:         map.get($typography, mono-big-strong),
-        mono-normal:             map.get($typography, mono-normal),
-        mono-normal-strong:      map.get($typography, mono-normal-strong),
-        mono-compact:            map.get($typography, mono-compact),
-        mono-compact-strong:     map.get($typography, mono-compact-strong),
-        tabular-big:             map.get($typography, tabular-big),
-        tabular-big-strong:      map.get($typography, tabular-big-strong),
-        tabular-normal:          map.get($typography, tabular-normal),
-        tabular-normal-strong:   map.get($typography, tabular-normal-strong),
-        tabular-compact:         map.get($typography, tabular-compact),
-        tabular-compact-strong:  map.get($typography, tabular-compact-strong),
-        italic-big:              map.get($typography, italic-big),
-        italic-big-strong:       map.get($typography, italic-big-strong),
-        italic-normal:           map.get($typography, italic-normal),
-        italic-normal-strong:    map.get($typography, italic-normal-strong),
-        italic-compact:          map.get($typography, italic-compact),
-        italic-compact-strong:   map.get($typography, italic-compact-strong),
-        mono-codeblock:          map.get($typography, mono-codeblock),
-
-        navbar-title:            map.get($typography, navbar-title)
+        display-big: map.get($typography, display-big),
+        display-normal: map.get($typography, display-normal),
+        display-compact: map.get($typography, display-compact),
+        display-big-strong: map.get($typography, display-big-strong),
+        display-normal-strong: map.get($typography, display-normal-strong),
+        display-compact-strong: map.get($typography, display-compact-strong),
+        text-big: map.get($typography, text-big),
+        text-big-strong: map.get($typography, text-big-strong),
+        text-normal: map.get($typography, text-normal),
+        text-normal-strong: map.get($typography, text-normal-strong),
+        text-compact: map.get($typography, text-compact),
+        text-compact-strong: map.get($typography, text-compact-strong),
+        caps-big: map.get($typography, caps-big),
+        caps-big-strong: map.get($typography, caps-big-strong),
+        caps-normal: map.get($typography, caps-normal),
+        caps-normal-strong: map.get($typography, caps-normal-strong),
+        caps-compact: map.get($typography, caps-compact),
+        caps-compact-strong: map.get($typography, caps-compact-strong),
+        mono-big: map.get($typography, mono-big),
+        mono-big-strong: map.get($typography, mono-big-strong),
+        mono-normal: map.get($typography, mono-normal),
+        mono-normal-strong: map.get($typography, mono-normal-strong),
+        mono-compact: map.get($typography, mono-compact),
+        mono-compact-strong: map.get($typography, mono-compact-strong),
+        tabular-big: map.get($typography, tabular-big),
+        tabular-big-strong: map.get($typography, tabular-big-strong),
+        tabular-normal: map.get($typography, tabular-normal),
+        tabular-normal-strong: map.get($typography, tabular-normal-strong),
+        tabular-compact: map.get($typography, tabular-compact),
+        tabular-compact-strong: map.get($typography, tabular-compact-strong),
+        italic-big: map.get($typography, italic-big),
+        italic-big-strong: map.get($typography, italic-big-strong),
+        italic-normal: map.get($typography, italic-normal),
+        italic-normal-strong: map.get($typography, italic-normal-strong),
+        italic-compact: map.get($typography, italic-compact),
+        italic-compact-strong: map.get($typography, italic-compact-strong),
+        mono-codeblock: map.get($typography, mono-codeblock),
+        navbar-title: map.get($typography, navbar-title)
     );
 
     @each $key, $level in $config {
-        @if map.get($level, font-family) == null {
-            $new-level: map.merge($level, (font-family: $font-family));
-            $config: map.merge($config, ($key: $new-level));
+        @if not map.get($level, font-family) {
+            $new-level: map.merge(
+                $level,
+                (
+                    font-family: $font-family,
+                )
+            );
+            $config: map.merge(
+                $config,
+                (
+                    $key: $new-level,
+                )
+            );
         }
     }
 
     // Add the base font family to the config.
-    @return map.merge($config, (font-family: $font-family, tokens: $tokens));
+    @return map.merge(
+        $config,
+        (
+            font-family: $font-family,
+            tokens: $tokens,
+        )
+    );
 }
 
 @function kbq-markdown-typography-config($tokens) {
@@ -101,31 +107,45 @@
     $md-typography: map.get(map.get($tokens, md-typography), md-typography);
 
     $config: (
-        md-h1:              map.get($md-typography, md-h1),
-        md-h2:              map.get($md-typography, md-h2),
-        md-h3:              map.get($md-typography, md-h3),
-        md-h4:              map.get($md-typography, md-h4),
-        md-h5:              map.get($md-typography, md-h5),
-        md-h6:              map.get($md-typography, md-h6),
-
-        md-body:            map.get($md-typography, md-body),
-        md-body-mono:       map.get($md-typography, md-body-mono),
-        md-caption:         map.get($md-typography, md-caption),
-        md-table-cell:      map.get($md-typography, md-table-cell),
-        md-table-header:    map.get($md-typography, md-table-header),
+        md-h1: map.get($md-typography, md-h1),
+        md-h2: map.get($md-typography, md-h2),
+        md-h3: map.get($md-typography, md-h3),
+        md-h4: map.get($md-typography, md-h4),
+        md-h5: map.get($md-typography, md-h5),
+        md-h6: map.get($md-typography, md-h6),
+        md-body: map.get($md-typography, md-body),
+        md-body-mono: map.get($md-typography, md-body-mono),
+        md-caption: map.get($md-typography, md-caption),
+        md-table-cell: map.get($md-typography, md-table-cell),
+        md-table-header: map.get($md-typography, md-table-header),
     );
 
     @each $key, $level in $config {
-        @if map.get($level, font-family) == null {
-            $new-level: map.merge($level, (font-family: $font-family));
-            $config: map.merge($config, ($key: $new-level));
+        @if not map.get($level, font-family) {
+            $new-level: map.merge(
+                $level,
+                (
+                    font-family: $font-family,
+                )
+            );
+            $config: map.merge(
+                $config,
+                (
+                    $key: $new-level,
+                )
+            );
         }
     }
 
     // Add the base font family to the config.
-    @return map.merge($config, (font-family: $font-family, tokens: $tokens));
+    @return map.merge(
+        $config,
+        (
+            font-family: $font-family,
+            tokens: $tokens,
+        )
+    );
 }
-
 
 @mixin kbq-base-typography($config) {
     //legacy will be deleted

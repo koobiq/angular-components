@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-textarea {
     display: inline-block;
 
@@ -19,9 +18,7 @@
 
     box-sizing: border-box;
 
-    padding:
-        kbq-css-variable(textarea-size-padding-vertical)
-        kbq-css-variable(textarea-size-padding-horizontal);
+    padding: kbq-css-variable(textarea-size-padding-vertical) kbq-css-variable(textarea-size-padding-horizontal);
 
     -webkit-appearance: none; // Chrome textarea height sizing fix
     vertical-align: bottom; // Chrome textarea height sizing fix

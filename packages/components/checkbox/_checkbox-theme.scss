@@ -4,8 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
-/* stylelint-disable no-descending-specificity */
 @mixin kbq-checkbox-color($component, $style-name) {
     $style: map.get($component, $style-name);
     $base: checkbox-#{$style-name};
@@ -14,17 +12,15 @@
         border-color: kbq-css-variable(#{$base}-default-border, map.get($style, default, border));
 
         background-color: kbq-css-variable(#{$base}-default-background, map.get($style, default, background));
-    }
 
-    .kbq-checkbox-label {
-        color: kbq-css-variable(#{$base}-default-text, map.get($style, default, text));
-    }
-
-    .kbq-checkbox__frame {
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
             color: kbq-css-variable(#{$base}-default-color, map.get($style, default, color));
         }
+    }
+
+    .kbq-checkbox-label {
+        color: kbq-css-variable(#{$base}-default-text, map.get($style, default, text));
     }
 
     & .kbq-hint .kbq-hint__text {
@@ -57,7 +53,9 @@
                 border-color: kbq-css-variable(#{$base}-hover-border, map.get($style, checked-hover, border));
 
                 background-color: kbq-css-variable(
-                    #{$base}-hover-background, map.get($style, checked-hover, background));
+                    #{$base}-hover-background,
+                    map.get($style, checked-hover, background)
+                );
             }
         }
 
@@ -65,7 +63,9 @@
             + .kbq-checkbox__frame {
                 border-color: kbq-css-variable(#{$base}-focused-border, map.get($style, checked-focused, border));
                 background-color: kbq-css-variable(
-                    #{$base}-focused-background, map.get($style, checked-focused, background));
+                    #{$base}-focused-background,
+                    map.get($style, checked-focused, background)
+                );
                 outline: kbq-css-variable(#{$base}-focused-outline, map.get($style, checked-focused, outline));
             }
         }
@@ -99,7 +99,6 @@
         }
     }
 }
-/* stylelint-enable no-descending-specificity */
 
 @mixin kbq-checkbox-theme($theme) {
     $checkbox: map.get(map.get($theme, components), checkbox);

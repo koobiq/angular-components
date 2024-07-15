@@ -1,13 +1,12 @@
 @use '../main';
 
-
 .example-container {
     width: 50%;
 }
 
 .simple-tags-example-row {
     display: flex;
-    gap: 8px
+    gap: 8px;
 }
 
 .dev-container {
