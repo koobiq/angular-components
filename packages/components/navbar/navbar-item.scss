@@ -26,6 +26,8 @@
 
     & .kbq-button-icon {
         position: absolute;
+        padding-left: kbq-css-variable(size-xs);
+        padding-right: kbq-css-variable(size-xs);
         top: 50%;
         transform: translateY(-50%);
     }
