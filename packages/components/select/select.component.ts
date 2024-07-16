@@ -105,6 +105,7 @@ import {
     distinctUntilChanged,
     delay
 } from 'rxjs/operators';
+import { SizeXxs } from '@koobiq/design-tokens';
 
 
 let nextUniqueId = 0;
@@ -230,6 +231,9 @@ export class KbqSelect extends KbqSelectMixinBase implements
         }
     ];
 
+    /**
+     * Trigger - is a clickable field to open select dropdown panel
+     */
     @ViewChild('trigger', { static: false }) trigger: ElementRef;
 
     @ViewChild('panel', { static: false }) panel: ElementRef;
@@ -944,12 +948,13 @@ export class KbqSelect extends KbqSelectMixinBase implements
         this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let totalItemsWidth: number = 0;
-        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>)
-            .forEach((item) => totalItemsWidth += this.getItemWidth(item));
+        const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
+        selectedItemsViewValueContainers.forEach((item) => totalItemsWidth += this.getItemWidth(item));
 
         triggerClone.remove();
 
-        return totalItemsWidth;
+        // item width + flex gap between each item
+        return totalItemsWidth + parseInt(SizeXxs) * (selectedItemsViewValueContainers.length - 1);
     }
 
     private getItemWidth(element: HTMLElement): number {

@@ -223,7 +223,6 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     tags: QueryList<KbqTag>;
     toggle(): void;
     transformOrigin: string;
-    // (undocumented)
     trigger: ElementRef;
     triggerFontSize: number;
     triggerRect: ClientRect;
