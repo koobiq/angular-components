@@ -94,6 +94,7 @@ import {
     startWith,
     delay
 } from 'rxjs/operators';
+import { SizeXxs } from '@koobiq/design-tokens';
 
 
 let nextUniqueId = 0;
@@ -221,6 +222,10 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     options: QueryList<KbqTreeOption>;
 
+
+    /**
+     * Trigger - is a clickable field to open select dropdown panel
+     */
     @ViewChild('trigger', { static: false }) trigger: ElementRef;
 
     @ViewChild('panel', { static: false }) panel: ElementRef;
@@ -896,12 +901,13 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
         this.renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let totalItemsWidth: number = 0;
-        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>)
-            .forEach((item) => totalItemsWidth += this.getItemWidth(item));
+        const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
+        selectedItemsViewValueContainers.forEach((item) => totalItemsWidth += this.getItemWidth(item));
 
         triggerClone.remove();
 
-        return totalItemsWidth;
+        // item width + flex gap between each item
+        return totalItemsWidth + parseInt(SizeXxs) * (selectedItemsViewValueContainers.length - 1);
     }
 
     private getTotalVisibleItems(): [number, number] {
