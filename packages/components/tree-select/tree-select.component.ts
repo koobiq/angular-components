@@ -73,19 +73,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
-import { KbqTree, KbqTreeSelection, KbqTreeOption } from '@koobiq/components/tree';
-import { defer, merge, Observable, Subject, Subscription } from 'rxjs';
-import {
-    filter,
-    map,
-    switchMap,
-    take,
-    takeUntil,
-    distinctUntilChanged,
-    startWith,
-    delay
-} from 'rxjs/operators';
+import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs } from '@koobiq/design-tokens';
+import { Observable, Subject, Subscription, defer, merge } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -224,7 +215,6 @@ export class KbqTreeSelect
     ];
 
     options: QueryList<KbqTreeOption>;
-
 
     /**
      * Trigger - is a clickable field to open select dropdown panel
@@ -915,7 +905,7 @@ export class KbqTreeSelect
 
         let totalItemsWidth: number = 0;
         const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
-        selectedItemsViewValueContainers.forEach((item) => totalItemsWidth += this.getItemWidth(item));
+        selectedItemsViewValueContainers.forEach((item) => (totalItemsWidth += this.getItemWidth(item)));
 
         triggerClone.remove();
 

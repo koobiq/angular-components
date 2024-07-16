@@ -87,18 +87,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
-import { BehaviorSubject, defer, merge, Observable, Subject, Subscription } from 'rxjs';
-import {
-    filter,
-    map,
-    startWith,
-    switchMap,
-    take,
-    takeUntil,
-    distinctUntilChanged,
-    delay
-} from 'rxjs/operators';
 import { SizeXxs } from '@koobiq/design-tokens';
+import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -957,7 +948,7 @@ export class KbqSelect
 
         let totalItemsWidth: number = 0;
         const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
-        selectedItemsViewValueContainers.forEach((item) => totalItemsWidth += this.getItemWidth(item));
+        selectedItemsViewValueContainers.forEach((item) => (totalItemsWidth += this.getItemWidth(item)));
 
         triggerClone.remove();
 
