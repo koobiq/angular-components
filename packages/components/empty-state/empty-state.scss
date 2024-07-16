@@ -4,7 +4,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-empty-state {
     display: flex;
     flex-direction: column;
@@ -13,8 +12,7 @@
     flex: 1;
 
     &.kbq-empty-state_normal {
-        padding:
-            kbq-css-variable(empty-state-size-normal-padding-top)
+        padding: kbq-css-variable(empty-state-size-normal-padding-top)
             kbq-css-variable(empty-state-size-normal-padding-horizontal)
             kbq-css-variable(empty-state-size-normal-padding-bottom);
 
@@ -39,13 +37,12 @@
         }
 
         &.kbq-empty-state_align-center.kbq-empty-state_has-icon {
-            margin-bottom: kbq-css-variable(empty-state-size-normal-image-addon-height)
+            margin-bottom: kbq-css-variable(empty-state-size-normal-image-addon-height);
         }
     }
 
     &.kbq-empty-state_big {
-        padding:
-            kbq-css-variable(empty-state-size-big-padding-top)
+        padding: kbq-css-variable(empty-state-size-big-padding-top)
             kbq-css-variable(empty-state-size-big-padding-horizontal)
             kbq-css-variable(empty-state-size-big-padding-bottom);
 
@@ -70,7 +67,7 @@
         }
 
         &.kbq-empty-state_align-center.kbq-empty-state_has-icon {
-            margin-bottom: kbq-css-variable(empty-state-size-big-image-addon-height)
+            margin-bottom: kbq-css-variable(empty-state-size-big-image-addon-height);
         }
     }
 

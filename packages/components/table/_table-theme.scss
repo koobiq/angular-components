@@ -27,7 +27,9 @@
 
                 &:hover td {
                     background-color: kbq-css-variable(
-                        states-background-transparent-hover, map.get($states-background, transparent-hover));
+                        states-background-transparent-hover,
+                        map.get($states-background, transparent-hover)
+                    );
                 }
             }
         }
