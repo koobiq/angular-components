@@ -16,7 +16,7 @@ const localeDataSet = {
     'es-LA': esLALocaleDataSet,
     'pt-BR': ptBRLocaleDataSet,
     'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
 };
 
 /**
@@ -26,7 +26,7 @@ const localeDataSet = {
     selector: 'select-search-overview-example',
     templateUrl: 'select-search-overview-example.html',
     styleUrls: ['select-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectSearchOverviewExample {
     options: string[] = [];
@@ -49,7 +49,7 @@ export class SelectSearchOverviewExample {
     init(): void {
         this.filteredOptions = merge(
             of(this.options),
-            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value))),
+            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }
 

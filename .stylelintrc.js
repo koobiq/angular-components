@@ -9,19 +9,19 @@ const config = {
     allowEmptyInput: true,
     extends: [
         'stylelint-config-recommended-scss',
-        'stylelint-prettier/recommended',
+        'stylelint-prettier/recommended'
     ],
     ignoreFiles: [
         '**/dist/**',
-        '**/node_modules/**',
+        '**/node_modules/**'
     ],
     rules: {
         'rule-empty-line-before': [
             'always-multi-line',
             {
                 except: ['first-nested'],
-                ignore: ['after-comment'],
-            },
+                ignore: ['after-comment']
+            }
         ],
         'no-unknown-custom-properties': true,
         'no-descending-specificity': null,
@@ -29,8 +29,8 @@ const config = {
             true,
             {
                 ignore: ['custom-elements'],
-                ignoreTypes: ['app'],
-            },
+                ignoreTypes: ['app']
+            }
         ],
         'font-family-no-missing-generic-family-keyword': [
             true,
@@ -38,12 +38,12 @@ const config = {
                 ignoreFontFamilies: [
                     'Inter',
                     'PT Mosaic Icons',
-                    'JetBrains Mono',
-                ],
-            },
+                    'JetBrains Mono'
+                ]
+            }
         ],
-        'scss/operator-no-newline-after': null,
-    },
+        'scss/operator-no-newline-after': null
+    }
 };
 
 module.exports = config;

@@ -7,12 +7,12 @@ import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@ko
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     options: KbqScrollbarOptions;
     events: KbqScrollbarEvents = {
-        initialized: (...args) => this.onInitialize(args),
+        initialized: (...args) => this.onInitialize(args)
     };
 
     scrollCounter = 0;
@@ -50,6 +50,6 @@ export class DemoComponent {
 @NgModule({
     declarations: [DemoComponent],
     imports: [BrowserModule, KbqScrollbarModule, KbqButtonModule],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

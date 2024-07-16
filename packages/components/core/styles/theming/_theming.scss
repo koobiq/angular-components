@@ -11,7 +11,7 @@
     $result: map.merge(
         $base-palette,
         (
-            default: $default,
+            default: $default
         )
     );
 
@@ -20,7 +20,7 @@
         $result: map.merge(
             $result,
             (
-                '#{$hue}-contrast': kbq-contrast($base-palette, $hue),
+                '#{$hue}-contrast': kbq-contrast($base-palette, $hue)
             )
         );
     }
@@ -238,7 +238,7 @@
     @return map.merge(
         $base-palette,
         (
-            default: $default,
+            default: $default
         )
     );
 }

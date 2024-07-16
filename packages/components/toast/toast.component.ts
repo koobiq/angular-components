@@ -9,7 +9,7 @@ import {
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { BehaviorSubject, Subject, merge } from 'rxjs';
@@ -21,8 +21,8 @@ import { KbqToastData, KbqToastStyle } from './toast.type';
 @Directive({
     selector: '[kbq-toast-close-button]',
     host: {
-        class: 'kbq-toast__close-button',
-    },
+        class: 'kbq-toast__close-button'
+    }
 })
 export class KbqToastCloseButton {}
 
@@ -43,11 +43,11 @@ let id = 0;
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)',
 
-        '(keydown.esc)': 'close()',
+        '(keydown.esc)': 'close()'
     },
     animations: [kbqToastAnimations.toastState],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqToastComponent implements OnDestroy {
     themePalette = ThemePalette;
@@ -65,7 +65,7 @@ export class KbqToastComponent implements OnDestroy {
 
     get toastStyle() {
         return {
-            [`kbq-toast_${this.data.style}`]: true,
+            [`kbq-toast_${this.data.style}`]: true
         };
     }
 
@@ -79,7 +79,7 @@ export class KbqToastComponent implements OnDestroy {
         readonly data: KbqToastData,
         @Inject(forwardRef(() => KbqToastService)) readonly service: KbqToastService,
         public elementRef: ElementRef,
-        private focusMonitor: FocusMonitor,
+        private focusMonitor: FocusMonitor
     ) {
         this.$implicit = this;
 
@@ -98,7 +98,7 @@ export class KbqToastComponent implements OnDestroy {
         merge(this.hovered, this.focused)
             .pipe(
                 takeUntil(this.destroyed),
-                filter((value) => value),
+                filter((value) => value)
             )
             .subscribe(() => {
                 if (this.ttl === 0) {

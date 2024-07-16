@@ -20,7 +20,7 @@ export {
     TabsOverviewExample,
     TabsStretchExample,
     TabsVerticalExample,
-    TabsWithScrollExample,
+    TabsWithScrollExample
 };
 
 const EXAMPLES = [
@@ -31,7 +31,7 @@ const EXAMPLES = [
     TabsWithScrollExample,
     TabsEmptyExample,
     TabActiveTabExample,
-    TabActiveTabIndexExample,
+    TabActiveTabIndexExample
 ];
 
 @NgModule({
@@ -39,9 +39,9 @@ const EXAMPLES = [
         CommonModule,
         KbqTabsModule,
         KbqIconModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TabsExamplesModule {}

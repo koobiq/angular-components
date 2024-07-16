@@ -13,7 +13,7 @@ import { codeCSS, codeCs, codeHTML, codeHTML3, codeJs2, codeJson, codeTs, codeXM
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
+    templateUrl: './template.html'
 })
 export class DemoComponent {
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
@@ -27,63 +27,63 @@ export class DemoComponent {
             {
                 filename: 'types.ts',
                 content: codeTs,
-                language: 'typescript',
+                language: 'typescript'
             },
             {
                 filename: 'index.html',
                 content: codeHTML,
                 language: 'html',
-                link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html',
+                link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
             },
             {
                 filename: 'menu.xml',
                 content: codeXML,
-                language: 'xml',
+                language: 'xml'
             },
             {
                 filename: 'app.js',
                 content: codeJs2,
                 language: 'javascript',
-                link: 'https://stackblitz.com/edit/js-aux7gf?file=index.js',
+                link: 'https://stackblitz.com/edit/js-aux7gf?file=index.js'
             },
             {
                 filename: 'Text.txt',
                 content: text,
-                language: 'txt',
+                language: 'txt'
             },
             {
                 filename: 'response.json',
                 content: codeJson,
-                language: 'json',
+                language: 'json'
             },
             {
                 filename: 'class',
                 content: codeCs,
-                language: 'csharp',
+                language: 'csharp'
             },
             {
                 filename: 'smallHtml',
                 content: codeHTML3,
-                language: 'html',
+                language: 'html'
             },
             {
                 filename: 'styles.css',
                 content: codeCSS,
-                language: 'css',
+                language: 'css'
             },
             {
                 filename: 'app',
                 content: codeJs2,
-                language: 'javascript',
-            },
+                language: 'javascript'
+            }
         ];
 
         this.files4 = [
             {
                 filename: '',
                 content: codeJs2,
-                language: 'javascript',
-            },
+                language: 'javascript'
+            }
         ];
     }
 }
@@ -97,7 +97,7 @@ export class DemoComponent {
         KbqToggleModule,
         KbqButtonModule,
         KbqSidepanelModule,
-        FormsModule,
+        FormsModule
     ],
     providers: [
         {
@@ -110,10 +110,10 @@ export class DemoComponent {
                 copyTooltip: 'Скопировать',
                 viewAllText: 'Показать все',
                 viewLessText: 'Свернуть',
-                openExternalSystemTooltip: 'Открыть во внешней системе',
-            },
-        },
+                openExternalSystemTooltip: 'Открыть во внешней системе'
+            }
+        }
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

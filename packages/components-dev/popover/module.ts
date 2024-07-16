@@ -20,7 +20,7 @@ import { KbqIconModule } from '../../components/icon/';
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
+    templateUrl: './template.html'
 })
 export class DemoComponent {
     @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
@@ -41,20 +41,20 @@ export class DemoComponent {
         INPUT: 'input',
         ICON: 'icon',
         RADIO_GROUP: 'radio-group',
-        LINK: 'link',
+        LINK: 'link'
     };
 
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
         HOVER: 'hover',
-        CUSTOM: 'custom',
+        CUSTOM: 'custom'
     };
 
     SIZE = {
         LARGE: 'large',
         MEDIUM: 'medium',
-        SMALL: 'small',
+        SMALL: 'small'
     };
 
     selectedElement: string = this.ELEMENTS.BUTTON;
@@ -153,8 +153,8 @@ export class DemoComponent {
         KbqSplitterModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

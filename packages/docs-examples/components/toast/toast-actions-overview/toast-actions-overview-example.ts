@@ -11,7 +11,7 @@ import { take } from 'rxjs/operators';
     selector: 'toast-actions-overview-example',
     templateUrl: 'toast-actions-overview-example.html',
     styleUrls: ['toast-actions-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ToastActionsOverviewExample {
     @ViewChild('dropdown') dropdown: KbqDropdown;
@@ -31,9 +31,9 @@ export class ToastActionsOverviewExample {
             {
                 title: 'Заголовок',
                 caption: 'Подзаголовок, подробности',
-                actions,
+                actions
             },
-            0,
+            0
         );
         this.dropdown.closed.pipe(take(1)).subscribe(() => ref.instance.close());
     }

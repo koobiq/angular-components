@@ -8,7 +8,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'tooltip-overview-example',
     templateUrl: 'tooltip-overview-example.html',
     styleUrls: ['tooltip-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TooltipOverviewExample {
     placement: PopUpPlacements = PopUpPlacements.Top;

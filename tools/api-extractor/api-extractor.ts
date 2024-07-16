@@ -44,12 +44,12 @@ function runExtractor(folder: string, component: string): ExtractorResult {
     const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({
         configObject,
         configObjectFullPath,
-        packageJsonFullPath,
+        packageJsonFullPath
     });
 
     return Extractor.invoke(extractorConfig, {
         localBuild,
-        showVerboseMessages: true,
+        showVerboseMessages: true
     });
 }
 

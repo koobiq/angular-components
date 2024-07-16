@@ -32,7 +32,7 @@ export {
     LinkPrintExample,
     LinkPseudoExample,
     LinkTargetBlankExample,
-    LinkVisitedExample,
+    LinkVisitedExample
 };
 
 const EXAMPLES = [
@@ -49,7 +49,7 @@ const EXAMPLES = [
     LinkColorExample,
     LinkVisitedExample,
     LinkDisabledExample,
-    LinkCaptionExample,
+    LinkCaptionExample
 ];
 
 @NgModule({
@@ -57,9 +57,9 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class LinkExamplesModule {}

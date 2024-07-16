@@ -83,12 +83,12 @@ const KBQ_COMPONENTS = [
     KbqTreeModule,
     KbqTreeSelectModule,
     KbqFileUploadModule,
-    KbqCodeBlockModule,
+    KbqCodeBlockModule
 ];
 
 const KBQ_CORE = [KbqHighlightModule, KbqPseudoCheckboxModule, KbqFormattersModule];
 
 @NgModule({
-    exports: [...KBQ_COMPONENTS, ...KBQ_CORE],
+    exports: [...KBQ_COMPONENTS, ...KBQ_CORE]
 })
 export class DemoMosaicModule {}

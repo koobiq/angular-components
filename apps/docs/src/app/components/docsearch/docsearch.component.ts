@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
-
 import * as UAParser from 'ua-parser-js';
 
 @Component({
@@ -8,7 +7,7 @@ import * as UAParser from 'ua-parser-js';
     selector: 'docs-docsearch',
     template: '',
     styleUrl: './docsearch.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsearchComponent implements OnInit {
     private readonly platform = inject(PLATFORM_ID);
@@ -20,11 +19,11 @@ export class DocsearchComponent implements OnInit {
         indexName: 'koobiq',
         maxResultsPerGroup: 20,
         searchParameters: {
-            hitsPerPage: 40,
+            hitsPerPage: 40
         },
         disableUserPersonalization: false,
         resultsFooterComponent: null,
-        placeholder: 'Поиск',
+        placeholder: 'Поиск'
     };
 
     async ngOnInit() {
@@ -47,7 +46,7 @@ export class DocsearchComponent implements OnInit {
                 ...this.DOCSEARCH_CONFIG,
                 container: this.DOCSEARCH_CONTAINER,
                 transformItems: (items: any[]) => this.transformItems(items, shouldTransformItemURL),
-                translations: this.getTranslations(buttonText),
+                translations: this.getTranslations(buttonText)
             });
         }
     }
@@ -73,7 +72,7 @@ export class DocsearchComponent implements OnInit {
         return {
             button: {
                 buttonText,
-                buttonAriaLabel: 'Поиск',
+                buttonAriaLabel: 'Поиск'
             },
             modal: {
                 searchBox: {
@@ -81,7 +80,7 @@ export class DocsearchComponent implements OnInit {
                     resetButtonAriaLabel: 'Очистить запрос',
                     cancelButtonText: 'Отмена',
                     cancelButtonAriaLabel: 'Отмена',
-                    searchInputLabel: 'Поиск',
+                    searchInputLabel: 'Поиск'
                 },
                 startScreen: {
                     recentSearchesTitle: 'Недавние',
@@ -89,11 +88,11 @@ export class DocsearchComponent implements OnInit {
                     saveRecentSearchButtonTitle: 'Сохранить этот поиск',
                     removeRecentSearchButtonTitle: 'Удалить этот поиск из истории',
                     favoriteSearchesTitle: 'Избранное',
-                    removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного',
+                    removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного'
                 },
                 errorScreen: {
                     titleText: 'Не удалось получить результаты',
-                    helpText: 'Возможно, вам следует проверить соединение с интернетом.',
+                    helpText: 'Возможно, вам следует проверить соединение с интернетом.'
                 },
                 footer: {
                     selectText: 'Выбрать',
@@ -103,15 +102,15 @@ export class DocsearchComponent implements OnInit {
                     navigateDownKeyAriaLabel: 'Клавиша стрелка вниз',
                     closeText: 'Закрыть',
                     closeKeyAriaLabel: 'Клавиша Escape',
-                    searchByText: 'Поиск',
+                    searchByText: 'Поиск'
                 },
                 noResultsScreen: {
                     noResultsText: 'Нет результатов для',
                     suggestedQueryText: 'Попробуйте поискать',
                     reportMissingResultsText: 'Считаете, что этот запрос должен вернуть результаты?',
-                    reportMissingResultsLinkText: 'Сообщите нам.',
-                },
-            },
+                    reportMissingResultsLinkText: 'Сообщите нам.'
+                }
+            }
         };
     }
 }

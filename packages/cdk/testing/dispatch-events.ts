@@ -26,7 +26,7 @@ export function dispatchMouseEvent(
     type: string,
     x = 0,
     y = 0,
-    event = createMouseEvent(type, x, y),
+    event = createMouseEvent(type, x, y)
 ): MouseEvent {
     return dispatchEvent(node, event) as MouseEvent;
 }

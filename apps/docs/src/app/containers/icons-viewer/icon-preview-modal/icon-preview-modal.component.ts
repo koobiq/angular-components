@@ -7,7 +7,7 @@ import {
     ElementRef,
     Input,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -20,7 +20,7 @@ import { IconItem } from 'src/app/components/icons-items/icon-items';
     templateUrl: './icon-preview-modal.template.html',
     styleUrls: ['./icon-preview-modal.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconPreviewModalComponent implements AfterViewInit {
     @ViewChild('iconPreview') iconPreview: KbqIcon;
@@ -36,7 +36,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
         KbqComponentColors.Contrast,
         KbqComponentColors.ContrastFade,
         KbqComponentColors.Error,
-        KbqComponentColors.Success,
+        KbqComponentColors.Success
     ];
 
     selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
@@ -47,7 +47,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
         public modal: KbqModalRef,
         private http: HttpClient,
         private clipboard: Clipboard,
-        private toastService: KbqToastService,
+        private toastService: KbqToastService
     ) {}
 
     ngAfterViewInit(): void {

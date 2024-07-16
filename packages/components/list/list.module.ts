@@ -11,7 +11,7 @@ import { KbqList, KbqListItem } from './list.component';
         A11yModule,
         KbqPseudoCheckboxModule,
         KbqLineModule,
-        KbqOptionModule,
+        KbqOptionModule
     ],
     exports: [
         KbqList,
@@ -19,14 +19,14 @@ import { KbqList, KbqListItem } from './list.component';
         KbqListItem,
         KbqListOption,
         KbqListOptionCaption,
-        KbqOptionModule,
+        KbqOptionModule
     ],
     declarations: [
         KbqList,
         KbqListSelection,
         KbqListItem,
         KbqListOption,
-        KbqListOptionCaption,
-    ],
+        KbqListOptionCaption
+    ]
 })
 export class KbqListModule {}

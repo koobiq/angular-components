@@ -7,6 +7,6 @@ import { KbqButtonToggle, KbqButtonToggleGroup } from './button-toggle.component
 @NgModule({
     imports: [KbqCommonModule, KbqButtonModule, KbqTitleModule],
     exports: [KbqCommonModule, KbqButtonToggleGroup, KbqButtonToggle],
-    declarations: [KbqButtonToggleGroup, KbqButtonToggle],
+    declarations: [KbqButtonToggleGroup, KbqButtonToggle]
 })
 export class KbqButtonToggleModule {}

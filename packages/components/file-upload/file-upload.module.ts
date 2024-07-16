@@ -27,17 +27,17 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqFormFieldModule,
         KbqEllipsisCenterModule,
         KbqDataSizePipe,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: [
         KbqFileDropDirective,
         KbqSingleFileUploadComponent,
-        KbqMultipleFileUploadComponent,
+        KbqMultipleFileUploadComponent
     ],
     exports: [
         KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
-        KbqFileDropDirective,
-    ],
+        KbqFileDropDirective
+    ]
 })
 export class KbqFileUploadModule {}

@@ -10,6 +10,6 @@ if (require.main === module) {
     ensureDirSync(dirname(outDir));
 
     copySync(execPath, outDir, {
-        filter: (path) => !/.json/.test(path),
+        filter: (path) => !/.json/.test(path)
     });
 }

@@ -33,7 +33,7 @@ export const TEMPLATE_FILES = [
     'src/styles.scss',
     'src/app/app.module.ts',
     'src/environments/environment.prod.ts',
-    'src/environments/environment.ts',
+    'src/environments/environment.ts'
 ];
 
 type FileDictionary = { [path: string]: string };
@@ -47,7 +47,7 @@ export class StackblitzWriter {
 
     constructor(
         private http: HttpClient,
-        private ngZone: NgZone,
+        private ngZone: NgZone
     ) {}
 
     /**
@@ -64,7 +64,7 @@ export class StackblitzWriter {
                     files,
                     title: `Angular Components - ${data.description}`,
                     description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
-                    openFile: exampleMainFile,
+                    openFile: exampleMainFile
                 });
             };
         });
@@ -103,14 +103,14 @@ export class StackblitzWriter {
             // will be replaced as `declarations: [ButtonDemo]`
             fileContent = fileContent.replace(
                 /declarations: \[KoobiqDocsExample\]/g,
-                `declarations: [${joinedComponentNames}]`,
+                `declarations: [${joinedComponentNames}]`
             );
 
             // Replace `entryComponents: [KoobiqDocsExample]`
             // will be replaced as `entryComponents: [DialogContent]`
             fileContent = fileContent.replace(
                 /entryComponents: \[KoobiqDocsExample\]/g,
-                `entryComponents: [${joinedComponentNames}]`,
+                `entryComponents: [${joinedComponentNames}]`
             );
 
             // Replace `bootstrap: [KoobiqDocsExample]`
@@ -118,7 +118,7 @@ export class StackblitzWriter {
             // This assumes the first component listed in the main component
             fileContent = fileContent.replace(
                 /bootstrap: \[KoobiqDocsExample]/g,
-                `bootstrap: [${data.componentNames[0]}]`,
+                `bootstrap: [${data.componentNames[0]}]`
             );
 
             const dotIndex = data.indexFilename.lastIndexOf('.');
@@ -151,7 +151,7 @@ export class StackblitzWriter {
                 this.loadFile(TEMPLATE_PATH + relativeFilePath)
                     // Replace example placeholders in the template files.
                     .then((content) => this.replaceExamplePlaceholderNames(data, relativeFilePath, content))
-                    .then((content) => (result[relativeFilePath] = content)),
+                    .then((content) => (result[relativeFilePath] = content))
             );
         }
 
@@ -160,7 +160,7 @@ export class StackblitzWriter {
                 this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)
                     // Insert a copyright footer for all example files inserted into the project.
                     .then((content) => this.appendCopyright(relativeFilePath, content))
-                    .then((content) => (result[`src/app/${relativeFilePath}`] = content)),
+                    .then((content) => (result[`src/app/${relativeFilePath}`] = content))
             );
         }
 
@@ -175,7 +175,7 @@ export class StackblitzWriter {
         title,
         description,
         openFile,
-        files,
+        files
     }: {
         title: string;
         description: string;
@@ -184,7 +184,7 @@ export class StackblitzWriter {
     }): void {
         StackBlitzSDK.openProject(
             { title, files, description, template: PROJECT_TEMPLATE, tags: PROJECT_TAGS },
-            { openFile },
+            { openFile }
         );
     }
 

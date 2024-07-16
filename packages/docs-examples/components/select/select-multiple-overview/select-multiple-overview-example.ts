@@ -14,7 +14,7 @@ const localeDataSet = {
     'es-LA': esLALocaleDataSet,
     'pt-BR': ptBRLocaleDataSet,
     'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
 };
 
 /**
@@ -24,7 +24,7 @@ const localeDataSet = {
     selector: 'select-multiple-overview-example',
     templateUrl: 'select-multiple-overview-example.html',
     styleUrls: ['select-multiple-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectMultipleOverviewExample {
     selected = [];

@@ -8,19 +8,19 @@ import { KbqAlert, KbqAlertCloseButton, KbqAlertControl, KbqAlertTitle } from '.
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     exports: [
         KbqAlert,
         KbqAlertTitle,
         KbqAlertCloseButton,
-        KbqAlertControl,
+        KbqAlertControl
     ],
     declarations: [
         KbqAlert,
         KbqAlertTitle,
         KbqAlertCloseButton,
-        KbqAlertControl,
-    ],
+        KbqAlertControl
+    ]
 })
 export class KbqAlertModule {}

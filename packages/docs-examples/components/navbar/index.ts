@@ -17,7 +17,7 @@ export { NavbarOverviewExample, NavbarVerticalExample };
 
 const EXAMPLES = [
     NavbarOverviewExample,
-    NavbarVerticalExample,
+    NavbarVerticalExample
 ];
 
 @NgModule({
@@ -32,9 +32,9 @@ const EXAMPLES = [
         KbqBadgeModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class NavbarExamplesModule {}

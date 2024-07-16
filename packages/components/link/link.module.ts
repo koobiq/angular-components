@@ -6,9 +6,9 @@ import { KbqLink } from './link.component';
 @NgModule({
     imports: [
         CommonModule,
-        A11yModule,
+        A11yModule
     ],
     declarations: [KbqLink],
-    exports: [KbqLink],
+    exports: [KbqLink]
 })
 export class KbqLinkModule {}

@@ -6,7 +6,7 @@ import {
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
+    UntypedFormGroup
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
@@ -24,13 +24,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             KbqFormFieldModule,
             KbqInputModule,
             KbqToolTipModule,
-            ...imports,
+            ...imports
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers,
-        ],
+            ...providers
+        ]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -60,7 +60,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
                 >Только латинские буквы, цифры, пробелы и спецсимволы
             </kbq-password-hint>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqPasswordInputDefault {
     disabled = false;
@@ -82,7 +82,7 @@ class KbqPasswordInputDefault {
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqPasswordInputCustomPasswordRulesUndefined {
     value = '1';
@@ -104,7 +104,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqPasswordInputCustomPasswordRule {
     @ViewChild(KbqPasswordHint) passwordHint: KbqPasswordHint;
@@ -129,7 +129,7 @@ class KbqPasswordInputCustomPasswordRule {
         <kbq-form-field>
             <input kbqInputPassword [formControl]="formControl" />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqPasswordInputWithFormControl {
     formControl = new UntypedFormControl('');
@@ -142,14 +142,14 @@ class KbqPasswordInputWithFormControl {
                 <input kbqInputPassword formControlName="reactiveInputValue" />
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class KbqPasswordInputWithFormControlName {
     reactiveForm: UntypedFormGroup;
 
     constructor(private formBuilder: UntypedFormBuilder) {
         this.reactiveForm = this.formBuilder.group({
-            reactiveInputValue: new UntypedFormControl(''),
+            reactiveInputValue: new UntypedFormControl('')
         });
     }
 }
@@ -242,7 +242,7 @@ describe('KbqPasswordInput', () => {
 
         expect(fixture.componentInstance.passwordHint.customCheckRule).toBeTruthy();
         expect(fixture.componentInstance.passwordHint.hasError).toEqual(
-            fixture.componentInstance.passwordHint.customCheckRule(valueToTest),
+            fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
         );
     }));
 

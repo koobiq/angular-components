@@ -31,7 +31,7 @@ askPassword(user.loginOk, user.loginFail);`;
     selector: 'code-block-cut-example',
     templateUrl: 'code-block-cut-example.html',
     styleUrls: ['code-block-cut-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockCutExample {
     files: KbqCodeFile[];
@@ -42,8 +42,8 @@ export class CodeBlockCutExample {
             {
                 filename: '',
                 content: codeJs2,
-                language: 'javascript',
-            },
+                language: 'javascript'
+            }
         ];
     }
 }

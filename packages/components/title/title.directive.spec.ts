@@ -16,11 +16,11 @@ describe('KbqTitleDirective', () => {
             declarations: [
                 KbqTitleDirective,
                 BaseKbqTitleComponent,
-                WithParamsKbqTitleComponent,
+                WithParamsKbqTitleComponent
             ],
             providers: [
-                KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
-            ],
+                KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER
+            ]
         });
     });
 
@@ -101,7 +101,8 @@ describe('KbqTitleDirective', () => {
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-        `,
+        `
+
     ],
     template: `
         <div id="parent1" class="parent" style="max-width: 150px;" kbq-title>{{ longValue }}</div>
@@ -109,7 +110,7 @@ describe('KbqTitleDirective', () => {
         <div id="parent3" class="parent" style="max-width: 600px;" kbq-title>
             <span>{{ longValue }}</span>
         </div>
-    `,
+    `
 })
 class BaseKbqTitleComponent {
     defaultValue = 'Just a text';
@@ -135,7 +136,8 @@ class BaseKbqTitleComponent {
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-        `,
+        `
+
     ],
     template: `
         <div id="parent1" style="max-width: 150px" kbq-title>
@@ -149,7 +151,7 @@ class BaseKbqTitleComponent {
                 <div class="child" #kbqTitleText>{{ defaultValue }}</div>
             </div>
         </div>
-    `,
+    `
 })
 class WithParamsKbqTitleComponent {
     defaultValue = 'Just a text';

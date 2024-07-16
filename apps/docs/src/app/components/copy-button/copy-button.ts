@@ -6,7 +6,7 @@ import {
     Component,
     Input,
     NgModule,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -16,10 +16,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
     templateUrl: './copy-button.html',
     styleUrls: ['./copy-button.scss'],
     host: {
-        class: 'kbq-docs-copy-button',
+        class: 'kbq-docs-copy-button'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CopyButton {
     @Input() contentToCopy: string;
@@ -31,7 +31,7 @@ export class CopyButton {
 
     constructor(
         private clipboard: Clipboard,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef
     ) {}
 
     copyContent(): void {
@@ -52,6 +52,6 @@ export class CopyButton {
 @NgModule({
     imports: [CommonModule, KbqIconModule, KbqLinkModule],
     exports: [CopyButton],
-    declarations: [CopyButton],
+    declarations: [CopyButton]
 })
 export class CopyButtonModule {}

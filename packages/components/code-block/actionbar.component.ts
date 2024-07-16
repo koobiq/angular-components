@@ -6,7 +6,7 @@ import {
     Input,
     Output,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
@@ -18,10 +18,10 @@ import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
     styleUrls: ['./actionbar.component.scss'],
     host: {
         class: 'kbq-code-block-actionbar',
-        '[class.kbq-code-block-actionbar_less-contrast]': 'lessContrast',
+        '[class.kbq-code-block-actionbar_less-contrast]': 'lessContrast'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqActionBarComponent implements AfterViewInit {
     @ViewChild('copyTooltip') copyTooltip: KbqTooltipTrigger;

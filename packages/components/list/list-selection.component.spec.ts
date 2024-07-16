@@ -13,7 +13,7 @@ import {
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
-    dispatchKeyboardEvent,
+    dispatchKeyboardEvent
 } from '@koobiq/cdk/testing';
 import { KbqListModule, KbqListOption, KbqListSelection, KbqListSelectionChange } from './index';
 
@@ -31,7 +31,7 @@ describe('KbqListSelection without forms', () => {
                     SelectionListWithListOptions,
                     SelectionListWithCheckboxPositionAfter,
                     SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption,
+                    SelectionListWithOnlyOneOption
                 ],
                 providers: [
                     {
@@ -41,10 +41,10 @@ describe('KbqListSelection without forms', () => {
                                 const originalClipboard = new Clipboard(document);
                                 originalClipboard.copy(value);
                                 clipboardContent = value;
-                            },
-                        }),
-                    },
-                ],
+                            }
+                        })
+                    }
+                ]
             });
 
             TestBed.compileComponents();
@@ -421,7 +421,7 @@ describe('KbqListSelection without forms', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [SelectionListWithSelectedOption],
+                declarations: [SelectionListWithSelectedOption]
             });
 
             TestBed.compileComponents();
@@ -447,8 +447,8 @@ describe('KbqListSelection without forms', () => {
                 imports: [KbqListModule],
                 declarations: [
                     SelectionListWithTabindexAttr,
-                    SelectionListWithTabindexInDisabledState,
-                ],
+                    SelectionListWithTabindexInDisabledState
+                ]
             });
 
             TestBed.compileComponents();
@@ -493,8 +493,8 @@ describe('KbqListSelection without forms', () => {
                     SelectionListWithListOptions,
                     SelectionListWithCheckboxPositionAfter,
                     SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption,
-                ],
+                    SelectionListWithOnlyOneOption
+                ]
             });
 
             TestBed.compileComponents();
@@ -527,7 +527,7 @@ describe('KbqListSelection without forms', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [SelectionListWithDisabledOption],
+                declarations: [SelectionListWithDisabledOption]
             });
 
             TestBed.compileComponents();
@@ -554,8 +554,8 @@ describe('KbqListSelection without forms', () => {
                     SelectionListWithListOptions,
                     SelectionListWithCheckboxPositionAfter,
                     SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption,
-                ],
+                    SelectionListWithOnlyOneOption
+                ]
             });
 
             TestBed.compileComponents();
@@ -593,8 +593,8 @@ describe('KbqListSelection without forms', () => {
                     SelectionListWithListOptions,
                     SelectionListWithCheckboxPositionAfter,
                     SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption,
-                ],
+                    SelectionListWithOnlyOneOption
+                ]
             });
 
             TestBed.compileComponents();
@@ -621,8 +621,8 @@ xdescribe('KbqListSelection with forms', () => {
                 SelectionListWithFormControl,
                 SelectionListWithPreselectedOption,
                 SelectionListWithPreselectedOptionAndModel,
-                SelectionListWithPreselectedFormControlOnPush,
-            ],
+                SelectionListWithPreselectedFormControlOnPush
+            ]
         });
 
         TestBed.compileComponents();
@@ -888,7 +888,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqListModule, FormsModule],
-            declarations: [SelectionListMultipleCheckbox],
+            declarations: [SelectionListMultipleCheckbox]
         });
 
         TestBed.compileComponents();
@@ -971,7 +971,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
         <mat-list-option *ngFor="let option of options" [value]="option">
             {{ option.label }}
         </mat-list-option>
-    </mat-selection-list>`,
+    </mat-selection-list>`
 })
 class SelectionListWithCustomComparator {
     @ViewChildren(KbqListOption) optionInstances: QueryList<KbqListOption>;
@@ -980,7 +980,7 @@ class SelectionListWithCustomComparator {
     options = [
         { id: 1, label: 'One' },
         { id: 2, label: 'Two' },
-        { id: 3, label: 'Three' },
+        { id: 3, label: 'Three' }
     ];
 }
 
@@ -998,7 +998,7 @@ class SelectionListWithCustomComparator {
         <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'"> Starred </kbq-list-option>
         <kbq-list-option checkboxPosition="before" [value]="'sent-mail'"> Sent Mail </kbq-list-option>
         <kbq-list-option checkboxPosition="before" [value]="'drafts'" *ngIf="showLastOption"> Drafts </kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
@@ -1018,7 +1018,7 @@ class SelectionListWithListOptions {
         <kbq-list-option [value]="'value3'">value3</kbq-list-option>
         <kbq-list-option [value]="'value4'">value4</kbq-list-option>
         <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListMultipleCheckbox {
     model = [];
@@ -1030,7 +1030,7 @@ class SelectionListMultipleCheckbox {
         <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
         <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
         <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithCheckboxPositionAfter {}
 
@@ -1040,7 +1040,7 @@ class SelectionListWithCheckboxPositionAfter {}
         <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
         <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
         <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithListDisabled {}
 
@@ -1049,7 +1049,7 @@ class SelectionListWithListDisabled {}
         <kbq-list-selection>
             <kbq-list-option [disabled]="disableItem">Item</kbq-list-option>
         </kbq-list-selection>
-    `,
+    `
 })
 class SelectionListWithDisabledOption {
     disableItem: boolean = false;
@@ -1058,24 +1058,24 @@ class SelectionListWithDisabledOption {
 @Component({
     template: ` <kbq-list-selection>
         <kbq-list-option [selected]="true">Item</kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithSelectedOption {}
 
 @Component({
     template: ` <kbq-list-selection id="selection-list-4">
         <kbq-list-option checkboxPosition="after" id="123"> Inbox </kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithOnlyOneOption {}
 
 @Component({
-    template: ` <kbq-list-selection [tabIndex]="5"></kbq-list-selection>`,
+    template: ` <kbq-list-selection [tabIndex]="5"></kbq-list-selection>`
 })
 class SelectionListWithTabindexAttr {}
 
 @Component({
-    template: ` <kbq-list-selection [disabled]="disabled"></kbq-list-selection>`,
+    template: ` <kbq-list-selection [disabled]="disabled"></kbq-list-selection>`
 })
 class SelectionListWithTabindexInDisabledState {
     tabIndex: number;
@@ -1087,7 +1087,7 @@ class SelectionListWithTabindexInDisabledState {
         <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
         <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
         <kbq-list-option [value]="'opt3'" *ngIf="renderLastOption">Option 3</kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithModel {
     selectedOptions: string[] = [];
@@ -1101,7 +1101,7 @@ class SelectionListWithModel {
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
             <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
         </kbq-list-selection>
-    `,
+    `
 })
 class SelectionListWithFormControl {
     formControl = new UntypedFormControl();
@@ -1111,7 +1111,7 @@ class SelectionListWithFormControl {
     template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
         <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
         <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithPreselectedOption {
     selectedOptions: string[];
@@ -1121,7 +1121,7 @@ class SelectionListWithPreselectedOption {
     template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
         <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
         <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-    </kbq-list-selection>`,
+    </kbq-list-selection>`
 })
 class SelectionListWithPreselectedOptionAndModel {
     selectedOptions = ['opt1'];
@@ -1133,7 +1133,7 @@ class SelectionListWithPreselectedOptionAndModel {
         <kbq-list-selection [formControl]="formControl">
             <kbq-list-option *ngFor="let opt of opts" [value]="opt">{{ opt }}</kbq-list-option>
         </kbq-list-selection>
-    `,
+    `
 })
 class SelectionListWithPreselectedFormControlOnPush {
     opts = ['opt1', 'opt2', 'opt3'];

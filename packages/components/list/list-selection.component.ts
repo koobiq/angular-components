@@ -23,7 +23,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FocusKeyManager, IFocusableOption } from '@koobiq/cdk/a11y';
@@ -42,7 +42,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
@@ -57,7 +57,7 @@ import {
     mixinDisabled,
     mixinTabIndex,
     MultipleMode,
-    toBoolean,
+    toBoolean
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -71,27 +71,27 @@ export interface KbqOptionEvent {
 export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqListSelection),
-    multi: true,
+    multi: true
 };
 
 export class KbqListSelectionChange {
     constructor(
         public source: KbqListSelection,
-        public option: KbqListOption,
+        public option: KbqListOption
     ) {}
 }
 
 export class KbqListSelectAllEvent<T> {
     constructor(
         public source: KbqListSelection,
-        public options: T[],
+        public options: T[]
     ) {}
 }
 
 export class KbqListCopyEvent<T> {
     constructor(
         public source: KbqListSelection,
-        public option: T,
+        public option: T
     ) {}
 }
 
@@ -102,7 +102,7 @@ export class KbqListSelectionBase {
 
 /** @docs-private */
 export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeof KbqListSelectionBase = mixinTabIndex(
-    mixinDisabled(KbqListSelectionBase),
+    mixinDisabled(KbqListSelectionBase)
 );
 
 @Component({
@@ -122,10 +122,10 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
         '[attr.disabled]': 'disabled || null',
 
         '(keydown)': 'onKeyDown($event)',
-        '(window:resize)': 'updateScrollSize()',
+        '(window:resize)': 'updateScrollSize()'
     },
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
-    preserveWhitespaces: false,
+    preserveWhitespaces: false
 })
 export class KbqListSelection
     extends KbqListSelectionMixinBase
@@ -215,7 +215,7 @@ export class KbqListSelection
         elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         @Attribute('multiple') multiple: MultipleMode,
-        @Optional() private clipboard: Clipboard,
+        @Optional() private clipboard: Clipboard
     ) {
         super(elementRef);
 
@@ -509,7 +509,7 @@ export class KbqListSelection
             this.setSelectedOptionsByKey(
                 this.keyManager.activeItem as KbqListOption,
                 hasModifierKey(event, 'shiftKey'),
-                hasModifierKey(event, 'ctrlKey'),
+                hasModifierKey(event, 'ctrlKey')
             );
         }
     }
@@ -632,8 +632,8 @@ export class KbqListSelection
 @Directive({
     selector: '[kbq-list-option-caption]',
     host: {
-        class: 'kbq-list-option-caption',
-    },
+        class: 'kbq-list-option-caption'
+    }
 })
 export class KbqListOptionCaption {}
 
@@ -661,15 +661,15 @@ export class KbqListOptionCaption {}
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
         '(click)': 'handleClick($event)',
-        '(keydown)': 'onKeydown($event)',
+        '(keydown)': 'onKeydown($event)'
     },
     encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption },
-    ],
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
+    ]
 })
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     hasFocus: boolean = false;
@@ -762,7 +762,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         private changeDetector: ChangeDetectorRef,
         private ngZone: NgZone,
         @Inject(forwardRef(() => KbqListSelection)) public listSelection: KbqListSelection,
-        @Optional() readonly group: KbqOptgroup,
+        @Optional() readonly group: KbqOptgroup
     ) {}
 
     ngOnInit() {
@@ -837,7 +837,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         this.listSelection.setSelectedOptionsByClick(
             this,
             hasModifierKey($event, 'shiftKey'),
-            hasModifierKey($event, 'ctrlKey'),
+            hasModifierKey($event, 'ctrlKey')
         );
     }
 

@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'splitter-dynamic-data-example',
     templateUrl: 'splitter-dynamic-data-example.html',
     styleUrls: ['splitter-dynamic-data-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SplitterDynamicDataExample {
     isFirstVisible = true;

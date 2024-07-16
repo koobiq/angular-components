@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'button-toggle-disabled-all-overview-example',
     templateUrl: 'button-toggle-disabled-all-overview-example.html',
-    styleUrls: ['button-toggle-disabled-all-overview-example.css'],
+    styleUrls: ['button-toggle-disabled-all-overview-example.css']
 })
 export class ButtonToggleDisabledAllOverviewExample {
     model = 1;

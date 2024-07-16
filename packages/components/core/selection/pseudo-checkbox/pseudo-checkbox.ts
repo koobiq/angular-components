@@ -6,7 +6,7 @@ import {
     CanDisableCtor,
     KbqComponentColors,
     mixinColor,
-    mixinDisabled,
+    mixinDisabled
 } from '../../common-behaviors';
 
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
@@ -20,7 +20,7 @@ export class KbqPseudoCheckboxBase {
 /** @docs-private */
 export const KbqPseudoCheckboxMixinBase: CanColorCtor & CanDisableCtor & typeof KbqPseudoCheckboxBase = mixinColor(
     mixinDisabled(KbqPseudoCheckboxBase),
-    KbqComponentColors.Theme,
+    KbqComponentColors.Theme
 );
 
 /**
@@ -45,12 +45,12 @@ export const KbqPseudoCheckboxMixinBase: CanColorCtor & CanDisableCtor & typeof 
         '[class.kbq-checkbox_big]': 'big',
         '[class.kbq-indeterminate]': 'state === "indeterminate"',
         '[class.kbq-checked]': 'state === "checked"',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled'
     },
     preserveWhitespaces: false,
     inputs: ['color'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPseudoCheckbox extends KbqPseudoCheckboxMixinBase implements CanColor, CanDisable {
     @Input() big: boolean = false;

@@ -8,7 +8,7 @@ import { ThemePalette } from '@koobiq/components/core';
     selector: 'progress-spinner-indeterminate-example',
     templateUrl: 'progress-spinner-indeterminate-example.html',
     styleUrls: ['progress-spinner-indeterminate-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ProgressSpinnerIndeterminateExample {
     themePalette = ThemePalette;

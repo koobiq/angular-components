@@ -18,7 +18,7 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    dispatchMouseEvent,
+    dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { DateAdapter, KBQ_DATE_FORMATS, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -35,7 +35,7 @@ describe('KbqDatepicker', () => {
         component: Type<any>,
         imports: Type<any>[] = [],
         providers: (FactoryProvider | ValueProvider)[] = [],
-        entryComponents: Type<any>[] = [],
+        entryComponents: Type<any>[] = []
     ): ComponentFixture<any> {
         TestBed.configureTestingModule({
             imports: [
@@ -45,13 +45,13 @@ describe('KbqDatepicker', () => {
                 KbqInputModule,
                 NoopAnimationsModule,
                 ReactiveFormsModule,
-                ...imports,
+                ...imports
             ],
             providers: [
                 { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
-                ...providers,
+                ...providers
             ],
-            declarations: [component, ...entryComponents],
+            declarations: [component, ...entryComponents]
         });
 
         TestBed.overrideModule(BrowserDynamicTestingModule, {}).compileComponents();
@@ -185,13 +185,13 @@ describe('KbqDatepicker', () => {
 
                     if (currentDay === 1) {
                         expect(testComponent.datepickerInput.value?.toISO()).toEqual(
-                            DateTime.local(2020, 1, currentDay).toISO(),
+                            DateTime.local(2020, 1, currentDay).toISO()
                         );
                     }
 
                     if (currentDay === 2) {
                         expect(testComponent.datepickerInput.value?.toISO()).toEqual(
-                            DateTime.local(2020, 1, currentDay).toISO(),
+                            DateTime.local(2020, 1, currentDay).toISO()
                         );
                     }
 
@@ -281,7 +281,7 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(testComponent.datepicker.opened).toBe(false);
-                }),
+                })
             ));
 
             it('should close the datepicker using ALT + UP_ARROW', fakeAsync(() => {
@@ -562,7 +562,7 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker.select(originDateTime);
 
                 expect(testComponent.adapter.toIso8601(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.toIso8601(originDateTime as DateTime),
+                    testComponent.adapter.toIso8601(originDateTime as DateTime)
                 );
 
                 const newDate = testComponent.adapter.createDate(2018, 1, 1);
@@ -570,31 +570,31 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker.select(newDate);
 
                 expect(testComponent.adapter.getYear(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getYear(newDate),
+                    testComponent.adapter.getYear(newDate)
                 );
 
                 expect(testComponent.adapter.getMonth(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getMonth(newDate),
+                    testComponent.adapter.getMonth(newDate)
                 );
 
                 expect(testComponent.adapter.getDate(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getDate(newDate),
+                    testComponent.adapter.getDate(newDate)
                 );
 
                 expect(testComponent.adapter.getHours(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getHours(originDateTime),
+                    testComponent.adapter.getHours(originDateTime)
                 );
 
                 expect(testComponent.adapter.getMinutes(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getMinutes(originDateTime),
+                    testComponent.adapter.getMinutes(originDateTime)
                 );
 
                 expect(testComponent.adapter.getSeconds(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getSeconds(originDateTime),
+                    testComponent.adapter.getSeconds(originDateTime)
                 );
 
                 expect(testComponent.adapter.getMilliseconds(testComponent.selected as DateTime)).toEqual(
-                    testComponent.adapter.getMilliseconds(originDateTime),
+                    testComponent.adapter.getMilliseconds(originDateTime)
                 );
             }));
         });
@@ -744,7 +744,7 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
-                },
+                }
             ));
 
             it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
@@ -870,7 +870,7 @@ describe('KbqDatepicker', () => {
                 expect(fixture.componentInstance.date?.year).not.toEqual(fixture.componentInstance.minDate.year);
                 expect(fixture.componentInstance.date?.year).toEqual(invalidYearLessThanMin);
                 expect(
-                    fixture.debugElement.queryAll(By.css(yearSelectValuePath))[1].nativeElement.textContent,
+                    fixture.debugElement.queryAll(By.css(yearSelectValuePath))[1].nativeElement.textContent
                 ).toContain(invalidYearLessThanMin.toString());
             }));
         });
@@ -1130,9 +1130,9 @@ describe('KbqDatepicker', () => {
                     [
                         {
                             provide: Directionality,
-                            useValue: { value: 'rtl' },
-                        },
-                    ],
+                            useValue: { value: 'rtl' }
+                        }
+                    ]
                 );
 
                 fixture.detectChanges();
@@ -1152,9 +1152,9 @@ describe('KbqDatepicker', () => {
                     [
                         {
                             provide: Directionality,
-                            useFactory: () => dirProvider,
-                        },
-                    ],
+                            useFactory: () => dirProvider
+                        }
+                    ]
                 );
 
                 fixture.detectChanges();
@@ -1197,7 +1197,7 @@ describe('KbqDatepicker', () => {
             fixture = createComponent(
                 DatepickerWithi18n,
                 [KbqLuxonDateModule],
-                [{ provide: KBQ_DATE_LOCALE, useValue: 'de-DE' }],
+                [{ provide: KBQ_DATE_LOCALE, useValue: 'de-DE' }]
             );
             fixture.detectChanges();
             testComponent = fixture.componentInstance;
@@ -1223,7 +1223,7 @@ describe('KbqDatepicker', () => {
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [disabled]="disabled" [opened]="opened"></kbq-datepicker>
-    `,
+    `
 })
 class StandardDatepicker {
     opened = false;
@@ -1237,12 +1237,12 @@ class StandardDatepicker {
     template: `
         <input [kbqDatepicker]="d" /><input [kbqDatepicker]="d" />
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class MultiInputDatepicker {}
 
 @Component({
-    template: ` <kbq-datepicker #d></kbq-datepicker>`,
+    template: ` <kbq-datepicker #d></kbq-datepicker>`
 })
 class NoInputDatepicker {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1252,7 +1252,7 @@ class NoInputDatepicker {
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [startAt]="startDate"></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithStartAt {
     date = DateTime.local(2020, 1, 1);
@@ -1264,7 +1264,7 @@ class DatepickerWithStartAt {
     template: `
         <input [(ngModel)]="selected" [kbqDatepicker]="d" />
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithNgModel {
     selected: DateTime | null = null;
@@ -1279,7 +1279,7 @@ class DatepickerWithNgModel {
         <input [formControl]="formControl" [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithFormControl {
     formControl = new UntypedFormControl();
@@ -1293,7 +1293,7 @@ class DatepickerWithFormControl {
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithToggle {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1307,7 +1307,7 @@ class DatepickerWithToggle {
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithCustomIcon {}
 
@@ -1316,7 +1316,7 @@ class DatepickerWithCustomIcon {}
         <input [kbqDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithMinAndMaxValidation {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1330,7 +1330,7 @@ class DatepickerWithMinAndMaxValidation {
         <input [kbqDatepicker]="d" [(ngModel)]="date" [kbqDatepickerFilter]="filter" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithFilterAndValidation {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1348,7 +1348,7 @@ class DatepickerWithFilterAndValidation {
             (dateInput)="onDateInput()"
         />
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithChangeAndInputEvents {
     value = null;
@@ -1366,7 +1366,7 @@ class DatepickerWithChangeAndInputEvents {
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithi18n {
     date: DateTime | null = DateTime.local(2010, 1, 1);
@@ -1378,7 +1378,7 @@ class DatepickerWithi18n {
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max" />
         <kbq-datepicker #d [startAt]="startAt"></kbq-datepicker>
-    `,
+    `
 })
 // tslint:disable-next-line:naming-convention
 class DatepickerWithISOStrings {
@@ -1394,7 +1394,7 @@ class DatepickerWithISOStrings {
     template: `
         <input [(ngModel)]="selected" [kbqDatepicker]="d" />
         <kbq-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithEvents {
     selected: DateTime | null = null;
@@ -1407,7 +1407,7 @@ class DatepickerWithEvents {
     template: `
         <input (focus)="d.open()" [kbqDatepicker]="d" />
         <kbq-datepicker #d="kbqDatepicker"></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerOpeningOnFocus {
     @ViewChild(KbqDatepicker, { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1417,7 +1417,7 @@ class DatepickerOpeningOnFocus {
     template: `
         <input [kbqDatepicker]="assignedDatepicker" [value]="date" />
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DelayedDatepicker {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1433,6 +1433,6 @@ class DelayedDatepicker {
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
-    `,
+    `
 })
 class DatepickerWithTabindexOnToggle {}

@@ -33,7 +33,7 @@ import {
             [max]="maxTime"
             [disabled]="isDisabled"
         />
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class TestApp {
     @ViewChild('ngModel') ngModel: NgModel;
@@ -62,9 +62,9 @@ describe('KbqTimepicker', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule,
+                KbqLuxonDateModule
             ],
-            declarations: [TestApp],
+            declarations: [TestApp]
         });
         TestBed.compileComponents();
 
@@ -110,22 +110,22 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '10:10:10',
-                },
+                    getData: () => '10:10:10'
+                }
             });
 
             fixture.detectChanges();
 
             expect(testComponent.adapter.getYear(testComponent.timeValue as DateTime)).toEqual(
-                testComponent.adapter.getYear(originDateTime),
+                testComponent.adapter.getYear(originDateTime)
             );
 
             expect(testComponent.adapter.getMonth(testComponent.timeValue as DateTime)).toEqual(
-                testComponent.adapter.getMonth(originDateTime),
+                testComponent.adapter.getMonth(originDateTime)
             );
 
             expect(testComponent.adapter.getDate(testComponent.timeValue as DateTime)).toEqual(
-                testComponent.adapter.getDate(originDateTime),
+                testComponent.adapter.getDate(originDateTime)
             );
 
             expect(testComponent.adapter.getHours(testComponent.timeValue as DateTime)).toEqual(10);
@@ -243,8 +243,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => 'string',
-                },
+                    getData: () => 'string'
+                }
             });
 
             fixture.detectChanges();
@@ -321,8 +321,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '19:01:08',
-                },
+                    getData: () => '19:01:08'
+                }
             });
             fixture.detectChanges();
             expect(testComponent.timeValue.toString()).toContain('19:01:08');
@@ -332,8 +332,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '07:15 pm',
-                },
+                    getData: () => '07:15 pm'
+                }
             });
             fixture.detectChanges();
 
@@ -344,8 +344,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '1:3 am',
-                },
+                    getData: () => '1:3 am'
+                }
             });
             fixture.detectChanges();
 
@@ -356,8 +356,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '01:3 am',
-                },
+                    getData: () => '01:3 am'
+                }
             });
             fixture.detectChanges();
 
@@ -368,8 +368,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '1:30 am',
-                },
+                    getData: () => '1:30 am'
+                }
             });
             fixture.detectChanges();
 
@@ -380,8 +380,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '01:30 am',
-                },
+                    getData: () => '01:30 am'
+                }
             });
             fixture.detectChanges();
 
@@ -392,8 +392,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '10:3 am',
-                },
+                    getData: () => '10:3 am'
+                }
             });
             fixture.detectChanges();
 
@@ -404,8 +404,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '10:30 am',
-                },
+                    getData: () => '10:30 am'
+                }
             });
             fixture.detectChanges();
 
@@ -416,8 +416,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '10:30 pm',
-                },
+                    getData: () => '10:30 pm'
+                }
             });
             fixture.detectChanges();
 
@@ -428,8 +428,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '12:3 aM',
-                },
+                    getData: () => '12:3 aM'
+                }
             });
             fixture.detectChanges();
 
@@ -440,8 +440,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '11:3 PM',
-                },
+                    getData: () => '11:3 PM'
+                }
             });
             fixture.detectChanges();
 
@@ -452,8 +452,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '11:3 a',
-                },
+                    getData: () => '11:3 a'
+                }
             });
             fixture.detectChanges();
 
@@ -464,8 +464,8 @@ describe('KbqTimepicker', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '11:3 p',
-                },
+                    getData: () => '11:3 p'
+                }
             });
             fixture.detectChanges();
 
@@ -577,7 +577,7 @@ describe('KbqTimepicker', () => {
     template: ` <kbq-form-field>
         <i kbqPrefix kbq-icon="mc-clock_16"></i>
         <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class TimePickerWithNullFormControlValue {
     formControl: UntypedFormControl = new UntypedFormControl();
@@ -597,9 +597,9 @@ describe('KbqTimepicker with null formControl value', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule,
+                KbqLuxonDateModule
             ],
-            declarations: [TimePickerWithNullFormControlValue],
+            declarations: [TimePickerWithNullFormControlValue]
         });
         TestBed.compileComponents();
 
@@ -622,8 +622,8 @@ describe('KbqTimepicker with null formControl value', () => {
         inputElementDebug.triggerEventHandler('paste', {
             preventDefault: () => null,
             clipboardData: {
-                getData: () => '19:01:02',
-            },
+                getData: () => '19:01:02'
+            }
         });
         fixture.detectChanges();
 
@@ -651,7 +651,7 @@ describe('KbqTimepicker with null formControl value', () => {
     template: ` <kbq-form-field>
         <i kbqPrefix kbq-icon="mc-clock_16"></i>
         <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class TimePickerWithNullModelValue {
     timeFormat: string;
@@ -670,9 +670,9 @@ describe('KbqTimepicker with null model value', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule,
+                KbqLuxonDateModule
             ],
-            declarations: [TimePickerWithNullModelValue],
+            declarations: [TimePickerWithNullModelValue]
         });
         TestBed.compileComponents();
 
@@ -695,8 +695,8 @@ describe('KbqTimepicker with null model value', () => {
         inputElementDebug.triggerEventHandler('paste', {
             preventDefault: () => null,
             clipboardData: {
-                getData: () => '19:01:02',
-            },
+                getData: () => '19:01:02'
+            }
         });
         fixture.detectChanges();
 

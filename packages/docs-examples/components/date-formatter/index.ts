@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import {
     KBQ_LUXON_DATE_ADAPTER_OPTIONS,
     KBQ_LUXON_DATE_FORMATS,
-    LuxonDateAdapter,
+    LuxonDateAdapter
 } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -11,7 +11,7 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
-    KbqFormattersModule,
+    KbqFormattersModule
 } from '@koobiq/components/core';
 import { AbsoluteDateFormatterExample } from './absolute-date-formatter/absolute-date-formatter-example';
 import { DurationDateFormatterExample } from './duration-date-formatter/duration-date-formatter-example';
@@ -22,20 +22,20 @@ export {
     AbsoluteDateFormatterExample,
     DurationDateFormatterExample,
     RangeDateFormatterExample,
-    RelativeDateFormatterExample,
+    RelativeDateFormatterExample
 };
 
 const EXAMPLES = [
     AbsoluteDateFormatterExample,
     RelativeDateFormatterExample,
     RangeDateFormatterExample,
-    DurationDateFormatterExample,
+    DurationDateFormatterExample
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        KbqFormattersModule,
+        KbqFormattersModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES,
@@ -44,9 +44,9 @@ const EXAMPLES = [
         {
             provide: DateAdapter,
             useClass: LuxonDateAdapter,
-            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE],
+            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
         },
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-    ],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ]
 })
 export class DateFormatterExamplesModule {}

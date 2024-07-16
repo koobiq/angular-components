@@ -7,7 +7,7 @@ import {
     OverlayConfig,
     OverlayRef,
     ScrollStrategy,
-    VerticalConnectionPos,
+    VerticalConnectionPos
 } from '@angular/cdk/overlay';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -24,7 +24,7 @@ import {
     Optional,
     Output,
     Self,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
 import { Observable, Subscription, asapScheduler, merge, of as observableOf } from 'rxjs';
@@ -47,7 +47,7 @@ export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => Sc
 export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
     deps: [Overlay],
-    useFactory: KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY,
+    useFactory: KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY
 };
 
 /** Default top padding of the nested dropdown panel. */
@@ -69,8 +69,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
         '[class.kbq-pressed]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
-        '(click)': 'handleClick($event)',
-    },
+        '(click)': 'handleClick($event)'
+    }
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     lastDestroyReason: DropdownCloseReason;
@@ -154,7 +154,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         @Optional() @Self() private dropdownItemInstance: KbqDropdownItem,
         @Optional() private _dir: Directionality,
         private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor?: FocusMonitor,
+        private focusMonitor?: FocusMonitor
     ) {
         elementRef.nativeElement.addEventListener('touchstart', this.handleTouchStart, passiveEventListenerOptions);
 
@@ -177,7 +177,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         this.elementRef.nativeElement.removeEventListener(
             'touchstart',
             this.handleTouchStart,
-            passiveEventListenerOptions,
+            passiveEventListenerOptions
         );
 
         this.cleanUpSubscriptions();
@@ -330,7 +330,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
             const animationSubscription = this.dropdown.animationDone.pipe(
                 filter((event) => event.toState === 'void'),
-                take(1),
+                take(1)
             );
 
             if (this.dropdown.lazyContent) {
@@ -338,12 +338,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 animationSubscription
                     .pipe(
                         // Interrupt if the content got re-attached.
-                        takeUntil(this.dropdown.lazyContent.attached),
+                        takeUntil(this.dropdown.lazyContent.attached)
                     )
                     .subscribe({
                         next: () => this.dropdown.lazyContent!.detach(),
                         // No matter whether the content got re-attached, reset the this.dropdown.
-                        complete: () => this.setIsOpened(false),
+                        complete: () => this.setIsOpened(false)
                     });
             } else {
                 animationSubscription.subscribe(() => this.setIsOpened(false));
@@ -433,7 +433,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 .withTransformOriginOn('.kbq-dropdown__panel'),
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
-            direction: this.dir,
+            direction: this.dir
         });
     }
 
@@ -499,7 +499,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 overlayX,
                 overlayY: overlayFallbackY,
                 offsetY: -offsetY,
-                offsetX: -offsetX,
+                offsetX: -offsetX
             },
             {
                 originX: originFallbackX,
@@ -507,8 +507,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 overlayX: overlayFallbackX,
                 overlayY: overlayFallbackY,
                 offsetY: -offsetY,
-                offsetX: -offsetX,
-            },
+                offsetX: -offsetX
+            }
         ]);
     }
 
@@ -527,7 +527,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         const hover = this.parent
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
-                  filter(() => this._opened),
+                  filter(() => this._opened)
               )
             : observableOf();
 
@@ -536,7 +536,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             outsidePointerEvents,
             parentClose as Observable<DropdownCloseReason>,
             hover,
-            detachments,
+            detachments
         );
     }
 
@@ -554,7 +554,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             // it won't be closed immediately after it is opened.
             .pipe(
                 filter((active) => active === this.dropdownItemInstance && !active.disabled),
-                delay(0, asapScheduler),
+                delay(0, asapScheduler)
             )
             .subscribe(() => {
                 this.openedBy = 'mouse';

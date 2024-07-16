@@ -5,7 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 
 export enum DocsNavbarState {
     opened,
-    closed,
+    closed
 }
 
 @Injectable()

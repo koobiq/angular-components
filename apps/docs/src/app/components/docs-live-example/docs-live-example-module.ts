@@ -23,9 +23,9 @@ import { DocsLiveExample } from './docs-live-example';
         StackblitzButtonModule,
         CopyButtonModule,
         PortalModule,
-        KbqCodeBlockModule,
+        KbqCodeBlockModule
     ],
     declarations: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource],
-    exports: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource],
+    exports: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource]
 })
 export class DocsLiveExampleModule {}

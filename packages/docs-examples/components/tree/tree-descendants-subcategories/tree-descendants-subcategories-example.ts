@@ -6,7 +6,7 @@ import {
     KbqTreeFlattener,
     KbqTreeOption,
     KbqTreeSelection,
-    KbqTreeSelectionChange,
+    KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 
 export class FileNode {
@@ -60,17 +60,17 @@ export const DATA_OBJECT = {
                     'aria-describer': 'ts',
                     'aria-describer.spec': 'ts',
                     'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts',
+                    'aria-reference.spec': 'ts'
                 },
                 'focus monitor': {
                     'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts',
-                },
-            },
+                    'focus-monitor.spec': 'ts'
+                }
+            }
         },
         documentation: {
             source: '',
-            tools: '',
+            tools: ''
         },
         koobiq: {
             autocomplete: '',
@@ -78,28 +78,28 @@ export const DATA_OBJECT = {
             'button-toggle': '',
             index: 'ts',
             package: 'json',
-            version: 'ts',
+            version: 'ts'
         },
         'koobiq-dev': {
             alert: '',
-            badge: '',
+            badge: ''
         },
         'koobiq-examples': '',
         'koobiq-moment-adapter': '',
         README: 'md',
         'tsconfig.build': 'json',
-        wallabyTest: 'ts',
+        wallabyTest: 'ts'
     },
     scripts: {
         deploy: {
             'cleanup-preview': 'ts',
             'publish-artifacts': 'sh',
             'publish-docs': 'sh',
-            'publish-docs-preview': 'ts',
+            'publish-docs-preview': 'ts'
         },
-        'tsconfig.deploy': 'json',
+        'tsconfig.deploy': 'json'
     },
-    tests: '',
+    tests: ''
 };
 
 abstract class TreeParams {
@@ -114,7 +114,7 @@ abstract class TreeParams {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -157,7 +157,7 @@ abstract class TreeParams {
 @Component({
     selector: 'tree-descendants-subcategories-example',
     templateUrl: 'tree-descendants-subcategories-example.html',
-    styleUrls: ['tree-descendants-subcategories-example.css'],
+    styleUrls: ['tree-descendants-subcategories-example.css']
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;

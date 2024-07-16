@@ -14,7 +14,7 @@ const MOCK_TOAST_DATA: KbqToastData = {
     style: 'warning',
     title: 'Warning',
     content: 'Message Content',
-    closeButton: true,
+    closeButton: true
 };
 
 describe('ToastService', () => {
@@ -27,7 +27,7 @@ describe('ToastService', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [CommonModule, KbqToastModule, BrowserAnimationsModule],
-            declarations: [KbqToastButtonWrapperComponent],
+            declarations: [KbqToastButtonWrapperComponent]
         }).compileComponents();
     }));
 
@@ -108,7 +108,7 @@ describe('ToastService', () => {
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
 
             const button = toast.ref.location.nativeElement.querySelector(
-                '[kbq-toast-close-button]',
+                '[kbq-toast-close-button]'
             ) as HTMLButtonElement;
             button.click();
 
@@ -157,7 +157,7 @@ describe('Standalone ToastService', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqToastModule, NoopAnimationsModule],
-            declarations: [KbqToastButtonWrapperComponent],
+            declarations: [KbqToastButtonWrapperComponent]
         });
     }));
 
@@ -166,7 +166,7 @@ describe('Standalone ToastService', () => {
         service = TestBed.inject(KbqToastService);
         service.timer = service.timer.pipe(
             tap(() => console.log(NgZone.isInAngularZone())),
-            takeUntil(destroy$),
+            takeUntil(destroy$)
         );
 
         service.show(MOCK_TOAST_DATA, 3000);
@@ -197,7 +197,7 @@ describe('Standalone ToastService', () => {
 
 @Component({
     selector: 'kbq-toast-test-button',
-    template: `<button (click)="show()">Show</button>`,
+    template: `<button (click)="show()">Show</button>`
 })
 class KbqToastButtonWrapperComponent {
     constructor(public toastService: KbqToastService) {}

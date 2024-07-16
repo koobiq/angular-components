@@ -15,8 +15,8 @@ export class KbqTimezoneSelectTrigger {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect },
-    ],
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }
+    ]
 })
 export class KbqTimezoneSelect extends KbqSelect {
     @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;

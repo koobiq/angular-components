@@ -13,8 +13,8 @@ export const KBQ_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<KbqLuxonDateAda
     'KBQ_MOMENT_DATE_ADAPTER_OPTIONS',
     {
         providedIn: 'root',
-        factory: KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY,
-    },
+        factory: KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY
+    }
 );
 
 /** @docs-private */
@@ -35,7 +35,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
     constructor(
         @Inject(KBQ_DATE_LOCALE) dateLocale: string,
         @Optional() @Inject(KBQ_LUXON_DATE_ADAPTER_OPTIONS) protected readonly options?: LuxonDateAdapterOptions,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         super(dateLocale, options);
 
@@ -57,7 +57,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
                 shortMonths: Info.monthsFormat('short', options),
                 narrowDaysOfWeek: Info.weekdaysFormat('narrow', options),
                 shortDaysOfWeek: Info.weekdaysFormat('short', options),
-                longDaysOfWeek: Info.weekdaysFormat('long', options),
+                longDaysOfWeek: Info.weekdaysFormat('long', options)
             };
 
             this.updateLocaleData(localeData);

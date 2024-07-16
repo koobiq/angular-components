@@ -23,7 +23,7 @@ export enum ThemePalette {
     Success = 'success',
 
     Default = 'secondary',
-    Empty = '',
+    Empty = ''
 }
 
 export enum KbqComponentColors {
@@ -37,18 +37,18 @@ export enum KbqComponentColors {
     Success = 'success',
 
     Default = 'contrast',
-    Empty = '',
+    Empty = ''
 }
 
 /** Mixin to augment a directive with a `color` property. */
 export function mixinColor<T extends AbstractConstructor<HasElementRef>>(
     base: T,
-    defaultColor?: KbqComponentColors | ThemePalette,
+    defaultColor?: KbqComponentColors | ThemePalette
 ): CanColorCtor & T;
 
 export function mixinColor<T extends Constructor<HasElementRef>>(
     base: T,
-    defaultColor: KbqComponentColors | ThemePalette = KbqComponentColors.Empty,
+    defaultColor: KbqComponentColors | ThemePalette = KbqComponentColors.Empty
 ): CanColorCtor & T {
     return class extends base {
         get color(): KbqComponentColors | ThemePalette {

@@ -7,6 +7,6 @@ import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from './scrollbar.types
     imports: [],
     declarations: [KbqScrollbar, KbqScrollbarDirective],
     exports: [KbqScrollbar, KbqScrollbarDirective],
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
+    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
 })
 export class KbqScrollbarModule {}

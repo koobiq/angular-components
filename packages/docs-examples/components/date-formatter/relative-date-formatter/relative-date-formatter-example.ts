@@ -11,7 +11,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 @Component({
     selector: 'relative-date-formatter-example',
     templateUrl: 'relative-date-formatter-example.html',
-    styleUrls: ['relative-date-formatter-example.css'],
+    styleUrls: ['relative-date-formatter-example.css']
 })
 export class RelativeDateFormatterExample {
     formats = {
@@ -39,7 +39,7 @@ export class RelativeDateFormatterExample {
                 afterTomorrowCurrentYearSeconds: '',
                 afterTomorrowCurrentYearMilliseconds: '',
 
-                afterTomorrowNotCurrentYear: '',
+                afterTomorrowNotCurrentYear: ''
             },
             short: {
                 beforeYesterdayNotCurrentYear: '',
@@ -64,15 +64,15 @@ export class RelativeDateFormatterExample {
                 afterTomorrowCurrentYearSeconds: '',
                 afterTomorrowCurrentYearMilliseconds: '',
 
-                afterTomorrowNotCurrentYear: '',
-            },
-        },
+                afterTomorrowNotCurrentYear: ''
+            }
+        }
     };
 
     constructor(
         private adapter: DateAdapter<DateTime>,
         private dateFormatter: DateFormatter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
@@ -94,39 +94,39 @@ export class RelativeDateFormatterExample {
         short.beforeYesterdayNotCurrentYear = this.dateFormatter.relativeShortDate(now.minus({ years: 1, days: 2 }));
         short.beforeYesterdayCurrentYear = this.dateFormatter.relativeShortDate(now.minus({ days: 2 }));
         short.beforeYesterdayCurrentYearSeconds = this.dateFormatter.relativeShortDateTime(now.minus({ days: 2 }), {
-            seconds: true,
+            seconds: true
         });
         short.beforeYesterdayCurrentYearMilliseconds = this.dateFormatter.relativeShortDateTime(
             now.minus({ days: 2 }),
-            { milliseconds: true },
+            { milliseconds: true }
         );
 
         short.yesterday = this.dateFormatter.relativeShortDate(now.minus({ days: 1 }));
         short.yesterdaySeconds = this.dateFormatter.relativeShortDateTime(now.minus({ days: 1 }), { seconds: true });
         short.yesterdayMilliseconds = this.dateFormatter.relativeShortDateTime(now.minus({ days: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         short.today = this.dateFormatter.relativeShortDate(now.minus({ hours: 1 }));
         short.todaySeconds = this.dateFormatter.relativeShortDateTime(now.minus({ hours: 1 }), { seconds: true });
         short.todayMilliseconds = this.dateFormatter.relativeShortDateTime(now.minus({ hours: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         short.tomorrow = this.dateFormatter.relativeShortDate(now.plus({ days: 1, hours: 1 }));
         short.tomorrowSeconds = this.dateFormatter.relativeShortDateTime(now.plus({ days: 1, hours: 1 }), {
-            seconds: true,
+            seconds: true
         });
         short.tomorrowMilliseconds = this.dateFormatter.relativeShortDateTime(now.plus({ days: 1, hours: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         short.afterTomorrowCurrentYear = this.dateFormatter.relativeShortDate(now.plus({ days: 2 }));
         short.afterTomorrowCurrentYearSeconds = this.dateFormatter.relativeShortDateTime(now.plus({ days: 2 }), {
-            seconds: true,
+            seconds: true
         });
         short.afterTomorrowCurrentYearMilliseconds = this.dateFormatter.relativeShortDateTime(now.plus({ days: 2 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         short.afterTomorrowNotCurrentYear = this.dateFormatter.relativeShortDate(now.plus({ years: 1, days: 2 }));
@@ -142,38 +142,38 @@ export class RelativeDateFormatterExample {
         long.beforeYesterdayNotCurrentYear = this.dateFormatter.relativeLongDate(now.minus({ years: 1, days: 2 }));
         long.beforeYesterdayCurrentYear = this.dateFormatter.relativeLongDate(now.minus({ days: 2 }));
         long.beforeYesterdayCurrentYearSeconds = this.dateFormatter.relativeLongDateTime(now.minus({ days: 2 }), {
-            seconds: true,
+            seconds: true
         });
         long.beforeYesterdayCurrentYearMilliseconds = this.dateFormatter.relativeLongDateTime(now.minus({ days: 2 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         long.yesterday = this.dateFormatter.relativeLongDate(now.minus({ days: 1 }));
         long.yesterdaySeconds = this.dateFormatter.relativeLongDateTime(now.minus({ days: 1 }), { seconds: true });
         long.yesterdayMilliseconds = this.dateFormatter.relativeLongDateTime(now.minus({ days: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         long.today = this.dateFormatter.relativeLongDate(now.minus({ hours: 1 }));
         long.todaySeconds = this.dateFormatter.relativeLongDateTime(now.minus({ hours: 1 }), { seconds: true });
         long.todayMilliseconds = this.dateFormatter.relativeLongDateTime(now.minus({ hours: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         long.tomorrow = this.dateFormatter.relativeLongDate(now.plus({ days: 1, hours: 1 }));
         long.tomorrowSeconds = this.dateFormatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {
-            seconds: true,
+            seconds: true
         });
         long.tomorrowMilliseconds = this.dateFormatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         long.afterTomorrowCurrentYear = this.dateFormatter.relativeLongDate(now.plus({ days: 2 }));
         long.afterTomorrowCurrentYearSeconds = this.dateFormatter.relativeLongDateTime(now.plus({ days: 2 }), {
-            seconds: true,
+            seconds: true
         });
         long.afterTomorrowCurrentYearMilliseconds = this.dateFormatter.relativeLongDateTime(now.plus({ days: 2 }), {
-            milliseconds: true,
+            milliseconds: true
         });
 
         long.afterTomorrowNotCurrentYear = this.dateFormatter.relativeLongDate(now.plus({ years: 1, days: 2 }));

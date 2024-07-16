@@ -8,7 +8,7 @@ import { ThemePalette } from '@koobiq/components/core';
     selector: 'progress-bar-overview-example',
     templateUrl: 'progress-bar-overview-example.html',
     styleUrls: ['progress-bar-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ProgressBarOverviewExample {
     themePalette = ThemePalette;

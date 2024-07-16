@@ -20,9 +20,9 @@ interface KbqDocsAnchor {
     templateUrl: './anchors.component.html',
     styleUrls: ['./anchors.scss'],
     host: {
-        class: 'docs-anchors',
+        class: 'docs-anchors'
     },
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class AnchorsComponent implements OnDestroy {
     @Input() anchors: KbqDocsAnchor[] = [];
@@ -67,7 +67,7 @@ export class AnchorsComponent implements OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private ref: ChangeDetectorRef,
-        @Inject(DOCUMENT) private document: Document,
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.isSmoothScrollSupported = 'scrollBehavior' in this.scrollContainer.style;
 
@@ -82,7 +82,7 @@ export class AnchorsComponent implements OnDestroy {
         this.router.events
             .pipe(
                 takeUntil(this.destroyed),
-                filter((event) => event instanceof NavigationEnd),
+                filter((event) => event instanceof NavigationEnd)
             )
             .subscribe((event) => {
                 const [rootUrl] = router.url.split('#');
@@ -183,9 +183,9 @@ export class AnchorsComponent implements OnDestroy {
                     top: this.getHeaderTopOffset(header),
                     active: i === 0,
                     level: this.getLevel(header.classList),
-                    element: header,
+                    element: header
                 };
-            },
+            }
         );
     }
 
@@ -201,7 +201,7 @@ export class AnchorsComponent implements OnDestroy {
         return [
             'kbq-markdown__h3',
             'kbq-markdown__h4',
-            'kbq-markdown__h5',
+            'kbq-markdown__h5'
         ].indexOf(className);
     }
 

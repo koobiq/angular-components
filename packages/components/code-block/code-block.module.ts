@@ -15,11 +15,11 @@ import { KbqCodeBlockComponent } from './code-block.component';
         KbqToolTipModule,
         KbqIconModule,
         HighlightModule,
-        KbqTabsModule,
+        KbqTabsModule
     ], // , I18nModule
     declarations: [
         KbqCodeBlockComponent,
-        KbqActionBarComponent,
+        KbqActionBarComponent
     ],
     providers: [
         {
@@ -27,10 +27,10 @@ import { KbqCodeBlockComponent } from './code-block.component';
             useValue: {
                 fullLibraryLoader: () => import('highlight.js'),
                 lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'),
-                lineNumbers: true,
-            },
-        },
+                lineNumbers: true
+            }
+        }
     ],
-    exports: [KbqCodeBlockComponent],
+    exports: [KbqCodeBlockComponent]
 })
 export class KbqCodeBlockModule {}

@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'checkbox-overview-example',
     templateUrl: 'checkbox-overview-example.html',
     styleUrls: ['checkbox-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CheckboxOverviewExample {}

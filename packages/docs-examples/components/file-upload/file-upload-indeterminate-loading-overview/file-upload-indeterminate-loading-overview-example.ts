@@ -10,7 +10,7 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'file-upload-indeterminate-loading-overview-example',
     templateUrl: 'file-upload-indeterminate-loading-overview-example.html',
-    styleUrls: ['file-upload-indeterminate-loading-overview-example.css'],
+    styleUrls: ['file-upload-indeterminate-loading-overview-example.css']
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     isLoading: boolean;

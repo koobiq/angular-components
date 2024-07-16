@@ -11,7 +11,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     CanDisable,
@@ -19,7 +19,7 @@ import {
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
     PopUpPlacements,
-    mixinDisabled,
+    mixinDisabled
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
 import { KBQ_POPOVER_SCROLL_STRATEGY } from '@koobiq/components/popover';
@@ -45,9 +45,9 @@ export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled
     encapsulation: ViewEncapsulation.None,
     providers: [
         ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY, KBQ_POPOVER_SCROLL_STRATEGY].map((token) =>
-            KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close()),
-        ),
-    ],
+            KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close())
+        )
+    ]
 })
 export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
     /** @docs-private */

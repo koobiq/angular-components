@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'radio-group-example',
     templateUrl: 'radio-group-example.html',
     styleUrls: ['radio-group-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class RadioGroupExample {}

@@ -6,17 +6,17 @@ import { KbqProgressSpinner, KbqProgressSpinnerCaption, KbqProgressSpinnerText }
 @NgModule({
     imports: [
         CommonModule,
-        PlatformModule,
+        PlatformModule
     ],
     declarations: [
         KbqProgressSpinner,
         KbqProgressSpinnerText,
-        KbqProgressSpinnerCaption,
+        KbqProgressSpinnerCaption
     ],
     exports: [
         KbqProgressSpinner,
         KbqProgressSpinnerText,
-        KbqProgressSpinnerCaption,
-    ],
+        KbqProgressSpinnerCaption
+    ]
 })
 export class KbqProgressSpinnerModule {}

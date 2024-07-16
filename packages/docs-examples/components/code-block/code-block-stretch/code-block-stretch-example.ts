@@ -23,7 +23,7 @@ const codeTs = `class Greeter {
     selector: 'code-block-stretch-example',
     templateUrl: 'code-block-stretch-example.html',
     styleUrls: ['code-block-stretch-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockStretchExample {
     files: KbqCodeFile[];
@@ -35,8 +35,8 @@ export class CodeBlockStretchExample {
             {
                 filename: '',
                 content: codeTs,
-                language: 'typescript',
-            },
+                language: 'typescript'
+            }
         ];
     }
 }

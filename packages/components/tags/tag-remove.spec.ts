@@ -13,7 +13,7 @@ describe('Tag Remove', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqTagsModule],
-            declarations: [TestTag],
+            declarations: [TestTag]
         });
 
         TestBed.compileComponents();
@@ -51,7 +51,7 @@ describe('Tag Remove', () => {
 });
 
 @Component({
-    template: ` <kbq-tag [removable]="removable" (removed)="didRemove()"><a kbqTagRemove></a></kbq-tag> `,
+    template: ` <kbq-tag [removable]="removable" (removed)="didRemove()"><a kbqTagRemove></a></kbq-tag> `
 })
 class TestTag {
     removable: boolean;

@@ -12,12 +12,12 @@ import {
     InjectionToken,
     OnDestroy,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     KbqSidepanelAnimationState,
     kbqSidepanelAnimations,
-    kbqSidepanelTransformAnimation,
+    kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
 import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
 
@@ -44,8 +44,8 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
             params: animationTransform
         }`,
         '(@state.start)': 'onAnimation($event)',
-        '(@state.done)': 'onAnimation($event)',
-    },
+        '(@state.done)': 'onAnimation($event)'
+    }
 })
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
     /** ID for the container DOM element. */
@@ -74,7 +74,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         private changeDetectorRef: ChangeDetectorRef,
         public sidepanelConfig: KbqSidepanelConfig,
         @Inject(KBQ_SIDEPANEL_WITH_INDENT) public withIndent: boolean,
-        @Inject(KBQ_SIDEPANEL_WITH_SHADOW) public withShadow: boolean,
+        @Inject(KBQ_SIDEPANEL_WITH_SHADOW) public withShadow: boolean
     ) {
         super();
     }
@@ -130,7 +130,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
         this.animationTransform = {
             transformIn: kbqSidepanelTransformAnimation[position].in,
-            transformOut: kbqSidepanelTransformAnimation[position].out,
+            transformOut: kbqSidepanelTransformAnimation[position].out
         };
     }
 

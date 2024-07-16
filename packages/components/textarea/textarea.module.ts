@@ -8,6 +8,6 @@ import { KbqTextarea } from './textarea.component';
 @NgModule({
     imports: [CommonModule, A11yModule, KbqCommonModule, FormsModule],
     exports: [KbqTextarea],
-    declarations: [KbqTextarea],
+    declarations: [KbqTextarea]
 })
 export class KbqTextareaModule {}

@@ -20,9 +20,9 @@ import { NavbarComponent } from './navbar.component';
         KbqIconModule,
         KbqSelectModule,
         KbqNavbarModule,
-        DocsearchComponent,
+        DocsearchComponent
     ],
     exports: [NavbarComponent],
-    declarations: [NavbarComponent],
+    declarations: [NavbarComponent]
 })
 export class NavbarModule {}

@@ -46,7 +46,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'versioning',
@@ -55,7 +55,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'directory-structure',
@@ -64,7 +64,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'component-health',
@@ -73,7 +73,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'theming',
@@ -82,7 +82,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'customization',
@@ -91,7 +91,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'typography',
@@ -99,10 +99,10 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'typography',
                     hasApi: false,
                     hasExamples: false,
-                    examples: ['typography-types'],
-                },
-            ],
-        },
+                    examples: ['typography-types']
+                }
+            ]
+        }
     ],
     [COMPONENTS]: [
         {
@@ -117,7 +117,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'alert',
                     hasExamples: false,
-                    examples: ['alert-types'],
+                    examples: ['alert-types']
                 },
                 {
                     id: 'autocomplete',
@@ -126,7 +126,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'autocomplete',
                     hasExamples: false,
-                    examples: ['autocomplete-types'],
+                    examples: ['autocomplete-types']
                 },
                 {
                     id: 'badge',
@@ -135,7 +135,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'badge',
                     hasExamples: false,
-                    examples: ['badge-types'],
+                    examples: ['badge-types']
                 },
                 {
                     id: 'button',
@@ -145,7 +145,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'button',
                     hasExamples: false,
                     summary: 'An interactive button with a range of presentation options.',
-                    examples: ['button-types'],
+                    examples: ['button-types']
                 },
                 {
                     id: 'button-toggle',
@@ -154,7 +154,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'button-toggle',
                     hasExamples: false,
-                    examples: ['button-toggle-types'],
+                    examples: ['button-toggle-types']
                 },
                 {
                     id: 'card',
@@ -163,7 +163,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'card',
                     hasExamples: false,
-                    examples: ['card-types'],
+                    examples: ['card-types']
                 },
                 {
                     id: 'checkbox',
@@ -172,7 +172,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'checkbox',
                     hasExamples: false,
-                    examples: ['checkbox-types'],
+                    examples: ['checkbox-types']
                 },
                 {
                     id: 'code-block',
@@ -181,7 +181,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'code-block',
                     hasExamples: false,
-                    examples: ['code-block-types'],
+                    examples: ['code-block-types']
                 },
 
                 {
@@ -191,7 +191,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'datepicker',
                     hasExamples: false,
-                    examples: ['datepicker-types'],
+                    examples: ['datepicker-types']
                 },
                 {
                     id: 'divider',
@@ -200,7 +200,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'divider',
                     hasExamples: false,
-                    examples: ['divider-types'],
+                    examples: ['divider-types']
                 },
                 {
                     id: 'dl',
@@ -209,7 +209,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'dl',
                     hasExamples: false,
-                    examples: ['dl-types'],
+                    examples: ['dl-types']
                 },
                 {
                     id: 'dropdown',
@@ -218,7 +218,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'dropdown',
                     hasExamples: false,
-                    examples: ['dropdown-types'],
+                    examples: ['dropdown-types']
                 },
                 {
                     id: 'empty-state',
@@ -236,7 +236,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'icon',
                     hasExamples: false,
-                    examples: ['icon-types'],
+                    examples: ['icon-types']
                 },
                 {
                     id: 'icon-item',
@@ -244,7 +244,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'icon',
                     hasExamples: false,
-                    examples: ['icon-types'],
+                    examples: ['icon-types']
                 },
                 {
                     id: 'input',
@@ -253,7 +253,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: false,
-                    examples: ['input-types'],
+                    examples: ['input-types']
                 },
                 {
                     id: 'file-upload',
@@ -262,7 +262,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'file-upload',
                     hasExamples: true,
-                    examples: ['file-upload-types'],
+                    examples: ['file-upload-types']
                 },
                 {
                     id: 'layout-flex',
@@ -270,7 +270,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'layout flex',
                     hasApi: false,
                     hasExamples: false,
-                    examples: ['layout-flex-types'],
+                    examples: ['layout-flex-types']
                 },
                 {
                     id: 'link',
@@ -279,7 +279,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'link',
                     hasExamples: false,
-                    examples: ['link-types'],
+                    examples: ['link-types']
                 },
                 {
                     id: 'list',
@@ -288,7 +288,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'list',
                     hasExamples: false,
-                    examples: ['list-types'],
+                    examples: ['list-types']
                 },
                 {
                     id: 'loader-overlay',
@@ -297,7 +297,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'loader-overlay',
                     hasExamples: false,
-                    examples: ['loader-overlay-types'],
+                    examples: ['loader-overlay-types']
                 },
                 {
                     id: 'markdown',
@@ -306,7 +306,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'markdown',
                     hasExamples: false,
-                    examples: ['markdown-types'],
+                    examples: ['markdown-types']
                 },
                 {
                     id: 'modal',
@@ -315,7 +315,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'modal',
                     hasExamples: false,
-                    examples: ['modal-types'],
+                    examples: ['modal-types']
                 },
                 {
                     id: 'navbar',
@@ -324,7 +324,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: false,
-                    examples: ['navbar-types'],
+                    examples: ['navbar-types']
                 },
                 {
                     id: 'popover',
@@ -333,7 +333,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'popover',
                     hasExamples: false,
-                    examples: ['popover-types'],
+                    examples: ['popover-types']
                 },
                 {
                     id: 'progress-bar',
@@ -342,7 +342,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'progress-bar',
                     hasExamples: false,
-                    examples: ['progress-bar-types'],
+                    examples: ['progress-bar-types']
                 },
                 {
                     id: 'progress-spinner',
@@ -351,7 +351,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'progress-spinner',
                     hasExamples: false,
-                    examples: ['progress-spinner-types'],
+                    examples: ['progress-spinner-types']
                 },
                 {
                     id: 'radio',
@@ -360,7 +360,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'radio',
                     hasExamples: false,
-                    examples: ['radio-types'],
+                    examples: ['radio-types']
                 },
                 {
                     id: 'scrollbar',
@@ -369,7 +369,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'scrollbar',
                     hasExamples: false,
-                    examples: [],
+                    examples: []
                 },
                 {
                     id: 'select',
@@ -378,7 +378,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'select',
                     hasExamples: false,
-                    examples: ['select-types'],
+                    examples: ['select-types']
                 },
                 {
                     id: 'sidepanel',
@@ -387,7 +387,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'sidepanel',
                     hasExamples: false,
-                    examples: ['sidepanel-types'],
+                    examples: ['sidepanel-types']
                 },
                 {
                     id: 'splitter',
@@ -396,7 +396,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'splitter',
                     hasExamples: false,
-                    examples: ['splitter-types'],
+                    examples: ['splitter-types']
                 },
                 {
                     id: 'table',
@@ -405,7 +405,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'table',
                     hasExamples: false,
-                    examples: ['table-types'],
+                    examples: ['table-types']
                 },
                 {
                     id: 'tabs',
@@ -414,7 +414,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tabs',
                     hasExamples: true,
-                    examples: ['tabs-types'],
+                    examples: ['tabs-types']
                 },
                 {
                     id: 'tag',
@@ -423,7 +423,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tag-types'],
+                    examples: ['tag-types']
                 },
                 {
                     id: 'tag-autocomplete',
@@ -432,7 +432,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tag',
                     hasExamples: true,
-                    examples: ['tag-autocomplete-types'],
+                    examples: ['tag-autocomplete-types']
                 },
                 {
                     id: 'tag-input',
@@ -441,7 +441,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tag',
                     hasExamples: true,
-                    examples: ['tag-input-types'],
+                    examples: ['tag-input-types']
                 },
                 {
                     id: 'tag-list',
@@ -450,7 +450,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tag',
                     hasExamples: false,
-                    examples: ['tag-list-types'],
+                    examples: ['tag-list-types']
                 },
                 {
                     id: 'textarea',
@@ -459,7 +459,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'textarea',
                     hasExamples: false,
-                    examples: ['textarea-types'],
+                    examples: ['textarea-types']
                 },
                 {
                     id: 'timepicker',
@@ -468,7 +468,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'timepicker',
                     hasExamples: false,
-                    examples: ['timepicker-types'],
+                    examples: ['timepicker-types']
                 },
                 {
                     id: 'timezone',
@@ -477,7 +477,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'timezone',
                     hasExamples: false,
-                    examples: ['timezone-types'],
+                    examples: ['timezone-types']
                 },
                 {
                     id: 'toast',
@@ -486,7 +486,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'toast',
                     hasExamples: true,
-                    examples: ['toast-types'],
+                    examples: ['toast-types']
                 },
                 {
                     id: 'toggle',
@@ -495,7 +495,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'toggle',
                     hasExamples: false,
-                    examples: ['toggle-types'],
+                    examples: ['toggle-types']
                 },
                 {
                     id: 'tooltip',
@@ -504,7 +504,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tooltip',
                     hasExamples: false,
-                    examples: ['tooltip-types'],
+                    examples: ['tooltip-types']
                 },
                 {
                     id: 'tree',
@@ -513,7 +513,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tree',
                     hasExamples: true,
-                    examples: ['tree-types'],
+                    examples: ['tree-types']
                 },
                 {
                     id: 'tree-select',
@@ -522,10 +522,10 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'tree-select',
                     hasExamples: false,
-                    examples: ['treeSelect-types'],
-                },
-            ],
-        },
+                    examples: ['treeSelect-types']
+                }
+            ]
+        }
     ],
     [OTHER]: [
         {
@@ -541,7 +541,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'date-formatter',
                     hasExamples: false,
-                    examples: ['date-formatter-types'],
+                    examples: ['date-formatter-types']
                 },
                 {
                     id: 'forms',
@@ -550,7 +550,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'forms',
                     hasExamples: false,
-                    examples: ['forms-types'],
+                    examples: ['forms-types']
                 },
                 {
                     id: 'number-formatter',
@@ -559,7 +559,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'number-formatter',
                     hasExamples: false,
-                    examples: ['number-formatter-types'],
+                    examples: ['number-formatter-types']
                 },
                 {
                     id: 'validation',
@@ -567,10 +567,10 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'validation',
                     hasApi: false,
                     hasExamples: false,
-                    examples: ['validation-types'],
-                },
-            ],
-        },
+                    examples: ['validation-types']
+                }
+            ]
+        }
     ],
     [ICONS]: [
         {
@@ -578,8 +578,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
             name: 'Иконки',
             isPreviewed: false,
             summary: '',
-            items: [],
-        },
+            items: []
+        }
     ],
     [CDK]: [
         {
@@ -594,7 +594,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'a11y',
                     hasExamples: false,
-                    examples: ['key-managers-types'],
+                    examples: ['key-managers-types']
                 },
                 {
                     id: 'keycodes',
@@ -602,11 +602,11 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: true,
                     apiId: 'keycodes',
                     hasExamples: false,
-                    examples: ['keycodes-types'],
-                },
-            ],
-        },
-    ],
+                    examples: ['keycodes-types']
+                }
+            ]
+        }
+    ]
 };
 
 updatePackageName(DOCS[MAIN], MAIN);
@@ -630,7 +630,7 @@ const ALL_DOCS = [
     ...ALL_COMPONENTS,
     ...ALL_OTHER,
     ...ALL_ICONS,
-    ...ALL_CDK,
+    ...ALL_CDK
 ];
 
 const ALL_CATEGORIES = [
@@ -638,7 +638,7 @@ const ALL_CATEGORIES = [
     ...DOCS[COMPONENTS],
     ...DOCS[OTHER],
     ...DOCS[ICONS],
-    ...DOCS[CDK],
+    ...DOCS[CDK]
 ];
 
 @Injectable()

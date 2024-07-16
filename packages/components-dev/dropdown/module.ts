@@ -15,7 +15,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     colors = KbqComponentColors;
@@ -27,25 +27,25 @@ export class DemoComponent {
             name: 'x',
             domains: [
                 { id: 10, name: 'ax' },
-                { id: 11, name: 'bx' },
-            ],
+                { id: 11, name: 'bx' }
+            ]
         },
         {
             id: 2,
             name: 'y',
             domains: [
                 { id: 20, name: 'ay' },
-                { id: 21, name: 'by' },
-            ],
+                { id: 21, name: 'by' }
+            ]
         },
         {
             id: 3,
             name: 'z',
             domains: [
                 { id: 30, name: 'az' },
-                { id: 31, name: 'bz' },
-            ],
-        },
+                { id: 31, name: 'bz' }
+            ]
+        }
     ];
 
     someValue = 'Lazy Value';
@@ -67,7 +67,7 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent,
+        DemoComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -78,10 +78,10 @@ export class DemoComponent {
         KbqButtonModule,
         KbqDropdownModule,
         KbqTitleModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
     bootstrap: [
-        DemoComponent,
-    ],
+        DemoComponent
+    ]
 })
 export class DemoModule {}

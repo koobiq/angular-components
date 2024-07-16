@@ -9,7 +9,7 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-overview-example',
     templateUrl: 'modal-overview-example.html',
     styleUrls: ['modal-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ModalOverviewExample {
     constructor(private modalService: KbqModalService) {}
@@ -21,7 +21,7 @@ export class ModalOverviewExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -32,7 +32,7 @@ export class ModalOverviewExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -45,7 +45,7 @@ export class ModalOverviewExample {
             kbqWidth: '480px',
             kbqMaskClosable: true,
             kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 }

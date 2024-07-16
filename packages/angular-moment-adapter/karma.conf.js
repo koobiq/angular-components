@@ -6,7 +6,7 @@ module.exports = function (config) {
         ...baseConfig,
 
         coverageReporter: {
-            dir: '../../dist/coverage/angular-moment-adapter',
-        },
+            dir: '../../dist/coverage/angular-moment-adapter'
+        }
     });
 };

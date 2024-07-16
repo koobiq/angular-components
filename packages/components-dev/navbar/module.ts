@@ -20,7 +20,7 @@ import { KbqNavbar, KbqNavbarModule } from '../../components/navbar';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NavbarDemoComponent {
     popUpPlacements = PopUpPlacements;
@@ -60,7 +60,7 @@ export class NavbarDemoComponent {
             kbqMaskClosable: true,
             kbqContent: 'content',
             kbqOkText: 'Ok',
-            kbqCancelText: 'Cancel',
+            kbqCancelText: 'Cancel'
         });
     }
 }
@@ -82,8 +82,8 @@ export class NavbarDemoComponent {
         KbqToolTipModule,
         KbqModalModule,
         KbqBadgeModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
-    bootstrap: [NavbarDemoComponent],
+    bootstrap: [NavbarDemoComponent]
 })
 export class DemoModule {}

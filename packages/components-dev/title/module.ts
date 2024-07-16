@@ -48,14 +48,14 @@ const options = [
     'Самара',
     'Санкт-Петербург',
     'Уфа',
-    'Челябинск',
+    'Челябинск'
 ];
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements OnInit {
     defaultValue = 'Just a text';
@@ -69,7 +69,7 @@ export class DemoComponent implements OnInit {
     ngOnInit(): void {
         this.filteredOptions = this.formControl.valueChanges.pipe(
             startWith(''),
-            map((value) => this.filter(value)),
+            map((value) => this.filter(value))
         );
     }
 
@@ -104,8 +104,8 @@ export class DemoComponent implements OnInit {
         KbqAutocompleteModule,
         KbqInputModule,
         ReactiveFormsModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

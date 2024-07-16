@@ -12,7 +12,7 @@ export {
     BadgeFillAndStyleExample,
     BadgeHugContentExample,
     BadgeOverviewExample,
-    BadgeSizeExample,
+    BadgeSizeExample
 };
 
 const EXAMPLES = [
@@ -20,12 +20,12 @@ const EXAMPLES = [
     BadgeSizeExample,
     BadgeFillAndStyleExample,
     BadgeContentExample,
-    BadgeHugContentExample,
+    BadgeHugContentExample
 ];
 
 @NgModule({
     declarations: EXAMPLES,
     imports: [KbqBadgeModule, KbqIconModule],
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class BadgeExamplesModule {}

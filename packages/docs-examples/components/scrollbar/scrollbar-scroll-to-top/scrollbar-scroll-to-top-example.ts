@@ -7,7 +7,7 @@ import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
     selector: 'scrollbar-scroll-to-top-example',
     templateUrl: 'scrollbar-scroll-to-top-example.html',
     styleUrls: ['scrollbar-scroll-to-top-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ScrollbarScrollToTopExample {
     constructor(public cdr: ChangeDetectorRef) {}

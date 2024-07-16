@@ -28,7 +28,7 @@ export {
     CodeBlockStylingExample,
     CodeBlockTabsExample,
     CodeBlockTabsWithOverflowExample,
-    CodeBlockTitleExample,
+    CodeBlockTitleExample
 };
 
 const EXAMPLES = [
@@ -42,7 +42,7 @@ const EXAMPLES = [
     CodeBlockCutExample,
     CodeBlockStylingExample,
     CodeBlockNoborderExample,
-    CodeBlockLineNumbersExample,
+    CodeBlockLineNumbersExample
 ];
 
 @NgModule({
@@ -52,9 +52,9 @@ const EXAMPLES = [
         KbqToggleModule,
         KbqButtonModule,
         KbqSidepanelModule,
-        FormsModule,
+        FormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class CodeBlockExamplesModule {}

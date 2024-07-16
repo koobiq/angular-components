@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'markdown-overview-example',
     templateUrl: 'markdown-overview-example.html',
     styleUrls: ['markdown-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class MarkdownOverviewExample {}

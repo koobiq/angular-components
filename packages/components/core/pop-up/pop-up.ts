@@ -90,7 +90,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMap = {
             [`${this.prefix}_placement-${placement}`]: true,
             [customClass]: !!customClass,
-            ...classMap,
+            ...classMap
         };
     }
 

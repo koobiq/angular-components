@@ -10,7 +10,7 @@ import {
     faIRFormattersData,
     ptBRFormattersData,
     ruRUFormattersData,
-    zhCNFormattersData,
+    zhCNFormattersData
 } from './formatters';
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
@@ -28,19 +28,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY() {
             { id: 'es-LA', name: 'Español' },
             { id: 'pt-BR', name: 'Português' },
             { id: 'ru-RU', name: 'Русский' },
-            { id: 'fa-IR', name: 'فارسی' },
+            { id: 'fa-IR', name: 'فارسی' }
         ],
         'en-US': { ...enUSLocaleData, ...enUSFormattersData },
         'zh-CN': { ...zhCNLocaleData, ...zhCNFormattersData },
         'es-LA': { ...esLALocaleData, ...esLAFormattersData },
         'pt-BR': { ...ptBRLocaleData, ...ptBRFormattersData },
         'ru-RU': { ...ruRULocaleData, ...ruRUFormattersData },
-        'fa-IR': { ...faIRLocaleData, ...faIRFormattersData },
+        'fa-IR': { ...faIRLocaleData, ...faIRFormattersData }
     };
 }
 export const KBQ_LOCALE_DATA = new InjectionToken<any>('KBQ_LOCALE_DATA', {
     providedIn: 'root',
-    factory: KBQ_DEFAULT_LOCALE_DATA_FACTORY,
+    factory: KBQ_DEFAULT_LOCALE_DATA_FACTORY
 });
 
 export const KBQ_LOCALE_SERVICE = new InjectionToken<KbqLocaleService>('KBQ_LOCALE_SERVICE');

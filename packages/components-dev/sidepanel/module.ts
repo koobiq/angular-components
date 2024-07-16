@@ -14,7 +14,7 @@ import {
     KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelService,
-    KbqSidepanelSize,
+    KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
@@ -23,7 +23,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SidepanelDemoComponent {
     themePalette = ThemePalette;
@@ -46,8 +46,8 @@ export class SidepanelDemoComponent {
             data: {
                 openComponentSidepanel: () => {
                     this.openComponentSidepanel();
-                },
-            },
+                }
+            }
         });
     }
 
@@ -55,7 +55,7 @@ export class SidepanelDemoComponent {
         this.sidepanelService.open(this.template, {
             position: this.position,
             size: this.size,
-            hasBackdrop: this.modalState,
+            hasBackdrop: this.modalState
         });
     }
 }
@@ -84,8 +84,8 @@ export class SidepanelDemoComponent {
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>`,
     host: {
-        class: 'layout-column flex',
-    },
+        class: 'layout-column flex'
+    }
 })
 export class ExampleSidepanelComponent {
     themePalette = ThemePalette;
@@ -102,7 +102,7 @@ export class ExampleSidepanelComponent {
 @NgModule({
     declarations: [
         SidepanelDemoComponent,
-        ExampleSidepanelComponent,
+        ExampleSidepanelComponent
     ],
     imports: [
         BrowserModule,
@@ -115,10 +115,10 @@ export class ExampleSidepanelComponent {
         KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
-        KbqDropdownModule,
+        KbqDropdownModule
     ],
     bootstrap: [
-        SidepanelDemoComponent,
-    ],
+        SidepanelDemoComponent
+    ]
 })
 export class DemoModule {}

@@ -8,7 +8,7 @@ import {
     Inject,
     Input,
     Optional,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     CanColor,
@@ -16,7 +16,7 @@ import {
     KBQ_FORM_FIELD_REF,
     KbqComponentColors,
     KbqFormFieldRef,
-    mixinColor,
+    mixinColor
 } from '@koobiq/components/core';
 
 /** @docs-private */
@@ -27,7 +27,7 @@ export class KbqIconBase {
 /** @docs-private */
 export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
     KbqIconBase,
-    KbqComponentColors.ContrastFade,
+    KbqComponentColors.ContrastFade
 );
 
 @Component({
@@ -39,8 +39,8 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
     inputs: ['color'],
     host: {
         class: 'mc kbq-icon',
-        '[class.kbq-error]': 'color === "error" || hasError',
-    },
+        '[class.kbq-error]': 'color === "error" || hasError'
+    }
 })
 export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentInit {
     @Input() small = false;
@@ -54,7 +54,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
         elementRef: ElementRef,
         @Attribute('kbq-icon') protected iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef,
-        protected changeDetectorRef: ChangeDetectorRef,
+        protected changeDetectorRef: ChangeDetectorRef
     ) {
         super(elementRef);
 

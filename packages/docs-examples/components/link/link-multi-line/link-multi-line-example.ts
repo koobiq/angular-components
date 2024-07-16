@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-multi-line-example',
     templateUrl: 'link-multi-line-example.html',
     styleUrls: ['link-multi-line-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LinkMultiLineExample {}

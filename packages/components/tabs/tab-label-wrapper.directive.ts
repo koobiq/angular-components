@@ -19,8 +19,8 @@ export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWra
     inputs: ['disabled'],
     host: {
         '[class.kbq-disabled]': 'disabled',
-        '[attr.disabled]': 'disabled || null',
-    },
+        '[attr.disabled]': 'disabled || null'
+    }
 })
 export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements CanDisable, AfterViewInit {
     @ContentChild('labelContent') labelContent: ElementRef;
@@ -29,7 +29,7 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
 
     constructor(
         public elementRef: ElementRef,
-        private renderer: Renderer2,
+        private renderer: Renderer2
     ) {
         super();
     }

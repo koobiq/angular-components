@@ -18,7 +18,7 @@ export { DatepickerLanguageExample, DatepickerNotEmptyExample, DatepickerOvervie
 const EXAMPLES = [
     DatepickerLanguageExample,
     DatepickerOverviewExample,
-    DatepickerNotEmptyExample,
+    DatepickerNotEmptyExample
 ];
 
 @NgModule({
@@ -31,7 +31,7 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqIconModule,
         KbqRadioModule,
-        KbqToolTipModule,
+        KbqToolTipModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES,
@@ -39,8 +39,8 @@ const EXAMPLES = [
         {
             provide: DateAdapter,
             useClass: LuxonDateAdapter,
-            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE],
-        },
-    ],
+            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
+        }
+    ]
 })
 export class DatepickerExamplesModule {}

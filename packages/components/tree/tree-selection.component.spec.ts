@@ -20,7 +20,7 @@ import {
     KbqTreeModule,
     KbqTreeNodePadding,
     KbqTreeOption,
-    KbqTreeSelection,
+    KbqTreeSelection
 } from './index';
 
 describe('KbqTreeSelection', () => {
@@ -30,7 +30,7 @@ describe('KbqTreeSelection', () => {
         TestBed.configureTestingModule({
             imports: [KbqTreeModule, FormsModule],
             declarations,
-            providers,
+            providers
         }).compileComponents();
     }
 
@@ -54,14 +54,14 @@ describe('KbqTreeSelection', () => {
                                     const originalClipboard = new Clipboard(document);
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
-                                },
-                            }),
+                                }
+                            })
                         },
                         {
                             provide: AsyncScheduler,
-                            useValue: testScheduler,
-                        },
-                    ],
+                            useValue: testScheduler
+                        }
+                    ]
                 );
                 fixture = TestBed.createComponent(SimpleKbqTreeApp);
 
@@ -91,7 +91,7 @@ describe('KbqTreeSelection', () => {
                     [`Pictures`],
                     [`Documents`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
             });
 
@@ -181,7 +181,7 @@ describe('KbqTreeSelection', () => {
                     [`Pictures`],
                     [`Documents`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
 
                 (getNodes(treeElement)[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
@@ -200,7 +200,7 @@ describe('KbqTreeSelection', () => {
                     [null, 'PhotoBoothLibrary'],
                     [`Documents`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
 
                 (getNodes(treeElement)[5].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
@@ -223,7 +223,7 @@ describe('KbqTreeSelection', () => {
                     [null, `angular`],
                     [null, `material2`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
 
                 (getNodes(treeElement)[5].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
@@ -239,7 +239,7 @@ describe('KbqTreeSelection', () => {
                     [null, 'PhotoBoothLibrary'],
                     [`Documents`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
             });
 
@@ -278,7 +278,7 @@ describe('KbqTreeSelection', () => {
 
                 configureKbqTreeTestingModule(
                     [KbqTreeAppMultiple],
-                    [{ provide: AsyncScheduler, useValue: testScheduler }],
+                    [{ provide: AsyncScheduler, useValue: testScheduler }]
                 );
                 fixture = TestBed.createComponent(KbqTreeAppMultiple);
 
@@ -472,7 +472,7 @@ describe('KbqTreeSelection', () => {
                     [`Pictures`],
                     [`Documents`],
                     [`Downloads`],
-                    [`Applications`],
+                    [`Applications`]
                 );
             });
         });
@@ -625,7 +625,7 @@ describe('KbqTreeSelection', () => {
                 component.treeControl.filterNodes('app');
                 tick();
                 const filteredNodesLengthOnlyByText = component.tree.renderedOptions.map(
-                    (option) => option.value,
+                    (option) => option.value
                 ).length;
 
                 component.treeControl.filterNodes(null);
@@ -652,23 +652,23 @@ export const DATA_OBJECT = {
     Pictures: {
         Sun: 'png',
         Woods: 'jpg',
-        PhotoBoothLibrary: 'jpg',
+        PhotoBoothLibrary: 'jpg'
     },
     Documents: {
         react: 'jpg',
         angular: 'ts',
-        material2: 'ts',
+        material2: 'ts'
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf',
+        October: 'pdf'
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app',
-    },
+        Webstorm: 'app'
+    }
 };
 
 export class FileNode {
@@ -770,7 +770,7 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class SimpleKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -787,7 +787,7 @@ class SimpleKbqTreeApp {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
 
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
@@ -830,7 +830,7 @@ abstract class TreeParams {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -879,7 +879,7 @@ abstract class TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class KbqTreeAppMultiple extends TreeParams {
     modelValue = [];
@@ -909,7 +909,7 @@ class KbqTreeAppMultiple extends TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class KbqTreeAppMultipleCheckbox extends TreeParams {
     modelValue: any[] = ['Pictures'];
@@ -925,7 +925,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         this.treeControl.setFilters(
             new FilterByViewValue<FileFlatNode>(this.treeControl),
             this.filterByValues,
-            new FilterParentsForNodes<FileFlatNode>(this.treeControl),
+            new FilterParentsForNodes<FileFlatNode>(this.treeControl)
         );
     }
 
@@ -948,7 +948,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class KbqTreeAppWithToggle {
     toggleRecursively: boolean = true;
@@ -968,7 +968,7 @@ class KbqTreeAppWithToggle {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1016,7 +1016,7 @@ class KbqTreeAppWithToggle {
                 >>>{{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class WhenNodeKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -1034,7 +1034,7 @@ class WhenNodeKbqTreeApp {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1077,7 +1077,7 @@ class WhenNodeKbqTreeApp {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `,
+    `
 })
 class FiltrationKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -1094,7 +1094,7 @@ class FiltrationKbqTreeApp {
             this.transformer,
             this.getLevel,
             this.isExpandable,
-            this.getChildren,
+            this.getChildren
         );
 
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);

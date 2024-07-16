@@ -6,7 +6,7 @@ import {
     KbqTimezoneGroup,
     KbqTimezoneZone,
     getZonesGroupedByCountry,
-    offsetFormatter,
+    offsetFormatter
 } from '@koobiq/components/timezone';
 import { Observable, merge, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { timezones } from '../mock';
     selector: 'timezone-search-overview-example',
     templateUrl: 'timezone-search-overview-example.html',
     styleUrls: ['timezone-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TimezoneSearchOverviewExample implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
@@ -50,11 +50,11 @@ export class TimezoneSearchOverviewExample implements OnInit {
                       .map(({ city }) => city)
                       .sort()
                       .join(', ')
-                : '',
+                : ''
         }));
 
         this.priorityCountry = this.data.find(
-            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone,
+            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone
         )?.countryCode as string;
     }
 
@@ -70,8 +70,8 @@ export class TimezoneSearchOverviewExample implements OnInit {
                     }
 
                     return this.getFilteredData();
-                }),
-            ),
+                })
+            )
         );
     }
 
@@ -82,7 +82,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
             const fields: string[] = [
                 offsetFormatter(timezone.offset),
                 timezone.city,
-                timezone.cities,
+                timezone.cities
             ];
 
             return regex.test(fields.join(' ')) || fields.some((timezoneValue: string) => regex.test(timezoneValue));

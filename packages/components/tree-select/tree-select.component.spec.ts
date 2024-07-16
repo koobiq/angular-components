@@ -14,7 +14,7 @@ import {
     OnInit,
     QueryList,
     ViewChild,
-    ViewChildren,
+    ViewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import {
@@ -25,7 +25,7 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    Validators,
+    Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,14 +40,14 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    wrappedErrorMessage,
+    wrappedErrorMessage
 } from '@koobiq/cdk/testing';
 import {
     ErrorStateMatcher,
@@ -56,7 +56,7 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError,
+    getKbqSelectNonFunctionValueError
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -67,7 +67,7 @@ import {
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelectionChange,
+    KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 import { Observable, Subject, Subscription, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -80,34 +80,34 @@ const TREE_DATA = {
         Woods: 'jpg',
         Photo_Booth_Library: {
             Contents: 'dir',
-            Pictures: 'dir',
-        },
+            Pictures: 'dir'
+        }
     },
     Documents: {
         angular: {
             src: {
                 core: 'ts',
-                compiler: 'ts',
-            },
+                compiler: 'ts'
+            }
         },
         material2: {
             src: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts',
-            },
-        },
+                input: 'ts'
+            }
+        }
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf',
+        October: 'pdf'
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app',
-    },
+        Webstorm: 'app'
+    }
 };
 
 const TREE_DATA_RESET = {
@@ -115,11 +115,11 @@ const TREE_DATA_RESET = {
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf',
+        October: 'pdf'
     },
     'Null-option': null,
     'Falsy-option': false,
-    'Undefined-option': undefined,
+    'Undefined-option': undefined
 };
 
 class FileNode {
@@ -242,7 +242,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
+    `
 })
 class BasicTreeSelect {
     control = new UntypedFormControl();
@@ -298,7 +298,7 @@ class BasicTreeSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicEvents {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -342,7 +342,7 @@ class BasicEvents {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class NgModelSelect {
     isDisabled: boolean;
@@ -400,7 +400,7 @@ class NgModelSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class ManySelects {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -440,7 +440,7 @@ class ManySelects {
                 </kbq-tree-select>
             </kbq-form-field>
         </div>
-    `,
+    `
 })
 class NgIfSelect {
     isShowing = false;
@@ -487,7 +487,7 @@ class NgIfSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
@@ -530,7 +530,7 @@ class SelectWithSearch implements OnInit {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithChangeEvent {
     changeListener = jasmine.createSpy('KbqTreeSelect change listener');
@@ -570,7 +570,7 @@ class SelectWithChangeEvent {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectInitWithoutOptions {
     control = new UntypedFormControl('rootNode_1');
@@ -606,9 +606,9 @@ class SelectInitWithoutOptions {
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: CustomSelectAccessor,
-            multi: true,
-        },
-    ],
+            multi: true
+        }
+    ]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -625,9 +625,9 @@ class CustomSelectAccessor implements ControlValueAccessor {
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: CustomSelectAccessor,
-            multi: true,
-        },
-    ],
+            multi: true
+        }
+    ]
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
@@ -641,7 +641,7 @@ class CompWithCustomSelect {
             <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
         </kbq-form-field>
         <throws-error-on-init></throws-error-on-init>
-    `,
+    `
 })
 class SelectWithErrorSibling {
     value: string;
@@ -649,7 +649,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: '',
+    template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -675,7 +675,7 @@ class ThrowsErrorOnInit implements OnInit {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectOnPush {
     control = new UntypedFormControl();
@@ -716,7 +716,7 @@ class BasicSelectOnPush {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectOnPushPreselected {
     control = new UntypedFormControl('rootNode_1');
@@ -756,7 +756,7 @@ class BasicSelectOnPushPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class MultiSelect {
     control = new UntypedFormControl();
@@ -786,7 +786,7 @@ class MultiSelect {
     selector: 'select-with-plain-tabindex',
     template: ` <kbq-form-field>
         <kbq-tree-select></kbq-tree-select>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class EmptySelect {}
 
@@ -796,7 +796,7 @@ class EmptySelect {}
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect"></kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectEarlyAccessSibling {}
 
@@ -817,7 +817,7 @@ class SelectEarlyAccessSibling {}
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -857,7 +857,7 @@ class BasicSelectInitiallyHidden {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectNoPlaceholder {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -895,7 +895,7 @@ class BasicSelectNoPlaceholder {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithTheming {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -936,7 +936,7 @@ class BasicSelectWithTheming {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class ResetValuesSelect {
     control = new UntypedFormControl();
@@ -977,7 +977,7 @@ class ResetValuesSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class FalsyValueSelect {
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
@@ -1009,7 +1009,7 @@ class FalsyValueSelect {
                 <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class InvalidSelectInForm {
     value: any;
@@ -1034,7 +1034,7 @@ class InvalidSelectInForm {
                 <!--<kbq-error>This field is required</kbq-error>-->
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class SelectInsideFormGroup {
     @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
@@ -1042,7 +1042,7 @@ class SelectInsideFormGroup {
 
     formControl = new UntypedFormControl('', Validators.required);
     formGroup = new UntypedFormGroup({
-        food: this.formControl,
+        food: this.formControl
     });
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1085,7 +1085,7 @@ class SelectInsideFormGroup {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
@@ -1126,7 +1126,7 @@ class BasicSelectWithoutForms {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'Pictures';
@@ -1169,7 +1169,7 @@ class BasicSelectWithoutFormsPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
@@ -1214,7 +1214,7 @@ class BasicSelectWithoutFormsMultiple {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithCustomTrigger {
     control = new UntypedFormControl();
@@ -1254,7 +1254,7 @@ class SelectWithCustomTrigger {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class NgModelCompareWithSelect {
     selected: { name: string; type: string } = { name: 'rootNode_1', type: 'app' };
@@ -1320,7 +1320,7 @@ class NgModelCompareWithSelect {
                 </kbq-tree-option>
             </kbq-tree-selection>
         </kbq-tree-select>
-    `,
+    `
 })
 class CustomErrorBehaviorSelect {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -1363,7 +1363,7 @@ class CustomErrorBehaviorSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SingleSelectWithPreselectedArrayValues {
     selectedFood: string | null;
@@ -1400,7 +1400,7 @@ class SingleSelectWithPreselectedArrayValues {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1433,7 +1433,7 @@ class SelectWithFormFieldLabel {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
+    `
 })
 class ChildSelection {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1538,7 +1538,7 @@ describe('KbqTreeSelect', () => {
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
-                KbqPseudoCheckboxModule,
+                KbqPseudoCheckboxModule
             ],
             declarations,
             providers: [
@@ -1546,10 +1546,10 @@ describe('KbqTreeSelect', () => {
                 {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
-                        scrolled: () => scrolledSubject.asObservable(),
-                    }),
-                },
-            ],
+                        scrolled: () => scrolledSubject.asObservable()
+                    })
+                }
+            ]
         }).compileComponents();
 
         inject([OverlayContainer], (oc: OverlayContainer) => {
@@ -1569,7 +1569,7 @@ describe('KbqTreeSelect', () => {
                 BasicEvents,
                 MultiSelect,
                 SelectWithFormFieldLabel,
-                SelectWithChangeEvent,
+                SelectWithChangeEvent
             ]);
         }));
 
@@ -2382,7 +2382,7 @@ describe('KbqTreeSelect', () => {
                 expect(option.classList).toContain('kbq-selected');
                 expect(fixture.componentInstance.options.first.selected).toBe(true);
                 expect(fixture.componentInstance.select.selectedValues).toBe(
-                    fixture.componentInstance.options.first.value,
+                    fixture.componentInstance.options.first.value
                 );
             }));
 
@@ -2642,7 +2642,7 @@ describe('KbqTreeSelect', () => {
                 const {
                     bottom: elementBottom,
                     height: elementHeight,
-                    top: elementTop,
+                    top: elementTop
                 } = options[options.length - 1].getBoundingClientRect();
                 const { top: containerTop, bottom: containerBottom } =
                     fixture.componentInstance.select.panel.nativeElement.getBoundingClientRect();
@@ -2668,7 +2668,7 @@ describe('KbqTreeSelect', () => {
                     const option: HTMLElement = overlayContainerElement.querySelectorAll('kbq-tree-option')[0];
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
-                        altKey: { get: () => true },
+                        altKey: { get: () => true }
                     });
 
                     dispatchEvent(option, keyBoardEvent);
@@ -3436,14 +3436,14 @@ describe('KbqTreeSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqTreeSelectTestingModule([
                 SelectWithErrorSibling,
-                ThrowsErrorOnInit,
+                ThrowsErrorOnInit
             ])));
 
         it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
             // Note that this test can be considered successful if the error being thrown didn't
             // end up crashing the testing setup altogether.
             expect(() => TestBed.createComponent(SelectWithErrorSibling).detectChanges()).toThrowError(
-                new RegExp('Oh no!', 'g'),
+                new RegExp('Oh no!', 'g')
             );
         }));
     });
@@ -3697,7 +3697,7 @@ describe('KbqTreeSelect', () => {
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true),
+                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
             };
 
             fixture.destroy();
@@ -3709,10 +3709,10 @@ describe('KbqTreeSelect', () => {
                     KbqTreeSelectModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule,
+                    NoopAnimationsModule
                 ],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
+                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -3761,7 +3761,7 @@ describe('KbqTreeSelect', () => {
     describe('with preselected array values', () => {
         beforeEach(waitForAsync(() =>
             configureKbqTreeSelectTestingModule([
-                SingleSelectWithPreselectedArrayValues,
+                SingleSelectWithPreselectedArrayValues
             ])));
 
         it('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
@@ -3781,7 +3781,7 @@ describe('KbqTreeSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqTreeSelectTestingModule([
                 CompWithCustomSelect,
-                CustomSelectAccessor,
+                CustomSelectAccessor
             ])));
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
@@ -3823,7 +3823,7 @@ describe('KbqTreeSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqTreeSelectTestingModule([
                 BasicSelectOnPush,
-                BasicSelectOnPushPreselected,
+                BasicSelectOnPushPreselected
             ])));
 
         it('should set the trigger text based on the value when initialized', fakeAsync(() => {
@@ -3972,7 +3972,7 @@ describe('KbqTreeSelect', () => {
             configureKbqTreeSelectTestingModule([
                 BasicSelectWithoutForms,
                 BasicSelectWithoutFormsPreselected,
-                BasicSelectWithoutFormsMultiple,
+                BasicSelectWithoutFormsMultiple
             ]);
 
             fixture = TestBed.createComponent(BasicSelectWithoutForms);
@@ -4188,7 +4188,7 @@ describe('KbqTreeSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqTreeSelectTestingModule([
                 BasicTreeSelect,
-                MultiSelect,
+                MultiSelect
             ])));
 
         beforeEach(inject([ViewportRuler], (vr: ViewportRuler) => {
@@ -4694,7 +4694,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             const expandableNode = fixture.componentInstance.treeControl.dataNodes.find(
-                (node) => node.name === 'Downloads',
+                (node) => node.name === 'Downloads'
             );
             fixture.componentInstance.treeControl.expand(expandableNode!);
 
@@ -4713,7 +4713,7 @@ describe('KbqTreeSelect', () => {
                 'rootNode_1',
                 'Documents',
                 'Applications',
-                'November',
+                'November'
             ]);
 
             fixture.componentInstance.treeControl.collapse(expandableNode!);
@@ -4725,7 +4725,7 @@ describe('KbqTreeSelect', () => {
                 'rootNode_1',
                 'Documents',
                 'Applications',
-                'November',
+                'November'
             ]);
 
             optionsExpanded[2].click();
@@ -4736,7 +4736,7 @@ describe('KbqTreeSelect', () => {
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
                 'rootNode_1',
                 'Applications',
-                'November',
+                'November'
             ]);
         }));
 
@@ -4970,7 +4970,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -4997,7 +4997,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -5028,7 +5028,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -5047,7 +5047,7 @@ describe('KbqTreeSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
             expect(options.every((option) => option.selected)).toBe(true);
 

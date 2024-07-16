@@ -10,7 +10,7 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -22,8 +22,8 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
     selector: 'kbq-timezone-option',
     host: {
         '(mouseenter)': 'onMouseEnter()',
-        '(mouseleave)': 'onMouseLeave()',
-    },
+        '(mouseleave)': 'onMouseLeave()'
+    }
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private resizeObserver: ResizeObserver;
@@ -38,7 +38,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
         this.tooltipPlacement = PopUpPlacements.Right;

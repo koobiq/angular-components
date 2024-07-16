@@ -35,8 +35,8 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             console.error(
                 red(
                     `Cannot parse current version in ${italic('package.json')}. Please ` +
-                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
-                ),
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`
+                )
             );
             process.exit(1);
         }
@@ -74,8 +74,8 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             console.log(
                 green(
                     `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
-                        `${italic('package.json')}`,
-                ),
+                        `${italic('package.json')}`
+                )
             );
             console.log();
         }
@@ -87,8 +87,8 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         console.log(
             yellow(
                 `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
-                    `changes that apply to the public library release. When done, proceed to the prompt below.`,
-            ),
+                    `changes that apply to the public library release. When done, proceed to the prompt below.`
+            )
         );
         console.log();
 
@@ -110,7 +110,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         // Extract the release notes for the new version from the changelog file.
         const extractedReleaseNotes = extractReleaseNotes(
             join(this.config.projectDir, CHANGELOG_FILE_NAME),
-            newVersionName,
+            newVersionName
         );
 
         if (!extractedReleaseNotes) {
@@ -140,8 +140,8 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 console.error(
                     red(
                         `  ✘   Tag "${tagName}" already exists locally, but does not refer ` +
-                            `to the version bump commit. Please delete the tag if you want to proceed.`,
-                    ),
+                            `to the version bump commit. Please delete the tag if you want to proceed.`
+                    )
                 );
                 process.exit(1);
             }
@@ -167,8 +167,8 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 console.error(
                     red(
                         `  ✘   Tag "${tagName}" already exists on the remote, but does not ` +
-                            `refer to the version bump commit.`,
-                    ),
+                            `refer to the version bump commit.`
+                    )
                 );
                 console.error(red(`      Please delete the tag on the remote if you want to proceed.`));
                 process.exit(1);
@@ -182,9 +182,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         if (!this.git.pushTagToRemote(tagName, upstreamRemote)) {
             console.error(red(`  ✘   Could not push the "${tagName}" tag upstream.`));
             console.error(
-                red(
-                    `      Please make sure you have permission to push to the ` + `"${this.git.remoteGitUrl}" remote.`,
-                ),
+                red(`      Please make sure you have permission to push to the ` + `"${this.git.remoteGitUrl}" remote.`)
             );
             process.exit(1);
         }

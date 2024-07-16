@@ -9,17 +9,17 @@ export { ScrollbarOverviewExample, ScrollbarScrollToTopExample };
 
 const EXAMPLES = [
     ScrollbarOverviewExample,
-    ScrollbarScrollToTopExample,
+    ScrollbarScrollToTopExample
 ];
 
 @NgModule({
     imports: [
         BrowserModule,
         KbqButtonModule,
-        KbqScrollbarModule,
+        KbqScrollbarModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES,
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
+    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
 })
 export class ScrollbarExamplesModule {}

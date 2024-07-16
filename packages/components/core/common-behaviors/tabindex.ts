@@ -12,7 +12,7 @@ export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<Has
 /** Mixin to augment a directive with a `tabIndex` property. */
 export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(
     base: T,
-    defaultTabIndex?: number,
+    defaultTabIndex?: number
 ): HasTabIndexCtor & T;
 
 export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaultTabIndex = 0): HasTabIndexCtor & T {

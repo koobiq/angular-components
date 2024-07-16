@@ -7,7 +7,7 @@ import { KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger } from './popover-
 import {
     KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqPopoverComponent,
-    KbqPopoverTrigger,
+    KbqPopoverTrigger
 } from './popover.component';
 
 @NgModule({
@@ -16,7 +16,6 @@ import {
     imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
-    ],
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
 })
 export class KbqPopoverModule {}

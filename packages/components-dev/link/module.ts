@@ -7,7 +7,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     url = 'http://localhost:3003/';
@@ -18,8 +18,8 @@ export class DemoComponent {
     imports: [
         BrowserModule,
         KbqLinkModule,
-        KbqIconModule,
+        KbqIconModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

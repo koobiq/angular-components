@@ -5,6 +5,6 @@ import { KbqTitleDirective } from './title.directive';
 @NgModule({
     imports: [KbqToolTipModule],
     declarations: [KbqTitleDirective],
-    exports: [KbqTitleDirective],
+    exports: [KbqTitleDirective]
 })
 export class KbqTitleModule {}

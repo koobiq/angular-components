@@ -6,7 +6,7 @@ import {
     Component,
     ElementRef,
     OnDestroy,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -25,10 +25,10 @@ const SEARCH_DEBOUNCE_TIME = 300;
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],
     host: {
-        class: 'docs-icons-viewer kbq-scrollbar',
+        class: 'docs-icons-viewer kbq-scrollbar'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class IconsViewerComponent implements OnDestroy {
     themePalette = ThemePalette;
@@ -52,7 +52,7 @@ export class IconsViewerComponent implements OnDestroy {
         private titleService: Title,
         private docStates: DocStates,
         private changeDetectorRef: ChangeDetectorRef,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef
     ) {
         this.http.get('assets/SVGIcons/mc-icons-info.json', { responseType: 'json' }).subscribe((data) => {
             this.iconItems = new IconItems(data);
@@ -93,12 +93,12 @@ export class IconsViewerComponent implements OnDestroy {
                         .filter(
                             (item) =>
                                 item.name.toLowerCase().includes(lowered) ||
-                                item.tags.some((tag) => tag.toLowerCase().includes(lowered)),
+                                item.tags.some((tag) => tag.toLowerCase().includes(lowered))
                         );
 
                     return items.length ? items : undefined;
                 }),
-                takeUntil(this.destroy),
+                takeUntil(this.destroy)
             )
             .subscribe((filteredItems) => this.filteredIcons.next(filteredItems));
 
@@ -128,8 +128,8 @@ export class IconsViewerComponent implements OnDestroy {
             relativeTo: this.activeRoute,
             queryParams: {
                 id: iconItem?.id,
-                s: this.searchControl.value ? this.searchControl.value : undefined,
-            },
+                s: this.searchControl.value ? this.searchControl.value : undefined
+            }
         });
 
         this.refreshTitle(iconItem);
@@ -141,7 +141,7 @@ export class IconsViewerComponent implements OnDestroy {
                 kbqComponent: IconPreviewModalComponent,
                 kbqComponentParams: { iconItem },
                 kbqClassName: 'icon-preview-modal',
-                kbqWidth: 400,
+                kbqWidth: 400
             })
             .afterClose.subscribe((result: string) => {
                 if (result) {
@@ -165,7 +165,7 @@ export class IconsViewerComponent implements OnDestroy {
         this.router.navigate([], {
             relativeTo: this.activeRoute,
             queryParams: { s: value || undefined },
-            queryParamsHandling: 'merge',
+            queryParamsHandling: 'merge'
         });
     }
 

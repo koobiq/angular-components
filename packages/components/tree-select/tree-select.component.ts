@@ -29,7 +29,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
@@ -46,7 +46,7 @@ import {
     TAB,
     UP_ARROW,
     hasModifierKey,
-    isSelectAll,
+    isSelectAll
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
@@ -69,7 +69,7 @@ import {
     kbqSelectAnimations,
     mixinDisabled,
     mixinErrorState,
-    mixinTabIndex,
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -100,7 +100,7 @@ export class KbqTreeSelectChange {
     constructor(
         public source: KbqTreeSelect,
         public value: any,
-        public isUserInput = false,
+        public isUserInput = false
     ) {}
 }
 
@@ -118,7 +118,7 @@ class KbqTreeSelectBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl,
+        public ngControl: NgControl
     ) {}
 }
 
@@ -146,16 +146,16 @@ const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorS
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
-        '(window:resize)': 'calculateHiddenItems()',
+        '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [
         kbqSelectAnimations.transformPanel,
-        kbqSelectAnimations.fadeInContent,
+        kbqSelectAnimations.fadeInContent
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
-        { provide: KbqTree, useExisting: KbqTreeSelect },
-    ],
+        { provide: KbqTree, useExisting: KbqTreeSelect }
+    ]
 })
 export class KbqTreeSelect
     extends KbqTreeSelectMixinBase
@@ -213,14 +213,14 @@ export class KbqTreeSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top',
+            overlayY: 'top'
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom',
-        },
+            overlayY: 'bottom'
+        }
     ];
 
     options: QueryList<KbqTreeOption>;
@@ -258,13 +258,13 @@ export class KbqTreeSelect
     /** Event emitted when the select has been opened. */
     @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
-        map(() => {}),
+        map(() => {})
     );
 
     /** Event emitted when the select has been closed. */
     @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
-        map(() => {}),
+        map(() => {})
     );
 
     /** Event emitted when the selected value has been changed by the user. */
@@ -296,13 +296,13 @@ export class KbqTreeSelect
         if (this.options) {
             return this.options.changes.pipe(
                 startWith(this.options),
-                switchMap(() => merge(...this.options.map((option) => option.onSelectionChange))),
+                switchMap(() => merge(...this.options.map((option) => option.onSelectionChange)))
             );
         }
 
         return this.ngZone.onStable.asObservable().pipe(
             take(1),
-            switchMap(() => this.optionSelectionChanges),
+            switchMap(() => this.optionSelectionChanges)
         );
     }) as Observable<KbqTreeSelectChange>;
 
@@ -482,7 +482,7 @@ export class KbqTreeSelect
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         @Optional() private readonly parentFormField: KbqFormField,
-        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Self() ngControl: NgControl
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
@@ -579,7 +579,7 @@ export class KbqTreeSelect
             this.selectionModel.changed
                 .pipe(
                     takeUntil(this.destroy),
-                    filter(({ added }) => !!added.length),
+                    filter(({ added }) => !!added.length)
                 )
                 .subscribe(({ added }) => {
                     this.tree.keyManager.setFocusOrigin('program');
@@ -846,14 +846,14 @@ export class KbqTreeSelect
         $event.stopPropagation();
 
         this.selectionModel.deselect(
-            this.selected.find((value) => this.tree.treeControl.getValue(value) === selectedOption.value),
+            this.selected.find((value) => this.tree.treeControl.getValue(value) === selectedOption.value)
         );
 
         this.selectionChange.emit(
             new KbqTreeSelectChange(
                 this,
-                this.options.find((option) => option.value === selectedOption.value) || selectedOption.value,
-            ),
+                this.options.find((option) => option.value === selectedOption.value) || selectedOption.value
+            )
         );
 
         this.onChange(this.selectedValues);
@@ -1049,7 +1049,7 @@ export class KbqTreeSelect
                 this.tree.setSelectedOptionsByKey(
                     this.tree.keyManager.activeItem,
                     hasModifierKey(event, 'shiftKey'),
-                    hasModifierKey(event, 'ctrlKey'),
+                    hasModifierKey(event, 'ctrlKey')
                 );
             }
 
@@ -1063,7 +1063,7 @@ export class KbqTreeSelect
         this.triggerValues = this.selectionModel.selected.map((node) => ({
             value: this.tree.treeControl.getValue(node),
             viewValue: this.tree.treeControl.getViewValue(node),
-            disabled: this.tree.treeControl.isDisabled(node),
+            disabled: this.tree.treeControl.isDisabled(node)
         }));
 
         this.changeDetectorRef.detectChanges();

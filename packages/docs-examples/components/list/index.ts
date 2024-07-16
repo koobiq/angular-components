@@ -16,7 +16,7 @@ export {
     ListGroupsExample,
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
-    ListOverviewExample,
+    ListOverviewExample
 };
 
 const EXAMPLES = [
@@ -24,7 +24,7 @@ const EXAMPLES = [
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
     ListGroupsExample,
-    ListActionButtonExample,
+    ListActionButtonExample
 ];
 
 @NgModule({
@@ -34,9 +34,9 @@ const EXAMPLES = [
         KbqListModule,
         KbqDropdownModule,
         KbqToolTipModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ListExamplesModule {}

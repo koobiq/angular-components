@@ -12,7 +12,7 @@ import { KbqToggleModule } from '../../components/toggle/';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -35,7 +35,7 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent,
+        DemoComponent
     ],
     imports: [
         BrowserModule,
@@ -44,10 +44,10 @@ export class DemoComponent {
         KbqToggleModule,
         KbqButtonModule,
         KbqFormFieldModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
     ],
     bootstrap: [
-        DemoComponent,
-    ],
+        DemoComponent
+    ]
 })
 export class DemoModule {}

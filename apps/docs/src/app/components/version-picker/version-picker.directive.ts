@@ -11,7 +11,7 @@ interface DocVersion {
 
 @Directive({
     exportAs: 'kbqDocVersionPicker',
-    selector: '[kbq-docs-version-picker]',
+    selector: '[kbq-docs-version-picker]'
 })
 export class VersionPickerDirective {
     selected: DocVersion;
@@ -20,7 +20,7 @@ export class VersionPickerDirective {
 
     constructor(
         private http: HttpClient,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef
     ) {
         this.http.get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' }).subscribe((data) => {
             Object.entries(data)

@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'scrollbar-overview-example',
     templateUrl: 'scrollbar-overview-example.html',
     styleUrls: ['scrollbar-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ScrollbarOverviewExample {}

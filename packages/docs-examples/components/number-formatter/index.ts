@@ -16,9 +16,9 @@ const EXAMPLES = [NumberFormatterOverviewExample];
         KbqFormattersModule,
         KbqInputModule,
         KbqFormFieldModule,
-        FormsModule,
+        FormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class NumberFormatterExamplesModule {}

@@ -8,15 +8,15 @@ import { KbqTable, KbqTableCellContent } from './table.component';
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     declarations: [
         KbqTable,
-        KbqTableCellContent,
+        KbqTableCellContent
     ],
     exports: [
         KbqTable,
-        KbqTableCellContent,
-    ],
+        KbqTableCellContent
+    ]
 })
 export class KbqTableModule {}

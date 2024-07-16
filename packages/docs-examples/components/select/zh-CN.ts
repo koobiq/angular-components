@@ -141,6 +141,6 @@ export const zhCNLocaleDataSet = {
         '恩格斯',
         '南薩哈林斯克',
         '雅庫茨克',
-        '雅羅斯拉夫',
-    ],
+        '雅羅斯拉夫'
+    ]
 };

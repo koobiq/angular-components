@@ -16,7 +16,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
@@ -29,7 +29,7 @@ import {
     KbqComponentColors,
     KbqTitleTextRef,
     mixinColor,
-    mixinDisabled,
+    mixinDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
@@ -45,7 +45,7 @@ export class KbqTagSelectionChange {
     constructor(
         public source: KbqTag,
         public selected: boolean,
-        public isUserInput = false,
+        public isUserInput = false
     ) {}
 }
 
@@ -57,7 +57,7 @@ const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
  */
 @Directive({
     selector: 'kbq-tag-avatar, [kbqTagAvatar]',
-    host: { class: 'kbq-tag-avatar' },
+    host: { class: 'kbq-tag-avatar' }
 })
 export class KbqTagAvatar {}
 
@@ -67,7 +67,7 @@ export class KbqTagAvatar {}
  */
 @Directive({
     selector: 'kbq-tag-trailing-icon, [kbqTagTrailingIcon]',
-    host: { class: 'kbq-tag-trailing-icon' },
+    host: { class: 'kbq-tag-trailing-icon' }
 })
 export class KbqTagTrailingIcon {}
 
@@ -79,7 +79,7 @@ export class KbqTagBase {
 /** @docs-private */
 export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase = mixinColor(
     mixinDisabled(KbqTagBase),
-    KbqComponentColors.ContrastFade,
+    KbqComponentColors.ContrastFade
 );
 
 @Component({
@@ -104,11 +104,11 @@ export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase 
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'focus()',
-        '(blur)': 'blur()',
+        '(blur)': 'blur()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
 })
 export class KbqTag
     extends KbqTagMixinBase
@@ -237,7 +237,7 @@ export class KbqTag
     constructor(
         public elementRef: ElementRef,
         public changeDetectorRef: ChangeDetectorRef,
-        private _ngZone: NgZone,
+        private _ngZone: NgZone
     ) {
         super(elementRef);
 
@@ -403,7 +403,7 @@ export class KbqTag
         this.selectionChange.emit({
             source: this,
             isUserInput,
-            selected: this._selected,
+            selected: this._selected
         });
     }
 }
@@ -425,8 +425,8 @@ export class KbqTag
         class: 'kbq-tag-remove kbq-tag-trailing-icon',
         '[attr.tabindex]': '-1',
         '(click)': 'handleClick($event)',
-        '(focus)': 'focus($event)',
-    },
+        '(focus)': 'focus($event)'
+    }
 })
 export class KbqTagRemove {
     constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}

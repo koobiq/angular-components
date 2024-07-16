@@ -4,7 +4,7 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrol
 
 type Defer = [
     requestDefer: (callback: () => any, options?: boolean | IdleRequestOptions) => void,
-    cancelDefer: () => void,
+    cancelDefer: () => void
 ];
 
 const createDefer = (): Defer => {
@@ -38,15 +38,16 @@ const createDefer = (): Defer => {
                           rafId = requestAnimationFrame(callback);
                       }
                     : callback,
-                typeof options === 'object' ? options : { timeout: 2233 },
+                typeof options === 'object' ? options : { timeout: 2233 }
             );
         },
-        clear,
+        clear
+
     ];
 };
 
 @Directive({
-    selector: '[kbqScrollbar]',
+    selector: '[kbqScrollbar]'
 })
 export class KbqScrollbarDirective implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
@@ -91,7 +92,7 @@ export class KbqScrollbarDirective implements OnDestroy {
 
     constructor(
         private ngZone: NgZone,
-        @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions,
+        @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions
     ) {
         const [requestDefer, cancelDefer] = createDefer();
         this.requestDefer = requestDefer;
@@ -104,7 +105,7 @@ export class KbqScrollbarDirective implements OnDestroy {
                 this.scrollbarInstance = OverlayScrollbars(
                     target,
                     this.options || this.scrollbarConfig || {},
-                    this.events || {},
+                    this.events || {}
                 );
             };
 

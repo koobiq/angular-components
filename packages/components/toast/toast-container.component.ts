@@ -14,7 +14,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation,
     ViewRef,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
@@ -24,10 +24,10 @@ import { KbqToastData } from './toast.type';
     template: '<ng-container #container></ng-container>',
     styleUrls: ['./toast-container.component.scss'],
     host: {
-        class: 'kbq-toast-container',
+        class: 'kbq-toast-container'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqToastContainerComponent extends CdkScrollable {
     @ViewChild('container', { static: true, read: ViewContainerRef }) viewContainer: ViewContainerRef;
@@ -39,7 +39,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
 
         elementRef: ElementRef<HTMLElement>,
         scrollDispatcher: ScrollDispatcher,
-        ngZone: NgZone,
+        ngZone: NgZone
     ) {
         super(elementRef, scrollDispatcher, ngZone);
 
@@ -74,7 +74,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     getInjector(data: KbqToastData): Injector {
         return Injector.create({
             providers: [{ provide: KbqToastData, useValue: data }],
-            parent: this.injector,
+            parent: this.injector
         });
     }
 

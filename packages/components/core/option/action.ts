@@ -9,7 +9,7 @@ import {
     Inject,
     InjectionToken,
     OnDestroy,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
@@ -39,7 +39,7 @@ export class KbqOptionActionBase {}
 
 /** @docs-private */
 export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqOptionActionBase = mixinTabIndex(
-    mixinDisabled(KbqOptionActionBase),
+    mixinDisabled(KbqOptionActionBase)
 );
 
 @Component({
@@ -63,11 +63,11 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()',
         '(click)': 'onClick($event)',
-        '(keydown)': 'onKeyDown($event)',
+        '(keydown)': 'onKeyDown($event)'
     },
     inputs: ['disabled'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqOptionActionComponent extends KbqOptionActionMixinBase implements AfterViewInit, OnDestroy {
     @ContentChild('customIcon') customIcon: ElementRef;
@@ -83,7 +83,7 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
     constructor(
         private elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
-        @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent,
+        @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent
     ) {
         super();
 

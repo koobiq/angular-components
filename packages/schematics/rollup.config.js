@@ -13,7 +13,7 @@ const distDir = path.join(__dirname, 'dist');
 const clean = () => ({
     async buildStart() {
         await fs.rm(distDir, { force: true, recursive: true });
-    },
+    }
 });
 
 module.exports = [
@@ -21,10 +21,10 @@ module.exports = [
         output: {
             dir: distDir,
             format: 'cjs',
-            exports: 'named',
+            exports: 'named'
         },
         input: {
-            'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
+            'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts')
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
         external: (dependency) =>
@@ -45,11 +45,12 @@ module.exports = [
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
                 'VERSIONS.MARKED': version(pkg.dependencies.marked),
                 'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars),
-                'VERSIONS.NGX_HIGHLIGHTJS': version(pkg.devDependencies['ngx-highlightjs']),
+                'VERSIONS.NGX_HIGHLIGHTJS': version(pkg.devDependencies['ngx-highlightjs'])
             }),
             typescript({
-                tsconfig: path.join(__dirname, 'tsconfig.rollup.json'),
-            }),
-        ],
-    },
+                tsconfig: path.join(__dirname, 'tsconfig.rollup.json')
+            })
+
+        ]
+    }
 ];

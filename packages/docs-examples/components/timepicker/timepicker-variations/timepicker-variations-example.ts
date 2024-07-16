@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'timepicker-variations-example',
     templateUrl: 'timepicker-variations-example.html',
-    styleUrls: ['timepicker-variations-example.css'],
+    styleUrls: ['timepicker-variations-example.css']
 })
 export class TimepickerVariationsExample {
     value: DateTime;

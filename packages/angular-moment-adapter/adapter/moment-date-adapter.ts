@@ -11,8 +11,8 @@ export const KBQ_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<IKbqMomentDate
     'KBQ_MOMENT_DATE_ADAPTER_OPTIONS',
     {
         providedIn: 'root',
-        factory: KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY,
-    },
+        factory: KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY
+    }
 );
 
 /** @docs-private */
@@ -20,7 +20,7 @@ export const KBQ_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<IKbqMomentDate
 export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapterOptions {
     return {
         useUtc: false,
-        findDateFormat: false,
+        findDateFormat: false
     };
 }
 
@@ -29,7 +29,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
     constructor(
         @Optional() @Inject(KBQ_DATE_LOCALE) dateLocale: string,
         @Optional() @Inject(KBQ_MOMENT_DATE_ADAPTER_OPTIONS) protected readonly options?: IKbqMomentDateAdapterOptions,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         super(dateLocale, options);
 

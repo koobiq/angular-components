@@ -7,13 +7,13 @@ export enum KbqSidepanelPosition {
     Right = 'right',
     Left = 'left',
     Top = 'top',
-    Bottom = 'bottom',
+    Bottom = 'bottom'
 }
 
 export enum KbqSidepanelSize {
     Small = 'small',
     Medium = 'medium',
-    Large = 'large',
+    Large = 'large'
 }
 
 export class KbqSidepanelConfig<D = any> {

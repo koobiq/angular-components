@@ -6,6 +6,6 @@ export const enUSLocaleData = {
     title: 'Add photos',
     gridHeaders: {
         file: 'File',
-        size: 'Size',
-    },
+        size: 'Size'
+    }
 };

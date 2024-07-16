@@ -10,7 +10,7 @@ import {
     Input,
     OnDestroy,
     Optional,
-    Renderer2,
+    Renderer2
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -35,7 +35,7 @@ import {
     UP_ARROW,
     V,
     X,
-    Z,
+    Z
 } from '@koobiq/cdk/keycodes';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -78,7 +78,7 @@ export function add(value1: number, value2: number): number {
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqNumberInput),
-    multi: true,
+    multi: true
 };
 
 interface NumberLocaleConfig {
@@ -96,8 +96,8 @@ interface NumberLocaleConfig {
         '(focus)': 'focusChanged(true)',
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
-        '(input)': 'onInput($event)',
-    },
+        '(input)': 'onInput($event)'
+    }
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
     /** Emits when the value changes (either due to user input or programmatic change). */
@@ -215,7 +215,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         @Attribute('big-step') bigStep: string,
         @Attribute('min') min: string,
         @Attribute('max') max: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.step = isDigit(step) ? parseFloat(step) : SMALL_STEP;
         this.bigStep = isDigit(bigStep) ? parseFloat(bigStep) : BIG_STEP;
@@ -229,14 +229,14 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                     const res = parseFloat(normalizeSplitter(this.value));
 
                     return isNaN(res) ? null : res;
-                },
+                }
             });
         }
 
         this.allNumberLocaleConfigs = this.localeService?.locales.items.map(
             (localeItem: { id: string; name: string }) => {
                 return { id: localeItem.id, config: this.localeService.locales[localeItem.id].input.number };
-            },
+            }
         );
 
         this.localeSubscription = this.localeService?.changes.subscribe(this.updateLocaleParams);
@@ -326,18 +326,15 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             }
         }
 
-        if (
-            allowedKeys.indexOf(keyCode) !== -1 ||
-            [
+        if (allowedKeys.indexOf(keyCode) !== -1 || [
                 isCtrlA,
                 isCtrlC,
                 isCtrlV,
                 isCtrlX,
                 isCtrlZ,
                 isFunctionKey,
-                isPeriod,
-            ].some((fn) => fn(event))
-        ) {
+                isPeriod
+            ].some((fn) => fn(event))) {
             // let it happen, don't do anything
             return;
         }
@@ -377,7 +374,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                         const cursorPosition = Math.max(
                             0,
                             (this.nativeElement.selectionStart || 0) +
-                                Math.sign(this.viewValue.length - currentValueLength),
+                                Math.sign(this.viewValue.length - currentValueLength)
                         );
 
                         this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
@@ -477,7 +474,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private createLocalizedNumberFromParts(intPart: number, fractionPart?: string): string {
         const formatOptions = {
             useGrouping: this.withThousandSeparator,
-            maximumFractionDigits: 20,
+            maximumFractionDigits: 20
         };
 
         if (this.withThousandSeparator && this.numberLocaleConfig.startFormattingFrom) {
@@ -486,7 +483,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 Math.pow(
                     // tslint:disable-next-line:no-magic-numbers
                     10,
-                    this.numberLocaleConfig.startFormattingFrom,
+                    this.numberLocaleConfig.startFormattingFrom
                 );
         }
 

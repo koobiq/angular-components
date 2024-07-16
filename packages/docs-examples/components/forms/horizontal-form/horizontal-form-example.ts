@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'horizontal-form-example',
     templateUrl: 'horizontal-form-example.html',
     styleUrls: ['horizontal-form-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class HorizontalFormExample {
     value: any;

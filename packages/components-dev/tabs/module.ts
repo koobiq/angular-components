@@ -23,7 +23,7 @@ export interface IExampleTab {
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsDemoComponent {
     asyncTabs: Observable<IExampleTab[]>;
@@ -46,7 +46,7 @@ export class TabsDemoComponent {
                 observer.next([
                     { label: 'First', content: 'Content 1' },
                     { label: 'Second', content: 'Content 2' },
-                    { label: 'Third', content: 'Content 3' },
+                    { label: 'Third', content: 'Content 3' }
                 ]);
             }, this.timeout);
         });
@@ -91,8 +91,8 @@ export class TabsDemoComponent {
         KbqInputModule,
         KbqToolTipModule,
         KbqSelectModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
-    bootstrap: [TabsDemoComponent],
+    bootstrap: [TabsDemoComponent]
 })
 export class DemoModule {}

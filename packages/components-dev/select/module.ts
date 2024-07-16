@@ -20,7 +20,7 @@ import { OPTIONS } from './options';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements OnInit {
     singleSelected = '';
@@ -46,7 +46,7 @@ export class DemoComponent implements OnInit {
     selectedOptionsAsObject = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
-        { id: 114, name: 'Tomsk' },
+        { id: 114, name: 'Tomsk' }
     ];
     optionsObj: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
@@ -61,12 +61,12 @@ export class DemoComponent implements OnInit {
     ngOnInit(): void {
         this.filteredOptions = merge(
             of(OPTIONS),
-            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value))),
+            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
 
         this.filteredMultipleOptions = merge(
             of(OPTIONS),
-            this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value))),
+            this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }
 
@@ -115,14 +115,13 @@ export class DemoComponent implements OnInit {
         KbqButtonModule,
         KbqSelectModule,
         KbqHighlightModule,
-
         KbqButtonModule,
         KbqInputModule,
         KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
-        KbqTagsModule,
+        KbqTagsModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

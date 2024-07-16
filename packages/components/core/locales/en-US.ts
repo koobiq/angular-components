@@ -2,18 +2,18 @@ export const enUSLocaleData = {
     select: { hiddenItemsText: '{{ number }} more' },
     datepicker: {
         placeholder: 'yyyy-mm-dd',
-        dateInput: 'yyyy-MM-dd',
+        dateInput: 'yyyy-MM-dd'
     },
     timepicker: {
         placeholder: {
             full: 'hh:mm:ss',
-            short: 'hh:mm',
-        },
+            short: 'hh:mm'
+        }
     },
     fileUpload: {
         single: {
             captionText: 'Drag file here or {{ browseLink }}',
-            browseLink: 'choose',
+            browseLink: 'choose'
         },
         multiple: {
             captionText: 'Drag here or {{ browseLink }}',
@@ -23,8 +23,8 @@ export const enUSLocaleData = {
             title: 'Upload files',
             gridHeaders: {
                 file: 'File',
-                size: 'Size',
-            },
-        },
-    },
+                size: 'Size'
+            }
+        }
+    }
 };

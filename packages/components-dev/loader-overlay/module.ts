@@ -12,7 +12,7 @@ import { KbqLoaderOverlayModule } from '../../components/loader-overlay';
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['../main.scss', 'styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LoaderOverlayDemoComponent {
     themePalette = ThemePalette;
@@ -30,9 +30,9 @@ export class LoaderOverlayDemoComponent {
         CommonModule,
         KbqButtonModule,
         KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule,
+        KbqLoaderOverlayModule
     ],
     declarations: [LoaderOverlayDemoComponent],
-    bootstrap: [LoaderOverlayDemoComponent],
+    bootstrap: [LoaderOverlayDemoComponent]
 })
 export class DemoModule {}

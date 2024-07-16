@@ -8,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'button-loading-state-example',
     templateUrl: 'button-loading-state-example.html',
     styleUrls: ['button-loading-state-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonLoadingStateExample {
     colors = KbqComponentColors;

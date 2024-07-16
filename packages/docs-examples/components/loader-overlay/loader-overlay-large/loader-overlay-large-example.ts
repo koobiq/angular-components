@@ -8,7 +8,7 @@ import { ThemePalette } from '@koobiq/components/core';
     selector: 'loader-overlay-large-example',
     templateUrl: 'loader-overlay-large-example.html',
     styleUrls: ['loader-overlay-large-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LoaderOverlayLargeExample {
     themePalette = ThemePalette;

@@ -9,7 +9,7 @@ import { KbqTableModule } from '@koobiq/components/table';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     protected readonly colors = KbqComponentColors;
@@ -20,8 +20,8 @@ export class DemoComponent {
     imports: [
         BrowserModule,
         KbqTableModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

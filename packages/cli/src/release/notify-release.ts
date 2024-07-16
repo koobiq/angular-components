@@ -23,7 +23,7 @@ async function sendNotification(url: string, body: object): Promise<void> {
     const requestOptions: RequestInit = {
         method: 'POST',
         headers,
-        body: JSON.stringify(body),
+        body: JSON.stringify(body)
     };
 
     console.info(cyan('POST notification:', { url, headers, body: JSON.stringify(body) }));
@@ -63,7 +63,7 @@ export async function notify(releaseData: any): Promise<void> {
         channel: `${config.channel}`,
         username: 'Wall-e',
         short: false,
-        text: `## ${releaseData.releaseTitle}\n${releaseData.releaseNotes}`,
+        text: `## ${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
     };
 
     try {

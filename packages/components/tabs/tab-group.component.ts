@@ -20,7 +20,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { CanDisableCtor, KBQ_PARENT_ANIMATION_COMPONENT, mixinDisabled } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
@@ -30,25 +30,25 @@ import { KbqTab } from './tab.component';
 
 @Directive({
     selector: 'kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center]',
-    host: { class: 'kbq-tab-group_align-labels-center' },
+    host: { class: 'kbq-tab-group_align-labels-center' }
 })
 export class KbqAlignTabsCenterCssStyler {}
 
 @Directive({
     selector: 'kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end]',
-    host: { class: 'kbq-tab-group_align-labels-end' },
+    host: { class: 'kbq-tab-group_align-labels-end' }
 })
 export class KbqAlignTabsEndCssStyler {}
 
 @Directive({
     selector: 'kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs]',
-    host: { class: 'kbq-tab-group_stretch-labels' },
+    host: { class: 'kbq-tab-group_stretch-labels' }
 })
 export class KbqStretchTabsCssStyler {}
 
 @Directive({
     selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical]',
-    host: { class: 'kbq-tab-group_vertical' },
+    host: { class: 'kbq-tab-group_vertical' }
 })
 export class KbqVerticalTabsCssStyler {}
 
@@ -106,9 +106,9 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
         '[class.kbq-tab-group_on-surface]': 'onSurface',
         '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight',
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
-        '(window:resize)': 'resizeStream.next($event)',
+        '(window:resize)': 'resizeStream.next($event)'
     },
-    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }],
+    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }]
 })
 export class KbqTabGroup
     extends KbqTabGroupMixinBase
@@ -215,7 +215,7 @@ export class KbqTabGroup
         elementRef: ElementRef,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Attribute('vertical') vertical: string,
-        @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: IKbqTabsConfig,
+        @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: IKbqTabsConfig
     ) {
         super(elementRef);
 
@@ -259,7 +259,7 @@ export class KbqTabGroup
                     this.activeTabChange.emit(
                         this.attributeToSelectBy && typeof this.attributeToSelectBy === 'function' && tabToSelect
                             ? tabToSelect
-                            : (this.attributeToSelectBy as string | number),
+                            : (this.attributeToSelectBy as string | number)
                     );
                 }
             });
@@ -419,7 +419,7 @@ export class KbqTabGroup
         }
 
         this.tabLabelSubscription = merge(...this.tabs.map((tab) => tab.stateChanges)).subscribe(() =>
-            this.changeDetectorRef.markForCheck(),
+            this.changeDetectorRef.markForCheck()
         );
     }
 

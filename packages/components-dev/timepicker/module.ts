@@ -7,7 +7,7 @@ import {
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
-    ValidatorFn,
+    ValidatorFn
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,7 +28,7 @@ export function customValidator(): ValidatorFn {
     selector: 'app',
     styleUrls: ['../main.scss', 'styles.scss'],
     templateUrl: 'template.html',
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TimepickerDemoComponent {
     TimeFormats = TimeFormats;
@@ -51,7 +51,7 @@ export class TimepickerDemoComponent {
     constructor(
         private fb: UntypedFormBuilder,
         private adapter: DateAdapter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService,
+        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
     ) {
         this.languageList = this.localeService.locales.items;
         this.selectedLanguage =
@@ -65,7 +65,7 @@ export class TimepickerDemoComponent {
         this.ngModelValue = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
 
         this.testForm = this.fb.group({
-            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 10, 0)],
+            time: [this.adapter.createDateTime(2000, 10, 1, 12, 0, 10, 0)]
         });
 
         this.reactiveFormControlValue.valueChanges.subscribe((value) => {
@@ -104,8 +104,8 @@ export class TimepickerDemoComponent {
         KbqLuxonDateModule,
         ReactiveFormsModule,
         KbqRadioModule,
-        KbqLocaleServiceModule,
+        KbqLocaleServiceModule
     ],
-    bootstrap: [TimepickerDemoComponent],
+    bootstrap: [TimepickerDemoComponent]
 })
 export class DemoModule {}

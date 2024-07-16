@@ -23,7 +23,7 @@ import { KbqValidateDirective } from './validate.directive';
         KbqStepper,
         KbqValidateDirective,
         KbqTrim,
-        KbqPasswordToggle,
+        KbqPasswordToggle
     ],
     imports: [CommonModule, KbqIconModule],
     exports: [
@@ -37,7 +37,7 @@ import { KbqValidateDirective } from './validate.directive';
         KbqStepper,
         KbqValidateDirective,
         KbqTrim,
-        KbqPasswordToggle,
-    ],
+        KbqPasswordToggle
+    ]
 })
 export class KbqFormFieldModule {}

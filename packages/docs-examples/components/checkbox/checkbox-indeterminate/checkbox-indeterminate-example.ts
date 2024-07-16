@@ -12,7 +12,7 @@ interface ICheckbox {
     selector: 'checkbox-indeterminate-example',
     templateUrl: 'checkbox-indeterminate-example.html',
     styleUrls: ['checkbox-indeterminate-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CheckboxIndeterminateExample {
     parentIndeterminate = true;
@@ -21,7 +21,7 @@ export class CheckboxIndeterminateExample {
     fruits: ICheckbox[] = [
         { name: 'Apples', checked: true },
         { name: 'Bananas', checked: false },
-        { name: 'Grapes', checked: false },
+        { name: 'Grapes', checked: false }
     ];
 
     constructor(private ref: ChangeDetectorRef) {}

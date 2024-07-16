@@ -35,11 +35,11 @@ describe('KbqTagInput', () => {
                         return {
                             value: dir.toLowerCase(),
                             // tslint:disable-next-line: no-inferred-empty-object-type
-                            change: new Subject(),
+                            change: new Subject()
                         };
-                    },
-                },
-            ],
+                    }
+                }
+            ]
         });
 
         TestBed.compileComponents();
@@ -130,10 +130,10 @@ describe('KbqTagInput', () => {
     describe('[addOnPaste]', () => {
         const clipboardEventData = {
             clipboardData: {
-                getData: (_) => 'test test test',
+                getData: (_) => 'test test test'
             },
             preventDefault: () => {},
-            stopPropagation: () => {},
+            stopPropagation: () => {}
         };
 
         it('allows (tagEnd) when true', () => {
@@ -187,10 +187,10 @@ describe('KbqTagInput', () => {
                 { keyCode: ENTER, key: 'Enter' },
                 { keyCode: COMMA, key: ',' },
                 { keyCode: TAB, key: 'Tab' },
-                { keyCode: SPACE, key: ' ' },
+                { keyCode: SPACE, key: ' ' }
             ];
             const SEPARATOR_EVENTS = separators.map(({ keyCode, key }) =>
-                createKeyboardEvent('keydown', keyCode, inputNativeElement, key),
+                createKeyboardEvent('keydown', keyCode, inputNativeElement, key)
             );
 
             spyOn(testTagInput, 'add');
@@ -215,10 +215,10 @@ describe('KbqTagInput', () => {
                             // tslint:disable-next-line: no-object-literal-type-assertion
                             useValue: {
                                 separatorKeyCodes: [COMMA],
-                                separators: { [COMMA]: { symbol: /,/, key: ',' } },
-                            } as KbqTagsDefaultOptions,
-                        },
-                    ],
+                                separators: { [COMMA]: { symbol: /,/, key: ',' } }
+                            } as KbqTagsDefaultOptions
+                        }
+                    ]
                 })
                 .compileComponents();
 
@@ -263,7 +263,7 @@ describe('KbqTagInput', () => {
                 [placeholder]="placeholder"
             />
         </kbq-form-field>
-    `,
+    `
 })
 class TestTagInput {
     @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;

@@ -14,7 +14,7 @@ import {
     RelativeDateFormatterPipe,
     RelativeDateTimeFormatterPipe,
     RelativeShortDateFormatterPipe,
-    RelativeShortDateTimeFormatterPipe,
+    RelativeShortDateTimeFormatterPipe
 } from './date/formatter.pipe';
 import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './number/formatter';
 
@@ -23,45 +23,39 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
         KbqTableNumberPipe,
-
         AbsoluteDateFormatterPipe,
         AbsoluteDateTimeFormatterPipe,
         AbsoluteDateShortFormatterPipe,
         AbsoluteShortDateTimeFormatterPipe,
-
         RelativeDateFormatterPipe,
         RelativeDateTimeFormatterPipe,
         RelativeShortDateFormatterPipe,
         RelativeShortDateTimeFormatterPipe,
-
         RangeDateFormatterPipe,
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
         RangeShortDateTimeFormatterPipe,
-        RangeMiddleDateTimeFormatterPipe,
+        RangeMiddleDateTimeFormatterPipe
     ],
     exports: [
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
         KbqTableNumberPipe,
-
         AbsoluteDateFormatterPipe,
         AbsoluteDateTimeFormatterPipe,
         AbsoluteDateShortFormatterPipe,
         AbsoluteShortDateTimeFormatterPipe,
-
         RelativeDateFormatterPipe,
         RelativeDateTimeFormatterPipe,
         RelativeShortDateFormatterPipe,
         RelativeShortDateTimeFormatterPipe,
-
         RangeDateFormatterPipe,
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
         RangeShortDateTimeFormatterPipe,
-        RangeMiddleDateTimeFormatterPipe,
+        RangeMiddleDateTimeFormatterPipe
     ],
-    providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+    providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }]
 })
 export class KbqFormattersModule {}
 

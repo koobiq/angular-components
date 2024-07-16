@@ -5,13 +5,13 @@ import {
     ContentChild,
     Directive,
     Input,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 export enum KbqAlertStyles {
     Default = 'default',
-    Colored = 'colored',
+    Colored = 'colored'
 }
 
 export enum KbqAlertColors {
@@ -19,30 +19,30 @@ export enum KbqAlertColors {
     Error = 'error',
     Warning = 'warning',
     Success = 'success',
-    Theme = 'theme',
+    Theme = 'theme'
 }
 
 @Directive({
     selector: '[kbq-alert-title]',
     host: {
-        class: 'kbq-alert__title',
-    },
+        class: 'kbq-alert__title'
+    }
 })
 export class KbqAlertTitle {}
 
 @Directive({
     selector: '[kbq-alert-close-button]',
     host: {
-        class: 'kbq-alert-close-button',
-    },
+        class: 'kbq-alert-close-button'
+    }
 })
 export class KbqAlertCloseButton {}
 
 @Directive({
     selector: '[kbq-alert-control]',
     host: {
-        class: 'kbq-alert-control',
-    },
+        class: 'kbq-alert-control'
+    }
 })
 export class KbqAlertControl {}
 
@@ -59,8 +59,8 @@ export class KbqAlertControl {}
         '[class.kbq-alert_compact]': 'compact',
         '[class.kbq-alert_default]': '!isColored',
         '[class.kbq-alert_colored]': 'isColored',
-        '[class.kbq-alert_dismissible]': 'closeButton',
-    },
+        '[class.kbq-alert_dismissible]': 'closeButton'
+    }
 })
 export class KbqAlert implements AfterContentInit {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

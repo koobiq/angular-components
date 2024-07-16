@@ -13,7 +13,7 @@ import {
     KbqAlignTabsEndCssStyler,
     KbqStretchTabsCssStyler,
     KbqTabGroup,
-    KbqVerticalTabsCssStyler,
+    KbqVerticalTabsCssStyler
 } from './tab-group.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -29,7 +29,7 @@ import { KbqTab } from './tab.component';
         CdkScrollableModule,
         KbqCommonModule,
         KbqIconModule,
-        KbqToolTipModule,
+        KbqToolTipModule
     ],
     // Don't export all components because some are only to be used internally.
     exports: [
@@ -43,7 +43,7 @@ import { KbqTab } from './tab.component';
         KbqAlignTabsCenterCssStyler,
         KbqAlignTabsEndCssStyler,
         KbqStretchTabsCssStyler,
-        KbqVerticalTabsCssStyler,
+        KbqVerticalTabsCssStyler
     ],
     declarations: [
         KbqTabGroup,
@@ -59,7 +59,7 @@ import { KbqTab } from './tab.component';
         KbqAlignTabsCenterCssStyler,
         KbqAlignTabsEndCssStyler,
         KbqStretchTabsCssStyler,
-        KbqVerticalTabsCssStyler,
-    ],
+        KbqVerticalTabsCssStyler
+    ]
 })
 export class KbqTabsModule {}

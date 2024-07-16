@@ -9,8 +9,8 @@ export const kbqPopoverAnimations: {
             'initial',
             style({
                 opacity: 0,
-                transform: 'scale(1, 0.8)',
-            }),
+                transform: 'scale(1, 0.8)'
+            })
         ),
         transition(
             '* => visible',
@@ -18,10 +18,10 @@ export const kbqPopoverAnimations: {
                 '120ms cubic-bezier(0, 0, 0.2, 1)',
                 style({
                     opacity: 1,
-                    transform: 'scale(1, 1)',
-                }),
-            ),
+                    transform: 'scale(1, 1)'
+                })
+            )
         ),
-        transition('* => hidden', animate('100ms linear', style({ opacity: 0 }))),
-    ]),
+        transition('* => hidden', animate('100ms linear', style({ opacity: 0 })))
+    ])
 };

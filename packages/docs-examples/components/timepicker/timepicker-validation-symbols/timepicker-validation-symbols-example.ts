@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'timepicker-validation-symbols-example',
     templateUrl: 'timepicker-validation-symbols-example.html',
-    styleUrls: ['timepicker-validation-symbols-example.css'],
+    styleUrls: ['timepicker-validation-symbols-example.css']
 })
 export class TimepickerValidationSymbolsExample {
     timeFormats = TimeFormats;

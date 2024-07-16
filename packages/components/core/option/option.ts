@@ -14,7 +14,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
@@ -31,7 +31,7 @@ let uniqueIdCounter = 0;
 export class KbqOptionSelectionChange<T = KbqOption> {
     constructor(
         public source: T,
-        public isUserInput = false,
+        public isUserInput = false
     ) {}
 }
 
@@ -98,7 +98,7 @@ export class KbqVirtualOption extends KbqOptionBase {
 
     constructor(
         public value: any,
-        private _disabled: boolean = false,
+        private _disabled: boolean = false
     ) {
         super();
     }
@@ -136,7 +136,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '[id]': 'id',
 
         '(click)': 'selectViaInteraction()',
-        '(keydown)': 'handleKeydown($event)',
+        '(keydown)': 'handleKeydown($event)'
     },
     styleUrls: ['option.scss'],
     templateUrl: 'option.html',
@@ -145,9 +145,9 @@ export class KbqVirtualOption extends KbqOptionBase {
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,
-            useExisting: KbqOption,
-        },
-    ],
+            useExisting: KbqOption
+        }
+    ]
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -228,7 +228,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         private readonly element: ElementRef,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) private readonly parent: KbqOptionParentComponent,
-        @Optional() readonly group: KbqOptgroup,
+        @Optional() readonly group: KbqOptgroup
     ) {
         super();
     }
@@ -359,7 +359,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 export function countGroupLabelsBeforeOption(
     optionIndex: number,
     options: QueryList<KbqOption>,
-    optionGroups: QueryList<KbqOptgroup>,
+    optionGroups: QueryList<KbqOptgroup>
 ): number {
     if (optionGroups.length) {
         const optionsArray = options.toArray();
@@ -391,7 +391,7 @@ export function getOptionScrollPosition(
     optionIndex: number,
     optionHeight: number,
     currentScrollPosition: number,
-    panelHeight: number,
+    panelHeight: number
 ): number {
     const optionOffset = optionIndex * optionHeight;
 

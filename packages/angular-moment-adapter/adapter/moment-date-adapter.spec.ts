@@ -19,8 +19,8 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
             imports: [MomentDateModule],
             providers: [
                 { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -41,8 +41,8 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
             imports: [MomentDateModule],
             providers: [
                 { provide: LOCALE_ID, useValue: 'en-US' },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -64,10 +64,10 @@ describe('MomentDateAdapter with KBQ_MOMENT_DATE_ADAPTER_OPTIONS override', () =
             providers: [
                 {
                     provide: KBQ_MOMENT_DATE_ADAPTER_OPTIONS,
-                    useValue: { useUtc: true },
+                    useValue: { useUtc: true }
                 },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 

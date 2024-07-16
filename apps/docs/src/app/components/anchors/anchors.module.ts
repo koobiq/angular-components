@@ -7,6 +7,6 @@ import { HeaderDirective } from './header.directive';
 @NgModule({
     imports: [CommonModule, RouterModule],
     exports: [AnchorsComponent, HeaderDirective],
-    declarations: [AnchorsComponent, HeaderDirective],
+    declarations: [AnchorsComponent, HeaderDirective]
 })
 export class AnchorsModule {}

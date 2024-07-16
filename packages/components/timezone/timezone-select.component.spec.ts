@@ -17,7 +17,7 @@ import {
     flush,
     inject,
     tick,
-    waitForAsync,
+    waitForAsync
 } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -58,7 +58,7 @@ const longOptionText: string = [
     'city',
     'village',
     'city',
-    'village',
+    'village'
 ].join(', ');
 
 const groupedZones: KbqTimezoneGroup[] = [
@@ -72,7 +72,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city1',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: 'city4, city5',
+                cities: 'city4, city5'
             },
             {
                 id: 'Europe/city7',
@@ -80,7 +80,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city7',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: 'city9, city22',
+                cities: 'city9, city22'
             },
             {
                 id: 'Europe/city17',
@@ -88,10 +88,10 @@ const groupedZones: KbqTimezoneGroup[] = [
                 city: 'city17',
                 countryCode: 'ru',
                 countryName: 'Russia',
-                cities: longOptionText,
-            },
-        ],
-    },
+                cities: longOptionText
+            }
+        ]
+    }
 ];
 
 @Component({
@@ -117,7 +117,7 @@ const groupedZones: KbqTimezoneGroup[] = [
             </kbq-timezone-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
+    `
 })
 class BasicTimezoneSelect {
     zones: KbqTimezoneGroup[] = groupedZones;
@@ -156,7 +156,7 @@ class BasicTimezoneSelect {
                 </ng-container>
             </kbq-timezone-select>
         </kbq-form-field>
-    `,
+    `
 })
 class TimezoneSelectWithSearch {
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqTimezoneSelect;
@@ -169,7 +169,7 @@ class TimezoneSelectWithSearch {
     ngOnInit(): void {
         this.options$ = merge(
             of(groupedZones),
-            this.searchCtrl.valueChanges.pipe(map(() => this.getFilteredOptions())),
+            this.searchCtrl.valueChanges.pipe(map(() => this.getFilteredOptions()))
         );
     }
 
@@ -184,7 +184,7 @@ class TimezoneSelectWithSearch {
                     const fields: string[] = [
                         offsetFormatter(zone.offset),
                         zone.city,
-                        zone.cities,
+                        zone.cities
                     ];
 
                     return fields.join(' ').toLowerCase().includes(this.searchCtrl.value.toLowerCase());
@@ -214,7 +214,7 @@ describe('KbqTimezoneSelect', () => {
                 KbqInputModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule,
+                NoopAnimationsModule
             ],
             declarations,
             providers: [
@@ -223,10 +223,10 @@ describe('KbqTimezoneSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => [],
-                    }),
-                },
-            ],
+                        getAncestorScrollContainers: () => []
+                    })
+                }
+            ]
         }).compileComponents();
 
         inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {

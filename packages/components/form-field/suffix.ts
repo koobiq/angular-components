@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-    selector: '[kbqSuffix]',
+    selector: '[kbqSuffix]'
 })
 export class KbqSuffix {}

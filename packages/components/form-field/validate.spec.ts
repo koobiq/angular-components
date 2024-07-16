@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-form-field>
             <input kbqInput [formControl]="testControl" type="text" />
         </kbq-form-field>
-    `,
+    `
 })
 class TestApp {
     testControl = new FormControl('');
@@ -27,9 +27,9 @@ describe('KbqValidate', () => {
             imports: [
                 ReactiveFormsModule,
                 KbqFormFieldModule,
-                KbqInputModule,
+                KbqInputModule
             ],
-            declarations: [TestApp],
+            declarations: [TestApp]
         });
         TestBed.compileComponents();
 
@@ -50,7 +50,7 @@ describe('KbqValidate', () => {
         input.blur();
 
         expect(testControl.errors).toEqual({
-            required: true,
+            required: true
         });
     });
 });

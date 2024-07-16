@@ -25,7 +25,7 @@ export {
     ValidationOnBlurExample,
     ValidationOnTypeExample,
     ValidationOverviewExample,
-    ValidationSmallExample,
+    ValidationSmallExample
 };
 
 const EXAMPLES = [
@@ -35,7 +35,7 @@ const EXAMPLES = [
     ValidationOnBlurExample,
     ValidationOnTypeExample,
     ValidationSmallExample,
-    ValidationGlobalOneRequiredExample,
+    ValidationGlobalOneRequiredExample
 ];
 
 @NgModule({
@@ -51,9 +51,9 @@ const EXAMPLES = [
         KbqIconModule,
         KbqButtonModule,
         KbqTextareaModule,
-        KbqAlertModule,
+        KbqAlertModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ValidationExamplesModule {}

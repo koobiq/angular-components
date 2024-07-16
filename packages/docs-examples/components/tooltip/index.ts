@@ -17,7 +17,7 @@ export {
     TooltipMultipleLinesExample,
     TooltipOverviewExample,
     TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample,
+    TooltipPlacementEdgesExample
 };
 
 const EXAMPLES = [
@@ -26,7 +26,7 @@ const EXAMPLES = [
     TooltipMultipleLinesExample,
     TooltipLongExample,
     TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample,
+    TooltipPlacementEdgesExample
 ];
 
 @NgModule({
@@ -35,9 +35,9 @@ const EXAMPLES = [
         A11yModule,
         KbqButtonModule,
         KbqToolTipModule,
-        CdkScrollableModule,
+        CdkScrollableModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TooltipExamplesModule {}

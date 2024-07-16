@@ -159,7 +159,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
                 tap((keyCode) => this.pressedLetters.push(keyCode)),
                 debounceTime(debounceInterval),
                 filter(() => this.pressedLetters.length > 0),
-                map(() => this.pressedLetters.join('')),
+                map(() => this.pressedLetters.join(''))
             )
             .subscribe((inputString) => {
                 if (searchLetterIndex === -1) {

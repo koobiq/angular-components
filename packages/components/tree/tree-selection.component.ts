@@ -20,7 +20,7 @@ import {
     QueryList,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
@@ -41,7 +41,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import { CanDisable, getKbqSelectNonArrayValueError, HasTabIndex, MultipleMode } from '@koobiq/components/core';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -54,34 +54,34 @@ import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } f
 export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqTreeSelection),
-    multi: true,
+    multi: true
 };
 
 export class KbqTreeSelectAllEvent<T> {
     constructor(
         public source: KbqTreeSelection,
-        public options: T[],
+        public options: T[]
     ) {}
 }
 
 export class KbqTreeCopyEvent<T> {
     constructor(
         public source: KbqTreeSelection,
-        public option: T,
+        public option: T
     ) {}
 }
 
 export class KbqTreeNavigationChange<T> {
     constructor(
         public source: KbqTreeSelection,
-        public option: T,
+        public option: T
     ) {}
 }
 
 export class KbqTreeSelectionChange<T> {
     constructor(
         public source: KbqTreeSelection,
-        public option: T,
+        public option: T
     ) {}
 }
 
@@ -106,15 +106,14 @@ interface SelectionModelOption {
         '(focus)': 'focus($event)',
 
         '(keydown)': 'onKeyDown($event)',
-        '(window:resize)': 'updateScrollSize()',
+        '(window:resize)': 'updateScrollSize()'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         KBQ_SELECTION_TREE_VALUE_ACCESSOR,
         { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection },
-    ],
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection }]
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
@@ -233,7 +232,7 @@ export class KbqTreeSelection
         differs: IterableDiffers,
         changeDetectorRef: ChangeDetectorRef,
         @Attribute('multiple') multiple: MultipleMode,
-        @Optional() private clipboard: Clipboard,
+        @Optional() private clipboard: Clipboard
     ) {
         super(differs, changeDetectorRef);
 
@@ -381,7 +380,7 @@ export class KbqTreeSelection
             this.setSelectedOptionsByKey(
                 this.keyManager.activeItem,
                 hasModifierKey(event, 'shiftKey'),
-                hasModifierKey(event, 'ctrlKey'),
+                hasModifierKey(event, 'ctrlKey')
             );
         }
     }
@@ -481,7 +480,7 @@ export class KbqTreeSelection
         data: KbqTreeOption[],
         dataDiffer: IterableDiffer<KbqTreeOption> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
-        parentData?: KbqTreeOption,
+        parentData?: KbqTreeOption
     ): void {
         super.renderNodeChanges(data, dataDiffer, viewContainer, parentData);
 

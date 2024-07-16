@@ -8,10 +8,10 @@ import { KbqFile } from './file-upload';
 
 export const createFile = (
     name: string,
-    type?: string,
+    type?: string
 ): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry> } => ({
     kind: 'file',
-    webkitGetAsEntry: () => createFSFile(name, type),
+    webkitGetAsEntry: () => createFSFile(name, type)
 });
 
 const createFSFile = (name: string, type = '') => {
@@ -22,7 +22,7 @@ const createFSFile = (name: string, type = '') => {
         fullPath: name,
         isDirectory: false,
         isFile: true,
-        file: (successCb) => successCb(file),
+        file: (successCb) => successCb(file)
     };
 };
 
@@ -32,7 +32,7 @@ describe('FileDropDirective', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SimpleDNDComponent, KbqFileDropDirective],
+            declarations: [SimpleDNDComponent, KbqFileDropDirective]
         }).compileComponents();
     });
 
@@ -97,8 +97,7 @@ describe('FileDropDirective', () => {
         const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeFiles = [
             createFSFile('test1'),
-            createFSFile('test2'),
-        ];
+            createFSFile('test2')];
 
         const fakeDirectoryItem = {
             kind: 'file',
@@ -106,9 +105,9 @@ describe('FileDropDirective', () => {
                 isDirectory: true,
                 isFile: false,
                 createReader: () => ({
-                    readEntries: (successCb) => successCb(fakeFiles),
-                }),
-            }),
+                    readEntries: (successCb) => successCb(fakeFiles)
+                })
+            })
         };
         (event as any).dataTransfer = { items: [fakeDirectoryItem] };
         spyOn(component, 'onDrop').and.callThrough();
@@ -127,7 +126,7 @@ describe('FileDropDirective', () => {
 });
 
 @Component({
-    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>',
+    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {
     files: KbqFile[];

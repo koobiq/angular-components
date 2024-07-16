@@ -10,7 +10,7 @@ export const formatDataSize = (value: number, precision: number, system): { valu
 
     return {
         value: volume,
-        unit,
+        unit
     };
 };
 
@@ -44,6 +44,6 @@ export const getHumanizedBytes = (value: number, system, threshold?: number): { 
 
     return {
         result,
-        unit: system.abbreviations[step],
+        unit: system.abbreviations[step]
     };
 };

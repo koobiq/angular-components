@@ -15,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ModalDemoComponent {
     componentColors = KbqComponentColors;
@@ -36,7 +36,7 @@ export class ModalDemoComponent {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -52,7 +52,7 @@ export class ModalDemoComponent {
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
             kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel'),
+            kbqOnCancel: () => console.log('Cancel')
         });
 
         this.showConfirm();
@@ -64,13 +64,13 @@ export class ModalDemoComponent {
             kbqContent: tplContent,
             kbqFooter: tplFooter,
             kbqClosable: true,
-            kbqOnOk: () => console.log('Click ok'),
+            kbqOnOk: () => console.log('Click ok')
         });
     }
 
     createModalComponent() {
         this.modalService.open({
-            kbqComponent: KbqModalFullCustomComponent,
+            kbqComponent: KbqModalFullCustomComponent
         });
     }
 
@@ -80,7 +80,7 @@ export class ModalDemoComponent {
             kbqContent: KbqModalLongCustomComponent,
             kbqOkText: 'Yes',
             kbqCancelText: 'No',
-            kbqSize: ModalSize.Small,
+            kbqSize: ModalSize.Small
         });
     }
 
@@ -91,7 +91,7 @@ export class ModalDemoComponent {
             kbqOkText: 'Yes',
             kbqOnOk: () => ref.close(),
             kbqCancelText: 'No',
-            kbqSize: ModalSize.Small,
+            kbqSize: ModalSize.Small
         });
     }
 
@@ -101,7 +101,7 @@ export class ModalDemoComponent {
             kbqContent: KbqModalLongCustomComponent,
             kbqOkText: 'Yes',
             kbqCancelText: 'No',
-            kbqSize: ModalSize.Small,
+            kbqSize: ModalSize.Small
         });
     }
 
@@ -114,7 +114,7 @@ export class ModalDemoComponent {
             kbqContent: KbqModalCustomComponent,
             kbqComponentParams: {
                 title: 'title in component',
-                subtitle: 'component sub title，will be changed after 2 sec',
+                subtitle: 'component sub title，will be changed after 2 sec'
             },
             kbqFooter: [
                 {
@@ -124,7 +124,7 @@ export class ModalDemoComponent {
                     loading: () => isLoading,
                     onClick: (componentInstance: any) => {
                         componentInstance.title = 'title in inner component is changed';
-                    },
+                    }
                 },
                 {
                     label: 'button 2',
@@ -133,9 +133,9 @@ export class ModalDemoComponent {
                     show: () => isShown,
                     onClick: (componentInstance: any) => {
                         componentInstance.title = 'title in inner component is changed';
-                    },
-                },
-            ],
+                    }
+                }
+            ]
         });
 
         modal.afterOpen.subscribe(() => {
@@ -171,8 +171,8 @@ export class ModalDemoComponent {
                 kbqCancelText: 'Cancel',
                 kbqMask: false,
                 kbqContent: `Test content: <b>${method}</b>`,
-                kbqStyle: { position: 'absolute', top: `${pos * 70}px`, left: `${pos++ * 300}px` },
-            }),
+                kbqStyle: { position: 'absolute', top: `${pos * 70}px`, left: `${pos++ * 300}px` }
+            })
         );
 
         this.htmlModalVisible = true;
@@ -193,7 +193,7 @@ export class ModalDemoComponent {
         <ng-container *ngFor="let item of longText">
             <p>{{ item }}</p>
         </ng-container>
-    `,
+    `
 })
 export class KbqModalLongCustomComponent {
     longText: any = [];
@@ -218,7 +218,7 @@ export class KbqModalLongCustomComponent {
                 </button>
             </p>
         </div>
-    `,
+    `
 })
 export class KbqModalCustomComponent {
     componentColors = KbqComponentColors;
@@ -253,7 +253,7 @@ export class KbqModalCustomComponent {
             <button kbq-button [color]="componentColors.Contrast">Save</button>
             <button kbq-button autofocus (click)="destroyModal()">Close</button>
         </div>
-    `,
+    `
 })
 export class KbqModalFullCustomComponent {
     componentColors = KbqComponentColors;
@@ -273,7 +273,7 @@ export class KbqModalFullCustomComponent {
         ModalDemoComponent,
         KbqModalCustomComponent,
         KbqModalLongCustomComponent,
-        KbqModalFullCustomComponent,
+        KbqModalFullCustomComponent
     ],
     imports: [
         BrowserModule,
@@ -282,8 +282,8 @@ export class KbqModalFullCustomComponent {
         KbqIconModule,
         KbqModalModule,
         KbqDropdownModule,
-        KbqToolTipModule,
+        KbqToolTipModule
     ],
-    bootstrap: [ModalDemoComponent],
+    bootstrap: [ModalDemoComponent]
 })
 export class DemoModule {}

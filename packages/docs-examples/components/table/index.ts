@@ -11,12 +11,12 @@ export { TableFullWidthExample, TableOverviewExample, TableWithBordersExample };
 const EXAMPLES = [
     TableOverviewExample,
     TableWithBordersExample,
-    TableFullWidthExample,
+    TableFullWidthExample
 ];
 
 @NgModule({
     imports: [CommonModule, KbqTableModule, KbqButtonModule],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TableExamplesModule {}

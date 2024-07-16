@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'button-toggle-overview-example',
     templateUrl: 'button-toggle-overview-example.html',
     styleUrls: ['button-toggle-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonToggleOverviewExample {}

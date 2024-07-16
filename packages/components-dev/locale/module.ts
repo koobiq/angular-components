@@ -8,7 +8,7 @@ import {
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule,
-    ThemePalette,
+    ThemePalette
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -20,7 +20,7 @@ import { KbqNavbarModule } from '../../components/navbar';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LocaleDemoComponent {
     themePalette = ThemePalette;
@@ -54,9 +54,9 @@ export class LocaleDemoComponent {
         KbqDropdownModule,
         KbqFormFieldModule,
         KbqOptionModule,
-        KbqSelectModule,
+        KbqSelectModule
     ],
     declarations: [LocaleDemoComponent],
-    bootstrap: [LocaleDemoComponent],
+    bootstrap: [LocaleDemoComponent]
 })
 export class DemoModule {}

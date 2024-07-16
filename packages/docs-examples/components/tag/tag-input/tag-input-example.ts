@@ -10,7 +10,7 @@ import { KbqTagInputEvent } from '@koobiq/components/tags';
     selector: 'tag-input-example',
     templateUrl: 'tag-input-example.html',
     styleUrls: ['tag-input-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TagInputExample {
     control = new FormControl();

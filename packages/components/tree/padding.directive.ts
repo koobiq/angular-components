@@ -12,7 +12,7 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
 
 @Directive({
     selector: '[kbqTreeNodePadding]',
-    exportAs: 'kbqTreeNodePadding',
+    exportAs: 'kbqTreeNodePadding'
 })
 export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
     get level(): number {
@@ -56,7 +56,7 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
         private renderer: Renderer2,
         private element: ElementRef<HTMLElement>,
         private option: KbqTreeOption,
-        @Optional() private dir: Directionality,
+        @Optional() private dir: Directionality
     ) {
         this.dir?.change?.pipe(takeUntil(this.destroyed)).subscribe(() => this.setPadding());
     }

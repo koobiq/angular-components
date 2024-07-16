@@ -5,7 +5,7 @@ import { KbqCommonModule, KbqOptionModule } from '@koobiq/components/core';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import {
     KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER,
-    KbqAutocompleteTrigger,
+    KbqAutocompleteTrigger
 } from './autocomplete-trigger.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
@@ -16,9 +16,9 @@ import { KbqAutocomplete } from './autocomplete.component';
         KbqOptionModule,
         KbqAutocompleteTrigger,
         KbqAutocompleteOrigin,
-        KbqCommonModule,
+        KbqCommonModule
     ],
     declarations: [KbqAutocomplete, KbqAutocompleteTrigger, KbqAutocompleteOrigin],
-    providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER],
+    providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
 export class KbqAutocompleteModule {}

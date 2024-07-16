@@ -5,24 +5,24 @@ import {
     KbqGutterDirective,
     KbqGutterGhostDirective,
     KbqSplitterAreaDirective,
-    KbqSplitterComponent,
+    KbqSplitterComponent
 } from './splitter.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     exports: [
         KbqGutterDirective,
         KbqSplitterAreaDirective,
-        KbqSplitterComponent,
+        KbqSplitterComponent
     ],
     declarations: [
         KbqGutterDirective,
         KbqGutterGhostDirective,
         KbqSplitterAreaDirective,
-        KbqSplitterComponent,
-    ],
+        KbqSplitterComponent
+    ]
 })
 export class KbqSplitterModule {}

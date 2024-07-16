@@ -26,10 +26,10 @@ describe('Tags', () => {
                     useFactory: () => ({
                         value: dir,
                         // tslint:disable-next-line: no-inferred-empty-object-type
-                        change: new Subject(),
-                    }),
-                },
-            ],
+                        change: new Subject()
+                    })
+                }
+            ]
         });
 
         TestBed.compileComponents();
@@ -129,7 +129,7 @@ describe('Tags', () => {
                 expect(testComponent.tagSelectionChange).toHaveBeenCalledWith({
                     source: tagInstance,
                     isUserInput: false,
-                    selected: true,
+                    selected: true
                 });
             });
 
@@ -220,13 +220,13 @@ describe('Tags', () => {
                     const CHIP_SELECTED_EVENT: KbqTagSelectionChange = {
                         source: tagInstance,
                         isUserInput: true,
-                        selected: true,
+                        selected: true
                     };
 
                     const CHIP_DESELECTED_EVENT: KbqTagSelectionChange = {
                         source: tagInstance,
                         isUserInput: true,
-                        selected: false,
+                        selected: false
                     };
 
                     spyOn(testComponent, 'tagSelectionChange');
@@ -364,7 +364,7 @@ describe('Tags', () => {
                 {{ name }}
             </kbq-tag>
         </div>
-    </kbq-tag-list>`,
+    </kbq-tag-list>`
 })
 class SingleTag {
     disabled: boolean = false;
@@ -384,6 +384,6 @@ class SingleTag {
 }
 
 @Component({
-    template: ` <kbq-basic-tag>{{ name }}</kbq-basic-tag>`,
+    template: ` <kbq-basic-tag>{{ name }}</kbq-basic-tag>`
 })
 class BasicTag {}

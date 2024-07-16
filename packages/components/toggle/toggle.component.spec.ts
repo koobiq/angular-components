@@ -23,8 +23,8 @@ describe('KbqToggle', () => {
                 ToggleWithNameAttribute,
                 ToggleWithFormControl,
                 ToggleWithoutLabel,
-                ToggleUsingViewChild,
-            ],
+                ToggleUsingViewChild
+            ]
         });
 
         TestBed.compileComponents();
@@ -503,7 +503,7 @@ describe('KbqToggle', () => {
         >
             Simple toggle
         </kbq-toggle>
-    </div>`,
+    </div>`
 })
 class SingleToggle {
     labelPos: 'left' | 'right' = 'left';
@@ -523,7 +523,7 @@ class SingleToggle {
         <form>
             <kbq-toggle name="cb" [(ngModel)]="isGood">Be good</kbq-toggle>
         </form>
-    `,
+    `
 })
 class ToggleWithFormDirectives {
     isGood: boolean = false;
@@ -533,12 +533,12 @@ class ToggleWithFormDirectives {
     template: `
         <kbq-toggle>Option 1</kbq-toggle>
         <kbq-toggle>Option 2</kbq-toggle>
-    `,
+    `
 })
 class MultipleToggles {}
 
 @Component({
-    template: ` <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled"> </kbq-toggle>`,
+    template: ` <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled"> </kbq-toggle>`
 })
 class ToggleWithTabIndex {
     customTabIndex: number = 7;
@@ -546,7 +546,7 @@ class ToggleWithTabIndex {
 }
 
 @Component({
-    template: ` <kbq-toggle></kbq-toggle>`,
+    template: ` <kbq-toggle></kbq-toggle>`
 })
 class ToggleUsingViewChild {
     @ViewChild(KbqToggleComponent, { static: false }) toggle;
@@ -557,29 +557,29 @@ class ToggleUsingViewChild {
 }
 
 @Component({
-    template: `<kbq-toggle aria-label="Super effective"></kbq-toggle>`,
+    template: `<kbq-toggle aria-label="Super effective"></kbq-toggle>`
 })
 class ToggleWithAriaLabel {}
 
 @Component({
-    template: `<kbq-toggle aria-labelledby="some-id"></kbq-toggle>`,
+    template: `<kbq-toggle aria-labelledby="some-id"></kbq-toggle>`
 })
 class ToggleWithAriaLabelledby {}
 
 @Component({
-    template: `<kbq-toggle name="test-name"></kbq-toggle>`,
+    template: `<kbq-toggle name="test-name"></kbq-toggle>`
 })
 class ToggleWithNameAttribute {}
 
 @Component({
-    template: `<kbq-toggle [formControl]="formControl"></kbq-toggle>`,
+    template: `<kbq-toggle [formControl]="formControl"></kbq-toggle>`
 })
 class ToggleWithFormControl {
     formControl = new UntypedFormControl();
 }
 
 @Component({
-    template: `<kbq-toggle>{{ label }}</kbq-toggle>`,
+    template: `<kbq-toggle>{{ label }}</kbq-toggle>`
 })
 class ToggleWithoutLabel {
     label: string;

@@ -17,7 +17,7 @@ export class ModalBuilderForService {
 
     constructor(
         private overlay: Overlay,
-        options: IModalOptionsForService = {},
+        options: IModalOptionsForService = {}
     ) {
         this.createModal();
 
@@ -35,7 +35,7 @@ export class ModalBuilderForService {
                 filter((event: KeyboardEvent) => {
                     // tslint:disable-next-line:deprecation replacement .key isn't supported in Edge
                     return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
-                }),
+                })
             )
             .subscribe(() => this.getInstance()?.handleCloseResult('cancel', () => true));
     }
@@ -79,7 +79,7 @@ export class KbqModalService {
 
     constructor(
         private overlay: Overlay,
-        private modalControl: KbqModalControlService,
+        private modalControl: KbqModalControlService
     ) {}
 
     // Closes all of the currently-open dialogs

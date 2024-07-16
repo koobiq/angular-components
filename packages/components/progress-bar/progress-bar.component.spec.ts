@@ -7,7 +7,8 @@ import { KbqProgressBarModule, ProgressBarMode } from './index';
 const percentPairs = [
     [40, 40],
     [-50, 0],
-    [140, 100],
+    [140, 100]
+
 ];
 // tslint:enable no-magic-numbers
 
@@ -15,7 +16,7 @@ describe('KbqProgressBar', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqProgressBarModule],
-            declarations: [TestApp],
+            declarations: [TestApp]
         });
 
         TestBed.compileComponents();
@@ -116,7 +117,7 @@ describe('KbqProgressBar', () => {
     template: `
         <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode"> </kbq-progress-bar>
         <kbq-progress-bar class="default"></kbq-progress-bar>
-    `,
+    `
 })
 class TestApp {
     value: number = 0;

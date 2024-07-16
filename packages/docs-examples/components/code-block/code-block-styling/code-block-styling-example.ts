@@ -52,7 +52,7 @@ body {
     selector: 'code-block-styling-example',
     templateUrl: 'code-block-styling-example.html',
     styleUrls: ['code-block-styling-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockStylingExample {
     files: KbqCodeFile[];
@@ -64,18 +64,18 @@ export class CodeBlockStylingExample {
                 filename: 'HTML',
                 content: codeHTML,
                 language: 'html',
-                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.html',
+                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.html'
             },
             {
                 filename: 'TS',
                 content: codeTs,
-                language: 'typescript',
+                language: 'typescript'
             },
             {
                 filename: 'CSS',
                 content: codeCSS,
-                language: 'css',
-            },
+                language: 'css'
+            }
         ];
     }
 }

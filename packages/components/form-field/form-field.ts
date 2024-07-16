@@ -17,7 +17,7 @@ import {
     QueryList,
     Self,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
@@ -28,7 +28,7 @@ import { KbqCleaner } from './cleaner';
 import { KbqFormFieldControl } from './form-field-control';
 import {
     getKbqFormFieldMissingControlError,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError,
+    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from './form-field-errors';
 import { KbqHint } from './hint';
 import { KbqPasswordHint, hasPasswordStrengthError } from './password-hint';
@@ -59,7 +59,7 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
         '../input/input.scss',
         '../timepicker/timepicker.scss',
         '../datepicker/datepicker-input.scss',
-        '../textarea/textarea.scss',
+        '../textarea/textarea.scss'
     ],
     host: {
         class: 'kbq-form-field',
@@ -82,14 +82,13 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
 
         '(keydown)': 'onKeyDown($event)',
         '(mouseenter)': 'onHoverChanged(true)',
-        '(mouseleave)': 'onHoverChanged(false)',
+        '(mouseleave)': 'onHoverChanged(false)'
     },
     inputs: ['color'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField },
-    ],
+        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
 export class KbqFormField
     extends KbqFormFieldMixinBase
@@ -161,7 +160,7 @@ export class KbqFormField
     constructor(
         public elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
+        private focusMonitor: FocusMonitor
     ) {
         super(elementRef);
 
@@ -288,21 +287,21 @@ export class KbqFormField
 @Directive({
     selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
     exportAs: 'kbqFormFieldWithoutBorders',
-    host: { class: 'kbq-form-field_without-borders' },
+    host: { class: 'kbq-form-field_without-borders' }
 })
 export class KbqFormFieldWithoutBorders {}
 
 @Directive({
     selector: '[kbqInput], [kbqTextarea]',
     exportAs: 'KbqTrim',
-    host: { class: 'kbq-trim' },
+    host: { class: 'kbq-trim' }
 })
 export class KbqTrim {
     private original: (fn: any) => void;
 
     constructor(
         @Attribute('no-trim') private readonly noTrim: boolean,
-        @Optional() @Self() private ngControl: NgControl,
+        @Optional() @Self() private ngControl: NgControl
     ) {
         this.noTrim = coerceBooleanProperty(noTrim);
 

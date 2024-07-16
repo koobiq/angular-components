@@ -8,7 +8,7 @@ import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/si
     selector: 'sidepanel-overlayed-example',
     templateUrl: 'sidepanel-overlayed-example.html',
     styleUrls: ['sidepanel-overlayed-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SidepanelOverlayedExample {
     position = KbqSidepanelPosition.Right;
@@ -26,7 +26,7 @@ export class SidepanelOverlayedExample {
         for (let i = 0; i < this.overlaysCount; i++) {
             this.sidepanelService.open(this.template, {
                 position: this.position,
-                hasBackdrop: false,
+                hasBackdrop: false
             });
         }
     }

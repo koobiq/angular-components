@@ -13,7 +13,7 @@ import {
     Renderer2,
     Self,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, FormControlStatus, NgControl } from '@angular/forms';
 import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
@@ -27,7 +27,7 @@ import {
     KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel,
-    isCorrectExtension,
+    isCorrectExtension
 } from './file-upload';
 
 let nextSingleFileUploadUniqueId = 0;
@@ -41,8 +41,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-single-file-upload',
-    },
+        class: 'kbq-single-file-upload'
+    }
 })
 export class KbqSingleFileUploadComponent
     implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor
@@ -101,7 +101,7 @@ export class KbqSingleFileUploadComponent
         private renderer: Renderer2,
         @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileLabel,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
-        @Optional() @Self() public ngControl?: NgControl,
+        @Optional() @Self() public ngControl?: NgControl
     ) {
         this.localeService?.changes.subscribe(this.updateLocaleParams);
 
@@ -218,7 +218,7 @@ export class KbqSingleFileUploadComponent
             file,
             hasError: this.validateFile(file),
             progress: new BehaviorSubject<number>(0),
-            loading: new BehaviorSubject<boolean>(false),
+            loading: new BehaviorSubject<boolean>(false)
         };
     }
 

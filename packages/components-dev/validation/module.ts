@@ -9,7 +9,7 @@ import {
     UntypedFormControl,
     UntypedFormGroup,
     ValidatorFn,
-    Validators,
+    Validators
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,35 +52,35 @@ export const DATA_OBJECT = {
         Woods: 'jpg',
         PhotoBoothLibrary: {
             Contents: 'dir',
-            Pictures_2: 'dir',
-        },
+            Pictures_2: 'dir'
+        }
     },
     Documents: {
         Pictures_3: 'Pictures',
         angular: {
             src: {
                 core: 'ts',
-                compiler: 'ts',
-            },
+                compiler: 'ts'
+            }
         },
         material2: {
             src: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts',
-            },
-        },
+                input: 'ts'
+            }
+        }
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf',
+        October: 'pdf'
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app',
-    },
+        Webstorm: 'app'
+    }
 };
 
 /**
@@ -127,14 +127,14 @@ export function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         { provide: KBQ_DATE_LOCALE, useValue: 'en' },
         {
             provide: KBQ_DATE_FORMATS,
-            useFactory: () => ({ ...KBQ_LUXON_DATE_FORMATS, dateInput: 'yyyy-MM-dd' }),
+            useFactory: () => ({ ...KBQ_LUXON_DATE_FORMATS, dateInput: 'yyyy-MM-dd' })
         },
         {
             provide: DateAdapter,
             useFactory: (locale: string) => new LuxonDateAdapter(locale),
-            deps: [KBQ_DATE_LOCALE],
-        },
-    ],
+            deps: [KBQ_DATE_LOCALE]
+        }
+    ]
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -162,9 +162,8 @@ export class DemoComponent {
     formWithCustomValidator = new UntypedFormGroup({
         login: new UntypedFormControl('', [
             Validators.required,
-            ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/),
-        ]),
-        password: new UntypedFormControl('', Validators.required),
+            ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)]),
+        password: new UntypedFormControl('', Validators.required)
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -184,7 +183,7 @@ export class DemoComponent {
 
     constructor(
         private formBuilder: UntypedFormBuilder,
-        public changeDetectorRef: ChangeDetectorRef,
+        public changeDetectorRef: ChangeDetectorRef
     ) {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
@@ -192,7 +191,7 @@ export class DemoComponent {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -203,12 +202,11 @@ export class DemoComponent {
             date: new UntypedFormControl(null, Validators.required),
             reactiveInputValue: new UntypedFormControl('', [
                 Validators.required,
-                Validators.pattern('[a-zA-Z]*'),
-            ]),
+                Validators.pattern('[a-zA-Z]*')]),
             reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTypeaheadValue: new UntypedFormControl([], Validators.required),
-            tagInputFormControl: new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')]),
+            tagInputFormControl: new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')])
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
@@ -365,8 +363,8 @@ export class DemoComponent {
         KbqFormFieldModule,
         KbqIconModule,
         KbqDatepickerModule,
-        KbqTimepickerModule,
+        KbqTimepickerModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

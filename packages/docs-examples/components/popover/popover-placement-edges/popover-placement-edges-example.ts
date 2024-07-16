@@ -8,7 +8,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'popover-placement-edges-example',
     templateUrl: 'popover-placement-edges-example.html',
     styleUrls: ['popover-placement-edges-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class PopoverPlacementEdgesExample {
     placements = [
@@ -19,7 +19,7 @@ export class PopoverPlacementEdgesExample {
         PopUpPlacements.LeftBottom,
         PopUpPlacements.LeftTop,
         PopUpPlacements.RightBottom,
-        PopUpPlacements.RightTop,
+        PopUpPlacements.RightTop
     ];
     activePlacement: PopUpPlacements | null;
 }

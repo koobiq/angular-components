@@ -5,6 +5,6 @@ import { KbqPseudoCheckbox } from './pseudo-checkbox';
 @NgModule({
     imports: [CommonModule],
     exports: [KbqPseudoCheckbox],
-    declarations: [KbqPseudoCheckbox],
+    declarations: [KbqPseudoCheckbox]
 })
 export class KbqPseudoCheckboxModule {}

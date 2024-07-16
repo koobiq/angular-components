@@ -18,7 +18,7 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    QueryList,
+    QueryList
 } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
@@ -171,7 +171,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         private ngZone: NgZone,
         private platform: Platform,
         @Optional() private dir: Directionality,
-        @Optional() @Inject(ANIMATION_MODULE_TYPE) public animationMode?: string,
+        @Optional() @Inject(ANIMATION_MODULE_TYPE) public animationMode?: string
     ) {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
         ngZone.runOutsideAngular(() => {
@@ -202,7 +202,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         };
 
         this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
-            this.getLayoutDirection(),
+            this.getLayoutDirection()
         );
 
         this.keyManager.updateActiveItem(this._selectedIndex);
@@ -223,7 +223,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                     Promise.resolve().then(() => {
                         this.updateScrollPosition();
                         realign();
-                    }),
+                    })
                 );
 
                 this.keyManager.withHorizontalOrientation(this.getLayoutDirection());

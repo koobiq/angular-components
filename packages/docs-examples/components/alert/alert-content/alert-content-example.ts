@@ -16,10 +16,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
             state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s')),
-        ]),
+            transition('true => false', animate('.2s'))])
+
     ],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class AlertContentExample {
     colors = KbqComponentColors;

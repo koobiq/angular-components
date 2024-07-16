@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'datepicker-not-empty-example',
     templateUrl: 'datepicker-not-empty-example.html',
-    styleUrls: ['datepicker-not-empty-example.css'],
+    styleUrls: ['datepicker-not-empty-example.css']
 })
 export class DatepickerNotEmptyExample {
     date: DateTime;

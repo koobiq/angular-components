@@ -19,7 +19,7 @@ import {
     TemplateRef,
     Type,
     ViewChild,
-    ViewChildren,
+    ViewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -33,7 +33,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    patchElementFocus,
+    patchElementFocus
 } from '@koobiq/cdk/testing';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
@@ -51,7 +51,7 @@ import {
     KbqDropdownPanel,
     KbqDropdownTrigger,
     NESTED_PANEL_LEFT_PADDING,
-    NESTED_PANEL_TOP_PADDING,
+    NESTED_PANEL_TOP_PADDING
 } from './index';
 
 const PANEL_SELECTOR = '.kbq-dropdown__panel';
@@ -67,12 +67,12 @@ describe('KbqDropdown', () => {
     function createComponent<T>(
         component: Type<T>,
         providers: Provider[] = [],
-        declarations: any[] = [],
+        declarations: any[] = []
     ): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [KbqDropdownModule, NoopAnimationsModule],
             declarations: [component, ...declarations],
-            providers,
+            providers
         }).compileComponents();
 
         inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
@@ -358,7 +358,7 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(
             SimpleDropdown,
             [{ provide: Directionality, useFactory: () => ({ value: 'rtl' }) }],
-            [],
+            []
         );
 
         fixture.detectChanges();
@@ -374,7 +374,7 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(
             SimpleDropdown,
             [{ provide: Directionality, useFactory: () => dirProvider }],
-            [],
+            []
         );
 
         fixture.detectChanges();
@@ -397,7 +397,7 @@ describe('KbqDropdown', () => {
 
                 boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
                 expect(boundingBox.getAttribute('dir')).toEqual('ltr');
-            },
+            }
         });
     });
 
@@ -477,10 +477,10 @@ describe('KbqDropdown', () => {
                 {
                     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
                     deps: [Overlay],
-                    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
-                },
+                    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
+                }
             ],
-            [],
+            []
         );
 
         fixture.detectChanges();
@@ -652,8 +652,8 @@ describe('KbqDropdown', () => {
             const fixture = createComponent(SimpleLazyDropdown, [
                 {
                     provide: NgZone,
-                    useFactory: () => (zone = new MockNgZone()),
-                },
+                    useFactory: () => (zone = new MockNgZone())
+                }
             ]);
 
             fixture.detectChanges();
@@ -1046,8 +1046,8 @@ describe('KbqDropdown', () => {
             fixture = createComponent(NestedDropdown, [
                 {
                     provide: Directionality,
-                    useFactory: () => ({ value: direction }),
-                },
+                    useFactory: () => ({ value: direction })
+                }
             ]);
 
             fixture.detectChanges();
@@ -1676,7 +1676,7 @@ describe('KbqDropdown', () => {
             fixture = createComponent(
                 DropdownWithTooltip,
                 [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER],
-                [KbqTitleDirective],
+                [KbqTitleDirective]
             );
             fixture.detectChanges();
             fixture.componentInstance.trigger.open();
@@ -1741,9 +1741,9 @@ describe('KbqDropdown default overrides', () => {
             providers: [
                 {
                     provide: KBQ_DROPDOWN_DEFAULT_OPTIONS,
-                    useValue: { overlapTriggerY: true, xPosition: 'before', yPosition: 'above' },
-                },
-            ],
+                    useValue: { overlapTriggerY: true, xPosition: 'before', yPosition: 'above' }
+                }
+            ]
         }).compileComponents();
     }));
 
@@ -1776,7 +1776,7 @@ describe('KbqDropdown default overrides', () => {
             </button>
             <button *ngFor="let item of extraItems" kbq-dropdown-item>{{ item }}</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class SimpleDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1794,7 +1794,7 @@ class SimpleDropdown {
         <kbq-dropdown [xPosition]="xPosition" [yPosition]="yPosition" #dropdown="kbqDropdown">
             <button kbq-dropdown-item>Positioned Content</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class PositionedDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1815,7 +1815,7 @@ interface TestableDropdown {
         <kbq-dropdown [overlapTriggerY]="overlapTriggerY" #dropdown="kbqDropdown">
             <button kbq-dropdown-item>Not overlapped Content</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class OverlapDropdown implements TestableDropdown {
     @Input() overlapTriggerY: boolean;
@@ -1831,7 +1831,7 @@ class OverlapDropdown implements TestableDropdown {
             <ng-content></ng-content>
         </ng-template>
     `,
-    exportAs: 'appCustomDropdown',
+    exportAs: 'appCustomDropdown'
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
     direction: Direction;
@@ -1861,7 +1861,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
         <custom-dropdown #dropdown="appCustomDropdown">
             <button kbq-dropdown-item>Custom Content</button>
         </custom-dropdown>
-    `,
+    `
 })
 class CustomDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1920,7 +1920,7 @@ class CustomDropdown {
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class NestedDropdown {
     @ViewChild('root', { static: false }) rootDropdown: KbqDropdown;
@@ -1960,7 +1960,7 @@ class NestedDropdown {
             <button kbq-dropdown-item>Four</button>
             <button kbq-dropdown-item>Five</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class NestedDropdownRepeater {
     @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef<HTMLElement>;
@@ -1980,7 +1980,7 @@ class NestedDropdownRepeater {
                 <button kbq-dropdown-item class="level-two-item">Two</button>
             </kbq-dropdown>
         </kbq-dropdown>
-    `,
+    `
 })
 class NestedDropdownDeclaredInsideParentDropdown {
     @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef;
@@ -1995,7 +1995,7 @@ class NestedDropdownDeclaredInsideParentDropdown {
                 <button kbq-dropdown-item>Another item</button>
             </ng-template>
         </kbq-dropdown>
-    `,
+    `
 })
 class SimpleLazyDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -2024,7 +2024,7 @@ class SimpleLazyDropdown {
                 <button kbq-dropdown-item>{{ label }}</button>
             </ng-template>
         </kbq-dropdown>
-    `,
+    `
 })
 class LazyDropdownWithContext {
     @ViewChild('triggerOne', { static: false }) triggerOne: KbqDropdownTrigger;
@@ -2041,7 +2041,7 @@ class LazyDropdownWithContext {
         <kbq-dropdown #two="kbqDropdown">
             <button kbq-dropdown-item>Two</button>
         </kbq-dropdown>
-    `,
+    `
 })
 class DynamicPanelDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -2056,7 +2056,7 @@ class DynamicPanelDropdown {
             <button #item kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class OnPushContainer {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -2087,7 +2087,7 @@ class OnPushContainer {
                 </div>
             </button>
         </kbq-dropdown>
-    `,
+    `
 })
 class DropdownWithTooltip implements TestableDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;

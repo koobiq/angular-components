@@ -8,7 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
     selector: 'validation-global-example',
     templateUrl: 'validation-global-example.html',
     styleUrls: ['validation-global-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ValidationGlobalExample {
     @ViewChild('submitButton') submitButton: ElementRef;
@@ -21,7 +21,7 @@ export class ValidationGlobalExample {
         this.globalErrorForm = new FormGroup({
             firstName: new FormControl(''),
             lastName: new FormControl(''),
-            thirdName: new FormControl(''),
+            thirdName: new FormControl('')
         });
     }
 
@@ -36,7 +36,7 @@ export class ValidationGlobalExample {
                 this.submitButton.nativeElement.focus();
             },
             // tslint:disable-next-line:no-magic-numbers
-            1000,
+            1000
         );
     }
 }

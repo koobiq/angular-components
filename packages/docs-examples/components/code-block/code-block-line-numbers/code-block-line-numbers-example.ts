@@ -18,7 +18,7 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
     selector: 'code-block-line-numbers-example',
     templateUrl: 'code-block-line-numbers-example.html',
     styleUrls: ['code-block-line-numbers-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockLineNumbersExample {
     files: KbqCodeFile[];
@@ -29,8 +29,8 @@ export class CodeBlockLineNumbersExample {
             {
                 filename: '',
                 content: codeXML,
-                language: 'xml',
-            },
+                language: 'xml'
+            }
         ];
     }
 }

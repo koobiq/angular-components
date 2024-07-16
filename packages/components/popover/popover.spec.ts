@@ -24,8 +24,8 @@ describe('KbqPopover', () => {
             declarations: [
                 KbqPopoverTestComponent,
                 KbqPopoverConfirmTestComponent,
-                KbqPopoverConfirmWithProvidersTestComponent,
-            ],
+                KbqPopoverConfirmWithProvidersTestComponent
+            ]
         });
         TestBed.compileComponents();
     }));
@@ -217,7 +217,7 @@ describe('KbqPopover', () => {
             expect(button.nativeElement.textContent).toEqual('Да');
 
             const confirmText = componentFixture.debugElement.query(
-                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+                By.css('.kbq-popover-confirm .kbq-popover__content div')
             );
             expect(confirmText.nativeElement.textContent).toEqual('Вы уверены, что хотите продолжить?');
         }));
@@ -231,7 +231,7 @@ describe('KbqPopover', () => {
             componentFixture.detectChanges();
 
             const confirmText = componentFixture.debugElement.query(
-                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+                By.css('.kbq-popover-confirm .kbq-popover__content div')
             );
             expect(confirmText.nativeElement.textContent).toEqual(expectedValue);
         }));
@@ -281,7 +281,7 @@ describe('KbqPopover', () => {
             expect(button.nativeElement.textContent).toEqual('provided button text');
 
             const confirmText = componentFixture.debugElement.query(
-                By.css('.kbq-popover-confirm .kbq-popover__content div'),
+                By.css('.kbq-popover-confirm .kbq-popover__content div')
             );
             expect(confirmText.nativeElement.textContent).toEqual('provided confirm text');
         }));
@@ -309,7 +309,7 @@ describe('KbqPopover', () => {
 
         <button #test7 kbqPopover [kbqPopoverClass]="'_TEST7'" [kbqPopoverContent]="'_TEST7'">_TEST7</button>
         <button #test8 kbqPopover [kbqPopoverClass]="'_TEST8'" [kbqPopoverContent]="'_TEST8'">_TEST8</button>
-    `,
+    `
 })
 class KbqPopoverTestComponent {
     popoverVisibility: boolean = false;
@@ -331,7 +331,7 @@ class KbqPopoverTestComponent {
         <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
         <button #test10 kbqPopoverConfirm kbqPopoverConfirmButtonText="new button text">_TEST10</button>
         <button #test11 kbqPopoverConfirm (confirm)="onConfirm()">_TEST11</button>
-    `,
+    `
 })
 class KbqPopoverConfirmTestComponent {
     @ViewChild('test8', { static: false }) test8: ElementRef;
@@ -349,8 +349,8 @@ class KbqPopoverConfirmTestComponent {
     template: ` <button #test12 kbqPopoverConfirm>_TEST12</button> `,
     providers: [
         { provide: KBQ_POPOVER_CONFIRM_TEXT, useValue: 'provided confirm text' },
-        { provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text' },
-    ],
+        { provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text' }
+    ]
 })
 class KbqPopoverConfirmWithProvidersTestComponent {
     @ViewChild('test12', { static: false }) test12: ElementRef;

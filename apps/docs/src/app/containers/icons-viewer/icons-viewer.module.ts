@@ -44,16 +44,16 @@ import { IconsViewerComponent } from './icons-viewer.component';
         SidenavModule,
         NavbarModule,
         KbqButtonModule,
-        AnchorsModule,
+        AnchorsModule
     ],
     exports: [
         IconsViewerComponent,
-        IconPreviewModalComponent,
+        IconPreviewModalComponent
     ],
     declarations: [
         IconsViewerComponent,
-        IconPreviewModalComponent,
+        IconPreviewModalComponent
     ],
-    providers: [IconItems, KbqToastService],
+    providers: [IconItems, KbqToastService]
 })
 export class IconsViewerModule {}

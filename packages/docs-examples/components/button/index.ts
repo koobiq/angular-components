@@ -18,7 +18,7 @@ export {
     ButtonFixedContentExample,
     ButtonHugContentExample,
     ButtonLoadingStateExample,
-    ButtonOverviewExample,
+    ButtonOverviewExample
 };
 
 const EXAMPLES = [
@@ -28,7 +28,7 @@ const EXAMPLES = [
     ButtonFillContentExample,
     ButtonFixedContentExample,
     ButtonHugContentExample,
-    ButtonLoadingStateExample,
+    ButtonLoadingStateExample
 ];
 
 @NgModule({
@@ -36,9 +36,9 @@ const EXAMPLES = [
         FormsModule,
         KbqButtonModule,
         KbqCheckboxModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ButtonExamplesModule {}

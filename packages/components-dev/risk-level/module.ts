@@ -8,7 +8,7 @@ import { KbqRiskLevelModule } from '../../components/risk-level';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     colors = KbqBadgeColors;
@@ -18,8 +18,8 @@ export class DemoComponent {
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
-        KbqRiskLevelModule,
+        KbqRiskLevelModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

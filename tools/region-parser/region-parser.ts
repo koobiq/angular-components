@@ -11,7 +11,7 @@ export function regionParser(contents: string, fileType: string) {
 
 function regionParserImpl(
     contents: string,
-    fileType: string,
+    fileType: string
 ): { contents: string; regions: { [regionName: string]: string } } {
     const regionMatchers: { [fileType: string]: { [region: string]: RegExp } } = {
         ts: inlineC,
@@ -20,7 +20,7 @@ function regionParserImpl(
         html,
         css: blockC,
         json: inlineC,
-        'json.annotated': inlineC,
+        'json.annotated': inlineC
     };
     const regionMatcher = regionMatchers[fileType];
     const openRegions: string[] = [];
@@ -87,7 +87,7 @@ function regionParserImpl(
 
         return {
             contents: lines.join('\n'),
-            regions: mapObject(regionMap, (regionName: string, region: Region) => leftAlign(region.lines).join('\n')),
+            regions: mapObject(regionMap, (regionName: string, region: Region) => leftAlign(region.lines).join('\n'))
         };
     } else {
         return { contents, regions: {} };

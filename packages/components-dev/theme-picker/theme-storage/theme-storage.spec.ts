@@ -4,7 +4,7 @@ const testStorageKey = ThemeStorage.storageKey;
 const testTheme = {
     primary: '#000000',
     accent: '#ffffff',
-    href: 'test/path/to/theme',
+    href: 'test/path/to/theme'
 };
 
 const createTestData = () => {
@@ -24,7 +24,7 @@ describe('ThemeStorage Service', () => {
     const secondTestTheme = {
         primary: '#666666',
         accent: '#333333',
-        href: 'some/cool/path',
+        href: 'some/cool/path'
     };
 
     beforeEach(createTestData);

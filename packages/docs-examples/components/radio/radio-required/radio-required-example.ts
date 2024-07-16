@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'radio-required-example',
     templateUrl: 'radio-required-example.html',
     styleUrls: ['radio-required-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class RadioRequiredExample {}

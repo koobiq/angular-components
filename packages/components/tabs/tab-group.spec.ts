@@ -23,8 +23,8 @@ describe('KbqTabGroup', () => {
                 TabGroupWithSimpleApi,
                 TemplateTabs,
                 TabGroupWithIsActiveBinding,
-                TestSelectionByIndexOrTabIdApp,
-            ],
+                TestSelectionByIndexOrTabIdApp
+            ]
         });
 
         TestBed.compileComponents();
@@ -539,12 +539,12 @@ describe('KbqTabGroup', () => {
         expect(tabComponent.selectedIndex).toBe(expectedIndex);
 
         const tabLabelElement = fixture.debugElement.query(
-            By.css(`.kbq-tab-label:nth-of-type(${expectedIndex + 1})`),
+            By.css(`.kbq-tab-label:nth-of-type(${expectedIndex + 1})`)
         ).nativeElement;
         expect(tabLabelElement.classList.contains('kbq-selected')).toBe(true);
 
         const tabContentElement = fixture.debugElement.query(
-            By.css(`kbq-tab-body:nth-of-type(${expectedIndex + 1})`),
+            By.css(`kbq-tab-body:nth-of-type(${expectedIndex + 1})`)
         ).nativeElement;
         expect(tabContentElement.classList.contains('kbq-tab-body__active')).toBe(true);
     }
@@ -562,7 +562,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqTabsModule, BrowserAnimationsModule],
-            declarations: [NestedTabs],
+            declarations: [NestedTabs]
         });
 
         TestBed.compileComponents();
@@ -600,7 +600,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class SimpleTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -633,13 +633,13 @@ class SimpleTabsTestApp {
                 {{ tab.content }}
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class SimpleDynamicTabsTestApp {
     tabs = [
         { label: 'Label 1', content: 'Content 1' },
         { label: 'Label 2', content: 'Content 2' },
-        { label: 'Label 3', content: 'Content 3' },
+        { label: 'Label 3', content: 'Content 3' }
     ];
     selectedIndex: number = 1;
     focusEvent: any;
@@ -661,19 +661,19 @@ class SimpleDynamicTabsTestApp {
                 {{ tab.content }}
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class BindedTabsTestApp {
     tabs = [
         { label: 'one', content: 'one' },
-        { label: 'two', content: 'two' },
+        { label: 'two', content: 'two' }
     ];
     selectedIndex = 0;
 
     addNewActiveTab(): void {
         this.tabs.push({
             label: 'new tab',
-            content: 'new content',
+            content: 'new content'
         });
         this.selectedIndex = this.tabs.length - 1;
     }
@@ -696,7 +696,7 @@ class BindedTabsTestApp {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class DisabledTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -711,13 +711,13 @@ class DisabledTabsTestApp {
                 {{ tab.content }}
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class AsyncTabsTestApp implements OnInit {
     tabs: Observable<any>;
     private tabsItems = [
         { label: 'one', content: 'one' },
-        { label: 'two', content: 'two' },
+        { label: 'two', content: 'two' }
     ];
 
     ngOnInit() {
@@ -736,7 +736,7 @@ class AsyncTabsTestApp implements OnInit {
             <kbq-tab [label]="otherLabel"> {{ otherContent }} </kbq-tab>
             <kbq-tab label="Legumes"> <p #legumes>Peanuts</p> </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class TabGroupWithSimpleApi {
     otherLabel = 'Fruit';
@@ -757,7 +757,7 @@ class TabGroupWithSimpleApi {
                 </kbq-tab-group>
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class NestedTabs {}
 
@@ -772,7 +772,7 @@ class NestedTabs {}
                 </ng-template>
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class TemplateTabs {}
 
@@ -784,7 +784,7 @@ class TemplateTabs {}
         </kbq-tab-group>
 
         <div *ngIf="pizza.isActive">pizza is active</div>
-    `,
+    `
 })
 class TabGroupWithIsActiveBinding {}
 
@@ -804,7 +804,7 @@ class TabGroupWithIsActiveBinding {}
                 Tab last content
             </kbq-tab>
         </kbq-tab-group>
-    `,
+    `
 })
 class TestSelectionByIndexOrTabIdApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;

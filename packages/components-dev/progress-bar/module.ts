@@ -13,7 +13,7 @@ const MAX_PERCENT: number = 100;
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['../main.scss', './styles.scss']
 })
 export class ProgressBarDemoComponent implements OnDestroy {
     themePalette = ThemePalette;
@@ -36,8 +36,8 @@ export class ProgressBarDemoComponent implements OnDestroy {
         CommonModule,
         BrowserModule,
         KbqProgressBarModule,
-        FormsModule,
+        FormsModule
     ],
-    bootstrap: [ProgressBarDemoComponent],
+    bootstrap: [ProgressBarDemoComponent]
 })
 export class DemoModule {}

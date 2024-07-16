@@ -9,7 +9,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -20,8 +20,8 @@ export class DemoComponent {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        KbqDlModule,
+        KbqDlModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

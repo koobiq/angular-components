@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'radio-overview-example',
     templateUrl: 'radio-overview-example.html',
     styleUrls: ['radio-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class RadioOverviewExample {
     isDisabled = false;

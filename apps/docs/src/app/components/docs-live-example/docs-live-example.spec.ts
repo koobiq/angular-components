@@ -12,7 +12,7 @@ describe('docs-live-example', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleModule, DocsAppTestingModule],
-            declarations: [DocViewerTestComponent],
+            declarations: [DocViewerTestComponent]
         }).compileComponents();
     }));
 
@@ -59,7 +59,7 @@ describe('docs-live-example', () => {
 
 @Component({
     selector: 'test',
-    template: ` <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`,
+    template: ` <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`
 })
 class DocViewerTestComponent {
     documentUrl = '//koobiq.io/simple-doc.html';
@@ -71,5 +71,5 @@ const FAKE_DOCS = {
       <div>Check out this example:</div>
       <div koobiq-docs-example="some-example"></div>`,
     '//koobiq.io/doc-with-links.html': `<a href="#test">Test link</a>`,
-    '//koobiq.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
+    '//koobiq.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`
 };

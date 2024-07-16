@@ -12,15 +12,15 @@ const EXAMPLES = [
     IconItemDefaultExample,
     IconItemColorExample,
     IconItemSizeExample,
-    IconItemVariantExample,
+    IconItemVariantExample
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class AlertExamplesModule {}

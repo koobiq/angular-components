@@ -7,6 +7,6 @@ import { KbqRadioButton, KbqRadioGroup } from './radio.component';
 @NgModule({
     imports: [CommonModule, A11yModule, KbqCommonModule],
     exports: [KbqRadioGroup, KbqRadioButton],
-    declarations: [KbqRadioGroup, KbqRadioButton],
+    declarations: [KbqRadioGroup, KbqRadioButton]
 })
 export class KbqRadioModule {}

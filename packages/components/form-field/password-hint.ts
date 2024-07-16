@@ -9,7 +9,7 @@ import {
     Input,
     Optional,
     QueryList,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
@@ -24,14 +24,14 @@ export enum PasswordRules {
     LowerLatin,
     Digit,
     LatinAndSpecialSymbols,
-    Custom,
+    Custom
 }
 
 export const regExpPasswordValidator = {
     [PasswordRules.LowerLatin]: RegExp(/^(?=.*?[a-z])/),
     [PasswordRules.UpperLatin]: RegExp(/^(?=.*?[A-Z])/),
     [PasswordRules.Digit]: RegExp(/^(?=.*?[0-9])/),
-    [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/),
+    [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/)
 };
 
 export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHint>): boolean => {
@@ -54,10 +54,10 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         '[class.kbq-success]': 'checked',
         '[class.kbq-error]': 'hasError',
         '[class.kbq-hint_fill-text-off]': 'fillTextOff',
-        '[class.kbq-hint_compact]': 'compact',
+        '[class.kbq-hint_compact]': 'compact'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     @Input() id: string = `kbq-hint-${nextPasswordHintUniqueId++}`;
@@ -91,7 +91,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     constructor(
         elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any,
+        @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any
     ) {
         super(elementRef);
     }

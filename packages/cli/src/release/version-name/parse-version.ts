@@ -12,7 +12,7 @@ export class Version {
         /** Pre-release label for the version (e.g. alpha, beta, rc) */
         public prereleaseLabel: string | null,
         /** Number for the pre-release. There can be multiple pre-releases for a version. */
-        public prereleaseNumber: number | null,
+        public prereleaseNumber: number | null
     ) {}
 
     /** Serializes the version info into a string formatted version name. */
@@ -52,7 +52,7 @@ export function parseVersionName(version: string): Version | null {
         Number(matches[2]),
         Number(matches[3]),
         matches[4] || null,
-        Number(matches[5]) || null,
+        Number(matches[5]) || null
     );
 }
 

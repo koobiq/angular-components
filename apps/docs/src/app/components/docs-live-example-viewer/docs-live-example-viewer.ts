@@ -7,7 +7,7 @@ import {
     NgModuleFactory,
     Type,
     ViewEncapsulation,
-    ɵNgModuleFactory,
+    ɵNgModuleFactory
 } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
@@ -28,9 +28,9 @@ interface ExampleFileData {
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
     host: {
-        class: 'docs-live-example-viewer kbq-markdown',
+        class: 'docs-live-example-viewer kbq-markdown'
     },
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DocsLiveExampleViewer {
     isSourceShown: boolean = false;
@@ -65,7 +65,7 @@ export class DocsLiveExampleViewer {
             this._example = exampleName;
             this.exampleData = EXAMPLE_COMPONENTS[exampleName];
             this.loadExampleComponent().catch((error) =>
-                console.error(`Could not load example '${exampleName}': ${error}`),
+                console.error(`Could not load example '${exampleName}': ${error}`)
             );
             this.generateExampleTabs();
         } else {
@@ -77,7 +77,7 @@ export class DocsLiveExampleViewer {
 
     constructor(
         private readonly elementRef: ElementRef<HTMLElement>,
-        private http: HttpClient,
+        private http: HttpClient
     ) {}
 
     toggleSourceView() {
@@ -102,8 +102,8 @@ export class DocsLiveExampleViewer {
                 map((content) => ({
                     filename: this.determineLanguage(fileName),
                     content: content,
-                    language: this.determineLanguage(fileName),
-                })),
+                    language: this.determineLanguage(fileName)
+                }))
             );
         });
 
@@ -112,13 +112,13 @@ export class DocsLiveExampleViewer {
                 // Sorts the files according to the predefined preferredExampleFileOrder by language
                 results.sort(
                     (a, b) =>
-                        preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language),
+                        preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
                 this.files.push(...results);
             },
             error: (error) => {
                 console.error('Error fetching the files', error);
-            },
+            }
         });
     }
 

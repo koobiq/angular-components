@@ -27,7 +27,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     constructor(
         public containerInstance: KbqSidepanelContainerComponent,
         private overlayRef: OverlayRef,
-        public config: KbqSidepanelConfig,
+        public config: KbqSidepanelConfig
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
@@ -36,7 +36,7 @@ export class KbqSidepanelRef<T = any, R = any> {
         containerInstance.animationStateChanged
             .pipe(
                 filter((event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Visible),
-                take(1),
+                take(1)
             )
             .subscribe(() => {
                 this.afterOpened$.next();
@@ -47,7 +47,7 @@ export class KbqSidepanelRef<T = any, R = any> {
         containerInstance.animationStateChanged
             .pipe(
                 filter((event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Hidden),
-                take(1),
+                take(1)
             )
             .subscribe(() => {
                 overlayRef.dispose();
@@ -61,8 +61,8 @@ export class KbqSidepanelRef<T = any, R = any> {
                 overlayRef.keydownEvents().pipe(
                     // tslint:disable:deprecation
                     // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
-                    filter((event) => event.keyCode === ESCAPE),
-                ),
+                    filter((event) => event.keyCode === ESCAPE)
+                )
             ).subscribe(() => this.close());
         }
     }
@@ -73,7 +73,7 @@ export class KbqSidepanelRef<T = any, R = any> {
             this.containerInstance.animationStateChanged
                 .pipe(
                     filter((event) => event.phaseName === 'done'),
-                    take(1),
+                    take(1)
                 )
                 .subscribe(() => this.overlayRef.detachBackdrop());
 

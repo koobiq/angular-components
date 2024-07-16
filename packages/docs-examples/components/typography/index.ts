@@ -5,14 +5,14 @@ import { TypographyOverviewExample } from './typography-overview/typography-over
 export { TypographyOverviewExample };
 
 const EXAMPLES = [
-    TypographyOverviewExample,
+    TypographyOverviewExample
 ];
 
 @NgModule({
     imports: [
-        CommonModule,
+        CommonModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TypographyExamplesModule {}

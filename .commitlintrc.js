@@ -63,7 +63,7 @@ const scope_types = [
     'validation',
     'layout',
     'title',
-    'file-upload',
+    'file-upload'
 ];
 
 /**
@@ -85,15 +85,15 @@ const config = {
                 'build',
                 'test',
                 'ci',
-                'chore',
-            ],
+                'chore'
+            ]
         ],
         'scope-enum': [
             2,
             'always',
-            scope_types,
-        ],
-    },
+            scope_types
+        ]
+    }
 };
 
 module.exports = config;

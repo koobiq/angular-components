@@ -31,7 +31,7 @@ askPassword(user.loginOk, user.loginFail);`;
     selector: 'code-block-title-example',
     templateUrl: 'code-block-title-example.html',
     styleUrls: ['code-block-title-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockTitleExample {
     files: KbqCodeFile[];
@@ -41,8 +41,8 @@ export class CodeBlockTitleExample {
             {
                 filename: 'Block Title',
                 content: codeJs2,
-                language: 'javascript',
-            },
+                language: 'javascript'
+            }
         ];
     }
 }

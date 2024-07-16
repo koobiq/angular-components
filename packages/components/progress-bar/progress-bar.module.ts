@@ -6,17 +6,17 @@ import { KbqProgressBar, KbqProgressBarCaption, KbqProgressBarText } from './pro
 @NgModule({
     imports: [
         CommonModule,
-        PlatformModule,
+        PlatformModule
     ],
     declarations: [
         KbqProgressBar,
         KbqProgressBarText,
-        KbqProgressBarCaption,
+        KbqProgressBarCaption
     ],
     exports: [
         KbqProgressBar,
         KbqProgressBarText,
-        KbqProgressBarCaption,
-    ],
+        KbqProgressBarCaption
+    ]
 })
 export class KbqProgressBarModule {}

@@ -8,7 +8,7 @@ import {
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
-    KbqSelectTrigger,
+    KbqSelectTrigger
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -27,7 +27,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult,
+        KbqSelectSearchEmptyResult
     ],
     exports: [
         KbqTreeSelect,
@@ -36,9 +36,9 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult,
+        KbqSelectSearchEmptyResult
     ],
     declarations: [KbqTreeSelect],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
+    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })
 export class KbqTreeSelectModule {}

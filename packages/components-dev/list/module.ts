@@ -18,7 +18,7 @@ import { debounceTime, startWith, switchMap } from 'rxjs/operators';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     popUpPlacements = PopUpPlacements;
@@ -37,7 +37,7 @@ export class DemoComponent {
         debounceTime(3000),
         switchMap(() => {
             return of(this.typesOfShoes);
-        }),
+        })
     );
 
     constructor(private clipboard: Clipboard) {}
@@ -58,7 +58,7 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent,
+        DemoComponent
     ],
     imports: [
         BrowserModule,
@@ -69,10 +69,10 @@ export class DemoComponent {
         KbqToolTipModule,
         KbqDropdownModule,
         KbqIconModule,
-        KbqTitleModule,
+        KbqTitleModule
     ],
     bootstrap: [
-        DemoComponent,
-    ],
+        DemoComponent
+    ]
 })
 export class DemoModule {}

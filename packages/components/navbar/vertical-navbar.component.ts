@@ -11,7 +11,7 @@ import {
     forwardRef,
     Input,
     QueryList,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
@@ -31,7 +31,7 @@ import { KbqFocusableComponent } from './navbar.component';
         './vertical-navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss',
+        './navbar-divider.scss'
     ],
     host: {
         class: 'kbq-vertical-navbar',
@@ -40,10 +40,10 @@ import { KbqFocusableComponent } from './navbar.component';
         '(focus)': 'focus()',
         '(blur)': 'blur()',
 
-        '(keydown)': 'onKeyDown($event)',
+        '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
@@ -71,7 +71,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     constructor(
         protected elementRef: ElementRef,
         changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 

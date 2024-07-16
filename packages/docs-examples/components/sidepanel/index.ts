@@ -18,7 +18,7 @@ const EXAMPLES = [
     SidepanelModalModeExample,
     SidepanelNormalModeExample,
     SidepanelOverlayedExample,
-    SidepanelSizesExample,
+    SidepanelSizesExample
 ];
 
 @NgModule({
@@ -30,9 +30,9 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
-        FormsModule,
+        FormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class SidepanelExamplesModule {}

@@ -6,7 +6,7 @@ import { NavbarProperty, NavbarPropertyParameters } from './navbar-property';
 
 export enum Themes {
     Default = 'theme-light',
-    Dark = 'theme-dark',
+    Dark = 'theme-dark'
 }
 
 @Component({
@@ -14,9 +14,9 @@ export enum Themes {
     templateUrl: 'navbar.template.html',
     styleUrls: ['navbar.scss'],
     host: {
-        class: 'docs-navbar',
+        class: 'docs-navbar'
     },
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NavbarComponent {
     version = koobiqVersion;
@@ -30,18 +30,18 @@ export class NavbarComponent {
         {
             name: 'Как в системе',
             className: this.colorAutomaticTheme.matches ? Themes.Default : Themes.Dark,
-            selected: false,
+            selected: false
         },
         {
             name: 'Светлая',
             className: Themes.Default,
-            selected: false,
+            selected: false
         },
         {
             name: 'Тёмная',
             className: Themes.Dark,
-            selected: false,
-        },
+            selected: false
+        }
     ];
 
     opened: boolean;
@@ -50,12 +50,12 @@ export class NavbarComponent {
         property: 'docs_theme',
         data: this.kbqThemes,
         updateTemplate: false,
-        updateSelected: false,
+        updateSelected: false
     };
 
     constructor(
         private themeService: ThemeService,
-        public docStates: DocStates,
+        public docStates: DocStates
     ) {
         // set custom theme configs for light/dark themes
         this.themeService.setThemes(this.kbqThemes);
@@ -94,7 +94,7 @@ export class NavbarComponent {
     private setAutoTheme = (e) => {
         this.themeService.themes[0] = {
             ...this.themeService.themes[0],
-            className: e.matches ? Themes.Default : Themes.Dark,
+            className: e.matches ? Themes.Default : Themes.Dark
         };
 
         if (this.themeService.themes[0].selected) {

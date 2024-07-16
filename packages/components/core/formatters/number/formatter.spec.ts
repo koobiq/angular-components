@@ -5,7 +5,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
-    KbqRoundDecimalPipe,
+    KbqRoundDecimalPipe
 } from '@koobiq/components/core';
 
 // tslint:disable:no-magic-numbers
@@ -17,8 +17,8 @@ describe('KbqRoundDecimalPipe', () => {
             imports: [KbqFormattersModule],
             providers: [
                 { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
-                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService, deps: [KBQ_LOCALE_ID, KBQ_LOCALE_DATA] },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService, deps: [KBQ_LOCALE_ID, KBQ_LOCALE_DATA] }
+            ]
         }).compileComponents();
 
         pipe = TestBed.inject(KbqRoundDecimalPipe);
@@ -85,7 +85,7 @@ describe('KbqRoundDecimalPipe', () => {
                 localeService.current.formatters.number.rounding.thousand,
                 localeService.current.formatters.number.rounding.million,
                 localeService.current.formatters.number.rounding.billion,
-                localeService.current.formatters.number.rounding.trillion,
+                localeService.current.formatters.number.rounding.trillion
             ];
 
             expect(pipe.transform(betweenOneAndThousand))

@@ -21,7 +21,7 @@ export {
     ToastOverviewExample,
     ToastProgressBarOverviewExample,
     ToastReportOverviewExample,
-    ToastTypesOverviewExample,
+    ToastTypesOverviewExample
 };
 
 const EXAMPLES = [
@@ -31,7 +31,7 @@ const EXAMPLES = [
     ToastProgressBarOverviewExample,
     ToastReportOverviewExample,
     ToastTypesOverviewExample,
-    ToastHideOverviewExample,
+    ToastHideOverviewExample
 ];
 
 @NgModule({
@@ -44,6 +44,6 @@ const EXAMPLES = [
         KbqDropdownModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ToastExamplesModule {}

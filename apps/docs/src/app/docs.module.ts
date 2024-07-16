@@ -56,12 +56,13 @@ import { APP_ROUTES } from './docs.module-routes';
 
         RouterModule.forRoot(APP_ROUTES, {
             scrollPositionRestoration: 'disabled',
-            onSameUrlNavigation: 'reload',
+            onSameUrlNavigation: 'reload'
         }),
 
         ComponentViewerModule,
         IconsViewerModule,
-        SidenavModule,
+        SidenavModule
+
     ],
     declarations: [DocsAppComponent, PageNotFoundComponent],
     providers: [
@@ -70,18 +71,18 @@ import { APP_ROUTES } from './docs.module-routes';
         IconItems,
         {
             provide: LocationStrategy,
-            useClass: PathLocationStrategy,
+            useClass: PathLocationStrategy
         },
         {
             provide: HIGHLIGHT_OPTIONS,
             useValue: {
                 fullLibraryLoader: () => import('highlight.js'),
                 lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'),
-                lineNumbers: true,
-            },
+                lineNumbers: true
+            }
         },
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
     ],
-    bootstrap: [DocsAppComponent],
+    bootstrap: [DocsAppComponent]
 })
 export class AppModule {}

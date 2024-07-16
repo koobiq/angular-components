@@ -5,6 +5,6 @@ import { KbqDivider } from './divider.component';
 @NgModule({
     imports: [CommonModule],
     exports: [KbqDivider],
-    declarations: [KbqDivider],
+    declarations: [KbqDivider]
 })
 export class KbqDividerModule {}

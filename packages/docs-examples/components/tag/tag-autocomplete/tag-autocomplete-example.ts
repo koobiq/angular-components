@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
     selector: 'tag-autocomplete-example',
     templateUrl: 'tag-autocomplete-example.html',
     styleUrls: ['tag-autocomplete-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TagAutocompleteExample {
     allTags: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
@@ -45,9 +45,9 @@ export class TagAutocompleteExample {
                     const values = selectedTags.map((tag: any) => tag.value);
 
                     return this.allTags.filter((tag) => !values.includes(tag));
-                }),
+                })
             ),
-            this.control.valueChanges.pipe(map(this.onControlValueChanges)),
+            this.control.valueChanges.pipe(map(this.onControlValueChanges))
         );
     }
 
@@ -104,7 +104,7 @@ export class TagAutocompleteExample {
         if (!target || target.tagName !== this.kbqOptionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
                 input: this.tagInput.nativeElement,
-                value: this.tagInput.nativeElement.value,
+                value: this.tagInput.nativeElement.value
             };
 
             this.onCreate(kbqTagEvent);
@@ -115,7 +115,7 @@ export class TagAutocompleteExample {
         const filterValue = value.toLowerCase();
 
         return [...new Set(this.allTags.concat(this.selectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0,
+            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
         );
     }
 

@@ -10,15 +10,15 @@ import { KbqButton, KbqButtonCssStyler } from './button.component';
         CommonModule,
         A11yModule,
         PlatformModule,
-        ObserversModule,
+        ObserversModule
     ],
     exports: [
         KbqButton,
-        KbqButtonCssStyler,
+        KbqButtonCssStyler
     ],
     declarations: [
         KbqButton,
-        KbqButtonCssStyler,
-    ],
+        KbqButtonCssStyler
+    ]
 })
 export class KbqButtonModule {}

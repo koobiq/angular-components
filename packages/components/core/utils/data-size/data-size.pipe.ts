@@ -6,14 +6,14 @@ import { formatDataSize } from './size';
 @Pipe({
     name: 'kbqDataSize',
     standalone: true,
-    pure: false,
+    pure: false
 })
 export class KbqDataSizePipe implements PipeTransform {
     private config: SizeUnitsConfig;
 
     constructor(
         @Optional() @Inject(KBQ_SIZE_UNITS_CONFIG) public readonly externalConfig: SizeUnitsConfig,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         this.localeService?.changes.subscribe(this.updateLocaleParams);
 

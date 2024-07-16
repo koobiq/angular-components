@@ -9,7 +9,7 @@ describe('Format utils', () => {
 
         const { result, unit } = getHumanizedBytes(
             raw,
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.SI],
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.SI]
         );
 
         expect(result).toBe(expectedResult);
@@ -23,7 +23,7 @@ describe('Format utils', () => {
 
         const { result, unit } = getHumanizedBytes(
             raw,
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC],
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC]
         );
 
         expect(result).toBe(expectedResult);
@@ -39,7 +39,7 @@ describe('Format utils', () => {
         const { result, unit } = getHumanizedBytes(
             raw,
             KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC],
-            threshold,
+            threshold
         );
 
         expect(result).toBe(expectedResult);
@@ -54,7 +54,7 @@ describe('Format utils', () => {
         const { value } = formatDataSize(
             raw,
             precision,
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC],
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[MeasurementSystem.IEC]
         );
 
         expect(value).toBe(expected);

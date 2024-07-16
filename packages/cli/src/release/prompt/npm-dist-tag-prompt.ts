@@ -22,7 +22,7 @@ export async function promptForNpmDistTag(version: Version): Promise<string> {
         type: 'list',
         name: 'distTag',
         message: 'What is the NPM dist-tag you want to publish to?',
-        choices: getDistTagChoicesForVersion(version),
+        choices: getDistTagChoicesForVersion(version)
     });
 
     return distTag;

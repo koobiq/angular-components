@@ -144,7 +144,7 @@ export const OPTIONS = [
     'Engels',
     'Yuzhno-Sakhalinsk',
     'Yakutsk',
-    'Yaroslavl',
+    'Yaroslavl'
 ];
 
 /**
@@ -154,7 +154,7 @@ export const OPTIONS = [
     selector: 'select-virtual-scroll-example',
     templateUrl: 'select-virtual-scroll-example.html',
     styleUrls: ['select-virtual-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectVirtualScrollExample {
     options: string[] = OPTIONS.sort();

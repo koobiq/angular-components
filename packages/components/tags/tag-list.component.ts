@@ -18,7 +18,7 @@ import {
     Output,
     QueryList,
     Self,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
@@ -27,7 +27,7 @@ import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    mixinErrorState,
+    mixinErrorState
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
@@ -48,7 +48,7 @@ export class KbqTagListBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl,
+        public ngControl: NgControl
     ) {}
 }
 
@@ -62,7 +62,7 @@ let nextUniqueId = 0;
 export class KbqTagListChange {
     constructor(
         public source: KbqTagList,
-        public value: any,
+        public value: any
     ) {}
 }
 
@@ -81,11 +81,11 @@ export class KbqTagListChange {
 
         '(focus)': 'focus()',
         '(blur)': 'blur()',
-        '(keydown)': 'keydown($event)',
+        '(keydown)': 'keydown($event)'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }]
 })
 export class KbqTagList
     extends KbqTagListMixinBase
@@ -307,7 +307,7 @@ export class KbqTagList
     @ContentChildren(KbqTag, {
         // Need to use `descendants: true`,
         // Ivy will no longer match indirect descendants if it's left as false.
-        descendants: true,
+        descendants: true
     })
     tags: QueryList<KbqTag>;
 
@@ -355,7 +355,7 @@ export class KbqTagList
         @Optional() private dir: Directionality,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
-        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Self() ngControl: NgControl
     ) {
         super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
@@ -455,7 +455,7 @@ export class KbqTagList
         // todo need rethink about it
         if (this.ngControl && inputElement.ngControl?.statusChanges) {
             inputElement.ngControl.statusChanges.subscribe(() =>
-                this.ngControl.control!.setErrors(inputElement.ngControl!.errors),
+                this.ngControl.control!.setErrors(inputElement.ngControl!.errors)
             );
         }
     }

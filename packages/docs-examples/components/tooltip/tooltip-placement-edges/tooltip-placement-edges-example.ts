@@ -8,7 +8,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'tooltip-placement-edges-example',
     templateUrl: 'tooltip-placement-edges-example.html',
     styleUrls: ['tooltip-placement-edges-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TooltipPlacementEdgesExample {
     placements = [
@@ -19,6 +19,6 @@ export class TooltipPlacementEdgesExample {
         PopUpPlacements.LeftBottom,
         PopUpPlacements.LeftTop,
         PopUpPlacements.RightBottom,
-        PopUpPlacements.RightTop,
+        PopUpPlacements.RightTop
     ];
 }

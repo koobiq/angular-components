@@ -8,7 +8,7 @@ import { KbqFormFieldModule } from '../../components/form-field';
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['../main.scss', './styles.scss']
 })
 export class DemoComponent {
     value: string;
@@ -16,16 +16,16 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent,
+        DemoComponent
     ],
     imports: [
         BrowserModule,
         KbqTextareaModule,
         KbqFormFieldModule,
-        FormsModule,
+        FormsModule
     ],
     bootstrap: [
-        DemoComponent,
-    ],
+        DemoComponent
+    ]
 })
 export class DemoModule {}

@@ -12,7 +12,7 @@ const IP_PATTERN =
     selector: 'validation-on-blur-example',
     templateUrl: 'validation-on-blur-example.html',
     styleUrls: ['validation-on-blur-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ValidationOnBlurExample {
     themePalette = ThemePalette;

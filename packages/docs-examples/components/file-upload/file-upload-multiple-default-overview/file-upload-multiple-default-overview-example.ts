@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'file-upload-multiple-default-overview-example',
     templateUrl: 'file-upload-multiple-default-overview-example.html',
-    styleUrls: ['file-upload-multiple-default-overview-example.css'],
+    styleUrls: ['file-upload-multiple-default-overview-example.css']
 })
 export class FileUploadMultipleDefaultOverviewExample {}

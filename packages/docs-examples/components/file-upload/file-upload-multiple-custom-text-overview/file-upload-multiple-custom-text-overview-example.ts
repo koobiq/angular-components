@@ -14,7 +14,7 @@ const localeData = {
     'es-LA': esLALocaleData,
     'pt-BR': ptBRLocaleData,
     'ru-RU': ruRULocaleData,
-    'fa-IR': faIRLocaleData,
+    'fa-IR': faIRLocaleData
 };
 
 class FileUploadConfiguration implements KbqInputFileMultipleLabel {
@@ -50,8 +50,8 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useClass: FileUploadConfiguration,
-            deps: [KBQ_LOCALE_SERVICE],
-        },
-    ],
+            deps: [KBQ_LOCALE_SERVICE]
+        }
+    ]
 })
 export class FileUploadMultipleCustomTextOverviewExample {}

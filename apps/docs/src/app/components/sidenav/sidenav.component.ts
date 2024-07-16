@@ -11,14 +11,14 @@ import { DocStates } from '../doс-states';
 
 enum TreeNodeType {
     Category = 'Category',
-    Item = 'Item',
+    Item = 'Item'
 }
 class TreeNode {
     constructor(
         public id: string,
         public children: TreeNode[],
         public name: string,
-        public type: TreeNodeType,
+        public type: TreeNodeType
     ) {}
 }
 
@@ -40,7 +40,7 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
             cat.id,
             cat.items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item)),
             cat.name,
-            TreeNodeType.Category,
+            TreeNodeType.Category
         );
 
         data.push(node);
@@ -54,9 +54,9 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
     templateUrl: './sidenav.component.html',
     styleUrls: ['./sidenav.scss'],
     host: {
-        class: 'docs-sidenav',
+        class: 'docs-sidenav'
     },
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild(KbqScrollbar) sidenavMenuContainer: KbqScrollbar;
@@ -106,7 +106,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         private docItems: DocumentationItems,
         private router: Router,
         private routeActivated: ActivatedRoute,
-        private viewportScroller: ViewportScroller,
+        private viewportScroller: ViewportScroller
     ) {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
@@ -114,7 +114,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);

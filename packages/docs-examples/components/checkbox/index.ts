@@ -13,7 +13,7 @@ export { CheckboxIndeterminateExample, CheckboxOverviewExample, PseudoCheckboxEx
 const EXAMPLES = [
     CheckboxIndeterminateExample,
     CheckboxOverviewExample,
-    PseudoCheckboxExample,
+    PseudoCheckboxExample
 ];
 
 @NgModule({
@@ -22,9 +22,9 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqPseudoCheckboxModule,
-        FormsModule,
+        FormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class CheckboxExamplesModule {}

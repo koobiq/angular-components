@@ -7,7 +7,7 @@ import { KBQ_DATE_LOCALE } from '../../datetime';
 export class DateFormatter<D> extends BaseDateFormatter<D> {
     constructor(
         override readonly adapter: DateAdapter<D>,
-        @Inject(KBQ_DATE_LOCALE) locale: string,
+        @Inject(KBQ_DATE_LOCALE) locale: string
     ) {
         super(adapter, locale);
     }

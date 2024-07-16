@@ -9,7 +9,7 @@ import {
     Optional,
     Output,
     Renderer2,
-    Self,
+    Self
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
@@ -25,7 +25,7 @@ const KbqTagInputDefaultSeparators: { [key: number]: KbqTagSeparator } = {
     [TAB]: { symbol: /\t/, key: 'Tab' },
     [SPACE]: { symbol: / /, key: ' ' },
     [COMMA]: { symbol: /,/, key: ',' },
-    [SEMICOLON]: { symbol: /;/, key: ';' },
+    [SEMICOLON]: { symbol: /;/, key: ';' }
 };
 
 /** Represents an input event on a `kbqTagInput`. */
@@ -64,8 +64,8 @@ let nextUniqueId = 0;
         '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',
         '(input)': 'onInput()',
-        '(paste)': 'onPaste($event)',
-    },
+        '(paste)': 'onPaste($event)'
+    }
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */
@@ -175,7 +175,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         @Inject(KBQ_TAGS_DEFAULT_OPTIONS) private defaultOptions: KbqTagsDefaultOptions,
         @Optional() @Self() private trimDirective: KbqTrim,
         @Optional() @Self() public ngControl: NgControl,
-        @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger,
+        @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
     ) {
         // tslint:disable-next-line: no-unnecessary-type-assertion
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;

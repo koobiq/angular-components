@@ -19,7 +19,7 @@ import { DateTime } from 'luxon';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements AfterViewInit {
     // date = this.adapter.createDate(2015, 1, 1);
@@ -35,15 +35,14 @@ export class DemoComponent implements AfterViewInit {
         { id: 'pt-BR' },
         { id: 'es-LA' },
         { id: 'zh-CN' },
-        { id: 'fa-IR' },
-    ];
+        { id: 'fa-IR' }];
     selectedLanguage: any = this.languageList[0];
 
     @ViewChild(KbqDatepicker) datepicker: KbqDatepicker<any>;
 
     constructor(
         private adapter: DateAdapter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
         this.formControlValue.valueChanges.subscribe((value) => {
@@ -103,8 +102,8 @@ export class DemoComponent implements AfterViewInit {
         KbqLuxonDateModule,
         KbqInputModule,
         KbqIconModule,
-        KbqRadioModule,
+        KbqRadioModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

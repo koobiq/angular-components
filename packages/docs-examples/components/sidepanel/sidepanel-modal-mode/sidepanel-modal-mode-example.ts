@@ -8,7 +8,7 @@ import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/si
     selector: 'sidepanel-modal-mode-example',
     templateUrl: 'sidepanel-modal-mode-example.html',
     styleUrls: ['sidepanel-modal-mode-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SidepanelModalModeExample {
     position = KbqSidepanelPosition.Right;
@@ -23,7 +23,7 @@ export class SidepanelModalModeExample {
     openSidepanel() {
         this.sidepanelService.open(this.template, {
             position: this.position,
-            hasBackdrop: true,
+            hasBackdrop: true
         });
     }
 }

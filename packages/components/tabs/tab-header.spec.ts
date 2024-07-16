@@ -11,7 +11,7 @@ import {
     fakeAsync,
     flush,
     tick,
-    waitForAsync,
+    waitForAsync
 } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
 import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
@@ -37,10 +37,10 @@ describe('KbqTabHeader', () => {
                     provide: Directionality,
                     useFactory: () => ({
                         value: dir,
-                        change: change.asObservable(),
-                    }),
-                },
-            ],
+                        change: change.asObservable()
+                    })
+                }
+            ]
         });
 
         TestBed.compileComponents();
@@ -329,8 +329,9 @@ interface ITab {
             :host {
                 width: 130px;
             }
-        `,
-    ],
+        `
+
+    ]
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;
@@ -340,8 +341,7 @@ class SimpleTabHeaderApp {
         { label: 'tab one' },
         { label: 'tab one' },
         { label: 'tab one' },
-        { label: 'tab one' },
-    ];
+        { label: 'tab one' }];
     dir: Direction = 'ltr';
 
     @ViewChild(KbqTabHeader, { static: true })

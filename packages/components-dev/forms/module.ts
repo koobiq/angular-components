@@ -10,7 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     value = '';
@@ -23,8 +23,8 @@ export class DemoComponent {
         FormsModule,
         KbqInputModule,
         KbqFormFieldModule,
-        KbqFormsModule,
+        KbqFormsModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

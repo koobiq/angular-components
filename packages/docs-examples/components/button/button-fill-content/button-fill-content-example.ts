@@ -8,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'button-fill-content-example',
     templateUrl: 'button-fill-content-example.html',
     styleUrls: ['button-fill-content-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonFillContentExample {
     colors = KbqComponentColors;

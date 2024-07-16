@@ -10,7 +10,7 @@ import {
     Inject,
     NgZone,
     Optional,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -23,8 +23,8 @@ import { debounceTime } from 'rxjs/operators';
     host: {
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
-        '(window:resize)': 'resizeStream.next($event)',
-    },
+        '(window:resize)': 'resizeStream.next($event)'
+    }
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     get isOverflown(): boolean {
@@ -66,7 +66,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         focusMonitor: FocusMonitor,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef,
+        @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
@@ -116,7 +116,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                 characterData: true,
                 attributes: false,
                 childList: true,
-                subtree: true,
+                subtree: true
             });
 
             return () => mutationObserver.disconnect();

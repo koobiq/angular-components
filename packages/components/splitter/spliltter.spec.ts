@@ -8,7 +8,7 @@ import {
     KbqGutterGhostDirective,
     KbqSplitterAreaDirective,
     KbqSplitterComponent,
-    KbqSplitterModule,
+    KbqSplitterModule
 } from './index';
 
 function createTestComponent<T>(component: Type<T>) {
@@ -16,7 +16,7 @@ function createTestComponent<T>(component: Type<T>) {
         .configureTestingModule({
             imports: [KbqSplitterModule],
             declarations: [component],
-            providers: [],
+            providers: []
         })
         .compileComponents();
 
@@ -27,7 +27,7 @@ function checkDirection<T>(
     fixture: ComponentFixture<T>,
     direction: Direction,
     guttersCount: number,
-    gutterSize: number,
+    gutterSize: number
 ) {
     const splitter = fixture.debugElement.query(By.directive(KbqSplitterComponent));
     const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
@@ -53,7 +53,7 @@ function checkDirection<T>(
             <div kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
-    `,
+    `
 })
 class KbqSplitterDefaultDirection {}
 
@@ -65,7 +65,7 @@ class KbqSplitterDefaultDirection {}
             <div kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
-    `,
+    `
 })
 class KbqSplitterDirection {
     direction: Direction = Direction.Vertical;
@@ -78,7 +78,7 @@ class KbqSplitterDirection {
             <div #areaA kbq-splitter-area (sizeChange)="areaASizeChange($event)">first</div>
             <div #areaB kbq-splitter-area (sizeChange)="areaBSizeChange($event)">second</div>
         </kbq-splitter>
-    `,
+    `
 })
 class KbqSplitterEvents {
     gutterPositionChange = jasmine.createSpy('gutter position change callback');
@@ -95,7 +95,7 @@ class KbqSplitterEvents {
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
-    `,
+    `
 })
 class KbqSplitterGhost {
     direction: Direction = Direction.Horizontal;
@@ -111,7 +111,7 @@ class KbqSplitterGhost {
             <div #areaA kbq-splitter-area style="flex: 1" *ngIf="isFirstRendered">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
-    `,
+    `
 })
 class DynamicData {
     direction: Direction = Direction.Horizontal;
@@ -177,11 +177,11 @@ describe('KbqSplitter', () => {
             expect(fixture.componentInstance.gutterPositionChange).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.areaASizeChange).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.areaASizeChange).toHaveBeenCalledWith(
-                fixture.componentInstance.areaA.getSize(),
+                fixture.componentInstance.areaA.getSize()
             );
             expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledWith(
-                fixture.componentInstance.areaB.getSize(),
+                fixture.componentInstance.areaB.getSize()
             );
         }));
     });
@@ -328,7 +328,7 @@ describe('KbqSplitter', () => {
 
             expect(componentInstance.areaA).toBeFalsy();
             expect(+(componentInstance.areaB as any).elementRef.nativeElement.style.order).not.toEqual(
-                areaBInitialOrder,
+                areaBInitialOrder
             );
         }));
     });

@@ -13,7 +13,7 @@ const MAX_PERCENT: number = 100;
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['../main.scss', './styles.scss']
 })
 export class ProgressSpinnerDemoComponent implements OnDestroy {
     colors = KbqComponentColors;
@@ -33,16 +33,16 @@ export class ProgressSpinnerDemoComponent implements OnDestroy {
 
 @NgModule({
     declarations: [
-        ProgressSpinnerDemoComponent,
+        ProgressSpinnerDemoComponent
     ],
     imports: [
         CommonModule,
         BrowserModule,
         KbqProgressSpinnerModule,
-        FormsModule,
+        FormsModule
     ],
     bootstrap: [
-        ProgressSpinnerDemoComponent,
-    ],
+        ProgressSpinnerDemoComponent
+    ]
 })
 export class DemoModule {}

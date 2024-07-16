@@ -9,7 +9,7 @@ import { timezones } from '../mock';
     selector: 'timezone-trigger-overview-example',
     templateUrl: 'timezone-trigger-overview-example.html',
     styleUrls: ['timezone-trigger-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TimezoneTriggerOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -24,7 +24,7 @@ export class TimezoneTriggerOverviewExample {
                       .map(({ city }) => city)
                       .sort()
                       .join(', ')
-                : '',
+                : ''
         }));
 
         this.data = getZonesGroupedByCountry(zones, 'Другие страны');

@@ -11,7 +11,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['../main.scss', 'styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonDemoComponent {
     colors = KbqComponentColors;
@@ -24,9 +24,9 @@ export class ButtonDemoComponent {
         BrowserAnimationsModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqToolTipModule,
+        KbqToolTipModule
     ],
     declarations: [ButtonDemoComponent],
-    bootstrap: [ButtonDemoComponent],
+    bootstrap: [ButtonDemoComponent]
 })
 export class DemoModule {}

@@ -8,7 +8,7 @@ import {
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
-    KbqSelectTrigger,
+    KbqSelectTrigger
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -29,7 +29,7 @@ import { KbqSelect } from './select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult,
+        KbqSelectSearchEmptyResult
     ],
     exports: [
         KbqFormFieldModule,
@@ -41,12 +41,12 @@ import { KbqSelect } from './select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult,
+        KbqSelectSearchEmptyResult
     ],
     declarations: [
         KbqSelect,
-        KbqOptionTooltip,
+        KbqOptionTooltip
     ],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
+    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })
 export class KbqSelectModule {}

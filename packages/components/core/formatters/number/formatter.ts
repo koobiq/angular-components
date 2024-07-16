@@ -8,7 +8,7 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
     minimumIntegerDigits: 1,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
+    maximumFractionDigits: 3
 };
 
 function isEmpty(value: any): boolean {
@@ -69,7 +69,7 @@ const ROUNDING_UNITS = {
     million: 1e6,
     oneHundredMillions: 100 * 1e6,
     billion: 1e9,
-    trillion: 1e12,
+    trillion: 1e12
 };
 
 const intervalsConfig = {
@@ -79,8 +79,8 @@ const intervalsConfig = {
         { startRange: ROUNDING_UNITS.thousand, endRange: ROUNDING_UNITS.tenThousand, precision: 1 },
         { startRange: ROUNDING_UNITS.tenThousand, endRange: ROUNDING_UNITS.million },
         { startRange: ROUNDING_UNITS.million, endRange: ROUNDING_UNITS.million * 10, precision: 1 },
-        { startRange: ROUNDING_UNITS.million * 10, endRange: ROUNDING_UNITS.billion },
-    ],
+        { startRange: ROUNDING_UNITS.million * 10, endRange: ROUNDING_UNITS.billion }
+    ]
 };
 // tslint:enable:no-magic-numbers
 
@@ -134,7 +134,7 @@ export class KbqDecimalPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo,
+        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -170,7 +170,7 @@ export class KbqDecimalPipe implements PipeTransform {
 
         const options: NumberFormatOptions = {
             ...this.options,
-            ...parsedDigitsInfo,
+            ...parsedDigitsInfo
         };
 
         if (this.isSpecialFormatForRULocale(currentLocale, value, parsedDigitsInfo?.useGrouping)) {
@@ -204,7 +204,7 @@ export class KbqTableNumberPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo,
+        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -240,7 +240,7 @@ export class KbqTableNumberPipe implements PipeTransform {
 
         const options: NumberFormatOptions = {
             ...this.options,
-            ...parsedDigitsInfo,
+            ...parsedDigitsInfo
         };
 
         try {
@@ -271,7 +271,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
@@ -303,7 +303,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                                     ? this.calculatePartsForThousands(num)
                                     : {
                                           num: Math.trunc(num / ROUNDING_UNITS[unit]),
-                                          fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit]),
+                                          fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                                       };
                         } else {
                             parts = { num: Math.round(num / ROUNDING_UNITS[unit]) };
@@ -318,7 +318,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                 ? parts
                 : {
                       num: Math.trunc(num / ROUNDING_UNITS[unit]),
-                      fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit]),
+                      fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
             Object.keys(parts).forEach((key) => {
                 parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);

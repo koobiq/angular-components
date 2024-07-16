@@ -33,15 +33,15 @@ export class PublishReleaseCITask extends BaseReleaseTask {
             console.error(
                 red(
                     `Cannot parse current version in ${italic('package.json')}. Please ` +
-                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
-                ),
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`
+                )
             );
             process.exit(1);
         }
 
         this.githubApi = new Octokit({
             type: 'token',
-            token: config.repoToken,
+            token: config.repoToken
         });
     }
 
@@ -74,7 +74,7 @@ export class PublishReleaseCITask extends BaseReleaseTask {
 
         const extractedReleaseNotes = extractReleaseNotes(
             join(this.config.projectDir, CHANGELOG_FILE_NAME),
-            newVersionName,
+            newVersionName
         );
 
         if (!extractedReleaseNotes) {
@@ -133,8 +133,8 @@ export class PublishReleaseCITask extends BaseReleaseTask {
             console.error(
                 red(
                     `  ✘   Release output does not pass all release validations. Please fix ` +
-                        `all failures or reach out to the team.`,
-                ),
+                        `all failures or reach out to the team.`
+                )
             );
             process.exit(1);
         }

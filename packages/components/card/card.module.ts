@@ -8,9 +8,9 @@ import { KbqCard } from './card.component';
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     exports: [KbqCard],
-    declarations: [KbqCard],
+    declarations: [KbqCard]
 })
 export class KbqCardModule {}

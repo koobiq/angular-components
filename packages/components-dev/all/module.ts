@@ -53,7 +53,7 @@ const MAX_PERCENT: number = 100;
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -84,27 +84,27 @@ export class DemoComponent {
     folders = [
         {
             name: 'Photos',
-            updated: new Date('1/1/16'),
+            updated: new Date('1/1/16')
         },
         {
             name: 'Recipes',
-            updated: new Date('1/17/16'),
+            updated: new Date('1/17/16')
         },
         {
             name: 'Work',
-            updated: new Date('1/28/16'),
-        },
+            updated: new Date('1/28/16')
+        }
     ];
 
     notes = [
         {
             name: 'Vacation Itinerary',
-            updated: new Date('2/20/16'),
+            updated: new Date('2/20/16')
         },
         {
             name: 'Kitchen Remodel',
-            updated: new Date('1/18/16'),
-        },
+            updated: new Date('1/18/16')
+        }
     ];
 
     mode: ProgressSpinnerMode = 'determinate';
@@ -119,12 +119,12 @@ export class DemoComponent {
         'Apple',
         'Banana',
         'Tomato',
-        'Крякать как уточка',
+        'Крякать как уточка'
     ];
 
     selectionList = [
         { name: 'Yes', value: 'true', selected: false },
-        { name: 'No', value: 'false', selected: true },
+        { name: 'No', value: 'false', selected: true }
     ];
 
     singleSelected = 'Normal';
@@ -149,7 +149,7 @@ export class DemoComponent {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -162,7 +162,7 @@ export class DemoComponent {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -212,7 +212,7 @@ export class DemoComponent {
 
 @NgModule({
     declarations: [
-        DemoComponent,
+        DemoComponent
     ],
     imports: [
         BrowserModule,
@@ -244,10 +244,10 @@ export class DemoComponent {
         KbqTimepickerModule,
         KbqToggleModule,
         KbqToolTipModule,
-        KbqTreeModule,
+        KbqTreeModule
     ],
     bootstrap: [
-        DemoComponent,
-    ],
+        DemoComponent
+    ]
 })
 export class DemoModule {}

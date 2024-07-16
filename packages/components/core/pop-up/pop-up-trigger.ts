@@ -7,7 +7,7 @@ import {
     Overlay,
     OverlayConfig,
     OverlayRef,
-    ScrollDispatcher,
+    ScrollDispatcher
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Directive, ElementRef, EventEmitter, NgZone, TemplateRef, Type, ViewContainerRef } from '@angular/core';
@@ -18,7 +18,7 @@ import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
     POSITION_PRIORITY_STRATEGY,
-    POSITION_TO_CSS_MAP,
+    POSITION_TO_CSS_MAP
 } from '../overlay/overlay-position-map';
 import { PopUpPlacements, PopUpTriggers } from './constants';
 
@@ -71,7 +71,7 @@ export abstract class KbqPopUpTrigger<T> {
         protected scrollDispatcher: ScrollDispatcher,
         protected hostView: ViewContainerRef,
         protected scrollStrategy,
-        protected direction?: Directionality,
+        protected direction?: Directionality
     ) {
         this.availablePositions = POSITION_MAP;
     }
@@ -214,7 +214,7 @@ export abstract class KbqPopUpTrigger<T> {
             ...this.overlayConfig,
             direction: this.direction,
             positionStrategy: strategy,
-            scrollStrategy: this.scrollStrategy(),
+            scrollStrategy: this.scrollStrategy()
         });
 
         this.subscribeOnClosingActions();
@@ -338,7 +338,8 @@ export abstract class KbqPopUpTrigger<T> {
                 this.triggerName = name;
 
                 return listener.call(this);
-            },
+            }
+
         ];
     }
 

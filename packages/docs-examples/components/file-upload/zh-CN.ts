@@ -6,6 +6,6 @@ export const zhCNLocaleData = {
     title: '添加照片',
     gridHeaders: {
         file: '文件',
-        size: '大小',
-    },
+        size: '大小'
+    }
 };

@@ -38,7 +38,7 @@ const classWithMargin = 'kbq-form-row_margin';
                 </kbq-form-field>
             </div>
         </form>
-    `,
+    `
 })
 class HorizontalForm {}
 
@@ -72,7 +72,7 @@ class HorizontalForm {}
                 </kbq-form-field>
             </div>
         </form>
-    `,
+    `
 })
 class VerticalForm {}
 
@@ -82,9 +82,9 @@ xdescribe('Forms', () => {
             imports: [
                 KbqFormsModule,
                 KbqInputModule,
-                KbqFormFieldModule,
+                KbqFormFieldModule
             ],
-            declarations: [HorizontalForm, VerticalForm],
+            declarations: [HorizontalForm, VerticalForm]
         }).compileComponents();
     }));
 

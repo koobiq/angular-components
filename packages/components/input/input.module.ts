@@ -15,7 +15,7 @@ import { KbqInputPassword } from './input-password';
         A11yModule,
         KbqCommonModule,
         FormsModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: [
         KbqInput,
@@ -23,7 +23,7 @@ import { KbqInputPassword } from './input-password';
         KbqInputPassword,
         KbqInputMono,
         MinValidator,
-        MaxValidator,
+        MaxValidator
     ],
     exports: [
         KbqInput,
@@ -31,7 +31,7 @@ import { KbqInputPassword } from './input-password';
         KbqInputPassword,
         KbqInputMono,
         MinValidator,
-        MaxValidator,
-    ],
+        MaxValidator
+    ]
 })
 export class KbqInputModule {}

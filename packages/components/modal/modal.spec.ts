@@ -27,7 +27,7 @@ describe('KbqModal', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [ModalTestModule],
+            imports: [ModalTestModule]
         });
 
         TestBed.compileComponents();
@@ -90,9 +90,9 @@ describe('KbqModal', () => {
                         type: 'primary',
                         onClick: () => {
                             onClickEmitter.emit();
-                        },
-                    },
-                ],
+                        }
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -196,7 +196,7 @@ describe('KbqModal', () => {
             const spyCancel = jasmine.createSpy('cancel spy');
             const modalRef: KbqModalRef = modalService.create({
                 kbqOnOk: spyOk,
-                kbqOnCancel: spyCancel,
+                kbqOnCancel: spyCancel
             });
 
             fixture.detectChanges();
@@ -215,9 +215,9 @@ describe('KbqModal', () => {
                     {
                         label: 'button 1',
                         type: 'primary',
-                        loading: () => isLoading,
-                    },
-                ],
+                        loading: () => isLoading
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -233,9 +233,9 @@ describe('KbqModal', () => {
                     {
                         label: 'button 1',
                         type: ThemePalette.Primary,
-                        show: () => isShown,
-                    },
-                ],
+                        show: () => isShown
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -251,9 +251,9 @@ describe('KbqModal', () => {
                     {
                         label: 'button 1',
                         type: ThemePalette.Primary,
-                        disabled: () => isDisabled,
-                    },
-                ],
+                        disabled: () => isDisabled
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -271,9 +271,9 @@ describe('KbqModal', () => {
                         label: 'Test label',
                         type: 'primary',
                         kbqModalMainAction: true,
-                        onClick: spyOk,
-                    },
-                ],
+                        onClick: spyOk
+                    }
+                ]
             });
             fixture.detectChanges();
             tick(600);
@@ -283,7 +283,7 @@ describe('KbqModal', () => {
 
             Object.defineProperties(event, {
                 keyCode: { get: () => ENTER },
-                ctrlKey: { get: () => true },
+                ctrlKey: { get: () => true }
             });
 
             modalRef.getElement().dispatchEvent(event);
@@ -299,7 +299,7 @@ describe('KbqModal', () => {
                 kbqContent: 'Сохранить сделанные изменения?',
                 kbqOkText: 'Сохранить',
                 kbqCancelText: 'Отмена',
-                kbqOnOk: spyOk,
+                kbqOnOk: spyOk
             });
             fixture.detectChanges();
 
@@ -308,7 +308,7 @@ describe('KbqModal', () => {
 
             Object.defineProperties(event, {
                 keyCode: { get: () => ENTER },
-                ctrlKey: { get: () => true },
+                ctrlKey: { get: () => true }
             });
 
             modalRef.getElement().dispatchEvent(event);
@@ -322,9 +322,9 @@ describe('KbqModal', () => {
                 kbqFooter: [
                     {
                         label: 'button 1',
-                        type: 'primary',
-                    },
-                ],
+                        type: 'primary'
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -335,7 +335,7 @@ describe('KbqModal', () => {
 
         it('should show the footer, when kbqOkText is specified', fakeAsync(() => {
             const modalRef = modalService.create({
-                kbqOkText: 'OK',
+                kbqOkText: 'OK'
             });
 
             fixture.detectChanges();
@@ -346,7 +346,7 @@ describe('KbqModal', () => {
 
         it('should show the footer, when kbqCancelText is specified', fakeAsync(() => {
             const modalRef = modalService.create({
-                kbqCancelText: 'OK',
+                kbqCancelText: 'OK'
             });
 
             fixture.detectChanges();
@@ -395,9 +395,9 @@ describe('KbqModal', () => {
                 kbqFooter: [
                     {
                         label: 'button 1',
-                        type: 'primary',
-                    },
-                ],
+                        type: 'primary'
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -427,9 +427,9 @@ describe('KbqModal', () => {
                 kbqFooter: [
                     {
                         label: 'button 1',
-                        type: 'primary',
-                    },
-                ],
+                        type: 'primary'
+                    }
+                ]
             });
 
             fixture.detectChanges();
@@ -454,7 +454,7 @@ describe('KbqModal', () => {
 
                 const modalRef = modalService.create({
                     kbqRestoreFocus: true,
-                    kbqFooter: [{ label: 'button 1', type: 'primary' }],
+                    kbqFooter: [{ label: 'button 1', type: 'primary' }]
                 });
 
                 fixture.detectChanges();
@@ -539,7 +539,7 @@ describe('KbqModal', () => {
         </kbq-dropdown>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService],
+    providers: [KbqModalControlService]
 })
 class ModalByServiceFromDropdownComponent {
     nonServiceModalVisible = false;
@@ -548,7 +548,7 @@ class ModalByServiceFromDropdownComponent {
     // @ts-ignore
     constructor(
         public modalControlService: KbqModalControlService,
-        public modalService: KbqModalService,
+        public modalService: KbqModalService
     ) {}
 
     showConfirm() {
@@ -559,13 +559,13 @@ class ModalByServiceFromDropdownComponent {
             kbqContent: 'Save all?',
             kbqOkText: this.kbqOkText,
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 }
 
 @Component({
-    template: `Modal Content`,
+    template: `Modal Content`
 })
 class TestModalContentComponent {}
 
@@ -576,7 +576,7 @@ class TestModalContentComponent {}
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService],
+    providers: [KbqModalControlService]
 })
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
@@ -588,7 +588,7 @@ class ModalByServiceComponent {
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,
     TestModalContentComponent,
-    ModalByServiceFromDropdownComponent,
+    ModalByServiceFromDropdownComponent
 ];
 
 @NgModule({
@@ -596,9 +596,9 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule,
+        NoopAnimationsModule
     ],
     exports: TEST_DIRECTIVES,
-    declarations: TEST_DIRECTIVES,
+    declarations: TEST_DIRECTIVES
 })
 class ModalTestModule {}

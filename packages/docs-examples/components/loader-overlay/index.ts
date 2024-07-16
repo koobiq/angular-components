@@ -11,23 +11,23 @@ export {
     LoaderOverlayDefaultExample,
     LoaderOverlayFixedTopExample,
     LoaderOverlayLargeExample,
-    LoaderOverlayOverviewExample,
+    LoaderOverlayOverviewExample
 };
 
 const EXAMPLES = [
     LoaderOverlayOverviewExample,
     LoaderOverlayFixedTopExample,
     LoaderOverlayDefaultExample,
-    LoaderOverlayLargeExample,
+    LoaderOverlayLargeExample
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule,
+        KbqLoaderOverlayModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class LoaderOverlayExamplesModule {}

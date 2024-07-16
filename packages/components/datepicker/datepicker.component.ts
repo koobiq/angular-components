@@ -20,7 +20,7 @@ import {
     Output,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -37,7 +37,7 @@ let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const KBQ_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
-    'kbq-datepicker-scroll-strategy',
+    'kbq-datepicker-scroll-strategy'
 );
 
 /** @docs-private */
@@ -50,7 +50,7 @@ export function KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => 
 export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DATEPICKER_SCROLL_STRATEGY,
     deps: [Overlay],
-    useFactory: KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY,
+    useFactory: KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY
 };
 
 /**
@@ -69,14 +69,14 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         class: 'kbq-datepicker__content',
 
         '[@transformPanel]': 'animationState',
-        '(@transformPanel.done)': 'animationDone.next()',
+        '(@transformPanel.done)': 'animationDone.next()'
     },
     animations: [
         kbqDatepickerAnimations.transformPanel,
-        kbqDatepickerAnimations.fadeInCalendar,
+        kbqDatepickerAnimations.fadeInCalendar
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqDatepickerContent<D> implements OnDestroy {
     /** Emits when an animation has finished. */
@@ -99,7 +99,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
         this.subscriptions.add(
             this.datepicker.stateChanges.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
-            }),
+            })
         );
     }
 
@@ -124,7 +124,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     exportAs: 'kbqDatepicker',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }]
 })
 export class KbqDatepicker<D> implements OnDestroy {
     @Input()
@@ -277,7 +277,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         @Inject(KBQ_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
         @Optional() private readonly dateAdapter: DateAdapter<D>,
         @Optional() private dir: Directionality,
-        @Optional() @Inject(DOCUMENT) private document: any,
+        @Optional() @Inject(DOCUMENT) private document: any
     ) {
         if (!this.dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
@@ -399,7 +399,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         if (!this.calendarPortal) {
             this.calendarPortal = new ComponentPortal<KbqDatepickerContent<D>>(
                 KbqDatepickerContent,
-                this.viewContainerRef,
+                this.viewContainerRef
             );
         }
 
@@ -427,7 +427,7 @@ export class KbqDatepicker<D> implements OnDestroy {
             backdropClass: this.backdropClass,
             direction: this.dir,
             scrollStrategy: this.scrollStrategy(),
-            panelClass: 'kbq-datepicker__popup',
+            panelClass: 'kbq-datepicker__popup'
         });
 
         this.popupRef = this.overlay.create(overlayConfig);
@@ -443,7 +443,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         return merge(
             this.popupRef!.backdropClick(),
             this.popupRef!.outsidePointerEvents(),
-            this.popupRef!.detachments(),
+            this.popupRef!.detachments()
         );
     }
 
@@ -461,26 +461,26 @@ export class KbqDatepicker<D> implements OnDestroy {
                     originX: 'start',
                     originY: 'bottom',
                     overlayX: 'start',
-                    overlayY: 'top',
+                    overlayY: 'top'
                 },
                 {
                     originX: 'start',
                     originY: 'top',
                     overlayX: 'start',
-                    overlayY: 'bottom',
+                    overlayY: 'bottom'
                 },
                 {
                     originX: 'end',
                     originY: 'bottom',
                     overlayX: 'end',
-                    overlayY: 'top',
+                    overlayY: 'top'
                 },
                 {
                     originX: 'end',
                     originY: 'top',
                     overlayX: 'end',
-                    overlayY: 'bottom',
-                },
+                    overlayY: 'bottom'
+                }
             ]);
     }
 }

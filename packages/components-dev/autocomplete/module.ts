@@ -15,7 +15,7 @@ import { map, startWith } from 'rxjs/operators';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements OnInit {
     options = [
@@ -49,7 +49,7 @@ export class DemoComponent implements OnInit {
         'Самара',
         'Санкт-Петербург',
         'Уфа',
-        'Челябинск',
+        'Челябинск'
     ];
 
     filteredOptions: Observable<string[]>;
@@ -63,7 +63,7 @@ export class DemoComponent implements OnInit {
     ngOnInit(): void {
         this.filteredOptions = this.formControl.valueChanges.pipe(
             startWith(''),
-            map((value) => this.filter(value)),
+            map((value) => this.filter(value))
         );
     }
 
@@ -81,13 +81,12 @@ export class DemoComponent implements OnInit {
         BrowserModule,
         FormsModule,
         KbqAutocompleteModule,
-
         KbqInputModule,
         KbqButtonModule,
         KbqFormFieldModule,
         KbqIconModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

@@ -18,7 +18,7 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
     selector: 'code-block-line-wrap-example',
     templateUrl: 'code-block-line-wrap-example.html',
     styleUrls: ['code-block-line-wrap-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockLineWrapExample {
     files: KbqCodeFile[];
@@ -29,8 +29,8 @@ export class CodeBlockLineWrapExample {
             {
                 filename: '',
                 content: codeXML,
-                language: 'xml',
-            },
+                language: 'xml'
+            }
         ];
     }
 }

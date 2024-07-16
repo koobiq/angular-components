@@ -8,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'tag-content-example',
     templateUrl: 'tag-content-example.html',
     styleUrls: ['tag-content-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TagContentExample {
     colors = KbqComponentColors;

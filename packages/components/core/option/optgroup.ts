@@ -22,8 +22,8 @@ let uniqueOptgroupIdCounter = 0;
     inputs: ['disabled'],
     host: {
         class: 'kbq-optgroup',
-        '[class.kbq-disabled]': 'disabled',
-    },
+        '[class.kbq-disabled]': 'disabled'
+    }
 })
 export class KbqOptgroup extends KbqOptgroupMixinBase implements CanDisable {
     @Input() label: string;

@@ -13,7 +13,7 @@ import {
     Optional,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -45,8 +45,8 @@ export type ScrollDirection = 'after' | 'before';
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
-        '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'",
-    },
+        '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
+    }
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** The index of the active tab. */
@@ -65,7 +65,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
         ngZone: NgZone,
         platform: Platform,
         @Optional() dir: Directionality,
-        @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+        @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string
     ) {
         super(elementRef, changeDetectorRef, viewportRuler, ngZone, platform, dir, animationMode);
     }

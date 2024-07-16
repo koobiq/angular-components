@@ -7,6 +7,6 @@ import { KbqToggleComponent } from './toggle.component';
 @NgModule({
     imports: [CommonModule, A11yModule, KbqCommonModule],
     exports: [KbqToggleComponent],
-    declarations: [KbqToggleComponent],
+    declarations: [KbqToggleComponent]
 })
 export class KbqToggleModule {}

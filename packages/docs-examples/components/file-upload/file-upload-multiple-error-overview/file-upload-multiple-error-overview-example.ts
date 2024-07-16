@@ -7,7 +7,7 @@ import { KbqFileItem } from '@koobiq/components/file-upload';
 @Component({
     selector: 'file-upload-multiple-error-overview-example',
     templateUrl: 'file-upload-multiple-error-overview-example.html',
-    styleUrls: ['file-upload-multiple-error-overview-example.css'],
+    styleUrls: ['file-upload-multiple-error-overview-example.css']
 })
 export class FileUploadMultipleErrorOverviewExample {
     errors: string[] = [];
@@ -32,12 +32,12 @@ export class FileUploadMultipleErrorOverviewExample {
 
             this.errors = [
                 ...this.errors,
-                ...errorsPerFile,
+                ...errorsPerFile
             ].filter(Boolean);
 
             return {
                 ...file,
-                hasError: errorsPerFile.length > 0,
+                hasError: errorsPerFile.length > 0
             };
         });
     }

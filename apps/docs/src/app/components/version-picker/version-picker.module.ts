@@ -10,9 +10,9 @@ import { VersionPickerDirective } from './version-picker.directive';
         CommonModule,
         KbqDropdownModule,
         KbqLinkModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     exports: [VersionPickerDirective],
-    declarations: [VersionPickerDirective],
+    declarations: [VersionPickerDirective]
 })
 export class VersionPickerModule {}

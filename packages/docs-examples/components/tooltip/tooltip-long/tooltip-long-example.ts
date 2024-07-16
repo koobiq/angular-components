@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tooltip-long-example',
     templateUrl: 'tooltip-long-example.html',
     styleUrls: ['tooltip-long-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TooltipLongExample {}

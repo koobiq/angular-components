@@ -10,7 +10,7 @@ import { map, startWith } from 'rxjs/operators';
     selector: 'autocomplete-overview-example',
     templateUrl: 'autocomplete-overview-example.html',
     styleUrls: ['autocomplete-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class AutocompleteOverviewExample {
     options = [
@@ -185,7 +185,7 @@ export class AutocompleteOverviewExample {
         'Ethiopia',
         'South Africa',
         'Jamaica',
-        'Japan',
+        'Japan'
     ];
 
     control = new FormControl('');
@@ -194,7 +194,7 @@ export class AutocompleteOverviewExample {
     ngOnInit(): void {
         this.filteredOptions = this.control.valueChanges.pipe(
             startWith(''),
-            map((value) => this.filter(value as string)),
+            map((value) => this.filter(value as string))
         );
     }
 

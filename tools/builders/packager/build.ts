@@ -14,7 +14,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
     const target: Target = {
         target: options.buildTarget,
-        project,
+        project
     };
 
     await fillKoobiqVersion(project);
@@ -32,7 +32,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
         return {
             error: err,
-            success: false,
+            success: false
         };
     }
 
@@ -48,7 +48,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
         if (!projectRoot) {
             context.logger.error(
-                `❌ Could not find a root folder for the project ${project} in your angular.json file`,
+                `❌ Could not find a root folder for the project ${project} in your angular.json file`
             );
 
             return { success: false };
@@ -76,14 +76,14 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             releasePackageJson,
             packageJson,
             options.versionPlaceholder,
-            context,
+            context
         );
 
         context.logger.info('Syncing Angular dependency versions for releasing...');
         releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder, context);
 
         writeFileSync(join(libraryDestination, 'package.json'), JSON.stringify(releasePackageJson, null, 4), {
-            encoding: 'utf-8',
+            encoding: 'utf-8'
         });
         context.logger.info(green('Replaced all version placeholders in package.json file!'));
 
@@ -109,7 +109,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
     return {
         error: 'Package failed',
-        success: false,
+        success: false
     };
 }
 
@@ -132,7 +132,7 @@ function syncComponentsVersion(
     releaseJson: IPackageJson,
     rootPackageJson: IPackageJson,
     placeholder: string,
-    context: BuilderContext,
+    context: BuilderContext
 ): IPackageJson {
     const newPackageJson = { ...releaseJson };
 
@@ -154,7 +154,7 @@ function syncNgVersion(
     releaseJson: IPackageJson,
     rootPackageJson: IPackageJson,
     placeholder: string,
-    context: BuilderContext,
+    context: BuilderContext
 ): IPackageJson {
     const updatedJson = { ...releaseJson };
 

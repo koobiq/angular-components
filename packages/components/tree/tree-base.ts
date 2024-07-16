@@ -16,7 +16,7 @@ import {
     TrackByFunction,
     ViewChild,
     ViewContainerRef,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
@@ -28,7 +28,7 @@ import {
     getTreeControlMissingError,
     getTreeMissingMatchingNodeDefError,
     getTreeMultipleDefaultNodeDefsError,
-    getTreeNoValidDataSourceError,
+    getTreeNoValidDataSourceError
 } from './tree-errors';
 
 @Directive()
@@ -92,7 +92,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
     constructor(
         protected differs: IterableDiffers,
-        protected changeDetectorRef: ChangeDetectorRef,
+        protected changeDetectorRef: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -138,7 +138,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         data: T[] | ReadonlyArray<T>,
         dataDiffer: IterableDiffer<T> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
-        parentData?: T,
+        parentData?: T
     ) {
         const changes = dataDiffer.diff(data);
 
@@ -157,7 +157,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
                     const view = viewContainer.get(adjustedPreviousIndex!);
                     viewContainer.move(view!, currentIndex);
                 }
-            },
+            }
         );
 
         this.changeDetectorRef.detectChanges();
@@ -273,7 +273,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
 @Directive({
     selector: 'kbq-tree-node',
-    exportAs: 'kbqTreeNode',
+    exportAs: 'kbqTreeNode'
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     /**
@@ -304,7 +304,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
     constructor(
         protected elementRef: ElementRef,
-        @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>,
+        @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>
     ) {
         KbqTreeNode.mostRecentTreeNode = this;
     }

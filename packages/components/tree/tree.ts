@@ -7,9 +7,9 @@ import { KbqTreeBase } from './tree-base';
     template: `<ng-container kbqTreeNodeOutlet></ng-container>`,
     styleUrls: ['./tree.scss'],
     host: {
-        class: 'kbq-tree',
+        class: 'kbq-tree'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTree extends KbqTreeBase<any> {}

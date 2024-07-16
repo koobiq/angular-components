@@ -23,7 +23,7 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqIconModule,
         KbqTagsModule,
         KbqToolTipModule,
-        KbqHighlightModule,
+        KbqHighlightModule
     ],
     declarations: [
         UtcOffsetPipe,
@@ -31,13 +31,13 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
-        KbqTimezoneSelectTrigger,
+        KbqTimezoneSelectTrigger
     ],
     exports: [
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
-        KbqTimezoneSelectTrigger,
-    ],
+        KbqTimezoneSelectTrigger
+    ]
 })
 export class KbqTimezoneModule {}

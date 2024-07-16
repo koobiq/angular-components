@@ -35,7 +35,7 @@ export {
     TreeMultipleCheckboxExample,
     TreeMultipleChecklistExample,
     TreeMultipleKeyboardExample,
-    TreeOverviewExample,
+    TreeOverviewExample
 };
 
 const EXAMPLES = [
@@ -49,7 +49,7 @@ const EXAMPLES = [
     TreeCheckedFilteringExample,
     TreeLazyloadExample,
     TreeDescendantsSubcategoriesExample,
-    TreeAccessRightsExample,
+    TreeAccessRightsExample
 ];
 
 @NgModule({
@@ -67,9 +67,9 @@ const EXAMPLES = [
         KbqOptionModule,
         KbqProgressSpinnerModule,
         ClipboardModule,
-        KbqButtonToggleModule,
+        KbqButtonToggleModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TreeExamplesModule {}

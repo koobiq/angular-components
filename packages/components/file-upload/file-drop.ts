@@ -12,8 +12,8 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
         '[class.dragover]': 'dragover',
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
-        '(drop)': 'onDrop($event)',
-    },
+        '(drop)': 'onDrop($event)'
+    }
 })
 export class KbqFileDropDirective {
     dragover: boolean;
@@ -67,7 +67,7 @@ const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
             const directoryReader = next.createReader();
 
             queue.push(
-                new Promise<FileSystemEntry[]>((resolve, reject) => directoryReader.readEntries(resolve, reject)),
+                new Promise<FileSystemEntry[]>((resolve, reject) => directoryReader.readEntries(resolve, reject))
             );
         } else if (entryIsFile(next)) {
             const fileEntry = next;
@@ -77,7 +77,7 @@ const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
                         (file as KbqFile).fullPath = fileEntry.fullPath;
                         resolve(file as KbqFile);
                     }, reject);
-                }),
+                })
             );
         }
     }

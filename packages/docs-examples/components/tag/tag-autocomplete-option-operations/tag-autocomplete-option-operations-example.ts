@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
     selector: 'tag-autocomplete-option-operations-example',
     templateUrl: 'tag-autocomplete-option-operations-example.html',
     styleUrls: ['tag-autocomplete-option-operations-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TagAutocompleteOptionOperationsExample {
     allTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
@@ -45,9 +45,9 @@ export class TagAutocompleteOptionOperationsExample {
                     const values = selectedTags.map((tag: any) => tag.value);
 
                     return this.allTags.filter((tag) => !values.includes(tag));
-                }),
+                })
             ),
-            this.control.valueChanges.pipe(map(this.onControlValueChanges)),
+            this.control.valueChanges.pipe(map(this.onControlValueChanges))
         );
     }
 
@@ -104,7 +104,7 @@ export class TagAutocompleteOptionOperationsExample {
         if (!target || target.tagName !== this.kbqOptionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
                 input: this.tagInput.nativeElement,
-                value: this.tagInput.nativeElement.value,
+                value: this.tagInput.nativeElement.value
             };
 
             this.onCreate(kbqTagEvent);
@@ -115,7 +115,7 @@ export class TagAutocompleteOptionOperationsExample {
         const filterValue = value.toLowerCase();
 
         return [...new Set(this.allTags.concat(this.selectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0,
+            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
         );
     }
 

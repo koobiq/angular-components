@@ -6,7 +6,7 @@ import {
     ElementRef,
     Input,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { shareReplay } from 'rxjs/operators';
 
@@ -15,10 +15,10 @@ import { shareReplay } from 'rxjs/operators';
     templateUrl: 'docs-example-source.html',
     styleUrls: ['docs-example-source.scss'],
     host: {
-        class: 'docs-example-source',
+        class: 'docs-example-source'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DocsExampleSource {
     @ViewChild('code') code: ElementRef;
@@ -37,7 +37,7 @@ export class DocsExampleSource {
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private http: HttpClient,
+        private http: HttpClient
     ) {}
 
     private setLineNumbers() {

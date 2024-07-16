@@ -9,7 +9,7 @@ import {
     Optional,
     Output,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
@@ -26,7 +26,7 @@ const DAYS_PER_WEEK = 7;
     exportAs: 'kbqMonthView',
     templateUrl: 'month-view.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqMonthView<D> implements AfterContentInit {
     /**
@@ -105,7 +105,7 @@ export class KbqMonthView<D> implements AfterContentInit {
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        @Optional() public adapter: DateAdapter<D>,
+        @Optional() public adapter: DateAdapter<D>
     ) {
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');
@@ -149,7 +149,7 @@ export class KbqMonthView<D> implements AfterContentInit {
 
         const firstOfMonth = this.adapter.createDate(
             this.adapter.getYear(this.activeDate),
-            this.adapter.getMonth(this.activeDate),
+            this.adapter.getMonth(this.activeDate)
         );
 
         this.firstWeekOffset =
@@ -176,7 +176,7 @@ export class KbqMonthView<D> implements AfterContentInit {
             const date = this.adapter.createDate(
                 this.adapter.getYear(this.activeDate),
                 this.adapter.getMonth(this.activeDate),
-                i + 1,
+                i + 1
             );
             const enabled = this.shouldEnableDate(date);
             const cellClasses = this.dateClass ? this.dateClass(date) : undefined;

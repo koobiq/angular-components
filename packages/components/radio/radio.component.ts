@@ -18,7 +18,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -31,7 +31,7 @@ import {
     mixinColor,
     mixinDisabled,
     mixinTabIndex,
-    toBoolean,
+    toBoolean
 } from '@koobiq/components/core';
 
 // Increasing integer for generating unique ids for radio components.
@@ -43,7 +43,7 @@ export class KbqRadioChange {
         /** The KbqRadioButton that emits the change event. */
         public source: KbqRadioButton,
         /** The value of the KbqRadioButton. */
-        public value: any,
+        public value: any
     ) {}
 }
 
@@ -63,7 +63,7 @@ export const KbqRadioGroupMixinBase: CanDisableCtor & typeof KbqRadioGroupBase =
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqRadioGroup),
-    multi: true,
+    multi: true
 };
 
 @Directive({
@@ -73,9 +73,9 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
         role: 'radiogroup',
         class: 'kbq-radio-group',
         '[class.kbq-radio-group_normal]': '!big',
-        '[class.kbq-radio-group_big]': 'big',
+        '[class.kbq-radio-group_big]': 'big'
     },
-    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR]
 })
 export class KbqRadioGroup
     extends KbqRadioGroupMixinBase
@@ -194,7 +194,7 @@ export class KbqRadioGroup
 
     constructor(
         elementRef: ElementRef,
-        private readonly changeDetector: ChangeDetectorRef,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         super(elementRef);
     }
@@ -321,7 +321,7 @@ abstract class KbqRadioButtonBase {
 
 /** @docs-private */
 export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof KbqRadioButtonBase = mixinColor(
-    mixinTabIndex(KbqRadioButtonBase),
+    mixinTabIndex(KbqRadioButtonBase)
 );
 
 @Component({
@@ -337,8 +337,8 @@ export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof Kb
         '[attr.id]': 'id',
         '[class.kbq-radio-button_big]': 'radioGroup?.big',
         '[class.kbq-selected]': 'checked',
-        '[class.kbq-disabled]': 'disabled',
-    },
+        '[class.kbq-disabled]': 'disabled'
+    }
 })
 export class KbqRadioButton
     extends KbqRadioButtonMixinBase
@@ -476,7 +476,7 @@ export class KbqRadioButton
         elementRef: ElementRef,
         private readonly changeDetector: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
-        private readonly radioDispatcher: UniqueSelectionDispatcher,
+        private readonly radioDispatcher: UniqueSelectionDispatcher
     ) {
         super(elementRef);
 

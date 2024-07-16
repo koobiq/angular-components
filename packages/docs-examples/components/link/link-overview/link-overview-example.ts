@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-overview-example',
     templateUrl: 'link-overview-example.html',
     styleUrls: ['link-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LinkOverviewExample {
     active = true;

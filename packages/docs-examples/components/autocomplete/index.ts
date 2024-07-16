@@ -11,7 +11,7 @@ import { AutocompleteOverviewExample } from './autocomplete-overview/autocomplet
 export { AutocompleteOverviewExample };
 
 const EXAMPLES = [
-    AutocompleteOverviewExample,
+    AutocompleteOverviewExample
 ];
 
 @NgModule({
@@ -19,14 +19,13 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqAutocompleteModule,
-
         KbqInputModule,
         KbqButtonModule,
         KbqFormFieldModule,
         KbqIconModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class AutocompleteExamplesModule {}

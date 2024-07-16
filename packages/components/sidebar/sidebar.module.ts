@@ -7,12 +7,12 @@ import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened } from './sidebar.compon
     declarations: [
         KbqSidebarClosed,
         KbqSidebarOpened,
-        KbqSidebar,
+        KbqSidebar
     ],
     exports: [
         KbqSidebarClosed,
         KbqSidebarOpened,
-        KbqSidebar,
-    ],
+        KbqSidebar
+    ]
 })
 export class KbqSidebarModule {}

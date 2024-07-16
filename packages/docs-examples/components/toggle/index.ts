@@ -6,15 +6,15 @@ import { ToggleOverviewExample } from './toggle-overview/toggle-overview-example
 export { ToggleOverviewExample };
 
 const EXAMPLES = [
-    ToggleOverviewExample,
+    ToggleOverviewExample
 ];
 
 @NgModule({
     imports: [
         FormsModule,
-        KbqToggleModule,
+        KbqToggleModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ToggleExamplesModule {}

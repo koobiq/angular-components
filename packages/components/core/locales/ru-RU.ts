@@ -2,7 +2,7 @@ export const ruRULocaleData = {
     select: { hiddenItemsText: 'еще {{ number }}' },
     datepicker: {
         placeholder: 'дд.мм.гггг',
-        dateInput: 'dd.MM.yyyy',
+        dateInput: 'dd.MM.yyyy'
     },
     timepicker: {
         placeholder: {
@@ -13,7 +13,7 @@ export const ruRULocaleData = {
     fileUpload: {
         single: {
             captionText: 'Перетащите файл или {{ browseLink }}',
-            browseLink: 'выберите',
+            browseLink: 'выберите'
         },
         multiple: {
             captionText: 'Перетащите сюда или {{ browseLink }}',
@@ -23,8 +23,8 @@ export const ruRULocaleData = {
             title: 'Загрузите файлы',
             gridHeaders: {
                 file: 'Файл',
-                size: 'Размер',
-            },
-        },
-    },
+                size: 'Размер'
+            }
+        }
+    }
 };

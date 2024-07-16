@@ -13,7 +13,7 @@ import {
     OnInit,
     Optional,
     Renderer2,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
@@ -25,8 +25,8 @@ const MIN_VISIBLE_LENGTH = 50;
     selector: '[kbqEllipsisCenter]',
     host: {
         class: 'kbq-ellipsis-center',
-        '(window:resize)': 'resizeStream.next($event)',
-    },
+        '(window:resize)': 'resizeStream.next($event)'
+    }
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     @Input() set kbqEllipsisCenter(value: string) {
@@ -53,7 +53,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
         @Optional() direction: Directionality,
         focusMonitor: FocusMonitor,
-        private renderer: Renderer2,
+        private renderer: Renderer2
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
@@ -117,6 +117,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 @NgModule({
     imports: [],
     exports: [KbqEllipsisCenterDirective],
-    declarations: [KbqEllipsisCenterDirective],
+    declarations: [KbqEllipsisCenterDirective]
 })
 export class KbqEllipsisCenterModule {}

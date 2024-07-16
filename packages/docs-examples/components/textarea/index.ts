@@ -7,16 +7,16 @@ import { TextAreaOverviewExample } from './text-area-overview/text-area-overview
 export { TextAreaOverviewExample };
 
 const EXAMPLES = [
-    TextAreaOverviewExample,
+    TextAreaOverviewExample
 ];
 
 @NgModule({
     imports: [
         FormsModule,
         KbqTextareaModule,
-        KbqFormFieldModule,
+        KbqFormFieldModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TextAreaExamplesModule {}

@@ -14,7 +14,7 @@ export {
     ButtonToggleDisabledAllOverviewExample,
     ButtonToggleDisabledPartialOverviewExample,
     ButtonToggleOverviewExample,
-    ButtonToggleTooltipOverviewExample,
+    ButtonToggleTooltipOverviewExample
 };
 
 const EXAMPLES = [
@@ -22,7 +22,7 @@ const EXAMPLES = [
     ButtonToggleTooltipOverviewExample,
     ButtonToggleAlignmentOverviewExample,
     ButtonToggleDisabledAllOverviewExample,
-    ButtonToggleDisabledPartialOverviewExample,
+    ButtonToggleDisabledPartialOverviewExample
 ];
 
 @NgModule({
@@ -31,9 +31,9 @@ const EXAMPLES = [
         FormsModule,
         ReactiveFormsModule,
         KbqButtonToggleModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ButtonToggleExamplesModule {}

@@ -8,7 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
     selector: 'validation-overview-example',
     templateUrl: 'validation-overview-example.html',
     styleUrls: ['validation-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ValidationOverviewExample {
     feedbackForm: FormGroup;
@@ -22,7 +22,7 @@ export class ValidationOverviewExample {
             email: new FormControl('', [Validators.required, Validators.email]),
             reason: new FormControl('', [Validators.required]),
             rating: new FormControl('', [Validators.required]),
-            comment: new FormControl(''),
+            comment: new FormControl('')
         });
 
         this.feedbackForm = new FormGroup({
@@ -32,7 +32,7 @@ export class ValidationOverviewExample {
             email: new FormControl('', [Validators.required, Validators.email]),
             reason: new FormControl('', [Validators.required]),
             rating: new FormControl('', [Validators.required]),
-            comment: new FormControl(''),
+            comment: new FormControl('')
         });
     }
 }

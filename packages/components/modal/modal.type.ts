@@ -12,7 +12,7 @@ export type ConfirmType = 'confirm' | 'success' | 'warn';
 export enum ModalSize {
     Small = 'small',
     Medium = 'medium',
-    Large = 'large',
+    Large = 'large'
 }
 
 // Public options for using by service

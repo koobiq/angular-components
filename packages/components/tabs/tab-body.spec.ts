@@ -22,11 +22,10 @@ describe('KbqTabBody', () => {
             declarations: [
                 KbqTabBody,
                 KbqTabBodyPortal,
-                SimpleTabBodyApp,
+                SimpleTabBodyApp
             ],
             providers: [
-                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) },
-            ],
+                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }]
         });
 
         TestBed.compileComponents();
@@ -185,7 +184,7 @@ describe('KbqTabBody', () => {
     template: `
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin"></kbq-tab-body>
-    `,
+    `
 })
 class SimpleTabBodyApp implements AfterContentInit {
     content: TemplatePortal;

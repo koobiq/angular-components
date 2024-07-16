@@ -11,13 +11,13 @@ export const KbqDefaultThemes: KbqTheme[] = [
     {
         name: 'light',
         className: 'kbq-theme-light',
-        selected: true,
+        selected: true
     },
     {
         name: 'dark',
         className: 'kbq-theme-dark',
-        selected: false,
-    },
+        selected: false
+    }
 ];
 
 @Injectable({ providedIn: 'root' })

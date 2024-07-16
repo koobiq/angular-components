@@ -11,14 +11,14 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
 import { KbqSidebarAnimationState, kbqSidebarAnimations } from './sidebar-animations';
 
 export enum SidebarPositions {
     Left = 'left',
-    Right = 'right',
+    Right = 'right'
 }
 
 // tslint:disable-next-line:naming-convention
@@ -32,7 +32,7 @@ interface KbqSidebarParams {
 
 @Directive({
     selector: '[kbq-sidebar-opened]',
-    exportAs: 'kbqSidebarOpened',
+    exportAs: 'kbqSidebarOpened'
 })
 export class KbqSidebarOpened {
     @Input() minWidth: string;
@@ -42,7 +42,7 @@ export class KbqSidebarOpened {
 
 @Directive({
     selector: '[kbq-sidebar-closed]',
-    exportAs: 'kbqSidebarClosed',
+    exportAs: 'kbqSidebarClosed'
 })
 export class KbqSidebarClosed {
     @Input() width: string;
@@ -60,11 +60,11 @@ export class KbqSidebarClosed {
             params: params
         }`,
         '(@state.start)': 'onAnimationStart()',
-        '(@state.done)': 'onAnimationDone()',
+        '(@state.done)': 'onAnimationDone()'
     },
     animations: [kbqSidebarAnimations.sidebarState],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
     @Input()
@@ -88,7 +88,7 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
         openedStateMinWidth: 'inherit',
         openedStateMaxWidth: 'inherit',
 
-        closedStateWidth: '32px',
+        closedStateWidth: '32px'
     };
 
     @Output() readonly stateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -107,7 +107,7 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
     constructor(
         private ngZone: NgZone,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef
     ) {}
 
     ngOnInit(): void {
@@ -144,7 +144,7 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
             openedStateMinWidth: this.openedContent.minWidth || 'inherit',
             openedStateMaxWidth: this.openedContent.maxWidth || 'inherit',
 
-            closedStateWidth: this.closedContent.width || '32px',
+            closedStateWidth: this.closedContent.width || '32px'
         };
     }
 

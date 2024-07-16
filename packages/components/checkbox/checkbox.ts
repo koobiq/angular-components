@@ -13,7 +13,7 @@ import {
     Output,
     ViewChild,
     ViewEncapsulation,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -27,7 +27,7 @@ import {
     mixinColor,
     mixinDisabled,
     mixinTabIndex,
-    toBoolean,
+    toBoolean
 } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
@@ -42,7 +42,7 @@ let nextUniqueId = 0;
 export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqCheckbox),
-    multi: true,
+    multi: true
 };
 
 /**
@@ -57,7 +57,7 @@ export enum TransitionCheckState {
     /** The state representing the component when it's becoming unchecked. */
     Unchecked,
     /** The state representing the component when it's becoming indeterminate. */
-    Indeterminate,
+    Indeterminate
 }
 
 /** Change event object emitted by KbqCheckbox. */
@@ -99,12 +99,12 @@ export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCt
         '[class.kbq-indeterminate]': 'indeterminate',
         '[class.kbq-checked]': 'checked',
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-checkbox_label-before]': 'labelPosition == "before"',
+        '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
     },
     providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
     inputs: ['color', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCheckbox
     extends KbqCheckboxMixinBase
@@ -223,7 +223,7 @@ export class KbqCheckbox
         elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
-        @Optional() @Inject(KBQ_CHECKBOX_CLICK_ACTION) private clickAction: KbqCheckboxClickAction,
+        @Optional() @Inject(KBQ_CHECKBOX_CLICK_ACTION) private clickAction: KbqCheckboxClickAction
     ) {
         super(elementRef);
 

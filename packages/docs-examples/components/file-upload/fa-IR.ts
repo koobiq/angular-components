@@ -6,6 +6,6 @@ export const faIRLocaleData = {
     title: 'اضافه کردن عکس',
     gridHeaders: {
         file: 'فایل',
-        size: 'اندازه',
-    },
+        size: 'اندازه'
+    }
 };

@@ -17,13 +17,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             FormsModule,
             KbqTextareaModule,
             KbqFormFieldModule,
-            ...imports,
+            ...imports
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers,
-        ],
+            ...providers
+        ]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -35,7 +35,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <textarea kbqTextarea [(ngModel)]="value" required></textarea>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqTextareaInvalid {
     value: string = '';
@@ -50,7 +50,7 @@ class KbqTextareaInvalid {
 
             <button type="submit"></button>
         </form>
-    `,
+    `
 })
 class KbqFormFieldWithNgModelInForm {
     @ViewChild('form', { static: false }) form: NgForm;
@@ -61,7 +61,7 @@ class KbqFormFieldWithNgModelInForm {
 @Component({
     template: ` <kbq-form-field>
         <textarea kbqTextarea class="kbq-textarea_monospace" [(ngModel)]="value"></textarea>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class KbqTextareaWithMonospace {
     value: string = 'test';
@@ -70,7 +70,7 @@ class KbqTextareaWithMonospace {
 @Component({
     template: ` <kbq-form-field>
         <textarea kbqTextarea [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled"></textarea>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
@@ -81,7 +81,7 @@ class KbqTextareaForBehaviors {
 @Component({
     template: ` <kbq-form-field>
         <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class KbqTextareaGrowOff {
     value: string = 'test\ntest\ntest';
@@ -92,7 +92,7 @@ class KbqTextareaGrowOff {
 @Component({
     template: ` <kbq-form-field kbqFormFieldWithoutBorders>
         <textarea kbqTextarea></textarea>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class KbqFormFieldWithoutBorders {}
 
@@ -191,7 +191,7 @@ describe('KbqTextarea', () => {
 
         it('should be without borders', () => {
             const fixture = createComponent(KbqFormFieldWithoutBorders, [
-                KbqIconModule,
+                KbqIconModule
             ]);
             fixture.detectChanges();
 

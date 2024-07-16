@@ -5,7 +5,7 @@ import {
     EventEmitter,
     Input,
     Output,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 
@@ -19,10 +19,10 @@ const defaultMaxYear = 2099;
     templateUrl: 'calendar-header.html',
     styleUrls: ['calendar-header.scss'],
     host: {
-        class: 'kbq-calendar-header',
+        class: 'kbq-calendar-header'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: { name: string; value: number }[];
@@ -110,7 +110,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.activeDate = this.adapter.createDate(
             year,
             month,
-            Math.min(this.adapter.getDate(this.activeDate), daysInMonth),
+            Math.min(this.adapter.getDate(this.activeDate), daysInMonth)
         );
 
         this.monthSelected.emit(this.activeDate);
@@ -125,7 +125,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.activeDate = this.adapter.createDate(
             year,
             month,
-            Math.min(this.adapter.getDate(this.activeDate), daysInMonth),
+            Math.min(this.adapter.getDate(this.activeDate), daysInMonth)
         );
 
         this.yearSelected.emit(this.activeDate);
@@ -166,7 +166,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         const year = this.adapter.getYear(this.activeDate);
         this.selectedYear = this.years.find(({ name }) => name === year) || {
             name: year,
-            value: this.adapter.getYearName(this.activeDate),
+            value: this.adapter.getYearName(this.activeDate)
         };
     }
 

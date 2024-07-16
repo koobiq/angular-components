@@ -12,7 +12,7 @@ class TimezoneOptionComponent {
         city: 'city3',
         countryCode: 'ru',
         countryName: 'Russia',
-        cities: 'city1, city2',
+        cities: 'city1, city2'
     };
 }
 
@@ -20,7 +20,7 @@ describe('KbqTimezoneOption component', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqTimezoneModule],
-            declarations: [TimezoneOptionComponent],
+            declarations: [TimezoneOptionComponent]
         }).compileComponents();
     }));
 
@@ -29,7 +29,7 @@ describe('KbqTimezoneOption component', () => {
         fixture.detectChanges();
 
         const optionInstance: KbqTimezoneOption = fixture.debugElement.query(
-            By.directive(KbqTimezoneOption),
+            By.directive(KbqTimezoneOption)
         ).componentInstance;
 
         expect(optionInstance.viewValue).toBe('UTC +03:00 city3, city1, city2');

@@ -7,7 +7,7 @@ import { Directive, ElementRef, NgModule, QueryList } from '@angular/core';
  */
 @Directive({
     selector: '[kbq-line], [mcLine]',
-    host: { class: 'kbq-line' },
+    host: { class: 'kbq-line' }
 })
 export class KbqLine {}
 
@@ -18,7 +18,7 @@ export class KbqLine {}
 export class KbqLineSetter {
     constructor(
         private _lines: QueryList<KbqLine>,
-        private _element: ElementRef,
+        private _element: ElementRef
     ) {
         this.setLineClass(this._lines.length);
 
@@ -56,6 +56,6 @@ export class KbqLineSetter {
 @NgModule({
     imports: [],
     exports: [KbqLine],
-    declarations: [KbqLine],
+    declarations: [KbqLine]
 })
 export class KbqLineModule {}

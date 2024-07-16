@@ -20,7 +20,7 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
@@ -36,7 +36,7 @@ import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_PANEL,
     KbqDropdownDefaultOptions,
-    KbqDropdownPanel,
+    KbqDropdownPanel
 } from './dropdown.types';
 
 @Component({
@@ -48,11 +48,10 @@ import {
     encapsulation: ViewEncapsulation.None,
     animations: [
         kbqDropdownAnimations.transformDropdown,
-        kbqDropdownAnimations.fadeInItems,
+        kbqDropdownAnimations.fadeInItems
     ],
     providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown },
-    ],
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     @Input() navigationWithWrap: boolean = false;
@@ -196,7 +195,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     constructor(
         private elementRef: ElementRef<HTMLElement>,
         private ngZone: NgZone,
-        @Inject(KBQ_DROPDOWN_DEFAULT_OPTIONS) private defaultOptions: KbqDropdownDefaultOptions,
+        @Inject(KBQ_DROPDOWN_DEFAULT_OPTIONS) private defaultOptions: KbqDropdownDefaultOptions
     ) {}
 
     ngOnInit() {
@@ -220,7 +219,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.directDescendantItems.changes
             .pipe(
                 startWith(this.directDescendantItems),
-                switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.focused))),
+                switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.focused)))
             )
             .subscribe((focusedItem) => this.keyManager.updateActiveItem(focusedItem as KbqDropdownItem));
     }
@@ -237,7 +236,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         return itemChanges.pipe(
             startWith(this.directDescendantItems),
-            switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.hovered))),
+            switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.hovered)))
         ) as Observable<KbqDropdownItem>;
     }
 

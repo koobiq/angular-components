@@ -9,13 +9,13 @@ import {
     OnDestroy,
     Optional,
     SkipSelf,
-    TemplateRef,
+    TemplateRef
 } from '@angular/core';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import {
     KBQ_SIDEPANEL_WITH_INDENT,
     KBQ_SIDEPANEL_WITH_SHADOW,
-    KbqSidepanelContainerComponent,
+    KbqSidepanelContainerComponent
 } from './sidepanel-container.component';
 import { KbqSidepanelRef } from './sidepanel-ref';
 
@@ -37,7 +37,7 @@ export class KbqSidepanelService implements OnDestroy {
         private overlay: Overlay,
         private injector: Injector,
         @Optional() @Inject(KBQ_SIDEPANEL_DEFAULT_OPTIONS) private defaultOptions: KbqSidepanelConfig,
-        @Optional() @SkipSelf() private parentSidepanelService: KbqSidepanelService,
+        @Optional() @SkipSelf() private parentSidepanelService: KbqSidepanelService
     ) {}
 
     ngOnDestroy() {
@@ -48,11 +48,11 @@ export class KbqSidepanelService implements OnDestroy {
 
     open<T, D = any>(
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-        config?: KbqSidepanelConfig<D>,
+        config?: KbqSidepanelConfig<D>
     ): KbqSidepanelRef<T> {
         const fullConfig = {
             ...(this.defaultOptions || new KbqSidepanelConfig()),
-            ...config,
+            ...config
         };
 
         if (fullConfig.id && this.getSidepanelById(fullConfig.id)) {
@@ -68,14 +68,14 @@ export class KbqSidepanelService implements OnDestroy {
             container.attachTemplatePortal(
                 new TemplatePortal<T>(componentOrTemplateRef, null!, {
                     $implicit: fullConfig.data,
-                    sidepanelRef: ref,
-                } as any),
+                    sidepanelRef: ref
+                } as any)
             );
         } else {
             const portal = new ComponentPortal(
                 componentOrTemplateRef,
                 undefined,
-                this.createInjector(fullConfig, ref, container),
+                this.createInjector(fullConfig, ref, container)
             );
             const contentRef = container.attachComponentPortal(portal);
 
@@ -117,8 +117,8 @@ export class KbqSidepanelService implements OnDestroy {
                 { provide: KbqSidepanelConfig, useValue: config },
                 { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 },
                 // tslint:disable-next-line:no-magic-numbers
-                { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 },
-            ],
+                { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 }
+            ]
         });
 
         const containerPortal = new ComponentPortal(KbqSidepanelContainerComponent, undefined, injector);
@@ -138,7 +138,7 @@ export class KbqSidepanelService implements OnDestroy {
     private createInjector<T>(
         config: KbqSidepanelConfig,
         sidepanelRef: KbqSidepanelRef<T>,
-        sidepanelContainer: KbqSidepanelContainerComponent,
+        sidepanelContainer: KbqSidepanelContainerComponent
     ): Injector {
         // The KbqSidepanelContainerComponent is injected in the portal as the KbqSidepanelContainerComponent and
         // the sidepanel's content are created out of the same ViewContainerRef and as such, are siblings for injector
@@ -150,8 +150,8 @@ export class KbqSidepanelService implements OnDestroy {
             providers: [
                 { provide: KbqSidepanelContainerComponent, useValue: sidepanelContainer },
                 { provide: KBQ_SIDEPANEL_DATA, useValue: config.data },
-                { provide: KbqSidepanelRef, useValue: sidepanelRef },
-            ],
+                { provide: KbqSidepanelRef, useValue: sidepanelRef }
+            ]
         });
     }
 
@@ -166,7 +166,7 @@ export class KbqSidepanelService implements OnDestroy {
             maxWidth: '100%',
             panelClass: config.overlayPanelClass,
             scrollStrategy: this.overlay.scrollStrategies.block(),
-            positionStrategy: this.overlay.position().global(),
+            positionStrategy: this.overlay.position().global()
         });
 
         return this.overlay.create(overlayConfig);
@@ -184,7 +184,7 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
-            (sidepanelRef) => sidepanelRef.config.hasBackdrop!,
+            (sidepanelRef) => sidepanelRef.config.hasBackdrop!
         );
 
         return config.requiredBackdrop || !hasOpenedSidepanelWithBackdrop

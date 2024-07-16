@@ -13,7 +13,7 @@ export { InputNumberOverviewExample, InputOverviewExample, InputPasswordOverview
 const EXAMPLES = [
     InputOverviewExample,
     InputNumberOverviewExample,
-    InputPasswordOverviewExample,
+    InputPasswordOverviewExample
 ];
 
 @NgModule({
@@ -22,9 +22,9 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
-        KbqFormsModule,
+        KbqFormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class InputExamplesModule {}

@@ -36,7 +36,7 @@ export class BaseReleaseTask {
 
     constructor(
         public git: GitClient,
-        public config: IReleaseTaskConfig,
+        public config: IReleaseTaskConfig
     ) {
         this.packageJsonPath = join(config.projectDir, 'package.json');
         this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
@@ -60,7 +60,7 @@ export class BaseReleaseTask {
         if (allowedBranches.length !== 1) {
             console.warn(yellow('  ✘   You are not on an allowed publish branch.'));
             console.warn(
-                yellow(`      Please switch to one of the following branches: ` + `${allowedBranches.join(', ')}`),
+                yellow(`      Please switch to one of the following branches: ` + `${allowedBranches.join(', ')}`)
             );
             process.exit(0);
         }
@@ -108,7 +108,7 @@ export class BaseReleaseTask {
             await prompt<{ result: boolean }>({
                 type: 'confirm',
                 name: 'result',
-                message,
+                message
             })
         ).result;
     }

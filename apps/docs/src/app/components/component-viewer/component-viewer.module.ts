@@ -22,7 +22,7 @@ import {
     ComponentApiComponent,
     ComponentExamplesComponent,
     ComponentOverviewComponent,
-    ComponentViewerComponent,
+    ComponentViewerComponent
 } from './component-viewer.component';
 
 @NgModule({
@@ -42,18 +42,16 @@ import {
         SidenavModule,
         NavbarModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: [
         ComponentViewerComponent,
-
         ComponentOverviewComponent,
         ComponentApiComponent,
         ComponentExamplesComponent,
-
         CdkOverviewComponent,
-        CdkApiComponent,
+        CdkApiComponent
     ],
-    providers: [DocumentationItems, KbqSidepanelService],
+    providers: [DocumentationItems, KbqSidepanelService]
 })
 export class ComponentViewerModule {}

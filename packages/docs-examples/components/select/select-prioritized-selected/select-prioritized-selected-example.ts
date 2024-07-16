@@ -13,7 +13,7 @@ const localeDataSet = {
     'es-LA': esLALocaleDataSet,
     'pt-BR': ptBRLocaleDataSet,
     'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
 };
 
 /**
@@ -23,7 +23,7 @@ const localeDataSet = {
     selector: 'select-prioritized-selected-example',
     templateUrl: 'select-prioritized-selected-example.html',
     styleUrls: ['select-prioritized-selected-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectPrioritizedSelectedExample implements OnInit {
     selected: string[];

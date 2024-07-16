@@ -13,9 +13,9 @@ describe('Sidebar', () => {
                 NoopAnimationsModule,
                 FormsModule,
                 ReactiveFormsModule,
-                KbqSidebarModule,
+                KbqSidebarModule
             ],
-            declarations: [SimpleSidebar],
+            declarations: [SimpleSidebar]
         });
 
         TestBed.compileComponents();
@@ -125,7 +125,7 @@ describe('Sidebar', () => {
                 <div kbq-sidebar-closed>kbq-sidebar-closed</div>
             </kbq-sidebar>
         </div>
-    `,
+    `
 })
 class SimpleSidebar {
     showContainer: boolean = true;

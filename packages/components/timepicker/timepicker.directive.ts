@@ -9,7 +9,7 @@ import {
     OnDestroy,
     Optional,
     Output,
-    Renderer2,
+    Renderer2
 } from '@angular/core';
 import {
     AbstractControl,
@@ -19,7 +19,7 @@ import {
     ValidationErrors,
     Validator,
     ValidatorFn,
-    Validators,
+    Validators
 } from '@angular/forms';
 import {
     BACKSPACE,
@@ -37,7 +37,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService,
@@ -68,14 +68,14 @@ import {
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqTimepicker),
-    multi: true,
+    multi: true
 };
 
 /** @docs-private */
 export const KBQ_TIMEPICKER_VALIDATORS: any = {
     provide: NG_VALIDATORS,
     useExisting: forwardRef(() => KbqTimepicker),
-    multi: true,
+    multi: true
 };
 
 let uniqueComponentIdSuffix: number = 0;
@@ -102,13 +102,12 @@ const fullFormatSize: number = 8;
 
         '(paste)': 'onPaste($event)',
 
-        '(keydown)': 'onKeyDown($event)',
+        '(keydown)': 'onKeyDown($event)'
     },
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker },
-    ],
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
 })
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
     /**
@@ -356,7 +355,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         if (!this.dateAdapter) {
             throw Error(
                 `KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +
-                    `modules at your application root or provide a custom implementation or use exists ones.`,
+                    `modules at your application root or provide a custom implementation or use exists ones.`
             );
         }
 
@@ -538,7 +537,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         }
 
         const match: RegExpMatchArray | null = value.match(
-            /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/,
+            /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/
         );
 
         if (!match?.groups?.hours) {
@@ -551,7 +550,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             Object.values(match.groups)
                 // tslint:disable-next-line:no-magic-numbers
                 .map((group) => (group || '').padStart(2, '0'))
-                .join(':'),
+                .join(':')
         );
     }
 
@@ -577,7 +576,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         let formattedValue: string = value;
 
         const match: RegExpMatchArray | null = value.match(
-            /^(?<hours>\d{0,4}):?(?<minutes>\d{0,4}):?(?<seconds>\d{0,4})$/,
+            /^(?<hours>\d{0,4}):?(?<minutes>\d{0,4}):?(?<seconds>\d{0,4})$/
         );
 
         if (match?.groups) {
@@ -723,7 +722,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             hours,
             minutes,
             seconds,
-            this.dateAdapter.getMilliseconds(this.value),
+            this.dateAdapter.getMilliseconds(this.value)
         );
     }
 
@@ -764,7 +763,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             hours,
             minutes,
             seconds,
-            this.dateAdapter.getMilliseconds(this.value),
+            this.dateAdapter.getMilliseconds(this.value)
         );
     }
 
@@ -863,7 +862,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             hours,
             minutes || 0,
             seconds || 0,
-            this.dateAdapter.getMilliseconds(date),
+            this.dateAdapter.getMilliseconds(date)
         );
 
         return this.getValidDateOrNull(resultDate);

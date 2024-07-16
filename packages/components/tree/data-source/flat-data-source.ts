@@ -43,7 +43,7 @@ export class KbqTreeFlattener<T, F> {
         public transformFunction: (node: T, level: number, parent: F | null) => F,
         public getLevel: (node: F) => number,
         public isExpandable: (node: F) => boolean,
-        public getChildren: (node: T) => Observable<T[]> | T[] | undefined | null,
+        public getChildren: (node: T) => Observable<T[]> | T[] | undefined | null
     ) {}
 
     flattenNode(node: T, level: number, resultNodes: F[], parent: F | null): F[] {
@@ -115,7 +115,7 @@ export class KbqTreeFlattener<T, F> {
 
 enum KbqTreeDataSourceChangeTypes {
     Expansion = 'expansion',
-    Filter = 'filter',
+    Filter = 'filter'
 }
 
 /**
@@ -148,7 +148,7 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
     constructor(
         private treeControl: FlatTreeControl<F>,
         private treeFlattener: KbqTreeFlattener<T, F>,
-        initialData: T[] = [],
+        initialData: T[] = []
     ) {
         super();
 
@@ -159,10 +159,10 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
         return merge(
             collectionViewer.viewChange,
             this.treeControl.expansionModel.changed.pipe(
-                map((value) => ({ type: KbqTreeDataSourceChangeTypes.Expansion, value })),
+                map((value) => ({ type: KbqTreeDataSourceChangeTypes.Expansion, value }))
             ),
             this.treeControl.filterValue.pipe(map((value) => ({ type: KbqTreeDataSourceChangeTypes.Filter, value }))),
-            this.flattenedData,
+            this.flattenedData
         ).pipe(
             map((changeObj: any): any => {
                 if (changeObj.type === KbqTreeDataSourceChangeTypes.Filter) {
@@ -174,7 +174,7 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
                 }
 
                 return this.expansionHandler(changeObj.value);
-            }),
+            })
         );
     }
 

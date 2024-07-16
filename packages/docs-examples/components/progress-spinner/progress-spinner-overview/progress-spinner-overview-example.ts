@@ -12,7 +12,7 @@ const MAX_PERCENT: number = 100;
     selector: 'progress-spinner-overview-example',
     templateUrl: 'progress-spinner-overview-example.html',
     styleUrls: ['progress-spinner-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ProgressSpinnerOverviewExample {
     themePalette = ThemePalette;

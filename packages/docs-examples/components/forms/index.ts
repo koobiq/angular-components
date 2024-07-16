@@ -13,7 +13,7 @@ export { HorizontalFormExample, HorizontalFormLabelsExample, VerticalFormExample
 const EXAMPLES = [
     HorizontalFormExample,
     HorizontalFormLabelsExample,
-    VerticalFormExample,
+    VerticalFormExample
 ];
 
 @NgModule({
@@ -22,9 +22,9 @@ const EXAMPLES = [
         FormsModule,
         KbqInputModule,
         KbqFormFieldModule,
-        KbqFormsModule,
+        KbqFormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class FormsExamplesModule {}

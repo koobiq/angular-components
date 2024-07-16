@@ -14,8 +14,8 @@ describe('LuxonDateAdapter with KBQ_DATE_LOCALE override', () => {
             imports: [LuxonDateModule],
             providers: [
                 { provide: KBQ_DATE_LOCALE, useValue: 'es-LA' },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -36,8 +36,8 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
             imports: [LuxonDateModule],
             providers: [
                 { provide: LOCALE_ID, useValue: 'es-LA' },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -59,10 +59,10 @@ describe('LuxonDateAdapter with KBQ_LUXON_DATE_ADAPTER_OPTIONS override', () => 
             providers: [
                 {
                     provide: KBQ_LUXON_DATE_ADAPTER_OPTIONS,
-                    useValue: { useUtc: true },
+                    useValue: { useUtc: true }
                 },
-                { provide: KBQ_LOCALE_SERVICE, useValue: null },
-            ],
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 

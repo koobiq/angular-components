@@ -8,9 +8,9 @@ import { KbqRiskLevel } from './risk-level.component';
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     declarations: [KbqRiskLevel],
-    exports: [KbqRiskLevel],
+    exports: [KbqRiskLevel]
 })
 export class KbqRiskLevelModule {}

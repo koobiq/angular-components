@@ -15,6 +15,6 @@ export function configureMarkedGlobally(customRenderer?: Renderer): Marked {
 
     return marked.options({
         // Custom markdown renderer for transforming markdown files for the docs.
-        renderer: customRenderer || null,
+        renderer: customRenderer || null
     });
 }

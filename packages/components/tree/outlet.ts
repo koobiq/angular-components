@@ -4,6 +4,6 @@ import { ChangeDetectorRef, Directive, ViewContainerRef } from '@angular/core';
 export class KbqTreeNodeOutlet {
     constructor(
         public viewContainer: ViewContainerRef,
-        public changeDetectorRef: ChangeDetectorRef,
+        public changeDetectorRef: ChangeDetectorRef
     ) {}
 }

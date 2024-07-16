@@ -9,8 +9,8 @@ import { KbqSidepanelService } from './sidepanel.service';
     selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
         '(click)': 'sidepanelRef.close(sidepanelResult)',
-        class: 'kbq-sidepanel-close',
-    },
+        class: 'kbq-sidepanel-close'
+    }
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
@@ -20,7 +20,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
         private elementRef: ElementRef<HTMLElement>,
-        private sidepanelService: KbqSidepanelService,
+        private sidepanelService: KbqSidepanelService
     ) {}
 
     ngOnInit() {
@@ -61,8 +61,8 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         </button>
     `,
     host: {
-        class: 'kbq-sidepanel-header',
-    },
+        class: 'kbq-sidepanel-header'
+    }
 })
 export class KbqSidepanelHeader {
     @Input() closeable: boolean;
@@ -74,8 +74,8 @@ export class KbqSidepanelHeader {
 @Directive({
     selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody',
     host: {
-        class: 'kbq-sidepanel-body kbq-scrollbar',
-    },
+        class: 'kbq-sidepanel-body kbq-scrollbar'
+    }
 })
 export class KbqSidepanelBody {}
 
@@ -85,8 +85,8 @@ export class KbqSidepanelBody {}
 @Directive({
     selector: 'kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter',
     host: {
-        class: 'kbq-sidepanel-footer',
-    },
+        class: 'kbq-sidepanel-footer'
+    }
 })
 export class KbqSidepanelFooter {}
 
@@ -96,8 +96,8 @@ export class KbqSidepanelFooter {}
 @Directive({
     selector: 'kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions',
     host: {
-        class: 'kbq-sidepanel-actions',
-    },
+        class: 'kbq-sidepanel-actions'
+    }
 })
 export class KbqSidepanelActions {}
 

@@ -14,7 +14,7 @@ import {
     Output,
     SecurityContext,
     ViewChild,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
@@ -47,8 +47,8 @@ export class DocExampleFetcher {
             <div [outerHTML]="htmlContent"></div>
         </ng-template> `,
     host: {
-        class: 'docs-live-example',
-    },
+        class: 'docs-live-example'
+    }
 })
 export class DocExampleViewer implements OnDestroy {
     @ViewChild(CdkPortal) copyableCodeTemplate: CdkPortal;
@@ -82,7 +82,7 @@ export class DocExampleViewer implements OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private ngZone: NgZone,
         private domSanitizer: DomSanitizer,
-        private docFetcher: DocExampleFetcher,
+        private docFetcher: DocExampleFetcher
     ) {}
 
     ngOnDestroy() {
@@ -96,7 +96,7 @@ export class DocExampleViewer implements OnDestroy {
 
         this.documentFetchSubscription = this.docFetcher.fetchDocument(url).subscribe(
             (document) => this.updateDocument(document),
-            (error) => this.showError(url, error),
+            (error) => this.showError(url, error)
         );
     }
 

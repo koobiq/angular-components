@@ -11,7 +11,7 @@ import {
     RequiredValidator,
     ValidationErrors,
     Validator,
-    ValidatorFn,
+    ValidatorFn
 } from '@angular/forms';
 import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
 import { KbqFormFieldControl } from './form-field-control';
@@ -27,7 +27,7 @@ import { KbqFormFieldControl } from './form-field-control';
         kbq-tree-select,
         kbq-tag-list
     `,
-    exportAs: 'KbqValidate',
+    exportAs: 'KbqValidate'
 })
 export class KbqValidateDirective implements AfterContentInit {
     get isNgModel(): boolean {
@@ -61,7 +61,7 @@ export class KbqValidateDirective implements AfterContentInit {
         @Optional() private parentForm: NgForm,
         @Optional() private parentFormGroup: FormGroupDirective,
         @Optional() @Inject(KBQ_VALIDATION) private mcValidation: KbqValidationOptions,
-        private cdr: ChangeDetectorRef,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngAfterContentInit() {

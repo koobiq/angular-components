@@ -11,7 +11,7 @@ import {
     OnDestroy,
     SimpleChanges,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { Subscription, merge, of as observableOf } from 'rxjs';
@@ -20,7 +20,7 @@ import { KbqDatepicker } from './datepicker.component';
 
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
 @Directive({
-    selector: '[kbqDatepickerToggleIcon]',
+    selector: '[kbqDatepickerToggleIcon]'
 })
 export class KbqDatepickerToggleIcon {}
 
@@ -30,11 +30,11 @@ export class KbqDatepickerToggleIcon {}
     styleUrls: ['datepicker-toggle.scss'],
     host: {
         class: 'kbq-datepicker-toggle',
-        '[class.kbq-active]': 'datepicker && datepicker.opened',
+        '[class.kbq-active]': 'datepicker && datepicker.opened'
     },
     exportAs: 'kbqDatepickerToggle',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */
@@ -64,7 +64,7 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 
     constructor(
         public intl: KbqDatepickerIntl,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef
     ) {}
 
     ngOnChanges(changes: SimpleChanges) {
@@ -103,7 +103,7 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
         this.stateChanges.unsubscribe();
 
         this.stateChanges = merge(this.intl.changes, datepickerDisabled, inputDisabled, datepickerToggled).subscribe(
-            () => this.changeDetectorRef.markForCheck(),
+            () => this.changeDetectorRef.markForCheck()
         );
     }
 }

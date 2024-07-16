@@ -11,7 +11,7 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    TemplateRef,
+    TemplateRef
 } from '@angular/core';
 import { BehaviorSubject, Subscription, filter, shareReplay, timer } from 'rxjs';
 import { KbqToastContainerComponent } from './toast-container.component';
@@ -24,7 +24,7 @@ export const defaultToastConfig: KbqToastConfig = {
     position: KbqToastPosition.TOP_RIGHT,
     duration: 5000,
     delay: 2000,
-    onTop: false,
+    onTop: false
 };
 
 const INDENT_SIZE = 0;
@@ -48,7 +48,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     timer = timer(CHECK_INTERVAL, CHECK_INTERVAL).pipe(
         filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
-        shareReplay(),
+        shareReplay()
     );
 
     private containerInstance: KbqToastContainerComponent;
@@ -65,7 +65,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         private overlayContainer: OverlayContainer,
         private ngZone: NgZone,
         @Inject(KBQ_TOAST_FACTORY) private toastFactory: any,
-        @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig,
+        @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig
     ) {
         this.toastConfig = toastConfig || defaultToastConfig;
 
@@ -79,7 +79,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     show(
         data: KbqToastData,
         duration: number = this.toastConfig.duration,
-        onTop: boolean = this.toastConfig.onTop,
+        onTop: boolean = this.toastConfig.onTop
     ): { ref: ComponentRef<T>; id: number } {
         this.prepareContainer();
 
@@ -97,7 +97,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         data: KbqToastData,
         template: TemplateRef<any>,
         duration: number = this.toastConfig.duration,
-        onTop: boolean = this.toastConfig.onTop,
+        onTop: boolean = this.toastConfig.onTop
     ): { ref: EmbeddedViewRef<T>; id: number } {
         this.prepareContainer();
 

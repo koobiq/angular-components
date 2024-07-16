@@ -26,7 +26,7 @@ export async function promptForNewVersion(currentVersion: Version): Promise<Vers
     if (currentVersion.prereleaseLabel) {
         versionChoices.push(
             createVersionChoice(currentVersion, 'stable-release', 'Stable release'),
-            createVersionChoice(currentVersion, 'bump-prerelease', 'Bump pre-release number'),
+            createVersionChoice(currentVersion, 'bump-prerelease', 'Bump pre-release number')
         );
 
         // Only add the option to change the prerelease label if the current version can be
@@ -35,20 +35,20 @@ export async function promptForNewVersion(currentVersion: Version): Promise<Vers
         if (allowedPrereleaseChoices) {
             versionChoices.push({
                 value: 'new-prerelease-label',
-                name: `New pre-release (${allowedPrereleaseChoices.map((c) => c.value).join(', ')})`,
+                name: `New pre-release (${allowedPrereleaseChoices.map((c) => c.value).join(', ')})`
             });
         }
     } else {
         versionChoices.push(
             createVersionChoice(currentVersion, 'major', 'Major release'),
             createVersionChoice(currentVersion, 'minor', 'Minor release'),
-            createVersionChoice(currentVersion, 'patch', 'Patch release'),
+            createVersionChoice(currentVersion, 'patch', 'Patch release')
         );
     }
 
     versionChoices.push(new Separator(), {
         name: `Use current version (${currentVersionName})`,
-        value: currentVersionName,
+        value: currentVersionName
     });
 
     const answers = await prompt<IVersionPromptAnswers>([
@@ -56,8 +56,8 @@ export async function promptForNewVersion(currentVersion: Version): Promise<Vers
             type: 'list',
             name: 'proposedVersion',
             message: `What's the type of the new release?`,
-            choices: versionChoices,
-        },
+            choices: versionChoices
+        }
     ]);
 
     const newVersion =
@@ -79,6 +79,6 @@ function createVersionChoice(currentVersion: Version, releaseType: ReleaseType, 
 
     return {
         value: versionName,
-        name: `${message} (${versionName})`,
+        name: `${message} (${versionName})`
     };
 }

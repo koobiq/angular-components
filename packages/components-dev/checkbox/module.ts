@@ -11,7 +11,7 @@ import { KbqCheckboxModule } from '../../components/checkbox';
     selector: 'app',
     styleUrls: ['../main.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
+    templateUrl: './template.html'
 })
 export class DemoComponent {
     themePalette = ThemePalette;
@@ -33,8 +33,8 @@ export class DemoComponent {
         FormsModule,
         KbqFormFieldModule,
         KbqCheckboxModule,
-        KbqPseudoCheckboxModule,
+        KbqPseudoCheckboxModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

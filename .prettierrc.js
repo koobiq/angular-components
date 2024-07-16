@@ -9,35 +9,36 @@ const config = {
     tabWidth: 4,
     useTabs: false,
     singleQuote: true,
+    trailingComma: 'none',
     plugins: [
         'prettier-plugin-organize-imports',
         // should be last
-        'prettier-plugin-multiline-arrays',
+        'prettier-plugin-multiline-arrays'
     ],
     overrides: [
         {
             files: ['*.yml'],
             options: {
-                tabWidth: 2,
-            },
+                tabWidth: 2
+            }
         },
         {
             files: [
                 '.component.html',
-                '.page.html',
+                '.page.html'
             ],
             options: {
-                parser: 'angular',
-            },
+                parser: 'angular'
+            }
         },
         {
             files: ['*.html'],
             options: {
                 parser: 'html',
-                singleQuote: false,
-            },
-        },
-    ],
+                singleQuote: false
+            }
+        }
+    ]
 };
 
 module.exports = config;

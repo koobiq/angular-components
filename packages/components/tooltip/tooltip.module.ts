@@ -7,7 +7,7 @@ import {
     KbqExtendedTooltipTrigger,
     KbqTooltipComponent,
     KbqTooltipTrigger,
-    KbqWarningTooltipTrigger,
+    KbqWarningTooltipTrigger
 } from './tooltip.component';
 
 @NgModule({
@@ -15,18 +15,18 @@ import {
         KbqTooltipComponent,
         KbqTooltipTrigger,
         KbqExtendedTooltipTrigger,
-        KbqWarningTooltipTrigger,
+        KbqWarningTooltipTrigger
     ],
     exports: [
         KbqTooltipComponent,
         KbqTooltipTrigger,
         KbqExtendedTooltipTrigger,
-        KbqWarningTooltipTrigger,
+        KbqWarningTooltipTrigger
     ],
     imports: [CommonModule, OverlayModule],
     providers: [
         KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
-        KBQ_TOOLTIP_OPEN_TIME_PROVIDER,
-    ],
+        KBQ_TOOLTIP_OPEN_TIME_PROVIDER
+    ]
 })
 export class KbqToolTipModule {}

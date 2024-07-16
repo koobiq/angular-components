@@ -8,7 +8,7 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 
 const mcLoaderOverlayParent = 'kbq-loader-overlay_parent';
@@ -16,24 +16,24 @@ const mcLoaderOverlayParent = 'kbq-loader-overlay_parent';
 @Directive({
     selector: '[kbq-loader-overlay-indicator]',
     host: {
-        class: 'kbq-loader-overlay-indicator',
-    },
+        class: 'kbq-loader-overlay-indicator'
+    }
 })
 export class KbqLoaderOverlayIndicator {}
 
 @Directive({
     selector: '[kbq-loader-overlay-text]',
     host: {
-        class: 'kbq-loader-overlay-text',
-    },
+        class: 'kbq-loader-overlay-text'
+    }
 })
 export class KbqLoaderOverlayText {}
 
 @Directive({
     selector: '[kbq-loader-overlay-caption]',
     host: {
-        class: 'kbq-loader-overlay-caption',
-    },
+        class: 'kbq-loader-overlay-caption'
+    }
 })
 export class KbqLoaderOverlayCaption {}
 
@@ -47,10 +47,10 @@ export class KbqLoaderOverlayCaption {}
         '[class.kbq-loader-overlay_transparent]': 'transparent',
         '[class.kbq-loader-overlay_filled]': '!transparent',
         '[class.kbq-loader-overlay_big]': '!compact',
-        '[class.kbq-loader-overlay_compact]': 'compact',
+        '[class.kbq-loader-overlay_compact]': 'compact'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() text: string;
@@ -85,7 +85,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
 
     constructor(
         private elementRef: ElementRef,
-        private renderer: Renderer2,
+        private renderer: Renderer2
     ) {}
 
     ngOnInit(): void {

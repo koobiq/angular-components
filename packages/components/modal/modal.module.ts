@@ -18,14 +18,14 @@ import { KbqModalService } from './modal.service';
         A11yModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqTitleModule,
+        KbqTitleModule
     ],
     exports: [
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,
         KbqModalFooter,
-        KbqModalMainAction,
+        KbqModalMainAction
     ],
     declarations: [
         KbqModalComponent,
@@ -33,12 +33,11 @@ import { KbqModalService } from './modal.service';
         KbqModalBody,
         KbqModalFooter,
         CssUnitPipe,
-        KbqModalMainAction,
+        KbqModalMainAction
     ],
     providers: [
         KbqModalControlService,
         KbqModalService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
-    ],
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
 })
 export class KbqModalModule {}

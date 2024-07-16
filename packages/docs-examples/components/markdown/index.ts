@@ -8,15 +8,15 @@ export { MarkdownOverviewExample, MarkdownTypographyExample };
 
 const EXAMPLES = [
     MarkdownOverviewExample,
-    MarkdownTypographyExample,
+    MarkdownTypographyExample
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        KbqMarkdownModule,
+        KbqMarkdownModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class MarkdownExamplesModule {}

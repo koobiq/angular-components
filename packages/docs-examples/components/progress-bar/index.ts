@@ -11,7 +11,7 @@ export { ProgressBarIndeterminateExample, ProgressBarOverviewExample };
 
 const EXAMPLES = [
     ProgressBarIndeterminateExample,
-    ProgressBarOverviewExample,
+    ProgressBarOverviewExample
 ];
 
 @NgModule({
@@ -20,9 +20,9 @@ const EXAMPLES = [
         FormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqProgressBarModule,
+        KbqProgressBarModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ProgressBarExamplesModule {}

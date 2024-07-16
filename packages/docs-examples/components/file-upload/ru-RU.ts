@@ -7,6 +7,6 @@ export const ruRULocaleData = {
     title: 'Добавьте фотографии',
     gridHeaders: {
         file: 'Файл',
-        size: 'Размер',
-    },
+        size: 'Размер'
+    }
 };

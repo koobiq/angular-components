@@ -14,7 +14,7 @@ export {
     SplitterFixedExample,
     SplitterNestedExample,
     SplitterOverviewExample,
-    SplitterVerticalExample,
+    SplitterVerticalExample
 };
 
 const EXAMPLES = [
@@ -22,7 +22,7 @@ const EXAMPLES = [
     SplitterFixedExample,
     SplitterVerticalExample,
     SplitterNestedExample,
-    SplitterDynamicDataExample,
+    SplitterDynamicDataExample
 ];
 
 @NgModule({
@@ -30,9 +30,9 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqSplitterModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class SplitterExamplesModule {}

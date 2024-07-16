@@ -9,6 +9,6 @@ import { FooterComponent } from './footer.component';
 @NgModule({
     imports: [CommonModule, KbqIconModule, KbqLinkModule, KbqDropdownModule, VersionPickerModule],
     exports: [FooterComponent],
-    declarations: [FooterComponent],
+    declarations: [FooterComponent]
 })
 export class FooterModule {}

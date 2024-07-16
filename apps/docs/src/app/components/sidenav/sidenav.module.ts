@@ -19,10 +19,10 @@ import { ComponentSidenav } from './sidenav.component';
         KbqTreeModule,
         KbqDividerModule,
         FooterModule,
-        KbqScrollbarModule,
+        KbqScrollbarModule
     ],
     exports: [ComponentSidenav],
     declarations: [ComponentSidenav],
-    providers: [DocumentationItems],
+    providers: [DocumentationItems]
 })
 export class SidenavModule {}

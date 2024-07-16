@@ -32,7 +32,7 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 
     constructor(
         private tree: KbqTreeBase<T>,
-        private treeNode: KbqTreeNode<T>,
+        private treeNode: KbqTreeNode<T>
     ) {
         super();
 
@@ -63,11 +63,11 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 
         '[attr.disabled]': 'disabled || null',
 
-        '(click)': 'toggle($event)',
+        '(click)': 'toggle($event)'
     },
     inputs: ['disabled'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
@@ -76,7 +76,7 @@ export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirectiv
     exportAs: 'kbqTreeNodeToggle',
     host: {
         '[attr.disabled]': 'disabled || null',
-        '(click)': 'toggle($event)',
-    },
+        '(click)': 'toggle($event)'
+    }
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

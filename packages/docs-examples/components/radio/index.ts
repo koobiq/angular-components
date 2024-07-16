@@ -20,7 +20,7 @@ export {
     RadioOverviewExample,
     RadioRequiredExample,
     RadioSizeExample,
-    RadioStyleExample,
+    RadioStyleExample
 };
 
 const EXAMPLES = [
@@ -30,7 +30,7 @@ const EXAMPLES = [
     RadioContentExample,
     RadioGroupExample,
     RadioInvalidExample,
-    RadioRequiredExample,
+    RadioRequiredExample
 ];
 
 @NgModule({
@@ -40,9 +40,9 @@ const EXAMPLES = [
         KbqCheckboxModule,
         KbqRadioModule,
         FormsModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class RadioExamplesModule {}

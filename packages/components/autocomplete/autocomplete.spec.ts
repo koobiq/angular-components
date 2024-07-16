@@ -18,7 +18,7 @@ import {
     QueryList,
     Type,
     ViewChild,
-    ViewChildren,
+    ViewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -31,7 +31,7 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    typeInElement,
+    typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqLocaleServiceModule, KbqOption, KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -46,7 +46,7 @@ import {
     KbqAutocompleteOrigin,
     KbqAutocompleteSelectedEvent,
     KbqAutocompleteTrigger,
-    getKbqAutocompleteMissingPanelError,
+    getKbqAutocompleteMissingPanelError
 } from './index';
 
 describe('KbqAutocomplete', () => {
@@ -64,14 +64,14 @@ describe('KbqAutocomplete', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 NoopAnimationsModule,
-                KbqLocaleServiceModule,
+                KbqLocaleServiceModule
             ],
             declarations: [component],
             providers: [
                 { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useFactory: () => ({ autoActiveFirstOption: false }) },
-                ...providers,
-            ],
+                ...providers
+            ]
         });
 
         TestBed.compileComponents();
@@ -401,8 +401,7 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.openedSpy).not.toHaveBeenCalled();
 
             fixture.componentInstance.filteredStates = fixture.componentInstance.states = [
-                { name: 'California', code: 'CA' },
-            ];
+                { name: 'California', code: 'CA' }];
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -510,8 +509,7 @@ describe('KbqAutocomplete', () => {
 
     it('should have the correct text direction in RTL', () => {
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) },
-        ]);
+            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) }]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -524,8 +522,7 @@ describe('KbqAutocomplete', () => {
     it('should update the panel direction if it changes for the trigger', () => {
         const dirProvider = { value: 'rtl', change: EMPTY };
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => dirProvider },
-        ]);
+            { provide: Directionality, useFactory: () => dirProvider }]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -1461,8 +1458,8 @@ describe('KbqAutocomplete', () => {
             const fixture = createComponent(SimpleAutocomplete, [
                 {
                     provide: ScrollDispatcher,
-                    useValue: { scrolled: () => scrolledSubject.asObservable() },
-                },
+                    useValue: { scrolled: () => scrolledSubject.asObservable() }
+                }
             ]);
 
             fixture.detectChanges();
@@ -1626,7 +1623,7 @@ describe('KbqAutocomplete', () => {
                     .withContext(`Expected panel to fall back to above position after repositioning.`)
                     .toBe(Math.floor(inputRect.top));
                 tick();
-            }),
+            })
         );
 
         it('should not throw if a panel reposition is requested while the panel is closed', () => {
@@ -1707,8 +1704,7 @@ describe('KbqAutocomplete', () => {
             fixture.destroy();
             TestBed.resetTestingModule();
             fixture = createComponent(SimpleAutocomplete, [
-                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } },
-            ]);
+                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }]);
 
             fixture.detectChanges();
             fixture.componentInstance.trigger.openPanel();
@@ -1976,7 +1972,7 @@ describe('KbqAutocomplete', () => {
 
                 expect(input.value).toBe('California');
                 expect(label.classList).not.toContain('kbq-form-field-empty');
-            }),
+            })
         );
 
         it('should transfer the kbq-autocomplete classes to the panel element', fakeAsync(() => {
@@ -2002,13 +1998,13 @@ describe('KbqAutocomplete', () => {
             const fixture = createComponent(SimpleAutocomplete, [
                 {
                     provide: ScrollDispatcher,
-                    useValue: { scrolled: () => scrolledSubject.asObservable() },
+                    useValue: { scrolled: () => scrolledSubject.asObservable() }
                 },
                 {
                     provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
                     useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
-                    deps: [Overlay],
-                },
+                    deps: [Overlay]
+                }
             ]);
 
             fixture.detectChanges();
@@ -2206,7 +2202,7 @@ describe('KbqAutocomplete', () => {
                 fixture.detectChanges();
                 expect(panel.classList).withContext(`Expected panel to be visible.`).toContain(visibleClass);
             });
-        }),
+        })
     );
 
     it('should emit an event when an option is selected', fakeAsync(() => {
@@ -2472,7 +2468,7 @@ describe('KbqAutocomplete', () => {
                 <span>{{ state.code }}: {{ state.name }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class SimpleAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();
@@ -2500,7 +2496,7 @@ class SimpleAutocomplete implements OnDestroy {
         { code: 'PA', name: 'Pennsylvania' },
         { code: 'TN', name: 'Tennessee' },
         { code: 'VA', name: 'Virginia' },
-        { code: 'WY', name: 'Wyoming' },
+        { code: 'WY', name: 'Wyoming' }
     ];
 
     constructor() {
@@ -2530,7 +2526,7 @@ class SimpleAutocomplete implements OnDestroy {
                 {{ option }}
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class NgIfAutocomplete {
     optionCtrl = new UntypedFormControl();
@@ -2546,7 +2542,7 @@ class NgIfAutocomplete {
             startWith(null),
             map((val: string) => {
                 return val ? this.options.filter((option) => new RegExp(val, 'gi').test(option)) : this.options.slice();
-            }),
+            })
         );
     }
 }
@@ -2562,7 +2558,7 @@ class NgIfAutocomplete {
                 <span>{{ state }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithoutForms {
     filteredStates: any[];
@@ -2594,7 +2590,7 @@ class AutocompleteWithoutForms {
                 <span>{{ state }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithNgModel {
     filteredStates: any[];
@@ -2621,7 +2617,7 @@ class AutocompleteWithNgModel {
                 <span>{{ number }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithNumbers {
     selectedNumber: number;
@@ -2638,7 +2634,7 @@ class AutocompleteWithNumbers {
         <kbq-autocomplete #auto="kbqAutocomplete">
             <kbq-option *ngFor="let option of options" [value]="option">{{ option }}</kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithOnPushDelay implements OnInit {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2660,7 +2656,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
                 {{ option }}
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithNativeInput {
     optionCtrl = new UntypedFormControl();
@@ -2675,13 +2671,13 @@ class AutocompleteWithNativeInput {
             startWith(null),
             map((val: string) => {
                 return val ? this.options.filter((option) => new RegExp(val, 'gi').test(option)) : this.options.slice();
-            }),
+            })
         );
     }
 }
 
 @Component({
-    template: ` <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" /> `,
+    template: ` <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" /> `
 })
 class AutocompleteWithoutPanel {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2697,7 +2693,7 @@ class AutocompleteWithoutPanel {
         <kbq-autocomplete #auto="kbqAutocomplete">
             <kbq-option [value]="'California'">California</kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithFormsAndNonfloatingLabel {
     formControl = new UntypedFormControl('California');
@@ -2716,7 +2712,7 @@ class AutocompleteWithFormsAndNonfloatingLabel {
                 </kbq-option>
             </kbq-optgroup>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithGroups {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2724,16 +2720,16 @@ class AutocompleteWithGroups {
     stateGroups = [
         {
             title: 'One',
-            states: ['Alabama', 'California', 'Florida', 'Oregon'],
+            states: ['Alabama', 'California', 'Florida', 'Oregon']
         },
         {
             title: 'Two',
-            states: ['Kansas', 'Massachusetts', 'New York', 'Pennsylvania'],
+            states: ['Kansas', 'Massachusetts', 'New York', 'Pennsylvania']
         },
         {
             title: 'Three',
-            states: ['Tennessee', 'Virginia', 'Wyoming', 'Alaska'],
-        },
+            states: ['Tennessee', 'Virginia', 'Wyoming', 'Alaska']
+        }
     ];
 }
 
@@ -2748,7 +2744,7 @@ class AutocompleteWithGroups {
                 <span>{{ state }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithSelectEvent {
     selectedState: string;
@@ -2763,7 +2759,7 @@ class AutocompleteWithSelectEvent {
     template: `
         <input [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete"></kbq-autocomplete>
-    `,
+    `
 })
 class PlainAutocompleteInputWithFormControl {
     formControl = new UntypedFormControl();
@@ -2778,7 +2774,7 @@ class PlainAutocompleteInputWithFormControl {
         <kbq-autocomplete #auto="kbqAutocomplete">
             <kbq-option *ngFor="let value of values" [value]="value">{{ value }}</kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithNumberInputAndNgModel {
     selectedValue: number;
@@ -2805,7 +2801,7 @@ class AutocompleteWithNumberInputAndNgModel {
         <kbq-autocomplete #auto="kbqAutocomplete">
             <kbq-option *ngFor="let value of values" [value]="value">{{ value }}</kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithDifferentOrigin {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2820,14 +2816,14 @@ class AutocompleteWithDifferentOrigin {
     template: `
         <input autocomplete="changed" [(ngModel)]="value" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete"></kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithNativeAutocompleteAttribute {
     value: string;
 }
 
 @Component({
-    template: '<input [kbqAutocomplete]="null" kbqAutocompleteDisabled>',
+    template: '<input [kbqAutocomplete]="null" kbqAutocompleteDisabled>'
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -2842,7 +2838,7 @@ class InputWithoutAutocompleteAndDisabled {}
                 <span>{{ state.name }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithDisabledItems {
     @ViewChild(KbqAutocompleteTrigger, { static: true }) trigger: KbqAutocompleteTrigger;
@@ -2859,7 +2855,7 @@ class AutocompleteWithDisabledItems {
         { code: 'PA', name: 'Pennsylvania' },
         { code: 'TN', name: 'Tennessee' },
         { code: 'VA', name: 'Virginia' },
-        { code: 'WY', name: 'Wyoming' },
+        { code: 'WY', name: 'Wyoming' }
     ];
 }
 
@@ -2874,7 +2870,7 @@ class AutocompleteWithDisabledItems {
                 <span>{{ state.name }}</span>
             </kbq-option>
         </kbq-autocomplete>
-    `,
+    `
 })
 class AutocompleteWithOpenOnFocus {
     @ViewChild(KbqAutocompleteTrigger, { static: true }) trigger: KbqAutocompleteTrigger;
@@ -2891,6 +2887,6 @@ class AutocompleteWithOpenOnFocus {
         { code: 'PA', name: 'Pennsylvania' },
         { code: 'TN', name: 'Tennessee' },
         { code: 'VA', name: 'Virginia' },
-        { code: 'WY', name: 'Wyoming' },
+        { code: 'WY', name: 'Wyoming' }
     ];
 }

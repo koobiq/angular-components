@@ -10,6 +10,6 @@ import { KbqMarkdownService } from './markdown.service';
     imports: [CommonModule, A11yModule, KbqCommonModule, FormsModule],
     exports: [KbqMarkdown],
     declarations: [KbqMarkdown],
-    providers: [KbqMarkdownService],
+    providers: [KbqMarkdownService]
 })
 export class KbqMarkdownModule {}

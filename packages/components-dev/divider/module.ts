@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {}
 
@@ -14,8 +14,8 @@ export class DemoComponent {}
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

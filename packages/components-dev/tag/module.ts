@@ -15,7 +15,7 @@ import {
     KbqTagInputEvent,
     KbqTagList,
     KbqTagsDefaultOptions,
-    KbqTagsModule,
+    KbqTagsModule
 } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable, merge } from 'rxjs';
@@ -25,7 +25,7 @@ import { map } from 'rxjs/operators';
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['../main.scss', 'styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements AfterViewInit {
     colors = KbqComponentColors;
@@ -67,7 +67,7 @@ export class DemoComponent implements AfterViewInit {
         return (
             cleanedValue &&
             [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))].every(
-                (tag) => tag !== cleanedValue,
+                (tag) => tag !== cleanedValue
             )
         );
     }
@@ -79,7 +79,7 @@ export class DemoComponent implements AfterViewInit {
                     const values = selectedTags.map((tag) => tag.value);
 
                     return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
-                }),
+                })
             ),
             this.tagCtrl.valueChanges.pipe(
                 map((value: any) => {
@@ -90,7 +90,7 @@ export class DemoComponent implements AfterViewInit {
                         : this.autocompleteAllTags.slice();
 
                     const inputAndSelectionTagsDiff = this.autocompleteFilteredTagsByInput.filter(
-                        (tag) => !this.autocompleteSelectedTags.includes(tag),
+                        (tag) => !this.autocompleteSelectedTags.includes(tag)
                     );
 
                     // check for scenario where duplicate exists but also can create/select other tags
@@ -98,8 +98,8 @@ export class DemoComponent implements AfterViewInit {
                         !inputAndSelectionTagsDiff.length && this.autoCompleteTagInputRef.hasDuplicates;
 
                     return inputAndSelectionTagsDiff;
-                }),
-            ),
+                })
+            )
         );
     }
 
@@ -163,7 +163,7 @@ export class DemoComponent implements AfterViewInit {
         if (!target || target.tagName !== this.optionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
                 input: this.autocompleteTagInput.nativeElement,
-                value: this.autocompleteTagInput.nativeElement.value,
+                value: this.autocompleteTagInput.nativeElement.value
             };
 
             this.autocompleteOnCreate(kbqTagEvent);
@@ -217,7 +217,7 @@ export class DemoComponent implements AfterViewInit {
         const filterValue = value.toLowerCase();
 
         return [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0,
+            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
         );
     }
 }
@@ -229,9 +229,9 @@ export class DemoComponent implements AfterViewInit {
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             // tslint:disable-next-line: no-object-literal-type-assertion
-            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions,
-        },
-    ],
+            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
+        }
+    ]
 })
 export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
 
@@ -243,12 +243,11 @@ export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
         FormsModule,
         KbqFormFieldModule,
         ReactiveFormsModule,
-
         KbqAutocompleteModule,
         KbqTagsModule,
         KbqIconModule,
-        KbqTitleModule,
+        KbqTitleModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

@@ -52,15 +52,15 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(
                 red(
                     `Cannot parse current version in ${italic('package.json')}. Please ` +
-                        `make sure "${this.packageJson.version}" is a valid Semver version.`,
-                ),
+                        `make sure "${this.packageJson.version}" is a valid Semver version.`
+                )
             );
             process.exit(1);
         }
 
         this.githubApi = new Octokit({
             type: 'token',
-            token: config.repoToken,
+            token: config.repoToken
         });
     }
 
@@ -101,8 +101,8 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.log(
                 green(
                     `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
-                        `${italic('package.json')}`,
-                ),
+                        `${italic('package.json')}`
+                )
             );
             console.log();
         }
@@ -114,8 +114,8 @@ export class StageReleaseTask extends BaseReleaseTask {
         console.log(
             yellow(
                 `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
-                    `changes that apply to the public library release. When done, proceed to the prompt below.`,
-            ),
+                    `changes that apply to the public library release. When done, proceed to the prompt below.`
+            )
         );
         console.log();
 
@@ -149,7 +149,7 @@ export class StageReleaseTask extends BaseReleaseTask {
             await this.githubApi.repos.getCombinedStatusForRef({
                 owner: repoOwner,
                 repo: repoName,
-                ref: commitRef,
+                ref: commitRef
             })
         ).data;
 
@@ -157,14 +157,14 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(
                 red(
                     `  ✘   Cannot stage release. Commit "${commitRef}" does not pass all github ` +
-                        `status checks. Please make sure this commit passes all checks before re-running.`,
-                ),
+                        `status checks. Please make sure this commit passes all checks before re-running.`
+                )
             );
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
                 console.info(
-                    green(`  ⚠   Upstream commit is failing CI checks, but status has been ` + `forcibly ignored.`),
+                    green(`  ⚠   Upstream commit is failing CI checks, but status has been ` + `forcibly ignored.`)
                 );
 
                 return;
@@ -174,8 +174,8 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(
                 red(
                     `  ✘   Commit "${commitRef}" still has pending github statuses that ` +
-                        `need to succeed before staging a release.`,
-                ),
+                        `need to succeed before staging a release.`
+                )
             );
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 

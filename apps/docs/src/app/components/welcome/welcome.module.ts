@@ -12,9 +12,9 @@ import { WelcomeComponent } from './welcome.component';
         CommonModule,
         KbqIconModule,
         KbqLinkModule,
-        RouterModule,
+        RouterModule
     ],
     exports: [WelcomeComponent],
-    declarations: [WelcomeComponent],
+    declarations: [WelcomeComponent]
 })
 export class WelcomeModule {}

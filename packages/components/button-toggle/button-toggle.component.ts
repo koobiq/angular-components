@@ -18,7 +18,7 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getNodesWithoutComments, KbqButton } from '@koobiq/components/button';
@@ -35,7 +35,7 @@ export type ToggleType = 'checkbox' | 'radio';
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqButtonToggleGroup),
-    multi: true,
+    multi: true
 };
 
 /** Change event object emitted by MсButtonToggle. */
@@ -44,7 +44,7 @@ export class KbqButtonToggleChange {
         /** The MсButtonToggle that emits the event. */
         public source: KbqButtonToggle,
         /** The value assigned to the MсButtonToggle. */
-        public value: any,
+        public value: any
     ) {}
 }
 
@@ -54,9 +54,9 @@ export class KbqButtonToggleChange {
     providers: [KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
     host: {
         class: 'kbq-button-toggle-group',
-        '[class.kbq-button-toggle_vertical]': 'vertical',
+        '[class.kbq-button-toggle_vertical]': 'vertical'
     },
-    exportAs: 'kbqButtonToggleGroup',
+    exportAs: 'kbqButtonToggleGroup'
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     /** Whether the toggle group is vertical. */
@@ -311,8 +311,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-button-toggle',
-        '[class]': '"kbq-button-toggle" + iconType',
-    },
+        '[class]': '"kbq-button-toggle" + iconType'
+    }
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
@@ -369,7 +369,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
         @Optional() public buttonToggleGroup: KbqButtonToggleGroup,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
-        private element: ElementRef,
+        private element: ElementRef
     ) {}
 
     ngOnInit() {
@@ -386,7 +386,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
     ngAfterContentInit(): void {
         if (this.icons.length) {
             const nodesWithoutComments = getNodesWithoutComments(
-                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList,
+                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
             ).length;
             this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
         }

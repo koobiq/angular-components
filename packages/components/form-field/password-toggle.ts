@@ -15,7 +15,7 @@ import {
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
@@ -33,10 +33,10 @@ import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/componen
 
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
-        '(keydown.SPACE)': 'toggle($event)',
+        '(keydown.SPACE)': 'toggle($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
     @ViewChild(KbqIconButton) icon: KbqIconButton;
@@ -75,7 +75,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         focusMonitor: FocusMonitor,
         @Optional() direction: Directionality,
         @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: KbqFormFieldRef,
-        private changeDetector: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
 

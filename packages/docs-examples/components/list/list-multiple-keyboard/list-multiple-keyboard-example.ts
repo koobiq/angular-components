@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'list-multiple-keyboard-example',
     templateUrl: 'list-multiple-keyboard-example.html',
     styleUrls: ['list-multiple-keyboard-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ListMultipleKeyboardExample {
     selected = [];

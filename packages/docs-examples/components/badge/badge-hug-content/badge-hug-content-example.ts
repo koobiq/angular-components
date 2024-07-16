@@ -8,7 +8,7 @@ import { KbqBadgeColors } from '@koobiq/components/badge';
     selector: 'badge-hug-content-example',
     templateUrl: 'badge-hug-content-example.html',
     styleUrls: ['badge-hug-content-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class BadgeHugContentExample {
     colors = KbqBadgeColors;

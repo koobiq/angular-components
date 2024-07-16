@@ -9,7 +9,7 @@ import { spawnSync } from 'child_process';
 const npmClientEnvironment = {
     ...process.env,
     // See https://docs.npmjs.com/misc/registry for the official documentation of the NPM registry.
-    npm_config_registry: 'https://registry.npmjs.org',
+    npm_config_registry: 'https://registry.npmjs.org'
 };
 
 /** Checks whether NPM is currently authenticated. */
@@ -17,7 +17,7 @@ export function isNpmAuthenticated(): boolean {
     return (
         spawnSync('npm', ['whoami'], {
             shell: true,
-            env: npmClientEnvironment,
+            env: npmClientEnvironment
         }).stdout.toString() !== ''
     );
 }
@@ -28,7 +28,7 @@ export function npmLoginInteractive(): boolean {
         spawnSync('npm', ['login'], {
             stdio: 'inherit',
             shell: true,
-            env: npmClientEnvironment,
+            env: npmClientEnvironment
         }).status === 0
     );
 }
@@ -43,7 +43,7 @@ export function npmPublish(packagePath: string, distTag: string): string | undef
 
     const result = spawnSync('npm', command, {
         cwd: packagePath,
-        shell: true,
+        shell: true
     });
 
     if (result.status !== 0) {
@@ -58,7 +58,7 @@ export function npmLogout(): boolean {
     return (
         spawnSync('npm', ['logout'], {
             shell: true,
-            env: npmClientEnvironment,
+            env: npmClientEnvironment
         }).status === 0
     );
 }

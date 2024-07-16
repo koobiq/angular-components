@@ -9,7 +9,7 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    dispatchMouseEvent,
+    dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { createFile } from './file-drop.spec';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
@@ -21,7 +21,7 @@ export function dispatchDropEvent(
     component: any,
     fixture: ComponentFixture<any>,
     fileName = 'test.file',
-    type?: string,
+    type?: string
 ) {
     const fakeDropEvent = createFakeEvent('drop');
     const fakeItem = createFile(fileName, type);
@@ -53,7 +53,7 @@ describe('MultipleFileUploadComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
-            declarations: [BasicMultipleFileUpload, ControlValueAccessorMultipleFileUpload],
+            declarations: [BasicMultipleFileUpload, ControlValueAccessorMultipleFileUpload]
         }).compileComponents();
 
         fixture = TestBed.createComponent(BasicMultipleFileUpload);
@@ -118,7 +118,7 @@ describe('MultipleFileUploadComponent', () => {
             dispatchKeyboardEvent(
                 fixture.debugElement.query(By.css(`.${fileItemRowCssClass}`)).nativeElement,
                 'keydown',
-                DELETE,
+                DELETE
             );
             subscription.unsubscribe();
         });
@@ -303,8 +303,8 @@ describe('SingleFileUploadComponent', () => {
             imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
             declarations: [
                 BasicSingleFileUpload,
-                ControlValueAccessorSingleFileUpload,
-            ],
+                ControlValueAccessorSingleFileUpload
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(BasicSingleFileUpload);
@@ -366,7 +366,7 @@ describe('SingleFileUploadComponent', () => {
             dispatchKeyboardEvent(
                 component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`),
                 'keydown',
-                DELETE,
+                DELETE
             );
             subscription.unsubscribe();
         });
@@ -470,7 +470,7 @@ describe('SingleFileUploadComponent', () => {
 
             dispatchMouseEvent(
                 fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
-                'mouseenter',
+                'mouseenter'
             );
             fixture.detectChanges();
             flush();
@@ -612,7 +612,7 @@ describe('SingleFileUploadComponent', () => {
             >
             </kbq-single-file-upload>
         </div>
-    `,
+    `
 })
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -641,7 +641,7 @@ class BasicSingleFileUpload {
             >
             </kbq-file-upload>
         </div>
-    `,
+    `
 })
 class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -669,7 +669,7 @@ class ControlValueAccessorSingleFileUpload {
             >
             </kbq-multiple-file-upload>
         </div>
-    `,
+    `
 })
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -697,7 +697,7 @@ class BasicMultipleFileUpload {
             >
             </kbq-multiple-file-upload>
         </div>
-    `,
+    `
 })
 class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;

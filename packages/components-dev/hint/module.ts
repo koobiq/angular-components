@@ -9,7 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     colors = KbqComponentColors;
@@ -20,8 +20,8 @@ export class DemoComponent {
     imports: [
         BrowserModule,
         KbqFormFieldModule,
-        KbqIconModule,
+        KbqIconModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

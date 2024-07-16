@@ -7,7 +7,7 @@ import {
     HasTabIndexCtor,
     mixinDisabled,
     mixinTabIndex,
-    toBoolean,
+    toBoolean
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -16,7 +16,7 @@ export class KbqLinkBase {}
 
 /** @docs-private */
 export const KbqLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqLinkBase = mixinTabIndex(
-    mixinDisabled(KbqLinkBase),
+    mixinDisabled(KbqLinkBase)
 );
 
 export const baseURLRegex = /^http(s)?:\/\//;
@@ -38,8 +38,8 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-disabled]': 'disabled || null',
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.print]': 'printUrl',
-    },
+        '[attr.print]': 'printUrl'
+    }
 })
 export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
     @Input()
@@ -137,7 +137,7 @@ export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex,
     constructor(
         private elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
-        private changeDetector: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef
     ) {
         super();
 

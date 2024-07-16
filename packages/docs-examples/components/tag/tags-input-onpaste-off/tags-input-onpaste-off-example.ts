@@ -15,9 +15,9 @@ import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagInputEvent, KbqTagsDefaultOptions } fro
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             // tslint:disable-next-line: no-object-literal-type-assertion
-            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions,
-        },
-    ],
+            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
+        }
+    ]
 })
 export class TagsInputOnpasteOffExample {
     control = new FormControl();

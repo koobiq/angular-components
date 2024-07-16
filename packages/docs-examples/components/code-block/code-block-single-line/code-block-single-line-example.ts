@@ -10,7 +10,7 @@ const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catc
     selector: 'code-block-single-line-example',
     templateUrl: 'code-block-single-line-example.html',
     styleUrls: ['code-block-single-line-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockSingleLineExample {
     files: KbqCodeFile[];
@@ -20,8 +20,8 @@ export class CodeBlockSingleLineExample {
             {
                 filename: '',
                 content: codeTs2,
-                language: 'typescript',
-            },
+                language: 'typescript'
+            }
         ];
     }
 }

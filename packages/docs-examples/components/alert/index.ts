@@ -17,7 +17,7 @@ const EXAMPLES = [
     AlertContentExample,
     AlertSizeExample,
     AlertStatusExample,
-    AlertVariantsExample,
+    AlertVariantsExample
 ];
 
 @NgModule({
@@ -26,9 +26,9 @@ const EXAMPLES = [
         KbqIconModule,
         KbqButtonModule,
         KbqLinkModule,
-        KbqAlertModule,
+        KbqAlertModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class AlertExamplesModule {}

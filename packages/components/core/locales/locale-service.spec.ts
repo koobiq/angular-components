@@ -6,7 +6,7 @@ describe('KbqLocaleService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [KbqLocaleService],
+            providers: [KbqLocaleService]
         });
         service = TestBed.inject(KbqLocaleService);
     });

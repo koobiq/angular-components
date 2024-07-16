@@ -7,7 +7,7 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { SPACE } from '@koobiq/cdk/keycodes';
 import { CanColorCtor, mixinColor } from '@koobiq/components/core';
@@ -33,8 +33,8 @@ export const KbqCardBaseMixin: CanColorCtor & typeof KbqCardBase = mixinColor(Kb
         '[class.kbq-selected]': 'selected',
         '[attr.tabindex]': 'tabIndex',
         '(keydown)': 'onKeyDown($event)',
-        '(click)': 'onClick($event)',
-    },
+        '(click)': 'onClick($event)'
+    }
 })
 export class KbqCard extends KbqCardBaseMixin implements OnDestroy {
     @Input()
@@ -59,7 +59,7 @@ export class KbqCard extends KbqCardBaseMixin implements OnDestroy {
 
     constructor(
         elementRef: ElementRef,
-        private _focusMonitor: FocusMonitor,
+        private _focusMonitor: FocusMonitor
     ) {
         super(elementRef);
 

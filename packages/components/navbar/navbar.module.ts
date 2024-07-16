@@ -13,7 +13,7 @@ import {
     KbqNavbarLogo,
     KbqNavbarRectangleElement,
     KbqNavbarTitle,
-    KbqNavbarToggle,
+    KbqNavbarToggle
 } from './navbar-item.component';
 import { KbqNavbar, KbqNavbarContainer } from './navbar.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
@@ -24,7 +24,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         A11yModule,
         PlatformModule,
         KbqIconModule,
-        KbqToolTipModule,
+        KbqToolTipModule
     ],
     exports: [
         KbqNavbar,
@@ -38,7 +38,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento,
+        KbqNavbarBento
     ],
     declarations: [
         KbqNavbar,
@@ -52,7 +52,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarDivider,
         KbqNavbarFocusableItem,
         KbqNavbarRectangleElement,
-        KbqNavbarBento,
-    ],
+        KbqNavbarBento
+    ]
 })
 export class KbqNavbarModule {}

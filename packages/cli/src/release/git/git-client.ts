@@ -9,7 +9,7 @@ import { spawnSync, SpawnSyncReturns } from 'child_process';
 export class GitClient {
     constructor(
         public projectDir: string,
-        public remoteGitUrl: string,
+        public remoteGitUrl: string
     ) {}
 
     /** Gets the currently checked out branch for the project directory. */
@@ -120,7 +120,7 @@ export class GitClient {
         return spawnSync('git', args, {
             cwd: this.projectDir,
             stdio: ['pipe', 'pipe', printStderr ? 'inherit' : 'pipe'],
-            encoding: 'utf8',
+            encoding: 'utf8'
         });
     }
 }

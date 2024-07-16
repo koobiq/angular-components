@@ -18,7 +18,7 @@ export function parseOffset(offset: string): number {
 export function getZonesGroupedByCountry(
     data: KbqTimezoneZone[],
     otherCountriesLabel: string = 'Other',
-    priorityCountry?: string,
+    priorityCountry?: string
 ): KbqTimezoneGroup[] {
     const systemTimezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const countryCode: string | undefined = priorityCountry
@@ -39,7 +39,7 @@ export function getZonesGroupedByCountry(
 
             return result;
         },
-        {},
+        {}
     );
 
     // make data groups
@@ -47,13 +47,13 @@ export function getZonesGroupedByCountry(
         (zones: KbqTimezoneZone[]) => ({
             countryCode: zones[0].countryCode,
             countryName: zones[0].countryName,
-            zones: zones.sort(timezonesSortComparator),
-        }),
+            zones: zones.sort(timezonesSortComparator)
+        })
     );
 
     // sort by priority country
     const priorityGroupIndex = groups.findIndex(
-        (group) => group.countryCode.toLowerCase() === countryCode?.toLowerCase(),
+        (group) => group.countryCode.toLowerCase() === countryCode?.toLowerCase()
     );
 
     if (priorityGroupIndex > -1) {

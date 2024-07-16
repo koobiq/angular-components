@@ -3,7 +3,7 @@ import { basename, extname } from 'path';
 import {
     CLASS_PREFIX,
     MARKDOWN_TAGS_TO_CLASS_ALIAS,
-    MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS,
+    MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS
 } from '../../../packages/components/markdown/markdown.values';
 
 /** Regular expression that matches example comments. */
@@ -12,7 +12,7 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 function setTargetBlank(content: string): string {
     return content.replace(
         new RegExp(`href=".[^"]*"`, 'g'), // .[^"]* - any symbol except "
-        (match: string) => `${match} target="_blank"`,
+        (match: string) => `${match} target="_blank"`
     );
 }
 
@@ -27,7 +27,7 @@ function createTagNameStringAliaser(classPrefix: string) {
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             str = str.replace(
                 new RegExp(`<${tag}\s*>`, 'g'),
-                (_match: string) => `<${tag} class="${classPrefix}__${tag}">`,
+                (_match: string) => `<${tag} class="${classPrefix}__${tag}">`
             );
         });
 

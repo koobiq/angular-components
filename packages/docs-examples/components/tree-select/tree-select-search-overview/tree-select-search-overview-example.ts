@@ -54,17 +54,17 @@ export const DATA_OBJECT = {
                     'aria-describer': 'ts',
                     'aria-describer.spec': 'ts',
                     'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts',
+                    'aria-reference.spec': 'ts'
                 },
                 'focus monitor': {
                     'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts',
-                },
-            },
+                    'focus-monitor.spec': 'ts'
+                }
+            }
         },
         documentation: {
             source: '',
-            tools: '',
+            tools: ''
         },
         mosaic: {
             autocomplete: '',
@@ -72,28 +72,28 @@ export const DATA_OBJECT = {
             'button-toggle': '',
             index: 'ts',
             package: 'json',
-            version: 'ts',
+            version: 'ts'
         },
         'components-dev': {
             alert: '',
-            badge: '',
+            badge: ''
         },
         'koobiq-examples': '',
         'koobiq-moment-adapter': '',
         README: 'md',
         'tsconfig.build': 'json',
-        wallabyTest: 'ts',
+        wallabyTest: 'ts'
     },
     scripts: {
         deploy: {
             'cleanup-preview': 'ts',
             'publish-artifacts': 'sh',
             'publish-docs': 'sh',
-            'publish-docs-preview': 'ts',
+            'publish-docs-preview': 'ts'
         },
-        'tsconfig.deploy': 'json',
+        'tsconfig.deploy': 'json'
     },
-    tests: '',
+    tests: ''
 };
 
 /**
@@ -103,7 +103,7 @@ export const DATA_OBJECT = {
     selector: 'tree-select-search-overview-example',
     templateUrl: 'tree-select-search-overview-example.html',
     styleUrls: ['tree-select-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
     selected = '';
@@ -122,7 +122,7 @@ export class TreeSelectSearchOverviewExample implements OnInit {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 

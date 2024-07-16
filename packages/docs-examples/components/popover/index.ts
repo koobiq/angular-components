@@ -23,7 +23,7 @@ const EXAMPLES = [
     PopoverCommonExample,
     PopoverScrollExample,
     PopoverPlacementCenterExample,
-    PopoverPlacementEdgesExample,
+    PopoverPlacementEdgesExample
 ];
 
 @NgModule({
@@ -40,9 +40,9 @@ const EXAMPLES = [
         KbqInputModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class PopoverExamplesModule {}

@@ -9,7 +9,7 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-multiple-example',
     templateUrl: 'modal-multiple-example.html',
     styleUrls: ['modal-multiple-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ModalMultipleExample {
     // use modalService to prevent multiple overlaid masks
@@ -23,7 +23,7 @@ export class ModalMultipleExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
 
         this.showSuccessModal();
@@ -36,7 +36,7 @@ export class ModalMultipleExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 }

@@ -8,7 +8,7 @@ import { Direction } from '@koobiq/components/splitter';
     selector: 'splitter-vertical-example',
     templateUrl: 'splitter-vertical-example.html',
     styleUrls: ['splitter-vertical-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SplitterVerticalExample {
     direction = Direction;

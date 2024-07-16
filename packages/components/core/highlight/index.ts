@@ -5,7 +5,7 @@ import { KbqHighlightPipe } from './highlight.pipe';
 @NgModule({
     imports: [CommonModule],
     exports: [KbqHighlightPipe],
-    declarations: [KbqHighlightPipe],
+    declarations: [KbqHighlightPipe]
 })
 export class KbqHighlightModule {}
 

@@ -6,7 +6,7 @@ import {
     DateFormatter,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
+    KbqLocaleService
 } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
@@ -22,8 +22,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
     providers: [
         { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
         { provide: DateAdapter, useClass: LuxonDateAdapter },
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-    ],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ]
 })
 export class DurationDateFormatterExample {
     formats = {
@@ -34,15 +34,15 @@ export class DurationDateFormatterExample {
                     minutesSeconds: '',
                     withMilliseconds: '',
                     hoursMinutesSeconds: '',
-                    hoursMinutes: '',
+                    hoursMinutes: ''
                 },
                 onlyMinutes: {
                     seconds: '',
                     minutesSeconds: '',
                     withMilliseconds: '',
                     hoursMinutesSeconds: '',
-                    hoursMinutes: '',
-                },
+                    hoursMinutes: ''
+                }
             },
             long: {
                 seconds: '',
@@ -68,7 +68,7 @@ export class DurationDateFormatterExample {
 
                 yearsMonth: '',
                 years: '',
-                yearsWithFract: '',
+                yearsWithFract: ''
             },
             short: {
                 secondsMilliseconds: '',
@@ -95,15 +95,15 @@ export class DurationDateFormatterExample {
 
                 yearsMonth: '',
                 years: '',
-                yearsWithFract: '',
-            },
-        },
+                yearsWithFract: ''
+            }
+        }
     };
 
     constructor(
         private adapter: DateAdapter<DateTime>,
         private formatter: DateFormatter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
@@ -156,7 +156,7 @@ export class DurationDateFormatterExample {
         long.hoursMinutes = this.formatter.durationLong(start, start.plus({ hour: 1, minute: 21 }));
         long.hoursMinutesMoreThanDay = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 20 }), [
             'hours',
-            'minutes',
+            'minutes'
         ]);
         long.hours = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
@@ -185,7 +185,7 @@ export class DurationDateFormatterExample {
 
         short.secondsMilliseconds = this.formatter.durationShort(start, start.plus({ second: 21, millisecond: 365 }), [
             'seconds',
-            'milliseconds',
+            'milliseconds'
         ]);
         short.seconds = this.formatter.durationShort(start, start.plus({ second: 21, millisecond: 365 }));
 
@@ -197,7 +197,7 @@ export class DurationDateFormatterExample {
         short.hoursMinutesMoreThanDay = this.formatter.durationShort(
             start,
             start.plus({ day: 1, hour: 8, minute: 20 }),
-            ['hours', 'minutes'],
+            ['hours', 'minutes']
         );
         short.hours = this.formatter.durationShort(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
@@ -214,7 +214,7 @@ export class DurationDateFormatterExample {
             start,
             start.plus({ month: 2, day: 16 }),
             ['months'],
-            true,
+            true
         );
 
         short.yearsMonth = this.formatter.durationShort(start, start.plus({ year: 3, month: 11 }));

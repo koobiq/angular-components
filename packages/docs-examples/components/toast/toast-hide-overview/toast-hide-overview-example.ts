@@ -10,7 +10,7 @@ import { switchMap, timer } from 'rxjs';
     selector: 'toast-hide-overview-example',
     templateUrl: 'toast-hide-overview-example.html',
     styleUrls: ['toast-hide-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ToastHideOverviewExample {
     themePalette = ThemePalette;
@@ -22,7 +22,7 @@ export class ToastHideOverviewExample {
         this.toastService.show({
             title: 'Доступно обновление агента',
             caption: 'Версия 2.03.15 от 15 мая 2022',
-            actions,
+            actions
         });
     }
 
@@ -34,16 +34,16 @@ export class ToastHideOverviewExample {
                 caption: '12,1 МБ из 85 МБ — осталось 15 мин  ',
                 closeButton: false,
                 content,
-                actions,
+                actions
             },
-            0,
+            0
         );
         timer(2000)
             .pipe(
                 switchMap(() => {
                     this.progress = false;
                     return timer(550);
-                }),
+                })
             )
             .subscribe(() => ref.instance.close());
     }

@@ -9,13 +9,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     TestBed.configureTestingModule({
         imports: [
             KbqMarkdownModule,
-            ...imports,
+            ...imports
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers,
-        ],
+            ...providers
+        ]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -23,14 +23,14 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
 // tslint:disable no-unnecessary-class
 @Component({
-    template: '<kbq-markdown [markdownText]="markdownText"></kbq-markdown>',
+    template: '<kbq-markdown [markdownText]="markdownText"></kbq-markdown>'
 })
 class KbqMarkdownWithAttribute {
     markdownText: string = '';
 }
 
 @Component({
-    template: '<kbq-markdown>## header test</kbq-markdown>',
+    template: '<kbq-markdown>## header test</kbq-markdown>'
 })
 class KbqMarkdownWithContent {}
 

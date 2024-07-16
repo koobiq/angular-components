@@ -10,7 +10,7 @@ import {
     Input,
     NgModule,
     Output,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     AbstractControl,
@@ -18,7 +18,7 @@ import {
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    ValidationErrors
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,7 +30,7 @@ import {
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
     KbqFileUploadModule,
-    KbqFileValidatorFn,
+    KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -103,10 +103,10 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useValue: {
                 ...KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
-                captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize,
-            },
-        },
-    ],
+                captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
+            }
+        }
+    ]
 })
 export class MultipleFileUploadCompactComponent {
     @Input() disabled: boolean;
@@ -124,7 +124,7 @@ export class MultipleFileUploadCompactComponent {
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoComponent {
     disabled = false;
@@ -140,16 +140,16 @@ export class DemoComponent {
 
     form = new FormGroup(
         {
-            'file-upload': new FormControl<KbqFileItem | null>(null, maxFileExceededFn),
+            'file-upload': new FormControl<KbqFileItem | null>(null, maxFileExceededFn)
         },
-        { updateOn: 'submit' },
+        { updateOn: 'submit' }
     );
 
     formMultiple = new FormGroup(
         {
-            'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn),
+            'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn)
         },
-        { updateOn: 'submit' },
+        { updateOn: 'submit' }
     );
 
     secondControl = new FormControl<File | KbqFileItem | null>(null);
@@ -161,13 +161,12 @@ export class DemoComponent {
         { id: 'pt-BR' },
         { id: 'es-LA' },
         { id: 'zh-CN' },
-        { id: 'fa-IR' },
-    ];
+        { id: 'fa-IR' }];
     selectedLanguage: any = this.languageList[0];
 
     constructor(
         private cdr: ChangeDetectorRef,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.control.valueChanges.subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
@@ -204,12 +203,12 @@ export class DemoComponent {
 
             this.errorMessagesForMultiple = [
                 ...this.errorMessagesForMultiple,
-                ...errorsPerFile,
+                ...errorsPerFile
             ].filter(Boolean);
 
             return {
                 ...file,
-                hasError: errorsPerFile.length > 0,
+                hasError: errorsPerFile.length > 0
             };
         });
 
@@ -223,7 +222,7 @@ export class DemoComponent {
     toggleDisabled() {
         this.disabled = !this.disabled;
         [this.control, this.secondControl, this.form, this.formMultiple, this.multipleFileUploadControl].forEach(
-            (control) => (control.enabled ? control.disable() : control.enable()),
+            (control) => (control.enabled ? control.disable() : control.enable())
         );
     }
 
@@ -266,11 +265,11 @@ export class DemoComponent {
                 title: 'Загрузите фотографии',
                 gridHeaders: {
                     file: 'Файл',
-                    size: 'Размер',
-                },
-            },
-        },
-    ],
+                    size: 'Размер'
+                }
+            }
+        }
+    ]
 })
 export class CustomTextDirective {}
 
@@ -278,7 +277,7 @@ export class CustomTextDirective {}
     declarations: [
         DemoComponent,
         CustomTextDirective,
-        MultipleFileUploadCompactComponent,
+        MultipleFileUploadCompactComponent
     ],
     imports: [
         BrowserModule,
@@ -294,8 +293,8 @@ export class CustomTextDirective {}
         NgIf,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqDataSizePipe,
+        KbqDataSizePipe
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

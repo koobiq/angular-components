@@ -32,7 +32,7 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
-    isDevMode,
+    isDevMode
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
@@ -51,7 +51,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
@@ -83,7 +83,7 @@ import {
     kbqSelectAnimations,
     mixinDisabled,
     mixinErrorState,
-    mixinTabIndex,
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -106,7 +106,7 @@ let nextUniqueId = 0;
 export class KbqSelectChange {
     constructor(
         public source: KbqSelect,
-        public value: any,
+        public value: any
     ) {}
 }
 
@@ -124,7 +124,7 @@ export class KbqSelectBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl,
+        public ngControl: NgControl
     ) {}
 }
 
@@ -153,16 +153,16 @@ const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorState
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
 
-        '(window:resize)': 'calculateHiddenItems()',
+        '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [
         kbqSelectAnimations.transformPanel,
-        kbqSelectAnimations.fadeInContent,
+        kbqSelectAnimations.fadeInContent
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
-    ],
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect }
+    ]
 })
 export class KbqSelect
     extends KbqSelectMixinBase
@@ -225,14 +225,14 @@ export class KbqSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top',
+            overlayY: 'top'
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom',
-        },
+            overlayY: 'bottom'
+        }
     ];
 
     /**
@@ -292,14 +292,14 @@ export class KbqSelect
                 ...this.options.map((option) => option.onSelectionChange),
                 ...this.selectionModel.selected.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
-                    switchMap((list: QueryList<KbqOption>) => merge(...list.map((option) => option.onSelectionChange))),
-                ),
+                    switchMap((list: QueryList<KbqOption>) => merge(...list.map((option) => option.onSelectionChange)))
+                )
             );
         }
 
         return this._ngZone.onStable.asObservable().pipe(
             take(1),
-            switchMap(() => this.optionSelectionChanges),
+            switchMap(() => this.optionSelectionChanges)
         );
     }) as Observable<KbqOptionSelectionChange>;
 
@@ -309,13 +309,13 @@ export class KbqSelect
     /** Event emitted when the select has been opened. */
     @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
-        map(() => {}),
+        map(() => {})
     );
 
     /** Event emitted when the select has been closed. */
     @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
-        map(() => {}),
+        map(() => {})
     );
 
     /** Event emitted when the selected value has been changed by the user. */
@@ -531,7 +531,7 @@ export class KbqSelect
         @Optional() private readonly parentFormField: KbqFormField,
         @Self() @Optional() ngControl: NgControl,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
@@ -916,7 +916,7 @@ export class KbqSelect
 
     private modalOverlayPosition(): number {
         return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((childNode) =>
-            (childNode as HTMLElement).classList.contains('kbq-modal-overlay'),
+            (childNode as HTMLElement).classList.contains('kbq-modal-overlay')
         );
     }
 
@@ -932,7 +932,7 @@ export class KbqSelect
                     }
 
                     return true;
-                }),
+                })
             );
 
         return merge(outsidePointerEvents, this.overlayDir.overlayRef!.detachments());
@@ -1096,7 +1096,7 @@ export class KbqSelect
     private getCorrespondOption(value: any): KbqOptionBase | undefined {
         return [
             ...this.options.toArray(),
-            ...this.previousSelectionModelSelected,
+            ...this.previousSelectionModelSelected
         ].find((option: KbqOptionBase) => {
             try {
                 // Treat null as a special reset value.
@@ -1233,7 +1233,7 @@ export class KbqSelect
             const options = this.options.toArray();
 
             this.selectionModel.sort((a, b) =>
-                this.sortComparator ? this.sortComparator(a, b, options) : a.value - b.value,
+                this.sortComparator ? this.sortComparator(a, b, options) : a.value - b.value
             );
             this.stateChanges.next();
         }

@@ -6,7 +6,7 @@ import { KbqCardModule } from '../../components/card';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CardsDemoComponent {
     s1 = false;
@@ -19,8 +19,8 @@ export class CardsDemoComponent {
     declarations: [CardsDemoComponent],
     imports: [
         BrowserModule,
-        KbqCardModule,
+        KbqCardModule
     ],
-    bootstrap: [CardsDemoComponent],
+    bootstrap: [CardsDemoComponent]
 })
 export class DemoModule {}

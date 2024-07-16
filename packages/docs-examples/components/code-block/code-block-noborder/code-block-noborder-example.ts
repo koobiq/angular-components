@@ -204,7 +204,7 @@ export class KbqCodeBlockComponent implements OnDestroy {
     selector: 'code-block-noborder-example',
     templateUrl: 'code-block-noborder-example.html',
     styleUrls: ['code-block-noborder-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockNoborderExample {
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
@@ -219,8 +219,8 @@ export class CodeBlockNoborderExample {
                 filename: '',
                 content: codeJs2,
                 language: 'typescript',
-                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.ts',
-            },
+                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.ts'
+            }
         ];
     }
 
@@ -228,7 +228,7 @@ export class CodeBlockNoborderExample {
         if (!this.isOpened) {
             const sidepanel = this.sidepanelService.open(this.template, {
                 position: this.position,
-                hasBackdrop: false,
+                hasBackdrop: false
             });
 
             sidepanel

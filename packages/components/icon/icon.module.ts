@@ -10,17 +10,17 @@ import { KbqIcon } from './icon.component';
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     exports: [
         KbqIcon,
         KbqIconButton,
-        KbqIconItem,
+        KbqIconItem
     ],
     declarations: [
         KbqIcon,
         KbqIconButton,
-        KbqIconItem,
-    ],
+        KbqIconItem
+    ]
 })
 export class KbqIconModule {}

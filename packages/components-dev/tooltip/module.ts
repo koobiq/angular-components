@@ -17,7 +17,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
+    templateUrl: './template.html'
 })
 export class DemoComponent {
     placement = PopUpPlacements.Top;
@@ -37,13 +37,13 @@ export class DemoComponent {
         BUTTON: 'button',
         INPUT: 'input',
         ICON: 'icon',
-        EXTENDED: 'extended',
+        EXTENDED: 'extended'
     };
 
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
-        HOVER: 'hover',
+        HOVER: 'hover'
     };
 
     selectedElement: string = 'button';
@@ -124,8 +124,8 @@ export class DemoComponent {
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqSelectModule,
-        KbqIconModule,
+        KbqIconModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

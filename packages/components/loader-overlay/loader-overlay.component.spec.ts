@@ -9,7 +9,7 @@ import {
     KbqLoaderOverlayCaption,
     KbqLoaderOverlayIndicator,
     KbqLoaderOverlayModule,
-    KbqLoaderOverlayText,
+    KbqLoaderOverlayText
 } from './index';
 
 describe('KbqLoaderOverlay', () => {
@@ -19,9 +19,9 @@ describe('KbqLoaderOverlay', () => {
                 BrowserModule,
                 CommonModule,
                 KbqProgressSpinnerModule,
-                KbqLoaderOverlayModule,
+                KbqLoaderOverlayModule
             ],
-            declarations: [OverlayWithParams, OverlayNoParams, OverlayWithExternalParams],
+            declarations: [OverlayWithParams, OverlayNoParams, OverlayWithExternalParams]
         });
 
         TestBed.compileComponents();
@@ -83,7 +83,7 @@ describe('KbqLoaderOverlay', () => {
 
         <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
         </kbq-loader-overlay>
-    </div>`,
+    </div>`
 })
 class OverlayWithParams {
     @ViewChild(KbqLoaderOverlay) overlay: KbqLoaderOverlay;
@@ -95,7 +95,7 @@ class OverlayWithParams {
         text text text text text text text text text text text text text text text text text text text text
 
         <kbq-loader-overlay></kbq-loader-overlay>
-    </div>`,
+    </div>`
 })
 class OverlayNoParams {}
 
@@ -111,7 +111,7 @@ class OverlayNoParams {}
             <div kbq-loader-overlay-text>Создание отчета</div>
             <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
         </kbq-loader-overlay>
-    </div>`,
+    </div>`
 })
 class OverlayWithExternalParams {
     themePalette = ThemePalette;

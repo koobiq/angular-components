@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-pseudo-example',
     templateUrl: 'link-pseudo-example.html',
     styleUrls: ['link-pseudo-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LinkPseudoExample {}

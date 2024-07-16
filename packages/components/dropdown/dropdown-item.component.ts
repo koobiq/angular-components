@@ -10,7 +10,7 @@ import {
     OnDestroy,
     Optional,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import {
@@ -18,7 +18,7 @@ import {
     CanDisableCtor,
     KBQ_TITLE_TEXT_REF,
     KbqTitleTextRef,
-    mixinDisabled,
+    mixinDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
@@ -48,13 +48,12 @@ const KbqDropdownItemMixinBase: CanDisableCtor & typeof KbqDropdownItemBase = mi
         '[class.kbq-disabled]': 'disabled',
 
         '[attr.disabled]': 'disabled || null',
-        '[attr.tabindex]': 'getTabIndex()',
+        '[attr.tabindex]': 'getTabIndex()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem },
-    ],
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
 })
 export class KbqDropdownItem
     extends KbqDropdownItemMixinBase
@@ -79,7 +78,7 @@ export class KbqDropdownItem
     constructor(
         private elementRef: ElementRef<HTMLElement>,
         private focusMonitor: FocusMonitor,
-        @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel,
+        @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel
     ) {
         super();
     }

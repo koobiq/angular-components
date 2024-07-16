@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     colors = KbqBadgeColors;
@@ -19,8 +19,8 @@ export class DemoComponent {
     imports: [
         BrowserModule,
         KbqIconModule,
-        KbqBadgeModule,
+        KbqBadgeModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

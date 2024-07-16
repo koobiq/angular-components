@@ -9,7 +9,7 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-sizes-example',
     templateUrl: 'modal-sizes-example.html',
     styleUrls: ['modal-sizes-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ModalSizesExample {
     constructor(private modalService: KbqModalService) {}
@@ -20,7 +20,7 @@ export class ModalSizesExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -29,7 +29,7 @@ export class ModalSizesExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -40,7 +40,7 @@ export class ModalSizesExample {
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
             kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 
@@ -51,7 +51,7 @@ export class ModalSizesExample {
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
             kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 }

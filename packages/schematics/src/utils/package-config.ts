@@ -38,7 +38,7 @@ export function addPackageToPackageJson(tree: Tree, pkg: string, version: string
 export function getPackageVersionFromPackageJson(
     tree: Tree,
     name: string,
-    includeDevDependencies = false,
+    includeDevDependencies = false
 ): string | null {
     if (!tree.exists('package.json')) {
         return null;

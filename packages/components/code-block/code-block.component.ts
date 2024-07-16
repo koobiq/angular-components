@@ -13,7 +13,7 @@ import {
     Optional,
     Renderer2,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
 import { Subject, Subscription, pairwise } from 'rxjs';
@@ -38,7 +38,7 @@ export const LANGUAGES_EXTENSIONS = {
     csharp: 'cs',
     lua: 'lua',
     xml: 'xml',
-    json: 'json',
+    json: 'json'
 };
 
 export const KBQ_CODE_BLOCK_CONFIGURATION = new InjectionToken<any>('KbqCodeBlockConfiguration');
@@ -51,7 +51,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
     copyTooltip: 'Скопировать',
     viewAllText: 'Показать все',
     viewLessText: 'Свернуть',
-    openExternalSystemTooltip: 'Открыть во внешней системе',
+    openExternalSystemTooltip: 'Открыть во внешней системе'
 };
 
 const actionBarBlockLeftMargin = 24;
@@ -74,10 +74,10 @@ const hasScroll = (element: HTMLElement) => {
         '[class.kbq-code-block_single-file]': 'singleFile',
         '[class.kbq-code-block_no-header]': 'noHeader',
         '[class.kbq-code-block_header-with-shadow]': 'isTopOverflow',
-        '(window:resize)': 'resizeStream.next($event)',
+        '(window:resize)': 'resizeStream.next($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
@@ -116,7 +116,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         private clipboard: Clipboard,
         private renderer: Renderer2,
         private focusMonitor: FocusMonitor,
-        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) public config: KbqCodeBlockConfiguration,
+        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) public config: KbqCodeBlockConfiguration
     ) {
         this.config = config || KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
 
@@ -140,7 +140,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                     return this.focusMonitor
                         .monitor(current!)
                         .pipe(filter((origin: FocusOrigin) => origin === 'keyboard'));
-                }),
+                })
             )
             .subscribe(() => {
                 this.hasFocus = true;
@@ -160,7 +160,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.renderer.setStyle(
             this.tabGroup.tabHeader.elementRef.nativeElement,
             'padding-right',
-            `${actionBarBlockLeftMargin + clientWidth}px`,
+            `${actionBarBlockLeftMargin + clientWidth}px`
         );
 
         this.changeDetectorRef.markForCheck();
@@ -262,7 +262,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                 this.focusMonitor.focusVia(
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     currentCodeBlock.querySelector('code')!,
-                    'keyboard',
+                    'keyboard'
                 );
             }
         }, 0);

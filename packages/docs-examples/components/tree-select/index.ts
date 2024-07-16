@@ -23,7 +23,7 @@ export {
     TreeSelectLazyloadExample,
     TreeSelectMultipleOverviewExample,
     TreeSelectOverviewExample,
-    TreeSelectSearchOverviewExample,
+    TreeSelectSearchOverviewExample
 };
 
 const EXAMPLES = [
@@ -32,7 +32,7 @@ const EXAMPLES = [
     TreeSelectChildSelectionOverviewExample,
     TreeSelectSearchOverviewExample,
     TreeSelectLazyloadExample,
-    TreeSelectFooterOverviewExample,
+    TreeSelectFooterOverviewExample
 ];
 
 @NgModule({
@@ -49,9 +49,9 @@ const EXAMPLES = [
         KbqIconModule,
         KbqProgressSpinnerModule,
         KbqPseudoCheckboxModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TreeSelectExamplesModule {}

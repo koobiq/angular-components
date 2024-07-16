@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {}
 
@@ -13,6 +13,6 @@ export class DemoComponent {}
 @NgModule({
     declarations: [DemoComponent],
     imports: [BrowserModule],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

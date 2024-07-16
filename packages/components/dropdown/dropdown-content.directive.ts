@@ -8,7 +8,7 @@ import {
     Injector,
     OnDestroy,
     TemplateRef,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { Subject } from 'rxjs';
  * Dropdown content that will be rendered lazily once the dropdown is opened.
  */
 @Directive({
-    selector: 'ng-template[kbqDropdownContent]',
+    selector: 'ng-template[kbqDropdownContent]'
 })
 export class KbqDropdownContent implements OnDestroy {
     /** Emits when the dropdown content has been attached. */
@@ -30,7 +30,7 @@ export class KbqDropdownContent implements OnDestroy {
         private appRef: ApplicationRef,
         private injector: Injector,
         private viewContainerRef: ViewContainerRef,
-        @Inject(DOCUMENT) private document: any,
+        @Inject(DOCUMENT) private document: any
     ) {}
 
     /**
@@ -49,7 +49,7 @@ export class KbqDropdownContent implements OnDestroy {
                 this.document.createElement('div'),
                 this.componentFactoryResolver,
                 this.appRef,
-                this.injector,
+                this.injector
             );
         }
 

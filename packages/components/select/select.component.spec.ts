@@ -18,7 +18,7 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren,
+    ViewChildren
 } from '@angular/core';
 import {
     ComponentFixture,
@@ -28,7 +28,7 @@ import {
     flush,
     inject,
     tick,
-    waitForAsync,
+    waitForAsync
 } from '@angular/core/testing';
 import {
     ControlValueAccessor,
@@ -38,7 +38,7 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    Validators,
+    Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -53,7 +53,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
@@ -61,7 +61,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    wrappedErrorMessage,
+    wrappedErrorMessage
 } from '@koobiq/cdk/testing';
 import {
     ErrorStateMatcher,
@@ -71,7 +71,7 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError,
+    getKbqSelectNonFunctionValueError
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -241,7 +241,7 @@ const OPTIONS = [
     'Engels',
     'Yuzhno-Sakhalinsk',
     'Yakutsk',
-    'Yaroslavl',
+    'Yaroslavl'
 ];
 
 @Component({
@@ -274,7 +274,7 @@ const OPTIONS = [
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
+    `
 })
 class BasicSelect {
     foods: any[] = [
@@ -285,7 +285,7 @@ class BasicSelect {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
     isRequired: boolean;
@@ -324,7 +324,7 @@ class BasicSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicEvents {
     foods: any[] = [
@@ -335,7 +335,7 @@ class BasicEvents {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
 
     @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
@@ -353,13 +353,13 @@ class BasicEvents {
                 <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class NgModelSelect {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     isDisabled: boolean;
 
@@ -382,7 +382,7 @@ class NgModelSelect {
                 <kbq-option [value]="'four'">four</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class ManySelects {}
 
@@ -398,14 +398,14 @@ class ManySelects {}
                 </kbq-select>
             </kbq-form-field>
         </div>
-    `,
+    `
 })
 class NgIfSelect {
     isShowing = false;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     control = new UntypedFormControl('pizza-1');
 
@@ -432,7 +432,7 @@ class NgIfSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithChangeEvent {
     foods: string[] = [
@@ -443,7 +443,7 @@ class SelectWithChangeEvent {
         'chips-4',
         'eggs-5',
         'pasta-6',
-        'sushi-7',
+        'sushi-7'
     ];
 
     changeListener = jasmine.createSpy('KbqSelect change listener');
@@ -473,7 +473,7 @@ class SelectWithChangeEvent {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithSearch {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -488,7 +488,7 @@ class SelectWithSearch {
     ngOnInit(): void {
         this.options$ = merge(
             of(OPTIONS),
-            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value))),
+            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }
 
@@ -510,9 +510,9 @@ class SelectWithSearch {
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: CustomSelectAccessor,
-            multi: true,
-        },
-    ],
+            multi: true
+        }
+    ]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -529,9 +529,9 @@ class CustomSelectAccessor implements ControlValueAccessor {
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: CustomSelectAccessor,
-            multi: true,
-        },
-    ],
+            multi: true
+        }
+    ]
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
@@ -545,7 +545,7 @@ class CompWithCustomSelect {
             <kbq-select [(ngModel)]="value"></kbq-select>
         </kbq-form-field>
         <throws-error-on-init></throws-error-on-init>
-    `,
+    `
 })
 class SelectWithErrorSibling {
     value: string;
@@ -553,7 +553,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: '',
+    template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -572,13 +572,13 @@ class ThrowsErrorOnInit implements OnInit {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectOnPush {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     control = new UntypedFormControl();
 }
@@ -594,13 +594,13 @@ class BasicSelectOnPush {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectOnPushPreselected {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     control = new UntypedFormControl('pizza-1');
 }
@@ -625,7 +625,7 @@ class BasicSelectOnPushPreselected {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class MultiSelect {
     foods: any[] = [
@@ -636,7 +636,7 @@ class MultiSelect {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
 
@@ -671,7 +671,7 @@ class MultiSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class MultiSelectNarrow {
     foods: any[] = [
@@ -682,7 +682,7 @@ class MultiSelectNarrow {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
 
@@ -695,7 +695,7 @@ class MultiSelectNarrow {
     selector: 'select-with-plain-tabindex',
     template: ` <kbq-form-field>
         <kbq-select [tabIndex]="5"></kbq-select>
-    </kbq-form-field>`,
+    </kbq-form-field>`
 })
 class SelectWithPlainTabindex {}
 
@@ -706,7 +706,7 @@ class SelectWithPlainTabindex {}
             <kbq-select #select="kbqSelect"></kbq-select>
         </kbq-form-field>
         <div *ngIf="select.selected"></div>
-    `,
+    `
 })
 class SelectEarlyAccessSibling {}
 
@@ -718,7 +718,7 @@ class SelectEarlyAccessSibling {}
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -732,7 +732,7 @@ class BasicSelectInitiallyHidden {
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectNoPlaceholder {}
 
@@ -745,7 +745,7 @@ class BasicSelectNoPlaceholder {}
                 <kbq-option [value]="'pizza' - 1">Pizza</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithTheming {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -775,7 +775,7 @@ class BasicSelectWithTheming {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class ResetValuesSelect {
     foods: any[] = [
@@ -784,8 +784,7 @@ class ResetValuesSelect {
         { value: 'tacos-2', viewValue: 'Tacos' },
         { value: false, viewValue: 'Falsy' },
         { viewValue: 'Undefined' },
-        { value: null, viewValue: 'Null' },
-    ];
+        { value: null, viewValue: 'Null' }];
     control = new UntypedFormControl();
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -811,12 +810,12 @@ class ResetValuesSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class FalsyValueSelect {
     foods: any[] = [
         { value: 0, viewValue: 'Steak' },
-        { value: 1, viewValue: 'Pizza' },
+        { value: 1, viewValue: 'Pizza' }
     ];
     control = new UntypedFormControl();
     @ViewChildren(KbqOption) options: QueryList<KbqOption>;
@@ -835,7 +834,7 @@ class FalsyValueSelect {
                 <kbq-option [value]="'mime' - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithGroups {
     control = new UntypedFormControl();
@@ -845,8 +844,8 @@ class SelectWithGroups {
             pokemon: [
                 { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
                 { value: 'oddish-1', viewValue: 'Oddish' },
-                { value: 'bellsprout-2', viewValue: 'Bellsprout' },
-            ],
+                { value: 'bellsprout-2', viewValue: 'Bellsprout' }
+            ]
         },
         {
             name: 'Water',
@@ -854,24 +853,24 @@ class SelectWithGroups {
             pokemon: [
                 { value: 'squirtle-3', viewValue: 'Squirtle' },
                 { value: 'psyduck-4', viewValue: 'Psyduck' },
-                { value: 'horsea-5', viewValue: 'Horsea' },
-            ],
+                { value: 'horsea-5', viewValue: 'Horsea' }
+            ]
         },
         {
             name: 'Fire',
             pokemon: [
                 { value: 'charmander-6', viewValue: 'Charmander' },
                 { value: 'vulpix-7', viewValue: 'Vulpix' },
-                { value: 'flareon-8', viewValue: 'Flareon' },
-            ],
+                { value: 'flareon-8', viewValue: 'Flareon' }
+            ]
         },
         {
             name: 'Psychic',
             pokemon: [
                 { value: 'mew-9', viewValue: 'Mew' },
-                { value: 'mewtwo-10', viewValue: 'Mewtwo' },
-            ],
-        },
+                { value: 'mewtwo-10', viewValue: 'Mewtwo' }
+            ]
+        }
     ];
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -890,15 +889,15 @@ class SelectWithGroups {
                 </kbq-optgroup>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithGroupsAndNgContainer {
     control = new UntypedFormControl();
     pokemonTypes = [
         {
             name: 'Grass',
-            pokemon: [{ value: 'bulbasaur-0', viewValue: 'Bulbasaur' }],
-        },
+            pokemon: [{ value: 'bulbasaur-0', viewValue: 'Bulbasaur' }]
+        }
     ];
 }
 
@@ -909,7 +908,7 @@ class SelectWithGroupsAndNgContainer {
                 <kbq-select [(ngModel)]="value"></kbq-select>
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class InvalidSelectInForm {
     value: any;
@@ -927,14 +926,14 @@ class InvalidSelectInForm {
                 <!--<kbq-error>This field is required</kbq-error>-->
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class SelectInsideFormGroup {
     @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     formControl = new UntypedFormControl('', Validators.required);
     formGroup = new UntypedFormGroup({
-        food: this.formControl,
+        food: this.formControl
     });
     submitResult: string;
 
@@ -953,14 +952,14 @@ class SelectInsideFormGroup {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'sandwich-2', viewValue: 'Sandwich' },
+        { value: 'sandwich-2', viewValue: 'Sandwich' }
     ];
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -977,13 +976,13 @@ class BasicSelectWithoutForms {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'pizza-1';
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'pizza-1', viewValue: 'Pizza' }
     ];
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -998,14 +997,14 @@ class BasicSelectWithoutFormsPreselected {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'sandwich-2', viewValue: 'Sandwich' },
+        { value: 'sandwich-2', viewValue: 'Sandwich' }
     ];
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -1024,12 +1023,12 @@ class BasicSelectWithoutFormsMultiple {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithCustomTrigger {
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'pizza-1', viewValue: 'Pizza' }
     ];
     control = new UntypedFormControl();
 }
@@ -1054,13 +1053,13 @@ class SelectWithCustomTrigger {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class NgModelCompareWithSelect {
     foods: { value: string; viewValue: string }[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
     ];
     selectedFood: { value: string; viewValue: string } = { value: 'pizza-1', viewValue: 'Pizza' };
     comparator: ((f1: any, f2: any) => boolean) | null = this.compareByValue;
@@ -1100,14 +1099,14 @@ class NgModelCompareWithSelect {
                 {{ food.viewValue }}
             </kbq-option>
         </kbq-select>
-    `,
+    `
 })
 class CustomErrorBehaviorSelect {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
     control = new UntypedFormControl();
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'pizza-1', viewValue: 'Pizza' }
     ];
     errorStateMatcher: ErrorStateMatcher;
 }
@@ -1119,13 +1118,13 @@ class CustomErrorBehaviorSelect {
                 <kbq-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }} </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SingleSelectWithPreselectedArrayValues {
     foods: any[] = [
         { value: ['steak-0', 'steak-1'], viewValue: 'Steak' },
         { value: ['pizza-1', 'pizza-2'], viewValue: 'Pizza' },
-        { value: ['tacos-2', 'tacos-3'], viewValue: 'Tacos' },
+        { value: ['tacos-2', 'tacos-3'], viewValue: 'Tacos' }
     ];
 
     selectedFoods = this.foods[1].value;
@@ -1144,7 +1143,7 @@ class SingleSelectWithPreselectedArrayValues {
                 </kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithoutOptionCentering {
     foods: any[] = [
@@ -1155,7 +1154,7 @@ class SelectWithoutOptionCentering {
         { value: 'chips-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl('pizza-1');
 
@@ -1172,7 +1171,7 @@ class SelectWithoutOptionCentering {
                 <kbq-option [value]="'thing'">A thing</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1203,7 +1202,7 @@ class SelectWithFormFieldLabel {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class SelectWithLongOptionText {
     changingLabel: string =
@@ -1240,7 +1239,7 @@ class SelectWithLongOptionText {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class MultiSelectWithCustomizedTagContent {
     @ViewChild('select') kbqSelect: KbqSelect;
@@ -1263,7 +1262,7 @@ class MultiSelectWithCustomizedTagContent {
                 <kbq-cleaner></kbq-cleaner>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class CdkVirtualScrollViewportSelect<T = string> {
     itemSize = 32;
@@ -1307,7 +1306,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 <kbq-cleaner></kbq-cleaner>
             </kbq-select>
         </kbq-form-field>
-    `,
+    `
 })
 class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewportSelect<{
     id: number;
@@ -1316,7 +1315,7 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
-        { id: 114, name: 'Tomsk' },
+        { id: 114, name: 'Tomsk' }
     ];
 
     options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
@@ -1351,7 +1350,7 @@ describe('KbqSelect', () => {
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
-                ScrollingModule,
+                ScrollingModule
             ],
             declarations,
             providers: [
@@ -1360,10 +1359,10 @@ describe('KbqSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => [],
-                    }),
-                },
-            ],
+                        getAncestorScrollContainers: () => []
+                    })
+                }
+            ]
         }).compileComponents();
 
         inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
@@ -1386,7 +1385,7 @@ describe('KbqSelect', () => {
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
                 SelectWithFormFieldLabel,
-                SelectWithChangeEvent,
+                SelectWithChangeEvent
             ]);
         }));
 
@@ -1732,7 +1731,7 @@ describe('KbqSelect', () => {
                         expect(document.activeElement)
                             .withContext('Expected fourth option to remain focused.')
                             .toBe(options[3]);
-                    }),
+                    })
                 );
 
                 it('should not cycle through the options if the control is disabled', fakeAsync(() => {
@@ -2140,7 +2139,7 @@ describe('KbqSelect', () => {
 
                     /* tslint:disable-next-line:deprecation */
                     expect(selectInstance.focused).withContext('Expected select element to remain focused.').toBe(true);
-                }),
+                })
             );
         });
 
@@ -2426,7 +2425,7 @@ describe('KbqSelect', () => {
                     const option: HTMLElement = overlayContainerElement.querySelector('.kbq-option.kbq-active');
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
-                        altKey: { get: () => true },
+                        altKey: { get: () => true }
                     });
 
                     dispatchEvent(option, keyBoardEvent);
@@ -3173,7 +3172,7 @@ describe('KbqSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqSelectTestingModule([
                 SelectWithErrorSibling,
-                ThrowsErrorOnInit,
+                ThrowsErrorOnInit
             ])));
 
         it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
@@ -3436,7 +3435,7 @@ describe('KbqSelect', () => {
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true),
+                isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
             };
 
             fixture.destroy();
@@ -3444,7 +3443,7 @@ describe('KbqSelect', () => {
             TestBed.resetTestingModule().configureTestingModule({
                 imports: [KbqSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
+                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -3483,7 +3482,7 @@ describe('KbqSelect', () => {
     describe('with preselected array values', () => {
         beforeEach(waitForAsync(() =>
             configureKbqSelectTestingModule([
-                SingleSelectWithPreselectedArrayValues,
+                SingleSelectWithPreselectedArrayValues
             ])));
 
         xit('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
@@ -3502,7 +3501,7 @@ describe('KbqSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqSelectTestingModule([
                 CompWithCustomSelect,
-                CustomSelectAccessor,
+                CustomSelectAccessor
             ])));
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
@@ -3545,7 +3544,7 @@ describe('KbqSelect', () => {
         beforeEach(waitForAsync(() =>
             configureKbqSelectTestingModule([
                 BasicSelectOnPush,
-                BasicSelectOnPushPreselected,
+                BasicSelectOnPushPreselected
             ])));
 
         xit('should set the trigger text based on the value when initialized', fakeAsync(() => {
@@ -3692,7 +3691,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([
                 BasicSelectWithoutForms,
                 BasicSelectWithoutFormsPreselected,
-                BasicSelectWithoutFormsMultiple,
+                BasicSelectWithoutFormsMultiple
             ])));
 
         it('should set the value when options are clicked', fakeAsync(() => {
@@ -3896,7 +3895,7 @@ describe('KbqSelect', () => {
     describe('with option centering disabled', () => {
         beforeEach(waitForAsync(() =>
             configureKbqSelectTestingModule([
-                SelectWithoutOptionCentering,
+                SelectWithoutOptionCentering
             ])));
 
         let fixture: ComponentFixture<SelectWithoutOptionCentering>;
@@ -3931,7 +3930,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([
                 BasicSelect,
                 MultiSelect,
-                SelectWithGroups,
+                SelectWithGroups
             ])));
 
         let fixture: ComponentFixture<BasicSelect>;
@@ -4737,7 +4736,7 @@ describe('KbqSelect', () => {
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
                 'Steak',
                 'Tacos',
-                'Eggs',
+                'Eggs'
             ]);
 
             options[2].click();
@@ -4747,7 +4746,7 @@ describe('KbqSelect', () => {
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
                 'Steak',
-                'Eggs',
+                'Eggs'
             ]);
         }));
 
@@ -4934,7 +4933,7 @@ describe('KbqSelect', () => {
             fixture.componentInstance.foods = [
                 { value: null, viewValue: 'Steak' },
                 { value: 'pizza-1', viewValue: 'Pizza' },
-                { value: null, viewValue: 'Tacos' },
+                { value: null, viewValue: 'Tacos' }
             ];
 
             fixture.detectChanges();
@@ -4977,7 +4976,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -5004,7 +5003,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -5035,7 +5034,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
         });
 
@@ -5054,7 +5053,7 @@ describe('KbqSelect', () => {
                 'chips-4',
                 'eggs-5',
                 'pasta-6',
-                'sushi-7',
+                'sushi-7'
             ]);
             expect(options.every((option) => option.selected)).toBe(true);
 
@@ -5077,7 +5076,7 @@ describe('KbqSelect', () => {
             fixtureCustomizedContent.detectChanges();
 
             trigger = fixtureCustomizedContent.debugElement.query(
-                By.css('.kbq-select__trigger_multiple'),
+                By.css('.kbq-select__trigger_multiple')
             ).nativeElement;
             fixtureCustomizedContent.detectChanges();
 
@@ -5088,7 +5087,7 @@ describe('KbqSelect', () => {
             expect(
                 componentInstance.kbqSelect.tags
                     .map((tag) => tag.nativeElement?.textContent)
-                    .every((tagTextContent) => tagTextContent!.includes(componentInstance.customizedTextToken)),
+                    .every((tagTextContent) => tagTextContent!.includes(componentInstance.customizedTextToken))
             ).toEqual(true);
         }));
 
@@ -5278,9 +5277,9 @@ describe('KbqSelect', () => {
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,
-                    ScrollingModule,
+                    ScrollingModule
                 ],
-                declarations: [CdkVirtualScrollViewportSelect, CdkVirtualScrollViewportSelectOptionAsObject],
+                declarations: [CdkVirtualScrollViewportSelect, CdkVirtualScrollViewportSelectOptionAsObject]
             }).compileComponents();
 
             inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
@@ -5326,7 +5325,7 @@ describe('KbqSelect', () => {
                 const currentOptions: NodeListOf<HTMLElement> | undefined =
                     overlayContainerElement.querySelectorAll('kbq-option');
                 const currentSelectedOptions: string[] = testInstance.select.selectionModel.selected.map(
-                    (option) => option.value,
+                    (option) => option.value
                 );
 
                 expect(options?.length).not.toEqual(currentOptions.length);

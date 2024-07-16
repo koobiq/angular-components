@@ -13,7 +13,7 @@ import {
     KbqTimezoneModule,
     KbqTimezoneZone,
     getZonesGroupedByCountry,
-    offsetFormatter,
+    offsetFormatter
 } from '@koobiq/components/timezone';
 import { Observable, merge, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -23,7 +23,7 @@ import { timezones } from './mock';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
@@ -54,11 +54,11 @@ export class DemoComponent implements OnInit {
                       .map(({ city }) => city)
                       .sort()
                       .join(', ')
-                : '',
+                : ''
         }));
 
         this.priorityCountry = this.data.find(
-            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone,
+            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone
         )?.countryCode as string;
     }
 
@@ -74,8 +74,8 @@ export class DemoComponent implements OnInit {
                     }
 
                     return this.getFilteredData();
-                }),
-            ),
+                })
+            )
         );
     }
 
@@ -86,7 +86,7 @@ export class DemoComponent implements OnInit {
             const fields: string[] = [
                 offsetFormatter(timezone.offset),
                 timezone.city,
-                timezone.cities,
+                timezone.cities
             ];
 
             return regex.test(fields.join(' ')) || fields.some((timezoneValue: string) => regex.test(timezoneValue));
@@ -107,8 +107,8 @@ export class DemoComponent implements OnInit {
         KbqFormFieldModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqIconModule,
+        KbqIconModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

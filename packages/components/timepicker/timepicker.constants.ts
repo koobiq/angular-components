@@ -2,17 +2,17 @@
 export enum TimeParts {
     hours,
     minutes,
-    seconds,
+    seconds
 }
 
 export enum TimeFormats {
     HHmmss = 'HH:mm:ss',
-    HHmm = 'HH:mm',
+    HHmm = 'HH:mm'
 }
 
 export const TIMEFORMAT_PLACEHOLDERS: { [timeFormat: string]: string } = {
     [TimeFormats.HHmmss]: 'чч:мм:сс',
-    [TimeFormats.HHmm]: 'чч:мм',
+    [TimeFormats.HHmm]: 'чч:мм'
 };
 
 /** Object that maps each time format to a related locale key */

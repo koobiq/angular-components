@@ -14,7 +14,7 @@ export { TimezoneOverviewExample, TimezoneSearchOverviewExample, TimezoneTrigger
 const EXAMPLES = [
     TimezoneOverviewExample,
     TimezoneSearchOverviewExample,
-    TimezoneTriggerOverviewExample,
+    TimezoneTriggerOverviewExample
 ];
 
 @NgModule({
@@ -25,9 +25,9 @@ const EXAMPLES = [
         KbqTimezoneModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TimezoneExamplesModule {}

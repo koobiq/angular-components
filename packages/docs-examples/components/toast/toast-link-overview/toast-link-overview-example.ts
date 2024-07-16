@@ -9,7 +9,7 @@ import { KbqToastService } from '@koobiq/components/toast';
     selector: 'toast-link-overview-example',
     templateUrl: 'toast-link-overview-example.html',
     styleUrls: ['toast-link-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ToastLinkOverviewExample {
     constructor(private toastService: KbqToastService) {}

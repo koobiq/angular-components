@@ -8,17 +8,17 @@ import { KbqDdComponent, KbqDlComponent, KbqDtComponent } from './dl.component';
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     exports: [
         KbqDlComponent,
         KbqDtComponent,
-        KbqDdComponent,
+        KbqDdComponent
     ],
     declarations: [
         KbqDlComponent,
         KbqDtComponent,
-        KbqDdComponent,
-    ],
+        KbqDdComponent
+    ]
 })
 export class KbqDlModule {}

@@ -13,16 +13,16 @@ const EXAMPLES = [
     DlOverviewExample,
     DlHorizontalOverviewExample,
     DlVerticalOverviewExample,
-    DlSmallExample,
+    DlSmallExample
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         KbqDlModule,
-        KbqLinkModule,
+        KbqLinkModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class DlExamplesModule {}

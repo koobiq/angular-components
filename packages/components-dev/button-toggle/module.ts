@@ -11,7 +11,7 @@ import { KbqButtonToggleModule } from '../../components/button-toggle';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonToggleDemoComponent {
     modelResult: any;
@@ -20,7 +20,7 @@ export class ButtonToggleDemoComponent {
 
 @NgModule({
     declarations: [
-        ButtonToggleDemoComponent,
+        ButtonToggleDemoComponent
     ],
     imports: [
         BrowserModule,
@@ -29,10 +29,10 @@ export class ButtonToggleDemoComponent {
         KbqButtonToggleModule,
         KbqIconModule,
         FormsModule,
-        KbqTitleModule,
+        KbqTitleModule
     ],
     bootstrap: [
-        ButtonToggleDemoComponent,
-    ],
+        ButtonToggleDemoComponent
+    ]
 })
 export class DemoModule {}

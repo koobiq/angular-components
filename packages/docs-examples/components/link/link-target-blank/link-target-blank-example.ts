@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-target-blank-example',
     templateUrl: 'link-target-blank-example.html',
     styleUrls: ['link-target-blank-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LinkTargetBlankExample {}

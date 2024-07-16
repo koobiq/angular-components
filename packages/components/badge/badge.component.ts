@@ -12,7 +12,7 @@ import {
     QueryList,
     Renderer2,
     SkipSelf,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
@@ -26,14 +26,14 @@ export enum KbqBadgeColors {
     Theme = 'theme',
     Success = 'success',
     Warning = 'warning',
-    Error = 'error',
+    Error = 'error'
 }
 
 @Directive({
     selector: '[kbq-badge-caption]',
     host: {
-        class: 'kbq-badge-caption',
-    },
+        class: 'kbq-badge-caption'
+    }
 })
 export class KbqBadgeCaption {}
 
@@ -50,7 +50,7 @@ export const badgeLeftIconClassName = 'kbq-badge-icon_left';
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
 @Directive({
-    selector: 'kbq-badge',
+    selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
@@ -62,7 +62,7 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     constructor(
         elementRef: ElementRef,
         private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef,
+        @SkipSelf() private cdr: ChangeDetectorRef
     ) {
         this.nativeElement = elementRef.nativeElement;
     }
@@ -122,8 +122,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         '[class.kbq-badge_compact]': 'compact',
         '[class.kbq-badge-filled]': '!outline',
         '[class.kbq-badge-outline]': 'outline',
-        '[class]': 'badgeColor',
-    },
+        '[class]': 'badgeColor'
+    }
 })
 export class KbqBadge {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

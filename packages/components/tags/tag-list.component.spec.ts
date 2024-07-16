@@ -15,7 +15,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    typeInElement,
+    typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
@@ -1282,7 +1282,7 @@ describe('KbqTagList', () => {
     function createComponent<T>(
         component: Type<T>,
         providers: Provider[] = [],
-        animationsModule: Type<NoopAnimationsModule> | Type<BrowserAnimationsModule> = NoopAnimationsModule,
+        animationsModule: Type<NoopAnimationsModule> | Type<BrowserAnimationsModule> = NoopAnimationsModule
     ): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [
@@ -1291,13 +1291,13 @@ describe('KbqTagList', () => {
                 KbqTagsModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                animationsModule,
+                animationsModule
             ],
             declarations: [component],
             providers: [
                 { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
-                ...providers,
-            ],
+                ...providers
+            ]
         }).compileComponents();
 
         return TestBed.createComponent<T>(component);
@@ -1310,9 +1310,9 @@ describe('KbqTagList', () => {
                 provide: Directionality,
                 useFactory: () => ({
                     value: direction.toLowerCase(),
-                    change: dirChange,
-                }),
-            },
+                    change: dirChange
+                })
+            }
         ]);
         fixture.detectChanges();
 
@@ -1340,7 +1340,7 @@ describe('KbqTagList', () => {
         <kbq-tag *ngFor="let i of tags" (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
             {{ name }} {{ i + 1 }}
         </kbq-tag>
-    </kbq-tag-list>`,
+    </kbq-tag-list>`
 })
 class StandardTagList {
     name: string = 'Test';
@@ -1360,7 +1360,7 @@ class StandardTagList {
                 <input name="test" [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
-    `,
+    `
 })
 class FormFieldTagList {
     tags = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1390,7 +1390,7 @@ class FormFieldTagList {
                 </kbq-tag>
             </kbq-tag-list>
         </kbq-form-field>
-    `,
+    `
 })
 class BasicTagList {
     foods: any[] = [
@@ -1401,7 +1401,7 @@ class BasicTagList {
         { value: 'tags-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
     isRequired: boolean;
@@ -1429,7 +1429,7 @@ class BasicTagList {
                 </kbq-tag>
             </kbq-tag-list>
         </kbq-form-field>
-    `,
+    `
 })
 class MultiSelectionTagList {
     foods: any[] = [
@@ -1440,7 +1440,7 @@ class MultiSelectionTagList {
         { value: 'tags-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
     isRequired: boolean;
@@ -1474,7 +1474,7 @@ class MultiSelectionTagList {
                 (kbqTagInputTokenEnd)="add($event)"
             />
         </kbq-form-field>
-    `,
+    `
 })
 class InputTagList {
     foods: any[] = [
@@ -1485,7 +1485,7 @@ class InputTagList {
         { value: 'tags-4', viewValue: 'Chips' },
         { value: 'eggs-5', viewValue: 'Eggs' },
         { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
 
@@ -1504,7 +1504,7 @@ class InputTagList {
         if ((value || '').trim()) {
             this.foods.push({
                 value: `${value.trim().toLowerCase()}-${this.foods.length}`,
-                viewValue: value.trim(),
+                viewValue: value.trim()
             });
         }
 
@@ -1530,12 +1530,12 @@ class InputTagList {
                 <kbq-tag *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }}</kbq-tag>
             </kbq-tag-list>
         </kbq-form-field>
-    `,
+    `
 })
 class FalsyValueTagList {
     foods: any[] = [
         { value: 0, viewValue: 'Steak' },
-        { value: 1, viewValue: 'Pizza' },
+        { value: 1, viewValue: 'Pizza' }
     ];
     control = new UntypedFormControl();
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
@@ -1548,13 +1548,13 @@ class FalsyValueTagList {
                 {{ food.viewValue }}
             </kbq-tag>
         </kbq-tag-list>
-    `,
+    `
 })
 class SelectedTagList {
     foods: any[] = [
         { value: 0, viewValue: 'Steak', selected: true },
         { value: 1, viewValue: 'Pizza', selected: false },
-        { value: 2, viewValue: 'Pasta', selected: true },
+        { value: 2, viewValue: 'Pasta', selected: true }
     ];
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
@@ -1572,13 +1572,13 @@ class SelectedTagList {
                 <!--                <kbq-error>Should have value</kbq-error>-->
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class TagListWithFormErrorMessages {
     foods: any[] = [
         { value: 0, viewValue: 'Steak', selected: true },
         { value: 1, viewValue: 'Pizza', selected: false },
-        { value: 2, viewValue: 'Pasta', selected: true },
+        { value: 2, viewValue: 'Pasta', selected: true }
     ];
 
     formControl = new UntypedFormControl('', Validators.required);
@@ -1598,10 +1598,10 @@ class TagListWithFormErrorMessages {
         trigger('dummyAnimation', [
             transition(':leave', [
                 style({ opacity: 0 }),
-                animate('500ms', style({ opacity: 1 })),
-            ]),
-        ]),
-    ],
+                animate('500ms', style({ opacity: 1 }))])
+
+        ])
+    ]
 })
 class StandardTagListWithAnimations {
     numbers = [0, 1, 2, 3, 4];
@@ -1625,7 +1625,7 @@ class StandardTagListWithAnimations {
                 </kbq-tag>
             </kbq-tag-list>
         </kbq-form-field>
-    `,
+    `
 })
 class TagListWithRemove {
     tags = [0, 1, 2, 3, 4];

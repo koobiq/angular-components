@@ -8,7 +8,7 @@ import { ThemePalette } from '@koobiq/components/core';
     selector: 'progress-bar-indeterminate-example',
     templateUrl: 'progress-bar-indeterminate-example.html',
     styleUrls: ['progress-bar-indeterminate-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ProgressBarIndeterminateExample {
     themePalette = ThemePalette;

@@ -11,7 +11,7 @@ export async function promptForUpstreamRemote(availableRemotes: string[]): Promi
         type: 'list',
         name: 'distTag',
         message: 'What is the Git remote for pushing changes upstream?',
-        choices: availableRemotes.map((remoteName) => ({ value: remoteName, name: remoteName })),
+        choices: availableRemotes.map((remoteName) => ({ value: remoteName, name: remoteName }))
     });
 
     return distTag;

@@ -10,7 +10,7 @@ describe('KbqNavbar', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqNavbarModule, KbqIconModule],
-            declarations: [TestApp],
+            declarations: [TestApp]
         });
 
         TestBed.compileComponents();
@@ -37,7 +37,7 @@ describe('KbqNavbar', () => {
 
         const items = fixture.debugElement.queryAll(By.css('kbq-navbar-item'));
         const collapsedElements = items.filter(
-            (item) => item.nativeElement.querySelectorAll('.kbq-navbar-item_collapsed').length > 0,
+            (item) => item.nativeElement.querySelectorAll('.kbq-navbar-item_collapsed').length > 0
         );
 
         const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
@@ -92,7 +92,7 @@ describe('KbqNavbar', () => {
 
 @Component({
     selector: 'test-app',
-    templateUrl: './navbar.component.html',
+    templateUrl: './navbar.component.html'
 })
 class TestApp {
     counter: number = 0;

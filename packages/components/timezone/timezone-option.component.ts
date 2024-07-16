@@ -5,7 +5,7 @@ import {
     forwardRef,
     Input,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqTimezoneZone } from './timezone.models';
@@ -15,7 +15,7 @@ import { offsetFormatter } from './timezone.utils';
     selector: 'kbq-timezone-option',
     exportAs: 'kbqTimezoneOption',
     host: {
-        class: 'kbq-timezone-option',
+        class: 'kbq-timezone-option'
     },
     templateUrl: 'timezone-option.component.html',
     styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss'],
@@ -24,9 +24,9 @@ import { offsetFormatter } from './timezone.utils';
     providers: [
         {
             provide: KbqOption,
-            useExisting: forwardRef(() => KbqTimezoneOption),
-        },
-    ],
+            useExisting: forwardRef(() => KbqTimezoneOption)
+        }
+    ]
 })
 export class KbqTimezoneOption extends KbqOption {
     @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;

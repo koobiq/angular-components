@@ -23,17 +23,17 @@ const KBQ_TREE_DIRECTIVES = [
     KbqTreeSelection,
     KbqTreeOption,
     KbqTreeNodeToggleComponent,
-    KbqTreeNodeToggleDirective,
+    KbqTreeNodeToggleDirective
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         KbqPseudoCheckboxModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     exports: KBQ_TREE_DIRECTIVES,
     declarations: KBQ_TREE_DIRECTIVES,
-    providers: [{ provide: AsyncScheduler, useValue: asyncScheduler }],
+    providers: [{ provide: AsyncScheduler, useValue: asyncScheduler }]
 })
 export class KbqTreeModule {}

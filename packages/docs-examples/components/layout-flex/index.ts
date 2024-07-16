@@ -16,7 +16,7 @@ export {
     LayoutFlexBehaviourModifiersExample,
     LayoutFlexOffsetsExample,
     LayoutFlexOrderExample,
-    LayoutFlexOverviewExample,
+    LayoutFlexOverviewExample
 };
 
 const EXAMPLES = [
@@ -24,7 +24,7 @@ const EXAMPLES = [
     LayoutFlexAlignmentExample,
     LayoutFlexBehaviourModifiersExample,
     LayoutFlexOffsetsExample,
-    LayoutFlexOrderExample,
+    LayoutFlexOrderExample
 ];
 
 @NgModule({
@@ -34,9 +34,9 @@ const EXAMPLES = [
         KbqRadioModule,
         KbqSelectModule,
         KbqFormFieldModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class FlexLayoutExamplesModule {}

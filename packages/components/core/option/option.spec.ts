@@ -12,7 +12,7 @@ describe('KbqOption component', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqOptionModule],
-            declarations: [OptionWithDisable],
+            declarations: [OptionWithDisable]
         }).compileComponents();
     }));
 

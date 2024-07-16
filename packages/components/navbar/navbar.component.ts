@@ -12,7 +12,7 @@ import {
     Input,
     OnDestroy,
     QueryList,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
@@ -22,7 +22,7 @@ import {
     KbqNavbarFocusableItem,
     KbqNavbarFocusableItemEvent,
     KbqNavbarItem,
-    KbqNavbarRectangleElement,
+    KbqNavbarRectangleElement
 } from './navbar-item.component';
 
 export type KbqNavbarContainerPositionType = 'left' | 'right';
@@ -62,7 +62,7 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     constructor(
         protected changeDetectorRef: ChangeDetectorRef,
         elementRef: ElementRef,
-        private focusMonitor: FocusMonitor,
+        private focusMonitor: FocusMonitor
     ) {
         this.focusMonitorSubscription = this.focusMonitor.monitor(elementRef).subscribe((focusOrigin) => {
             this.keyManager.setFocusOrigin(focusOrigin);
@@ -161,8 +161,8 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
 @Directive({
     selector: 'kbq-navbar-container',
     host: {
-        class: 'kbq-navbar-container',
-    },
+        class: 'kbq-navbar-container'
+    }
 })
 export class KbqNavbarContainer {}
 
@@ -173,7 +173,7 @@ export class KbqNavbarContainer {}
         './navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss',
+        './navbar-divider.scss'
     ],
     host: {
         class: 'kbq-navbar',
@@ -185,10 +185,10 @@ export class KbqNavbarContainer {}
 
         '(keydown)': 'onKeyDown($event)',
 
-        '(window:resize)': 'resizeStream.next($event)',
+        '(window:resize)': 'resizeStream.next($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
     @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
@@ -220,7 +220,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     constructor(
         private elementRef: ElementRef,
         changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 

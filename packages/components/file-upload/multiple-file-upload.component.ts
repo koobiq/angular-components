@@ -15,7 +15,7 @@ import {
     Self,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
@@ -28,7 +28,7 @@ import {
     KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel,
-    isCorrectExtension,
+    isCorrectExtension
 } from './file-upload';
 
 let nextMultipleFileUploadUniqueId = 0;
@@ -53,8 +53,8 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-multiple-file-upload',
-    },
+        class: 'kbq-multiple-file-upload'
+    }
 })
 export class KbqMultipleFileUploadComponent
     implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor
@@ -125,7 +125,7 @@ export class KbqMultipleFileUploadComponent
         private renderer: Renderer2,
         @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileMultipleLabel,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
-        @Optional() @Self() public ngControl?: NgControl,
+        @Optional() @Self() public ngControl?: NgControl
     ) {
         this.localeService?.changes.subscribe(this.updateLocaleParams);
 
@@ -191,8 +191,7 @@ export class KbqMultipleFileUploadComponent
 
         this.files = [
             ...this.files,
-            ...this.mapToFileItem((target as HTMLInputElement).files),
-        ];
+            ...this.mapToFileItem((target as HTMLInputElement).files)];
         this.onTouched();
         /* even if the user selects the same file,
                  the onchange event will be triggered every time user clicks on the control.*/
@@ -229,7 +228,7 @@ export class KbqMultipleFileUploadComponent
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' },
+            { header: '', cssClass: 'action' }
         ];
 
         this.getCaptionText();
@@ -248,7 +247,7 @@ export class KbqMultipleFileUploadComponent
                 file,
                 hasError: this.validateFile(file),
                 loading: new BehaviorSubject<boolean>(false),
-                progress: new BehaviorSubject<number>(0),
+                progress: new BehaviorSubject<number>(0)
             }));
     }
 
@@ -267,7 +266,7 @@ export class KbqMultipleFileUploadComponent
 
         this.errors = [
             ...this.errors,
-            ...errorsPerFile,
+            ...errorsPerFile
         ];
 
         return !!errorsPerFile.length;
@@ -279,7 +278,7 @@ export class KbqMultipleFileUploadComponent
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' },
+            { header: '', cssClass: 'action' }
         ];
 
         this.getCaptionText();

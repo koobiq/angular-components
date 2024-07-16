@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'link-general-example',
     templateUrl: 'link-general-example.html',
     styleUrls: ['link-general-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LinkGeneralExample {}

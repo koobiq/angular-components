@@ -14,7 +14,7 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
@@ -28,7 +28,7 @@ let uniqueAutocompleteIdCounter = 0;
 export class KbqAutocompleteSelectedEvent {
     constructor(
         public source: KbqAutocomplete,
-        public option: KbqOption,
+        public option: KbqOption
     ) {}
 }
 
@@ -43,8 +43,8 @@ export const KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<KbqAutocomple
     'kbq-autocomplete-default-options',
     {
         providedIn: 'root',
-        factory: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY,
-    },
+        factory: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY
+    }
 );
 
 export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefaultOptions {
@@ -57,16 +57,16 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss'],
     host: {
-        class: 'kbq-autocomplete',
+        class: 'kbq-autocomplete'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,
-            useExisting: KbqAutocomplete,
-        },
-    ],
+            useExisting: KbqAutocomplete
+        }
+    ]
 })
 export class KbqAutocomplete implements AfterContentInit {
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
@@ -163,7 +163,7 @@ export class KbqAutocomplete implements AfterContentInit {
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef<HTMLElement>,
-        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions,
+        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions
     ) {
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
     }

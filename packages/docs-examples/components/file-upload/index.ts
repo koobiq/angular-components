@@ -22,7 +22,7 @@ export {
     FileUploadMultipleDefaultOverviewExample,
     FileUploadMultipleErrorOverviewExample,
     FileUploadSingleErrorOverviewExample,
-    FileUploadSingleOverviewExample,
+    FileUploadSingleOverviewExample
 };
 
 const EXAMPLES = [
@@ -33,7 +33,7 @@ const EXAMPLES = [
     FileUploadMultipleCompactOverviewExample,
     FileUploadMultipleCustomTextOverviewExample,
     FileUploadIndeterminateLoadingOverviewExample,
-    FileUploadCvaOverviewExample,
+    FileUploadCvaOverviewExample
 ];
 
 @NgModule({
@@ -43,9 +43,9 @@ const EXAMPLES = [
         KbqFileUploadModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqCheckboxModule,
+        KbqCheckboxModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class FileUploadExamplesModule {}

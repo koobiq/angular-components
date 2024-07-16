@@ -14,14 +14,14 @@ export class KbqMarkdownService {
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             transformed = transformed.replace(
                 new RegExp(`<${tag}`, 'g'),
-                (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}"`,
+                (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}"`
             );
         });
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             transformed = transformed.replace(
                 new RegExp(`<${tag}\s*>`, 'g'),
-                (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}">`,
+                (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}">`
             );
         });
 

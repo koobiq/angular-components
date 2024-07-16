@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'toCssUnit',
+    name: 'toCssUnit'
 })
 export class CssUnitPipe implements PipeTransform {
     transform(value: number | string, defaultUnit: string = 'px'): string {

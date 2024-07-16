@@ -9,8 +9,8 @@ export type KbqScrollbarTarget = InitializationTarget;
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions = {
     scrollbars: {
         autoHide: 'leave',
-        autoHideDelay: 100,
-    },
+        autoHideDelay: 100
+    }
 };
 
 export const KBQ_SCROLLBAR_CONFIG = new InjectionToken<KbqScrollbarOptions>('KBQ_SCROLLBAR_CONFIG');
@@ -18,5 +18,5 @@ export const KBQ_SCROLLBAR_CONFIG = new InjectionToken<KbqScrollbarOptions>('KBQ
 /** Default scroll behavior */
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider = {
     provide: KBQ_SCROLLBAR_CONFIG,
-    useValue: KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG,
+    useValue: KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG
 };

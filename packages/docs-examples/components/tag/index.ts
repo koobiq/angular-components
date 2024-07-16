@@ -27,7 +27,7 @@ export {
     TagListExample,
     TagOverviewExample,
     TagsAutocompleteOnpasteOffExample,
-    TagsInputOnpasteOffExample,
+    TagsInputOnpasteOffExample
 };
 
 const EXAMPLES = [
@@ -40,7 +40,7 @@ const EXAMPLES = [
     TagAutocompleteExample,
     TagAutocompleteOptionOperationsExample,
     TagsInputOnpasteOffExample,
-    TagsAutocompleteOnpasteOffExample,
+    TagsAutocompleteOnpasteOffExample
 ];
 
 @NgModule({
@@ -49,13 +49,12 @@ const EXAMPLES = [
         FormsModule,
         KbqFormFieldModule,
         ReactiveFormsModule,
-
         KbqAutocompleteModule,
         KbqTagsModule,
         KbqIconModule,
-        KbqCheckboxModule,
+        KbqCheckboxModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TagExamplesModule {}

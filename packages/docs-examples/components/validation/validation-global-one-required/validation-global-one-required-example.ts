@@ -8,7 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
     selector: 'validation-global-one-required-example',
     templateUrl: 'validation-global-one-required-example.html',
     styleUrls: ['validation-global-one-required-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ValidationGlobalOneRequiredExample {
     globalErrorForm: FormGroup;
@@ -22,7 +22,7 @@ export class ValidationGlobalOneRequiredExample {
         this.globalErrorForm = new FormGroup({
             firstName: new FormControl(''),
             lastName: new FormControl(''),
-            thirdName: new FormControl(''),
+            thirdName: new FormControl('')
         });
     }
 
@@ -36,7 +36,7 @@ export class ValidationGlobalOneRequiredExample {
                 this.inProgress = false;
             },
             // tslint:disable-next-line:no-magic-numbers
-            1000,
+            1000
         );
     }
 
@@ -50,7 +50,7 @@ export class ValidationGlobalOneRequiredExample {
                 this.disabled = true;
             },
             // tslint:disable-next-line:no-magic-numbers
-            2000,
+            2000
         );
     }
 }

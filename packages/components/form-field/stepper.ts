@@ -24,10 +24,10 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
     `,
     styleUrls: ['stepper.scss'],
     host: {
-        class: 'kbq-stepper',
+        class: 'kbq-stepper'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqStepper {
     @Output()

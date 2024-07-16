@@ -15,7 +15,7 @@ import {
     Renderer2,
     SkipSelf,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     CanColor,
@@ -26,14 +26,14 @@ import {
     KbqComponentColors,
     KbqTitleTextRef,
     mixinColor,
-    mixinTabIndex,
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 export enum KbqButtonStyles {
     Filled = 'filled',
     Outline = 'outline',
-    Transparent = 'transparent',
+    Transparent = 'transparent'
 }
 
 export const leftIconClassName = 'kbq-icon_left';
@@ -52,8 +52,8 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     selector: '[kbq-button]',
     host: {
         '[class.kbq-button]': '!isIconButton',
-        '[class.kbq-button-icon]': 'isIconButton',
-    },
+        '[class.kbq-button-icon]': 'isIconButton'
+    }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
@@ -65,7 +65,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     constructor(
         elementRef: ElementRef,
         private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef,
+        @SkipSelf() private cdr: ChangeDetectorRef
     ) {
         this.nativeElement = elementRef.nativeElement;
     }
@@ -86,7 +86,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
         const twoIcons = 2;
         const filteredNodesWithoutComments = getNodesWithoutComments(
-            this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList,
+            this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList
         );
 
         const currentIsIconButtonValue =
@@ -126,7 +126,7 @@ export class KbqButtonBase {
 
 /** @docs-private */
 export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButtonBase = mixinTabIndex(
-    mixinColor(KbqButtonBase, KbqComponentColors.ContrastFade),
+    mixinColor(KbqButtonBase, KbqComponentColors.ContrastFade)
 );
 
 @Component({
@@ -143,11 +143,10 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButt
         '[class]': 'kbqStyle',
 
         '(focus)': 'onFocus($event)',
-        '(blur)': 'onBlur()',
+        '(blur)': 'onBlur()'
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton },
-    ],
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
 export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
     hasFocus: boolean = false;
@@ -181,7 +180,7 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
     constructor(
         elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
-        private styler: KbqButtonCssStyler,
+        private styler: KbqButtonCssStyler
     ) {
         super(elementRef);
 

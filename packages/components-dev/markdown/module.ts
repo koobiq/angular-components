@@ -7,7 +7,7 @@ import { KbqMarkdownService } from 'packages/components/markdown';
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['../main.scss', './styles.scss']
 })
 export class DemoComponent {
     markdownText: string = `
@@ -57,8 +57,8 @@ Please make sure to update tests as appropriate.
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
-        KbqMarkdownModule,
+        KbqMarkdownModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

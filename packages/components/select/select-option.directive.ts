@@ -9,7 +9,7 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    ViewContainerRef,
+    ViewContainerRef
 } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -20,8 +20,8 @@ import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/componen
         '(mouseenter)': 'onMouseEnter()',
         '(mouseleave)': 'onMouseLeave()',
         '(focus)': 'onFocus()',
-        '(blur)': 'onBlur()',
-    },
+        '(blur)': 'onBlur()'
+    }
 })
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private resizeObserver: ResizeObserver;
@@ -44,7 +44,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
@@ -60,7 +60,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
             characterData: true,
             attributes: false,
             childList: true,
-            subtree: true,
+            subtree: true
         });
     }
 

@@ -14,7 +14,7 @@ function writeScss({ src, dist }: { src: string; dist: string }) {
             verbose: true,
             //sourceMapIncludeSources: true,
             style: 'compressed',
-            loadPaths: ['node_modules'],
+            loadPaths: ['node_modules']
         });
 
         const relativePathToSrcFile = path.relative(src, file);

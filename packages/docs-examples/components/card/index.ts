@@ -6,15 +6,15 @@ import { CardOverviewExample } from './card-overview/card-overview-example';
 export { CardOverviewExample };
 
 const EXAMPLES = [
-    CardOverviewExample,
+    CardOverviewExample
 ];
 
 @NgModule({
     imports: [
         FormsModule,
-        KbqCardModule,
+        KbqCardModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class CardExamplesModule {}

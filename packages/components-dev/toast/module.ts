@@ -7,7 +7,7 @@ import {
     NgModule,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +26,7 @@ import {
     KbqToastModule,
     KbqToastPosition,
     KbqToastService,
-    KbqToastStyle,
+    KbqToastStyle
 } from '@koobiq/components/toast';
 import { KbqButtonModule } from '../../components/button';
 
@@ -34,17 +34,17 @@ import { KbqButtonModule } from '../../components/button';
     selector: 'kbq-new-toast',
     template: '<div>MyToastComponent</div>',
     host: {
-        class: 'my-toast',
+        class: 'my-toast'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class MyToastComponent extends KbqToastComponent {
     constructor(
         readonly data: KbqToastData,
         readonly service: KbqToastService,
         elementRef: ElementRef,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(data, service, elementRef, focusMonitor);
 
@@ -56,7 +56,7 @@ export class MyToastComponent extends KbqToastComponent {
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ToastDemoComponent {
     themePalette = ThemePalette;
@@ -73,13 +73,13 @@ export class ToastDemoComponent {
         private toastService: KbqToastService,
         private newToastService: KbqToastService<MyToastComponent>,
         private modalService: KbqModalService,
-        private sidepanelService: KbqSidepanelService,
+        private sidepanelService: KbqSidepanelService
     ) {}
 
     openTemplateSidepanel() {
         this.sidepanelService.open(this.template, {
             position: this.position,
-            hasBackdrop: this.modalState,
+            hasBackdrop: this.modalState
         });
     }
 
@@ -87,7 +87,7 @@ export class ToastDemoComponent {
         this.toastService.show({
             title: 'Доступно обновление агента',
             caption: 'Версия 2.03.15 от 15 мая 2022',
-            actions,
+            actions
         });
     }
 
@@ -101,7 +101,7 @@ export class ToastDemoComponent {
             title: 'Не удалось авторизовать 15 агентов',
             actions,
             icon: true,
-            iconClass: 'mc-error_16',
+            iconClass: 'mc-error_16'
         });
     }
 
@@ -113,7 +113,7 @@ export class ToastDemoComponent {
         this.toastService.show({
             caption: 'Не удалось авторизовать 15 агентов',
             icon: false,
-            closeButton: false,
+            closeButton: false
         });
     }
 
@@ -124,9 +124,9 @@ export class ToastDemoComponent {
                 caption: '12,1 МБ из 85 МБ — осталось 15 мин  ',
                 closeButton: false,
                 content,
-                actions,
+                actions
             },
-            0,
+            0
         );
     }
 
@@ -141,7 +141,7 @@ export class ToastDemoComponent {
     showManyActonToast(actions: TemplateRef<any>) {
         this.toastService.show(
             { style: 'error', title: 'Заголовок', caption: 'Подзаголовок, подробности', actions },
-            0,
+            0
         );
     }
 
@@ -159,7 +159,7 @@ export class ToastDemoComponent {
         title: TemplateRef<any>,
         caption: TemplateRef<any>,
         content: TemplateRef<any>,
-        actions: TemplateRef<any>,
+        actions: TemplateRef<any>
     ) {
         this.toastService.show({ style, icon, title, caption, content, actions, closeButton: true }, 0);
     }
@@ -177,7 +177,7 @@ export class ToastDemoComponent {
             kbqTitle,
             kbqContent,
             kbqFooter,
-            kbqWidth: 400,
+            kbqWidth: 400
         });
     }
 }
@@ -185,7 +185,7 @@ export class ToastDemoComponent {
 @NgModule({
     declarations: [
         ToastDemoComponent,
-        MyToastComponent,
+        MyToastComponent
     ],
     imports: [
         BrowserModule,
@@ -198,7 +198,7 @@ export class ToastDemoComponent {
         KbqDropdownModule,
         KbqModalModule,
         KbqSidepanelModule,
-        KbqScrollbarModule,
+        KbqScrollbarModule
     ],
     bootstrap: [ToastDemoComponent],
     providers: [
@@ -208,13 +208,13 @@ export class ToastDemoComponent {
                 position: KbqToastPosition.TOP_RIGHT,
                 duration: 5000,
                 delay: 2000,
-                onTop: false,
-            },
-        },
+                onTop: false
+            }
+        }
         // {
         //     provide: KbqToastComponent,
         //     useFactory: () => MyToastComponent
         // }
-    ],
+    ]
 })
 export class DemoModule {}

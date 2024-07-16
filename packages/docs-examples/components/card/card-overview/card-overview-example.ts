@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'card-overview-example',
     templateUrl: 'card-overview-example.html',
     styleUrls: ['card-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class CardOverviewExample {}

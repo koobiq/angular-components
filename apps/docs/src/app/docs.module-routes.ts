@@ -5,7 +5,7 @@ import {
     ComponentApiComponent,
     ComponentExamplesComponent,
     ComponentOverviewComponent,
-    ComponentViewerComponent,
+    ComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
@@ -20,8 +20,8 @@ export const APP_ROUTES: Routes = [
         children: [
             { path: '', redirectTo: 'overview', pathMatch: 'full' },
             { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
-            { path: '**', redirectTo: 'overview' },
-        ],
+            { path: '**', redirectTo: 'overview' }
+        ]
     },
     { path: 'components', redirectTo: 'components/alert', pathMatch: 'full' },
     {
@@ -32,8 +32,8 @@ export const APP_ROUTES: Routes = [
             { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
             { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
             { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
-            { path: '**', redirectTo: 'overview' },
-        ],
+            { path: '**', redirectTo: 'overview' }
+        ]
     },
     { path: 'other', redirectTo: 'other/date-formatter', pathMatch: 'full' },
     {
@@ -44,8 +44,8 @@ export const APP_ROUTES: Routes = [
             { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
             { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
             { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
-            { path: '**', redirectTo: 'overview' },
-        ],
+            { path: '**', redirectTo: 'overview' }
+        ]
     },
     { path: 'cdk', redirectTo: 'cdk/a11y', pathMatch: 'full' },
     {
@@ -56,10 +56,10 @@ export const APP_ROUTES: Routes = [
             { path: 'overview', component: CdkOverviewComponent, pathMatch: 'full' },
             { path: 'api', component: CdkApiComponent, pathMatch: 'full' },
             { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
-            { path: '**', redirectTo: 'overview' },
-        ],
+            { path: '**', redirectTo: 'overview' }
+        ]
     },
     { path: 'icons', component: IconsViewerComponent },
     { path: '404', component: PageNotFoundComponent },
-    { path: '**', redirectTo: '/404' },
+    { path: '**', redirectTo: '/404' }
 ];

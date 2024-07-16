@@ -7,12 +7,12 @@ export { DividerOverviewExample, DividerVerticalExample };
 
 const EXAMPLES = [
     DividerOverviewExample,
-    DividerVerticalExample,
+    DividerVerticalExample
 ];
 
 @NgModule({
     imports: [KbqDividerModule],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class DividerExamplesModule {}

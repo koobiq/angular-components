@@ -12,8 +12,8 @@ describe('KbqLink', () => {
                 KbqLinkIconTestApp,
                 KbqLinkPrintTestApp,
                 KbqLinkPseudoTestApp,
-                KbqLinkNoUnderlineTestApp,
-            ],
+                KbqLinkNoUnderlineTestApp
+            ]
         });
 
         TestBed.compileComponents();
@@ -80,13 +80,13 @@ describe('KbqLink', () => {
 
 @Component({
     selector: 'kbq-link-base-test-app',
-    template: ` <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a> `,
+    template: ` <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a> `
 })
 class KbqLinkBaseTestApp {}
 
 @Component({
     selector: 'kbq-link-print-test-app',
-    template: ` <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a> `,
+    template: ` <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a> `
 })
 class KbqLinkPrintTestApp {
     print: string = '';
@@ -99,18 +99,18 @@ class KbqLinkPrintTestApp {
             <span class="kbq-link__text">Отчет сканирования</span>
             <i kbq-icon="mc-new-tab_16"></i>
         </a>
-    `,
+    `
 })
 class KbqLinkIconTestApp {}
 
 @Component({
     selector: 'kbq-link-pseudo-test-app',
-    template: ` <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a> `,
+    template: ` <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a> `
 })
 class KbqLinkPseudoTestApp {}
 
 @Component({
     selector: 'kbq-link-no-underline-test-app',
-    template: ` <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a> `,
+    template: ` <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a> `
 })
 class KbqLinkNoUnderlineTestApp {}

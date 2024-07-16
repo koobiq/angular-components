@@ -11,20 +11,20 @@ import { KbqDropdown } from './dropdown.component';
     imports: [
         CommonModule,
         OverlayModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     exports: [
         KbqDropdown,
         KbqDropdownItem,
         KbqDropdownTrigger,
-        KbqDropdownContent,
+        KbqDropdownContent
     ],
     declarations: [
         KbqDropdown,
         KbqDropdownItem,
         KbqDropdownTrigger,
-        KbqDropdownContent,
+        KbqDropdownContent
     ],
-    providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER],
+    providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
 export class KbqDropdownModule {}

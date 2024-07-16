@@ -57,8 +57,8 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
             module: {
                 name: data.module.name,
                 importSpecifier: data.module.packagePath,
-                importPath: `koobiq-docs-examples-${splitPackagePath[0]}-${splitPackagePath[1]}`,
-            },
+                importPath: `koobiq-docs-examples-${splitPackagePath[0]}-${splitPackagePath[1]}`
+            }
         };
 
         return result;
@@ -97,8 +97,8 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 ...parseExampleModuleFile(sourceFile).map((name) => ({
                     name,
                     importPath,
-                    packagePath,
-                })),
+                    packagePath
+                }))
             );
         }
 
@@ -124,7 +124,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 files: [],
                 // The `module` field will be set in a separate step below. We need to set
                 // it here as we are setting it later in a side-effect iteration.
-                module: null!,
+                module: null!
             };
 
             // For consistency, we expect the example component selector to match
@@ -133,7 +133,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             if (primaryComponent.selector !== expectedSelector) {
                 throw Error(
                     `Example ${exampleId} uses selector: ${primaryComponent.selector}, ` +
-                        `but expected: ${expectedSelector}`,
+                        `but expected: ${expectedSelector}`
                 );
             }
 
@@ -166,7 +166,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
         } else {
             throw Error(
                 `Could not find a primary example component in ${sourceFile}. ` +
-                    `Ensure that there's a component with an @title annotation.`,
+                    `Ensure that there's a component with an @title annotation.`
             );
         }
     }
@@ -211,7 +211,7 @@ function assertReferencedExampleFileExists(baseDir: string, examplePackagePath: 
 export function generateExampleModule(
     sourceFiles: string[],
     outputFile: string,
-    baseDir: string = path.dirname(outputFile),
+    baseDir: string = path.dirname(outputFile)
 ) {
     const analysisData = analyzeExamples(sourceFiles, baseDir);
     const generatedModuleFile = inlineExampleModuleTemplate(analysisData);

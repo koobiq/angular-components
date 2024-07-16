@@ -7,7 +7,7 @@ import {
     KbqLoaderOverlay,
     KbqLoaderOverlayCaption,
     KbqLoaderOverlayIndicator,
-    KbqLoaderOverlayText,
+    KbqLoaderOverlayText
 } from './loader-overlay.component';
 
 @NgModule({
@@ -15,19 +15,19 @@ import {
         CommonModule,
         A11yModule,
         PlatformModule,
-        KbqProgressSpinnerModule,
+        KbqProgressSpinnerModule
     ],
     declarations: [
         KbqLoaderOverlay,
         KbqLoaderOverlayIndicator,
         KbqLoaderOverlayText,
-        KbqLoaderOverlayCaption,
+        KbqLoaderOverlayCaption
     ],
     exports: [
         KbqLoaderOverlay,
         KbqLoaderOverlayIndicator,
         KbqLoaderOverlayText,
-        KbqLoaderOverlayCaption,
-    ],
+        KbqLoaderOverlayCaption
+    ]
 })
 export class KbqLoaderOverlayModule {}

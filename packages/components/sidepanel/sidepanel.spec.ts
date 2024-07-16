@@ -12,7 +12,7 @@ import {
     KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelRef,
-    KbqSidepanelService,
+    KbqSidepanelService
 } from './index';
 
 // tslint:disable:no-magic-numbers
@@ -25,7 +25,7 @@ describe('KbqSidepanelService', () => {
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqSidepanelModule, SidepanelTestModule],
+            imports: [KbqSidepanelModule, SidepanelTestModule]
         });
 
         TestBed.compileComponents();
@@ -316,7 +316,7 @@ describe('KbqSidepanelService', () => {
                 </button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
-    `,
+    `
 })
 class ComponentForSidepanel {}
 
@@ -333,7 +333,7 @@ class ComponentForSidepanel {}
         </kbq-dropdown>
     `,
     // Testing for service with parent service
-    providers: [KbqSidepanelService],
+    providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
     @ViewChild('trigger') trigger: KbqDropdownTrigger;
@@ -346,19 +346,19 @@ class SidepanelFromDropdownComponent {
 }
 
 @Component({
-    template: '<div>Simple Sidepanel</div>',
+    template: '<div>Simple Sidepanel</div>'
 })
 class SimpleSidepanelExample {
     constructor(
         public sidepanelRef: KbqSidepanelRef<SimpleSidepanelExample>,
-        @Inject(KBQ_SIDEPANEL_DATA) public data: any,
+        @Inject(KBQ_SIDEPANEL_DATA) public data: any
     ) {}
 }
 
 @Component({
     template: `<ng-template let-data let-sidepanelRef="sidepanelRef">
         {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}</ng-template
-    >`,
+    >`
 })
 class ComponentWithTemplateForSidepanel {
     localValue: string;
@@ -375,7 +375,7 @@ class ComponentWithTemplateForSidepanel {
 
 @Component({
     selector: 'root-component',
-    template: `<div></div>`,
+    template: `<div></div>`
 })
 class RootComponent {}
 
@@ -385,7 +385,7 @@ const TEST_COMPONENTS = [
     SimpleSidepanelExample,
     ComponentWithTemplateForSidepanel,
     RootComponent,
-    SidepanelFromDropdownComponent,
+    SidepanelFromDropdownComponent
 ];
 
 @NgModule({
@@ -393,9 +393,9 @@ const TEST_COMPONENTS = [
         KbqSidepanelModule,
         NoopAnimationsModule,
         KbqDropdownModule,
-        KbqButtonModule,
+        KbqButtonModule
     ],
     exports: TEST_COMPONENTS,
-    declarations: TEST_COMPONENTS,
+    declarations: TEST_COMPONENTS
 })
 class SidepanelTestModule {}

@@ -14,7 +14,7 @@ import {
     NgZone,
     Output,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { TAB, hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
@@ -23,7 +23,7 @@ import {
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
-    KbqTitleTextRef,
+    KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -45,7 +45,7 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<any>('KBQ_TRE
 export class KbqTreeOptionChange {
     constructor(
         public source: KbqTreeOption,
-        public isUserInput = false,
+        public isUserInput = false
     ) {}
 }
 
@@ -71,15 +71,15 @@ let uniqueIdCounter: number = 0;
         '(blur)': 'blur()',
 
         '(click)': 'selectViaInteraction($event)',
-        '(keydown)': 'onKeydown($event)',
+        '(keydown)': 'onKeydown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: KbqTreeNode, useExisting: KbqTreeOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },
-        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption },
-    ],
+        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption }
+    ]
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     readonly onFocus = new Subject<KbqTreeOptionEvent>();
@@ -185,7 +185,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private ngZone: NgZone,
-        @Inject(KBQ_TREE_OPTION_PARENT_COMPONENT) public tree: any,
+        @Inject(KBQ_TREE_OPTION_PARENT_COMPONENT) public tree: any
     ) {
         super(elementRef, tree);
     }

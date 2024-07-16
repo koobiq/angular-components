@@ -23,7 +23,7 @@ export {
     SelectOverviewExample,
     SelectPrioritizedSelectedExample,
     SelectSearchOverviewExample,
-    SelectVirtualScrollExample,
+    SelectVirtualScrollExample
 };
 
 const EXAMPLES = [
@@ -33,7 +33,7 @@ const EXAMPLES = [
     SelectPrioritizedSelectedExample,
     SelectGroupsExample,
     SelectFooterExample,
-    SelectVirtualScrollExample,
+    SelectVirtualScrollExample
 ];
 
 @NgModule({
@@ -47,9 +47,9 @@ const EXAMPLES = [
         KbqLinkModule,
         KbqButtonModule,
         ScrollingModule,
-        KbqHighlightModule,
+        KbqHighlightModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class SelectExamplesModule {}

@@ -19,14 +19,14 @@ export {
     TimepickerOverviewExample,
     TimepickerRangeExample,
     TimepickerValidationSymbolsExample,
-    TimepickerVariationsExample,
+    TimepickerVariationsExample
 };
 
 const EXAMPLES = [
     TimepickerOverviewExample,
     TimepickerRangeExample,
     TimepickerVariationsExample,
-    TimepickerValidationSymbolsExample,
+    TimepickerValidationSymbolsExample
 ];
 
 @NgModule({
@@ -41,9 +41,9 @@ const EXAMPLES = [
         KbqInputModule,
         KbqFormFieldModule,
         KbqIconModule,
-        KbqRadioModule,
+        KbqRadioModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TimepickerExamplesModule {}

@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'layout-flex-offsets-example',
     templateUrl: 'layout-flex-offsets-example.html',
     styleUrls: ['layout-flex-offsets-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class LayoutFlexOffsetsExample {
     selectedSize: string = 'flex-10';
@@ -35,7 +35,7 @@ export class LayoutFlexOffsetsExample {
         'flex-85',
         'flex-90',
         'flex-95',
-        'flex-100',
+        'flex-100'
     ];
 
     flexOffsets = [
@@ -60,6 +60,6 @@ export class LayoutFlexOffsetsExample {
         'flex-offset-85',
         'flex-offset-90',
         'flex-offset-95',
-        'flex-offset-100',
+        'flex-offset-100'
     ];
 }

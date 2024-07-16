@@ -31,7 +31,7 @@ class LazyLoadNode {
         public name: string,
         public hasChildren = false,
         public loading = false,
-        public loaded: boolean = false,
+        public loaded: boolean = false
     ) {}
 }
 
@@ -64,7 +64,7 @@ export class LazyLoadDataService {
                         ...value,
                         hasChildren: !(index % 2),
                         name: `node-${id}`,
-                        id,
+                        id
                     };
                 })
                 .map((nodeResponse: INodeResponse) => {
@@ -72,7 +72,7 @@ export class LazyLoadDataService {
                     this.nodeMap.set(nodeResponse.id, result);
 
                     return result;
-                }),
+                })
         );
     }
 
@@ -119,7 +119,7 @@ export class LazyLoadDataService {
                             ...value,
                             hasChildren: !(index % 2),
                             name: `node-${childId}`,
-                            id: childId,
+                            id: childId
                         };
                     })
                     .map((nodeResponse: INodeResponse) => {
@@ -127,7 +127,7 @@ export class LazyLoadDataService {
                         this.nodeMap.set(nodeResponse.id, result);
 
                         return result;
-                    }),
+                    })
             );
             parent.loading = false;
             parent.loaded = true;
@@ -141,7 +141,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     constructor(
         treeControl: FlatTreeControl<F>,
         treeFlattener: KbqTreeFlattener<T, F>,
-        private dataService: LazyLoadDataService,
+        private dataService: LazyLoadDataService
     ) {
         super(treeControl, treeFlattener, []);
     }
@@ -163,7 +163,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     templateUrl: 'tree-select-lazyload-example.html',
     styleUrls: ['tree-select-lazyload-example.css'],
     providers: [LazyLoadDataService],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TreeSelectLazyloadExample {
     selected = '';
@@ -181,7 +181,7 @@ export class TreeSelectLazyloadExample {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
         this.dataSource = new LazyLoadDataSource(this.treeControl, this.treeFlattener, this.dataService);
 

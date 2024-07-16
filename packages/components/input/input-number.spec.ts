@@ -6,7 +6,7 @@ import {
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
+    UntypedFormGroup
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@koobiq/cdk/keycodes';
@@ -14,7 +14,7 @@ import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboard
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
 import {
     KbqFormFieldModule,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError,
+    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from '@koobiq/components/form-field';
 import { KbqInput, KbqInputModule, KbqNumberInput } from './index';
 
@@ -28,13 +28,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             KbqInputModule,
             KbqLocaleServiceModule,
             KbqFormFieldModule,
-            ...imports,
+            ...imports
         ],
         declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
-            ...providers,
-        ],
+            ...providers
+        ]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -46,7 +46,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             <input kbqInput [(ngModel)]="value" type="number" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
@@ -58,7 +58,7 @@ class KbqNumberInputTestComponent {
             <input kbqInput [formControl]="formControl" type="number" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputWithFormControl {
     formControl = new UntypedFormControl(10);
@@ -72,14 +72,14 @@ class KbqNumberInputWithFormControl {
                 <kbq-stepper></kbq-stepper>
             </kbq-form-field>
         </form>
-    `,
+    `
 })
 class KbqNumberInputWithFormControlName {
     reactiveForm: UntypedFormGroup;
 
     constructor(private formBuilder: UntypedFormBuilder) {
         this.reactiveForm = this.formBuilder.group({
-            reactiveInputValue: new UntypedFormControl(10),
+            reactiveInputValue: new UntypedFormControl(10)
         });
     }
 }
@@ -90,7 +90,7 @@ class KbqNumberInputWithFormControlName {
             <input kbqInput [(ngModel)]="value" type="number" max="10" min="3" step="0.5" big-step="2" />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputMaxMinStep {
     value: number | null = null;
@@ -110,7 +110,7 @@ class KbqNumberInputMaxMinStep {
             />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputMaxMinStepInput {
     value: number | null = null;
@@ -126,7 +126,7 @@ class KbqNumberInputMaxMinStepInput {
             <input kbqInput [(ngModel)]="value" type="number" />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputWithCleaner {
     value: number = 0;
@@ -147,7 +147,7 @@ class KbqNumberInputWithCleaner {
             />
             <kbq-stepper></kbq-stepper>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqNumberInputWithMask {
     value: number | null = null;
@@ -1031,8 +1031,8 @@ describe('KbqNumberInput', () => {
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
-                    getData: () => '1.234.567,89',
-                },
+                    getData: () => '1.234.567,89'
+                }
             });
             fixture.detectChanges();
 

@@ -10,16 +10,16 @@ export { ProgressSpinnerIndeterminateExample, ProgressSpinnerOverviewExample };
 
 const EXAMPLES = [
     ProgressSpinnerIndeterminateExample,
-    ProgressSpinnerOverviewExample,
+    ProgressSpinnerOverviewExample
 ];
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         KbqFormFieldModule,
-        KbqProgressSpinnerModule,
+        KbqProgressSpinnerModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ProgressSpinnerExamplesModule {}

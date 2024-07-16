@@ -22,7 +22,7 @@ export {
     ModalOverviewExample,
     ModalScrollExample,
     ModalSizesExample,
-    ModalTemplateExample,
+    ModalTemplateExample
 };
 
 const EXAMPLES = [
@@ -33,7 +33,7 @@ const EXAMPLES = [
     ModalScrollExample,
     KbqLongComponent,
     ModalSizesExample,
-    ModalMultipleExample,
+    ModalMultipleExample
 ];
 
 @NgModule({
@@ -45,9 +45,9 @@ const EXAMPLES = [
         KbqIconModule,
         KbqInputModule,
         KbqFormFieldModule,
-        KbqFormsModule,
+        KbqFormsModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class ModalExamplesModule {}

@@ -11,7 +11,7 @@ import { timezones } from '../mock';
     selector: 'timezone-overview-example',
     templateUrl: 'timezone-overview-example.html',
     styleUrls: ['timezone-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TimezoneOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -26,7 +26,7 @@ export class TimezoneOverviewExample {
                       .map(({ city }) => city)
                       .sort()
                       .join(', ')
-                : '',
+                : ''
         }));
 
         this.data = getZonesGroupedByCountry(zones, 'Другие страны');

@@ -66,8 +66,8 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS = new InjectionToken<KbqDropdownDefaul
     'kbq-dropdown-default-options',
     {
         providedIn: 'root',
-        factory: KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY,
-    },
+        factory: KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY
+    }
 );
 
 /** @docs-private */
@@ -79,6 +79,6 @@ export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOption
         xPosition: 'after',
         yPosition: 'below',
         backdropClass: 'cdk-overlay-transparent-backdrop',
-        hasBackdrop: false,
+        hasBackdrop: false
     };
 }

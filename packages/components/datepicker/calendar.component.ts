@@ -11,7 +11,7 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
@@ -30,10 +30,10 @@ import { KbqMonthView } from './month-view.component';
     templateUrl: 'calendar.html',
     styleUrls: ['calendar.scss'],
     host: {
-        class: 'kbq-calendar',
+        class: 'kbq-calendar'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** A date representing the period (month or year) to start the calendar in. */
@@ -144,7 +144,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     constructor(
         intl: KbqDatepickerIntl,
         @Optional() private readonly adapter: DateAdapter<D>,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef
     ) {
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');

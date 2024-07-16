@@ -141,6 +141,6 @@ export const enUSLocaleDataSet = {
         'Engels',
         'Yuzhno-Sakhalinsk',
         'Yakutsk',
-        'Yaroslavl',
-    ],
+        'Yaroslavl'
+    ]
 };

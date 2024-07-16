@@ -19,19 +19,18 @@ describe('KbqCalendar', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
-                KbqDatepickerModule,
+                KbqDatepickerModule
             ],
             declarations: [
                 StandardCalendar,
                 CalendarWithMinMax,
                 CalendarWithDateFilter,
-                CalendarWithSelectableMinDate,
+                CalendarWithSelectableMinDate
             ],
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
-                { provide: LOCALE_ID, useValue: 'ru-RU' },
-            ],
+                { provide: LOCALE_ID, useValue: 'ru-RU' }]
         });
 
         TestBed.compileComponents();
@@ -182,7 +181,7 @@ describe('KbqCalendar', () => {
             fixture.detectChanges();
 
             const prevButton = calendarElement.querySelector(
-                '.kbq-calendar-header__previous-button',
+                '.kbq-calendar-header__previous-button'
             ) as HTMLButtonElement;
 
             expect(prevButton.disabled).withContext('previous button should not be disabled').toBe(false);
@@ -352,7 +351,7 @@ describe('KbqCalendar', () => {
         (yearSelected)="selectedYear = $event"
         (monthSelected)="selectedMonth = $event"
     >
-    </kbq-calendar>`,
+    </kbq-calendar>`
 })
 class StandardCalendar {
     selected: DateTime;
@@ -364,7 +363,7 @@ class StandardCalendar {
 }
 
 @Component({
-    template: ` <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></kbq-calendar> `,
+    template: ` <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></kbq-calendar> `
 })
 class CalendarWithMinMax {
     startAt: DateTime;
@@ -375,9 +374,7 @@ class CalendarWithMinMax {
 }
 
 @Component({
-    template: `
-        <kbq-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter"> </kbq-calendar>
-    `,
+    template: ` <kbq-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter"> </kbq-calendar> `
 })
 class CalendarWithDateFilter {
     selected: DateTime;
@@ -394,7 +391,7 @@ class CalendarWithDateFilter {
     template: `
         <kbq-calendar [startAt]="startAt" (selectedChange)="select($event)" [selected]="selected" [minDate]="selected">
         </kbq-calendar>
-    `,
+    `
 })
 class CalendarWithSelectableMinDate {
     startAt = new Date(2018, 6, 0);

@@ -140,5 +140,5 @@ export const OPTIONS = [
     'Engels',
     'Yuzhno-Sakhalinsk',
     'Yakutsk',
-    'Yaroslavl',
+    'Yaroslavl'
 ];

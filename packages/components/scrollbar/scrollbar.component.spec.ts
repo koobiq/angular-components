@@ -8,7 +8,7 @@ import {
     KBQ_SCROLLBAR_CONFIG,
     KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG,
     KbqScrollbarEvents,
-    KbqScrollbarOptions,
+    KbqScrollbarOptions
 } from './scrollbar.types';
 
 export const configureTestingModule = (declarations?: any[]) => {
@@ -18,9 +18,9 @@ export const configureTestingModule = (declarations?: any[]) => {
         providers: [
             {
                 provide: KBQ_SCROLLBAR_CONFIG,
-                useValue: null,
-            },
-        ],
+                useValue: null
+            }
+        ]
     }).compileComponents();
 };
 
@@ -206,7 +206,7 @@ describe('KbqScrollbar', () => {
                 ligula.
             </div>
         </div>
-    `,
+    `
 })
 class ScrollEventListener {
     options: KbqScrollbarOptions;

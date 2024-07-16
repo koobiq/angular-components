@@ -8,7 +8,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'navbar-vertical-example',
     templateUrl: 'navbar-vertical-example.html',
     styleUrls: ['navbar-vertical-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NavbarVerticalExample {
     popUpPlacements = PopUpPlacements;

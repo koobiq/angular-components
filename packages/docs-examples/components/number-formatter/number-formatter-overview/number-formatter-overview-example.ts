@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'number-formatter-overview-example',
     templateUrl: 'number-formatter-overview-example.html',
     styleUrls: ['number-formatter-overview-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NumberFormatterOverviewExample {
     value = 1000.123;

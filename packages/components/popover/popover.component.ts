@@ -5,7 +5,7 @@ import {
     Overlay,
     OverlayConfig,
     ScrollDispatcher,
-    ScrollStrategy,
+    ScrollStrategy
 } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
@@ -23,7 +23,7 @@ import {
     TemplateRef,
     Type,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     KbqPopUp,
@@ -31,7 +31,7 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
-    PopUpTriggers,
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
@@ -42,11 +42,11 @@ import { kbqPopoverAnimations } from './popover-animations';
     preserveWhitespaces: false,
     styleUrls: ['./popover.scss'],
     host: {
-        '(keydown.esc)': 'hide(0)',
+        '(keydown.esc)': 'hide(0)'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqPopoverAnimations.popoverState],
+    animations: [kbqPopoverAnimations.popoverState]
 })
 export class KbqPopoverComponent extends KbqPopUp {
     prefix = 'kbq-popover';
@@ -80,7 +80,7 @@ export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollS
 export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_POPOVER_SCROLL_STRATEGY,
     deps: [Overlay],
-    useFactory: kbqPopoverScrollStrategyFactory,
+    useFactory: kbqPopoverScrollStrategyFactory
 };
 
 /** Creates an error to be thrown if the user supplied an invalid popover position. */
@@ -95,8 +95,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()',
-    },
+        '(touchend)': 'handleTouchend()'
+    }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     @Input('kbqPopoverVisible')
@@ -260,7 +260,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         return {
             panelClass: 'kbq-popover__panel',
             hasBackdrop: this.hasBackdrop,
-            backdropClass: this.backdropClass,
+            backdropClass: this.backdropClass
         };
     }
 
@@ -271,7 +271,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         scrollDispatcher: ScrollDispatcher,
         hostView: ViewContainerRef,
         @Inject(KBQ_POPOVER_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
+        @Optional() direction: Directionality
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
     }
@@ -322,7 +322,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         if (this.hasClickTrigger) {
             return [
                 this.overlayRef!.backdropClick(),
-                this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents(),
+                this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents()
             ];
         }
 

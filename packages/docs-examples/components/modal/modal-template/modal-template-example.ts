@@ -9,7 +9,7 @@ import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
     selector: 'modal-template-example',
     templateUrl: 'modal-template-example.html',
     styleUrls: ['modal-template-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ModalTemplateExample {
     tplModal: KbqModalRef;
@@ -21,7 +21,7 @@ export class ModalTemplateExample {
             kbqTitle: tplTitle,
             kbqContent: tplContent,
             kbqFooter: tplFooter,
-            kbqOnOk: () => console.log('Click ok'),
+            kbqOnOk: () => console.log('Click ok')
         });
     }
 

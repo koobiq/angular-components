@@ -80,13 +80,13 @@
             $new-level: map.merge(
                 $level,
                 (
-                    font-family: $font-family,
+                    font-family: $font-family
                 )
             );
             $config: map.merge(
                 $config,
                 (
-                    $key: $new-level,
+                    $key: $new-level
                 )
             );
         }
@@ -97,7 +97,7 @@
         $config,
         (
             font-family: $font-family,
-            tokens: $tokens,
+            tokens: $tokens
         )
     );
 }
@@ -117,7 +117,7 @@
         md-body-mono: map.get($md-typography, md-body-mono),
         md-caption: map.get($md-typography, md-caption),
         md-table-cell: map.get($md-typography, md-table-cell),
-        md-table-header: map.get($md-typography, md-table-header),
+        md-table-header: map.get($md-typography, md-table-header)
     );
 
     @each $key, $level in $config {
@@ -125,13 +125,13 @@
             $new-level: map.merge(
                 $level,
                 (
-                    font-family: $font-family,
+                    font-family: $font-family
                 )
             );
             $config: map.merge(
                 $config,
                 (
-                    $key: $new-level,
+                    $key: $new-level
                 )
             );
         }
@@ -142,7 +142,7 @@
         $config,
         (
             font-family: $font-family,
-            tokens: $tokens,
+            tokens: $tokens
         )
     );
 }

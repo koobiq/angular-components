@@ -12,7 +12,7 @@ import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
-    KbqLocaleService,
+    KbqLocaleService
 } from '@koobiq/components/core';
 import { DateTime, DateTimeUnit } from 'luxon';
 
@@ -37,8 +37,8 @@ describe('Date formatter', () => {
             providers: [
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
-                { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-            ],
+                { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+            ]
         }).compileComponents();
     }));
 
@@ -81,7 +81,7 @@ describe('Date formatter', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
                     );
                 });
 
@@ -91,13 +91,13 @@ describe('Date formatter', () => {
                     let date = currentDate.minus({ days: 3 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
                     );
 
                     date = currentDate.minus({ days: 5 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
                     );
                 });
 
@@ -153,20 +153,20 @@ describe('Date formatter', () => {
                     let date = currentDate.plus({ days: 3 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
                     );
 
                     date = currentDate.plus({ days: 5 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
                     );
                 });
 
                 it('after tomorrow (other year)', () => {
                     const date = currentDate.plus({ years: 1 });
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`),
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
                     );
                 });
 
@@ -174,7 +174,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
-                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -182,7 +182,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -272,7 +272,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
-                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -280,7 +280,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -298,7 +298,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDate(date, true)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`)
                     );
                 });
 
@@ -312,7 +312,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`)
                     );
                 });
 
@@ -320,7 +320,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -328,7 +328,7 @@ describe('Date formatter', () => {
                     const date = adapter.createDate(2015);
 
                     expect(formatter.absoluteShortDateTime(date)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -336,7 +336,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { milliseconds: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -344,7 +344,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -352,7 +352,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`)
                     );
                 });
 
@@ -360,7 +360,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -394,7 +394,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { currYear: true })).toBe(
-                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`),
+                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -408,7 +408,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { milliseconds: true })).toBe(
-                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -416,7 +416,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true })).toBe(
-                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -424,7 +424,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`)
                     );
                 });
 
@@ -432,7 +432,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -467,7 +467,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -479,7 +479,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -491,7 +491,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -510,7 +510,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -522,7 +522,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -534,7 +534,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH} ${YEAR}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -546,7 +546,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -558,7 +558,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -570,7 +570,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -582,7 +582,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate, { seconds: true })).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -592,15 +592,15 @@ describe('Date formatter', () => {
 
                         const startString = adapter.format(
                             startDate,
-                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
                         );
                         const endString = adapter.format(
                             endDate,
-                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
                         );
 
                         expect(formatter.rangeShortDateTime(startDate, endDate, { milliseconds: true })).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -629,7 +629,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -641,7 +641,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -653,7 +653,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -672,7 +672,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`,
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
                         );
                     });
 
@@ -682,7 +682,7 @@ describe('Date formatter', () => {
 
                         const startString = adapter.format(
                             startDate,
-                            `${DAY_MONTH}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`,
+                            `${DAY_MONTH}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
                         );
                         const endString = adapter.format(endDate, `${UNTIL.toLocaleLowerCase()}${NBSP}${TIME}`);
 
@@ -695,7 +695,7 @@ describe('Date formatter', () => {
 
                         const startString = adapter.format(
                             startDate,
-                            `${DAY_MONTH} ${YEAR}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`,
+                            `${DAY_MONTH} ${YEAR}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
                         );
                         const endString = adapter.format(endDate, `${UNTIL.toLocaleLowerCase()}${NBSP}${TIME}`);
 
@@ -710,7 +710,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`,
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
                         );
                     });
 
@@ -722,7 +722,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`,
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
                         );
                     });
 
@@ -734,7 +734,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`,
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
                         );
                     });
                 });
@@ -753,7 +753,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -765,7 +765,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -777,7 +777,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH} ${YEAR}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -789,7 +789,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -801,7 +801,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -813,7 +813,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -904,7 +904,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, null, { seconds: true })).toBe(
-                            `${FROM}${NBSP}${startString}`,
+                            `${FROM}${NBSP}${startString}`
                         );
                     });
 
@@ -913,7 +913,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}${MILLISECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, null, { milliseconds: true })).toBe(
-                            `${FROM}${NBSP}${startString}`,
+                            `${FROM}${NBSP}${startString}`
                         );
                     });
                 });
@@ -1022,7 +1022,7 @@ describe('Date formatter', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
                     );
                 });
 
@@ -1032,13 +1032,13 @@ describe('Date formatter', () => {
                     let date = currentDate.minus({ days: 3 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
                     );
 
                     date = currentDate.minus({ days: 5 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
                     );
                 });
 
@@ -1070,20 +1070,20 @@ describe('Date formatter', () => {
                     let date = currentDate.plus({ days: 3 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
                     );
 
                     date = currentDate.plus({ days: 5 });
 
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
                     );
                 });
 
                 it('after tomorrow (other year)', () => {
                     const date = adapter.createDate(2015).plus({ days: 3 });
                     expect(formatter.relativeShortDate(date)).toBe(
-                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`),
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
                     );
                 });
 
@@ -1091,7 +1091,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
-                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`,
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`
                     );
                 });
 
@@ -1099,7 +1099,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
-                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`,
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`
                     );
                 });
             });
@@ -1165,7 +1165,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeLongDateTime(date, { milliseconds: true })).toBe(
-                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`,
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`
                     );
                 });
 
@@ -1173,7 +1173,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.relativeLongDateTime(date, { seconds: true })).toBe(
-                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`,
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`
                     );
                 });
             });
@@ -1191,7 +1191,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDate(date, true)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`)
                     );
                 });
 
@@ -1205,7 +1205,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`)
                     );
                 });
 
@@ -1213,7 +1213,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -1221,7 +1221,7 @@ describe('Date formatter', () => {
                     const date = adapter.createDate(2015);
 
                     expect(formatter.absoluteShortDateTime(date)).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -1229,7 +1229,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { milliseconds: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -1237,7 +1237,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -1245,7 +1245,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`)
                     );
                 });
 
@@ -1253,7 +1253,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -1286,7 +1286,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { currYear: true })).toBe(
-                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`),
+                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`)
                     );
                 });
 
@@ -1300,7 +1300,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { milliseconds: true })).toBe(
-                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -1308,7 +1308,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true })).toBe(
-                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`),
+                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
                     );
                 });
 
@@ -1316,7 +1316,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { seconds: true })).toBe(
-                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`)
                     );
                 });
 
@@ -1324,7 +1324,7 @@ describe('Date formatter', () => {
                     const date = adapter.today();
 
                     expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true })).toBe(
-                        adapter.format(date, `${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`),
+                        adapter.format(date, `${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`)
                     );
                 });
             });
@@ -1359,7 +1359,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1371,7 +1371,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1383,7 +1383,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
                         expect(formatter.rangeShortDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -1402,7 +1402,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1414,7 +1414,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -1426,7 +1426,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}, ${YEAR}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -1438,7 +1438,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1450,7 +1450,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1462,7 +1462,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1474,7 +1474,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, endDate, { seconds: true })).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1484,15 +1484,15 @@ describe('Date formatter', () => {
 
                         const startString = adapter.format(
                             startDate,
-                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
                         );
                         const endString = adapter.format(
                             endDate,
-                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
                         );
 
                         expect(formatter.rangeShortDateTime(startDate, endDate, { milliseconds: true })).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -1521,7 +1521,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1533,7 +1533,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1545,7 +1545,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
                         expect(formatter.rangeLongDate(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -1564,7 +1564,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM} ${startString} to${NBSP}${endString}`,
+                            `${FROM} ${startString} to${NBSP}${endString}`
                         );
                     });
 
@@ -1596,7 +1596,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM} ${startString} to${NBSP}${endString}`,
+                            `${FROM} ${startString} to${NBSP}${endString}`
                         );
                     });
 
@@ -1608,7 +1608,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM} ${startString} to${NBSP}${endString}`,
+                            `${FROM} ${startString} to${NBSP}${endString}`
                         );
                     });
 
@@ -1620,7 +1620,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
-                            `${FROM} ${startString} to${NBSP}${endString}`,
+                            `${FROM} ${startString} to${NBSP}${endString}`
                         );
                     });
                 });
@@ -1639,7 +1639,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1651,7 +1651,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -1663,7 +1663,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}, ${YEAR}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${DASH}${endString}`,
+                            `${startString}${DASH}${endString}`
                         );
                     });
 
@@ -1675,7 +1675,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, endDateFormat);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1687,7 +1687,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
 
@@ -1699,7 +1699,7 @@ describe('Date formatter', () => {
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
                         expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
-                            `${startString}${LONG_DASH}${endString}`,
+                            `${startString}${LONG_DASH}${endString}`
                         );
                     });
                 });
@@ -1790,7 +1790,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, null, { seconds: true })).toBe(
-                            `${FROM}${NBSP}${startString}`,
+                            `${FROM}${NBSP}${startString}`
                         );
                     });
 
@@ -1799,7 +1799,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}${MILLISECONDS}`);
 
                         expect(formatter.rangeShortDateTime(startDate, null, { milliseconds: true })).toBe(
-                            `${FROM}${NBSP}${startString}`,
+                            `${FROM}${NBSP}${startString}`
                         );
                     });
                 });
@@ -1929,7 +1929,7 @@ describe('Date formatter', () => {
                 const startDate = endDate.minus({ minute, second, millisecond });
 
                 expect(formatter.durationShortest(startDate, endDate, false)).toBe(
-                    `0:${String(minute).padStart(2, '0')}`,
+                    `0:${String(minute).padStart(2, '0')}`
                 );
             });
 
@@ -1944,7 +1944,7 @@ describe('Date formatter', () => {
                 const startDate = endDate.minus({ minute, second, millisecond });
 
                 expect(formatter.durationShortest(startDate, endDate, true, true)).toBe(
-                    `${minute}:${second},${millisecond}`,
+                    `${minute}:${second},${millisecond}`
                 );
             });
 
@@ -1953,7 +1953,7 @@ describe('Date formatter', () => {
                 const startDate = endDate.minus({ hour, minute, second, millisecond });
 
                 expect(formatter.durationShortest(startDate, endDate)).toBe(
-                    `${hour}:${String(minute).padStart(2, '0')}:${second}`,
+                    `${hour}:${String(minute).padStart(2, '0')}:${second}`
                 );
             });
         });
@@ -1964,7 +1964,7 @@ describe('Date formatter', () => {
                     const startDate = endDate.minus({ [unit]: value });
 
                     expect(formatter[formatterName](startDate, endDate, [unit])).toBe(
-                        `${value} ${plurals[unit][pr.select(value)]}`,
+                        `${value} ${plurals[unit][pr.select(value)]}`
                     );
                 });
             };
@@ -2004,7 +2004,7 @@ describe('Date formatter', () => {
                 const secondValue = `${minute} ${plurals.minute[pr.select(minute)]}`;
 
                 expect(formatter[formatterName](startDate, endDate, ['hours', 'minutes'])).toBe(
-                    `${firstValue}${separator}${secondValue}`,
+                    `${firstValue}${separator}${secondValue}`
                 );
             });
 
@@ -2023,7 +2023,7 @@ describe('Date formatter', () => {
                 const secondValue = `${hour} ${plurals.hour[pr.select(hour)]}`;
 
                 expect(formatter[formatterName](startDate, endDate, ['days', 'hours'])).toBe(
-                    `${firstValue}${separator}${secondValue}`,
+                    `${firstValue}${separator}${secondValue}`
                 );
             });
 
@@ -2042,7 +2042,7 @@ describe('Date formatter', () => {
                 const secondValue = `${day} ${plurals.day[pr.select(day)]}`;
 
                 expect(formatter[formatterName](startDate, endDate, ['weeks', 'days'])).toBe(
-                    `${firstValue}${separator}${secondValue}`,
+                    `${firstValue}${separator}${secondValue}`
                 );
             });
 
@@ -2068,7 +2068,7 @@ describe('Date formatter', () => {
                     const expectedValueFormatted = new Intl.NumberFormat(locale).format(expectedValue);
 
                     expect(formatter[formatterName](startDate, endDate, [unit], true)).toBe(
-                        `${expectedValueFormatted} ${intPart === 1 ? plurals[unit].few || plurals[unit].other : plurals[unit][pr.select(intPart)]}`,
+                        `${expectedValueFormatted} ${intPart === 1 ? plurals[unit].few || plurals[unit].other : plurals[unit][pr.select(intPart)]}`
                     );
                 });
             };
@@ -2098,7 +2098,7 @@ describe('Date formatter', () => {
                     day: { one: 'день', few: 'дня', many: 'дней' },
                     hour: { one: 'час', few: 'часа', many: 'часов' },
                     minute: { one: 'минута', few: 'минуты', many: 'минут' },
-                    second: { one: 'секунда', few: 'секунды', many: 'секунд' },
+                    second: { one: 'секунда', few: 'секунды', many: 'секунд' }
                 };
 
                 beforeEach(() => {
@@ -2128,7 +2128,7 @@ describe('Date formatter', () => {
                     day: { one: 'day', other: 'days' },
                     hour: { one: 'hour', other: 'hours' },
                     minute: { one: 'minute', other: 'minutes' },
-                    second: { one: 'second', other: 'seconds' },
+                    second: { one: 'second', other: 'seconds' }
                 };
 
                 beforeEach(() => {
@@ -2160,7 +2160,7 @@ describe('Date formatter', () => {
                     day: { one: 'д', few: 'д', many: 'д' },
                     hour: { one: 'ч', few: 'ч', many: 'ч' },
                     minute: { one: 'мин', few: 'мин', many: 'мин' },
-                    second: { one: 'с', few: 'с', many: 'с' },
+                    second: { one: 'с', few: 'с', many: 'с' }
                 };
 
                 beforeEach(() => {
@@ -2182,7 +2182,7 @@ describe('Date formatter', () => {
                     const startDate = endDate.minus({ second, millisecond });
 
                     expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds'])).toBe(
-                        `${second},${millisecond} ${plurals.second[pr.select(second)]}`,
+                        `${second},${millisecond} ${plurals.second[pr.select(second)]}`
                     );
                 });
 
@@ -2198,7 +2198,7 @@ describe('Date formatter', () => {
                     day: { one: 'd', other: 'd' },
                     hour: { one: 'h', other: 'h' },
                     minute: { one: 'min', other: 'min' },
-                    second: { one: 's', other: 's' },
+                    second: { one: 's', other: 's' }
                 };
 
                 beforeEach(() => {
@@ -2222,7 +2222,7 @@ describe('Date formatter', () => {
                     const millisecondsViewValue = millisecond < 100 ? `0${millisecond.toString()}` : millisecond;
 
                     expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds'])).toBe(
-                        `${second}.${millisecondsViewValue} ${plurals.second[pr.select(second)]}`,
+                        `${second}.${millisecondsViewValue} ${plurals.second[pr.select(second)]}`
                     );
                 });
 
@@ -2239,7 +2239,7 @@ describe('Date formatter (imports and providing)', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [KbqFormattersModule, KbqLuxonDateModule],
+                imports: [KbqFormattersModule, KbqLuxonDateModule]
             }).compileComponents();
         }));
 
@@ -2264,8 +2264,7 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-                ],
+                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
             }).compileComponents();
         }));
 
@@ -2292,9 +2291,9 @@ describe('Date formatter (imports and providing)', () => {
                 providers: [
                     {
                         provide: KBQ_LOCALE_SERVICE,
-                        useFactory: () => new KbqLocaleService('pt-BR', KBQ_DEFAULT_LOCALE_DATA_FACTORY()),
-                    },
-                ],
+                        useFactory: () => new KbqLocaleService('pt-BR', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
+                    }
+                ]
             }).compileComponents();
         }));
 
@@ -2323,9 +2322,9 @@ describe('Date formatter (imports and providing)', () => {
                     {
                         provide: KBQ_LOCALE_SERVICE,
                         useFactory: (locale: string) => new KbqLocaleService(locale, KBQ_DEFAULT_LOCALE_DATA_FACTORY()),
-                        deps: [KBQ_LOCALE_ID],
-                    },
-                ],
+                        deps: [KBQ_LOCALE_ID]
+                    }
+                ]
             }).compileComponents();
         }));
 

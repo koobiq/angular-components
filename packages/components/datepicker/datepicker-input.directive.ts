@@ -10,7 +10,7 @@ import {
     OnDestroy,
     Optional,
     Output,
-    Renderer2,
+    Renderer2
 } from '@angular/core';
 import {
     AbstractControl,
@@ -20,7 +20,7 @@ import {
     ValidationErrors,
     Validator,
     ValidatorFn,
-    Validators,
+    Validators
 } from '@angular/forms';
 import {
     BACKSPACE,
@@ -39,7 +39,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter,
@@ -48,7 +48,7 @@ import {
     KbqDateFormats,
     KbqLocaleService,
     validationTooltipHideDelay,
-    validationTooltipShowDelay,
+    validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
@@ -60,7 +60,7 @@ import { KbqDatepicker } from './datepicker.component';
 enum DateParts {
     year = 'y',
     month = 'm',
-    day = 'd',
+    day = 'd'
 }
 
 export const MAX_YEAR = 9999;
@@ -75,7 +75,7 @@ class DateDigit {
     constructor(
         public value: DateParts,
         public start: number,
-        public length: number,
+        public length: number
     ) {
         if (value === DateParts.day) {
             this.parse = this.parseDay;
@@ -165,14 +165,14 @@ class DateDigit {
 export const KBQ_DATEPICKER_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqDatepickerInput),
-    multi: true,
+    multi: true
 };
 
 /** @docs-private */
 export const KBQ_DATEPICKER_VALIDATORS: any = {
     provide: NG_VALIDATORS,
     useExisting: forwardRef(() => KbqDatepickerInput),
-    multi: true,
+    multi: true
 };
 
 /**
@@ -188,7 +188,7 @@ export class KbqDatepickerInputEvent<D> {
         /** Reference to the datepicker input component that emitted the event. */
         public target: KbqDatepickerInput<D>,
         /** Reference to the native input element associated with the datepicker input. */
-        public targetElement: HTMLElement,
+        public targetElement: HTMLElement
     ) {
         this.value = this.target.value;
     }
@@ -213,8 +213,7 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
-        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput },
-    ],
+        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
     host: {
         class: 'kbq-input kbq-datepicker',
         '[attr.placeholder]': 'placeholder',
@@ -230,8 +229,8 @@ interface DateTimeObject {
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
 
-        '(keydown)': 'onKeyDown($event)',
-    },
+        '(keydown)': 'onKeyDown($event)'
+    }
 })
 export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
     readonly stateChanges: Subject<void> = new Subject<void>();
@@ -488,13 +487,13 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         private readonly renderer: Renderer2,
         @Optional() readonly adapter: DateAdapter<D>,
         @Optional() @Inject(KBQ_DATE_FORMATS) private readonly dateFormats: KbqDateFormats,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.validator = Validators.compose([
             this.parseValidator,
             this.minValidator,
             this.maxValidator,
-            this.filterValidator,
+            this.filterValidator
         ]);
 
         if (!this.adapter) {
@@ -668,7 +667,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         const [digitWithYear, viewDigitWithYear] = [this.firstDigit, this.secondDigit, this.thirdDigit].reduce(
             (acc: any, digit, index) => (digit!.value === DateParts.year ? [digit, viewDigits[index]] : acc),
-            [],
+            []
         );
 
         // tslint:disable-next-line:no-magic-numbers
@@ -919,8 +918,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                     (digit) =>
                         (digit!.maxDays = this.getLastDayFor(
                             digitViewValue.year as number,
-                            (digitViewValue.month as number) - 1,
-                        )),
+                            (digitViewValue.month as number) - 1
+                        ))
                 );
             }
 
@@ -944,7 +943,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             hours: this.adapter.getHours(defaultValue),
             minutes: this.adapter.getMinutes(defaultValue),
             seconds: this.adapter.getSeconds(defaultValue),
-            milliseconds: this.adapter.getMilliseconds(defaultValue),
+            milliseconds: this.adapter.getMilliseconds(defaultValue)
         };
     }
 
@@ -957,7 +956,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getDateEditMetrics(
-        cursorPosition: number,
+        cursorPosition: number
     ): [modifiedTimePart: DateParts, cursorStartPosition: number, cursorEndPosition: number] {
         for (const digit of [this.firstDigit, this.secondDigit, this.thirdDigit]) {
             if (cursorPosition >= digit!.start && cursorPosition <= digit!.end) {
@@ -1238,7 +1237,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
                 return { prev: value, length, start };
             },
-            { length: 0, start: 0 },
+            { length: 0, start: 0 }
         );
 
         if (!this.firstDigit || !this.secondDigit || !this.thirdDigit) {
@@ -1254,7 +1253,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             this.adapter.getHours(this.value as D),
             this.adapter.getMinutes(this.value as D),
             this.adapter.getSeconds(this.value as D),
-            this.adapter.getMilliseconds(this.value as D),
+            this.adapter.getMilliseconds(this.value as D)
         );
     }
 
@@ -1270,7 +1269,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             value.hours,
             value.minutes,
             value.seconds,
-            value.milliseconds,
+            value.milliseconds
         );
     }
 

@@ -7,6 +7,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'tabs-empty-example',
     templateUrl: 'tabs-empty-example.html',
     styleUrls: ['tabs-empty-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsEmptyExample {}

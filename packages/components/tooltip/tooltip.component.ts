@@ -19,7 +19,7 @@ import {
     TemplateRef,
     Type,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     KbqComponentColors,
@@ -27,7 +27,7 @@ import {
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
-    PopUpTriggers,
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { kbqTooltipAnimations } from './tooltip.animations';
@@ -35,7 +35,7 @@ import { kbqTooltipAnimations } from './tooltip.animations';
 export enum TooltipModifier {
     Default = 'default',
     Warning = 'warning',
-    Extended = 'extended',
+    Extended = 'extended'
 }
 
 export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-open-time');
@@ -43,7 +43,7 @@ export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<() => ScrollStrategy>('k
 /** @docs-private */
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
     provide: KBQ_TOOLTIP_OPEN_TIME,
-    useValue: { value: 0 },
+    useValue: { value: 0 }
 };
 
 export const MIN_TIME_FOR_DELAY = 2000;
@@ -55,14 +55,14 @@ export const MIN_TIME_FOR_DELAY = 2000;
     animations: [kbqTooltipAnimations.tooltipState],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
+    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER]
 })
 export class KbqTooltipComponent extends KbqPopUp {
     prefix = 'kbq-tooltip';
 
     constructor(
         changeDetectorRef: ChangeDetectorRef,
-        @Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime,
+        @Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime
     ) {
         super(changeDetectorRef);
     }
@@ -80,7 +80,7 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     updateClassMap(placement: string, customClass: string, { modifier }) {
         const classMap = {
-            [`${this.prefix}_${modifier}`]: true,
+            [`${this.prefix}_${modifier}`]: true
         };
 
         super.updateClassMap(placement, customClass, classMap);
@@ -98,7 +98,7 @@ export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollS
 export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_TOOLTIP_SCROLL_STRATEGY,
     deps: [Overlay],
-    useFactory: kbqTooltipScrollStrategyFactory,
+    useFactory: kbqTooltipScrollStrategyFactory
 };
 
 @Directive({
@@ -108,8 +108,8 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()',
-    },
+        '(touchend)': 'handleTouchend()'
+    }
 })
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
     @Input('kbqVisible')
@@ -217,7 +217,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected originSelector = '.kbq-tooltip';
 
     protected overlayConfig: OverlayConfig = {
-        panelClass: 'kbq-tooltip-panel',
+        panelClass: 'kbq-tooltip-panel'
     };
 
     protected modifier: TooltipModifier = TooltipModifier.Default;
@@ -230,7 +230,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        protected focusMonitor: FocusMonitor,
+        protected focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
 
@@ -263,7 +263,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     closingActions() {
         return merge(
             this.hasClickInTrigger ? this.overlayRef!.outsidePointerEvents() : EMPTY,
-            this.overlayRef!.detachments(),
+            this.overlayRef!.detachments()
         );
     }
 
@@ -277,7 +277,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.color}`, {
-            modifier: this.modifier,
+            modifier: this.modifier
         });
         this.instance.markForCheck();
     }
@@ -290,8 +290,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()',
-    },
+        '(touchend)': 'handleTouchend()'
+    }
 })
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     @Input('kbqWarningTooltip')
@@ -315,7 +315,7 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
@@ -328,8 +328,8 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()',
-    },
+        '(touchend)': 'handleTouchend()'
+    }
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     @Input('kbqExtendedTooltip')
@@ -366,7 +366,7 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }

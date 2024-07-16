@@ -8,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'icon-item-color-example',
     templateUrl: 'icon-item-color-example.html',
     styleUrls: ['icon-item-color-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class IconItemColorExample {
     colors = KbqComponentColors;

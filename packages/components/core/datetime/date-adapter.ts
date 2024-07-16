@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 /** InjectionToken for datepicker that can be used to override default locale code. */
 export const KBQ_DATE_LOCALE = new InjectionToken<string>('KBQ_DATE_LOCALE', {
     providedIn: 'root',
-    factory: KBQ_DATE_LOCALE_FACTORY,
+    factory: KBQ_DATE_LOCALE_FACTORY
 });
 
 /** @docs-private */

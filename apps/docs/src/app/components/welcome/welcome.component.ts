@@ -10,9 +10,9 @@ import { DocStates } from '../doс-states';
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
     host: {
-        class: 'docs-welcome kbq-scrollbar',
+        class: 'docs-welcome kbq-scrollbar'
     },
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class WelcomeComponent implements OnInit, OnDestroy {
     readonly destroyed = new Subject<void>();
@@ -23,13 +23,13 @@ export class WelcomeComponent implements OnInit, OnDestroy {
         private elementRef: ElementRef,
         private docStates: DocStates,
         private docItems: DocumentationItems,
-        private themeService: ThemeService,
+        private themeService: ThemeService
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
             .pipe(
                 takeUntil(this.destroyed),
                 // tslint:disable-next-line:no-magic-numbers
-                debounceTime(10),
+                debounceTime(10)
             )
             .subscribe(this.checkOverflow);
     }
@@ -37,7 +37,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.docCategories = this.docItems.getCategories().filter((category) => category.isPreviewed);
         this.currentTheme$ = this.themeService.current.pipe(
-            map((currentTheme) => currentTheme.className.replace('theme-', '')),
+            map((currentTheme) => currentTheme.className.replace('theme-', ''))
         );
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }

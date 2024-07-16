@@ -19,9 +19,9 @@ import { DocExampleViewer } from './doc-example-viewer';
         KbqToolTipModule,
         StackblitzButtonModule,
         CopyButtonModule,
-        PortalModule,
+        PortalModule
     ],
     declarations: [DocExampleViewer],
-    exports: [DocExampleViewer],
+    exports: [DocExampleViewer]
 })
 export class DocExampleViewerModule {}

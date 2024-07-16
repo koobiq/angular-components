@@ -8,7 +8,7 @@ export enum KbqRiskLevelColors {
 
     Success = 'success',
     Warning = 'warning',
-    Error = 'error',
+    Error = 'error'
 }
 
 @Component({
@@ -21,8 +21,8 @@ export enum KbqRiskLevelColors {
         class: 'kbq-risk-level',
         '[class.kbq-risk-level_filled]': '!outline',
         '[class.kbq-risk-level_outline]': 'outline',
-        '[class]': 'riskLevelColor',
-    },
+        '[class]': 'riskLevelColor'
+    }
 })
 export class KbqRiskLevel {
     @Input() outline: boolean = false;

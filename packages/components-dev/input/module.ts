@@ -7,7 +7,7 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ import {
     KbqFormFieldModule,
     KbqPasswordHint,
     PasswordRules,
-    hasPasswordStrengthError,
+    hasPasswordStrengthError
 } from '../../components/form-field';
 import { KbqIconModule } from '../../components/icon';
 import { KbqInputModule } from '../../components/input/';
@@ -30,7 +30,7 @@ import { KbqInputModule } from '../../components/input/';
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class InputDemoComponent implements AfterViewInit {
     passwordRules = PasswordRules;
@@ -81,8 +81,8 @@ export class InputDemoComponent implements AfterViewInit {
         KbqButtonModule,
         KbqInputModule,
         KbqToolTipModule,
-        KbqIconModule,
+        KbqIconModule
     ],
-    bootstrap: [InputDemoComponent],
+    bootstrap: [InputDemoComponent]
 })
 export class DemoModule {}

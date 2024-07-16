@@ -9,5 +9,5 @@ export interface KbqValidationOptions {
 }
 
 export const KBQ_VALIDATION = new InjectionToken<KbqValidationOptions>('KbqUseValidation', {
-    factory: () => ({ useValidation: true }),
+    factory: () => ({ useValidation: true })
 });

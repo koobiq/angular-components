@@ -25,7 +25,7 @@ import {
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ENTER, ESCAPE } from '@koobiq/cdk/keycodes';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -48,8 +48,8 @@ type AnimationState = 'enter' | 'leave' | null;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        '(keydown)': 'onKeyDown($event)',
-    },
+        '(keydown)': 'onKeyDown($event)'
+    }
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
@@ -210,7 +210,7 @@ export class KbqModalComponent<T = any, R = any>
         private modalControl: KbqModalControlService,
         private changeDetector: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
-        @Inject(DOCUMENT) private document: any,
+        @Inject(DOCUMENT) private document: any
     ) {
         super();
     }
@@ -308,7 +308,7 @@ export class KbqModalComponent<T = any, R = any>
             if (this.kbqRestoreFocus && this.focusedElementBeforeOpen) {
                 this.focusMonitor.focusVia(
                     this.focusedElementBeforeOpen as HTMLElement,
-                    this.previouslyFocusedElementOrigin,
+                    this.previouslyFocusedElementOrigin
                 );
 
                 this.focusedElementBeforeOpen = null;
@@ -508,12 +508,12 @@ export class KbqModalComponent<T = any, R = any>
         if (state) {
             this.maskAnimationClassMap = {
                 [`fade-${state}`]: true,
-                [`fade-${state}-active`]: true,
+                [`fade-${state}-active`]: true
             };
 
             this.modalAnimationClassMap = {
                 [`zoom-${state}`]: true,
-                [`zoom-${state}-active`]: true,
+                [`zoom-${state}-active`]: true
             };
         } else {
             // @ts-ignore
@@ -555,9 +555,9 @@ export class KbqModalComponent<T = any, R = any>
                     autoLoading: true,
                     show: true,
                     loading: false,
-                    disabled: false,
+                    disabled: false
                 },
-                ...button,
+                ...button
             };
         });
     }
@@ -571,7 +571,7 @@ export class KbqModalComponent<T = any, R = any>
         const factory = this.cfr.resolveComponentFactory(component);
         const childInjector = Injector.create({
             providers: [{ provide: KbqModalRef, useValue: this }],
-            parent: this.viewContainer.injector,
+            parent: this.viewContainer.injector
         });
 
         this.contentComponentRef = factory.create(childInjector);

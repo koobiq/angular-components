@@ -40,7 +40,7 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
 @Component({
     selector: 'file-upload-cva-overview-example',
     templateUrl: 'file-upload-cva-overview-example.html',
-    styleUrls: ['file-upload-cva-overview-example.css'],
+    styleUrls: ['file-upload-cva-overview-example.css']
 })
 export class FileUploadCvaOverviewExample {
     control = new FormControl<KbqFileItem | null>(null, maxFileExceededFn);

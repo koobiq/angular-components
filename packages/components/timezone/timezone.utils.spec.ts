@@ -8,7 +8,7 @@ const firstTimezone: KbqTimezoneZone = {
     city: 'city3',
     countryCode: 'ru',
     countryName: 'Russia',
-    cities: 'city1, city2',
+    cities: 'city1, city2'
 };
 const secondTimezone: KbqTimezoneZone = {
     id: 'Europe/city4',
@@ -16,7 +16,7 @@ const secondTimezone: KbqTimezoneZone = {
     city: 'city4',
     countryCode: 'ru',
     countryName: 'Russia',
-    cities: 'city4, city5',
+    cities: 'city4, city5'
 };
 const thirdTimezone: KbqTimezoneZone = {
     id: 'Europe/city8',
@@ -24,7 +24,7 @@ const thirdTimezone: KbqTimezoneZone = {
     city: 'city8',
     countryCode: 'ru',
     countryName: 'Russia2',
-    cities: 'city9, city10',
+    cities: 'city9, city10'
 };
 
 describe('KbqTimezone utils', () => {
@@ -65,9 +65,9 @@ describe('KbqTimezone utils', () => {
                     countryName: 'Other',
                     zones: [
                         { ...secondTimezone, countryName: 'Other' },
-                        { ...firstTimezone, countryName: 'Other' },
-                    ],
-                },
+                        { ...firstTimezone, countryName: 'Other' }
+                    ]
+                }
             ];
 
             expect(getZonesGroupedByCountry(source)).toEqual(result);

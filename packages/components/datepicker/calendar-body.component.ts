@@ -7,7 +7,7 @@ import {
     OnChanges,
     Output,
     SimpleChanges,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 
 /**
@@ -24,7 +24,7 @@ export class KbqCalendarCell {
         public value: number,
         public displayValue: string,
         public enabled: boolean,
-        public cssClasses?: KbqCalendarCellCssClasses,
+        public cssClasses?: KbqCalendarCellCssClasses
     ) {}
 }
 
@@ -38,10 +38,10 @@ export class KbqCalendarCell {
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
     host: {
-        class: 'kbq-calendar__body',
+        class: 'kbq-calendar__body'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */

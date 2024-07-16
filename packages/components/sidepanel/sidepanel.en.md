@@ -8,7 +8,7 @@ The `open` method will return an instance of `KbqSidepanelRef`:
 
 ```ts
 const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    hasBackdrop: false,
+    hasBackdrop: false
 });
 ```
 
@@ -46,7 +46,7 @@ in configuration:
 
 ```ts
 const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    data: { items: ['One', 'Two', 'Three'] },
+    data: { items: ['One', 'Two', 'Three'] }
 });
 ```
 
@@ -57,7 +57,7 @@ import { Component, Inject } from '@angular/core';
 import { KBQ_SIDEPANEL_DATA } from '@koobiq/components';
 
 @Component({
-    template: 'passed in {{ data.items }}',
+    template: 'passed in {{ data.items }}'
 })
 export class ExampleSidepanelComponent {
     constructor(@Inject(KBQ_SIDEPANEL_DATA) public data: any) {}
@@ -74,12 +74,12 @@ for your sidepanel content component.
 @NgModule({
     imports: [
         // ...
-        KbqSidepanelModule,
+        KbqSidepanelModule
     ],
 
     declarations: [AppComponent, ExampleSidepanelComponent],
 
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
 ```

@@ -29,7 +29,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         /** compareValues will be used to comparing values. */
         public compareViewValues: (firstViewValue, secondViewValue) => boolean = defaultCompareViewValues,
         /** isDisabled will be used to determine if the node is disabled. */
-        public isDisabled: (dataNode: T) => boolean = () => false,
+        public isDisabled: (dataNode: T) => boolean = () => false
     ) {
         super();
 

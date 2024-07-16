@@ -15,7 +15,7 @@ import { KbqDatepickerToggle, KbqDatepickerToggleIcon } from './datepicker-toggl
 import {
     KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqDatepicker,
-    KbqDatepickerContent,
+    KbqDatepickerContent
 } from './datepicker.component';
 import { KbqMonthView } from './month-view.component';
 
@@ -28,7 +28,7 @@ import { KbqMonthView } from './month-view.component';
         PortalModule,
         KbqButtonModule,
         KbqSelectModule,
-        KbqIconModule,
+        KbqIconModule
     ],
     exports: [
         KbqCalendar,
@@ -39,7 +39,7 @@ import { KbqMonthView } from './month-view.component';
         KbqDatepickerToggle,
         KbqDatepickerToggleIcon,
         KbqMonthView,
-        KbqCalendarHeader,
+        KbqCalendarHeader
     ],
     declarations: [
         KbqCalendar,
@@ -50,11 +50,11 @@ import { KbqMonthView } from './month-view.component';
         KbqDatepickerToggle,
         KbqDatepickerToggleIcon,
         KbqMonthView,
-        KbqCalendarHeader,
+        KbqCalendarHeader
     ],
     providers: [
         KbqDatepickerIntl,
-        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-    ],
+        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
+    ]
 })
 export class KbqDatepickerModule {}

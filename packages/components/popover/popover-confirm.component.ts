@@ -14,7 +14,7 @@ import {
     Optional,
     Output,
     ViewContainerRef,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
     styleUrls: ['./popover.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqPopoverAnimations.popoverState],
+    animations: [kbqPopoverAnimations.popoverState]
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     onConfirm = new Subject<void>();
@@ -50,8 +50,8 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()',
-    },
+        '(touchend)': 'handleTouchend()'
+    }
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     @Output() confirm: EventEmitter<void> = new EventEmitter<void>();
@@ -91,7 +91,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
         @Inject(KBQ_POPOVER_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
         @Optional() @Inject(KBQ_POPOVER_CONFIRM_TEXT) confirmText: string,
-        @Optional() @Inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT) confirmButtonText: string,
+        @Optional() @Inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT) confirmButtonText: string
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
 

@@ -19,7 +19,7 @@ export { DropdownNavigationWrapExample, DropdownNestedExample, DropdownOverviewE
 const EXAMPLES = [
     DropdownNestedExample,
     DropdownOverviewExample,
-    DropdownNavigationWrapExample,
+    DropdownNavigationWrapExample
 ];
 
 @NgModule({
@@ -34,9 +34,9 @@ const EXAMPLES = [
         KbqFormFieldModule,
         KbqInputModule,
         KbqTitleModule,
-        KbqDividerModule,
+        KbqDividerModule
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class DropdownExamplesModule {}

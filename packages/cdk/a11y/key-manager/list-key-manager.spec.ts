@@ -49,7 +49,7 @@ describe('Key managers', () => {
             tab: createKeyboardEvent('keydown', TAB),
             home: createKeyboardEvent('keydown', HOME),
             end: createKeyboardEvent('keydown', END),
-            unsupported: createKeyboardEvent('keydown', 192), // corresponds to the tilde character (~)
+            unsupported: createKeyboardEvent('keydown', 192) // corresponds to the tilde character (~)
         };
     });
 
@@ -67,8 +67,7 @@ describe('Key managers', () => {
             itemList.reset([
                 new FakeFocusable('one'),
                 new FakeFocusable('two'),
-                new FakeFocusable('three'),
-            ]);
+                new FakeFocusable('three')]);
             keyManager = new ListKeyManager<FakeFocusable>(itemList);
 
             // first item is already focused
@@ -82,7 +81,7 @@ describe('Key managers', () => {
             expect(keyManager.activeItem!.getLabel()).toBe('one');
             itemList.reset([
                 new FakeFocusable('zero'),
-                ...itemList.toArray(),
+                ...itemList.toArray()
             ]);
             itemList.notifyOnChanges();
 
@@ -138,7 +137,7 @@ describe('Key managers', () => {
                 keyManager.setActiveItem(0);
                 itemList.reset([
                     new FakeFocusable('zero'),
-                    ...itemList.toArray(),
+                    ...itemList.toArray()
                 ]);
                 keyManager.setActiveItem(0);
 
@@ -436,7 +435,7 @@ describe('Key managers', () => {
             /** Runs the test that asserts that we handle modifier keys correctly. */
             function runModifierKeyTest(
                 context: { nextKeyEvent: KeyboardEvent; prevKeyEvent: KeyboardEvent },
-                modifier: ListKeyManagerModifierKey,
+                modifier: ListKeyManagerModifierKey
             ) {
                 const initialActiveIndex = keyManager.activeItemIndex;
                 const spy = jasmine.createSpy('change spy');

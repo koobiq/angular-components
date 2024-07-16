@@ -15,7 +15,7 @@ import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.co
         KbqTagInput,
         KbqTagTrailingIcon,
         KbqTagAvatar,
-        KbqTagRemove,
+        KbqTagRemove
     ],
     declarations: [
         KbqTagList,
@@ -23,14 +23,14 @@ import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.co
         KbqTagInput,
         KbqTagTrailingIcon,
         KbqTagAvatar,
-        KbqTagRemove,
+        KbqTagRemove
     ],
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             // tslint:disable-next-line: no-object-literal-type-assertion
-            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions,
-        },
-    ],
+            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
+        }
+    ]
 })
 export class KbqTagsModule {}

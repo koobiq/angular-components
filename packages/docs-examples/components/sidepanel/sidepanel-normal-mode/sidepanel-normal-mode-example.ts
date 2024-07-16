@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
     selector: 'sidepanel-normal-mode-example',
     templateUrl: 'sidepanel-normal-mode-example.html',
     styleUrls: ['sidepanel-normal-mode-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class SidepanelNormalModeExample {
     position = KbqSidepanelPosition.Right;
@@ -27,7 +27,7 @@ export class SidepanelNormalModeExample {
         if (!this.isOpened) {
             const sidepanel = this.sidepanelService.open(this.template, {
                 position: this.position,
-                hasBackdrop: false,
+                hasBackdrop: false
             });
 
             sidepanel

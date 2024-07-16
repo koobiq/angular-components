@@ -8,17 +8,17 @@ import { KbqBadge, KbqBadgeCaption, KbqBadgeCssStyler } from './badge.component'
     imports: [
         CommonModule,
         A11yModule,
-        PlatformModule,
+        PlatformModule
     ],
     declarations: [
         KbqBadge,
         KbqBadgeCaption,
-        KbqBadgeCssStyler,
+        KbqBadgeCssStyler
     ],
     exports: [
         KbqBadge,
         KbqBadgeCaption,
-        KbqBadgeCssStyler,
-    ],
+        KbqBadgeCssStyler
+    ]
 })
 export class KbqBadgeModule {}

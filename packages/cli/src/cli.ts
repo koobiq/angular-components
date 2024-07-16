@@ -17,7 +17,7 @@ enum CommandTypes {
     PublishCi = 'publish-ci',
     PublishDist = 'publish-dist',
     PublishCIGitlab = 'publish-ci-gitlab',
-    PublishCIGithub = 'publish-ci-github',
+    PublishCIGithub = 'publish-ci-github'
 }
 
 export const runCliCommands = () => {

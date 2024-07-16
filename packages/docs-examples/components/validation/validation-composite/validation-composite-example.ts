@@ -43,7 +43,7 @@ const IP_PATTERN =
     selector: 'validation-composite-example',
     templateUrl: 'validation-composite-example.html',
     styleUrls: ['validation-composite-example.css'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class ValidationCompositeExample {
     popUpPlacements = PopUpPlacements;
@@ -58,9 +58,9 @@ export class ValidationCompositeExample {
         this.compositeFormGroup = new FormGroup(
             {
                 start: new FormControl('', [fieldValidator(IP_PATTERN)]),
-                end: new FormControl('', [fieldValidator(IP_PATTERN)]),
+                end: new FormControl('', [fieldValidator(IP_PATTERN)])
             },
-            { updateOn: 'blur', validators: [groupValidator()] },
+            { updateOn: 'blur', validators: [groupValidator()] }
         );
     }
 

@@ -17,9 +17,9 @@ import { KoobiqDocsExample } from './koobiq-docs-example';
         HttpClientModule,
         DemoMosaicModule,
         ReactiveFormsModule,
-        ScrollingModule,
+        ScrollingModule
     ],
     declarations: [KoobiqDocsExample],
-    bootstrap: [KoobiqDocsExample],
+    bootstrap: [KoobiqDocsExample]
 })
 export class AppModule {}

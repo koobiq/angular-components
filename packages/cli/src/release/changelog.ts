@@ -24,7 +24,7 @@ const { prompt } = inquirer;
  */
 const enum CommitNote {
     Deprecation = 'DEPRECATED',
-    BreakingChange = 'BREAKING CHANGE',
+    BreakingChange = 'BREAKING CHANGE'
 }
 
 /** Interface that describes a package in the changelog. */
@@ -50,15 +50,15 @@ export async function promptAndGenerateChangelog(changelogPath: string, config: 
 export async function prependChangelogFromLatestTag(
     changelogPath: string,
     releaseName: string,
-    config: IReleaseTaskConfig,
+    config: IReleaseTaskConfig
 ) {
     const angularPresetWriterOptions = await writerOpts;
     const outputStream: Readable = conventionalChangelog(
         {
             preset: 'angular',
             pkg: {
-                path: join(config.projectDir, 'package.json'),
-            },
+                path: join(config.projectDir, 'package.json')
+            }
         } /* core options */,
         { title: releaseName } /* context options */,
         undefined,
@@ -67,9 +67,9 @@ export async function prependChangelogFromLatestTag(
             // Expansion of the convention-changelog-angular preset to extract the package
             // name from the commit message.
             headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
-            headerCorrespondence: ['type', 'package', 'scope', 'subject'],
+            headerCorrespondence: ['type', 'package', 'scope', 'subject']
         },
-        createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, config) /* writer options */,
+        createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, config) /* writer options */
     );
 
     // Stream for reading the existing changelog. This is necessary because we want to
@@ -101,7 +101,7 @@ export async function promptChangelogReleaseName(): Promise<string> {
         await prompt<{ releaseName: string }>({
             type: 'input',
             name: 'releaseName',
-            message: 'What should be the name of the release?',
+            message: 'What should be the name of the release?'
         })
     ).releaseName;
 }
@@ -201,12 +201,12 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     title: preparePackageName(pkgName),
                     commits: packageGroup.commits.sort(commitSortFunction),
                     breakingChanges: packageGroup.breakingChanges,
-                    deprecations: packageGroup.deprecations,
+                    deprecations: packageGroup.deprecations
                 };
             });
 
             return context;
-        },
+        }
     };
 }
 

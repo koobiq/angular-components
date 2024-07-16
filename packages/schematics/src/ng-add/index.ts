@@ -17,7 +17,7 @@ const VERSIONS = {
     LUXON: '^0.0.0',
     MARKED: '^0.0.0',
     OVERLAYSCROLLBARS: '^0.0.0',
-    NGX_HIGHLIGHTJS: '^0.0.0',
+    NGX_HIGHLIGHTJS: '^0.0.0'
 };
 
 /**

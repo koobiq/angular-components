@@ -17,9 +17,9 @@ describe('CodeBlockComponent', () => {
             imports: [
                 BrowserAnimationsModule,
                 HighlightModule,
-                KbqCodeBlockModule,
+                KbqCodeBlockModule
             ],
-            declarations: [KbqCodeBlockDefault],
+            declarations: [KbqCodeBlockDefault]
         });
 
         TestBed.compileComponents();
@@ -78,7 +78,7 @@ describe('CodeBlockComponent', () => {
 });
 
 @Component({
-    template: ` <kbq-code-block [filled]="lessContrast" [codeFiles]="codeFiles" [maxHeight]="200"> </kbq-code-block>`,
+    template: ` <kbq-code-block [filled]="lessContrast" [codeFiles]="codeFiles" [maxHeight]="200"> </kbq-code-block>`
 })
 class KbqCodeBlockDefault {
     @ViewChild(KbqCodeBlockComponent) codeBlock: KbqCodeBlockComponent;
@@ -88,14 +88,14 @@ class KbqCodeBlockDefault {
             filename: 'index.html',
             content: codeHTML,
             language: 'html',
-            link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html',
+            link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
         },
         {
             filename: 'menu.xml',
             content: codeXML,
             language: 'xml',
-            link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html',
-        },
+            link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
+        }
     ];
 
     lessContrast = true;

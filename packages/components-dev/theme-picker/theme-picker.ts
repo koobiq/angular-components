@@ -8,7 +8,7 @@ import { IDocsSiteTheme, ThemeStorage } from './theme-storage/theme-storage';
     styleUrls: ['theme-picker.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    host: { 'aria-hidden': 'true' },
+    host: { 'aria-hidden': 'true' }
 })
 export class ThemePicker {
     currentTheme;
@@ -17,12 +17,12 @@ export class ThemePicker {
         {
             primary: '#673AB7',
             href: 'default-theme.scss',
-            isDefault: true,
+            isDefault: true
         },
         {
             primary: '#000000',
-            href: 'dark-theme.scss',
-        },
+            href: 'dark-theme.scss'
+        }
     ];
 
     constructor(private _themeStorage: ThemeStorage) {
@@ -51,10 +51,10 @@ export class ThemePicker {
 
 @NgModule({
     imports: [
-        CommonModule,
+        CommonModule
     ],
     exports: [ThemePicker],
     declarations: [ThemePicker],
-    providers: [ThemeStorage],
+    providers: [ThemeStorage]
 })
 export class ThemePickerModule {}

@@ -7,7 +7,7 @@ describe('KbqDl', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqDlModule],
-            declarations: [TestApp],
+            declarations: [TestApp]
         });
 
         TestBed.compileComponents();
@@ -48,6 +48,6 @@ describe('KbqDl', () => {
                 видите этот текст.</kbq-dd
             >
         </kbq-dl>
-    `,
+    `
 })
 class TestApp {}

@@ -12,8 +12,8 @@ describe('MсRadio', () => {
             imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
             declarations: [
                 DisableableRadioButton,
-                RadiosInsideRadioGroup,
-            ],
+                RadiosInsideRadioGroup
+            ]
         });
 
         TestBed.compileComponents();
@@ -151,7 +151,7 @@ describe('MсRadio', () => {
             expect(radioInstances[0].checked).toBe(false);
 
             const spies = radioInstances.map((radio, index) =>
-                jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`),
+                jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`)
             );
 
             spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
@@ -330,7 +330,7 @@ describe('MсRadio', () => {
             <kbq-radio-button [value]="'water'" [color]="color"> Squirtle </kbq-radio-button>
             <kbq-radio-button [value]="'leaf'" [color]="color"> Bulbasaur </kbq-radio-button>
         </kbq-radio-group>
-    `,
+    `
 })
 class RadiosInsideRadioGroup {
     labelPos: 'before' | 'after';
@@ -342,7 +342,7 @@ class RadiosInsideRadioGroup {
 }
 
 @Component({
-    template: `<kbq-radio-button>One</kbq-radio-button>`,
+    template: `<kbq-radio-button>One</kbq-radio-button>`
 })
 class DisableableRadioButton {
     @ViewChild(KbqRadioButton, { static: false }) kbqRadioButton;

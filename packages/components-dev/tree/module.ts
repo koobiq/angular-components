@@ -20,7 +20,7 @@ import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule,
+    KbqTreeModule
 } from '@koobiq/components/tree';
 import { Subject, debounceTime } from 'rxjs';
 import { TREE_DATA } from './data';
@@ -74,42 +74,42 @@ export const DATA_OBJECT = {
         Woods: 'jpg',
         PhotoBoothLibrary: {
             Contents: 'dir',
-            Pictures_2: 'dir',
-        },
+            Pictures_2: 'dir'
+        }
     },
     Documents: {
         angular: {
             src: {
                 core: 'ts',
-                compiler: 'ts',
-            },
+                compiler: 'ts'
+            }
         },
         material2: {
             src: {
                 button: 'ts',
                 checkbox: 'ts',
-                input: 'ts',
-            },
+                input: 'ts'
+            }
         },
-        Pictures_3: 'Pictures',
+        Pictures_3: 'Pictures'
     },
     Downloads: {
         Tutorial: 'html',
         November: 'pdf',
-        October: 'pdf',
+        October: 'pdf'
     },
     Applications: {
         Chrome: 'app',
         Calendar: 'app',
-        Webstorm: 'app',
-    },
+        Webstorm: 'app'
+    }
 };
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     // tslint:disable-next-line:naming-convention
@@ -133,13 +133,13 @@ export class DemoComponent {
 
     dataSources = {
         small: buildFileTree(DATA_OBJECT, 0),
-        big: TREE_DATA,
+        big: TREE_DATA
     };
 
     readonly TreeStates = {
         ALL: 0,
         SELECTED: 1,
-        UNSELECTED: 2,
+        UNSELECTED: 2
     };
 
     constructor() {
@@ -149,14 +149,14 @@ export class DemoComponent {
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
 
         this.treeControl2 = new FlatTreeControl<FileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
-            this.getViewValue,
+            this.getViewValue
         );
 
         this.filterByValues = new FilterByValues<FileFlatNode>(this.treeControl);
@@ -165,7 +165,7 @@ export class DemoComponent {
         this.treeControl.setFilters(
             new FilterByViewValue<FileFlatNode>(this.treeControl),
             this.filterByValues,
-            new FilterParentsForNodes<FileFlatNode>(this.treeControl),
+            new FilterParentsForNodes<FileFlatNode>(this.treeControl)
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -273,8 +273,8 @@ export class DemoComponent {
         KbqHighlightModule,
         KbqOptionModule,
         KbqTitleModule,
-        KbqButtonToggleModule,
+        KbqButtonToggleModule
     ],
-    bootstrap: [DemoComponent],
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}

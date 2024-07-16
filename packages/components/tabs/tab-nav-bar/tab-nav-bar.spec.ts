@@ -17,17 +17,17 @@ describe('KbqTabNavBar', () => {
             declarations: [
                 SimpleTabNavBarTestApp,
                 TabLinkWithNgIf,
-                TabLinkWithTabIndexBinding,
+                TabLinkWithTabIndexBinding
             ],
             providers: [
                 {
                     provide: Directionality,
                     useFactory: () => ({
                         value: dir,
-                        change: dirChange.asObservable(),
-                    }),
-                },
-            ],
+                        change: dirChange.asObservable()
+                    })
+                }
+            ]
         });
 
         TestBed.compileComponents();
@@ -146,7 +146,7 @@ describe('KbqTabNavBar', () => {
                 Tab link {{ label }}
             </a>
         </nav>
-    `,
+    `
 })
 class SimpleTabNavBarTestApp {
     @ViewChild(KbqTabNav, { static: false }) tabNavBar: KbqTabNav;
@@ -164,7 +164,7 @@ class SimpleTabNavBarTestApp {
         <nav kbq-tab-nav-bar>
             <a kbq-tab-link *ngIf="!isDestroyed">Link</a>
         </nav>
-    `,
+    `
 })
 class TabLinkWithNgIf {
     isDestroyed = false;
@@ -175,7 +175,7 @@ class TabLinkWithNgIf {
         <nav kbq-tab-nav-bar>
             <a kbq-tab-link [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
-    `,
+    `
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;

@@ -13,7 +13,7 @@ import {
     OnDestroy,
     OnInit,
     Optional,
-    Self,
+    Self
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
@@ -21,7 +21,7 @@ import {
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
-    mixinErrorState,
+    mixinErrorState
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
@@ -43,7 +43,7 @@ export class KbqTextareaBase {
         public defaultErrorStateMatcher: ErrorStateMatcher,
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl,
+        public ngControl: NgControl
     ) {}
 }
 
@@ -64,9 +64,9 @@ export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaB
         '[required]': 'required',
 
         '(blur)': 'onBlur()',
-        '(focus)': 'focusChanged(true)',
+        '(focus)': 'focusChanged(true)'
     },
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
 })
 export class KbqTextarea
     extends KbqTextareaMixinBase
@@ -186,7 +186,7 @@ export class KbqTextarea
         defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() @Self() @Inject(KBQ_TEXTAREA_VALUE_ACCESSOR) inputValueAccessor: any,
         @Optional() @Host() @Inject(KBQ_PARENT_ANIMATION_COMPONENT) private parent: any,
-        private ngZone: NgZone,
+        private ngZone: NgZone
     ) {
         super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
         // If no input value accessor was explicitly specified, use the element as the textarea value

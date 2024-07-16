@@ -9,7 +9,7 @@ import {
     OnChanges,
     OnDestroy,
     Optional,
-    Self,
+    Self
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
@@ -35,14 +35,14 @@ let nextUniqueId = 0;
 
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-        '(input)': 'onInput()',
+        '(input)': 'onInput()'
     },
     providers: [
         {
             provide: KbqFormFieldControl,
-            useExisting: KbqInputPassword,
-        },
-    ],
+            useExisting: KbqInputPassword
+        }
+    ]
 })
 export class KbqInputPassword
     extends KbqInputMixinBase
@@ -176,7 +176,7 @@ export class KbqInputPassword
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         defaultErrorStateMatcher: ErrorStateMatcher,
-        @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+        @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any
     ) {
         super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 

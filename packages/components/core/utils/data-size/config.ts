@@ -3,7 +3,7 @@ import { enUSFormattersData } from '../../locales';
 
 export enum MeasurementSystem {
     SI = 'SI',
-    IEC = 'IEC',
+    IEC = 'IEC'
 }
 
 export interface SizeUnitsConfig {

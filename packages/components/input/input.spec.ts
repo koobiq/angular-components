@@ -16,7 +16,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     TestBed.configureTestingModule({
         imports: [FormsModule, KbqInputModule, KbqFormFieldModule, ...imports],
         declarations: [component],
-        providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }, ...providers],
+        providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }, ...providers]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -28,7 +28,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <input kbqInput [(ngModel)]="value" [required]="true" minlength="4" />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqInputInvalid {
     value: string = '';
@@ -39,7 +39,7 @@ class KbqInputInvalid {
         <kbq-form-field>
             <input kbqInput kbqInputMonospace [(ngModel)]="value" />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqInputWithKbqInputMonospace {
     value: string = 'test';
@@ -50,7 +50,7 @@ class KbqInputWithKbqInputMonospace {
         <kbq-form-field>
             <input kbqInput [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled" />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqInputForBehaviors {
     value: string = 'test';
@@ -64,7 +64,7 @@ class KbqInputForBehaviors {
             <input kbqInput />
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithHint {}
 
@@ -74,7 +74,7 @@ class KbqFormFieldWithHint {}
             <i kbqPrefix kbq-icon="mc-search_16"></i>
             <input kbqInput />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithPrefix {}
 
@@ -84,7 +84,7 @@ class KbqFormFieldWithPrefix {}
             <input kbqInput />
             <i kbqSuffix kbq-icon="mc-search_16"></i>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithSuffix {}
 
@@ -94,7 +94,7 @@ class KbqFormFieldWithSuffix {}
             <input kbqInput [(ngModel)]="value" />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithCleaner {
     value: string;
@@ -105,7 +105,7 @@ class KbqFormFieldWithCleaner {
         <kbq-form-field kbqFormFieldWithoutBorders>
             <input kbqInput />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithoutBorders {}
 
@@ -114,7 +114,7 @@ class KbqFormFieldWithoutBorders {}
         <kbq-form-field>
             <input kbqInput [(ngModel)]="value" required />
         </kbq-form-field>
-    `,
+    `
 })
 class KbqFormFieldWithStandaloneNgModel {
     value: string = '';
@@ -129,7 +129,7 @@ class KbqFormFieldWithStandaloneNgModel {
 
             <button type="submit"></button>
         </form>
-    `,
+    `
 })
 class KbqFormFieldWithNgModelInForm {
     @ViewChild('form', { static: false }) form: NgForm;
@@ -146,12 +146,12 @@ class KbqFormFieldWithNgModelInForm {
                 Отправить
             </button>
         </form>
-    `,
+    `
 })
 class KbqFormWithRequiredValidation {
     reactiveForm = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
-        lastName: new FormControl('', [Validators.required]),
+        lastName: new FormControl('', [Validators.required])
     });
 
     ThemePalette = ThemePalette;

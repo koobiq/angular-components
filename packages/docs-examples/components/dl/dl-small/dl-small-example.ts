@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'dl-small-example',
     templateUrl: 'dl-small-example.html',
-    styleUrls: ['dl-small-example.css'],
+    styleUrls: ['dl-small-example.css']
 })
 export class DlSmallExample {}

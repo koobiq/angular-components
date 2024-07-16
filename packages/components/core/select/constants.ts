@@ -29,5 +29,5 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER = {
     provide: KBQ_SELECT_SCROLL_STRATEGY,
     deps: [Overlay],
-    useFactory: kbqSelectScrollStrategyProviderFactory,
+    useFactory: kbqSelectScrollStrategyProviderFactory
 };

@@ -18,7 +18,7 @@ import {
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
-    forwardRef,
+    forwardRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -56,8 +56,8 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqTabsAnimations.translateTab],
     host: {
-        class: 'kbq-tab-body',
-    },
+        class: 'kbq-tab-body'
+    }
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */
@@ -105,7 +105,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     constructor(
         private readonly elementRef: ElementRef<HTMLElement>,
         @Optional() private readonly dir: Directionality,
-        changeDetectorRef: ChangeDetectorRef,
+        changeDetectorRef: ChangeDetectorRef
     ) {
         if (this.dir && changeDetectorRef) {
             this.dirChangeSubscription = this.dir.change.subscribe((direction: Direction) => {
@@ -190,7 +190,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
  * @docs-private
  */
 @Directive({
-    selector: '[kbqTabBodyHost]',
+    selector: '[kbqTabBodyHost]'
 })
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
     /** Subscription to events for when the tab body begins centering. */
@@ -201,7 +201,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     constructor(
         componentFactoryResolver: ComponentFactoryResolver,
         viewContainerRef: ViewContainerRef,
-        @Inject(forwardRef(() => KbqTabBody)) private readonly host: KbqTabBody,
+        @Inject(forwardRef(() => KbqTabBody)) private readonly host: KbqTabBody
     ) {
         super(componentFactoryResolver, viewContainerRef);
     }
