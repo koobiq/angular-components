@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-empty-state-theme($theme) {
     $empty-state: map.get($theme, components, empty-state);
 
@@ -30,6 +29,11 @@
 }
 
 @mixin kbq-empty-state-typography($config) {
+    .kbq-empty-state-title,
+    .kbq-empty-state-text {
+        text-align: center;
+    }
+
     .kbq-empty-state_normal {
         .kbq-empty-state-title {
             @include kbq-typography-css-variables(empty-state, normal-title);
@@ -48,10 +52,5 @@
         .kbq-empty-state-text {
             @include kbq-typography-css-variables(empty-state, big-text);
         }
-    }
-
-    .kbq-empty-state-title,
-    .kbq-empty-state-text {
-        text-align: center;
     }
 }

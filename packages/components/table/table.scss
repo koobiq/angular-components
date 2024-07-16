@@ -40,6 +40,7 @@ $tokens: meta.module-variables(tokens) !default;
         padding-bottom: kbq-css-variable(size-xxs);
     }
 }
+
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & th,

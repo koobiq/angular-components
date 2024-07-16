@@ -346,6 +346,13 @@
             @include kbq-code-block-style($code-block, filled);
         }
 
+        .kbq-tab-header {
+            & .kbq-tab-label.kbq-tab-label_horizontal,
+            & .kbq-tab-header__pagination {
+                border-bottom-color: transparent;
+            }
+        }
+
         .kbq-tab-group.kbq-focused {
             // paint focus border from the top since because of border constraints
             .kbq-tab-header {
@@ -356,13 +363,6 @@
                 border-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
                 box-shadow: inset 0 0 0.1 1px kbq-css-variable(
                     states-focused-color, map.get($theme, states, focused-color));
-            }
-        }
-
-        .kbq-tab-header {
-            & .kbq-tab-label.kbq-tab-label_horizontal,
-            & .kbq-tab-header__pagination {
-                border-bottom-color: transparent;
             }
         }
     }

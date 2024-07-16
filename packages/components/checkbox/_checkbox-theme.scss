@@ -14,17 +14,15 @@
         border-color: kbq-css-variable(#{$base}-default-border, map.get($style, default, border));
 
         background-color: kbq-css-variable(#{$base}-default-background, map.get($style, default, background));
-    }
 
-    .kbq-checkbox-label {
-        color: kbq-css-variable(#{$base}-default-text, map.get($style, default, text));
-    }
-
-    .kbq-checkbox__frame {
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
             color: kbq-css-variable(#{$base}-default-color, map.get($style, default, color));
         }
+    }
+
+    .kbq-checkbox-label {
+        color: kbq-css-variable(#{$base}-default-text, map.get($style, default, text));
     }
 
     & .kbq-hint .kbq-hint__text {
