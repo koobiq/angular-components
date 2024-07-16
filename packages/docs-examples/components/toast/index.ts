@@ -5,7 +5,6 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
-import { KbqToastModule } from '@koobiq/components/toast';
 
 import { ToastActionsOverviewExample } from './toast-actions-overview/toast-actions-overview-example';
 import { ToastLinkOverviewExample } from './toast-link-overview/toast-link-overview-example';
@@ -43,7 +42,6 @@ const EXAMPLES = [
         KbqLinkModule,
         KbqProgressBarModule,
         KbqIconModule,
-        KbqToastModule,
         KbqDropdownModule
     ],
     declarations: EXAMPLES,
