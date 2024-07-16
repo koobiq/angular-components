@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-table-theme($theme) {
     $foreground: map.get($theme, foreground);
     $states-background: map.get($theme, states, background);
@@ -63,4 +62,3 @@
         }
     }
 }
-

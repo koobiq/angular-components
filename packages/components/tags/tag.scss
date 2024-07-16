@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-tag {
     position: relative;
 
@@ -11,9 +10,7 @@
 
     max-width: 100%;
 
-    padding:
-        kbq-css-variable(tag-size-padding-vertical)
-        kbq-css-variable(tag-size-padding-horizontal);
+    padding: kbq-css-variable(tag-size-padding-vertical) kbq-css-variable(tag-size-padding-horizontal);
 
     border-radius: 4px;
 

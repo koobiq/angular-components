@@ -1,7 +1,9 @@
+@use 'sass:map';
+
 @mixin kbq-docs-page-not-found-theme($theme) {
-    $background: map-get($theme, background);
+    $background: map.get($theme, background);
 
     .page-not-found {
-        background: map-get($background, bg);
+        background: map.get($background, bg);
     }
 }

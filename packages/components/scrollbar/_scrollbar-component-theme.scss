@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-scrollbar-component-theme($theme) {
     $scrollbar: map.get(map.get($theme, components), scrollbar);
 
@@ -28,8 +27,8 @@
                 }
             }
 
-            /* stylelint-disable no-descending-specificity */
-            .os-scrollbar-track, .os-scrollbar-handle {
+            .os-scrollbar-track,
+            .os-scrollbar-handle {
                 border-style: solid;
                 border-color: kbq-css-variable(scrollbar-track-default, map.get($scrollbar, track, default)) !important;
                 background-color: kbq-css-variable(scrollbar-track-default, map.get($scrollbar, track, default));

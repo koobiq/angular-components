@@ -10,19 +10,46 @@ button-toggle-tooltip-overview-example .kbq-button-toggle-group_stretched > .kbq
     flex: 1;
 }
 
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper,
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper {
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button
+    .kbq-button-toggle-wrapper,
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button-icon
+    .kbq-button-toggle-wrapper {
     display: block !important;
 }
 
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper > :not(:last-child),
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper > :not(:last-child) {
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button
+    .kbq-button-toggle-wrapper
+    > :not(:last-child),
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button-icon
+    .kbq-button-toggle-wrapper
+    > :not(:last-child) {
     margin-right: 4px;
 }
 
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button .kbq-button-toggle-wrapper .kbq-icon,
-button-toggle-tooltip-overview-example .kbq-button-toggle-group .kbq-button-toggle > .kbq-button-icon .kbq-button-toggle-wrapper .kbq-icon {
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button
+    .kbq-button-toggle-wrapper
+    .kbq-icon,
+button-toggle-tooltip-overview-example
+    .kbq-button-toggle-group
+    .kbq-button-toggle
+    > .kbq-button-icon
+    .kbq-button-toggle-wrapper
+    .kbq-icon {
     position: relative;
     top: -1px;
 }
-

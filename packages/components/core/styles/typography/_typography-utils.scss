@@ -2,7 +2,6 @@
 @use 'sass:meta';
 @use 'sass:string';
 
-
 @function kbq-typography-level(
     $font-size,
     $line-height: $font-size,
@@ -55,7 +54,7 @@
 @function kbq-font-family($config, $level: null) {
     $font-family: map.get($config, font-family);
 
-    @if $level != null {
+    @if $level {
         $font-family: _kbq-get-type-value($config, $level, font-family);
     }
 

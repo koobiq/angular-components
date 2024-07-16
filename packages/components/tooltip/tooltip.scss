@@ -5,9 +5,7 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $trigger-margin: 8px;
-
 
 .kbq-tooltip__inner {
     border-radius: kbq-css-variable(tooltip-size-border-radius);
@@ -26,9 +24,7 @@ $trigger-margin: 8px;
     max-width: kbq-css-variable(tooltip-size-max-width);
 
     .kbq-tooltip__inner {
-        padding:
-            kbq-css-variable(tooltip-size-padding-vertical)
-            kbq-css-variable(tooltip-size-padding-horizontal);
+        padding: kbq-css-variable(tooltip-size-padding-vertical) kbq-css-variable(tooltip-size-padding-horizontal);
     }
 }
 

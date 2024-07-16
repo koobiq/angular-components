@@ -8,11 +8,21 @@
 }
 
 @function kbq-palette($base-palette, $default) {
-    $result: map.merge($base-palette, (default: $default));
+    $result: map.merge(
+        $base-palette,
+        (
+            default: $default,
+        )
+    );
 
     // For each hue in the palette, add a "-contrast" color to the map.
     @each $hue, $color in $base-palette {
-        $result: map.merge($result, ('#{$hue}-contrast': kbq-contrast($base-palette, $hue)));
+        $result: map.merge(
+            $result,
+            (
+                '#{$hue}-contrast': kbq-contrast($base-palette, $hue),
+            )
+        );
     }
 
     @return $result;
@@ -99,7 +109,6 @@
         warning: map.get($tokens, '#{$scheme}-background-warning'),
         warning-fade: map.get($tokens, '#{$scheme}-background-warning-fade'),
         transparent: map.get($tokens, '#{$scheme}-background-transparent'),
-
         // будет удалено, после удаления из компонентов ↓
         background: map.get($tokens, '#{$scheme}-background-background'),
         background-disabled: map.get($tokens, '#{$scheme}-background-background-disabled'),
@@ -140,7 +149,7 @@
         warning-fade: map.get($tokens, '#{$scheme}-line-warning-fade'),
         error: map.get($tokens, '#{$scheme}-line-error'),
         error-fade: map.get($tokens, '#{$scheme}-line-error-fade'),
-        visited: map.get($tokens, '#{$scheme}-line-visited'),
+        visited: map.get($tokens, '#{$scheme}-line-visited')
     );
 }
 
@@ -206,9 +215,7 @@
 }
 
 @function _theme_states-others($tokens, $scheme) {
-    @return (
-        brand: map.get($tokens, '#{$scheme}-states-others-brand')
-    );
+    @return (brand: map.get($tokens, '#{$scheme}-states-others-brand'));
 }
 
 @function _theme_states($tokens, $scheme) {
@@ -218,7 +225,6 @@
         icon: _theme_states-icon($tokens, $scheme),
         line: _theme_states-line($tokens, $scheme),
         others: _theme_states-others($tokens, $scheme),
-
         // будет удалено, после удаления из компонентов ↓
         focused-color: map.get($tokens, '#{$scheme}-states-focused-color'),
         focused-color-error: map.get($tokens, '#{$scheme}-states-focused-color-error'),
@@ -229,21 +235,23 @@
 }
 
 @function kbq-palette($base-palette, $default) {
-    @return map.merge($base-palette, (default: $default));
+    @return map.merge(
+        $base-palette,
+        (
+            default: $default,
+        )
+    );
 }
 
 @function _theme_palette($tokens, $scheme, $name) {
     @return kbq-palette(
         map.get($tokens, '#{$scheme}-#{$name}-palette'),
         map.get($tokens, '#{$scheme}-#{$name}-default')
-    )
+    );
 }
 
 @function _theme_palette_neutral($tokens, $scheme) {
-    @return (
-        white: map.get($tokens, '#{$scheme}-neutral-white'),
-        black: map.get($tokens, '#{$scheme}-neutral-black'),
-    )
+    @return (white: map.get($tokens, '#{$scheme}-neutral-white'), black: map.get($tokens, '#{$scheme}-neutral-black'));
 }
 
 @function kbq-light-theme($tokens) {
@@ -257,7 +265,6 @@
         icon: _theme_icon($tokens, $scheme),
         line: _theme_line($tokens, $scheme),
         states: _theme_states($tokens, $scheme),
-
         theme: _theme_palette($tokens, $scheme, theme),
         success: _theme_palette($tokens, $scheme, success),
         warning: _theme_palette($tokens, $scheme, warning),
@@ -268,11 +275,9 @@
         black: _theme_palette($tokens, $scheme, black),
         brand: _theme_palette($tokens, $scheme, brand),
         purple: _theme_palette($tokens, $scheme, purple),
-
         // будет удалено, после удаления из компонентов ↓
         info: _theme_palette($tokens, $scheme, info),
         // будет удалено, после удаления из компонентов ↑
-
         components: kbq-components-theme($tokens, $scheme),
         tokens: $tokens
     );
@@ -289,7 +294,6 @@
         icon: _theme_icon($tokens, $scheme),
         line: _theme_line($tokens, $scheme),
         states: _theme_states($tokens, $scheme),
-
         theme: _theme_palette($tokens, $scheme, theme),
         success: _theme_palette($tokens, $scheme, success),
         warning: _theme_palette($tokens, $scheme, warning),
@@ -300,11 +304,9 @@
         black: _theme_palette($tokens, $scheme, black),
         brand: _theme_palette($tokens, $scheme, brand),
         purple: _theme_palette($tokens, $scheme, purple),
-
         // будет удалено, после удаления из компонентов ↓
         info: _theme_palette($tokens, $scheme, info),
         // будет удалено, после удаления из компонентов ↑
-
         components: kbq-components-theme($tokens, $scheme),
         tokens: $tokens
     );

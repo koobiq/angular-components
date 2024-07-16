@@ -25,7 +25,6 @@
     right: 0;
 }
 
-/* stylelint-disable no-descending-specificity */
 @media (width <= 768px) {
     body {
         max-width: 100vw;
@@ -64,5 +63,3 @@
         display: none !important;
     }
 }
-
-/* stylelint-enable no-descending-specificity */

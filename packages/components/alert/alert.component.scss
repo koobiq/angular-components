@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-alert {
     display: flex;
 
@@ -25,17 +24,14 @@
 .kbq-alert.kbq-alert_normal {
     border-radius: kbq-css-variable(alert-size-normal-container-border-radius);
 
-    padding:
-        kbq-css-variable(alert-size-normal-container-padding-top)
+    padding: kbq-css-variable(alert-size-normal-container-padding-top)
         kbq-css-variable(alert-size-normal-container-padding-right)
         kbq-css-variable(alert-size-normal-container-padding-bottom)
         kbq-css-variable(alert-size-normal-container-padding-left);
 
     & .kbq-alert__icon {
-        margin:
-            kbq-css-variable(alert-size-normal-no-title-icon-margin-top)
-            kbq-css-variable(alert-size-normal-icon-margin-right)
-            kbq-css-variable(alert-size-normal-icon-margin-bottom)
+        margin: kbq-css-variable(alert-size-normal-no-title-icon-margin-top)
+            kbq-css-variable(alert-size-normal-icon-margin-right) kbq-css-variable(alert-size-normal-icon-margin-bottom)
             kbq-css-variable(alert-size-normal-icon-margin-left);
 
         &.kbq-alert__icon_title {
@@ -49,8 +45,7 @@
     }
 
     & .kbq-alert__content {
-        padding:
-            kbq-css-variable(alert-size-normal-content-padding-top)
+        padding: kbq-css-variable(alert-size-normal-content-padding-top)
             kbq-css-variable(alert-size-normal-content-padding-right)
             kbq-css-variable(alert-size-normal-content-padding-bottom)
             kbq-css-variable(alert-size-normal-content-padding-left);
@@ -74,14 +69,12 @@
 .kbq-alert.kbq-alert_compact {
     border-radius: kbq-css-variable(alert-size-compact-container-border-radius);
 
-    padding:
-        kbq-css-variable(alert-size-compact-container-padding-top)
+    padding: kbq-css-variable(alert-size-compact-container-padding-top)
         kbq-css-variable(alert-size-compact-container-padding-right)
         kbq-css-variable(alert-size-compact-container-padding-bottom)
         kbq-css-variable(alert-size-compact-container-padding-left);
 
     & .kbq-alert__icon {
-
         margin-top: kbq-css-variable(alert-size-compact-no-title-icon-margin-top);
         margin-right: kbq-css-variable(alert-size-compact-icon-margin-right);
 
@@ -98,8 +91,7 @@
     }
 
     & .kbq-alert__content {
-        padding:
-            kbq-css-variable(alert-size-compact-content-padding-top)
+        padding: kbq-css-variable(alert-size-compact-content-padding-top)
             kbq-css-variable(alert-size-compact-content-padding-right)
             kbq-css-variable(alert-size-compact-content-padding-bottom)
             kbq-css-variable(alert-size-compact-content-padding-left);

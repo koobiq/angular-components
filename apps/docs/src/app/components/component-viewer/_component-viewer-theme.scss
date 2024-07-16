@@ -1,25 +1,25 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 
-
-/* stylelint-disable no-descending-specificity */
 @mixin kbq-docs-component-viewer-theme($theme) {
-    $background: map-get($theme, background);
+    $background: map.get($theme, background);
 
     .docs-component-header {
-        background: map-get($background, bg);
+        background: map.get($background, bg);
     }
 
     .docs-api__section {
-        border-color: map-get($background, contrast-fade);
+        border-color: map.get($background, contrast-fade);
     }
 
     .docs-api__section_directive .docs-api_method-name {
-        color: map-get(map-get($theme, line), warning) !important;
+        color: map.get(map.get($theme, line), warning) !important;
     }
 
     .docs-api__input-marker {
-        color: map-get(map-get($theme, line), success) !important;
+        color: map.get(map.get($theme, line), success) !important;
     }
 
     .kbq-docs-table {
@@ -42,7 +42,9 @@
         letter-spacing: normal;
         font-weight: 700;
         text-transform: none;
-        font-feature-settings: "ss01" on, "ss04" on;
+        font-feature-settings:
+            'ss01' on,
+            'ss04' on;
     }
 
     .docs-api__class-name {
@@ -65,7 +67,9 @@
             letter-spacing: normal;
             font-weight: 700;
             text-transform: none;
-            font-feature-settings: "ss01" on, "ss04" on;
+            font-feature-settings:
+                'ss01' on,
+                'ss04' on;
         }
 
         // second level
@@ -78,7 +82,9 @@
             letter-spacing: normal;
             font-weight: 600;
             text-transform: none;
-            font-feature-settings: "ss01" on, "ss04" on;
+            font-feature-settings:
+                'ss01' on,
+                'ss04' on;
         }
 
         // third level
@@ -89,7 +95,9 @@
             letter-spacing: normal;
             font-weight: 600;
             text-transform: none;
-            font-feature-settings: "ss01" on, "ss04" on;
+            font-feature-settings:
+                'ss01' on,
+                'ss04' on;
         }
     }
 
@@ -113,5 +121,3 @@
         }
     }
 }
-
-/* stylelint-enable no-descending-specificity */

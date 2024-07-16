@@ -3,7 +3,6 @@
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-icon-theme($theme) {
     $icon: map.get($theme, components, icon);
 

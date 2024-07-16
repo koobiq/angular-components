@@ -1,14 +1,14 @@
 The `KbqSidepanelService` can be used to open sidepanels.
-These panels appear at the edge of the screen and can be used to perform 
+These panels appear at the edge of the screen and can be used to perform
 some actions or display additional information without losing context.
 
 You can open a sidepanel by calling `open` method with a component to be loaded or a template
-and an optional config object. 
+and an optional config object.
 The `open` method will return an instance of `KbqSidepanelRef`:
 
 ```ts
 const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    hasBackdrop: false
+    hasBackdrop: false,
 });
 ```
 
@@ -27,6 +27,7 @@ Note that multiple sidepanels can be open at a time. Any component contained ins
 can inject the `KbqSidepanelRef` as well.
 
 ### Specifying global configuration defaults
+
 Default sidepanel options can be specified by providing an instance of `KbqSidepanelConfig`
 for `KBQ_SIDEPANEL_DEFAULT_OPTIONS` in your application's root module.
 
@@ -39,12 +40,13 @@ for `KBQ_SIDEPANEL_DEFAULT_OPTIONS` in your application's root module.
 ```
 
 ### Sharing data with the sidepanel component
+
 If you want to pass in some data to the sidepanel, you can do so by using `data` property
 in configuration:
 
 ```ts
 const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    data: { items: ['One', 'Two', 'Three'] }
+    data: { items: ['One', 'Two', 'Three'] },
 });
 ```
 
@@ -52,10 +54,11 @@ Afterwards you can access thr injected data using the `KBQ_SIDEPANEL_DATA` injec
 
 ```ts
 import { Component, Inject } from '@angular/core';
+
 import { KBQ_SIDEPANEL_DATA } from '@koobiq/components';
 
 @Component({
-    template: 'passed in {{ data.items }}'
+    template: 'passed in {{ data.items }}',
 })
 export class ExampleSidepanelComponent {
     constructor(@Inject(KBQ_SIDEPANEL_DATA) public data: any) {}
@@ -70,36 +73,30 @@ for your sidepanel content component.
 
 ```ts
 @NgModule({
-  imports: [
-    // ...
-    KbqSidepanelModule
-  ],
+    imports: [
+        // ...
+        KbqSidepanelModule,
+    ],
 
-  declarations: [
-    AppComponent,
-    ExampleSidepanelComponent
-  ],
+    declarations: [AppComponent, ExampleSidepanelComponent],
 
-  bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
 
 ### Sidepanel content
+
 To structure your sidepanel content you can use several directives:
-`<kbq-sidepanel-header>`, `<kbq-sidepanel-body>`, `<kbq-sidepanel-footer>` 
+`<kbq-sidepanel-header>`, `<kbq-sidepanel-body>`, `<kbq-sidepanel-footer>`
 and `<kbq-sidepanel-actions>`.
 
-Also `kbq-sidepanel-close` directive is available to mark button which need 
+Also `kbq-sidepanel-close` directive is available to mark button which need
 to close sidepanel. For example, cancel button in footer.
 
 ```html
-<kbq-sidepanel-header [closeable]="true">
-    Sidepanel Header
-</kbq-sidepanel-header>
-<kbq-sidepanel-body class="layout-padding">
-    Sidepanel Body
-</kbq-sidepanel-body>
+<kbq-sidepanel-header [closeable]="true">Sidepanel Header</kbq-sidepanel-header>
+<kbq-sidepanel-body class="layout-padding">Sidepanel Body</kbq-sidepanel-body>
 <kbq-sidepanel-footer>
     <kbq-sidepanel-actions align="left">
         <button kbq-button [color]="'contrast'" (click)="doAnotherAction()">
@@ -119,6 +116,7 @@ to close sidepanel. For example, cancel button in footer.
 ```
 
 #### Keyboard interaction
+
 By default pressing the escape key will close the sidepanel. While this behavior can
 be turned off via the `disableClose` option, users should generally avoid doing so
 as it breaks the expected interaction pattern for screen-reader users.

@@ -4,14 +4,15 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-loader-overlay-theme($theme) {
     $loader-overlay: map.get(map.get($theme, components), loader-overlay);
 
     .kbq-loader-overlay_filled {
         &.kbq-loader-overlay {
             background: kbq-css-variable(
-                loader-overlay-filled-background, map.get($loader-overlay, filled, background));
+                loader-overlay-filled-background,
+                map.get($loader-overlay, filled, background)
+            );
         }
 
         & .kbq-loader-overlay-text {
@@ -26,7 +27,9 @@
     .kbq-loader-overlay_transparent {
         &.kbq-loader-overlay {
             background: kbq-css-variable(
-                loader-overlay-transparent-background, map.get($loader-overlay, transparent, background));
+                loader-overlay-transparent-background,
+                map.get($loader-overlay, transparent, background)
+            );
         }
 
         & .kbq-loader-overlay-text {
@@ -60,4 +63,3 @@
         }
     }
 }
-

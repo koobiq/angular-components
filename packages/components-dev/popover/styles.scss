@@ -1,8 +1,9 @@
 @use 'sass:meta';
+@use 'sass:map';
+
 @use '../../components/core/styles/tokens';
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
-
 
 $tokens: meta.module-variables(tokens);
 $theme: theming.kbq-light-theme($tokens);
@@ -31,7 +32,7 @@ app {
     }
 
     .red {
-        color: map-get(map-get($theme, error), default);
+        color: map.get(map.get($theme, error), default);
     }
 
     .container {

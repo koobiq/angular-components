@@ -1,3 +1,5 @@
+/* stylelint-disable scss/at-extend-no-missing-placeholder */
+
 /** @see https://docsearch.algolia.com/docs/styling */
 @use '@docsearch/css/dist/style.scss';
 @use 'koobiq/default-theme/variables' as *;
@@ -106,7 +108,9 @@
     padding: 0 $size-s $size-xxl $size-s;
 
     @media (max-width: 768px) {
-        max-height: calc(var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height));
+        max-height: calc(
+            var(--docsearch-vh, 1vh) * 85 - var(--docsearch-searchbox-height) - var(--docsearch-footer-height)
+        );
     }
 }
 
@@ -126,12 +130,12 @@
     outline-width: 1px;
 }
 
-.DocSearch-Hit[aria-selected=true] a {
+.DocSearch-Hit[aria-selected='true'] a {
     background-color: $light-states-background-transparent-active;
 }
 
 .DocSearch-Hit mark,
-.DocSearch-Hit[aria-selected=true] mark {
+.DocSearch-Hit[aria-selected='true'] mark {
     text-decoration: none;
     color: $light-foreground-warning !important;
 }
@@ -304,12 +308,12 @@ body.theme-dark {
         color: $icon-button-dark-fade-contrast-states-hover;
     }
 
-    .DocSearch-Hit[aria-selected=true] a {
+    .DocSearch-Hit[aria-selected='true'] a {
         background-color: $dark-states-background-transparent-active;
     }
 
     .DocSearch-Hit mark,
-    .DocSearch-Hit[aria-selected=true] mark {
+    .DocSearch-Hit[aria-selected='true'] mark {
         color: $dark-foreground-warning !important;
     }
 

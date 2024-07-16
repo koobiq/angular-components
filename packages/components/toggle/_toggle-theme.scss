@@ -5,7 +5,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-toggle-state($component, $type, $state-name) {
     $state: map.get($component, $type, $state-name);
     $base: toggle-#{$type}-#{$state-name};
@@ -43,10 +42,11 @@
                 toggle-#{$type}-states-focused-focus-outline,
                 map.get($component, $type, states-focused, focus-outline)
             );
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(
-                toggle-#{$type}-states-focused-focus-outline,
-                map.get($component, $type, states-focused, focus-outline)
-            );
+            box-shadow: 0 0 0.1px 1px
+                kbq-css-variable(
+                    toggle-#{$type}-states-focused-focus-outline,
+                    map.get($component, $type, states-focused, focus-outline)
+                );
         }
     }
 
@@ -58,10 +58,11 @@
                 toggle-#{$type}-states-checked-focused-focus-outline,
                 map.get($component, $type, states-checked-focused, focus-outline)
             );
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(
-                toggle-#{$type}-states-checked-focused-focus-outline,
-                map.get($component, $type, states-checked-focused, focus-outline)
-            );
+            box-shadow: 0 0 0.1px 1px
+                kbq-css-variable(
+                    toggle-#{$type}-states-checked-focused-focus-outline,
+                    map.get($component, $type, states-checked-focused, focus-outline)
+                );
         }
     }
 
