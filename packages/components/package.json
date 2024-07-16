@@ -24,8 +24,8 @@
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@koobiq/date-formatter": "^3.1.2",
         "@koobiq/icons": "^7.1.0",
-        "@koobiq/tokens-builder": "3.0.0-rc.11",
-        "@koobiq/design-tokens": "3.0.0-rc.11",
+        "@koobiq/tokens-builder": "3.0.0-rc.12",
+        "@koobiq/design-tokens": "3.0.0-rc.12",
         "marked": "^9.0.0",
         "overlayscrollbars": "^2.2.0",
         "ngx-highlightjs": "^10.0.0"
