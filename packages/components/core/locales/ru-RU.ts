@@ -8,8 +8,8 @@ export const ruRULocaleData = {
     },
     timepicker: {
         placeholder: {
-            full: 'hh:mm:ss',
-            short: 'hh:mm'
+            full: 'чч:мм:сс',
+            short: 'чч:мм'
         }
     },
     fileUpload: {

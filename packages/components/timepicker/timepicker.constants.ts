@@ -15,6 +15,12 @@ export const TIMEFORMAT_PLACEHOLDERS: { [timeFormat: string]: string } = {
     [TimeFormats.HHmm]: 'чч:мм'
 };
 
+/** Object that maps each time format to a related locale key */
+export const TimeFormatToLocaleKeys: Record<TimeFormats, 'full' | 'short'> = {
+    [TimeFormats.HHmmss]: 'full',
+    [TimeFormats.HHmm]: 'short'
+}
+
 export const DEFAULT_TIME_FORMAT: TimeFormats = TimeFormats.HHmm;
 
 export const HOURS_MINUTES_SECONDS_REGEXP = /^([0-1][0-9]|2[0-3]):?([0-5][0-9]):?([0-5][0-9])?$/;

@@ -15,6 +15,7 @@ import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@angular/cdk/platform';
 import * as i5 from '@angular/forms';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -48,7 +49,7 @@ export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
-    constructor(elementRef: ElementRef, renderer: Renderer2, dateAdapter: DateAdapter<any>);
+    constructor(elementRef: ElementRef, renderer: Renderer2, dateAdapter: DateAdapter<any>, localeService?: KbqLocaleService | undefined);
     controlType: string;
     // (undocumented)
     get disabled(): boolean;
@@ -117,6 +118,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     readonly stateChanges: Subject<void>;
+    get timeFormatPlaceholder(): string;
     // (undocumented)
     validate(control: AbstractControl): ValidationErrors | null;
     // (undocumented)
@@ -129,7 +131,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
@@ -162,6 +164,9 @@ export enum TimeFormats {
     // (undocumented)
     HHmmss = "HH:mm:ss"
 }
+
+// @public
+export const TimeFormatToLocaleKeys: Record<TimeFormats, 'full' | 'short'>;
 
 // @public (undocumented)
 export enum TimeParts {
