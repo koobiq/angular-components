@@ -49,6 +49,16 @@
                     ]
                 },
                 {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/*.@(js|css)",
                     "headers": [
                         {
@@ -109,6 +119,16 @@
                         {
                             "key": "Cache-Control",
                             "value": "public, max-age=15811200, s-maxage=31536000"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
                         }
                     ]
                 },
