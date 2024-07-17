@@ -1,10 +1,10 @@
 /* tslint:disable:no-reserved-keywords */
 import { ViewportScroller } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { Subject } from 'rxjs';
+import { delay, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { DocCategory, DocumentationItems } from '../documentation-items';
@@ -62,6 +62,8 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
 })
 export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild(KbqScrollbar) sidenavMenuContainer: KbqScrollbar;
+    @ViewChild('tree') tree: KbqTreeSelection;
+
     set category(value: string) {
         if (!value || value === this._category) { return; }
 
@@ -132,6 +134,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
 
                     return first.path;
                 }),
+                delay(0),
                 takeUntil(this.destroy)
             )
             .subscribe((url: string) => {
@@ -153,11 +156,11 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     needSelectDefaultItem = () => {
-        setTimeout(() => {
-            this._selectedItem = this.router.url
-                .replace('/', '')
-                .replace('/overview', '');
-        });
+        this._selectedItem = this.router.url
+            .replace('/', '')
+            .replace('/overview', '');
+
+        setTimeout(() => this.tree.highlightSelectedOption());
     }
 
     hasChild(_: number, nodeData: TreeFlatNode) { return nodeData.expandable; }
