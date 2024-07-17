@@ -68,7 +68,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "next",
@@ -142,7 +142,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "v16",
@@ -154,7 +154,7 @@
                     "destination": "/index.html"
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         }
     ]
 }
