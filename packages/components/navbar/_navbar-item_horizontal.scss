@@ -23,6 +23,13 @@
 
     justify-content: center;
 
+    &:before {
+        top: calc(-1 * #{kbq-css-variable(size-s)});
+        left: calc(-1 * #{kbq-css-variable(size-s)});
+        right: calc(-1 * #{kbq-css-variable(size-s)});
+        bottom: calc(-1 * #{kbq-css-variable(size-s)});
+    }
+
     &:after {
         top: 0;
         right: 0;
@@ -45,6 +52,11 @@
         padding-right: kbq-css-variable(size-m);
         padding-left: kbq-css-variable(size-m);
 
+        &:before {
+            left: 0;
+            right: 0
+        }
+
         & > .kbq-icon {
             align-self: center;
 
@@ -56,6 +68,10 @@
         justify-content: center;
 
         margin-right: kbq-css-variable(size-xxs);
+
+        &:before {
+            right: calc(-1 * #{kbq-css-variable(size-xxs)});
+        }
     }
 
     &.kbq-navbar-item_collapsed {
@@ -80,5 +96,10 @@
     &.kbq-navbar-item_has-nested {
         margin-left: kbq-css-variable(size-m);
         margin-right: kbq-css-variable(size-m);
+
+        &:before {
+            left: calc(-1 * #{kbq-css-variable(size-m)});
+            right: calc(-1 * #{kbq-css-variable(size-m)});
+        }
     }
 }

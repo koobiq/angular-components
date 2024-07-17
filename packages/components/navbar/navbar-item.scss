@@ -32,6 +32,11 @@
         transform: translateY(-50%);
     }
 
+    &:before {
+        position: absolute;
+        content: '';
+    }
+
     &:after {
         position: absolute;
         content: '';
