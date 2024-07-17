@@ -1,0 +1,56 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-empty-state-theme($theme) {
+    $empty-state: map.get($theme, components, empty-state);
+
+    .kbq-empty-state_normal-color {
+        .kbq-empty-state-title {
+            color: kbq-css-variable(empty-state-title, map.get($empty-state, title));
+        }
+
+        .kbq-empty-state-text {
+            color: kbq-css-variable(empty-state-title, map.get($empty-state, title));
+        }
+    }
+
+    .kbq-empty-state_error-color {
+        .kbq-empty-state-title {
+            color: kbq-css-variable(empty-state-title, map.get($theme, foreground, error));
+        }
+
+        .kbq-empty-state-text {
+            color: kbq-css-variable(empty-state-title, map.get($theme, foreground, error));
+        }
+    }
+}
+
+@mixin kbq-empty-state-typography($config) {
+    .kbq-empty-state-title,
+    .kbq-empty-state-text {
+        text-align: center;
+    }
+
+    .kbq-empty-state_normal {
+        .kbq-empty-state-title {
+            @include kbq-typography-css-variables(empty-state, normal-title);
+        }
+
+        .kbq-empty-state-text {
+            @include kbq-typography-css-variables(empty-state, normal-text);
+        }
+    }
+
+    .kbq-empty-state_big {
+        .kbq-empty-state-title {
+            @include kbq-typography-css-variables(empty-state, big-title);
+        }
+
+        .kbq-empty-state-text {
+            @include kbq-typography-css-variables(empty-state, big-text);
+        }
+    }
+}

@@ -223,6 +223,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['dropdown-types']
                 },
                 {
+                    id: 'empty-state',
+                    name: 'Empty state',
+                    svgPreview: 'empty-state',
+                    hasApi: true,
+                    apiId: 'empty-state',
+                    hasExamples: false,
+                    examples: ['empty-state-types']
+                },
+                {
                     id: 'icon',
                     name: 'Icon',
                     svgPreview: 'icons',
