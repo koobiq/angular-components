@@ -49,6 +49,31 @@
                     ]
                 },
                 {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/*.@(js|css)",
                     "headers": [
                         {
@@ -58,7 +83,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "next",
@@ -113,6 +138,31 @@
                     ]
                 },
                 {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/*.@(js|css)",
                     "headers": [
                         {
@@ -122,7 +172,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "v16",
@@ -134,7 +184,7 @@
                     "destination": "/index.html"
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         }
     ]
 }
