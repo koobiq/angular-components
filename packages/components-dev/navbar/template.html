@@ -71,10 +71,10 @@
 <kbq-navbar>
     <kbq-navbar-container>
         <kbq-navbar-item
+            bento
             [kbqTooltip]="'Приложения'"
             [kbqTrigger]="'hover'"
             [kbqPlacement]="popUpPlacements.BottomLeft"
-            class="kbq-navbar-margined"
             #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"
             [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
             [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened">
@@ -159,7 +159,6 @@
             [kbqTooltip]="'Профиль'"
             [kbqTrigger]="'hover'"
             [kbqPlacement]="popUpPlacements.BottomRight"
-            class="kbq-navbar-margined"
             #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
             [kbqDropdownTriggerFor]="horizontalNavbarProfile"
             [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened">
@@ -175,7 +174,6 @@
         <kbq-navbar-container>
             <a kbq-navbar-item
                bento
-               class="kbq-navbar-margined"
                #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"
                [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
                [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened">
@@ -206,7 +204,6 @@
 
             <kbq-navbar-item
                 #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"
-                class="kbq-navbar-margined"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
                 [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened">
 

@@ -16,18 +16,18 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
 
-    min-height: kbq-css-variable(size-5xl);
-    min-width: kbq-css-variable(size-5xl);
+    min-height: kbq-css-variable(size-3xl);
+    min-width: kbq-css-variable(size-3xl);
 
-    padding: kbq-css-variable(size-s);
+    margin: kbq-css-variable(size-s);
 
     justify-content: center;
 
     &:after {
-        top: kbq-css-variable(size-s);
-        right: kbq-css-variable(size-s);
-        bottom: kbq-css-variable(size-s);
-        left: kbq-css-variable(size-s);
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
 
     & .kbq-navbar-item__title {
@@ -40,15 +40,10 @@
     }
 
     &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
+        margin-left: 0;
+        margin-right: 0;
         padding-right: kbq-css-variable(size-m);
         padding-left: kbq-css-variable(size-m);
-        // (total height 48 - grey hover 32) / 2
-        &:after {
-            top: kbq-css-variable(size-s);
-            right: 0;
-            bottom: kbq-css-variable(size-s);
-            left: 0;
-        }
 
         & > .kbq-icon {
             align-self: center;
@@ -57,34 +52,10 @@
         }
     }
 
-    &.kbq-navbar-margined {
-        min-height: kbq-css-variable(size-5xl);
-        min-width: kbq-css-variable(size-3xl);
-
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: kbq-css-variable(size-s);
-        margin-right: kbq-css-variable(size-s);
-
-        &:after {
-            right: 0;
-            left: 0;
-        }
-    }
-
     &.kbq-navbar-bento {
-        min-width: 44px;
-
         justify-content: center;
 
-        padding-right: kbq-css-variable(size-xxs);
-
-        &:after {
-            top: kbq-css-variable(size-s);
-            right: kbq-css-variable(size-xxs);
-            bottom: kbq-css-variable(size-s);
-            left: kbq-css-variable(size-s);
-        }
+        margin-right: kbq-css-variable(size-xxs);
     }
 
     &.kbq-navbar-item_collapsed {
@@ -102,11 +73,12 @@
 
         z-index: 1;
 
-        top: kbq-css-variable(size-xs);
-        right: kbq-css-variable(size-xs);
+        top: -2px;
+        right: -2px;
     }
 
     &.kbq-navbar-item_has-nested {
-        padding: 0 kbq-css-variable(size-m);
+        margin-left: kbq-css-variable(size-m);
+        margin-right: kbq-css-variable(size-m);
     }
 }
