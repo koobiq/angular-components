@@ -22,7 +22,7 @@
     & > .kbq-icon:first-child:before {
         align-self: center;
         display: flex;
-        height: 20px; // Потому что высота строки справа = 20px
+        height: kbq-css-variable(size-xl);
         width: 16px;
         align-items: center;
     }

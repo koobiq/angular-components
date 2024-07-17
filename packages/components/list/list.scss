@@ -22,7 +22,7 @@
 
     & .kbq-option-action {
         display: none;
-        height: 20px;
+        height: kbq-css-variable(size-xl);
         align-items: center;
     }
 
