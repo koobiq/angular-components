@@ -37,6 +37,7 @@
             "@koobiq/components/divider": ["packages/components/divider/index.ts"],
             "@koobiq/components/dl": ["packages/components/dl/index.ts"],
             "@koobiq/components/dropdown": ["packages/components/dropdown/index.ts"],
+            "@koobiq/components/empty-state": ["packages/components/empty-state/index.ts"],
             "@koobiq/components/form-field": ["packages/components/form-field/index.ts"],
             "@koobiq/components/file-upload": ["packages/components/file-upload/index.ts"],
             "@koobiq/components/icon": ["packages/components/icon/index.ts"],

@@ -192,7 +192,6 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     transformOrigin: string;
     // (undocumented)
     tree: KbqTreeSelection;
-    // (undocumented)
     trigger: ElementRef;
     triggerFontSize: number;
     triggerRect: DOMRect;

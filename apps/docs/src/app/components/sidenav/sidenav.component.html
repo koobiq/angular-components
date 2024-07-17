@@ -20,42 +20,42 @@
         <path d="M19.3172 19.4743C15.3951 19.4743 12.9023 16.7113 12.9023 12.5713C12.9023 8.42253 15.3951 5.65088 19.3172 5.65088C23.2394 5.65088 25.7321 8.42253 25.7321 12.5713C25.7321 16.7113 23.2394 19.4743 19.3172 19.4743ZM19.3347 16.9467C21.4701 16.9467 22.5334 15.0117 22.5334 12.5626C22.5334 10.1134 21.4701 8.15234 19.3347 8.15234C17.1644 8.15234 16.1011 10.1134 16.1011 12.5626C16.1011 15.0117 17.1644 16.9467 19.3347 16.9467Z"/>
         <path d="M0.0551758 19.2129V1.36279H3.21033V11.203H3.42823L8.2394 5.82533H11.9262L6.74026 11.604L12.2313 19.2129H8.4573L4.36083 13.4866L3.21033 14.7155V19.2129H0.0551758Z" fill="#20222C"/>
     </svg>
-
 </a>
 
-<div class="docs-sidenav__menu" kbq-scrollbar [defer]="true">
-<kbq-tree-selection
-    [autoSelect]="false"
-    [(ngModel)]="selectedItem"
-    [dataSource]="dataSource"
-    [treeControl]="treeControl">
+<div class="docs-sidenav__menu" kbq-scrollbar>
+    <kbq-tree-selection
+        #tree
+        [autoSelect]="false"
+        [(ngModel)]="selectedItem"
+        [dataSource]="dataSource"
+        [treeControl]="treeControl">
 
-    <kbq-tree-option
-        *kbqTreeNodeDef="let node; when: hasChild"
-        class="docs-sidenav__category"
-        kbqTreeNodePadding>
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node; when: hasChild"
+            class="docs-sidenav__category"
+            kbqTreeNodePadding>
 
-        <div class="docs-sidenav__category-text" (click)="toggle($event, node)">
-            <span>{{ node.name }}</span>
-            <i kbq-icon-button="mc-angle-down-S_16"
-               class="docs-sidenav__category-icon"
-               kbq-tree-node-toggle
-               [class.mc_collapsed]="!treeControl.isExpanded(node)"
-               [style.visibility]="node.id === 'icons' ? 'hidden' : 'initial'">
-            </i>
-        </div>
-    </kbq-tree-option>
+            <div class="docs-sidenav__category-text" (click)="toggle($event, node)">
+                <span>{{ node.name }}</span>
+                <i kbq-icon-button="mc-angle-down-S_16"
+                   class="docs-sidenav__category-icon"
+                   kbq-tree-node-toggle
+                   [class.mc_collapsed]="!treeControl.isExpanded(node)"
+                   [style.visibility]="node.id === 'icons' ? 'hidden' : 'initial'">
+                </i>
+            </div>
+        </kbq-tree-option>
 
-    <kbq-tree-option
-        *kbqTreeNodeDef="let node"
-        class="docs-sidenav__item"
-        kbqTreeNodePadding
-        [kbqTreeNodePaddingIndent]="0">
-        <!-- link for algolia crawler -->
-        <a [href]="node.id" style="display: none;">{{ node.name }}</a>
-        {{ node.name }}
-    </kbq-tree-option>
-</kbq-tree-selection>
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node"
+            class="docs-sidenav__item"
+            kbqTreeNodePadding
+            [kbqTreeNodePaddingIndent]="0">
+            <!-- link for algolia crawler -->
+            <a [href]="node.id" style="display: none;">{{ node.name }}</a>
+            {{ node.name }}
+        </kbq-tree-option>
+    </kbq-tree-selection>
 </div>
 
 <kbq-divider></kbq-divider>

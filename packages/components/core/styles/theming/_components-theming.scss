@@ -186,7 +186,7 @@
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-active-background'),
                 states-disabled-foreground:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-foreground'),
-                states_disabled_background:
+                states-disabled-background:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-background'),
                 states-disabled-left-icon:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-left-icon'),
@@ -205,7 +205,7 @@
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-active-background'),
                 states-disabled-foreground:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-foreground'),
-                states_disabled_background:
+                states-disabled-background:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-background'),
                 states-disabled-left-icon:
                     map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-left-icon'),
@@ -637,6 +637,11 @@
     $dl: (
         dt: map.get($tokens, 'description-list-#{$scheme}-term-color'),
         dd: map.get($tokens, 'description-list-#{$scheme}-description-color'),
+    );
+
+    $empty-state: (
+        title: map.get($tokens, 'empty-state-#{$scheme}-title'),
+        color: map.get($tokens, 'empty-state-#{$scheme}-color'),
     );
 
     $form-field: (
@@ -1828,6 +1833,7 @@
         datepicker: $datepicker,
         divider: $divider,
         dl: $dl,
+        empty-state: $empty-state,
         file-upload: $file-upload,
         form-field: $form-field,
         form-field-hint: $form-field-hint,

@@ -13,6 +13,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTreeModule } from '@koobiq/components/tree';
+import { KbqToastModule } from '@koobiq/components/toast';
 import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 import { AnchorsModule } from './components/anchors/anchors.module';
@@ -46,6 +47,7 @@ import { APP_ROUTES } from './docs.module-routes';
         KbqDropdownModule,
         KbqLinkModule,
         KbqDividerModule,
+        KbqToastModule,
 
         NavbarModule,
         FooterModule,

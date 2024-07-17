@@ -21,7 +21,7 @@
     @if $type == filled {
         border: transparent;
     } @else {
-        border-color: map.get($component, border);
+        border-color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-border, map.get($style, border));
     }
 }
 
