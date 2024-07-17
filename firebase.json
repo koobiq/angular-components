@@ -49,6 +49,21 @@
                     ]
                 },
                 {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/assets/stackblitz/**",
                     "headers": [
                         {
@@ -119,6 +134,21 @@
                         {
                             "key": "Cache-Control",
                             "value": "public, max-age=15811200, s-maxage=31536000"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
                         }
                     ]
                 },
