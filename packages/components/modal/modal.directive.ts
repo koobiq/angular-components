@@ -1,7 +1,7 @@
 import { Component, Directive } from '@angular/core';
 
 @Component({
-    selector: `[kbq-modal-title], kbq-modal-title, [mcModalTitle]`,
+    selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
     template: `<div class="kbq-modal-title">
         <ng-content></ng-content>
     </div>`,
@@ -12,7 +12,7 @@ import { Component, Directive } from '@angular/core';
 export class KbqModalTitle {}
 
 @Directive({
-    selector: `[kbq-modal-body], kbq-modal-body, [mcModalBody]`,
+    selector: `[kbq-modal-body], kbq-modal-body, [kbqModalBody]`,
     host: {
         class: 'kbq-modal-body'
     }
@@ -20,7 +20,7 @@ export class KbqModalTitle {}
 export class KbqModalBody {}
 
 @Directive({
-    selector: `[kbq-modal-footer], kbq-modal-footer, [mcModalFooter]`,
+    selector: `[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]`,
     host: {
         class: 'kbq-modal-footer'
     }
