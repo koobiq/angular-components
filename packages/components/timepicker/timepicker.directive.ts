@@ -329,6 +329,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private control: AbstractControl;
 
     private defaultPlaceholder = true;
+    private separator = ':';
 
     private onChange: (value: any) => void;
     private onTouched: () => void;
@@ -628,14 +629,30 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.stateChanges.next();
     }
 
+    private fixEmptyDigit() {
+        const hasEmptyDigit = this.viewValue
+            .split(this.separator)
+            .map((part) => part.length)
+            .some((item) => !item);
+
+        if (hasEmptyDigit && this.value) {
+            this.value = this.dateAdapter.clone(this.value);
+        }
+    }
+
+
     private horizontalArrowKeyHandler(keyCode: number): void {
         if (!this.value) { return; }
 
         let cursorPos = this.selectionStart as number;
 
         if (keyCode === LEFT_ARROW) {
+            this.fixEmptyDigit();
+
             cursorPos = cursorPos === 0 ? this.viewValue.length : cursorPos - 1;
         } else if (keyCode === RIGHT_ARROW) {
+            this.fixEmptyDigit();
+
             const nextDividerPos: number = this.viewValue.indexOf(':', cursorPos);
 
             cursorPos = nextDividerPos ? nextDividerPos + 1 : 0;
