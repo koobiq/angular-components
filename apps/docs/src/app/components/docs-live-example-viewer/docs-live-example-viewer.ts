@@ -97,12 +97,13 @@ export class DocsLiveExampleViewer {
         const docsContentPath = `docs-content/examples-source/${this.exampleData.packagePath}`;
 
         const observables = this.exampleData.files.map((fileName) => {
+            const language = this.determineLanguage(fileName);
             const importPath = `${docsContentPath}/${fileName}`;
             return this.fetchCode(importPath).pipe(
                 map((content) => ({
-                    filename: this.determineLanguage(fileName),
+                    filename: language,
                     content: content,
-                    language: this.determineLanguage(fileName)
+                    language
                 }))
             );
         });
