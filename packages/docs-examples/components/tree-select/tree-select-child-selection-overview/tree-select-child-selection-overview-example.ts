@@ -88,8 +88,7 @@ export const DATA_OBJECT = {
         'koobiq-examples': '',
         'koobiq-moment-adapter': '',
         README: 'md',
-        'tsconfig.build': 'json',
-        wallabyTest: 'ts'
+        'tsconfig.build': 'json'
     },
     scripts: {
         deploy: {

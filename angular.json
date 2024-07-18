@@ -198,24 +198,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "karmaConfig": "packages/cdk/karma.conf.js",
-                        "main": "packages/cdk/test.ts",
-                        "tsConfig": "packages/cdk/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/cdk/**/*.ts",
-                            "packages/cdk/**/*.html"
-                        ]
-                    }
                 }
             }
         },
@@ -247,15 +229,6 @@
                         "tsConfig": "packages/components/tsconfig.spec.json",
                         "codeCoverage": true
                     }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/components/**/*.ts",
-                            "packages/components/**/*.html"
-                        ]
-                    }
                 }
             }
         },
@@ -278,24 +251,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "karmaConfig": "packages/angular-moment-adapter/karma.conf.js",
-                        "main": "packages/angular-moment-adapter/test.ts",
-                        "tsConfig": "packages/angular-moment-adapter/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/angular-moment-adapter/**/*.ts",
-                            "packages/angular-moment-adapter/**/*.html"
-                        ]
-                    }
                 }
             }
         },
@@ -317,24 +272,6 @@
                         "buildTarget": "packagr",
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "karmaConfig": "packages/angular-luxon-adapter/karma.conf.js",
-                        "main": "packages/angular-luxon-adapter/test.ts",
-                        "tsConfig": "packages/angular-luxon-adapter/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/angular-luxon-adapter/**/*.ts",
-                            "packages/angular-luxon-adapter/**/*.html"
-                        ]
                     }
                 }
             }
