@@ -99,7 +99,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 end = this._kbqEllipsisCenter;
             } else {
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length * dataTextStartLength);
-
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
             }
@@ -109,6 +108,13 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextStart);
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextEnd);
+        setTimeout(() => {
+            if (dataTextEnd.offsetWidth < dataTextEnd.scrollWidth) {
+                dataTextEnd.style.direction = 'rtl';
+            } else {
+                dataTextEnd.style.direction = 'ltr';
+            }
+        })
     }
 }
 
