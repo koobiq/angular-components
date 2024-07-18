@@ -75,9 +75,8 @@ export class AnchorsComponent implements OnDestroy {
             this.debounceTime = this.noSmoothScrollDebounce;
         }
 
-        this.currentUrl = router.url.split('#')[0];
-        localStorage.setItem('PT_nextRoute', this.currentUrl);
-        this.pathName = this.router.url;
+        this.pathName = router.url.split('#')[0];
+        localStorage.setItem('PT_nextRoute', this.pathName);
 
         this.router.events
             .pipe(
@@ -87,11 +86,10 @@ export class AnchorsComponent implements OnDestroy {
             .subscribe((event) => {
                 const [rootUrl] = router.url.split('#');
 
-                if (rootUrl !== this.currentUrl) {
+                if (rootUrl !== this.pathName) {
                     localStorage.setItem('PT_nextRoute', rootUrl);
 
-                    this.currentUrl = rootUrl;
-                    this.pathName = this.router.url;
+                    this.pathName = rootUrl;
                 }
             });
     }
@@ -121,7 +119,8 @@ export class AnchorsComponent implements OnDestroy {
 
         if (target) {
             target.scrollTop += this.headerHeight;
-            target.scrollIntoView();
+            // scroll after docs-sidepanel scrolled
+            setTimeout(() => target.scrollIntoView());
         } else {
             this.scrollContainer.scroll(0, 0);
         }
