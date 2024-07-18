@@ -236,7 +236,10 @@ export class KbqModalCustomComponent {
 @Component({
     selector: 'kbq-modal-full-custom-component',
     template: `
-        <kbq-modal-title> Modal Title </kbq-modal-title>
+        <kbq-modal-title>
+            Modal Title,Modal Title,Modal Title,Modal Title,Modal
+             Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,
+        </kbq-modal-title>
 
         <kbq-modal-body>
             <h2>{{ title }}</h2>
