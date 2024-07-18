@@ -40,7 +40,9 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService,
+    DateAdapter,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
@@ -59,9 +61,8 @@ import {
     SECONDS_PER_MINUTE,
     TIMEFORMAT_PLACEHOLDERS,
     TimeFormats,
-    TimeParts,
-    AM_PM_FORMAT_REGEXP,
-    TimeFormatToLocaleKeys
+    TimeFormatToLocaleKeys,
+    TimeParts
 } from './timepicker.constants';
 
 /** @docs-private */
@@ -327,8 +328,10 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
     /** Localized placeholder */
     get timeFormatPlaceholder(): string {
-        return this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]]
-            || TIMEFORMAT_PLACEHOLDERS[this.format];
+        return (
+            this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]] ||
+            TIMEFORMAT_PLACEHOLDERS[this.format]
+        );
     }
 
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
@@ -366,8 +369,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
-        this.localeSubscription = dateAdapter.localeChanges
-            .subscribe(this.updateLocaleParams);
+        this.localeSubscription = dateAdapter.localeChanges.subscribe(this.updateLocaleParams);
     }
 
     ngOnDestroy(): void {

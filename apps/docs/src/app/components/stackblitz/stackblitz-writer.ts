@@ -90,8 +90,7 @@ export class StackblitzWriter {
                 .replace(/{{title}}/g, data.description)
                 .replace(/{{version}}/g, koobiqVersion);
         } else if (fileName === '.stackblitzrc') {
-            fileContent = fileContent
-                .replace(/\${startCommand}/, 'npm start');
+            fileContent = fileContent.replace(/\${startCommand}/, 'npm start');
         } else if (fileName === 'src/app/app.module.ts') {
             const joinedComponentNames = data.componentNames.join(', ');
             // Replace the component name in `main.ts`.

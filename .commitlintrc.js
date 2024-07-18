@@ -67,7 +67,6 @@ const scope_types = [
 ];
 
 /**
- * @see https://commitlint.js.org/reference/configuration
  * @type {import('@commitlint/types').UserConfig}
  */
 const config = {

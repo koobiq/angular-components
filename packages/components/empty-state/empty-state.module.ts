@@ -6,11 +6,10 @@ import { NgModule } from '@angular/core';
 import {
     KbqEmptyState,
     KbqEmptyStateActions,
-    KbqEmptyStateTitle,
     KbqEmptyStateIcon,
-    KbqEmptyStateText
+    KbqEmptyStateText,
+    KbqEmptyStateTitle
 } from './empty-state.component';
-
 
 @NgModule({
     imports: [

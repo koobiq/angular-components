@@ -314,9 +314,7 @@ export class KbqTreeSelection
     }
 
     highlightSelectedOption(): void {
-        this.renderedOptions
-            .find((item) => item.data === this.selectionModel.selected[0])
-            ?.focus();
+        this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0])?.focus();
     }
 
     blur() {

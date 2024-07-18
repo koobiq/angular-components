@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @see https://stylelint.io/user-guide/configure
  * @type {import('stylelint').Config}
  */
 const config = {

@@ -2,9 +2,9 @@
 import { ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { delay, Subject } from 'rxjs';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
+import { Subject, delay } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DocCategory, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
@@ -154,12 +154,10 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     needSelectDefaultItem = () => {
-        this._selectedItem = this.router.url
-            .replace('/', '')
-            .replace('/overview', '');
+        this._selectedItem = this.router.url.replace('/', '').replace('/overview', '');
 
         setTimeout(() => this.tree.highlightSelectedOption());
-    }
+    };
 
     toggle($event: MouseEvent, node) {
         if (node.id !== 'icons') {

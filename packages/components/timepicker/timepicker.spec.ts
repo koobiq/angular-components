@@ -721,30 +721,27 @@ describe('KbqTimepicker with null model value', () => {
 
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker
-                   [format]="timeFormat"
-                   [(ngModel)]="model">
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
+    </kbq-form-field>`
 })
 class TimepickerWithLocaleChange {
     timeFormat: TimeFormats;
     model: any = null;
 
-    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
-    }
+    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
-
 
 describe('with Locale change', () => {
     let fixture: ComponentFixture<TimepickerWithLocaleChange>;
     let testComponent: TimepickerWithLocaleChange;
     let inputElementDebug: DebugElement;
 
-    const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string => testComponent
-        .localeService.current.timepicker.placeholder[TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]];
+    const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string =>
+        testComponent.localeService.current.timepicker.placeholder[
+            TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]
+        ];
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -766,24 +763,28 @@ describe('with Locale change', () => {
         fixture.detectChanges();
     }));
 
-    it('should get placeholder from localeService',() => {
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+    it('should get placeholder from localeService', () => {
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]
+        );
         expect(getPlaceholderForCurrentLocale()).toEqual(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
     });
 
-    it('should update placeholder of nativeElement on locale change',() => {
+    it('should update placeholder of nativeElement on locale change', () => {
         testComponent.localeService.setLocale('en-US');
         fixture.detectChanges();
         expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale());
     });
 
-    it('should apply localized format on format change',() => {
+    it('should apply localized format on format change', () => {
         const selectedFormat = TimeFormats.HHmmss;
         testComponent.timeFormat = selectedFormat;
         fixture.detectChanges();
 
         expect(getPlaceholderForCurrentLocale(selectedFormat)).toEqual(TIMEFORMAT_PLACEHOLDERS[selectedFormat]);
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale(selectedFormat));
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            getPlaceholderForCurrentLocale(selectedFormat)
+        );
 
         testComponent.localeService.setLocale('en-US');
         fixture.detectChanges();
@@ -791,4 +792,4 @@ describe('with Locale change', () => {
             getPlaceholderForCurrentLocale(selectedFormat)
         );
     });
-})
+});

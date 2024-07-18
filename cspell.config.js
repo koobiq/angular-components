@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @see https://cspell.org/configuration/
  * @type {import('cspell').CSpellSettings}
  */
 const config = {

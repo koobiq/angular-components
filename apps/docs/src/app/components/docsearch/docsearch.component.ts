@@ -41,7 +41,6 @@ export class DocsearchComponent implements OnInit {
             if (osName.includes('Mac')) {
                 buttonText += ' ⌘K';
             }
-            /** @see https://docsearch.algolia.com/docs/api */
             docsearch({
                 ...this.DOCSEARCH_CONFIG,
                 container: this.DOCSEARCH_CONTAINER,

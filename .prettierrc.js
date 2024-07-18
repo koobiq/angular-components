@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @see https://prettier.io/docs/en/options
  * @type {import('prettier').Options}
  */
 const config = {

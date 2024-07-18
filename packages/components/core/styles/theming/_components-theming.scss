@@ -641,7 +641,7 @@
 
     $empty-state: (
         title: map.get($tokens, 'empty-state-#{$scheme}-title'),
-        color: map.get($tokens, 'empty-state-#{$scheme}-color'),
+        color: map.get($tokens, 'empty-state-#{$scheme}-color')
     );
 
     $form-field: (
