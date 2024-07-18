@@ -4,11 +4,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastCloseButton, KbqToastComponent } from './toast.component';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
-
 
 @NgModule({
     declarations: [
@@ -30,7 +28,6 @@ import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
     ],
     providers: [
         KbqToastService,
-        { provide: KBQ_TOAST_FACTORY, useFactory: () => KbqToastComponent }
-    ]
+        { provide: KBQ_TOAST_FACTORY, useFactory: () => KbqToastComponent }]
 })
 export class KbqToastModule {}

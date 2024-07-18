@@ -1,12 +1,9 @@
+import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
+import { Schema } from '@angular/cli/lib/config/workspace-schema';
+import { green } from 'chalk';
 import { execSync } from 'child_process';
 import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
-
-import { Schema } from '@angular/cli/lib/config/workspace-schema';
-
-import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
-import { green } from 'chalk';
-
 import { IPackagerOptions } from './schema';
 
 const packageVersionFilePath = './packages/components/core/version.ts';

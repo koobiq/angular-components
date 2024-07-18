@@ -1,7 +1,7 @@
 // tslint:disable:no-console
 
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -32,9 +32,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { Observable, of as observableOf } from 'rxjs';
-
-import { buildFileTree, FileFlatNode, FileNode, DATA_OBJECT } from '../tree/module';
-
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
@@ -44,15 +41,13 @@ import * as _moment from 'moment';
 // @ts-ignore
 // tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
-
+import { buildFileTree, DATA_OBJECT, FileFlatNode, FileNode } from '../tree/module';
 
 const moment = _rollupMoment || _moment;
-
 
 const INTERVAL: number = 300;
 const STEP: number = 4;
 const MAX_PERCENT: number = 100;
-
 
 @Component({
     selector: 'app',
@@ -128,8 +123,8 @@ export class DemoComponent {
     ];
 
     selectionList = [
-        {name: 'Yes', value: 'true', selected: false},
-        {name: 'No', value: 'false', selected: true}
+        { name: 'Yes', value: 'true', selected: false },
+        { name: 'No', value: 'false', selected: true }
     ];
 
     singleSelected = 'Normal';
@@ -146,17 +141,15 @@ export class DemoComponent {
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
     constructor(private modalService: KbqModalService) {
-        setInterval(
-            () => this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP),
-            INTERVAL
-        );
+        setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
 
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -166,10 +159,10 @@ export class DemoComponent {
 
     showConfirm() {
         this.modalService.success({
-            kbqContent   : 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
-            kbqOkText    : 'Сохранить',
+            kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
+            kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk      : () => console.log('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -186,12 +179,14 @@ export class DemoComponent {
         flatNode.expandable = !!node.children;
 
         return flatNode;
+    };
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) { return nodeData.expandable; }
-
     hasNestedChild(_: number, nodeData: FileNode) {
-        return !(nodeData.type);
+        return !nodeData.type;
     }
 
     ngOnDestroy() {
@@ -200,11 +195,11 @@ export class DemoComponent {
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => node.level;
 
@@ -212,9 +207,8 @@ export class DemoComponent {
 
     private getChildren = (node: FileNode): Observable<FileNode[]> => {
         return observableOf(node.children);
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [

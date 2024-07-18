@@ -13,22 +13,10 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
-import {
-    auditTime,
-    BehaviorSubject,
-    distinctUntilChanged,
-    fromEvent,
-    map,
-    Subject,
-    takeUntil
-} from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { IconItems, IconItem } from 'src/app/components/icons-items/icon-items';
-
+import { BehaviorSubject, Subject, auditTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { IconItem, IconItems } from 'src/app/components/icons-items/icon-items';
 import { DocStates } from '../../components/doс-states';
-
 import { IconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
-
 
 const SEARCH_DEBOUNCE_TIME = 300;
 
@@ -66,26 +54,20 @@ export class IconsViewerComponent implements OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef
     ) {
-        this.http
-            .get('assets/SVGIcons/mc-icons-info.json', { responseType: 'json' })
-            .subscribe((data) => {
-                this.iconItems = new IconItems(data);
+        this.http.get('assets/SVGIcons/mc-icons-info.json', { responseType: 'json' }).subscribe((data) => {
+            this.iconItems = new IconItems(data);
 
-                this.availableSizes = Array
-                    .from(this.iconItems.sizes)
-                    .sort((a, b) => a - b);
+            this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
 
-                this.init();
-                this.refreshTitle(undefined);
+            this.init();
+            this.refreshTitle(undefined);
 
-                this.changeDetectorRef.markForCheck();
-            });
+            this.changeDetectorRef.markForCheck();
+        });
 
-        this.location
-            .subscribe(() => this.modalService.closeAll());
+        this.location.subscribe(() => this.modalService.closeAll());
 
-        this.activeRoute.queryParamMap
-            .subscribe(({ params }: any) => this.queryParamMap = params);
+        this.activeRoute.queryParamMap.subscribe(({ params }: any) => (this.queryParamMap = params));
 
         this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);
     }
@@ -100,15 +82,18 @@ export class IconsViewerComponent implements OnDestroy {
                 map((value) => {
                     this.syncSearchQuery(value);
 
-                    if (!value) { return this.iconItems.getItems(); }
+                    if (!value) {
+                        return this.iconItems.getItems();
+                    }
 
                     const lowered = value?.toLowerCase() || '';
 
                     const items = this.iconItems
                         .getItems()
-                        .filter((item) =>
-                            item.name.toLowerCase().includes(lowered) ||
-                            item.tags.some((tag) => tag.toLowerCase().includes(lowered))
+                        .filter(
+                            (item) =>
+                                item.name.toLowerCase().includes(lowered) ||
+                                item.tags.some((tag) => tag.toLowerCase().includes(lowered))
                         );
 
                     return items.length ? items : undefined;
@@ -117,22 +102,21 @@ export class IconsViewerComponent implements OnDestroy {
             )
             .subscribe((filteredItems) => this.filteredIcons.next(filteredItems));
 
-        this.activeRoute.queryParams
-            .subscribe((params) => {
-                if (params.id) {
-                    const iconItem = this.iconItems.getItemById(params.id);
+        this.activeRoute.queryParams.subscribe((params) => {
+            if (params.id) {
+                const iconItem = this.iconItems.getItemById(params.id);
 
-                    if (iconItem) {
-                        this.openIconPreview(iconItem);
-                    } else {
-                        this.setActiveIcon(undefined);
-                    }
-
-                    return;
+                if (iconItem) {
+                    this.openIconPreview(iconItem);
+                } else {
+                    this.setActiveIcon(undefined);
                 }
 
-                this.searchControl.setValue(params.s);
-            });
+                return;
+            }
+
+            this.searchControl.setValue(params.s);
+        });
     }
 
     filterBySize(icons: IconItem[], size: number): IconItem[] {
@@ -152,18 +136,20 @@ export class IconsViewerComponent implements OnDestroy {
     }
 
     openIconPreview(iconItem: IconItem): void {
-        this.modalService.open({
-            kbqComponent: IconPreviewModalComponent,
-            kbqComponentParams: { iconItem },
-            kbqClassName: 'icon-preview-modal',
-            kbqWidth: 400
-        }).afterClose.subscribe((result: string) => {
-            if (result) {
-                this.searchControl.setValue(result);
-            }
+        this.modalService
+            .open({
+                kbqComponent: IconPreviewModalComponent,
+                kbqComponentParams: { iconItem },
+                kbqClassName: 'icon-preview-modal',
+                kbqWidth: 400
+            })
+            .afterClose.subscribe((result: string) => {
+                if (result) {
+                    this.searchControl.setValue(result);
+                }
 
-            this.setActiveIcon(undefined);
-        });
+                this.setActiveIcon(undefined);
+            });
     }
 
     ngOnDestroy(): void {
@@ -172,7 +158,9 @@ export class IconsViewerComponent implements OnDestroy {
     }
 
     private syncSearchQuery(value: string) {
-        if (value === this.queryParamMap.s) { return; }
+        if (value === this.queryParamMap.s) {
+            return;
+        }
 
         this.router.navigate([], {
             relativeTo: this.activeRoute,

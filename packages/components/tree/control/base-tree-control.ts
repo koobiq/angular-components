@@ -1,8 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
-
 import { TreeControl } from './tree-control';
-
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 /* tslint:disable-next-line:naming-convention */
@@ -36,21 +34,27 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
 
     /** Toggles one single data node's expanded/collapsed state. */
     toggle(dataNode: T): void {
-        if (this.filterValue.value?.length) { return; }
+        if (this.filterValue.value?.length) {
+            return;
+        }
 
         this.expansionModel.toggle(dataNode);
     }
 
     /** Expands one single data node. */
     expand(dataNode: T): void {
-        if (this.filterValue.value?.length) { return; }
+        if (this.filterValue.value?.length) {
+            return;
+        }
 
         this.expansionModel.select(dataNode);
     }
 
     /** Collapses one single data node. */
     collapse(dataNode: T): void {
-        if (this.filterValue.value?.length) { return; }
+        if (this.filterValue.value?.length) {
+            return;
+        }
 
         this.expansionModel.deselect(dataNode);
     }

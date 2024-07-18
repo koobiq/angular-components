@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, NgModule } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { IDocsSiteTheme, ThemeStorage } from './theme-storage/theme-storage';
-
 
 @Component({
     selector: 'theme-picker',
@@ -10,7 +8,7 @@ import { IDocsSiteTheme, ThemeStorage } from './theme-storage/theme-storage';
     styleUrls: ['theme-picker.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    host: {'aria-hidden': 'true'}
+    host: { 'aria-hidden': 'true' }
 })
 export class ThemePicker {
     currentTheme;
@@ -47,10 +45,8 @@ export class ThemePicker {
     }
 
     private getCurrentThemeFromHref(href: string) {
-
         return this.themes.find((theme) => theme.href === href);
     }
-
 }
 
 @NgModule({
@@ -61,4 +57,4 @@ export class ThemePicker {
     declarations: [ThemePicker],
     providers: [ThemeStorage]
 })
-export class ThemePickerModule { }
+export class ThemePickerModule {}

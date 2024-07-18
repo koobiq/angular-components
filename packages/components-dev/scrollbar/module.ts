@@ -1,11 +1,7 @@
 import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-    KbqScrollbarModule,
-    KbqScrollbarEvents,
-    KbqScrollbarOptions
-} from '@koobiq/components/scrollbar';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
 
 @Component({
     selector: 'app',
@@ -26,9 +22,9 @@ export class DemoComponent {
     onScroll([instance, args]) {
         console.log(instance, args);
         this.scrollCounter++;
-    };
+    }
 
-    onInitialize($event)  {
+    onInitialize($event) {
         console.log($event);
     }
 
@@ -49,7 +45,6 @@ export class DemoComponent {
                     Proin eget tortor risus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Proin eget tortor risus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
                     `;
 }
-
 
 /* tslint:disable:max-classes-per-file */
 @NgModule({

@@ -23,23 +23,23 @@ import {
     Validators
 } from '@angular/forms';
 import {
-    UP_ARROW,
-    RIGHT_ARROW,
-    DOWN_ARROW,
-    LEFT_ARROW,
-    END,
-    PAGE_DOWN,
-    HOME,
-    PAGE_UP,
-    SPACE,
-    TAB,
-    ESCAPE,
-    DELETE,
     BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ESCAPE,
     hasModifierKey,
+    HOME,
     isHorizontalMovement,
     isLetterKey,
-    isVerticalMovement
+    isVerticalMovement,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter,
@@ -53,10 +53,8 @@ import {
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
-
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepicker } from './datepicker.component';
-
 
 // tslint:disable:naming-convention
 enum DateParts {
@@ -74,7 +72,11 @@ class DateDigit {
 
     parse: (value: string) => number;
 
-    constructor(public value: DateParts, public start: number, public length: number) {
+    constructor(
+        public value: DateParts,
+        public start: number,
+        public length: number
+    ) {
         if (value === DateParts.day) {
             this.parse = this.parseDay;
         } else if (value === DateParts.month) {
@@ -101,11 +103,17 @@ class DateDigit {
     }
 
     get fullName(): string {
-        if (this.isDay) { return 'date'; }
+        if (this.isDay) {
+            return 'date';
+        }
 
-        if (this.isMonth) { return 'month'; }
+        if (this.isMonth) {
+            return 'month';
+        }
 
-        if (this.isYear) { return 'year'; }
+        if (this.isYear) {
+            return 'year';
+        }
 
         return '';
     }
@@ -113,9 +121,13 @@ class DateDigit {
     private parseDay(value: string): number {
         const parsedValue: number = parseInt(value);
 
-        if (parsedValue === 0) { return 1; }
+        if (parsedValue === 0) {
+            return 1;
+        }
 
-        if (parsedValue > this.maxDays) { return this.maxDays; }
+        if (parsedValue > this.maxDays) {
+            return this.maxDays;
+        }
 
         return parsedValue;
     }
@@ -123,9 +135,13 @@ class DateDigit {
     private parseMonth(value: string): number {
         const parsedValue: number = parseInt(value);
 
-        if (parsedValue === 0) { return 1; }
+        if (parsedValue === 0) {
+            return 1;
+        }
 
-        if (parsedValue > this.maxMonth) { return this.maxMonth; }
+        if (parsedValue > this.maxMonth) {
+            return this.maxMonth;
+        }
 
         return parsedValue;
     }
@@ -133,9 +149,13 @@ class DateDigit {
     private parseYear(value: string): number {
         const parsedValue: number = parseInt(value);
 
-        if (parsedValue === 0) { return 1; }
+        if (parsedValue === 0) {
+            return 1;
+        }
 
-        if (parsedValue > MAX_YEAR) { return parseInt(value.substring(0, YEAR_LENGTH)); }
+        if (parsedValue > MAX_YEAR) {
+            return parseInt(value.substring(0, YEAR_LENGTH));
+        }
 
         return parsedValue;
     }
@@ -154,7 +174,6 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
     useExisting: forwardRef(() => KbqDatepickerInput),
     multi: true
 };
-
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -187,7 +206,6 @@ interface DateTimeObject {
     milliseconds: number;
 }
 
-
 /** Directive used to connect an input to a KbqDatepicker. */
 @Directive({
     selector: 'input[kbqDatepicker]',
@@ -195,8 +213,7 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
-        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }
-    ],
+        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
     host: {
         class: 'kbq-input kbq-datepicker',
         '[attr.placeholder]': 'placeholder',
@@ -260,21 +277,22 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     /** The datepicker that this input is associated with. */
     @Input()
     set kbqDatepicker(value: KbqDatepicker<D>) {
-        if (!value) { return; }
+        if (!value) {
+            return;
+        }
 
         this.datepicker = value;
         this.datepicker.registerInput(this);
         this.datepickerSubscription.unsubscribe();
 
-        this.datepickerSubscription = this.datepicker.selectedChanged
-            .subscribe((selected: D) => {
-                const newValue = this.saveTimePart(selected);
+        this.datepickerSubscription = this.datepicker.selectedChanged.subscribe((selected: D) => {
+            const newValue = this.saveTimePart(selected);
 
-                this.value = newValue;
-                this.cvaOnChange(newValue);
-                this.onTouched();
-                this.dateChange.emit(new KbqDatepickerInputEvent(this, this.elementRef.nativeElement));
-            });
+            this.value = newValue;
+            this.cvaOnChange(newValue);
+            this.onTouched();
+            this.dateChange.emit(new KbqDatepickerInputEvent(this, this.elementRef.nativeElement));
+        });
     }
 
     /** Function that can be used to filter out dates within the datepicker. */
@@ -373,7 +391,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     @Input()
     set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
-        if (!tooltip) { return; }
+        if (!tooltip) {
+            return;
+        }
 
         tooltip.enterDelay = validationTooltipShowDelay;
         tooltip.trigger = 'manual';
@@ -381,7 +401,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         tooltip.initListeners();
 
         this.incorrectInput.subscribe(() => {
-            if (tooltip.isOpen) { return; }
+            if (tooltip.isOpen) {
+                return;
+            }
 
             tooltip.show();
 
@@ -480,8 +502,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         this.setFormat(this.dateInputFormat);
 
-        this.localeSubscription = adapter.localeChanges
-            .subscribe(this.updateLocaleParams);
+        this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
     }
 
     onContainerClick() {
@@ -543,7 +564,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (this.isReadOnly) { return; }
+        if (this.isReadOnly) {
+            return;
+        }
 
         const keyCode = event.keyCode;
 
@@ -611,13 +634,15 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat), true);
 
-        this.selectNextDigitByCursor((this.selectionStart as number));
+        this.selectNextDigitByCursor(this.selectionStart as number);
 
         this.updateValue(newTimeObj);
-    }
+    };
 
     parseOnBlur = (): any => {
-        if (!this.viewValue || !this.readyForParse) { return null; }
+        if (!this.viewValue || !this.readyForParse) {
+            return null;
+        }
 
         const date: DateTimeObject = this.getDefaultValue();
 
@@ -640,8 +665,10 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         date[this.secondDigit!.fullName] = this.secondDigit!.parse(secondViewDigit);
         date[this.thirdDigit!.fullName] = this.thirdDigit!.parse(thirdViewDigit);
 
-        const [digitWithYear, viewDigitWithYear] = [this.firstDigit, this.secondDigit, this.thirdDigit]
-            .reduce((acc: any, digit, index) => digit!.value === DateParts.year ? [digit, viewDigits[index]] : acc, []);
+        const [digitWithYear, viewDigitWithYear] = [this.firstDigit, this.secondDigit, this.thirdDigit].reduce(
+            (acc: any, digit, index) => (digit!.value === DateParts.year ? [digit, viewDigits[index]] : acc),
+            []
+        );
 
         // tslint:disable-next-line:no-magic-numbers
         if (viewDigitWithYear.length < 3) {
@@ -674,7 +701,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat), true);
 
         this.updateValue(newTimeObj);
-    }
+    };
 
     onChange() {
         setTimeout(() => {
@@ -734,7 +761,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private saveTimePart(selected: D) {
-        if (!this.value) { return selected; }
+        if (!this.value) {
+            return selected;
+        }
 
         const years = this.adapter.getYear(selected);
         const month = this.adapter.getMonth(selected);
@@ -756,7 +785,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         }
 
         this.value = this.value;
-    }
+    };
 
     private setFormat(format: string): void {
         // @ts-ignore
@@ -764,7 +793,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         this.separatorPositions = format
             .split('')
-            .reduce((acc: any, item, index: number) => this.separator === item ? [...acc, index + 1] : acc, []);
+            .reduce((acc: any, item, index: number) => (this.separator === item ? [...acc, index + 1] : acc), []);
 
         this.getDigitPositions(format);
     }
@@ -793,9 +822,12 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private isKeyForByPass(event: KeyboardEvent): boolean {
-        return (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
-        event.ctrlKey || event.metaKey ||
-        [DELETE, BACKSPACE, TAB].includes(event.keyCode);
+        return (
+            (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
+            event.ctrlKey ||
+            event.metaKey ||
+            [DELETE, BACKSPACE, TAB].includes(event.keyCode)
+        );
     }
 
     private spaceKeyHandler(event: KeyboardEvent) {
@@ -837,26 +869,27 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getDateFromString(timeString: string): D | null {
-        if (!timeString || timeString.length < this.firstDigit!.length) { return null; }
+        if (!timeString || timeString.length < this.firstDigit!.length) {
+            return null;
+        }
 
         const date = this.getDefaultValue();
 
-        const viewDigits: string[] = timeString
-            .split(this.separator)
-            .map((value: string) => value);
+        const viewDigits: string[] = timeString.split(this.separator).map((value: string) => value);
 
         const [firsViewDigit, secondViewDigit, thirdViewDigit] = viewDigits;
 
-
         if (viewDigits.length === 1) {
-            if (/\D/.test(firsViewDigit) || firsViewDigit.length < this.firstDigit!.length) { return null; }
+            if (/\D/.test(firsViewDigit) || firsViewDigit.length < this.firstDigit!.length) {
+                return null;
+            }
 
             date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
 
             if (this.firstDigit!.isDay) {
                 date.month = 1;
             }
-        // tslint:disable-next-line:no-magic-numbers
+            // tslint:disable-next-line:no-magic-numbers
         } else if (viewDigits.length === 2) {
             if (firsViewDigit.length < this.firstDigit!.length || secondViewDigit.length < this.secondDigit!.length) {
                 return null;
@@ -864,13 +897,15 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
             date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
             date[this.secondDigit!.fullName] = this.secondDigit!.parse(secondViewDigit);
-        // tslint:disable-next-line:no-magic-numbers
+            // tslint:disable-next-line:no-magic-numbers
         } else if (viewDigits.length === 3) {
             if (
                 firsViewDigit.length < this.firstDigit!.length ||
                 secondViewDigit.length < this.secondDigit!.length ||
                 thirdViewDigit.length < this.thirdDigit!.length
-            ) { return null; }
+            ) {
+                return null;
+            }
 
             const digitViewValue: { date?: number; month?: number; year?: number } = {};
             const dateDigits = [this.firstDigit, this.secondDigit, this.thirdDigit];
@@ -879,8 +914,12 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             }
 
             if (this.value && digitViewValue.month && digitViewValue.month <= this.firstDigit!.maxMonth) {
-                dateDigits.forEach((digit) => digit!.maxDays = this.getLastDayFor(
-                    digitViewValue.year as number, digitViewValue.month as number - 1)
+                dateDigits.forEach(
+                    (digit) =>
+                        (digit!.maxDays = this.getLastDayFor(
+                            digitViewValue.year as number,
+                            (digitViewValue.month as number) - 1
+                        ))
                 );
             }
 
@@ -909,16 +948,16 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getTimeStringFromDate(value: D | null, timeFormat: string): string {
-        if (!value || !this.adapter.isValid(value)) { return ''; }
+        if (!value || !this.adapter.isValid(value)) {
+            return '';
+        }
 
         return this.adapter.format(value, timeFormat);
     }
 
-    private getDateEditMetrics(cursorPosition: number): [
-        modifiedTimePart: DateParts,
-        cursorStartPosition: number,
-        cursorEndPosition: number
-    ] {
+    private getDateEditMetrics(
+        cursorPosition: number
+    ): [modifiedTimePart: DateParts, cursorStartPosition: number, cursorEndPosition: number] {
         for (const digit of [this.firstDigit, this.secondDigit, this.thirdDigit]) {
             if (cursorPosition >= digit!.start && cursorPosition <= digit!.end) {
                 return [digit!.value, digit!.start, digit!.end];
@@ -1019,7 +1058,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private verticalArrowKeyHandler(keyCode: number): void {
-        if (!this.value) { return; }
+        if (!this.value) {
+            return;
+        }
 
         let changedTime;
 
@@ -1045,7 +1086,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private changeCaretPosition(keyCode: number): void {
-        if (!this.value) { return; }
+        if (!this.value) {
+            return;
+        }
 
         let cursorPos = this.selectionStart as number;
 
@@ -1099,7 +1142,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     /** Checks whether the input is invalid based on the native validation. */
     private isBadInput(): boolean {
-        const validity = (<HTMLInputElement> this.elementRef.nativeElement).validity;
+        const validity = (<HTMLInputElement>this.elementRef.nativeElement).validity;
 
         return validity && validity.badInput;
     }
@@ -1112,36 +1155,37 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     /** The form control validator for whether the input parses. */
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
-        return this.focused ||
-            this.empty ||
-            this.lastValueValid ? null : { kbqDatepickerParse: { text: this.elementRef.nativeElement.value } };
-    }
+        return this.focused || this.empty || this.lastValueValid
+            ? null
+            : { kbqDatepickerParse: { text: this.elementRef.nativeElement.value } };
+    };
 
     /** The form control validator for the min date. */
     private minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.adapter.deserialize(control.value);
 
-        return !this.min || !controlValue || this.adapter.compareDateTime(this.min, controlValue) <= 0 ?
-            null :
-            { kbqDatepickerMin: { min: this.min, actual: controlValue } };
-    }
+        return !this.min || !controlValue || this.adapter.compareDateTime(this.min, controlValue) <= 0
+            ? null
+            : { kbqDatepickerMin: { min: this.min, actual: controlValue } };
+    };
 
     /** The form control validator for the max date. */
     private maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.adapter.deserialize(control.value);
 
-        return !this.max || !controlValue || this.adapter.compareDateTime(this.max, controlValue) >= 0 ?
-            null :
-            { kbqDatepickerMax: { max: this.max, actual: controlValue } };
-    }
+        return !this.max || !controlValue || this.adapter.compareDateTime(this.max, controlValue) >= 0
+            ? null
+            : { kbqDatepickerMax: { max: this.max, actual: controlValue } };
+    };
 
     /** The form control validator for the date filter. */
     private filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.adapter.deserialize(control.value);
 
-        return !this.dateFilter || !controlValue || this.dateFilter(controlValue) ?
-            null : { kbqDatepickerFilter: true };
-    }
+        return !this.dateFilter || !controlValue || this.dateFilter(controlValue)
+            ? null
+            : { kbqDatepickerFilter: true };
+    };
 
     /** Formats a value and sets it on the input element. */
     private formatValue(value: D | null) {
@@ -1151,12 +1195,13 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private setControl(control: AbstractControl) {
-        if (this.control) { return; }
+        if (this.control) {
+            return;
+        }
 
         this.control = control;
 
-        this.control.valueChanges
-            .subscribe((value) => this._value = value);
+        this.control.valueChanges.subscribe((value) => (this._value = value));
     }
 
     /**
@@ -1164,7 +1209,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
      * @returns The given object if it is both a date instance and valid, otherwise null.
      */
     private getValidDateOrNull(obj: any): D | null {
-        return (this.adapter.isDateInstance(obj) && this.adapter.isValid(obj)) ? obj : null;
+        return this.adapter.isDateInstance(obj) && this.adapter.isValid(obj) ? obj : null;
     }
 
     private getDigitPositions(format: string) {
@@ -1172,30 +1217,28 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         const formatInLowerCase = format.toLowerCase();
 
-        formatInLowerCase
-            .split('')
-            .reduce(
-                ({ prev, length, start }: any, value: string, index: number, arr) => {
-                    if (value === this.separator || (arr.length - 1) === index) {
-                        if (!this.firstDigit) {
-                            this.firstDigit = new DateDigit(prev, start, length);
-                        } else if (!this.secondDigit) {
-                            this.secondDigit = new DateDigit(prev, start, length);
-                        } else if (!this.thirdDigit) {
-                            this.thirdDigit = new DateDigit(prev, start, arr.length - start);
-                        }
-
-                        // tslint:disable:no-parameter-reassignment
-                        length = 0;
-                        start = index + 1;
-                    } else {
-                        length++;
+        formatInLowerCase.split('').reduce(
+            ({ prev, length, start }: any, value: string, index: number, arr) => {
+                if (value === this.separator || arr.length - 1 === index) {
+                    if (!this.firstDigit) {
+                        this.firstDigit = new DateDigit(prev, start, length);
+                    } else if (!this.secondDigit) {
+                        this.secondDigit = new DateDigit(prev, start, length);
+                    } else if (!this.thirdDigit) {
+                        this.thirdDigit = new DateDigit(prev, start, arr.length - start);
                     }
 
-                    return { prev: value, length, start };
-                },
-                { length: 0, start: 0 }
-            );
+                    // tslint:disable:no-parameter-reassignment
+                    length = 0;
+                    start = index + 1;
+                } else {
+                    length++;
+                }
+
+                return { prev: value, length, start };
+            },
+            { length: 0, start: 0 }
+        );
 
         if (!this.firstDigit || !this.secondDigit || !this.thirdDigit) {
             Error(`Can' t use this format: ${format}`);
@@ -1215,7 +1258,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private createDateTime(value: DateTimeObject): D | null {
-        if (Object.values(value).some(isNaN)) { return null; }
+        if (Object.values(value).some(isNaN)) {
+            return null;
+        }
 
         return this.adapter.createDateTime(
             value.year,

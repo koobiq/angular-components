@@ -1,13 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation,
-    ElementRef,
-    Input,
-    Directive
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
-
 
 export type ProgressBarMode = 'determinate' | 'indeterminate';
 
@@ -22,8 +14,10 @@ export class KbqProgressBarBase {
 }
 
 /** @docs-private */
-export const KbqProgressBarMixinBase:
-    CanColorCtor & typeof KbqProgressBarBase = mixinColor(KbqProgressBarBase, KbqComponentColors.Theme);
+export const KbqProgressBarMixinBase: CanColorCtor & typeof KbqProgressBarBase = mixinColor(
+    KbqProgressBarBase,
+    KbqComponentColors.Theme
+);
 
 @Directive({
     selector: '[kbq-progress-bar-text]',

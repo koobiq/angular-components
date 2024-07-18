@@ -1,7 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
-
 /**
  * @title popover-scroll
  */

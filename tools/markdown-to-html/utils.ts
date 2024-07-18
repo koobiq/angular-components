@@ -1,8 +1,7 @@
-import { GlobSync } from 'glob';
-import { access, mkdir, readFile, writeFile } from 'fs/promises';
-import { basename, join } from 'path';
 import chalk from 'chalk';
-
+import { access, mkdir, readFile, writeFile } from 'fs/promises';
+import { GlobSync } from 'glob';
+import { basename, join } from 'path';
 import { configureMarkedGlobally } from './marked/configuration';
 import { DocsMarkdownRenderer } from './marked/docs-marked-renderer';
 
@@ -28,30 +27,29 @@ export const src = (path: string | string[]): string[] => {
     }
 
     return res;
-}
+};
 
-export const createDirIfNotExists = (dir: string) => access(dir)
-    .then(() => undefined)
-    .catch(() => mkdir(dir, { recursive: true }));
+export const createDirIfNotExists = (dir: string) =>
+    access(dir)
+        .then(() => undefined)
+        .catch(() => mkdir(dir, { recursive: true }));
 
-export const docTask = (taskId: string, { source, dest }: { source: string | string[], dest: string }) => {
+export const docTask = (taskId: string, { source, dest }: { source: string | string[]; dest: string }) => {
     return async () => {
         console.log(`Starting ${chalk.blue(taskId)}...`);
         await createDirIfNotExists(dest);
 
         const promises = src(source).map(async (inputPath: string) => {
-            const outputPath = join(
-                dest, basename(inputPath).replace(markdownExtension, '.html')
-            );
+            const outputPath = join(dest, basename(inputPath).replace(markdownExtension, '.html'));
             const mdContent = await readFile(inputPath, 'utf8');
-            const htmlOutput = markdownRenderer.finalizeOutput(marked.parse(mdContent) as string)
+            const htmlOutput = markdownRenderer.finalizeOutput(marked.parse(mdContent) as string);
 
             return await writeFile(outputPath, htmlOutput);
-        })
+        });
 
         const res = await Promise.all(promises);
         console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
         console.log(chalk.green('------------------------------------------------------------------------------'));
         return res;
-    }
-}
+    };
+};

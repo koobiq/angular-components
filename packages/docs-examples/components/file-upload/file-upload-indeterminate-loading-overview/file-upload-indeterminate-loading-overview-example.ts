@@ -4,7 +4,6 @@ import { KbqFileItem } from '@koobiq/components/file-upload';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-
 /**
  * @title Button's colors
  */
@@ -18,7 +17,9 @@ export class FileUploadIndeterminateLoadingOverviewExample {
     themePalette = ThemePalette;
 
     onFileChange(file: KbqFileItem | null) {
-        if (!file) { return; }
+        if (!file) {
+            return;
+        }
 
         const fakeBackendResponse = timer(1500);
 
@@ -31,7 +32,9 @@ export class FileUploadIndeterminateLoadingOverviewExample {
     }
 
     onFilesChange(files: KbqFileItem[] | null) {
-        if (!files?.length) { return; }
+        if (!files?.length) {
+            return;
+        }
 
         const fakeBackendResponse = timer(1500);
 

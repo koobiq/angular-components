@@ -20,35 +20,33 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-
 import { DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
+    MockNgZone,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    MockNgZone,
     typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqLocaleServiceModule, KbqOption, KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-
+import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { KbqInputModule } from '../input/index';
 import {
-    getKbqAutocompleteMissingPanelError,
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
     KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
     KbqAutocomplete,
     KbqAutocompleteModule,
     KbqAutocompleteOrigin,
     KbqAutocompleteSelectedEvent,
-    KbqAutocompleteTrigger
+    KbqAutocompleteTrigger,
+    getKbqAutocompleteMissingPanelError
 } from './index';
 
 describe('KbqAutocomplete', () => {
@@ -403,8 +401,7 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.openedSpy).not.toHaveBeenCalled();
 
             fixture.componentInstance.filteredStates = fixture.componentInstance.states = [
-                { name: 'California', code: 'CA' }
-            ];
+                { name: 'California', code: 'CA' }];
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -512,8 +509,7 @@ describe('KbqAutocomplete', () => {
 
     it('should have the correct text direction in RTL', () => {
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) }
-        ]);
+            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) }]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -526,8 +522,7 @@ describe('KbqAutocomplete', () => {
     it('should update the panel direction if it changes for the trigger', () => {
         const dirProvider = { value: 'rtl', change: EMPTY };
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => dirProvider }
-        ]);
+            { provide: Directionality, useFactory: () => dirProvider }]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -1709,8 +1704,7 @@ describe('KbqAutocomplete', () => {
             fixture.destroy();
             TestBed.resetTestingModule();
             fixture = createComponent(SimpleAutocomplete, [
-                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }
-            ]);
+                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }]);
 
             fixture.detectChanges();
             fixture.componentInstance.trigger.openPanel();
@@ -2683,9 +2677,7 @@ class AutocompleteWithNativeInput {
 }
 
 @Component({
-    template: `
-        <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" />
-    `
+    template: ` <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" /> `
 })
 class AutocompleteWithoutPanel {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;

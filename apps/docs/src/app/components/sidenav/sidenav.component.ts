@@ -2,21 +2,19 @@
 import { ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { delay, Subject } from 'rxjs';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
+import { Subject, delay } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-
 import { DocCategory, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
-
 
 enum TreeNodeType {
     Category = 'Category',
     Item = 'Item'
 }
 class TreeNode {
-    constructor (
+    constructor(
         public id: string,
         public children: TreeNode[],
         public name: string,
@@ -65,7 +63,9 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild('tree') tree: KbqTreeSelection;
 
     set category(value: string) {
-        if (!value || value === this._category) { return; }
+        if (!value || value === this._category) {
+            return;
+        }
 
         this.dataSource.data = buildTree(this.docItems.getCategories(value));
 
@@ -84,11 +84,9 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     set selectedItem(value: string) {
-        if (
-            !value ||
-            this._selectedItem === value ||
-            value !== 'icons' && value.search('/') === -1
-        ) { return; }
+        if (!value || this._selectedItem === value || (value !== 'icons' && value.search('/') === -1)) {
+            return;
+        }
 
         this._selectedItem = value;
 
@@ -103,7 +101,6 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
 
     private destroy: Subject<void> = new Subject();
 
-
     constructor(
         public docStates: DocStates,
         private docItems: DocumentationItems,
@@ -111,12 +108,13 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         private routeActivated: ActivatedRoute,
         private viewportScroller: ViewportScroller
     ) {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<TreeFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -156,14 +154,14 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     needSelectDefaultItem = () => {
-        this._selectedItem = this.router.url
-            .replace('/', '')
-            .replace('/overview', '');
+        this._selectedItem = this.router.url.replace('/', '').replace('/overview', '');
 
         setTimeout(() => this.tree.highlightSelectedOption());
-    }
+    };
 
-    hasChild(_: number, nodeData: TreeFlatNode) { return nodeData.expandable; }
+    hasChild(_: number, nodeData: TreeFlatNode) {
+        return nodeData.expandable;
+    }
 
     toggle($event: MouseEvent, node) {
         if (node.id !== 'icons') {
@@ -188,26 +186,25 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: TreeFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: TreeFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: TreeNode): TreeNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: TreeFlatNode) => {
         return node.id;
-    }
+    };
 
     private getViewValue = (node: TreeFlatNode): string => {
         return node.name;
-    }
-
+    };
 }

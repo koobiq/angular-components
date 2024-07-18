@@ -1,12 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Overlay,
-    ScrollDispatcher,
-    ScrollStrategy,
-    OverlayConfig
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -27,17 +22,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
+    KbqComponentColors,
     KbqPopUp,
     KbqPopUpTrigger,
-    PopUpPlacements,
-    PopUpTriggers,
     POSITION_TO_CSS_MAP,
-    KbqComponentColors
+    PopUpPlacements,
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
-
 import { kbqTooltipAnimations } from './tooltip.animations';
-
 
 export enum TooltipModifier {
     Default = 'default',
@@ -54,7 +47,6 @@ export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
 };
 
 export const MIN_TIME_FOR_DELAY = 2000;
-
 
 @Component({
     selector: 'kbq-tooltip-component',
@@ -95,8 +87,7 @@ export class KbqTooltipComponent extends KbqPopUp {
     }
 }
 
-export const KBQ_TOOLTIP_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy');
+export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy');
 
 /** @docs-private */
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
@@ -243,23 +234,27 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
 
-        this.focusMonitor.monitor(this.elementRef.nativeElement)
+        this.focusMonitor.monitor(this.elementRef.nativeElement);
     }
 
     ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement)
+        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
 
         super.ngOnDestroy();
     }
 
     show(delay: number = this.enterDelay) {
-        if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') { return; }
+        if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') {
+            return;
+        }
 
         super.show(delay);
     }
 
     updateData() {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
         this.instance.content = this.content;
         this.instance.detectChanges();
@@ -277,17 +272,16 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     }
 
     updateClassMap(newPlacement: string = this.placement) {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
-        this.instance.updateClassMap(
-            POSITION_TO_CSS_MAP[newPlacement],
-            `${this.customClass} ${this.color}`,
-            { modifier: this.modifier }
-        );
+        this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.color}`, {
+            modifier: this.modifier
+        });
         this.instance.markForCheck();
     }
 }
-
 
 @Directive({
     selector: '[kbqWarningTooltip]',
@@ -372,13 +366,15 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
         hostView: ViewContainerRef,
         @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
         @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
+        focusMonitor: FocusMonitor
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
     }
 
     updateData() {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
         super.updateData();
         this.instance.header = this.header;

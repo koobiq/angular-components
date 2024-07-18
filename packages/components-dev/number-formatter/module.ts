@@ -14,7 +14,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
-
 @Component({
     selector: 'app',
     templateUrl: './demo-template.html',
@@ -27,16 +26,16 @@ export class DemoComponent {
     locales: any[];
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
-
-        this.locales = this.localeService.locales.items
-            .map((item) => ({ ...item, selected: item.id === this.localeService.id }));
+        this.locales = this.localeService.locales.items.map((item) => ({
+            ...item,
+            selected: item.id === this.localeService.id
+        }));
     }
 
     selectLanguage(lang: any) {
         this.localeService.setLocale(lang.id);
     }
 }
-
 
 @NgModule({
     imports: [

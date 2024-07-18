@@ -1,11 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation
-} from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqTreeBase } from './tree-base';
-
 
 @Component({
     selector: 'kbq-tree',

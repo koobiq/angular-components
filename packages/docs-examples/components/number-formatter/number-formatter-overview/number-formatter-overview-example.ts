@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Basic progress number-formatter
  */

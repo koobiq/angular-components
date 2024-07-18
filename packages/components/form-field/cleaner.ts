@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 @Component({
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',

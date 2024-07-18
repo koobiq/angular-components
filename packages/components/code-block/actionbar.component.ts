@@ -10,12 +10,7 @@ import {
 } from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
-
-import {
-    KbqCodeBlockConfiguration,
-    KbqCodeFile
-} from './code-block.types';
-
+import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 
 @Component({
     selector: 'kbq-actionbar-block',
@@ -48,13 +43,11 @@ export class KbqActionBarComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.copyTooltipText = this.config.copyTooltip;
 
-        this.copyTooltip.visibleChange
-            .pipe(filter((state) => !state))
-            .subscribe(() => {
-                if (this.copyTooltipText === this.config.copiedTooltip) {
-                    this.copyTooltipText = this.config.copyTooltip;
-                }
-            });
+        this.copyTooltip.visibleChange.pipe(filter((state) => !state)).subscribe(() => {
+            if (this.copyTooltipText === this.config.copiedTooltip) {
+                this.copyTooltipText = this.config.copyTooltip;
+            }
+        });
     }
 
     onCopy() {

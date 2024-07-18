@@ -1,7 +1,5 @@
-
-
 export const enUSLocaleData = {
-    select: { hiddenItemsText: '{{ number }} more'},
+    select: { hiddenItemsText: '{{ number }} more' },
     datepicker: {
         placeholder: 'yyyy-mm-dd',
         dateInput: 'yyyy-MM-dd'

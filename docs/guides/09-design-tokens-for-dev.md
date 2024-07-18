@@ -55,8 +55,8 @@ buildTokens([
     {
         name: 'default-theme',
         buildPath: [koobiqTokensProps, koobiqTokensComponents],
-        outputPath: 'src/styles/default-theme/',
-    },
+        outputPath: 'src/styles/default-theme/'
+    }
 ]);
 ```
 
@@ -106,6 +106,6 @@ TypeScript type declarations are also published.
 ```typescript
 import {
     VerticalNavbarSizeStatesCollapsedWidth as closedWidth,
-    VerticalNavbarSizeStatesExpandedWidth as openedWidth,
+    VerticalNavbarSizeStatesExpandedWidth as openedWidth
 } from '@koobiq/design-tokens';
 ```

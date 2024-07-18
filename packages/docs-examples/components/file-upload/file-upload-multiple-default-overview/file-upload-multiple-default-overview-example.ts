@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-
 /**
  * @title file upload multiple default size
  */

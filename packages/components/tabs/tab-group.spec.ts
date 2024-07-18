@@ -2,15 +2,13 @@
 // tslint:disable:no-empty
 import { CommonModule } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { Observable } from 'rxjs';
-
 import { KbqTab, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy, KbqTabsModule } from './index';
-
 
 describe('KbqTabGroup', () => {
     beforeEach(fakeAsync(() => {
@@ -86,22 +84,16 @@ describe('KbqTabGroup', () => {
             component.selectedIndex = 0;
             fixture.detectChanges();
 
-            setTimeout(
-                () => {
-                    component.selectedIndex = 1;
-                    fixture.detectChanges();
+            setTimeout(() => {
+                component.selectedIndex = 1;
+                fixture.detectChanges();
 
-                    setTimeout(
-                        () => {
-                            component.selectedIndex = 0;
-                            fixture.detectChanges();
-                            fixture.whenStable().then(() => expect(component.selectedIndex).toBe(0));
-                        },
-                        1
-                    );
-                },
-                1
-            );
+                setTimeout(() => {
+                    component.selectedIndex = 0;
+                    fixture.detectChanges();
+                    fixture.whenStable().then(() => expect(component.selectedIndex).toBe(0));
+                }, 1);
+            }, 1);
         }));
 
         it('should change tabs based on selectedIndex', fakeAsync(() => {
@@ -123,8 +115,7 @@ describe('KbqTabGroup', () => {
 
         it('should update tab positions when selected index is changed', () => {
             fixture.detectChanges();
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
             const tabs: KbqTab[] = component.tabs.toArray();
 
             expect(tabs[0].position).toBeLessThan(0);
@@ -148,8 +139,7 @@ describe('KbqTabGroup', () => {
 
         it('should clamp the selected index to the size of the number of tabs', () => {
             fixture.detectChanges();
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             // Set the index to be negative, expect first tab selected
             fixture.componentInstance.selectedIndex = -1;
@@ -214,8 +204,7 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.handleFocus)
-                .toHaveBeenCalledWith(jasmine.objectContaining({ index: 2 }));
+            expect(fixture.componentInstance.handleFocus).toHaveBeenCalledWith(jasmine.objectContaining({ index: 2 }));
         });
 
         it('should emit focusChange on arrow key navigation', () => {
@@ -223,8 +212,8 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             const tabLabels = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
-            const tabLabelContainer = fixture.debugElement
-                .query(By.css('.kbq-tab-header__content')).nativeElement as HTMLElement;
+            const tabLabelContainer = fixture.debugElement.query(By.css('.kbq-tab-header__content'))
+                .nativeElement as HTMLElement;
 
             expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
 
@@ -238,10 +227,8 @@ describe('KbqTabGroup', () => {
             dispatchKeyboardEvent(tabLabelContainer, 'keydown', LEFT_ARROW);
 
             expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
-            expect(fixture.componentInstance.handleFocus)
-                .toHaveBeenCalledWith(jasmine.objectContaining({ index: 1 }));
+            expect(fixture.componentInstance.handleFocus).toHaveBeenCalledWith(jasmine.objectContaining({ index: 1 }));
         });
-
     });
 
     describe('disable tabs', () => {
@@ -285,43 +272,38 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
         }));
 
-        it(
-            'should be able to add a new tab, select it, and have correct origin position',
-            fakeAsync(() => {
-                const component: KbqTabGroup =
-                    fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+        it('should be able to add a new tab, select it, and have correct origin position', fakeAsync(() => {
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
-                let tabs: KbqTab[] = component.tabs.toArray();
-                expect(tabs[0].origin).toBe(null);
-                expect(tabs[1].origin).toBe(0);
-                expect(tabs[2].origin).toBe(null);
+            let tabs: KbqTab[] = component.tabs.toArray();
+            expect(tabs[0].origin).toBe(null);
+            expect(tabs[1].origin).toBe(0);
+            expect(tabs[2].origin).toBe(null);
 
-                // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
-                fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to right of index' });
-                fixture.componentInstance.selectedIndex = 4;
-                fixture.detectChanges();
-                tick();
+            // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
+            fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to right of index' });
+            fixture.componentInstance.selectedIndex = 4;
+            fixture.detectChanges();
+            tick();
 
-                tabs = component.tabs.toArray();
-                expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
+            tabs = component.tabs.toArray();
+            expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
-                // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
-                fixture.componentInstance.selectedIndex = 0;
-                fixture.detectChanges();
-                tick();
+            // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
+            fixture.componentInstance.selectedIndex = 0;
+            fixture.detectChanges();
+            tick();
 
-                fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to left of index' });
-                fixture.detectChanges();
-                tick();
+            fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to left of index' });
+            fixture.detectChanges();
+            tick();
 
-                tabs = component.tabs.toArray();
-                expect(tabs[0].origin).toBeLessThan(0);
-            }));
-
+            tabs = component.tabs.toArray();
+            expect(tabs[0].origin).toBeLessThan(0);
+        }));
 
         it('should update selected index if the last tab removed while selected', fakeAsync(() => {
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             const numberOfTabs = component.tabs.length;
             fixture.componentInstance.selectedIndex = numberOfTabs - 1;
@@ -336,11 +318,9 @@ describe('KbqTabGroup', () => {
             expect(component.selectedIndex).toBe(numberOfTabs - 2);
         }));
 
-
         it('should maintain the selected tab if a new tab is added', () => {
             fixture.detectChanges();
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
@@ -353,14 +333,12 @@ describe('KbqTabGroup', () => {
             expect(component.tabs.toArray()[2].isActive).toBe(true);
         });
 
-
         it('should maintain the selected tab if a tab is removed', () => {
             // Select the second tab.
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
 
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             // Remove the first tab that is right before the selected one.
             fixture.componentInstance.tabs.splice(0, 1);
@@ -374,8 +352,7 @@ describe('KbqTabGroup', () => {
 
         it('should be able to select a new tab after creation', fakeAsync(() => {
             fixture.detectChanges();
-            const component: KbqTabGroup =
-                fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+            const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             fixture.componentInstance.tabs.push({ label: 'Last tab', content: 'at the end' });
             fixture.componentInstance.selectedIndex = 3;
@@ -401,7 +378,6 @@ describe('KbqTabGroup', () => {
 
             expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
         }));
-
     });
 
     describe('async tabs', () => {
@@ -430,8 +406,7 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
             tick();
 
-            tabGroup =
-                fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
+            tabGroup = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
         }));
 
         it('should support a tab-group with the simple api', fakeAsync(() => {
@@ -520,7 +495,7 @@ describe('KbqTabGroup', () => {
             fixture = TestBed.createComponent(TestSelectionByIndexOrTabIdApp);
             instance = fixture.componentInstance;
             fixture.detectChanges();
-        })
+        });
 
         it('should select by number and assign number to binded property', () => {
             const indexToSelect: number = instance.tabs.length - 1;
@@ -551,7 +526,7 @@ describe('KbqTabGroup', () => {
             expect(instance.selectBy).toEqual('last');
             flush();
         }));
-    })
+    });
 
     /**
      * Checks that the `selectedIndex` has been updated; checks that the label and body have their
@@ -560,16 +535,17 @@ describe('KbqTabGroup', () => {
     function checkSelectedIndex(expectedIndex: number, fixture: ComponentFixture<any>) {
         fixture.detectChanges();
 
-        const tabComponent: KbqTabGroup = fixture.debugElement
-            .query(By.css('kbq-tab-group')).componentInstance;
+        const tabComponent: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
         expect(tabComponent.selectedIndex).toBe(expectedIndex);
 
-        const tabLabelElement = fixture.debugElement
-            .query(By.css(`.kbq-tab-label:nth-of-type(${expectedIndex + 1})`)).nativeElement;
+        const tabLabelElement = fixture.debugElement.query(
+            By.css(`.kbq-tab-label:nth-of-type(${expectedIndex + 1})`)
+        ).nativeElement;
         expect(tabLabelElement.classList.contains('kbq-selected')).toBe(true);
 
-        const tabContentElement = fixture.debugElement
-            .query(By.css(`kbq-tab-body:nth-of-type(${expectedIndex + 1})`)).nativeElement;
+        const tabContentElement = fixture.debugElement.query(
+            By.css(`kbq-tab-body:nth-of-type(${expectedIndex + 1})`)
+        ).nativeElement;
         expect(tabContentElement.classList.contains('kbq-tab-body__active')).toBe(true);
     }
 
@@ -581,7 +557,6 @@ describe('KbqTabGroup', () => {
         return fixture.nativeElement.querySelector('.kbq-tab-body__active');
     }
 });
-
 
 describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(fakeAsync(() => {
@@ -602,29 +577,30 @@ describe('nested KbqTabGroup with enabled animations', () => {
     }));
 });
 
-
 @Component({
     template: `
-    <kbq-tab-group class="tab-group"
-        [(selectedIndex)]="selectedIndex"
-        [headerPosition]="headerPosition"
-        (animationDone)="animationDone()"
-        (focusChange)="handleFocus($event)"
-        (selectedTabChange)="handleSelection($event)">
-      <kbq-tab>
-        <ng-template kbq-tab-label>Tab One</ng-template>
-        Tab one content
-      </kbq-tab>
-      <kbq-tab>
-        <ng-template kbq-tab-label>Tab Two</ng-template>
-        <span>Tab </span><span>two</span><span>content</span>
-      </kbq-tab>
-      <kbq-tab>
-        <ng-template kbq-tab-label>Tab Three</ng-template>
-        Tab three content
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group
+            class="tab-group"
+            [(selectedIndex)]="selectedIndex"
+            [headerPosition]="headerPosition"
+            (animationDone)="animationDone()"
+            (focusChange)="handleFocus($event)"
+            (selectedTabChange)="handleSelection($event)"
+        >
+            <kbq-tab>
+                <ng-template kbq-tab-label>Tab One</ng-template>
+                Tab one content
+            </kbq-tab>
+            <kbq-tab>
+                <ng-template kbq-tab-label>Tab Two</ng-template>
+                <span>Tab </span><span>two</span><span>content</span>
+            </kbq-tab>
+            <kbq-tab>
+                <ng-template kbq-tab-label>Tab Three</ng-template>
+                Tab three content
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class SimpleTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -641,21 +617,23 @@ class SimpleTabsTestApp {
         this.selectEvent = event;
     }
 
-    animationDone() { }
+    animationDone() {}
 }
 
 @Component({
     template: `
-    <kbq-tab-group class="tab-group"
-        [(selectedIndex)]="selectedIndex"
-        (focusChange)="handleFocus($event)"
-        (selectedTabChange)="handleSelection($event)">
-      <kbq-tab *ngFor="let tab of tabs">
-        <ng-template kbq-tab-label>{{tab.label}}</ng-template>
-        {{tab.content}}
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group
+            class="tab-group"
+            [(selectedIndex)]="selectedIndex"
+            (focusChange)="handleFocus($event)"
+            (selectedTabChange)="handleSelection($event)"
+        >
+            <kbq-tab *ngFor="let tab of tabs">
+                <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
+                {{ tab.content }}
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class SimpleDynamicTabsTestApp {
     tabs = [
@@ -678,12 +656,12 @@ class SimpleDynamicTabsTestApp {
 
 @Component({
     template: `
-    <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
-      <kbq-tab *ngFor="let tab of tabs" label="{{tab.label}}">
-        {{tab.content}}
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
+            <kbq-tab *ngFor="let tab of tabs" label="{{ tab.label }}">
+                {{ tab.content }}
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class BindedTabsTestApp {
     tabs = [
@@ -704,21 +682,21 @@ class BindedTabsTestApp {
 @Component({
     selector: 'test-app',
     template: `
-    <kbq-tab-group class="tab-group">
-      <kbq-tab>
-        <ng-template kbq-tab-label>Tab One</ng-template>
-        Tab one content
-      </kbq-tab>
-      <kbq-tab disabled>
-        <ng-template kbq-tab-label>Tab Two</ng-template>
-        Tab two content
-      </kbq-tab>
-      <kbq-tab [disabled]="isDisabled">
-        <ng-template kbq-tab-label>Tab Three</ng-template>
-        Tab three content
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group class="tab-group">
+            <kbq-tab>
+                <ng-template kbq-tab-label>Tab One</ng-template>
+                Tab one content
+            </kbq-tab>
+            <kbq-tab disabled>
+                <ng-template kbq-tab-label>Tab Two</ng-template>
+                Tab two content
+            </kbq-tab>
+            <kbq-tab [disabled]="isDisabled">
+                <ng-template kbq-tab-label>Tab Three</ng-template>
+                Tab three content
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class DisabledTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -727,16 +705,15 @@ class DisabledTabsTestApp {
 
 @Component({
     template: `
-    <kbq-tab-group class="tab-group">
-      <kbq-tab *ngFor="let tab of tabs | async">
-        <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
-        {{ tab.content }}
-      </kbq-tab>
-   </kbq-tab-group>
-  `
+        <kbq-tab-group class="tab-group">
+            <kbq-tab *ngFor="let tab of tabs | async">
+                <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
+                {{ tab.content }}
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class AsyncTabsTestApp implements OnInit {
-
     tabs: Observable<any>;
     private tabsItems = [
         { label: 'one', content: 'one' },
@@ -751,93 +728,85 @@ class AsyncTabsTestApp implements OnInit {
     }
 }
 
-
 @Component({
     template: `
-  <kbq-tab-group>
-    <kbq-tab label="Junk food"> Pizza, fries </kbq-tab>
-    <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
-    <kbq-tab [label]="otherLabel"> {{otherContent}} </kbq-tab>
-    <kbq-tab label="Legumes"> <p #legumes>Peanuts</p> </kbq-tab>
-  </kbq-tab-group>
-  `
+        <kbq-tab-group>
+            <kbq-tab label="Junk food"> Pizza, fries </kbq-tab>
+            <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
+            <kbq-tab [label]="otherLabel"> {{ otherContent }} </kbq-tab>
+            <kbq-tab label="Legumes"> <p #legumes>Peanuts</p> </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class TabGroupWithSimpleApi {
     otherLabel = 'Fruit';
     otherContent = 'Apples, grapes';
-    @ViewChild('legumes', {static: false}) legumes: any;
+    @ViewChild('legumes', { static: false }) legumes: any;
 }
-
 
 @Component({
     selector: 'nested-tabs',
     template: `
-    <kbq-tab-group>
-      <kbq-tab label="One">Tab one content</kbq-tab>
-      <kbq-tab label="Two">
-        Tab two content
-         <kbq-tab-group [dynamicHeight]="true">
-          <kbq-tab label="Inner tab one">Inner content one</kbq-tab>
-          <kbq-tab label="Inner tab two">Inner content two</kbq-tab>
+        <kbq-tab-group>
+            <kbq-tab label="One">Tab one content</kbq-tab>
+            <kbq-tab label="Two">
+                Tab two content
+                <kbq-tab-group [dynamicHeight]="true">
+                    <kbq-tab label="Inner tab one">Inner content one</kbq-tab>
+                    <kbq-tab label="Inner tab two">Inner content two</kbq-tab>
+                </kbq-tab-group>
+            </kbq-tab>
         </kbq-tab-group>
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+    `
 })
-class NestedTabs { }
+class NestedTabs {}
 
 @Component({
     selector: 'template-tabs',
     template: `
-    <kbq-tab-group>
-      <kbq-tab label="One">
-        Eager
-      </kbq-tab>
-      <kbq-tab label="Two">
-        <ng-template kbqTabContent>
-          <div class="child">Hi</div>
-        </ng-template>
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group>
+            <kbq-tab label="One"> Eager </kbq-tab>
+            <kbq-tab label="Two">
+                <ng-template kbqTabContent>
+                    <div class="child">Hi</div>
+                </ng-template>
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
-class TemplateTabs { }
-
+class TemplateTabs {}
 
 @Component({
     template: `
-    <kbq-tab-group>
-      <kbq-tab label="Junk food" #pizza> Pizza, fries </kbq-tab>
-      <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
-    </kbq-tab-group>
+        <kbq-tab-group>
+            <kbq-tab label="Junk food" #pizza> Pizza, fries </kbq-tab>
+            <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
+        </kbq-tab-group>
 
-    <div *ngIf="pizza.isActive">pizza is active</div>
-  `
+        <div *ngIf="pizza.isActive">pizza is active</div>
+    `
 })
-class TabGroupWithIsActiveBinding {
-}
+class TabGroupWithIsActiveBinding {}
 
 @Component({
     template: `
-    <kbq-tab-group class="tab-group"
-        [(activeTab)]="selectBy">
-      <kbq-tab tabId="first">
-        <ng-template kbq-tab-label>Tab first</ng-template>
-        Tab first content
-      </kbq-tab>
-      <kbq-tab tabId="second">
-        <ng-template kbq-tab-label>Tab second</ng-template>
-        <span>Tab </span><span>second</span><span>content</span>
-      </kbq-tab>
-      <kbq-tab tabId="last">
-        <ng-template kbq-tab-label>Tab last</ng-template>
-        Tab last content
-      </kbq-tab>
-    </kbq-tab-group>
-  `
+        <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
+            <kbq-tab tabId="first">
+                <ng-template kbq-tab-label>Tab first</ng-template>
+                Tab first content
+            </kbq-tab>
+            <kbq-tab tabId="second">
+                <ng-template kbq-tab-label>Tab second</ng-template>
+                <span>Tab </span><span>second</span><span>content</span>
+            </kbq-tab>
+            <kbq-tab tabId="last">
+                <ng-template kbq-tab-label>Tab last</ng-template>
+                Tab last content
+            </kbq-tab>
+        </kbq-tab-group>
+    `
 })
 class TestSelectionByIndexOrTabIdApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
     selectBy: KbqTabSelectBy = 1;
 }
-

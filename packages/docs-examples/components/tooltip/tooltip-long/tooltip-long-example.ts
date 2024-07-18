@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Long tooltip
  */
@@ -10,5 +9,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['tooltip-long-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class TooltipLongExample {
-}
+export class TooltipLongExample {}

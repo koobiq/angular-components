@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-
 import { outputFileSync } from 'fs-extra';
 
 type VersionInfo = {

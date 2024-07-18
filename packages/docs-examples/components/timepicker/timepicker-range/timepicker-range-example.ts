@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
-
 /**
  * @title Timepicker range
  */

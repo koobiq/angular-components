@@ -3,9 +3,9 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     FlexibleConnectedPositionStrategy,
     Overlay,
+    OverlayConfig,
     ScrollDispatcher,
-    ScrollStrategy,
-    OverlayConfig
+    ScrollStrategy
 } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
@@ -28,15 +28,13 @@ import {
 import {
     KbqPopUp,
     KbqPopUpTrigger,
+    POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
-    PopUpTriggers,
-    POSITION_TO_CSS_MAP
+    PopUpTriggers
 } from '@koobiq/components/core';
-import { merge, NEVER } from 'rxjs';
-
+import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
-
 
 @Component({
     selector: 'kbq-popover-component',
@@ -63,11 +61,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
-        super.updateClassMap(
-            placement,
-            customClass,
-            { [`${this.prefix}_${size}`]: !!size }
-        );
+        super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
     updateTrapFocus(isTrapFocus: boolean): void {
@@ -75,8 +69,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     }
 }
 
-export const KBQ_POPOVER_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
+export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
 
 /** @docs-private */
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
@@ -94,7 +87,6 @@ export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export function getKbqPopoverInvalidPositionError(position: string) {
     return Error(`KbqPopover position "${position}" is invalid.`);
 }
-
 
 @Directive({
     selector: '[kbqPopover]',
@@ -285,7 +277,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     }
 
     updateData() {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
         this.instance.header = this.header;
         this.instance.content = this.content;
@@ -316,7 +310,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     }
 
     updateClassMap(newPlacement: string = this.placement) {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
 
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], this.customClass, this.size);
         this.instance.markForCheck();
@@ -334,9 +330,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     }
 
     closingActions() {
-        return merge(
-            ...this.closingActionsForClick(),
-            this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER
-        );
+        return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
     }
 }

@@ -1,7 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
-
 @Component({
     selector: 'kbq-divider',
     host: {

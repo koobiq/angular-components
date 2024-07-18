@@ -3,18 +3,18 @@ import {
     ChangeDetectionStrategy,
     Component,
     ContentChild,
-    Directive, ElementRef,
+    Directive,
+    ElementRef,
     EventEmitter,
     Input,
     NgZone,
-    OnDestroy, OnInit,
+    OnDestroy,
+    OnInit,
     Output,
     ViewEncapsulation
 } from '@angular/core';
 import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
-
-import { kbqSidebarAnimations, KbqSidebarAnimationState } from './sidebar-animations';
-
+import { KbqSidebarAnimationState, kbqSidebarAnimations } from './sidebar-animations';
 
 export enum SidebarPositions {
     Left = 'left',
@@ -29,7 +29,6 @@ interface KbqSidebarParams {
 
     closedStateWidth: string;
 }
-
 
 @Directive({
     selector: '[kbq-sidebar-opened]',
@@ -48,7 +47,6 @@ export class KbqSidebarOpened {
 export class KbqSidebarClosed {
     @Input() width: string;
 }
-
 
 @Component({
     selector: 'kbq-sidebar',
@@ -107,7 +105,10 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
     private documentKeydownListener: (event: KeyboardEvent) => void;
 
-    constructor(private ngZone: NgZone, private elementRef: ElementRef) {}
+    constructor(
+        private ngZone: NgZone,
+        private elementRef: ElementRef
+    ) {}
 
     ngOnInit(): void {
         if (this.position === SidebarPositions.Left || this.position === SidebarPositions.Right) {
@@ -149,13 +150,15 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
     private registerKeydownListener(): void {
         this.documentKeydownListener = (event) => {
-            if (isControl(event) || isInput(event)) { return; }
+            if (isControl(event) || isInput(event)) {
+                return;
+            }
 
             if (
                 (this.position === SidebarPositions.Left && isLeftBracket(event)) ||
                 (this.position === SidebarPositions.Right && isRightBracket(event))
             ) {
-                this.ngZone.run(() => this._opened = !this._opened);
+                this.ngZone.run(() => (this._opened = !this._opened));
             }
         };
 

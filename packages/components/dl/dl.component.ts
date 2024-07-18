@@ -1,14 +1,6 @@
-import {
-    AfterContentInit,
-    Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
 
 @Component({
     selector: 'kbq-dl',
@@ -35,7 +27,9 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     constructor(protected elementRef: ElementRef) {}
 
     ngAfterContentInit(): void {
-        if (this.vertical !== null) { return; }
+        if (this.vertical !== null) {
+            return;
+        }
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
@@ -50,7 +44,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
         const { width } = this.elementRef.nativeElement.getClientRects()[0];
 
         this.vertical = width <= this.minWidth;
-    }
+    };
 }
 
 @Component({

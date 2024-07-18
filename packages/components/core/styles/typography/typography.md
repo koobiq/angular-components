@@ -18,7 +18,7 @@ $typography: kbq-typography-config();
 ```scss
 //kbq-typography-level($font-size, $line-height: $font-size, $letter-spacing: normal, $font-weight: normal, $font-family: null, $text-transform: null)
 $typography: kbq-typography-config(
-    $body: kbq-typography-level(45px, 45px, 0.55px),
+    $body: kbq-typography-level(45px, 45px, 0.55px)
 );
 ```
 
@@ -33,15 +33,15 @@ $fonts: (
         'Segoe UI',
         'Helvetica Neue',
         Arial,
-        sans-serif},
+        sans-serif}
     ),
     mono: (
         font-family: #{'Roboto Mono',
         'Consolas',
         'Menlo',
         'Monaco',
-        monospace},
-    ),
+        monospace}
+    )
 );
 
 $font-family: map.get(map.get($fonts, base), font-family);

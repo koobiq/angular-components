@@ -1,14 +1,12 @@
 /* tslint:disable:no-magic-numbers no-empty */
 import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { Subject } from 'rxjs';
-
-import { KbqTag, KbqTagEvent, KbqTagSelectionChange, KbqTagsModule, KbqTagList } from './index';
-
+import { KbqTag, KbqTagEvent, KbqTagList, KbqTagSelectionChange, KbqTagsModule } from './index';
 
 describe('Tags', () => {
     let fixture: ComponentFixture<any>;
@@ -22,13 +20,16 @@ describe('Tags', () => {
         TestBed.configureTestingModule({
             imports: [KbqTagsModule],
             declarations: [BasicTag, SingleTag],
-            providers: [{
-                provide: Directionality, useFactory: () => ({
-                    value: dir,
-                    // tslint:disable-next-line: no-inferred-empty-object-type
-                    change: new Subject()
-                })
-            }]
+            providers: [
+                {
+                    provide: Directionality,
+                    useFactory: () => ({
+                        value: dir,
+                        // tslint:disable-next-line: no-inferred-empty-object-type
+                        change: new Subject()
+                    })
+                }
+            ]
         });
 
         TestBed.compileComponents();
@@ -76,7 +77,6 @@ describe('Tags', () => {
         });
 
         describe('basic behaviors', () => {
-
             it('adds the `kbq-tag` class', () => {
                 expect(tagNativeElement.classList).toContain('kbq-tag');
             });
@@ -126,8 +126,11 @@ describe('Tags', () => {
                 fixture.detectChanges();
 
                 expect(tagNativeElement.classList).toContain('kbq-selected');
-                expect(testComponent.tagSelectionChange)
-                    .toHaveBeenCalledWith({ source: tagInstance, isUserInput: false, selected: true });
+                expect(testComponent.tagSelectionChange).toHaveBeenCalledWith({
+                    source: tagInstance,
+                    isUserInput: false,
+                    selected: true
+                });
             });
 
             it('allows removal', () => {
@@ -180,20 +183,17 @@ describe('Tags', () => {
                 subscription.unsubscribe();
             });
 
-            it(
-                'should not dispatch `selectionChange` event when selecting a selected tag via user interaction',
-                () => {
-                    tagInstance.select();
+            it('should not dispatch `selectionChange` event when selecting a selected tag via user interaction', () => {
+                tagInstance.select();
 
-                    const spy = jasmine.createSpy('selectionChange spy');
-                    const subscription = tagInstance.selectionChange.subscribe(spy);
+                const spy = jasmine.createSpy('selectionChange spy');
+                const subscription = tagInstance.selectionChange.subscribe(spy);
 
-                    tagInstance.selectViaInteraction();
+                tagInstance.selectViaInteraction();
 
-                    expect(spy).not.toHaveBeenCalled();
-                    subscription.unsubscribe();
-                }
-            );
+                expect(spy).not.toHaveBeenCalled();
+                subscription.unsubscribe();
+            });
 
             it('should not dispatch `selectionChange` through setter if the value did not change', () => {
                 tagInstance.selected = false;
@@ -209,7 +209,6 @@ describe('Tags', () => {
         });
 
         describe('keyboard behavior', () => {
-
             describe('when selectable is true', () => {
                 beforeEach(() => {
                     testComponent.selectable = true;
@@ -344,24 +343,28 @@ describe('Tags', () => {
 
                 expect(tagNativeElement.getAttribute('tabindex')).toBeFalsy();
             });
-
         });
     });
 });
 
 @Component({
-    template: `
-        <kbq-tag-list>
-            <div *ngIf="shouldShow">
-                <kbq-tag [selectable]="selectable" [removable]="removable"
-                          [color]="color" [selected]="selected" [disabled]="disabled"
-                          (focus)="tagFocus($event)" (destroyed)="tagDestroy($event)"
-                          (selectionChange)="tagSelectionChange($event)"
-                          (removed)="tagRemove($event)">
-                    {{name}}
-                </kbq-tag>
-            </div>
-        </kbq-tag-list>`
+    template: ` <kbq-tag-list>
+        <div *ngIf="shouldShow">
+            <kbq-tag
+                [selectable]="selectable"
+                [removable]="removable"
+                [color]="color"
+                [selected]="selected"
+                [disabled]="disabled"
+                (focus)="tagFocus($event)"
+                (destroyed)="tagDestroy($event)"
+                (selectionChange)="tagSelectionChange($event)"
+                (removed)="tagRemove($event)"
+            >
+                {{ name }}
+            </kbq-tag>
+        </div>
+    </kbq-tag-list>`
 })
 class SingleTag {
     disabled: boolean = false;
@@ -372,7 +375,7 @@ class SingleTag {
     removable: boolean = true;
     shouldShow: boolean = true;
 
-    @ViewChild(KbqTagList, {static: false}) tagList: KbqTagList;
+    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
 
     tagFocus: (event?: KbqTagEvent) => void = () => {};
     tagDestroy: (event?: KbqTagEvent) => void = () => {};
@@ -381,7 +384,6 @@ class SingleTag {
 }
 
 @Component({
-    template: `
-        <kbq-basic-tag>{{ name }}</kbq-basic-tag>`
+    template: ` <kbq-basic-tag>{{ name }}</kbq-basic-tag>`
 })
 class BasicTag {}

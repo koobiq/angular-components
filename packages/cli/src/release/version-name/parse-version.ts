@@ -12,7 +12,8 @@ export class Version {
         /** Pre-release label for the version (e.g. alpha, beta, rc) */
         public prereleaseLabel: string | null,
         /** Number for the pre-release. There can be multiple pre-releases for a version. */
-        public prereleaseNumber: number | null) {}
+        public prereleaseNumber: number | null
+    ) {}
 
     /** Serializes the version info into a string formatted version name. */
     format(): string {
@@ -20,19 +21,17 @@ export class Version {
     }
 
     equals(other: Version): boolean {
-        return this.major === other.major && this.minor === other.minor && this.patch === other.patch &&
+        return (
+            this.major === other.major &&
+            this.minor === other.minor &&
+            this.patch === other.patch &&
             this.prereleaseLabel === other.prereleaseLabel &&
-            this.prereleaseNumber === other.prereleaseNumber;
+            this.prereleaseNumber === other.prereleaseNumber
+        );
     }
 
     clone(): Version {
-        return new Version(
-            this.major,
-            this.minor,
-            this.patch,
-            this.prereleaseLabel,
-            this.prereleaseNumber
-        );
+        return new Version(this.major, this.minor, this.patch, this.prereleaseLabel, this.prereleaseNumber);
     }
 }
 
@@ -59,7 +58,7 @@ export function parseVersionName(version: string): Version | null {
 
 /** Serializes the specified version into a string. */
 export function serializeVersion(newVersion: Version): string {
-    const {major, minor, patch, prereleaseLabel, prereleaseNumber} = newVersion;
+    const { major, minor, patch, prereleaseLabel, prereleaseNumber } = newVersion;
 
     let versionString = `${major}.${minor}.${patch}`;
 

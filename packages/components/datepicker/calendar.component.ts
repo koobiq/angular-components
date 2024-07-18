@@ -15,12 +15,10 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
-
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqMonthView } from './month-view.component';
-
 
 /**
  * A calendar that is used as part of the datepicker.
@@ -38,7 +36,6 @@ import { KbqMonthView } from './month-view.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-
     /** A date representing the period (month or year) to start the calendar in. */
     @Input()
     get startAt(): D | null {
@@ -48,8 +45,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     set startAt(value: D | null) {
         const deserializedValue = this.getValidDateOrNull(this.adapter.deserialize(value));
 
-        this._startAt = deserializedValue !== null ?
-            this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
+        this._startAt =
+            deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
     }
 
     private _startAt: D | null;
@@ -205,11 +202,10 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
      */
     // todo выглядит как костыль от которого нужно избавиться
     private getValidDateOrNull(obj: any): D | null {
-        return (this.adapter.isDateInstance(obj) && this.adapter.isValid(obj)) ? obj : null;
+        return this.adapter.isDateInstance(obj) && this.adapter.isValid(obj) ? obj : null;
     }
 
     private getActiveDateDefault(): D {
         return this.startAt || this.adapter.today();
     }
 }
-

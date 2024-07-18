@@ -712,6 +712,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@augment-vir/common@npm:^23.3.4":
+  version: 23.4.0
+  resolution: "@augment-vir/common@npm:23.4.0"
+  dependencies:
+    browser-or-node: "npm:^2.1.1"
+    run-time-assertions: "npm:^1.0.0"
+    type-fest: "npm:^4.10.2"
+  checksum: 10c0/179b6f5edf9cbdecb8fd17b1eb95b3230a2893cf849ecf13f1587741228ae6e77302f5828a0f4c334ac156ef436a2f9015a38495ccfdb57e21286703c4e41030
+  languageName: node
+  linkType: hard
+
+"@augment-vir/common@npm:^28.0.0, @augment-vir/common@npm:^28.1.0":
+  version: 28.2.4
+  resolution: "@augment-vir/common@npm:28.2.4"
+  dependencies:
+    browser-or-node: "npm:^3.0.0"
+    run-time-assertions: "npm:^1.5.1"
+    type-fest: "npm:^4.20.1"
+  checksum: 10c0/5d391442a0220b5abe3881d74f8aaeab149bb4055c93d07d6410d999673948ed9c55691b72f4d61d5de31b27875cb1b74d4950f37d822521d2be16e682c65515
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.23.5, @babel/code-frame@npm:^7.24.1":
   version: 7.24.1
   resolution: "@babel/code-frame@npm:7.24.1"
@@ -792,7 +814,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.23.2, @babel/core@npm:^7.24.0":
+"@babel/core@npm:^7.23.2":
   version: 7.24.4
   resolution: "@babel/core@npm:7.24.4"
   dependencies:
@@ -2457,7 +2479,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.16.0, @babel/traverse@npm:^7.23.9, @babel/traverse@npm:^7.24.0, @babel/traverse@npm:^7.24.1":
+"@babel/traverse@npm:^7.16.0, @babel/traverse@npm:^7.23.9, @babel/traverse@npm:^7.24.1":
   version: 7.24.1
   resolution: "@babel/traverse@npm:7.24.1"
   dependencies:
@@ -3946,26 +3968,6 @@ __metadata:
   version: 3.0.2
   resolution: "@hutson/parse-repository-url@npm:3.0.2"
   checksum: 10c0/d9197757ecad2df18d29d3e1d1fe0716d458fd88b849c71cbec9e78239f911074c97e8d764dfd8ed890431c1137e52dd7a337207fd65be20ce0784f7860ae4d1
-  languageName: node
-  linkType: hard
-
-"@ianvs/prettier-plugin-sort-imports@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "@ianvs/prettier-plugin-sort-imports@npm:4.2.1"
-  dependencies:
-    "@babel/core": "npm:^7.24.0"
-    "@babel/generator": "npm:^7.23.6"
-    "@babel/parser": "npm:^7.24.0"
-    "@babel/traverse": "npm:^7.24.0"
-    "@babel/types": "npm:^7.24.0"
-    semver: "npm:^7.5.2"
-  peerDependencies:
-    "@vue/compiler-sfc": 2.7.x || 3.x
-    prettier: 2 || 3
-  peerDependenciesMeta:
-    "@vue/compiler-sfc":
-      optional: true
-  checksum: 10c0/76e5c79a72ca35e03f52059d039a037b2a29224582aca6590ba08a17d85e5143673bee301d3a9cc2e0257570801e6d0ec30ffd01e1f5f0d973a986c6c359f9a8
   languageName: node
   linkType: hard
 
@@ -7670,6 +7672,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"browser-or-node@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "browser-or-node@npm:2.1.1"
+  checksum: 10c0/f727639581182f831b5bf4686b401dcad5cc29b5a6b70059c0aa90990844b8f15f3a1d328cc8e83dd3b4bfa69175f9bdf2f4383faec14d47205bfea532b9964d
+  languageName: node
+  linkType: hard
+
+"browser-or-node@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "browser-or-node@npm:3.0.0"
+  checksum: 10c0/05db930e0a21bfffef74dbc4a27eaa12113e7f43a95f3b80a925f624212d701b86034cdfb5c422bdee061c4ae8442d294feee8996e6ae2555a8e46ea0b830b52
+  languageName: node
+  linkType: hard
+
 "browserslist@npm:^4.0.0, browserslist@npm:^4.21.10, browserslist@npm:^4.21.4, browserslist@npm:^4.21.5, browserslist@npm:^4.22.1, browserslist@npm:^4.22.2, browserslist@npm:^4.23.0":
   version: 4.23.0
   resolution: "browserslist@npm:4.23.0"
@@ -10631,6 +10647,13 @@ __metadata:
     raw-body: "npm:^2.3.3"
     semver: "npm:^7.0.0"
   checksum: 10c0/ebd7ca492e7bb8d1cf5aca344d7e834e3a09d9443f533aeb0e8e70e8438ddb33a0e746f1836de9ec25e02d0e8491dacaf9a2c02accd15b0939a94f0a28700fe2
+  languageName: node
+  linkType: hard
+
+"expect-type@npm:~0.15.0":
+  version: 0.15.0
+  resolution: "expect-type@npm:0.15.0"
+  checksum: 10c0/d5ffc86df1937290a6555e763f76a8c27d18d9bfa63e18788a79ff52bba3d2a9a518af1163d437854efca6bd8e03768a2c4b10ea29e861c9d6f57ff53f19c3c4
   languageName: node
   linkType: hard
 
@@ -13611,7 +13634,6 @@ __metadata:
     "@cspell/dict-markdown": "npm:^2.0.2"
     "@cspell/dict-ru_ru": "npm:^2.2.1"
     "@docsearch/js": "npm:^3.6.0"
-    "@ianvs/prettier-plugin-sort-imports": "npm:^4.2.1"
     "@koobiq/date-adapter": "npm:^3.1.2"
     "@koobiq/date-formatter": "npm:^3.1.2"
     "@koobiq/design-tokens": "npm:3.0.0-rc.12"
@@ -13689,7 +13711,8 @@ __metadata:
     postcss: "npm:^8.4.38"
     postcss-discard-comments: "npm:^7.0.0"
     prettier: "npm:^3.3.2"
-    prettier-plugin-organize-imports: "npm:^3.2.4"
+    prettier-plugin-multiline-arrays: "npm:^3.0.6"
+    prettier-plugin-organize-imports: "npm:^4.0.0"
     rimraf: "npm:^5.0.5"
     rollup: "npm:^4.17.2"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -16922,20 +16945,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-organize-imports@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "prettier-plugin-organize-imports@npm:3.2.4"
+"prettier-plugin-multiline-arrays@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "prettier-plugin-multiline-arrays@npm:3.0.6"
+  dependencies:
+    "@augment-vir/common": "npm:^28.1.0"
+    proxy-vir: "npm:^1.0.0"
   peerDependencies:
-    "@volar/vue-language-plugin-pug": ^1.0.4
-    "@volar/vue-typescript": ^1.0.4
+    prettier: ">=3.0.0"
+  checksum: 10c0/4a22a9f7edebbca06360d1092e1b9dbc8775dcf386fbd5f555565d56735b7c1698abcad46008dc1e23f693a9f0cf3dc92e70bebec282462b0480193fb26ead9c
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-organize-imports@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "prettier-plugin-organize-imports@npm:4.0.0"
+  peerDependencies:
+    "@vue/language-plugin-pug": ^2.0.24
     prettier: ">=2.0"
     typescript: ">=2.9"
+    vue-tsc: ^2.0.24
   peerDependenciesMeta:
-    "@volar/vue-language-plugin-pug":
+    "@vue/language-plugin-pug":
       optional: true
-    "@volar/vue-typescript":
+    vue-tsc:
       optional: true
-  checksum: 10c0/c20afa9b379106839a273d53c83fef70920e8ae86939d4890a06c63da19440de411568793e716bafcdd96e5ba8e34233f2944ea53ecd6ac18ba1ec0fa05bb58b
+  checksum: 10c0/6c3c2a0680540c2c27d8e0e47c7cb69d374e47534c467877a99031defa087d52a4fc972156321dadbadc10b2eb90d67398110a0be65f5b3c9db93b85a546d8f7
   languageName: node
   linkType: hard
 
@@ -17120,6 +17155,15 @@ __metadata:
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: 10c0/fe7dd8b1bdbbbea18d1459107729c3e4a2243ca870d26d34c2c1bcd3e4425b7bcc5112362df2d93cc7fb9746f6142b5e272fd1cc5c86ddf8580175186f6ad42b
+  languageName: node
+  linkType: hard
+
+"proxy-vir@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "proxy-vir@npm:1.0.0"
+  dependencies:
+    "@augment-vir/common": "npm:^23.3.4"
+  checksum: 10c0/49e0d29abf9d7cab10878ac988c08755282159e450dedcaea46e91cfd19aca05ae6db3193ecfb438bc50e404b3b8c4f29f39596c6a330717617eaa5a67edd240
   languageName: node
   linkType: hard
 
@@ -17909,6 +17953,17 @@ __metadata:
   dependencies:
     queue-microtask: "npm:^1.2.2"
   checksum: 10c0/200b5ab25b5b8b7113f9901bfe3afc347e19bb7475b267d55ad0eb86a62a46d77510cb0f232507c9e5d497ebda569a08a9867d0d14f57a82ad5564d991588b39
+  languageName: node
+  linkType: hard
+
+"run-time-assertions@npm:^1.0.0, run-time-assertions@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "run-time-assertions@npm:1.5.1"
+  dependencies:
+    "@augment-vir/common": "npm:^28.0.0"
+    expect-type: "npm:~0.15.0"
+    type-fest: "npm:^4.18.2"
+  checksum: 10c0/fc26714f2e0caed5c2e51e71d4bad767316de5a70d594bb3c0addf85ab86d88ba7c4edc267d1ff40fb6a173ec5a7888d2e1e7388cdac817a76f943c007e18727
   languageName: node
   linkType: hard
 
@@ -19774,6 +19829,13 @@ __metadata:
   version: 3.13.1
   resolution: "type-fest@npm:3.13.1"
   checksum: 10c0/547d22186f73a8c04590b70dcf63baff390078c75ea8acd366bbd510fd0646e348bd1970e47ecf795b7cff0b41d26e9c475c1fedd6ef5c45c82075fbf916b629
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.10.2, type-fest@npm:^4.18.2, type-fest@npm:^4.20.1":
+  version: 4.21.0
+  resolution: "type-fest@npm:4.21.0"
+  checksum: 10c0/60c09995336ea15a405caa76a9ad9238e7ea324d945519880c560e4ee0845479889c45a51810ca81b0f37abd46229a06d2e17ab9b12d1a5cbe335af56819c92b
   languageName: node
   linkType: hard
 

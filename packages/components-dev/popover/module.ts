@@ -13,9 +13,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
-
 import { KbqIconModule } from '../../components/icon/';
-
 
 /* tslint:disable:no-trailing-whitespace */
 @Component({
@@ -87,7 +85,9 @@ export class DemoComponent {
         const newStage = this.popoverActiveStage + direction;
 
         // tslint:disable-next-line:no-magic-numbers
-        if (newStage < 1 || newStage > 3) { return; }
+        if (newStage < 1 || newStage > 3) {
+            return;
+        }
 
         this.popoverActiveStage += direction;
     }

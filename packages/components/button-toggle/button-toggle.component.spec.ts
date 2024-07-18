@@ -1,14 +1,11 @@
 import { Component, DebugElement, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
-
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
-
 describe('KbqButtonToggle with forms', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
@@ -88,8 +85,7 @@ describe('KbqButtonToggle with forms', () => {
 
             buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(KbqButtonToggle));
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
-            innerButtons = buttonToggleDebugElements.map(
-                (debugEl) => debugEl.query(By.css('button')).nativeElement);
+            innerButtons = buttonToggleDebugElements.map((debugEl) => debugEl.query(By.css('button')).nativeElement);
 
             fixture.detectChanges();
         }));
@@ -124,31 +120,28 @@ describe('KbqButtonToggle with forms', () => {
             expect(selected.value).toBe(groupInstance.value);
         });
 
-        it(
-            'should have the correct FormControl state initially and after interaction',
-            fakeAsync(() => {
-                expect(groupNgModel.valid).toBe(true);
-                expect(groupNgModel.pristine).toBe(true);
-                expect(groupNgModel.touched).toBe(false);
+        it('should have the correct FormControl state initially and after interaction', fakeAsync(() => {
+            expect(groupNgModel.valid).toBe(true);
+            expect(groupNgModel.pristine).toBe(true);
+            expect(groupNgModel.touched).toBe(false);
 
-                buttonToggleInstances[1].checked = true;
-                fixture.detectChanges();
-                tick();
+            buttonToggleInstances[1].checked = true;
+            fixture.detectChanges();
+            tick();
 
-                expect(groupNgModel.valid).toBe(true);
-                expect(groupNgModel.pristine).toBe(true);
-                expect(groupNgModel.touched).toBe(false);
+            expect(groupNgModel.valid).toBe(true);
+            expect(groupNgModel.pristine).toBe(true);
+            expect(groupNgModel.touched).toBe(false);
 
-                // tslint:disable-next-line:no-magic-numbers
-                innerButtons[2].click();
-                fixture.detectChanges();
-                tick();
+            // tslint:disable-next-line:no-magic-numbers
+            innerButtons[2].click();
+            fixture.detectChanges();
+            tick();
 
-                expect(groupNgModel.valid).toBe(true);
-                expect(groupNgModel.pristine).toBe(false);
-                expect(groupNgModel.touched).toBe(true);
-            })
-        );
+            expect(groupNgModel.valid).toBe(true);
+            expect(groupNgModel.pristine).toBe(false);
+            expect(groupNgModel.touched).toBe(true);
+        }));
 
         it('should update the ngModel value when selecting a button toggle', fakeAsync(() => {
             innerButtons[1].click();
@@ -162,7 +155,6 @@ describe('KbqButtonToggle with forms', () => {
 });
 
 describe('KbqButtonToggle without forms', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule, KbqButtonToggleModule],
@@ -180,7 +172,6 @@ describe('KbqButtonToggle without forms', () => {
     }));
 
     describe('inside of an exclusive selection group', () => {
-
         let fixture: ComponentFixture<ButtonTogglesInsideButtonToggleGroup>;
         let groupDebugElement: DebugElement;
         let groupNativeElement: HTMLElement;
@@ -203,10 +194,10 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(KbqButtonToggle));
 
-            buttonToggleNativeElements = buttonToggleDebugElements
-                .map((debugEl) => debugEl.nativeElement);
+            buttonToggleNativeElements = buttonToggleDebugElements.map((debugEl) => debugEl.nativeElement);
 
-            buttonToggleLabelElements = fixture.debugElement.queryAll(By.css('button'))
+            buttonToggleLabelElements = fixture.debugElement
+                .queryAll(By.css('button'))
                 .map((debugEl) => debugEl.nativeElement);
 
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
@@ -377,17 +368,15 @@ describe('KbqButtonToggle without forms', () => {
             expect(groupInstance.value).toBeFalsy();
             expect(groupInstance.selected).toBeFalsy();
         }));
-
     });
 
     describe('with initial value and change event', () => {
-
         it('should not fire an initial change event', () => {
             const fixture = TestBed.createComponent(ButtonToggleGroupWithInitialValue);
             const testComponent = fixture.debugElement.componentInstance;
             const groupDebugElement = fixture.debugElement.query(By.directive(KbqButtonToggleGroup));
-            const groupInstance: KbqButtonToggleGroup = groupDebugElement.injector
-                .get<KbqButtonToggleGroup>(KbqButtonToggleGroup);
+            const groupInstance: KbqButtonToggleGroup =
+                groupDebugElement.injector.get<KbqButtonToggleGroup>(KbqButtonToggleGroup);
 
             fixture.detectChanges();
 
@@ -402,7 +391,6 @@ describe('KbqButtonToggle without forms', () => {
             expect(!!testComponent.lastEvent).toBe(false);
             expect(groupInstance.value).toBe('green');
         });
-
     });
 
     describe('inside of a multiple selection group', () => {
@@ -427,9 +415,9 @@ describe('KbqButtonToggle without forms', () => {
             groupInstance = groupDebugElement.injector.get<KbqButtonToggleGroup>(KbqButtonToggleGroup);
 
             buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(KbqButtonToggle));
-            buttonToggleNativeElements = buttonToggleDebugElements
-                .map((debugEl) => debugEl.nativeElement);
-            buttonToggleButtonElements = fixture.debugElement.queryAll(By.css('button'))
+            buttonToggleNativeElements = buttonToggleDebugElements.map((debugEl) => debugEl.nativeElement);
+            buttonToggleButtonElements = fixture.debugElement
+                .queryAll(By.css('button'))
                 .map((debugEl) => debugEl.nativeElement);
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
         }));
@@ -565,7 +553,6 @@ describe('KbqButtonToggle without forms', () => {
         }));
 
         it('should emit a change event for state changes', fakeAsync(() => {
-
             expect(buttonToggleInstance.checked).toBe(false);
 
             const changeSpy = jasmine.createSpy('button-toggle change listener');
@@ -595,24 +582,21 @@ describe('KbqButtonToggle without forms', () => {
         expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
     });
 
-    it(
-        'should maintain the selected state when the value and toggles are swapped out at the same time',
-        () => {
-            const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
-            fixture.detectChanges();
+    it('should maintain the selected state when the value and toggles are swapped out at the same time', () => {
+        const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+        fixture.detectChanges();
 
-            expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
-            expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+        expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
+        expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
 
-            fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
-            fixture.componentInstance.value = 'Seven';
-            fixture.detectChanges();
+        fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
+        fixture.componentInstance.value = 'Seven';
+        fixture.detectChanges();
 
-            expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
-            // tslint:disable-next-line:no-magic-numbers
-            expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
-        }
-    );
+        expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
+        // tslint:disable-next-line:no-magic-numbers
+        expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+    });
 
     it('should select falsy button toggle value in multiple selection', () => {
         const fixture = TestBed.createComponent(FalsyButtonTogglesInsideButtonToggleGroupMultiple);
@@ -635,10 +619,7 @@ describe('KbqButtonToggle without forms', () => {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [disabled]="isGroupDisabled"
-                                [vertical]="isVertical"
-                                [(value)]="groupValue">
-
+        <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
             <kbq-button-toggle [value]="'test1'" *ngIf="renderFirstToggle">Test1</kbq-button-toggle>
             <kbq-button-toggle [value]="'test2'">Test2</kbq-button-toggle>
             <kbq-button-toggle [value]="'test3'">Test3</kbq-button-toggle>
@@ -654,12 +635,9 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
     template: `
-        <kbq-button-toggle-group
-            [name]="groupName"
-            [(ngModel)]="modelValue"
-            (change)="lastEvent = $event">
+        <kbq-button-toggle-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
             <kbq-button-toggle *ngFor="let option of options" [value]="option.value">
-                {{option.label}}
+                {{ option.label }}
             </kbq-button-toggle>
         </kbq-button-toggle-group>
     `
@@ -668,9 +646,9 @@ class ButtonToggleGroupWithNgModel {
     groupName = 'group-name';
     modelValue: string;
     options = [
-        {label: 'Red', value: 'red'},
-        {label: 'Green', value: 'green'},
-        {label: 'Blue', value: 'blue'}
+        { label: 'Red', value: 'red' },
+        { label: 'Green', value: 'green' },
+        { label: 'Blue', value: 'blue' }
     ];
     lastEvent: KbqButtonToggleChange;
 }
@@ -705,14 +683,9 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 }
 
 @Component({
-    template: `
-        <kbq-button-toggle>
-            Yes
-        </kbq-button-toggle>
-    `
+    template: ` <kbq-button-toggle> Yes </kbq-button-toggle> `
 })
-class StandaloneButtonToggle {
-}
+class StandaloneButtonToggle {}
 
 @Component({
     template: `
@@ -743,16 +716,15 @@ class ButtonToggleGroupWithFormControl {
     template: `
         <kbq-button-toggle-group [(value)]="value">
             <kbq-button-toggle *ngFor="let toggle of possibleValues" [value]="toggle">
-                {{toggle}}
-             </kbq-button-toggle>
+                {{ toggle }}
+            </kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
 class RepeatedButtonTogglesWithPreselectedValue {
-    @ViewChild(KbqButtonToggleGroup, {static: false}) toggleGroup: KbqButtonToggleGroup;
+    @ViewChild(KbqButtonToggleGroup, { static: false }) toggleGroup: KbqButtonToggleGroup;
     @ViewChildren(KbqButtonToggle) toggles: QueryList<KbqButtonToggle>;
 
     possibleValues = ['One', 'Two', 'Three'];
     value = 'Two';
 }
-

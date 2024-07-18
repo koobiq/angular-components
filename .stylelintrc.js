@@ -1,7 +1,6 @@
 // @ts-check
 
 /**
- * @see https://stylelint.io/user-guide/configure
  * @type {import('stylelint').Config}
  */
 const config = {
@@ -13,25 +12,25 @@ const config = {
     ],
     ignoreFiles: [
         '**/dist/**',
-        '**/node_modules/**',
+        '**/node_modules/**'
     ],
     rules: {
         'rule-empty-line-before': [
-			'always-multi-line',
-			{
-				except: ['first-nested'],
-				ignore: ['after-comment'],
-			},
-		],
+            'always-multi-line',
+            {
+                except: ['first-nested'],
+                ignore: ['after-comment']
+            }
+        ],
         'no-unknown-custom-properties': true,
         'no-descending-specificity': null,
         'selector-type-no-unknown': [
-			true,
-			{
-				ignore: ['custom-elements'],
-                ignoreTypes: ['app'],
-			},
-		],
+            true,
+            {
+                ignore: ['custom-elements'],
+                ignoreTypes: ['app']
+            }
+        ],
         'font-family-no-missing-generic-family-keyword': [
             true,
             {
@@ -39,10 +38,10 @@ const config = {
                     'Inter',
                     'PT Mosaic Icons',
                     'JetBrains Mono'
-                ],
+                ]
             }
         ],
-        'scss/operator-no-newline-after': null,
+        'scss/operator-no-newline-after': null
     }
 };
 

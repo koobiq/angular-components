@@ -3,25 +3,19 @@
 // tslint:disable:no-empty
 
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, DebugElement, ChangeDetectionStrategy, QueryList, ViewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DebugElement, QueryList, ViewChildren } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END, C } from '@koobiq/cdk/keycodes';
+import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
-    dispatchFakeEvent,
+    createMouseEvent,
     dispatchEvent,
-    dispatchKeyboardEvent, createMouseEvent
+    dispatchFakeEvent,
+    dispatchKeyboardEvent
 } from '@koobiq/cdk/testing';
-
-import {
-    KbqListModule,
-    KbqListOption,
-    KbqListSelection,
-    KbqListSelectionChange
-} from './index';
-
+import { KbqListModule, KbqListOption, KbqListSelection, KbqListSelectionChange } from './index';
 
 describe('KbqListSelection without forms', () => {
     describe('with list option', () => {
@@ -39,15 +33,18 @@ describe('KbqListSelection without forms', () => {
                     SelectionListWithListDisabled,
                     SelectionListWithOnlyOneOption
                 ],
-                providers: [{
-                    provide: Clipboard, useFactory: () => ({
-                        copy: (value) => {
-                            const originalClipboard = new Clipboard(document);
-                            originalClipboard.copy(value);
-                            clipboardContent = value;
-                        }
-                    })
-                }]
+                providers: [
+                    {
+                        provide: Clipboard,
+                        useFactory: () => ({
+                            copy: (value) => {
+                                const originalClipboard = new Clipboard(document);
+                                originalClipboard.copy(value);
+                                clipboardContent = value;
+                            }
+                        })
+                    }
+                ]
             });
 
             TestBed.compileComponents();
@@ -144,8 +141,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should be able to dispatch one selected item', () => {
             const testListItem = listOptions[2].injector.get<KbqListOption>(KbqListOption);
-            const selectList =
-                selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+            const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
@@ -173,8 +169,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should be able to deselect an option', () => {
             const testListItem = listOptions[2].injector.get<KbqListOption>(KbqListOption);
-            const selectList =
-                selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+            const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
@@ -191,8 +186,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should not allow selection of disabled items', () => {
             const testListItem = listOptions[0].injector.get<KbqListOption>(KbqListOption);
-            const selectList =
-                selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+            const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
@@ -207,8 +201,7 @@ describe('KbqListSelection without forms', () => {
         it('should be able to use keyboard select with SPACE', () => {
             const manager = selectionList.componentInstance.keyManager;
             const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
-            const selectList =
-                selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+            const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
             expect(selectList.selected.length).toBe(0);
 
             manager.updateActiveItem(1);
@@ -252,8 +245,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should focus previous item when press UP ARROW', () => {
             const testListItem = listOptions[2].nativeElement as HTMLElement;
-            const UP_EVENT: KeyboardEvent =
-                createKeyboardEvent('keydown', UP_ARROW, testListItem);
+            const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW, testListItem);
             const manager = selectionList.componentInstance.keyManager;
 
             manager.setActiveItem(2);
@@ -450,7 +442,6 @@ describe('KbqListSelection without forms', () => {
     });
 
     describe('with tabindex', () => {
-
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
@@ -579,8 +570,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should not allow selection on disabled selection-list', () => {
             const testListItem = listOption[2].injector.get<KbqListOption>(KbqListOption);
-            const selectList =
-                selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+            const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
@@ -623,7 +613,6 @@ describe('KbqListSelection without forms', () => {
 });
 
 xdescribe('KbqListSelection with forms', () => {
-
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqListModule, FormsModule, ReactiveFormsModule],
@@ -651,7 +640,8 @@ xdescribe('KbqListSelection with forms', () => {
 
             selectionListDebug = fixture.debugElement.query(By.directive(KbqListSelection));
             ngModel = selectionListDebug.injector.get<NgModel>(NgModel);
-            listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
         });
 
@@ -701,18 +691,14 @@ xdescribe('KbqListSelection with forms', () => {
         }));
 
         it('should set the selection-list to touched on blur', fakeAsync(() => {
-            expect(ngModel.touched)
-                .withContext('Expected the selection-list to be untouched by default.')
-                .toBe(false);
+            expect(ngModel.touched).withContext('Expected the selection-list to be untouched by default.').toBe(false);
 
             dispatchFakeEvent(selectionListDebug.nativeElement, 'blur');
             fixture.detectChanges();
 
             tick();
 
-            expect(ngModel.touched)
-                .withContext('Expected the selection-list to be touched after blur')
-                .toBe(true);
+            expect(ngModel.touched).withContext('Expected the selection-list to be touched after blur').toBe(true);
         }));
 
         it('should be pristine by default', fakeAsync(() => {
@@ -720,18 +706,16 @@ xdescribe('KbqListSelection with forms', () => {
             fixture.componentInstance.selectedOptions = ['opt2'];
             fixture.detectChanges();
 
-            ngModel =
-                fixture.debugElement.query(By.directive(KbqListSelection)).injector.get<NgModel>(NgModel);
-            listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            ngModel = fixture.debugElement.query(By.directive(KbqListSelection)).injector.get<NgModel>(NgModel);
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
             // Flush the initial tick to ensure that every action from the ControlValueAccessor
             // happened before the actual test starts.
             tick();
 
-            expect(ngModel.pristine)
-                .withContext('Expected the selection-list to be pristine by default.')
-                .toBe(true);
+            expect(ngModel.pristine).withContext('Expected the selection-list to be pristine by default.').toBe(true);
 
             listOptions[1].toggle();
             fixture.detectChanges();
@@ -767,7 +751,6 @@ xdescribe('KbqListSelection with forms', () => {
 
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
         }));
-
     });
 
     describe('and formControl', () => {
@@ -778,7 +761,8 @@ xdescribe('KbqListSelection with forms', () => {
             fixture = TestBed.createComponent(SelectionListWithFormControl);
             fixture.detectChanges();
 
-            listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
         });
 
@@ -803,13 +787,9 @@ xdescribe('KbqListSelection with forms', () => {
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
             fixture.detectChanges();
 
-            expect(listOptions[1].selected)
-                .withContext('Expected second option to be selected.')
-                .toBe(true);
+            expect(listOptions[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
-            expect(listOptions[2].selected)
-                .withContext('Expected third option to be selected.')
-                .toBe(true);
+            expect(listOptions[2].selected).withContext('Expected third option to be selected.').toBe(true);
 
             fixture.componentInstance.formControl.setValue(null);
             fixture.detectChanges();
@@ -826,23 +806,21 @@ xdescribe('KbqListSelection with forms', () => {
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
             fixture.detectChanges();
 
-            listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
-            expect(listOptions[1].selected)
-                .withContext('Expected second option to be selected.')
-                .toBe(true);
+            expect(listOptions[1].selected).withContext('Expected second option to be selected.').toBe(true);
 
-            expect(listOptions[2].selected)
-                .withContext('Expected third option to be selected.')
-                .toBe(true);
+            expect(listOptions[2].selected).withContext('Expected third option to be selected.').toBe(true);
         });
     });
 
     describe('preselected values', () => {
         it('should add preselected options to the model value', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedOption);
-            const listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            const listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
             fixture.detectChanges();
@@ -854,7 +832,8 @@ xdescribe('KbqListSelection with forms', () => {
 
         it('should handle preselected option both through the model and the view', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedOptionAndModel);
-            const listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption))
+            const listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
             fixture.detectChanges();
@@ -884,11 +863,13 @@ xdescribe('KbqListSelection with forms', () => {
             const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
             const testComponent = fixture.componentInstance;
 
-            testComponent.compareWith = jasmine.createSpy('comparator', (o1: any, o2: any) => {
-                return o1 && o2 && o1.id === o2.id;
-            }).and.callThrough();
+            testComponent.compareWith = jasmine
+                .createSpy('comparator', (o1: any, o2: any) => {
+                    return o1 && o2 && o1.id === o2.id;
+                })
+                .and.callThrough();
 
-            testComponent.selectedOptions = [{id: 2, label: 'Two'}];
+            testComponent.selectedOptions = [{ id: 2, label: 'Two' }];
             fixture.detectChanges();
             tick();
 
@@ -920,7 +901,6 @@ describe('should update model after keyboard interaction with multiple mode = ch
         selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
         ngModel = selectionList.injector.get<NgModel>(NgModel);
     }));
-
 
     it('should update model when items selected with SPACE and ENTER', () => {
         const manager = selectionList.componentInstance.keyManager;
@@ -987,11 +967,10 @@ describe('should update model after keyboard interaction with multiple mode = ch
 });
 
 @Component({
-    template: `
-    <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
-      <mat-list-option *ngFor="let option of options" [value]="option">
-        {{option.label}}
-      </mat-list-option>
+    template: ` <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
+        <mat-list-option *ngFor="let option of options" [value]="option">
+            {{ option.label }}
+        </mat-list-option>
     </mat-selection-list>`
 })
 class SelectionListWithCustomComparator {
@@ -999,33 +978,27 @@ class SelectionListWithCustomComparator {
     selectedOptions: { id: number; label: string }[] = [];
     compareWith?: (o1: any, o2: any) => boolean;
     options = [
-        {id: 1, label: 'One'},
-        {id: 2, label: 'Two'},
-        {id: 3, label: 'Three'}
+        { id: 1, label: 'One' },
+        { id: 2, label: 'Two' },
+        { id: 3, label: 'Three' }
     ];
 }
 
 @Component({
-    template: `
-        <kbq-list-selection
-                id="selection-list-1"
-                [autoSelect]="false"
-                [noUnselectLast]="false"
-                multiple="keyboard"
-                (selectionChange)="onValueChange($event)">
-            <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
-                Inbox (disabled selection-option)
-            </kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'">
-                Starred
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="before" [value]="'sent-mail'">
-                Sent Mail
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="before" [value]="'drafts'" *ngIf="showLastOption">
-                Drafts
-            </kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection
+        id="selection-list-1"
+        [autoSelect]="false"
+        [noUnselectLast]="false"
+        multiple="keyboard"
+        (selectionChange)="onValueChange($event)"
+    >
+        <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
+            Inbox (disabled selection-option)
+        </kbq-list-option>
+        <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'"> Starred </kbq-list-option>
+        <kbq-list-option checkboxPosition="before" [value]="'sent-mail'"> Sent Mail </kbq-list-option>
+        <kbq-list-option checkboxPosition="before" [value]="'drafts'" *ngIf="showLastOption"> Drafts </kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
@@ -1034,58 +1007,40 @@ class SelectionListWithListOptions {
 }
 
 @Component({
-    template: `
-        <kbq-list-selection
-                multiple="checkbox"
-                [autoSelect]="false"
-                [noUnselectLast]="false"
-                [(ngModel)]="model">
-            <kbq-list-option [value]="'value1'">value1</kbq-list-option>
-            <kbq-list-option [value]="'value2'">value2</kbq-list-option>
-            <kbq-list-option [value]="'value3'">value3</kbq-list-option>
-            <kbq-list-option [value]="'value4'">value4</kbq-list-option>
-            <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection
+        multiple="checkbox"
+        [autoSelect]="false"
+        [noUnselectLast]="false"
+        [(ngModel)]="model"
+    >
+        <kbq-list-option [value]="'value1'">value1</kbq-list-option>
+        <kbq-list-option [value]="'value2'">value2</kbq-list-option>
+        <kbq-list-option [value]="'value3'">value3</kbq-list-option>
+        <kbq-list-option [value]="'value4'">value4</kbq-list-option>
+        <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListMultipleCheckbox {
     model = [];
 }
 
 @Component({
-    template: `
-        <kbq-list-selection id="selection-list-2">
-            <kbq-list-option checkboxPosition="after">
-                Inbox (disabled selection-option)
-            </kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="after">
-                Starred
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="after">
-                Sent Mail
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="after">
-                Drafts
-            </kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection id="selection-list-2">
+        <kbq-list-option checkboxPosition="after"> Inbox (disabled selection-option) </kbq-list-option>
+        <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
+        <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
+        <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
-    template: `
-        <kbq-list-selection id="selection-list-3" [disabled]=true>
-            <kbq-list-option checkboxPosition="after">
-                Inbox (disabled selection-option)
-            </kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="after">
-                Starred
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="after">
-                Sent Mail
-            </kbq-list-option>
-            <kbq-list-option checkboxPosition="after">
-                Drafts
-            </kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection id="selection-list-3" [disabled]="true">
+        <kbq-list-option checkboxPosition="after"> Inbox (disabled selection-option) </kbq-list-option>
+        <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
+        <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
+        <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithListDisabled {}
 
@@ -1101,32 +1056,26 @@ class SelectionListWithDisabledOption {
 }
 
 @Component({
-    template: `
-        <kbq-list-selection>
-            <kbq-list-option [selected]="true">Item</kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection>
+        <kbq-list-option [selected]="true">Item</kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithSelectedOption {}
 
 @Component({
-    template: `
-        <kbq-list-selection id="selection-list-4">
-            <kbq-list-option checkboxPosition="after" id="123">
-                Inbox
-            </kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection id="selection-list-4">
+        <kbq-list-option checkboxPosition="after" id="123"> Inbox </kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithOnlyOneOption {}
 
 @Component({
-    template: `
-        <kbq-list-selection [tabIndex]="5"></kbq-list-selection>`
+    template: ` <kbq-list-selection [tabIndex]="5"></kbq-list-selection>`
 })
 class SelectionListWithTabindexAttr {}
 
 @Component({
-    template: `
-        <kbq-list-selection [disabled]="disabled"></kbq-list-selection>`
+    template: ` <kbq-list-selection [disabled]="disabled"></kbq-list-selection>`
 })
 class SelectionListWithTabindexInDisabledState {
     tabIndex: number;
@@ -1134,12 +1083,11 @@ class SelectionListWithTabindexInDisabledState {
 }
 
 @Component({
-    template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions" [autoSelect]="false">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'opt3'" *ngIf="renderLastOption">Option 3</kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection [(ngModel)]="selectedOptions" [autoSelect]="false">
+        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+        <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        <kbq-list-option [value]="'opt3'" *ngIf="renderLastOption">Option 3</kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithModel {
     selectedOptions: string[] = [];
@@ -1159,36 +1107,31 @@ class SelectionListWithFormControl {
     formControl = new UntypedFormControl();
 }
 
-
 @Component({
-    template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
+        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+        <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithPreselectedOption {
     selectedOptions: string[];
 }
 
-
 @Component({
-    template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-        </kbq-list-selection>`
+    template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
+        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+        <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
+    </kbq-list-selection>`
 })
 class SelectionListWithPreselectedOptionAndModel {
     selectedOptions = ['opt1'];
 }
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-list-selection [formControl]="formControl">
-            <kbq-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</kbq-list-option>
+            <kbq-list-option *ngFor="let opt of opts" [value]="opt">{{ opt }}</kbq-list-option>
         </kbq-list-selection>
     `
 })

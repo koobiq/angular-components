@@ -18,10 +18,8 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { kbqPopoverAnimations } from './popover-animations';
 import { KBQ_POPOVER_SCROLL_STRATEGY, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
-
 
 export const KBQ_POPOVER_CONFIRM_TEXT = new InjectionToken<string>('');
 export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
@@ -45,7 +43,6 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
         super(changeDetectorRef);
     }
 }
-
 
 @Directive({
     selector: '[kbqPopoverConfirm]',
@@ -103,7 +100,9 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     }
 
     updateData() {
-        if (!this.instance) { return; }
+        if (!this.instance) {
+            return;
+        }
         super.updateData();
         this.setupButtonEvents();
         this.instance.confirmButtonText = this.confirmButtonText;

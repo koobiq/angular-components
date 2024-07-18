@@ -1,6 +1,5 @@
 import { ThemeStorage } from './theme-storage';
 
-
 const testStorageKey = ThemeStorage.storageKey;
 const testTheme = {
     primary: '#000000',

@@ -1,6 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
 
-
 export interface NavbarPropertyParameters {
     // name of local storage property
     property: string;
@@ -66,7 +65,9 @@ export class NavbarProperty {
     }
 
     private updateTemplateValues() {
-        if (!this.currentValue) { return; }
+        if (!this.currentValue) {
+            return;
+        }
 
         for (const color of this.data) {
             document.body.classList.remove(color.className);
@@ -79,7 +80,7 @@ export class NavbarProperty {
 
     private updateSelectedValues(i: number) {
         if (this.data[i]) {
-            this.data.forEach((color) => color.selected = false);
+            this.data.forEach((color) => (color.selected = false));
             this.data[i].selected = true;
 
             this.changes.next({ name: 'updateSelectedValues', value: this.currentValue });

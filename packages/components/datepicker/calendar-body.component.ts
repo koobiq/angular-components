@@ -4,12 +4,11 @@ import {
     Component,
     EventEmitter,
     Input,
-    Output,
-    ViewEncapsulation,
     OnChanges,
-    SimpleChanges
+    Output,
+    SimpleChanges,
+    ViewEncapsulation
 } from '@angular/core';
-
 
 /**
  * Extra CSS classes that can be associated with a calendar cell.
@@ -28,7 +27,6 @@ export class KbqCalendarCell {
         public cssClasses?: KbqCalendarCellCssClasses
     ) {}
 }
-
 
 /**
  * An internal component used to display calendar data in a table.

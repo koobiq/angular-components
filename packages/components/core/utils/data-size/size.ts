@@ -1,17 +1,11 @@
-export const formatDataSize = (
-    value: number,
-    precision: number,
-    system
-): { value: string; unit: string } => {
+export const formatDataSize = (value: number, precision: number, system): { value: string; unit: string } => {
     const { result, unit } = getHumanizedBytes(value, system);
     let volume: string;
 
     if (system.abbreviations[0] === unit) {
         volume = result.toString();
     } else {
-        volume = result
-            .toFixed(precision)
-            .replace(/\./g, ',');
+        volume = result.toFixed(precision).replace(/\./g, ',');
     }
 
     return {
@@ -27,17 +21,12 @@ export const formatDataSize = (
  * @param system система измерения
  * @param threshold нижний порог подсчета
  */
-export const getHumanizedBytes = (
-    value: number,
-    system,
-    threshold?: number
-): { result: number; unit: string } => {
+export const getHumanizedBytes = (value: number, system, threshold?: number): { result: number; unit: string } => {
     if (!Number.isFinite(value)) {
         throw new Error('Argument "value" must be number!');
     }
 
-    const calculatedThreshold = Number.isFinite(threshold)
-        ? threshold : Math.pow(system.base, system.power);
+    const calculatedThreshold = Number.isFinite(threshold) ? threshold : Math.pow(system.base, system.power);
     const orderOfMagnitude: number = Math.pow(system.base, system.power);
 
     let result: number = value;

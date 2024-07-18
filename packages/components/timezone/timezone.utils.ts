@@ -1,5 +1,4 @@
-import { KbqTimezoneZone, KbqTimezonesByCountry, KbqTimezoneGroup } from './timezone.models';
-
+import { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
 
 const minusUnicode = 0x2212; // Minus Sign U+2212
 
@@ -8,10 +7,9 @@ const minusUnicode = 0x2212; // Minus Sign U+2212
  */
 export function parseOffset(offset: string): number {
     const minutesPerHour = 60;
-    const [hours, minutes] = offset.split(':')
-        .map((part: string) => parseInt(part, 10));
+    const [hours, minutes] = offset.split(':').map((part: string) => parseInt(part, 10));
 
-    return (hours * minutesPerHour) + (hours >= 0 ? minutes : minutes * -1);
+    return hours * minutesPerHour + (hours >= 0 ? minutes : minutes * -1);
 }
 
 /**
@@ -30,9 +28,8 @@ export function getZonesGroupedByCountry(
     // collect data by countries
     const dataByCountries: KbqTimezonesByCountry = data.reduce<KbqTimezonesByCountry>(
         (result: KbqTimezonesByCountry, zone: KbqTimezoneZone) => {
-            const countryName: string = zone.countryCode.toLowerCase() === countryCode?.toLowerCase()
-                ? zone.countryName
-                : otherCountriesLabel;
+            const countryName: string =
+                zone.countryCode.toLowerCase() === countryCode?.toLowerCase() ? zone.countryName : otherCountriesLabel;
 
             if (!Array.isArray(result[countryName])) {
                 result[countryName] = [];
@@ -46,12 +43,13 @@ export function getZonesGroupedByCountry(
     );
 
     // make data groups
-    const groups: KbqTimezoneGroup[] = Object.values(dataByCountries)
-        .map<KbqTimezoneGroup>((zones: KbqTimezoneZone[]) => ({
+    const groups: KbqTimezoneGroup[] = Object.values(dataByCountries).map<KbqTimezoneGroup>(
+        (zones: KbqTimezoneZone[]) => ({
             countryCode: zones[0].countryCode,
             countryName: zones[0].countryName,
             zones: zones.sort(timezonesSortComparator)
-        }));
+        })
+    );
 
     // sort by priority country
     const priorityGroupIndex = groups.findIndex(
@@ -74,8 +72,8 @@ export function offset(value) {
     const preparedHours: string = !isPositiveOffset
         ? `${String.fromCharCode(minusUnicode)}${hours.substring(1)}`
         : parseInt(hours, 10) > 0 || parseInt(minutes, 10) > 0
-            ? `+${hours}`
-            : hours;
+          ? `+${hours}`
+          : hours;
 
     return [preparedHours, minutes].join(':');
 }
@@ -84,7 +82,7 @@ export function offsetFormatter(value: string): string {
     return `UTC ${offset(value)}`;
 }
 
-export function offsetFormatterAsObject(value: string): { [UTC: string] : string} {
+export function offsetFormatterAsObject(value: string): { [UTC: string]: string } {
     return { UTC: offset(value) };
 }
 

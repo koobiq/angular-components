@@ -1,20 +1,7 @@
 import { QueryList } from '@angular/core';
-import {
-    UP_ARROW,
-    DOWN_ARROW,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    TAB,
-    A,
-    Z,
-    ZERO,
-    NINE,
-    HOME,
-    END
-} from '@koobiq/cdk/keycodes';
+import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '@koobiq/cdk/keycodes';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
-
 
 // This interface is for items that can be passed to a ListKeyManager.
 export interface ListKeyManagerOption {
@@ -76,7 +63,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     constructor(private _items: QueryList<T>) {
         if (_items instanceof QueryList) {
-
             _items.changes.subscribe((newItems: QueryList<T>) => {
                 if (this._activeItem) {
                     const itemArray = newItems.toArray();
@@ -168,37 +154,39 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
         // Debounce the presses of non-navigational keys, collect the ones that correspond to letters and convert those
         // letters back into a string. Afterwards find the first item that starts with that string and select it.
-        this.typeaheadSubscription = this.letterKeyStream.pipe(
-            tap((keyCode) => this.pressedLetters.push(keyCode)),
-            debounceTime(debounceInterval),
-            filter(() => this.pressedLetters.length > 0),
-            map(() => this.pressedLetters.join(''))
-        ).subscribe((inputString) => {
-            if (searchLetterIndex === -1) {
-                this.pressedLetters = [];
+        this.typeaheadSubscription = this.letterKeyStream
+            .pipe(
+                tap((keyCode) => this.pressedLetters.push(keyCode)),
+                debounceTime(debounceInterval),
+                filter(() => this.pressedLetters.length > 0),
+                map(() => this.pressedLetters.join(''))
+            )
+            .subscribe((inputString) => {
+                if (searchLetterIndex === -1) {
+                    this.pressedLetters = [];
 
-                return;
-            }
-
-            const items = this._items.toArray();
-
-            // Start at 1 because we want to start searching at the item immediately
-            // following the current active item.
-            for (let i = 1; i < items.length + 1; i++) {
-                const index = (this._activeItemIndex + i) % items.length;
-                const item = items[index];
-
-                if (
-                    !item.disabled &&
-                    item.getLabel!().toUpperCase().trim().indexOf(inputString) === searchLetterIndex
-                ) {
-                    this.setActiveItem(index);
-                    break;
+                    return;
                 }
-            }
 
-            this.pressedLetters = [];
-        });
+                const items = this._items.toArray();
+
+                // Start at 1 because we want to start searching at the item immediately
+                // following the current active item.
+                for (let i = 1; i < items.length + 1; i++) {
+                    const index = (this._activeItemIndex + i) % items.length;
+                    const item = items[index];
+
+                    if (
+                        !item.disabled &&
+                        item.getLabel!().toUpperCase().trim().indexOf(inputString) === searchLetterIndex
+                    ) {
+                        this.setActiveItem(index);
+                        break;
+                    }
+                }
+
+                this.pressedLetters = [];
+            });
 
         return this;
     }
@@ -343,8 +331,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     // Sets the active item to a previous enabled item in the list.
     setPreviousItemActive(): void {
-        this._activeItemIndex < 0 && this.wrap ? this.setLastItemActive()
-            : this.setActiveItemByDelta(-1);
+        this._activeItemIndex < 0 && this.wrap ? this.setLastItemActive() : this.setActiveItemByDelta(-1);
     }
 
     setNextPageItemActive(delta: number = this.scrollSize): void {
@@ -412,7 +399,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         const items = this.getItemsArray();
 
         for (let i = 1; i <= items.length; i++) {
-            const index = (this._activeItemIndex + (delta * i) + items.length) % items.length;
+            const index = (this._activeItemIndex + delta * i + items.length) % items.length;
             const item = items[index];
 
             if (!this.skipPredicateFn(item)) {
@@ -440,13 +427,17 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     private setActiveItemByIndex(index: number, fallbackDelta: number): void {
         const items = this.getItemsArray();
 
-        if (!items[index]) { return; }
+        if (!items[index]) {
+            return;
+        }
 
         let curIndex = index;
         while (this.skipPredicateFn(items[curIndex])) {
             curIndex += fallbackDelta;
 
-            if (!items[curIndex]) { return; }
+            if (!items[curIndex]) {
+                return;
+            }
         }
 
         this.setActiveItem(curIndex);

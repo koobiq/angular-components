@@ -3,11 +3,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import {
-    CdkConnectedOverlay,
-    ConnectedPosition,
-    ViewportRuler
-} from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -35,67 +31,52 @@ import {
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     DOWN_ARROW,
     END,
     ENTER,
+    ESCAPE,
     HOME,
     LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
     RIGHT_ARROW,
     SPACE,
+    TAB,
     UP_ARROW,
-    PAGE_UP,
-    PAGE_DOWN,
-    ESCAPE, TAB,
-    hasModifierKey, isSelectAll
+    hasModifierKey,
+    isSelectAll
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
+    CanDisableCtor,
     CanUpdateErrorState,
+    CanUpdateErrorStateCtor,
     ErrorStateMatcher,
     HasTabIndex,
-    CanDisableCtor,
     HasTabIndexCtor,
-    CanUpdateErrorStateCtor,
-    mixinTabIndex,
-    mixinDisabled,
-    mixinErrorState,
-    kbqSelectAnimations,
-
-    SELECT_PANEL_PADDING_X,
-    SELECT_PANEL_VIEWPORT_PADDING,
     KBQ_SELECT_SCROLL_STRATEGY,
-
-    getKbqSelectDynamicMultipleError,
-    getKbqSelectNonFunctionValueError,
-    getKbqSelectNonArrayValueError,
-    MultipleMode,
+    KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
-    KbqSelectMatcher
+    MultipleMode,
+    SELECT_PANEL_PADDING_X,
+    SELECT_PANEL_VIEWPORT_PADDING,
+    getKbqSelectDynamicMultipleError,
+    getKbqSelectNonArrayValueError,
+    getKbqSelectNonFunctionValueError,
+    kbqSelectAnimations,
+    mixinDisabled,
+    mixinErrorState,
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
-import { KbqTree, KbqTreeSelection, KbqTreeOption } from '@koobiq/components/tree';
-import { defer, merge, Observable, Subject, Subscription } from 'rxjs';
-import {
-    filter,
-    map,
-    switchMap,
-    take,
-    takeUntil,
-    distinctUntilChanged,
-    startWith,
-    delay
-} from 'rxjs/operators';
+import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs } from '@koobiq/design-tokens';
-
+import { Observable, Subject, Subscription, defer, merge } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -107,9 +88,12 @@ export interface ITriggerValue {
 
 /** Change event object that is emitted when the select value has changed. */
 export class KbqTreeSelectChange {
-    constructor(public source: KbqTreeSelect, public value: any, public isUserInput = false) {}
+    constructor(
+        public source: KbqTreeSelect,
+        public value: any,
+        public isUserInput = false
+    ) {}
 }
-
 
 /** @docs-private */
 class KbqTreeSelectBase {
@@ -130,9 +114,8 @@ class KbqTreeSelectBase {
 }
 
 /** @docs-private */
-const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor &
-    typeof KbqTreeSelectBase = mixinTabIndex(mixinDisabled(mixinErrorState(KbqTreeSelectBase)));
-
+const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor & typeof KbqTreeSelectBase =
+    mixinTabIndex(mixinDisabled(mixinErrorState(KbqTreeSelectBase)));
 
 @Component({
     selector: 'kbq-tree-select',
@@ -165,10 +148,21 @@ const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorS
         { provide: KbqTree, useExisting: KbqTreeSelect }
     ]
 })
-export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
-    AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor,
-    CanDisable, HasTabIndex, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
-
+export class KbqTreeSelect
+    extends KbqTreeSelectMixinBase
+    implements
+        AfterContentInit,
+        AfterViewInit,
+        OnChanges,
+        OnDestroy,
+        OnInit,
+        DoCheck,
+        ControlValueAccessor,
+        CanDisable,
+        HasTabIndex,
+        KbqFormFieldControl<KbqTreeOption>,
+        CanUpdateErrorState
+{
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
 
@@ -222,7 +216,6 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     options: QueryList<KbqTreeOption>;
 
-
     /**
      * Trigger - is a clickable field to open select dropdown panel
      */
@@ -253,12 +246,16 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> =
-        this.openedChange.pipe(filter((o) => o), map(() => {}));
+    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+        filter((o) => o),
+        map(() => {})
+    );
 
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> =
-        this.openedChange.pipe(filter((o) => !o), map(() => {}));
+    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+        filter((o) => !o),
+        map(() => {})
+    );
 
     /** Event emitted when the selected value has been changed by the user. */
     @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectChange>();
@@ -293,9 +290,10 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             );
         }
 
-        return this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1), switchMap(() => this.optionSelectionChanges));
+        return this.ngZone.onStable.asObservable().pipe(
+            take(1),
+            switchMap(() => this.optionSelectionChanges)
+        );
     }) as Observable<KbqTreeSelectChange>;
 
     @Input()
@@ -341,7 +339,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     @Input()
     get autoSelect(): boolean {
-        if (this.multiple) { return false; }
+        if (this.multiple) {
+            return false;
+        }
 
         return this._autoSelect;
     }
@@ -492,39 +492,40 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
         // https://github.com/angular/angular/issues/24084
-        this.panelDoneAnimatingStream
-            .pipe(distinctUntilChanged(), takeUntil(this.destroy))
-            .subscribe(() => {
-                if (this.panelOpen) {
-                    this.scrollTop = 0;
+        this.panelDoneAnimatingStream.pipe(distinctUntilChanged(), takeUntil(this.destroy)).subscribe(() => {
+            if (this.panelOpen) {
+                this.scrollTop = 0;
 
-                    if (this.search) { this.search.focus(); }
-
-                    this.openedChange.emit(true);
-                } else {
-                    this.openedChange.emit(false);
-                    this.overlayDir.offsetX = 0;
-                    this.changeDetectorRef.markForCheck();
+                if (this.search) {
+                    this.search.focus();
                 }
-            });
+
+                this.openedChange.emit(true);
+            } else {
+                this.openedChange.emit(false);
+                this.overlayDir.offsetX = 0;
+                this.changeDetectorRef.markForCheck();
+            }
+        });
     }
 
     ngAfterContentInit() {
-        if (!this.tree) { return; }
+        if (!this.tree) {
+            return;
+        }
 
         this.tree.resetFocusedItemOnBlur = false;
         this.tree.optionShouldHoldFocusOnBlur = true;
 
         this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiple);
 
-        this.selectionModel.changed
-            .subscribe(() => {
-                this.onChange(this.selectedValues);
+        this.selectionModel.changed.subscribe(() => {
+            this.onChange(this.selectedValues);
 
-                if (this.multiple) {
-                    this.refreshTriggerValues();
-                }
-            });
+            if (this.multiple) {
+                this.refreshTriggerValues();
+            }
+        });
 
         this.tree.ngAfterContentInit();
 
@@ -546,27 +547,23 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             this.tempValues = null;
         }
 
-        this.optionSelectionChanges
-            .pipe(takeUntil(this.destroy))
-            .subscribe((event) => {
-                if (!this.multiple && this.panelOpen && event.isUserInput) {
-                    this.close();
+        this.optionSelectionChanges.pipe(takeUntil(this.destroy)).subscribe((event) => {
+            if (!this.multiple && this.panelOpen && event.isUserInput) {
+                this.close();
 
-                    Promise.resolve().then(() => this.focus());
-                }
-            });
+                Promise.resolve().then(() => this.focus());
+            }
+        });
 
-        this.tree.selectionChange
-            .pipe(takeUntil(this.destroy))
-            .subscribe((event) => {
-                this.onChange(this.selectedValues);
+        this.tree.selectionChange.pipe(takeUntil(this.destroy)).subscribe((event) => {
+            this.onChange(this.selectedValues);
 
-                this.selectionChange.emit(new KbqTreeSelectChange(this, event.option));
+            this.selectionChange.emit(new KbqTreeSelectChange(this, event.option));
 
-                if (this.search) {
-                    this.search.focus();
-                }
-            });
+            if (this.search) {
+                this.search.focus();
+            }
+        });
 
         if (!this.multiple) {
             this.selectionModel.changed
@@ -576,9 +573,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
                 )
                 .subscribe(({ added }) => {
                     this.tree.keyManager.setFocusOrigin('program');
-                    this.tree.keyManager.setActiveItem(
-                        this.options.find(({ data }) => data === added[0]) as any
-                    );
+                    this.tree.keyManager.setActiveItem(this.options.find(({ data }) => data === added[0]) as any);
                 });
         }
 
@@ -586,17 +581,19 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     ngAfterViewInit() {
-        if (!this.tree) { return; }
+        if (!this.tree) {
+            return;
+        }
 
-        this.tags.changes
-            .pipe(startWith(null))
-            .subscribe(() => {
-                this.calculateHiddenItems();
-            });
+        this.tags.changes.pipe(startWith(null)).subscribe(() => {
+            this.calculateHiddenItems();
+        });
     }
 
     ngDoCheck() {
-        if (this.ngControl) { this.updateErrorState(); }
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -645,7 +642,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     open(): void {
-        if (this.disabled || !this.options || !this.options.length || this._panelOpen) { return; }
+        if (this.disabled || !this.options || !this.options.length || this._panelOpen) {
+            return;
+        }
 
         this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
@@ -659,7 +658,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
         this.changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this.ngZone.onStable.asObservable()
+        this.ngZone.onStable
+            .asObservable()
             .pipe(take(1))
             .subscribe(() => {
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
@@ -670,7 +670,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this._panelOpen) { return; }
+        if (!this._panelOpen) {
+            return;
+        }
 
         this._panelOpen = false;
 
@@ -735,14 +737,15 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     get selectedValues(): any {
-        const selectedValues = this.selectionModel.selected
-            .map((value) => this.tree.treeControl.getValue(value));
+        const selectedValues = this.selectionModel.selected.map((value) => this.tree.treeControl.getValue(value));
 
         return this.multiple ? selectedValues : selectedValues[0];
     }
 
     get triggerValue(): string {
-        if (this.empty) { return ''; }
+        if (this.empty) {
+            return '';
+        }
 
         return this.tree.treeControl.getViewValue(this.selected);
     }
@@ -756,8 +759,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     get firstSelected() {
-        return this.selectionModel.selected
-            .filter((node) => !this.tree.treeControl.isDisabled(node))[0];
+        return this.selectionModel.selected.filter((node) => !this.tree.treeControl.isDisabled(node))[0];
     }
 
     handleKeydown(event: KeyboardEvent) {
@@ -801,18 +803,15 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     /** Callback that is invoked when the overlay panel has been attached. */
     onAttached() {
-        this.overlayDir.positionChange
-            .pipe(take(1))
-            .subscribe(() => {
-                this.changeDetectorRef.detectChanges();
-                this.calculateOverlayOffsetX();
-                this.panel.nativeElement.scrollTop = this.scrollTop;
+        this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
+            this.changeDetectorRef.detectChanges();
+            this.calculateOverlayOffsetX();
+            this.panel.nativeElement.scrollTop = this.scrollTop;
 
-                this.tree.updateScrollSize();
-            });
+            this.tree.updateScrollSize();
+        });
 
-        this.closeSubscription = this.closingActions()
-            .subscribe(() => this.close());
+        this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
 
     /** Returns the theme to be used on the panel. */
@@ -836,8 +835,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     onRemoveSelectedOption(selectedOption: any, $event) {
         $event.stopPropagation();
 
-        this.selectionModel
-            .deselect(this.selected.find((value) => this.tree.treeControl.getValue(value) === selectedOption.value));
+        this.selectionModel.deselect(
+            this.selected.find((value) => this.tree.treeControl.getValue(value) === selectedOption.value)
+        );
 
         this.selectionChange.emit(
             new KbqTreeSelectChange(
@@ -850,7 +850,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     calculateHiddenItems() {
-        if (this.customTrigger || this.empty || !this.multiple) { return; }
+        if (this.customTrigger || this.empty || !this.multiple) {
+            return;
+        }
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
@@ -868,14 +870,14 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
-            if (itemsCounterShowed && (totalItemsWidth < matcherWidth)) {
+            if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
                 this.hiddenItems = 0;
                 this.changeDetectorRef.detectChanges();
             }
 
             if (
                 totalVisibleItemsWidth === matcherListWidth ||
-                (totalVisibleItemsWidth + itemsCounterWidth) < matcherListWidth
+                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
             ) {
                 this.changeDetectorRef.markForCheck();
 
@@ -888,7 +890,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     private closingActions() {
         const backdrop = this.overlayDir.overlayRef!.backdropClick();
-        const outsidePointerEvents = this.overlayDir.overlayRef!.outsidePointerEvents()
+        const outsidePointerEvents = this.overlayDir
+            .overlayRef!.outsidePointerEvents()
             .pipe(filter((event) => !this.elementRef.nativeElement.contains(event.target)));
         const detachments = this.overlayDir.overlayRef!.detachments();
 
@@ -902,7 +905,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
         let totalItemsWidth: number = 0;
         const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
-        selectedItemsViewValueContainers.forEach((item) => totalItemsWidth += this.getItemWidth(item));
+        selectedItemsViewValueContainers.forEach((item) => (totalItemsWidth += this.getItemWidth(item)));
 
         triggerClone.remove();
 
@@ -912,22 +915,17 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
-        this.renderer.setStyle(
-            triggerClone.querySelector('.kbq-select__match-hidden-text'),
-            'display',
-            'block'
-        );
+        this.renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
         this.renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
         let totalVisibleItemsWidth: number = 0;
-        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>)
-            .forEach((item) => {
-                if (item.offsetTop < item.offsetHeight) {
-                    totalVisibleItemsWidth += this.getItemWidth(item);
-                    visibleItemsCount++;
-                }
-            });
+        (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>).forEach((item) => {
+            if (item.offsetTop < item.offsetHeight) {
+                totalVisibleItemsWidth += this.getItemWidth(item);
+                visibleItemsCount++;
+            }
+        });
 
         triggerClone.remove();
 
@@ -958,8 +956,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     private handleClosedKeydown(event: KeyboardEvent) {
         // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
-        const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW ||
-            keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
+        const isArrowKey =
+            keyCode === DOWN_ARROW || keyCode === UP_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
         const isOpenKey = keyCode === ENTER || keyCode === SPACE;
 
         // Open the select on ALT + arrow key to match the native <select>
@@ -978,7 +976,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
-        if (isArrowKey && event.altKey || keyCode === ESCAPE || keyCode === TAB) {
+        if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
             // Close the select on ALT + arrow key to match the native <select>
             event.preventDefault();
             this.close();
@@ -1028,7 +1026,10 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             this.tree.keyManager.onKeydown(event);
 
             if (
-                this.multiple && isArrowKey && event.shiftKey && this.tree.keyManager.activeItem &&
+                this.multiple &&
+                isArrowKey &&
+                event.shiftKey &&
+                this.tree.keyManager.activeItem &&
                 this.tree.keyManager.activeItemIndex !== previouslyFocusedIndex
             ) {
                 this.tree.keyManager.activeItem.selectViaInteraction(event);
@@ -1036,7 +1037,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
             if (this.autoSelect && this.tree.keyManager.activeItem) {
                 this.tree.setSelectedOptionsByKey(
-                    this.tree.keyManager.activeItem, hasModifierKey(event, 'shiftKey'), hasModifierKey(event, 'ctrlKey')
+                    this.tree.keyManager.activeItem,
+                    hasModifierKey(event, 'shiftKey'),
+                    hasModifierKey(event, 'ctrlKey')
                 );
             }
 
@@ -1047,12 +1050,11 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     }
 
     private refreshTriggerValues(): void {
-        this.triggerValues = this.selectionModel.selected
-                .map((node) => ({
-                    value: this.tree.treeControl.getValue(node),
-                    viewValue: this.tree.treeControl.getViewValue(node),
-                    disabled: this.tree.treeControl.isDisabled(node)
-                }));
+        this.triggerValues = this.selectionModel.selected.map((node) => ({
+            value: this.tree.treeControl.getValue(node),
+            viewValue: this.tree.treeControl.getViewValue(node),
+            disabled: this.tree.treeControl.isDisabled(node)
+        }));
 
         this.changeDetectorRef.detectChanges();
     }
@@ -1071,7 +1073,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
      */
     private setSelectionByValue(value: any | any[]) {
         if (this.multiple && value) {
-            if (!Array.isArray(value)) { throw getKbqSelectNonArrayValueError(); }
+            if (!Array.isArray(value)) {
+                throw getKbqSelectNonArrayValueError();
+            }
 
             this.tree.setOptionsFromValues(value);
 
@@ -1088,15 +1092,13 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
 
         this.tree.onKeyDown = () => {};
 
-        this.tree.keyManager.change
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => {
-                if (this._panelOpen && this.panel) {
-                    this.scrollActiveOptionIntoView();
-                } else if (!this._panelOpen && !this.multiple && this.tree.keyManager.activeItem) {
-                    this.tree.keyManager.activeItem.selectViaInteraction();
-                }
-            });
+        this.tree.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+            if (this._panelOpen && this.panel) {
+                this.scrollActiveOptionIntoView();
+            } else if (!this._panelOpen && !this.multiple && this.tree.keyManager.activeItem) {
+                this.tree.keyManager.activeItem.selectViaInteraction();
+            }
+        });
     }
 
     /** Sorts the selected values in the selected based on their order in the panel. */
@@ -1105,9 +1107,9 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
             const options = this.options.toArray();
 
             this.selectionModel.sort((a, b) => {
-                return this.sortComparator ?
-                    this.sortComparator(a, b, options) :
-                    options.indexOf(a) - options.indexOf(b);
+                return this.sortComparator
+                    ? this.sortComparator(a, b, options)
+                    : options.indexOf(a) - options.indexOf(b);
             });
 
             this.stateChanges.next();
@@ -1119,10 +1121,11 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
      * the first item instead.
      */
     private highlightCorrectOption() {
-        if (!this.tree.keyManager) { return; }
+        if (!this.tree.keyManager) {
+            return;
+        }
 
-        const selectedOption = this.options
-            .find((option) => option.data as any === this.firstSelected);
+        const selectedOption = this.options.find((option) => (option.data as any) === this.firstSelected);
 
         this.tree.keyManager.setFocusOrigin('keyboard');
 
@@ -1158,12 +1161,13 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
         let offsetX: number = SELECT_PANEL_PADDING_X;
 
         // Invert the offset in LTR.
-        if (!isRtl) { offsetX *= -1; }
+        if (!isRtl) {
+            offsetX *= -1;
+        }
 
         // Determine how much the select overflows on each side.
         const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - viewportSize.width
-            + (isRtl ? 0 : paddingWidth);
+        const rightOverflow = overlayRect.right + offsetX - viewportSize.width + (isRtl ? 0 : paddingWidth);
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0) {
@@ -1183,13 +1187,13 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements
     private _compareWith = (o1: any, o2: any) => o1 === o2;
 
     private subscribeOnSearchChanges() {
-        if (!this.search?.ngControl.valueChanges) { return; }
+        if (!this.search?.ngControl.valueChanges) {
+            return;
+        }
 
-        this.search.ngControl.valueChanges
-            .pipe(delay(0))
-            .subscribe((value) => {
-                this.isEmptySearchResult = !!value && this.tree.isEmpty;
-                this.changeDetectorRef.markForCheck();
-            });
+        this.search.ngControl.valueChanges.pipe(delay(0)).subscribe((value) => {
+            this.isEmptySearchResult = !!value && this.tree.isEmpty;
+            this.changeDetectorRef.markForCheck();
+        });
     }
 }

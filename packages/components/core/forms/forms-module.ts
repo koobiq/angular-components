@@ -1,10 +1,5 @@
 import { NgModule } from '@angular/core';
-
-import {
-    KbqForm,
-    KbqFormElement
-} from './forms.directive';
-
+import { KbqForm, KbqFormElement } from './forms.directive';
 
 @NgModule({
     exports: [

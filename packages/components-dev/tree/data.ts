@@ -114,8 +114,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Инвентаризация / Операционные системы / Не определена',
+                                treePath: 'Инвентаризация / Операционные системы / Не определена',
                                 children: []
                             }
                         ]
@@ -153,8 +152,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-001',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-001',
                                 children: [
                                     {
                                         id: '167dec83-bb00-0001-0000-000000000699',
@@ -165,8 +163,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -191,8 +188,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / FW',
                                         children: []
                                     },
                                     {
@@ -204,8 +200,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-001 / SCCM',
                                         children: []
                                     },
                                     {
@@ -232,8 +227,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-002',
                                 children: [
                                     {
                                         id: '167df66e-2280-0001-0000-0000000006a1',
@@ -244,8 +238,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -257,8 +250,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / FW',
                                         children: []
                                     },
                                     {
@@ -270,8 +262,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-002 / MNG',
                                         children: []
                                     },
                                     {
@@ -298,8 +289,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-003',
                                 children: [
                                     {
                                         id: '167df874-d880-0001-0000-0000000006ad',
@@ -336,8 +326,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-003 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-003 / FW',
                                         children: []
                                     },
                                     {
@@ -349,8 +338,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-003 / SRV_OPEN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-003 / SRV_OPEN',
                                         children: []
                                     }
                                 ]
@@ -364,8 +352,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-004',
                                 children: [
                                     {
                                         id: '167df931-5bc0-0001-0000-0000000006b1',
@@ -376,8 +363,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-004 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-004 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -389,8 +375,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-004 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-004 / FW',
                                         children: []
                                     }
                                 ]
@@ -404,8 +389,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-005',
                                 children: [
                                     {
                                         id: '1688400a-2340-0001-0000-0000000001ec',
@@ -416,8 +400,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-005 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-005 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -429,8 +412,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-005 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-005 / FW',
                                         children: []
                                     },
                                     {
@@ -457,8 +439,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-006',
                                 children: [
                                     {
                                         id: '167dfbeb-98c0-0001-0000-0000000006c1',
@@ -469,8 +450,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / ben-006 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-006 / FW',
                                         children: []
                                     }
                                 ]
@@ -484,8 +464,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / ben-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / ben-007',
                                 children: []
                             },
                             {
@@ -497,8 +476,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001',
                                 children: [
                                     {
                                         id: '16884031-e400-0001-0000-0000000001f3',
@@ -509,8 +487,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -522,8 +499,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / FW',
                                         children: []
                                     },
                                     {
@@ -535,8 +511,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-001 / MNG',
                                         children: []
                                     }
                                 ]
@@ -550,8 +525,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002',
                                 children: [
                                     {
                                         id: '1688404f-b5c0-0001-0000-0000000001fc',
@@ -562,8 +536,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -575,8 +548,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / FW',
                                         children: []
                                     },
                                     {
@@ -588,8 +560,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-002 / SCCM',
                                         children: []
                                     },
                                     {
@@ -616,8 +587,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003',
                                 children: [
                                     {
                                         id: '16884081-7100-0001-0000-00000000020a',
@@ -628,8 +598,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -641,8 +610,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / FW',
                                         children: []
                                     },
                                     {
@@ -654,8 +622,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / FW2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-003 / FW2',
                                         children: []
                                     }
                                 ]
@@ -669,8 +636,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-004',
                                 children: []
                             },
                             {
@@ -682,8 +648,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005',
                                 children: [
                                     {
                                         id: '1688409f-4580-0001-0000-000000000213',
@@ -694,8 +659,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -707,8 +671,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-005 / FW',
                                         children: []
                                     },
                                     {
@@ -735,8 +698,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-006',
                                 children: []
                             },
                             {
@@ -748,8 +710,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007',
                                 children: [
                                     {
                                         id: '168840c7-0780-0001-0000-000000000220',
@@ -760,8 +721,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -773,8 +733,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -786,8 +745,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -812,8 +770,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / FW',
                                         children: []
                                     },
                                     {
@@ -825,8 +782,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-007 / MNG',
                                         children: []
                                     }
                                 ]
@@ -840,8 +796,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008',
                                 children: [
                                     {
                                         id: '168840ee-c040-0001-0000-00000000022d',
@@ -852,8 +807,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -865,8 +819,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -878,8 +831,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-008 / FW',
                                         children: []
                                     }
                                 ]
@@ -893,8 +845,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009',
                                 children: [
                                     {
                                         id: '1688413e-5ac0-0001-0000-000000000247',
@@ -905,8 +856,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -918,8 +868,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -931,8 +880,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / ESXI',
                                         children: []
                                     },
                                     {
@@ -944,8 +892,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / FW',
                                         children: []
                                     },
                                     {
@@ -957,8 +904,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / MNG',
                                         children: []
                                     },
                                     {
@@ -970,8 +916,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-009 / SCCM',
                                         children: []
                                     },
                                     {
@@ -1024,8 +969,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010',
                                 children: [
                                     {
                                         id: '1688417a-0a00-0001-0000-00000000025f',
@@ -1036,8 +980,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1049,8 +992,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1062,8 +1004,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / ESXI',
                                         children: []
                                     },
                                     {
@@ -1075,8 +1016,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / FW',
                                         children: []
                                     },
                                     {
@@ -1088,8 +1028,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / MNG',
                                         children: []
                                     },
                                     {
@@ -1101,8 +1040,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-010 / SCCM',
                                         children: []
                                     },
                                     {
@@ -1129,8 +1067,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011',
                                 children: [
                                     {
                                         id: '168841b5-b800-0001-0000-000000000274',
@@ -1141,8 +1078,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1154,8 +1090,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1167,8 +1102,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-011 / FW',
                                         children: []
                                     }
                                 ]
@@ -1182,8 +1116,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012',
                                 children: [
                                     {
                                         id: '168841dd-8740-0001-0000-00000000027e',
@@ -1194,8 +1127,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1207,8 +1139,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / FW',
                                         children: []
                                     },
                                     {
@@ -1220,8 +1151,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-012 / MNG',
                                         children: []
                                     }
                                 ]
@@ -1235,8 +1165,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013',
                                 children: [
                                     {
                                         id: '16884205-4680-0001-0000-00000000028b',
@@ -1247,8 +1176,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1260,8 +1188,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1273,8 +1200,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / FW',
                                         children: []
                                     },
                                     {
@@ -1286,8 +1212,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-013 / MNG',
                                         children: []
                                     }
                                 ]
@@ -1301,8 +1226,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-014',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-014',
                                 children: []
                             },
                             {
@@ -1314,8 +1238,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015',
                                 children: [
                                     {
                                         id: '1688420f-3a00-0001-0000-00000000028f',
@@ -1326,8 +1249,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1339,8 +1261,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-015 / FW',
                                         children: []
                                     }
                                 ]
@@ -1354,8 +1275,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016',
                                 children: [
                                     {
                                         id: '16884223-1cc0-0001-0000-000000000294',
@@ -1366,8 +1286,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1379,8 +1298,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1392,8 +1310,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-016 / FW',
                                         children: []
                                     }
                                 ]
@@ -1407,8 +1324,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017',
                                 children: [
                                     {
                                         id: '16884254-d400-0001-0000-0000000002a5',
@@ -1419,8 +1335,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1445,8 +1360,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1458,8 +1372,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / FW',
                                         children: []
                                     },
                                     {
@@ -1471,8 +1384,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-017 / MNG',
                                         children: []
                                     },
                                     {
@@ -1499,8 +1411,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018',
                                 children: [
                                     {
                                         id: '1688429a-cec0-0001-0000-0000000002b8',
@@ -1511,8 +1422,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1524,8 +1434,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1537,8 +1446,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-018 / FW',
                                         children: []
                                     }
                                 ]
@@ -1552,8 +1460,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019',
                                 children: [
                                     {
                                         id: '168842cc-8040-0001-0000-0000000002c6',
@@ -1564,8 +1471,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1577,8 +1483,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ASKUE',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ASKUE',
                                         children: []
                                     },
                                     {
@@ -1590,8 +1495,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1603,8 +1507,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / FW',
                                         children: []
                                     },
                                     {
@@ -1616,8 +1519,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-019 / MNG',
                                         children: []
                                     }
                                 ]
@@ -1631,8 +1533,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020',
                                 children: [
                                     {
                                         id: '168842ea-5040-0001-0000-0000000002cf',
@@ -1643,8 +1544,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1656,8 +1556,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-020 / FW',
                                         children: []
                                     }
                                 ]
@@ -1671,8 +1570,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-021',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-021',
                                 children: []
                             },
                             {
@@ -1684,8 +1582,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022',
                                 children: [
                                     {
                                         id: '168842fe-36c0-0001-0000-0000000002d4',
@@ -1696,8 +1593,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1709,8 +1605,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-022 / FW',
                                         children: []
                                     }
                                 ]
@@ -1724,8 +1619,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023',
                                 children: [
                                     {
                                         id: '16884312-1b80-0001-0000-0000000002d9',
@@ -1736,8 +1630,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1749,8 +1642,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-023 / FW',
                                         children: []
                                     }
                                 ]
@@ -1764,8 +1656,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-024',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-024',
                                 children: [
                                     {
                                         id: '167e1333-ee40-0001-0000-000000000716',
@@ -1776,8 +1667,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-024 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-024 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1804,8 +1694,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025',
                                 children: [
                                     {
                                         id: '1688432f-ea00-0001-0000-0000000002e2',
@@ -1816,8 +1705,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1829,8 +1717,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-025 / FW',
                                         children: []
                                     }
                                 ]
@@ -1844,8 +1731,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026',
                                 children: [
                                     {
                                         id: '1688434d-d180-0001-0000-0000000002eb',
@@ -1856,8 +1742,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1869,8 +1754,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ACO_MNG2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ACO_MNG2',
                                         children: []
                                     },
                                     {
@@ -1882,8 +1766,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1895,8 +1778,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -1908,8 +1790,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-026 / FW',
                                         children: []
                                     }
                                 ]
@@ -1923,8 +1804,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027',
                                 children: [
                                     {
                                         id: '16884389-6f80-0001-0000-000000000300',
@@ -1935,8 +1815,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -1948,8 +1827,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -1961,8 +1839,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / FW',
                                         children: []
                                     },
                                     {
@@ -1974,8 +1851,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-027 / MNG',
                                         children: []
                                     },
                                     {
@@ -2002,8 +1878,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028',
                                 children: [
                                     {
                                         id: '168843cf-0580-0001-0000-000000000316',
@@ -2014,8 +1889,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2040,8 +1914,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ASKUE',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ASKUE',
                                         children: []
                                     },
                                     {
@@ -2053,8 +1926,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2066,8 +1938,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / FW',
                                         children: []
                                     },
                                     {
@@ -2079,8 +1950,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-028 / MNG',
                                         children: []
                                     }
                                 ]
@@ -2094,8 +1964,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029',
                                 children: [
                                     {
                                         id: '168843f6-ce40-0001-0000-000000000323',
@@ -2106,8 +1975,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2119,8 +1987,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / ESXI',
                                         children: []
                                     },
                                     {
@@ -2132,8 +1999,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-029 / FW',
                                         children: []
                                     },
                                     {
@@ -2160,8 +2026,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030',
                                 children: [
                                     {
                                         id: '16884414-9d40-0001-0000-00000000032c',
@@ -2172,8 +2037,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2185,8 +2049,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-030 / FW',
                                         children: []
                                     }
                                 ]
@@ -2200,8 +2063,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031',
                                 children: [
                                     {
                                         id: '1688441e-8e40-0001-0000-000000000330',
@@ -2212,8 +2074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2225,8 +2086,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-031 / FW',
                                         children: []
                                     }
                                 ]
@@ -2240,8 +2100,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032',
                                 children: [
                                     {
                                         id: '16884fa6-78c0-0001-0000-00000000033d',
@@ -2252,8 +2111,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2265,8 +2123,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2278,8 +2135,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-032 / FW',
                                         children: []
                                     },
                                     {
@@ -2319,8 +2175,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033',
                                 children: [
                                     {
                                         id: '16884fec-0e00-0001-0000-00000000034a',
@@ -2331,8 +2186,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2344,8 +2198,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-033 / FW',
                                         children: []
                                     }
                                 ]
@@ -2359,8 +2212,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034',
                                 children: [
                                     {
                                         id: '16885013-d540-0001-0000-000000000357',
@@ -2371,8 +2223,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2384,8 +2235,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2397,8 +2247,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / FW',
                                         children: []
                                     },
                                     {
@@ -2410,8 +2259,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-034 / MNG',
                                         children: []
                                     },
                                     {
@@ -2438,8 +2286,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035',
                                 children: [
                                     {
                                         id: '1688504f-7a00-0001-0000-000000000369',
@@ -2450,8 +2297,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2476,8 +2322,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2489,8 +2334,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-035 / FW',
                                         children: []
                                     }
                                 ]
@@ -2504,8 +2348,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036',
                                 children: [
                                     {
                                         id: '16885081-3fc0-0001-0000-000000000377',
@@ -2516,8 +2359,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2529,8 +2371,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2542,8 +2383,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -2555,8 +2395,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-036 / FW',
                                         children: []
                                     },
                                     {
@@ -2596,8 +2435,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038',
                                 children: [
                                     {
                                         id: '168850c6-f080-0001-0000-00000000038a',
@@ -2608,8 +2446,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2621,8 +2458,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2634,8 +2470,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / FW',
                                         children: []
                                     },
                                     {
@@ -2647,8 +2482,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-038 / MNG',
                                         children: []
                                     }
                                 ]
@@ -2662,8 +2496,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039',
                                 children: [
                                     {
                                         id: '168850f8-adc0-0001-0000-000000000398',
@@ -2674,8 +2507,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2687,8 +2519,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2700,8 +2531,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / FW',
                                         children: []
                                     },
                                     {
@@ -2713,8 +2543,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-039 / MNG',
                                         children: []
                                     }
                                 ]
@@ -2728,8 +2557,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041',
                                 children: [
                                     {
                                         id: '1688513e-6400-0001-0000-0000000003b1',
@@ -2740,8 +2568,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2753,8 +2580,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / FW',
                                         children: []
                                     },
                                     {
@@ -2766,8 +2592,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / MNG',
                                         children: []
                                     },
                                     {
@@ -2779,8 +2604,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / MNG-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-041 / MNG-2',
                                         children: []
                                     },
                                     {
@@ -2820,8 +2644,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043',
                                 children: [
                                     {
                                         id: '16885153-d500-0001-0000-0000000003b9',
@@ -2832,8 +2655,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2845,8 +2667,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2858,8 +2679,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-043 / FW',
                                         children: []
                                     }
                                 ]
@@ -2873,8 +2693,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044',
                                 children: [
                                     {
                                         id: '16885171-b280-0001-0000-0000000003c2',
@@ -2885,8 +2704,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2898,8 +2716,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2911,8 +2728,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / FW',
                                         children: []
                                     },
                                     {
@@ -2924,8 +2740,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-044 / MNG',
                                         children: []
                                     }
                                 ]
@@ -2939,8 +2754,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045',
                                 children: [
                                     {
                                         id: '16885199-81c0-0001-0000-0000000003cf',
@@ -2951,8 +2765,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -2964,8 +2777,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -2977,8 +2789,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-045 / FW',
                                         children: []
                                     },
                                     {
@@ -3005,8 +2816,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047',
                                 children: [
                                     {
                                         id: '168851c1-9080-0001-0000-0000000003dc',
@@ -3017,8 +2827,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3069,8 +2878,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3082,8 +2890,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / FW',
                                         children: []
                                     },
                                     {
@@ -3095,8 +2902,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / FW-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-047 / FW-2',
                                         children: []
                                     }
                                 ]
@@ -3110,8 +2916,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048',
                                 children: [
                                     {
                                         id: '1688524c-cb40-0001-0000-000000000402',
@@ -3122,8 +2927,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3161,8 +2965,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3174,8 +2977,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / FW',
                                         children: []
                                     },
                                     {
@@ -3187,8 +2989,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-048 / MNG',
                                         children: []
                                     },
                                     {
@@ -3228,8 +3029,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049',
                                 children: [
                                     {
                                         id: '1688529c-5dc0-0001-0000-000000000419',
@@ -3240,8 +3040,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3253,8 +3052,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3266,8 +3064,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / FW',
                                         children: []
                                     },
                                     {
@@ -3279,8 +3076,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-049 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3294,8 +3090,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050',
                                 children: [
                                     {
                                         id: '168852c4-2c80-0001-0000-000000000426',
@@ -3306,8 +3101,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3319,8 +3113,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3332,8 +3125,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / FW',
                                         children: []
                                     },
                                     {
@@ -3345,8 +3137,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-050 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3360,8 +3151,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051',
                                 children: [
                                     {
                                         id: '168852f5-ebc0-0001-0000-000000000434',
@@ -3372,8 +3162,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3385,8 +3174,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3398,8 +3186,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / FW',
                                         children: []
                                     },
                                     {
@@ -3411,8 +3198,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-051 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3426,8 +3212,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-052',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-052',
                                 children: []
                             },
                             {
@@ -3439,8 +3224,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056',
                                 children: [
                                     {
                                         id: '16885313-c480-0001-0000-000000000440',
@@ -3451,8 +3235,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3477,8 +3260,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / ESXI',
                                         children: []
                                     },
                                     {
@@ -3490,8 +3272,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / FW',
                                         children: []
                                     },
                                     {
@@ -3503,8 +3284,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / MNG',
                                         children: []
                                     },
                                     {
@@ -3516,8 +3296,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-056 / SCCM',
                                         children: []
                                     },
                                     {
@@ -3570,8 +3349,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057',
                                 children: [
                                     {
                                         id: '1688536d-4600-0001-0000-000000000461',
@@ -3582,8 +3360,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3595,8 +3372,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3608,8 +3384,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-057 / FW',
                                         children: []
                                     }
                                 ]
@@ -3623,8 +3398,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059',
                                 children: [
                                     {
                                         id: '1688538b-1f40-0001-0000-000000000467',
@@ -3635,8 +3409,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3648,8 +3421,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3661,8 +3433,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-059 / FW',
                                         children: []
                                     }
                                 ]
@@ -3676,8 +3447,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060',
                                 children: [
                                     {
                                         id: '168853b2-fbc0-0001-0000-000000000474',
@@ -3688,8 +3458,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3701,8 +3470,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3714,8 +3482,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / FW',
                                         children: []
                                     },
                                     {
@@ -3727,8 +3494,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-060 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3742,8 +3508,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063',
                                 children: [
                                     {
                                         id: '16885420-5ec0-0001-0000-000000000488',
@@ -3754,8 +3519,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3767,8 +3531,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3780,8 +3543,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / FW',
                                         children: []
                                     },
                                     {
@@ -3793,8 +3555,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-063 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3808,8 +3569,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064',
                                 children: [
                                     {
                                         id: '168c0cbc-03c0-0001-0000-00000000054e',
@@ -3820,8 +3580,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3872,8 +3631,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -3885,8 +3643,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / FW',
                                         children: []
                                     },
                                     {
@@ -3898,8 +3655,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-064 / MNG',
                                         children: []
                                     }
                                 ]
@@ -3913,8 +3669,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065',
                                 children: [
                                     {
                                         id: '168c0d16-0e80-0001-0000-00000000056c',
@@ -3925,8 +3680,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -3938,8 +3692,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / ESXI',
                                         children: []
                                     },
                                     {
@@ -3951,8 +3704,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / FW',
                                         children: []
                                     },
                                     {
@@ -3964,8 +3716,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / MNG',
                                         children: []
                                     },
                                     {
@@ -3977,8 +3728,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-065 / SCCM',
                                         children: []
                                     },
                                     {
@@ -4018,8 +3768,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066',
                                 children: [
                                     {
                                         id: '168c0d33-e580-0001-0000-000000000578',
@@ -4030,8 +3779,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4043,8 +3791,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / FW',
                                         children: []
                                     },
                                     {
@@ -4056,8 +3803,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-066 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4071,8 +3817,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067',
                                 children: [
                                     {
                                         id: '168c0d73-1e80-0001-0000-000000000586',
@@ -4083,8 +3828,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4096,8 +3840,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4109,8 +3852,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-067 / FW',
                                         children: []
                                     }
                                 ]
@@ -4124,8 +3866,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068',
                                 children: [
                                     {
                                         id: '168c0da4-f440-0001-0000-000000000591',
@@ -4136,8 +3877,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4162,8 +3902,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4175,8 +3914,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / FW',
                                         children: []
                                     },
                                     {
@@ -4188,8 +3926,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-068 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4203,8 +3940,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071',
                                 children: [
                                     {
                                         id: '168c0dc2-d840-0001-0000-00000000059d',
@@ -4215,8 +3951,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4241,8 +3976,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4254,8 +3988,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-071 / FW',
                                         children: []
                                     }
                                 ]
@@ -4269,8 +4002,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072',
                                 children: [
                                     {
                                         id: '168c0dea-b100-0001-0000-0000000005aa',
@@ -4281,8 +4013,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4307,8 +4038,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-072 / FW',
                                         children: []
                                     }
                                 ]
@@ -4322,8 +4052,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-073',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-073',
                                 children: []
                             },
                             {
@@ -4335,8 +4064,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074',
                                 children: [
                                     {
                                         id: '168c0e1c-8500-0001-0000-0000000005b8',
@@ -4347,8 +4075,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4360,8 +4087,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4373,8 +4099,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-074 / FW',
                                         children: []
                                     }
                                 ]
@@ -4388,8 +4113,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-075',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-075',
                                 children: []
                             },
                             {
@@ -4401,8 +4125,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076',
                                 children: [
                                     {
                                         id: '168c0e26-7a40-0001-0000-0000000005bc',
@@ -4413,8 +4136,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4426,8 +4148,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4439,8 +4160,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-076 / FW',
                                         children: []
                                     }
                                 ]
@@ -4454,8 +4174,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079',
                                 children: [
                                     {
                                         id: '168c0e4e-4e80-0001-0000-0000000005c6',
@@ -4466,8 +4185,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4479,8 +4197,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4492,8 +4209,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-079 / FW',
                                         children: []
                                     }
                                 ]
@@ -4507,8 +4223,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080',
                                 children: [
                                     {
                                         id: '168c0e76-1f40-0001-0000-0000000005d0',
@@ -4519,8 +4234,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4532,8 +4246,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4545,8 +4258,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-080 / FW',
                                         children: []
                                     }
                                 ]
@@ -4560,8 +4272,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081',
                                 children: [
                                     {
                                         id: '168c0ea7-dbc0-0001-0000-0000000005e4',
@@ -4572,8 +4283,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4585,8 +4295,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4598,8 +4307,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -4611,8 +4319,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP-3',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / ASUTP-3',
                                         children: []
                                     },
                                     {
@@ -4624,8 +4331,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / FW',
                                         children: []
                                     },
                                     {
@@ -4637,8 +4343,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-081 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4652,8 +4357,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082',
                                 children: [
                                     {
                                         id: '168c0ee3-9240-0001-0000-0000000005f6',
@@ -4664,8 +4368,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4677,8 +4380,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4690,8 +4392,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / FW',
                                         children: []
                                     },
                                     {
@@ -4703,8 +4404,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-082 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4718,8 +4418,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083',
                                 children: [
                                     {
                                         id: '168c0f15-4f00-0001-0000-000000000604',
@@ -4730,8 +4429,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4743,8 +4441,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4756,8 +4453,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / FW',
                                         children: []
                                     },
                                     {
@@ -4769,8 +4465,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-083 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4784,8 +4479,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085',
                                 children: [
                                     {
                                         id: '168c0f3d-25c0-0001-0000-00000000060e',
@@ -4796,8 +4490,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4809,8 +4502,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4822,8 +4514,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-085 / FW',
                                         children: []
                                     }
                                 ]
@@ -4837,8 +4528,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086',
                                 children: [
                                     {
                                         id: '168c0f64-f700-0001-0000-00000000061b',
@@ -4849,8 +4539,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4862,8 +4551,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4875,8 +4563,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / FW',
                                         children: []
                                     },
                                     {
@@ -4888,8 +4575,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-086 / MNG',
                                         children: []
                                     }
                                 ]
@@ -4903,8 +4589,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087',
                                 children: [
                                     {
                                         id: '168c0f78-dd00-0001-0000-000000000623',
@@ -4915,8 +4600,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4928,8 +4612,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -4941,8 +4624,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -4954,8 +4636,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-087 / FW',
                                         children: []
                                     }
                                 ]
@@ -4969,8 +4650,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088',
                                 children: [
                                     {
                                         id: '168c0fa0-aa80-0001-0000-000000000630',
@@ -4981,8 +4661,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -4994,8 +4673,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5007,8 +4685,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / FW',
                                         children: []
                                     },
                                     {
@@ -5020,8 +4697,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-088 / MNG',
                                         children: []
                                     }
                                 ]
@@ -5035,8 +4711,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089',
                                 children: [
                                     {
                                         id: '168c0fc8-7300-0001-0000-00000000063d',
@@ -5047,8 +4722,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5060,8 +4734,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5073,8 +4746,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-089 / FW',
                                         children: []
                                     }
                                 ]
@@ -5088,8 +4760,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-090',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-090',
                                 children: []
                             },
                             {
@@ -5101,8 +4772,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094',
                                 children: [
                                     {
                                         id: '167f1bbf-d400-0001-0000-0000000007d6',
@@ -5113,8 +4783,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5126,8 +4795,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5139,8 +4807,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -5152,8 +4819,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / FW',
                                         children: []
                                     },
                                     {
@@ -5165,8 +4831,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-094 / MNG',
                                         children: []
                                     }
                                 ]
@@ -5180,8 +4845,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096',
                                 children: [
                                     {
                                         id: '168c1067-c900-0001-0000-00000000065f',
@@ -5192,8 +4856,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5205,8 +4868,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5218,8 +4880,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / FW',
                                         children: []
                                     },
                                     {
@@ -5231,8 +4892,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-096 / MNG',
                                         children: []
                                     }
                                 ]
@@ -5246,8 +4906,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097',
                                 children: [
                                     {
                                         id: '168c107b-b480-0001-0000-000000000667',
@@ -5258,8 +4917,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5271,8 +4929,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / ESXI',
                                         children: []
                                     },
                                     {
@@ -5284,8 +4941,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / FW',
                                         children: []
                                     },
                                     {
@@ -5297,8 +4953,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / MNG',
                                         children: []
                                     },
                                     {
@@ -5310,8 +4965,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-097 / SCCM',
                                         children: []
                                     },
                                     {
@@ -5351,8 +5005,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099',
                                 children: [
                                     {
                                         id: '167f1ec7-5940-0001-0000-0000000007e2',
@@ -5363,8 +5016,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5376,8 +5028,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / ESXI',
                                         children: []
                                     },
                                     {
@@ -5389,8 +5040,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / FW',
                                         children: []
                                     },
                                     {
@@ -5402,8 +5052,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-099 / MNG',
                                         children: []
                                     }
                                 ]
@@ -5417,8 +5066,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100',
                                 children: [
                                     {
                                         id: '168c10e9-4980-0001-0000-00000000068d',
@@ -5429,8 +5077,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5468,8 +5115,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-100 / FW',
                                         children: []
                                     }
                                 ]
@@ -5483,8 +5129,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102',
                                 children: [
                                     {
                                         id: '168c114c-d880-0001-0000-0000000006af',
@@ -5495,8 +5140,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5534,8 +5178,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / DC',
                                         children: []
                                     },
                                     {
@@ -5547,8 +5190,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / ESXI-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / ESXI-2',
                                         children: []
                                     },
                                     {
@@ -5560,8 +5202,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / FW',
                                         children: []
                                     },
                                     {
@@ -5573,8 +5214,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-102 / SCCM',
                                         children: []
                                     },
                                     {
@@ -5601,8 +5241,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103',
                                 children: [
                                     {
                                         id: '168c116a-b740-0001-0000-0000000006b8',
@@ -5613,8 +5252,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5626,8 +5264,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5639,8 +5276,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-103 / FW',
                                         children: []
                                     }
                                 ]
@@ -5654,8 +5290,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104',
                                 children: [
                                     {
                                         id: '168c1188-95c0-0001-0000-0000000006c1',
@@ -5666,8 +5301,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5679,8 +5313,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5692,8 +5325,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-104 / FW',
                                         children: []
                                     }
                                 ]
@@ -5707,8 +5339,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105',
                                 children: [
                                     {
                                         id: '168c11a6-7040-0001-0000-0000000006ca',
@@ -5719,8 +5350,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5732,8 +5362,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5745,8 +5374,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-105 / FW',
                                         children: []
                                     }
                                 ]
@@ -5760,8 +5388,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106',
                                 children: [
                                     {
                                         id: '168c11c4-4bc0-0001-0000-0000000006d6',
@@ -5772,8 +5399,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5785,8 +5411,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5798,8 +5423,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-106 / FW',
                                         children: []
                                     }
                                 ]
@@ -5813,8 +5437,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-108',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-108',
                                 children: []
                             },
                             {
@@ -5826,8 +5449,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110',
                                 children: [
                                     {
                                         id: '168c11e2-2680-0001-0000-0000000006df',
@@ -5838,8 +5460,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5851,8 +5472,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5864,8 +5484,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-110 / FW',
                                         children: []
                                     }
                                 ]
@@ -5879,8 +5498,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111',
                                 children: [
                                     {
                                         id: '168c1209-fb00-0001-0000-0000000006e9',
@@ -5891,8 +5509,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5904,8 +5521,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5917,8 +5533,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-111 / FW',
                                         children: []
                                     }
                                 ]
@@ -5932,8 +5547,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112',
                                 children: [
                                     {
                                         id: '168c121d-e200-0001-0000-0000000006f1',
@@ -5944,8 +5558,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -5957,8 +5570,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -5970,8 +5582,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-112 / FW',
                                         children: []
                                     }
                                 ]
@@ -5985,8 +5596,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114',
                                 children: [
                                     {
                                         id: '168c123b-c800-0001-0000-0000000006fa',
@@ -5997,8 +5607,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6010,8 +5619,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6023,8 +5631,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-114 / FW',
                                         children: []
                                     }
                                 ]
@@ -6038,8 +5645,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115',
                                 children: [
                                     {
                                         id: '168c126d-9580-0001-0000-000000000708',
@@ -6076,8 +5682,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / BSHPD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / BSHPD',
                                         children: []
                                     },
                                     {
@@ -6089,8 +5694,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / FW',
                                         children: []
                                     },
                                     {
@@ -6102,8 +5706,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-115 / MNG',
                                         children: []
                                     },
                                     {
@@ -6143,8 +5746,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-116',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-116',
                                 children: []
                             },
                             {
@@ -6156,8 +5758,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-117',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-117',
                                 children: []
                             },
                             {
@@ -6169,8 +5770,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118',
                                 children: [
                                     {
                                         id: '168c12a0-6300-0001-0000-000000000719',
@@ -6181,8 +5781,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6194,8 +5793,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6207,8 +5805,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / BSHPD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / BSHPD',
                                         children: []
                                     },
                                     {
@@ -6220,8 +5817,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-118 / FW',
                                         children: []
                                     }
                                 ]
@@ -6235,8 +5831,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119',
                                 children: [
                                     {
                                         id: '168c12d2-29c0-0001-0000-00000000072a',
@@ -6247,8 +5842,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6273,8 +5867,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6286,8 +5879,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / BSHPD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / BSHPD',
                                         children: []
                                     },
                                     {
@@ -6299,8 +5891,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-119 / FW',
                                         children: []
                                     }
                                 ]
@@ -6314,8 +5905,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120',
                                 children: [
                                     {
                                         id: '168c12f0-0f00-0001-0000-000000000736',
@@ -6326,8 +5916,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6339,8 +5928,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ASUTP-1',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ASUTP-1',
                                         children: []
                                     },
                                     {
@@ -6352,8 +5940,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -6365,8 +5952,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-120 / FW',
                                         children: []
                                     }
                                 ]
@@ -6380,8 +5966,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121',
                                 children: [
                                     {
                                         id: '168c132b-d640-0001-0000-000000000748',
@@ -6392,8 +5977,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6405,8 +5989,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6418,8 +6001,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / BSHPD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / BSHPD',
                                         children: []
                                     },
                                     {
@@ -6431,8 +6013,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-121 / FW',
                                         children: []
                                     }
                                 ]
@@ -6446,8 +6027,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122',
                                 children: [
                                     {
                                         id: '168c135d-a900-0001-0000-000000000759',
@@ -6458,8 +6038,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / 1',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / 1',
                                         children: []
                                     },
                                     {
@@ -6471,8 +6050,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6484,8 +6062,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6497,8 +6074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-122 / FW',
                                         children: []
                                     }
                                 ]
@@ -6512,8 +6088,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123',
                                 children: [
                                     {
                                         id: '168c138f-7240-0001-0000-00000000076a',
@@ -6524,8 +6099,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6550,8 +6124,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6563,8 +6136,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-123 / FW',
                                         children: []
                                     }
                                 ]
@@ -6578,8 +6150,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124',
                                 children: [
                                     {
                                         id: '168c13a3-5a00-0001-0000-000000000772',
@@ -6590,8 +6161,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6629,8 +6199,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ESXI',
                                         children: []
                                     },
                                     {
@@ -6642,8 +6211,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / FW',
                                         children: []
                                     },
                                     {
@@ -6655,8 +6223,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / ILO',
                                         children: []
                                     },
                                     {
@@ -6668,8 +6235,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / MNG',
                                         children: []
                                     },
                                     {
@@ -6707,8 +6273,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / MNG_US',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / MNG_US',
                                         children: []
                                     },
                                     {
@@ -6720,8 +6285,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / NET_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / NET_MNG',
                                         children: []
                                     },
                                     {
@@ -6733,8 +6297,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-124 / SCCM',
                                         children: []
                                     },
                                     {
@@ -6774,8 +6337,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-125',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-125',
                                 children: []
                             },
                             {
@@ -6787,8 +6349,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126',
                                 children: [
                                     {
                                         id: '168c142e-cac0-0001-0000-0000000007aa',
@@ -6799,8 +6360,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6812,8 +6372,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -6825,8 +6384,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / BSHPD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / BSHPD',
                                         children: []
                                     },
                                     {
@@ -6838,8 +6396,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-126 / FW',
                                         children: []
                                     }
                                 ]
@@ -6853,8 +6410,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127',
                                 children: [
                                     {
                                         id: '168c1474-91c0-0001-0000-0000000007c6',
@@ -6865,8 +6421,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6891,8 +6446,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ASUTP-1',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ASUTP-1',
                                         children: []
                                     },
                                     {
@@ -6904,8 +6458,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -6917,8 +6470,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-127 / FW',
                                         children: []
                                     }
                                 ]
@@ -6932,8 +6484,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128',
                                 children: [
                                     {
                                         id: '168c1488-8680-0001-0000-0000000007ce',
@@ -6944,8 +6495,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -6957,8 +6507,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / BND',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / BND',
                                         children: []
                                     },
                                     {
@@ -6970,8 +6519,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / FW',
                                         children: []
                                     },
                                     {
@@ -6983,8 +6531,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-128 / MNG',
                                         children: []
                                     }
                                 ]
@@ -6998,8 +6545,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129',
                                 children: [
                                     {
                                         id: '168c14a6-6900-0001-0000-0000000007da',
@@ -7010,8 +6556,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7023,8 +6568,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7036,8 +6580,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ASUTP-1',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / ASUTP-1',
                                         children: []
                                     },
                                     {
@@ -7049,8 +6592,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-129 / MNG',
                                         children: []
                                     },
                                     {
@@ -7077,8 +6619,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130',
                                 children: [
                                     {
                                         id: '168c14d8-4340-0001-0000-0000000007ee',
@@ -7089,8 +6630,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7102,8 +6642,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / FW',
                                         children: []
                                     },
                                     {
@@ -7115,8 +6654,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-130 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7130,8 +6668,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131',
                                 children: [
                                     {
                                         id: '168c1500-1880-0001-0000-0000000007fe',
@@ -7142,8 +6679,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7155,8 +6691,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-131 / FW',
                                         children: []
                                     },
                                     {
@@ -7196,8 +6731,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132',
                                 children: [
                                     {
                                         id: '168c151d-f540-0001-0000-00000000080a',
@@ -7208,8 +6742,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7221,8 +6754,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7234,8 +6766,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-132 / FW',
                                         children: []
                                     }
                                 ]
@@ -7249,8 +6780,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133',
                                 children: [
                                     {
                                         id: '168c153b-d380-0001-0000-000000000816',
@@ -7261,8 +6791,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7274,8 +6803,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-133 / MNG',
                                         children: []
                                     },
                                     {
@@ -7302,8 +6830,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134',
                                 children: [
                                     {
                                         id: '168c1577-98c0-0001-0000-00000000082b',
@@ -7314,8 +6841,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7327,8 +6853,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7340,8 +6865,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-134 / FW',
                                         children: []
                                     }
                                 ]
@@ -7355,8 +6879,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135',
                                 children: [
                                     {
                                         id: '168c158b-9500-0001-0000-000000000833',
@@ -7367,8 +6890,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7380,8 +6902,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7393,8 +6914,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-135 / FW',
                                         children: []
                                     }
                                 ]
@@ -7408,8 +6928,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136',
                                 children: [
                                     {
                                         id: '168c15bd-6200-0001-0000-000000000847',
@@ -7420,8 +6939,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7433,8 +6951,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7446,8 +6963,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / FW',
                                         children: []
                                     },
                                     {
@@ -7459,8 +6975,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-136 / ILO',
                                         children: []
                                     },
                                     {
@@ -7487,8 +7002,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137',
                                 children: [
                                     {
                                         id: '168c15db-44c0-0001-0000-000000000853',
@@ -7499,8 +7013,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7512,8 +7025,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-137 / FW',
                                         children: []
                                     }
                                 ]
@@ -7527,8 +7039,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138',
                                 children: [
                                     {
                                         id: '168c15e5-3940-0001-0000-000000000857',
@@ -7539,8 +7050,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7552,8 +7062,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7565,8 +7074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-138 / FW',
                                         children: []
                                     },
                                     {
@@ -7593,8 +7101,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139',
                                 children: [
                                     {
                                         id: '168c160d-1d40-0001-0000-000000000867',
@@ -7605,8 +7112,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7618,8 +7124,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-139 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7633,8 +7138,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140',
                                 children: [
                                     {
                                         id: '168c1621-0c80-0001-0000-00000000086f',
@@ -7645,8 +7149,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7658,8 +7161,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-140 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7673,8 +7175,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141',
                                 children: [
                                     {
                                         id: '168c1634-f9c0-0001-0000-000000000877',
@@ -7685,8 +7186,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7711,8 +7211,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -7724,8 +7223,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / FW',
                                         children: []
                                     },
                                     {
@@ -7737,8 +7235,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-141 / MNG',
                                         children: []
                                     },
                                     {
@@ -7765,8 +7262,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142',
                                 children: [
                                     {
                                         id: '168c1670-bc40-0001-0000-00000000088f',
@@ -7777,8 +7273,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7790,8 +7285,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-142 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7805,8 +7299,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143',
                                 children: [
                                     {
                                         id: '168c168e-ab40-0001-0000-00000000089b',
@@ -7817,8 +7310,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7830,8 +7322,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-143 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7845,8 +7336,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144',
                                 children: [
                                     {
                                         id: '168c1698-9e40-0001-0000-00000000089f',
@@ -7857,8 +7347,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7870,8 +7359,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-144 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7885,8 +7373,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145',
                                 children: [
                                     {
                                         id: '168c16ac-89c0-0001-0000-0000000008a7',
@@ -7897,8 +7384,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7910,8 +7396,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-145 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7925,8 +7410,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146',
                                 children: [
                                     {
                                         id: '168c16c0-7bc0-0001-0000-0000000008af',
@@ -7937,8 +7421,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7950,8 +7433,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-146 / MNG',
                                         children: []
                                     }
                                 ]
@@ -7965,8 +7447,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147',
                                 children: [
                                     {
                                         id: '168c16d4-6040-0001-0000-0000000008b7',
@@ -7977,8 +7458,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -7990,8 +7470,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / FW',
                                         children: []
                                     },
                                     {
@@ -8003,8 +7482,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-147 / MNG',
                                         children: []
                                     }
                                 ]
@@ -8018,8 +7496,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-148',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-148',
                                 children: [
                                     {
                                         id: '168c16f2-47c0-0001-0000-0000000008c3',
@@ -8030,8 +7507,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-148 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-148 / ACO_MNG',
                                         children: []
                                     }
                                 ]
@@ -8045,8 +7521,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149',
                                 children: [
                                     {
                                         id: '168c16fc-4140-0001-0000-0000000008c7',
@@ -8057,8 +7532,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8070,8 +7544,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-149 / MNG',
                                         children: []
                                     }
                                 ]
@@ -8085,8 +7558,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-150',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-150',
                                 children: []
                             },
                             {
@@ -8098,8 +7570,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151',
                                 children: [
                                     {
                                         id: '168c1710-ce00-0001-0000-0000000008cf',
@@ -8110,8 +7581,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8123,8 +7593,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-151 / MNG',
                                         children: []
                                     }
                                 ]
@@ -8138,8 +7607,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152',
                                 children: [
                                     {
                                         id: '168c1724-ba40-0001-0000-0000000008d7',
@@ -8150,8 +7618,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8163,8 +7630,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8176,8 +7642,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / FW',
                                         children: []
                                     },
                                     {
@@ -8189,8 +7654,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -8202,8 +7666,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / MNG',
                                         children: []
                                     },
                                     {
@@ -8215,8 +7678,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-152 / SCCM',
                                         children: []
                                     },
                                     {
@@ -8256,8 +7718,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153',
                                 children: [
                                     {
                                         id: '168c1792-7680-0001-0000-000000000903',
@@ -8268,8 +7729,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8294,8 +7754,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / FW',
                                         children: []
                                     },
                                     {
@@ -8307,8 +7766,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / SAN-MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / SAN-MNG',
                                         children: []
                                     },
                                     {
@@ -8320,8 +7778,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / SERV_COM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / SERV_COM',
                                         children: []
                                     },
                                     {
@@ -8346,8 +7803,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / STATIC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-153 / STATIC',
                                         children: []
                                     }
                                 ]
@@ -8361,8 +7817,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155',
                                 children: [
                                     {
                                         id: '168c17ba-64c0-0001-0000-000000000913',
@@ -8373,8 +7828,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8386,8 +7840,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / FW',
                                         children: []
                                     },
                                     {
@@ -8399,8 +7852,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-155 / MNG',
                                         children: []
                                     },
                                     {
@@ -8427,8 +7879,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-156',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-156',
                                 children: [
                                     {
                                         id: '168c17e2-3f40-0001-0000-000000000923',
@@ -8439,8 +7890,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-156 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-156 / ACO_MNG',
                                         children: []
                                     }
                                 ]
@@ -8454,8 +7904,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157',
                                 children: [
                                     {
                                         id: '168c17ec-3800-0001-0000-000000000927',
@@ -8466,8 +7915,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8479,8 +7927,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-157 / FW',
                                         children: []
                                     }
                                 ]
@@ -8494,8 +7941,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-158',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-158',
                                 children: []
                             },
                             {
@@ -8507,8 +7953,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-159',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-159',
                                 children: []
                             },
                             {
@@ -8520,8 +7965,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161',
                                 children: [
                                     {
                                         id: '168c1800-25c0-0001-0000-00000000092f',
@@ -8532,8 +7976,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8545,8 +7988,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8558,8 +8000,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-161 / FW',
                                         children: []
                                     }
                                 ]
@@ -8573,8 +8014,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162',
                                 children: [
                                     {
                                         id: '168c1828-1340-0001-0000-00000000093f',
@@ -8585,8 +8025,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8598,8 +8037,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-162 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -8613,8 +8051,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163',
                                 children: [
                                     {
                                         id: '168c1832-0a00-0001-0000-000000000943',
@@ -8625,8 +8062,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8638,8 +8074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8651,8 +8086,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-163 / FW',
                                         children: []
                                     },
                                     {
@@ -8679,8 +8113,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164',
                                 children: [
                                     {
                                         id: '168c186d-d740-0001-0000-000000000958',
@@ -8691,8 +8124,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8704,8 +8136,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8717,8 +8148,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-164 / FW',
                                         children: []
                                     }
                                 ]
@@ -8732,8 +8162,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165',
                                 children: [
                                     {
                                         id: '168c18a9-a9c0-0001-0000-000000000964',
@@ -8744,8 +8173,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8757,8 +8185,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-165 / FW',
                                         children: []
                                     }
                                 ]
@@ -8772,8 +8199,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166',
                                 children: [
                                     {
                                         id: '168c18c7-86c0-0001-0000-000000000970',
@@ -8784,8 +8210,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8797,8 +8222,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8810,8 +8234,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-166 / FW',
                                         children: []
                                     }
                                 ]
@@ -8825,8 +8248,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168',
                                 children: [
                                     {
                                         id: '168c18db-7000-0001-0000-000000000978',
@@ -8837,8 +8259,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8850,8 +8271,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8863,8 +8283,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-168 / FW',
                                         children: []
                                     }
                                 ]
@@ -8878,8 +8297,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169',
                                 children: [
                                     {
                                         id: '168c18f9-5c80-0001-0000-000000000984',
@@ -8890,8 +8308,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8903,8 +8320,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -8916,8 +8332,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP-2',
                                         children: []
                                     },
                                     {
@@ -8929,8 +8344,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP-3',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / ASUTP-3',
                                         children: []
                                     },
                                     {
@@ -8942,8 +8356,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-169 / FW',
                                         children: []
                                     }
                                 ]
@@ -8957,8 +8370,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170',
                                 children: [
                                     {
                                         id: '168c1935-43c0-0001-0000-00000000099c',
@@ -8969,8 +8381,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -8995,8 +8406,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -9008,8 +8418,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ASUTP2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / ASUTP2',
                                         children: []
                                     },
                                     {
@@ -9021,8 +8430,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-170 / FW',
                                         children: []
                                     }
                                 ]
@@ -9036,8 +8444,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171',
                                 children: [
                                     {
                                         id: '168c1971-2300-0001-0000-0000000009b4',
@@ -9048,8 +8455,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9061,8 +8467,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -9074,8 +8479,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-171 / FW',
                                         children: []
                                     },
                                     {
@@ -9102,8 +8506,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174',
                                 children: [
                                     {
                                         id: '168c1985-1480-0001-0000-0000000009bc',
@@ -9114,8 +8517,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9127,8 +8529,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-174 / FW',
                                         children: []
                                     }
                                 ]
@@ -9142,8 +8543,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176',
                                 children: [
                                     {
                                         id: '168c19a3-0180-0001-0000-0000000009c8',
@@ -9154,8 +8554,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9167,8 +8566,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -9180,8 +8578,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-176 / FW',
                                         children: []
                                     }
                                 ]
@@ -9195,8 +8592,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177',
                                 children: [
                                     {
                                         id: '168c19d4-d740-0001-0000-0000000009dc',
@@ -9207,8 +8603,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9220,8 +8615,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -9233,8 +8627,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / FW',
                                         children: []
                                     },
                                     {
@@ -9246,8 +8639,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / MNG',
                                         children: []
                                     },
                                     {
@@ -9259,8 +8651,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / MNG-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-177 / MNG-2',
                                         children: []
                                     }
                                 ]
@@ -9274,8 +8665,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178',
                                 children: [
                                     {
                                         id: '168c19f2-bc80-0001-0000-0000000009e8',
@@ -9286,8 +8676,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178 / FW',
                                         children: []
                                     },
                                     {
@@ -9299,8 +8688,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178 / MNG_ACO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-178 / MNG_ACO',
                                         children: []
                                     }
                                 ]
@@ -9314,8 +8702,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180',
                                 children: [
                                     {
                                         id: '168c1a06-a980-0001-0000-0000000009f0',
@@ -9326,8 +8713,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9339,8 +8725,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-180 / FW',
                                         children: []
                                     }
                                 ]
@@ -9354,8 +8739,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188',
                                 children: [
                                     {
                                         id: '168c1a1a-9d80-0001-0000-0000000009f8',
@@ -9379,8 +8763,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / FW',
                                         children: []
                                     },
                                     {
@@ -9392,8 +8775,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / MNG',
                                         children: []
                                     },
                                     {
@@ -9405,8 +8787,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / SRV_OPEN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-188 / SRV_OPEN',
                                         children: []
                                     }
                                 ]
@@ -9420,8 +8801,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190',
                                 children: [
                                     {
                                         id: '168c1a38-8c80-0001-0000-000000000a04',
@@ -9432,8 +8812,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9445,8 +8824,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-190 / FW',
                                         children: []
                                     }
                                 ]
@@ -9460,8 +8838,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191',
                                 children: [
                                     {
                                         id: '168c1a4c-8240-0001-0000-000000000a0c',
@@ -9472,8 +8849,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9485,8 +8861,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -9498,8 +8873,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-191 / FW',
                                         children: []
                                     }
                                 ]
@@ -9513,8 +8887,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192',
                                 children: [
                                     {
                                         id: '168c1a6a-64c0-0001-0000-000000000a18',
@@ -9525,8 +8898,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9538,8 +8910,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-192 / FW',
                                         children: []
                                     }
                                 ]
@@ -9553,8 +8924,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193',
                                 children: [
                                     {
                                         id: '168c1a7e-5500-0001-0000-000000000a20',
@@ -9565,8 +8935,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -9578,8 +8947,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Добыча" / bnd-193 / FW',
                                         children: []
                                     }
                                 ]
@@ -9606,8 +8974,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-001',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-001',
                                 children: [
                                     {
                                         id: '168c1b28-1cc0-0001-0000-000000000a58',
@@ -9644,8 +9011,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-001 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-001 / FW',
                                         children: []
                                     }
                                 ]
@@ -9659,8 +9025,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-002',
                                 children: [
                                     {
                                         id: '168c1b3c-0a00-0001-0000-000000000a60',
@@ -9684,8 +9049,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-002 / FW',
                                         children: []
                                     }
                                 ]
@@ -9699,8 +9063,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-003',
                                 children: [
                                     {
                                         id: '168c1b50-01c0-0001-0000-000000000a68',
@@ -9724,8 +9087,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-003 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-003 / FW',
                                         children: []
                                     }
                                 ]
@@ -9739,8 +9101,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-004',
                                 children: [
                                     {
                                         id: '168c1b63-e9c0-0001-0000-000000000a70',
@@ -9764,8 +9125,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-004 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-004 / FW',
                                         children: []
                                     }
                                 ]
@@ -9779,8 +9139,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-005',
                                 children: [
                                     {
                                         id: '168c1b77-dcc0-0001-0000-000000000a78',
@@ -9804,8 +9163,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-005 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-005 / FW',
                                         children: []
                                     }
                                 ]
@@ -9819,8 +9177,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006',
                                 children: [
                                     {
                                         id: '168c1b95-c000-0001-0000-000000000a84',
@@ -9844,8 +9201,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006 / FW',
                                         children: []
                                     },
                                     {
@@ -9857,8 +9213,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006 / MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-006 / MNG',
                                         children: []
                                     }
                                 ]
@@ -9872,8 +9227,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-007',
                                 children: [
                                     {
                                         id: '168c1ba9-b480-0001-0000-000000000a8c',
@@ -9884,8 +9238,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-007 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-007 / FW',
                                         children: []
                                     }
                                 ]
@@ -9899,8 +9252,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-008',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-008',
                                 children: [
                                     {
                                         id: '168c1bb3-ab00-0001-0000-000000000a90',
@@ -9924,8 +9276,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-008 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-008 / FW',
                                         children: []
                                     }
                                 ]
@@ -9939,8 +9290,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-009',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-009',
                                 children: [
                                     {
                                         id: '168c1bc7-9e00-0001-0000-000000000a98',
@@ -9964,8 +9314,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-009 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-009 / FW',
                                         children: []
                                     }
                                 ]
@@ -9979,8 +9328,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-010',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-010',
                                 children: [
                                     {
                                         id: '168c1bef-8a40-0001-0000-000000000aa8',
@@ -10030,8 +9378,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-010 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-010 / FW',
                                         children: []
                                     }
                                 ]
@@ -10045,8 +9392,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-011',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-011',
                                 children: [
                                     {
                                         id: '168c1c03-7900-0001-0000-000000000ab0',
@@ -10070,8 +9416,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-011 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-011 / FW',
                                         children: []
                                     }
                                 ]
@@ -10085,8 +9430,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Логистика" / bnl-012',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-012',
                                 children: [
                                     {
                                         id: '168c1c17-6dc0-0001-0000-000000000ab8',
@@ -10110,8 +9454,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Логистика" / bnl-012 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Логистика" / bnl-012 / FW',
                                         children: []
                                     }
                                 ]
@@ -10138,8 +9481,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-002',
                                 children: [
                                     {
                                         id: '168c2146-ce00-0001-0000-000000000cba',
@@ -10163,8 +9505,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-002 / FW',
                                         children: []
                                     },
                                     {
@@ -10191,8 +9532,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-003',
                                 children: [
                                     {
                                         id: '168c215a-c800-0001-0000-000000000cc2',
@@ -10216,8 +9556,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-003 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-003 / FW',
                                         children: []
                                     }
                                 ]
@@ -10231,8 +9570,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-004',
                                 children: [
                                     {
                                         id: '168c216e-d600-0001-0000-000000000cca',
@@ -10256,8 +9594,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-004 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-004 / FW',
                                         children: []
                                     }
                                 ]
@@ -10271,8 +9608,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-005',
                                 children: []
                             },
                             {
@@ -10284,8 +9620,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-006',
                                 children: [
                                     {
                                         id: '168c2182-ca40-0001-0000-000000000cd2',
@@ -10309,8 +9644,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-006 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-006 / FW',
                                         children: []
                                     }
                                 ]
@@ -10324,8 +9658,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-007',
                                 children: [
                                     {
                                         id: '168c2196-c8c0-0001-0000-000000000cda',
@@ -10349,8 +9682,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-007 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-007 / FW',
                                         children: []
                                     }
                                 ]
@@ -10364,8 +9696,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-008',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-008',
                                 children: [
                                     {
                                         id: '168c21b4-c080-0001-0000-000000000ce6',
@@ -10389,8 +9720,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-008 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-008 / FW',
                                         children: []
                                     }
                                 ]
@@ -10404,8 +9734,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-009',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-009',
                                 children: [
                                     {
                                         id: '168c21be-bd40-0001-0000-000000000cea',
@@ -10429,8 +9758,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-009 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-009 / FW',
                                         children: []
                                     }
                                 ]
@@ -10444,8 +9772,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010',
+                                treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010',
                                 children: [
                                     {
                                         id: '168c21d2-b640-0001-0000-000000000cf2',
@@ -10469,8 +9796,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010 / FW',
                                         children: []
                                     },
                                     {
@@ -10482,8 +9808,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010 / SKUD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-ПЕТРОТЕСТ" / bnpt-010 / SKUD',
                                         children: []
                                     }
                                 ]
@@ -10510,8 +9835,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-001',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-001',
                                 children: []
                             },
                             {
@@ -10523,8 +9847,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002',
                                 children: [
                                     {
                                         id: '168c1c2b-6780-0001-0000-000000000ac0',
@@ -10535,8 +9858,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10548,8 +9870,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / FW',
                                         children: []
                                     },
                                     {
@@ -10561,8 +9882,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-002 / GGS',
                                         children: []
                                     },
                                     {
@@ -10589,8 +9909,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-003',
                                 children: []
                             },
                             {
@@ -10602,8 +9921,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004',
                                 children: [
                                     {
                                         id: '168c1c5d-3300-0001-0000-000000000ad4',
@@ -10614,8 +9932,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10627,8 +9944,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-004 / FW',
                                         children: []
                                     },
                                     {
@@ -10655,8 +9971,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005',
                                 children: [
                                     {
                                         id: '168c1c85-1600-0001-0000-000000000ae1',
@@ -10667,8 +9982,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10680,8 +9994,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / FW',
                                         children: []
                                     },
                                     {
@@ -10693,8 +10006,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-005 / ILO',
                                         children: []
                                     },
                                     {
@@ -10721,8 +10033,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-006',
                                 children: []
                             },
                             {
@@ -10734,8 +10045,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-007',
                                 children: []
                             },
                             {
@@ -10747,8 +10057,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008',
                                 children: [
                                     {
                                         id: '168c1cc0-e640-0001-0000-000000000af9',
@@ -10759,8 +10068,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10772,8 +10080,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / DC',
                                         children: []
                                     },
                                     {
@@ -10785,8 +10092,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / ESXI',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / ESXI',
                                         children: []
                                     },
                                     {
@@ -10798,8 +10104,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / FW',
                                         children: []
                                     },
                                     {
@@ -10811,8 +10116,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -10824,8 +10128,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SCCM',
                                         children: []
                                     },
                                     {
@@ -10837,8 +10140,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SERV_OPEN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SERV_OPEN',
                                         children: []
                                     },
                                     {
@@ -10850,8 +10152,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SHPD_MGMT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / SHPD_MGMT',
                                         children: []
                                     },
                                     {
@@ -10863,8 +10164,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / TETRA',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-008 / TETRA',
                                         children: []
                                     },
                                     {
@@ -10904,8 +10204,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009',
                                 children: [
                                     {
                                         id: '168c1d24-a400-0001-0000-000000000b1e',
@@ -10916,8 +10215,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10929,8 +10227,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-009 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -10944,8 +10241,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-010',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-010',
                                 children: [
                                     {
                                         id: '168c1d2e-9940-0001-0000-000000000b22',
@@ -10956,8 +10252,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-010 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-010 / ACO_MNG',
                                         children: []
                                     }
                                 ]
@@ -10971,8 +10266,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011',
                                 children: [
                                     {
                                         id: '168c1d42-8bc0-0001-0000-000000000b2a',
@@ -10983,8 +10277,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -10996,8 +10289,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-011 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11011,8 +10303,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-012',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-012',
                                 children: [
                                     {
                                         id: '168c1d4c-8bc0-0001-0000-000000000b2e',
@@ -11023,8 +10314,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-012 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-012 / ACO_MNG',
                                         children: []
                                     }
                                 ]
@@ -11038,8 +10328,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013',
                                 children: [
                                     {
                                         id: '168c1d56-8dc0-0001-0000-000000000b32',
@@ -11050,8 +10339,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11063,8 +10351,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-013 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11078,8 +10365,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014',
                                 children: [
                                     {
                                         id: '168c1d74-81c0-0001-0000-000000000b3e',
@@ -11090,8 +10376,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11103,8 +10388,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-014 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11118,8 +10402,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015',
                                 children: [
                                     {
                                         id: '168c1d7e-7dc0-0001-0000-000000000b42',
@@ -11130,8 +10413,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11143,8 +10425,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-015 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11158,8 +10439,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016',
                                 children: [
                                     {
                                         id: '16780340-f780-0001-0000-000000000070',
@@ -11170,8 +10450,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11183,8 +10462,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-016 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11198,8 +10476,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017',
                                 children: [
                                     {
                                         id: '168c1da6-6440-0001-0000-000000000b4f',
@@ -11210,8 +10487,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11223,8 +10499,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-017 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11238,8 +10513,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018',
                                 children: [
                                     {
                                         id: '168c1dba-5500-0001-0000-000000000b57',
@@ -11250,8 +10524,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11263,8 +10536,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-018 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11278,8 +10550,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019',
                                 children: [
                                     {
                                         id: '168c1dd8-3600-0001-0000-000000000b63',
@@ -11290,8 +10561,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11303,8 +10573,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-019 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11318,8 +10587,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020',
                                 children: [
                                     {
                                         id: '168c1dec-2fc0-0001-0000-000000000b68',
@@ -11330,8 +10598,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11343,8 +10610,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-020 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11358,8 +10624,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021',
                                 children: [
                                     {
                                         id: '168c1df6-2b80-0001-0000-000000000b6c',
@@ -11370,8 +10635,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11383,8 +10647,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-021 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11398,8 +10661,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022',
                                 children: [
                                     {
                                         id: '168c1e14-1d00-0001-0000-000000000b78',
@@ -11410,8 +10672,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11423,8 +10684,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-022 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11438,8 +10698,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-023',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-023',
                                 children: [
                                     {
                                         id: '168c1e1e-1440-0001-0000-000000000b7c',
@@ -11450,8 +10709,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-023 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-023 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11491,8 +10749,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024',
                                 children: [
                                     {
                                         id: '168c1e46-0080-0001-0000-000000000b8c',
@@ -11503,8 +10760,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11516,8 +10772,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-024 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11531,8 +10786,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-025',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-025',
                                 children: []
                             },
                             {
@@ -11544,8 +10798,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026',
                                 children: [
                                     {
                                         id: '168c1e59-fe00-0001-0000-000000000b94',
@@ -11556,8 +10809,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11569,8 +10821,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -11582,8 +10833,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / CORROSION',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-026 / CORROSION',
                                         children: []
                                     }
                                 ]
@@ -11597,8 +10847,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027',
                                 children: [
                                     {
                                         id: '168c1e77-e880-0001-0000-000000000ba0',
@@ -11609,8 +10858,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11622,8 +10870,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-027 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11637,8 +10884,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028',
                                 children: [
                                     {
                                         id: '168c1e8b-d880-0001-0000-000000000ba8',
@@ -11649,8 +10895,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11662,8 +10907,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-028 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11677,8 +10921,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-029',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-029',
                                 children: []
                             },
                             {
@@ -11690,8 +10933,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030',
                                 children: [
                                     {
                                         id: '168c1e9f-c780-0001-0000-000000000bb0',
@@ -11702,8 +10944,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11715,8 +10956,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-030 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11730,8 +10970,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031',
                                 children: [
                                     {
                                         id: '168c1eb3-c680-0001-0000-000000000bb8',
@@ -11742,8 +10981,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11755,8 +10993,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-031 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11770,8 +11007,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032',
                                 children: [
                                     {
                                         id: '168c1ec7-b880-0001-0000-000000000bc0',
@@ -11782,8 +11018,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11795,8 +11030,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-032 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11810,8 +11044,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033',
                                 children: [
                                     {
                                         id: '168c1edb-aec0-0001-0000-000000000bc8',
@@ -11822,8 +11055,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11835,8 +11067,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-033 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11850,8 +11081,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034',
                                 children: [
                                     {
                                         id: '168c1eef-a440-0001-0000-000000000bd0',
@@ -11862,8 +11092,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11875,8 +11104,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-034 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11890,8 +11118,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035',
                                 children: [
                                     {
                                         id: '168c1f03-94c0-0001-0000-000000000bd8',
@@ -11902,8 +11129,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11915,8 +11141,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-035 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11930,8 +11155,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036',
                                 children: [
                                     {
                                         id: '168c1f17-8580-0001-0000-000000000be0',
@@ -11942,8 +11166,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11955,8 +11178,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-036 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -11970,8 +11192,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037',
                                 children: [
                                     {
                                         id: '168c1f2b-80c0-0001-0000-000000000be8',
@@ -11982,8 +11203,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -11995,8 +11215,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-037 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -12010,8 +11229,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038',
                                 children: [
                                     {
                                         id: '168c1f3f-72c0-0001-0000-000000000bf0',
@@ -12022,8 +11240,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12035,8 +11252,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-038 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -12050,8 +11266,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039',
                                 children: [
                                     {
                                         id: '168c1f53-5f40-0001-0000-000000000bf8',
@@ -12062,8 +11277,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12075,8 +11289,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-039 / ASUTP',
                                         children: []
                                     }
                                 ]
@@ -12090,8 +11303,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040',
                                 children: [
                                     {
                                         id: '168c1f85-41c0-0001-0000-000000000c0c',
@@ -12102,8 +11314,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ACO-MNG2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ACO-MNG2',
                                         children: []
                                     },
                                     {
@@ -12115,8 +11326,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12128,8 +11338,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / AIIS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / AIIS',
                                         children: []
                                     },
                                     {
@@ -12141,8 +11350,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / DC',
                                         children: []
                                     },
                                     {
@@ -12154,8 +11362,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ESXI-1',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ESXI-1',
                                         children: []
                                     },
                                     {
@@ -12167,8 +11374,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ESXI-2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ESXI-2',
                                         children: []
                                     },
                                     {
@@ -12180,8 +11386,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / FW',
                                         children: []
                                     },
                                     {
@@ -12193,8 +11398,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / GGS',
                                         children: []
                                     },
                                     {
@@ -12206,8 +11410,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / ILO',
                                         children: []
                                     },
                                     {
@@ -12219,8 +11422,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -12245,8 +11447,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SCCM',
                                         children: []
                                     },
                                     {
@@ -12258,8 +11459,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SERV_CONF',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SERV_CONF',
                                         children: []
                                     },
                                     {
@@ -12297,8 +11497,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SHPD_MGMT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / SHPD_MGMT',
                                         children: []
                                     },
                                     {
@@ -12310,8 +11509,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / TETRA',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / TETRA',
                                         children: []
                                     },
                                     {
@@ -12336,8 +11534,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / СРК',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-040 / СРК',
                                         children: []
                                     }
                                 ]
@@ -12351,8 +11548,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-041',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-041',
                                 children: []
                             },
                             {
@@ -12364,8 +11560,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-042',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-042',
                                 children: []
                             },
                             {
@@ -12377,8 +11572,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-043',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-043',
                                 children: []
                             },
                             {
@@ -12390,8 +11584,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044',
                                 children: [
                                     {
                                         id: '168c2042-f0c0-0001-0000-000000000c52',
@@ -12402,8 +11595,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12415,8 +11607,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / AIIS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / AIIS',
                                         children: []
                                     },
                                     {
@@ -12428,8 +11619,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / ASODU',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / ASODU',
                                         children: []
                                     },
                                     {
@@ -12441,8 +11631,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / COROSSION',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / COROSSION',
                                         children: []
                                     },
                                     {
@@ -12454,8 +11643,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-044 / GGS',
                                         children: []
                                     },
                                     {
@@ -12482,8 +11670,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-045',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-045',
                                 children: []
                             },
                             {
@@ -12495,8 +11682,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-046',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-046',
                                 children: []
                             },
                             {
@@ -12508,8 +11694,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-047',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-047',
                                 children: []
                             },
                             {
@@ -12521,8 +11706,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-049',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-049',
                                 children: [
                                     {
                                         id: '168c206a-e2c0-0001-0000-000000000c62',
@@ -12533,8 +11717,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-049 / ACO-MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-049 / ACO-MNG',
                                         children: []
                                     }
                                 ]
@@ -12548,8 +11731,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051',
                                 children: [
                                     {
                                         id: '168c2074-e480-0001-0000-000000000c66',
@@ -12560,8 +11742,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12586,8 +11767,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-051 / GGS',
                                         children: []
                                     }
                                 ]
@@ -12601,8 +11781,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052',
                                 children: [
                                     {
                                         id: '168c209c-df40-0001-0000-000000000c76',
@@ -12613,8 +11792,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12626,8 +11804,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-052 / GGS',
                                         children: []
                                     },
                                     {
@@ -12654,8 +11831,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-053',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-053',
                                 children: [
                                     {
                                         id: '168c20b0-d480-0001-0000-000000000c7e',
@@ -12666,8 +11842,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-053 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-053 / ACO_MNG',
                                         children: []
                                     }
                                 ]
@@ -12681,8 +11856,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055',
                                 children: [
                                     {
                                         id: '168c20e2-da00-0001-0000-000000000c92',
@@ -12693,8 +11867,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / FW',
                                         children: []
                                     },
                                     {
@@ -12706,8 +11879,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / GGS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / GGS',
                                         children: []
                                     },
                                     {
@@ -12719,8 +11891,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / MGMT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / MGMT',
                                         children: []
                                     },
                                     {
@@ -12732,8 +11903,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / SHPD_MGMT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-055 / SHPD_MGMT',
                                         children: []
                                     },
                                     {
@@ -12760,8 +11930,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-056',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-056',
                                 children: []
                             },
                             {
@@ -12773,8 +11942,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060',
                                 children: [
                                     {
                                         id: '168c210a-ef80-0001-0000-000000000ca2',
@@ -12785,8 +11953,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -12798,8 +11965,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / AIIS',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / AIIS',
                                         children: []
                                     },
                                     {
@@ -12811,8 +11977,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / FW',
                                         children: []
                                     },
                                     {
@@ -12824,8 +11989,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -12837,8 +12001,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / MNG_OTHER',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / MNG_OTHER',
                                         children: []
                                     },
                                     {
@@ -12850,8 +12013,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / SCCM',
                                         children: []
                                     },
                                     {
@@ -12863,8 +12025,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / SKUD',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Полюс" / bnp-060 / SKUD',
                                         children: []
                                     },
                                     {
@@ -12904,8 +12065,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / azk',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk',
                                 children: [
                                     {
                                         id: '168c38b2-4300-0001-0000-000000001491',
@@ -12916,8 +12076,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-001',
                                         children: [
                                             {
                                                 id: '168c600f-3e80-0001-0000-000000001e73',
@@ -12969,8 +12128,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-002',
                                         children: [
                                             {
                                                 id: '168c602c-ec40-0001-0000-000000001e7f',
@@ -13022,8 +12180,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-003',
                                         children: [
                                             {
                                                 id: '168c604a-9c40-0001-0000-000000001e8b',
@@ -13075,8 +12232,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-004',
                                         children: [
                                             {
                                                 id: '168c6068-4800-0001-0000-000000001e97',
@@ -13128,8 +12284,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-005',
                                         children: [
                                             {
                                                 id: '168c6085-f3c0-0001-0000-000000001ea3',
@@ -13181,8 +12336,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-006',
                                         children: [
                                             {
                                                 id: '168c60a3-9e80-0001-0000-000000001eaf',
@@ -13234,8 +12388,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-007',
                                         children: [
                                             {
                                                 id: '168c60c1-4e40-0001-0000-000000001ebb',
@@ -13287,8 +12440,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-008',
                                         children: [
                                             {
                                                 id: '168c60de-fb80-0001-0000-000000001ec7',
@@ -13340,8 +12492,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-009',
                                         children: [
                                             {
                                                 id: '168c60fc-b180-0001-0000-000000001ed3',
@@ -13393,8 +12544,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-010',
                                         children: [
                                             {
                                                 id: '168c611a-5c80-0001-0000-000000001edf',
@@ -13446,8 +12596,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-011',
                                         children: [
                                             {
                                                 id: '168c6138-0580-0001-0000-000000001eeb',
@@ -13499,8 +12648,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-012',
                                         children: [
                                             {
                                                 id: '168c6155-b340-0001-0000-000000001ef7',
@@ -13552,8 +12700,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-013',
                                         children: [
                                             {
                                                 id: '168c6173-64c0-0001-0000-000000001f03',
@@ -13605,8 +12752,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-014',
                                         children: [
                                             {
                                                 id: '168c6191-0ec0-0001-0000-000000001f0f',
@@ -13658,8 +12804,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-016',
                                         children: [
                                             {
                                                 id: '168c61ae-bc00-0001-0000-000000001f1b',
@@ -13711,8 +12856,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-017',
                                         children: [
                                             {
                                                 id: '168c61cc-66c0-0001-0000-000000001f27',
@@ -13764,8 +12908,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-018',
                                         children: [
                                             {
                                                 id: '168c61ea-13c0-0001-0000-000000001f33',
@@ -13817,8 +12960,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-019',
                                         children: [
                                             {
                                                 id: '168c6207-bec0-0001-0000-000000001f3f',
@@ -13870,8 +13012,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-020',
                                         children: [
                                             {
                                                 id: '168c6225-6a80-0001-0000-000000001f4b',
@@ -13923,8 +13064,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-021',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-021',
                                         children: [
                                             {
                                                 id: '168c6243-1380-0001-0000-000000001f57',
@@ -13976,8 +13116,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-022',
                                         children: [
                                             {
                                                 id: '168c6260-c280-0001-0000-000000001f63',
@@ -14029,8 +13168,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-023',
                                         children: [
                                             {
                                                 id: '168c627e-7100-0001-0000-000000001f6f',
@@ -14082,8 +13220,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-024',
                                         children: [
                                             {
                                                 id: '168c629c-2200-0001-0000-000000001f7b',
@@ -14135,8 +13272,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-026',
                                         children: [
                                             {
                                                 id: '168c62b9-ce00-0001-0000-000000001f87',
@@ -14188,8 +13324,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-027',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-027',
                                         children: [
                                             {
                                                 id: '168c62d7-77c0-0001-0000-000000001f93',
@@ -14241,8 +13376,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-028',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-028',
                                         children: [
                                             {
                                                 id: '168c62f5-2440-0001-0000-000000001f9f',
@@ -14294,8 +13428,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-029',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-029',
                                         children: [
                                             {
                                                 id: '168c6312-d380-0001-0000-000000001fab',
@@ -14347,8 +13480,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-030',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-030',
                                         children: [
                                             {
                                                 id: '168c6330-8080-0001-0000-000000001fb7',
@@ -14400,8 +13532,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-031',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-031',
                                         children: [
                                             {
                                                 id: '168c634e-2b00-0001-0000-000000001fc3',
@@ -14453,8 +13584,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-032',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-032',
                                         children: [
                                             {
                                                 id: '168c636b-d6c0-0001-0000-000000001fcf',
@@ -14506,8 +13636,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-033',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-033',
                                         children: [
                                             {
                                                 id: '168c639f-e340-0001-0000-000000001fdb',
@@ -14559,8 +13688,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-034',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-034',
                                         children: [
                                             {
                                                 id: '168c63bd-e8c0-0001-0000-000000001fe7',
@@ -14612,8 +13740,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-035',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-035',
                                         children: [
                                             {
                                                 id: '168c63db-92c0-0001-0000-000000001ff3',
@@ -14665,8 +13792,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-036',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-036',
                                         children: [
                                             {
                                                 id: '168c63f9-4640-0001-0000-000000001fff',
@@ -14718,8 +13844,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-037',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-037',
                                         children: [
                                             {
                                                 id: '168c6416-f340-0001-0000-00000000200b',
@@ -14771,8 +13896,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-038',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-038',
                                         children: [
                                             {
                                                 id: '168c6434-a080-0001-0000-000000002017',
@@ -14824,8 +13948,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-039',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-039',
                                         children: [
                                             {
                                                 id: '168c6452-5200-0001-0000-000000002023',
@@ -14877,8 +14000,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-040',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-040',
                                         children: [
                                             {
                                                 id: '168c646f-fb80-0001-0000-00000000202f',
@@ -14930,8 +14052,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-041',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-041',
                                         children: [
                                             {
                                                 id: '168c648d-a840-0001-0000-00000000203b',
@@ -14983,8 +14104,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-042',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-042',
                                         children: [
                                             {
                                                 id: '168c64ab-5480-0001-0000-000000002047',
@@ -15036,8 +14156,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-043',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-043',
                                         children: [
                                             {
                                                 id: '168c64c8-fd00-0001-0000-000000002053',
@@ -15089,8 +14208,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-044',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-044',
                                         children: [
                                             {
                                                 id: '168c64e7-efc0-0001-0000-00000000205f',
@@ -15142,8 +14260,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-045',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-045',
                                         children: [
                                             {
                                                 id: '168c6505-9ac0-0001-0000-00000000206b',
@@ -15195,8 +14312,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-046',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-046',
                                         children: [
                                             {
                                                 id: '168c6523-4a80-0001-0000-000000002077',
@@ -15248,8 +14364,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-047',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-047',
                                         children: [
                                             {
                                                 id: '168c6540-fa80-0001-0000-000000002083',
@@ -15301,8 +14416,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-048',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-048',
                                         children: [
                                             {
                                                 id: '168c654a-dd00-0001-0000-000000002087',
@@ -15341,8 +14455,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-049',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-049',
                                         children: [
                                             {
                                                 id: '168c657c-4f40-0001-0000-000000002098',
@@ -15394,8 +14507,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-050',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-050',
                                         children: [
                                             {
                                                 id: '168c6599-fb40-0001-0000-0000000020a4',
@@ -15447,8 +14559,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-053',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-053',
                                         children: [
                                             {
                                                 id: '168c65b7-a740-0001-0000-0000000020b0',
@@ -15500,8 +14611,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-054',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-054',
                                         children: [
                                             {
                                                 id: '168c65d5-5380-0001-0000-0000000020bc',
@@ -15553,8 +14663,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-055',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-055',
                                         children: [
                                             {
                                                 id: '168c65f3-0080-0001-0000-0000000020c8',
@@ -15606,8 +14715,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-056',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-056',
                                         children: [
                                             {
                                                 id: '168c6610-ad40-0001-0000-0000000020d4',
@@ -15659,8 +14767,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-057',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-057',
                                         children: [
                                             {
                                                 id: '168c662e-5980-0001-0000-0000000020e0',
@@ -15712,8 +14819,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-058',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-058',
                                         children: [
                                             {
                                                 id: '168c664c-0680-0001-0000-0000000020ec',
@@ -15765,8 +14871,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-059',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-059',
                                         children: [
                                             {
                                                 id: '168c6669-b680-0001-0000-0000000020f8',
@@ -15818,8 +14923,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-060',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-060',
                                         children: [
                                             {
                                                 id: '168c6687-6280-0001-0000-000000002104',
@@ -15871,8 +14975,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-061',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-061',
                                         children: [
                                             {
                                                 id: '168c66a5-11c0-0001-0000-000000002110',
@@ -15924,8 +15027,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-062',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-062',
                                         children: [
                                             {
                                                 id: '168c66c2-bf40-0001-0000-00000000211c',
@@ -15977,8 +15079,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-063',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-063',
                                         children: [
                                             {
                                                 id: '168c66e0-7100-0001-0000-000000002128',
@@ -16030,8 +15131,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-064',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-064',
                                         children: [
                                             {
                                                 id: '168c66fe-2540-0001-0000-000000002134',
@@ -16083,8 +15183,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-065',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-065',
                                         children: [
                                             {
                                                 id: '168c671b-d580-0001-0000-000000002140',
@@ -16136,8 +15235,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-066',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-066',
                                         children: [
                                             {
                                                 id: '168c6739-7f40-0001-0000-00000000214c',
@@ -16189,8 +15287,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-067',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-067',
                                         children: [
                                             {
                                                 id: '168c6757-2a80-0001-0000-000000002158',
@@ -16242,8 +15339,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-068',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-068',
                                         children: [
                                             {
                                                 id: '168c6774-d8c0-0001-0000-000000002164',
@@ -16295,8 +15391,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-069',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-069',
                                         children: [
                                             {
                                                 id: '168c6792-8880-0001-0000-000000002170',
@@ -16348,8 +15443,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-070',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-070',
                                         children: [
                                             {
                                                 id: '168c67b0-30c0-0001-0000-00000000217c',
@@ -16401,8 +15495,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-071',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-071',
                                         children: [
                                             {
                                                 id: '168c67cd-de00-0001-0000-000000002188',
@@ -24457,8 +23550,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-225',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-225',
                                         children: [
                                             {
                                                 id: '168c7973-ce80-0001-0000-0000000028a8',
@@ -24510,8 +23602,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-226',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-226',
                                         children: [
                                             {
                                                 id: '168c7991-87c0-0001-0000-0000000028b4',
@@ -24563,8 +23654,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-227',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-227',
                                         children: [
                                             {
                                                 id: '168c79af-3640-0001-0000-0000000028c0',
@@ -24616,8 +23706,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-228',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-228',
                                         children: [
                                             {
                                                 id: '168c79cc-e840-0001-0000-0000000028cc',
@@ -24669,8 +23758,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-229',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-229',
                                         children: [
                                             {
                                                 id: '168c79ea-9f80-0001-0000-0000000028d8',
@@ -24722,8 +23810,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-230',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-230',
                                         children: [
                                             {
                                                 id: '168c7a08-5600-0001-0000-0000000028e4',
@@ -24775,8 +23862,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-231',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-231',
                                         children: [
                                             {
                                                 id: '168c7a26-0a40-0001-0000-0000000028f0',
@@ -24828,8 +23914,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-232',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-232',
                                         children: [
                                             {
                                                 id: '168c7a43-c3c0-0001-0000-0000000028fc',
@@ -24881,8 +23966,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-233',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-233',
                                         children: [
                                             {
                                                 id: '168c7a61-7a00-0001-0000-000000002908',
@@ -24934,8 +24018,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-234',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-234',
                                         children: [
                                             {
                                                 id: '168c7a7f-2d40-0001-0000-000000002914',
@@ -24987,8 +24070,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-235',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-235',
                                         children: [
                                             {
                                                 id: '168c7a9c-e740-0001-0000-000000002920',
@@ -25040,8 +24122,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-236',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-236',
                                         children: [
                                             {
                                                 id: '168c7aba-9780-0001-0000-00000000292c',
@@ -25093,8 +24174,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-237',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-237',
                                         children: [
                                             {
                                                 id: '168c7ad8-4b40-0001-0000-000000002938',
@@ -25146,8 +24226,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-238',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-238',
                                         children: [
                                             {
                                                 id: '168c7af5-fe80-0001-0000-000000002944',
@@ -25199,8 +24278,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-239',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-239',
                                         children: [
                                             {
                                                 id: '168c7b13-b000-0001-0000-000000002950',
@@ -25252,8 +24330,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-240',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-240',
                                         children: [
                                             {
                                                 id: '168c7b31-6980-0001-0000-00000000295c',
@@ -25305,8 +24382,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-241',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-241',
                                         children: [
                                             {
                                                 id: '168c7b4f-18c0-0001-0000-000000002968',
@@ -25358,8 +24434,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-242',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-242',
                                         children: [
                                             {
                                                 id: '168c7b6c-d5c0-0001-0000-000000002974',
@@ -25411,8 +24486,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-243',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-243',
                                         children: [
                                             {
                                                 id: '168c7b8a-8dc0-0001-0000-000000002980',
@@ -25464,8 +24538,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-244',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-244',
                                         children: [
                                             {
                                                 id: '168c7ba8-4080-0001-0000-00000000298c',
@@ -25517,8 +24590,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-245',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-245',
                                         children: [
                                             {
                                                 id: '168c7bc5-f780-0001-0000-000000002998',
@@ -25570,8 +24642,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-246',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-246',
                                         children: [
                                             {
                                                 id: '168c7be3-ab40-0001-0000-0000000029a4',
@@ -25623,8 +24694,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-247',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-247',
                                         children: [
                                             {
                                                 id: '168c7c01-5d00-0001-0000-0000000029b0',
@@ -25676,8 +24746,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-248',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-248',
                                         children: [
                                             {
                                                 id: '168c7c1f-0dc0-0001-0000-0000000029bc',
@@ -25729,8 +24798,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-249',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-249',
                                         children: [
                                             {
                                                 id: '168c7c3c-c940-0001-0000-0000000029c8',
@@ -25782,8 +24850,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-250',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-250',
                                         children: [
                                             {
                                                 id: '168c7c5a-7d40-0001-0000-0000000029d4',
@@ -25835,8 +24902,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-251',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-251',
                                         children: [
                                             {
                                                 id: '168c7c78-2f00-0001-0000-0000000029e0',
@@ -25888,8 +24954,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-252',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-252',
                                         children: [
                                             {
                                                 id: '168c7c95-e740-0001-0000-0000000029ec',
@@ -25941,8 +25006,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-253',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-253',
                                         children: [
                                             {
                                                 id: '168c7cb3-a4c0-0001-0000-0000000029f8',
@@ -25994,8 +25058,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-254',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-254',
                                         children: [
                                             {
                                                 id: '168c7cd1-5ec0-0001-0000-000000002a04',
@@ -26047,8 +25110,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-255',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-255',
                                         children: [
                                             {
                                                 id: '168c7cef-b880-0001-0000-000000002a10',
@@ -26100,8 +25162,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-256',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-256',
                                         children: [
                                             {
                                                 id: '168c7d0d-7900-0001-0000-000000002a1c',
@@ -26153,8 +25214,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-257',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-257',
                                         children: [
                                             {
                                                 id: '168c7d2b-2e00-0001-0000-000000002a28',
@@ -26206,8 +25266,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-258',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-258',
                                         children: [
                                             {
                                                 id: '168c7d48-df80-0001-0000-000000002a34',
@@ -26259,8 +25318,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-259',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-259',
                                         children: [
                                             {
                                                 id: '168c7d66-98c0-0001-0000-000000002a40',
@@ -26312,8 +25370,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-260',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-260',
                                         children: [
                                             {
                                                 id: '168c7d84-4c00-0001-0000-000000002a4c',
@@ -26365,8 +25422,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-261',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-261',
                                         children: [
                                             {
                                                 id: '168c7da1-ff40-0001-0000-000000002a58',
@@ -26418,8 +25474,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-262',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-262',
                                         children: [
                                             {
                                                 id: '168c7dbf-bac0-0001-0000-000000002a64',
@@ -26471,8 +25526,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-263',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-263',
                                         children: [
                                             {
                                                 id: '168c7ddd-6d40-0001-0000-000000002a70',
@@ -26524,8 +25578,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-264',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-264',
                                         children: [
                                             {
                                                 id: '168c7dfb-23c0-0001-0000-000000002a7c',
@@ -26577,8 +25630,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-265',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-265',
                                         children: [
                                             {
                                                 id: '168c7e18-d8c0-0001-0000-000000002a88',
@@ -26630,8 +25682,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-266',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-266',
                                         children: [
                                             {
                                                 id: '168c7e36-8f00-0001-0000-000000002a94',
@@ -26683,8 +25734,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-267',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-267',
                                         children: [
                                             {
                                                 id: '168c7e54-4180-0001-0000-000000002aa0',
@@ -26736,8 +25786,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-268',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-268',
                                         children: [
                                             {
                                                 id: '168c7e71-f480-0001-0000-000000002aac',
@@ -26789,8 +25838,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-269',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-269',
                                         children: [
                                             {
                                                 id: '168c7e8f-ac40-0001-0000-000000002ab8',
@@ -26842,8 +25890,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-270',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-270',
                                         children: [
                                             {
                                                 id: '168c7ead-6180-0001-0000-000000002ac4',
@@ -26895,8 +25942,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-271',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-271',
                                         children: [
                                             {
                                                 id: '168c7ecb-1780-0001-0000-000000002ad0',
@@ -26948,8 +25994,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-272',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-272',
                                         children: [
                                             {
                                                 id: '168c7ee8-cc00-0001-0000-000000002adc',
@@ -27001,8 +26046,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-273',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-273',
                                         children: [
                                             {
                                                 id: '168c7f06-8340-0001-0000-000000002ae8',
@@ -27054,8 +26098,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-274',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-274',
                                         children: [
                                             {
                                                 id: '168c7f24-3940-0001-0000-000000002af4',
@@ -27107,8 +26150,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-275',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-275',
                                         children: [
                                             {
                                                 id: '168c7f41-ea40-0001-0000-000000002b00',
@@ -27160,8 +26202,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-276',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-276',
                                         children: [
                                             {
                                                 id: '168c7f5f-a500-0001-0000-000000002b0c',
@@ -27213,8 +26254,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-277',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-277',
                                         children: [
                                             {
                                                 id: '168c7f7d-5a80-0001-0000-000000002b18',
@@ -27266,8 +26306,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-278',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-278',
                                         children: [
                                             {
                                                 id: '168c7f9b-1080-0001-0000-000000002b24',
@@ -27319,8 +26358,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-279',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-279',
                                         children: [
                                             {
                                                 id: '168c7fb8-cfc0-0001-0000-000000002b30',
@@ -27372,8 +26410,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-280',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-280',
                                         children: [
                                             {
                                                 id: '168c7fd6-8980-0001-0000-000000002b3c',
@@ -27425,8 +26462,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-281',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-281',
                                         children: [
                                             {
                                                 id: '168c7ff4-4340-0001-0000-000000002b48',
@@ -27478,8 +26514,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-282',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-282',
                                         children: [
                                             {
                                                 id: '168c8011-f840-0001-0000-000000002b54',
@@ -27531,8 +26566,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-283',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-283',
                                         children: [
                                             {
                                                 id: '168c802f-b180-0001-0000-000000002b60',
@@ -27584,8 +26618,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-284',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-284',
                                         children: [
                                             {
                                                 id: '168c804d-65c0-0001-0000-000000002b6c',
@@ -27637,8 +26670,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-285',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-285',
                                         children: [
                                             {
                                                 id: '168c806b-18c0-0001-0000-000000002b78',
@@ -27690,8 +26722,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-286',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-286',
                                         children: [
                                             {
                                                 id: '168c8088-cec0-0001-0000-000000002b84',
@@ -27743,8 +26774,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-287',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-287',
                                         children: [
                                             {
                                                 id: '168c80a6-8cc0-0001-0000-000000002b90',
@@ -27796,8 +26826,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-288',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-288',
                                         children: [
                                             {
                                                 id: '168c80c4-43c0-0001-0000-000000002b9c',
@@ -27849,8 +26878,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-289',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-289',
                                         children: [
                                             {
                                                 id: '168c80e1-fd40-0001-0000-000000002ba8',
@@ -27902,8 +26930,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-290',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-290',
                                         children: [
                                             {
                                                 id: '168c80ff-b480-0001-0000-000000002bb4',
@@ -27955,8 +26982,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-291',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-291',
                                         children: [
                                             {
                                                 id: '168c811d-68c0-0001-0000-000000002bc0',
@@ -28008,8 +27034,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-292',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-292',
                                         children: [
                                             {
                                                 id: '168c813b-2140-0001-0000-000000002bcc',
@@ -28061,8 +27086,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-293',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-293',
                                         children: [
                                             {
                                                 id: '168c8158-e640-0001-0000-000000002bd8',
@@ -28114,8 +27138,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-294',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-294',
                                         children: [
                                             {
                                                 id: '168c8176-a140-0001-0000-000000002be4',
@@ -28167,8 +27190,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-295',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-295',
                                         children: [
                                             {
                                                 id: '168c8194-5b00-0001-0000-000000002bf0',
@@ -28220,8 +27242,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-296',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-02-296',
                                         children: [
                                             {
                                                 id: '168c81b2-13c0-0001-0000-000000002bfc',
@@ -28273,8 +27294,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-12-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-12-001',
                                         children: [
                                             {
                                                 id: '168c81cf-d400-0001-0000-000000002c08',
@@ -28326,8 +27346,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-001',
                                         children: [
                                             {
                                                 id: '168c81ed-8b80-0001-0000-000000002c14',
@@ -28379,8 +27398,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-002',
                                         children: [
                                             {
                                                 id: '168c820b-45c0-0001-0000-000000002c20',
@@ -28432,8 +27450,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-003',
                                         children: [
                                             {
                                                 id: '168c8229-04c0-0001-0000-000000002c2c',
@@ -28485,8 +27502,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-004',
                                         children: [
                                             {
                                                 id: '168c8246-b880-0001-0000-000000002c38',
@@ -28538,8 +27554,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-005',
                                         children: [
                                             {
                                                 id: '168c8264-7740-0001-0000-000000002c44',
@@ -28591,8 +27606,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-006',
                                         children: [
                                             {
                                                 id: '168c8282-2a40-0001-0000-000000002c50',
@@ -28644,8 +27658,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-007',
                                         children: [
                                             {
                                                 id: '168c82a0-da00-0001-0000-000000002c5c',
@@ -28697,8 +27710,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-008',
                                         children: [
                                             {
                                                 id: '168c82be-9100-0001-0000-000000002c68',
@@ -28750,8 +27762,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-009',
                                         children: [
                                             {
                                                 id: '168c82dc-4d80-0001-0000-000000002c74',
@@ -28803,8 +27814,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-010',
                                         children: [
                                             {
                                                 id: '168c82fa-0340-0001-0000-000000002c80',
@@ -28856,8 +27866,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-011',
                                         children: [
                                             {
                                                 id: '168c8317-b7c0-0001-0000-000000002c8c',
@@ -28909,8 +27918,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-012',
                                         children: [
                                             {
                                                 id: '168c8335-6d80-0001-0000-000000002c98',
@@ -28962,8 +27970,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-013',
                                         children: [
                                             {
                                                 id: '168c8353-2d40-0001-0000-000000002ca4',
@@ -29015,8 +28022,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-13-014',
                                         children: [
                                             {
                                                 id: '168c8370-e5c0-0001-0000-000000002cb0',
@@ -29068,8 +28074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-001',
                                         children: [
                                             {
                                                 id: '168c838e-9b80-0001-0000-000000002cbc',
@@ -29121,8 +28126,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-002',
                                         children: [
                                             {
                                                 id: '168c83ac-5280-0001-0000-000000002cc8',
@@ -29174,8 +28178,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-003',
                                         children: [
                                             {
                                                 id: '168c83ca-0c40-0001-0000-000000002cd4',
@@ -29227,8 +28230,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-16-004',
                                         children: [
                                             {
                                                 id: '168c83e7-c280-0001-0000-000000002ce0',
@@ -29280,8 +28282,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-001',
                                         children: [
                                             {
                                                 id: '168c8405-7a00-0001-0000-000000002cec',
@@ -29333,8 +28334,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-002',
                                         children: [
                                             {
                                                 id: '168c8423-3cc0-0001-0000-000000002cf8',
@@ -29386,8 +28386,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-003',
                                         children: [
                                             {
                                                 id: '168c8440-f740-0001-0000-000000002d04',
@@ -29439,8 +28438,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-004',
                                         children: [
                                             {
                                                 id: '168c845e-adc0-0001-0000-000000002d10',
@@ -29492,8 +28490,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-005',
                                         children: [
                                             {
                                                 id: '168c847c-6380-0001-0000-000000002d1c',
@@ -29545,8 +28542,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-006',
                                         children: [
                                             {
                                                 id: '168c849a-1ec0-0001-0000-000000002d28',
@@ -29598,8 +28594,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-007',
                                         children: [
                                             {
                                                 id: '168c84b7-d5c0-0001-0000-000000002d34',
@@ -29651,8 +28646,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-008',
                                         children: [
                                             {
                                                 id: '168c84d5-8c80-0001-0000-000000002d40',
@@ -29704,8 +28698,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-009',
                                         children: [
                                             {
                                                 id: '168c84f3-4d80-0001-0000-000000002d4c',
@@ -29757,8 +28750,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-010',
                                         children: [
                                             {
                                                 id: '168c8511-0780-0001-0000-000000002d58',
@@ -29810,8 +28802,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-011',
                                         children: [
                                             {
                                                 id: '168c852e-bf40-0001-0000-000000002d64',
@@ -29863,8 +28854,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-012',
                                         children: [
                                             {
                                                 id: '168c854c-7480-0001-0000-000000002d70',
@@ -29916,8 +28906,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-013',
                                         children: [
                                             {
                                                 id: '168c856a-2d00-0001-0000-000000002d7c',
@@ -29969,8 +28958,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-014',
                                         children: [
                                             {
                                                 id: '168c8587-e2c0-0001-0000-000000002d88',
@@ -30022,8 +29010,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-015',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-015',
                                         children: [
                                             {
                                                 id: '168c85a5-9d00-0001-0000-000000002d94',
@@ -30075,8 +29062,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-016',
                                         children: [
                                             {
                                                 id: '168c85c3-5300-0001-0000-000000002da0',
@@ -30128,8 +29114,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-017',
                                         children: [
                                             {
                                                 id: '168c85e1-0d40-0001-0000-000000002dac',
@@ -30181,8 +29166,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-018',
                                         children: [
                                             {
                                                 id: '168c85fe-c7c0-0001-0000-000000002db8',
@@ -30234,8 +29218,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-019',
                                         children: [
                                             {
                                                 id: '168c861c-80c0-0001-0000-000000002dc4',
@@ -30287,8 +29270,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-020',
                                         children: [
                                             {
                                                 id: '168c863a-4640-0001-0000-000000002dd0',
@@ -30340,8 +29322,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-021',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-021',
                                         children: [
                                             {
                                                 id: '168c8658-03c0-0001-0000-000000002ddc',
@@ -30393,8 +29374,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-022',
                                         children: [
                                             {
                                                 id: '168c8675-bd80-0001-0000-000000002de8',
@@ -30446,8 +29426,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-023',
                                         children: [
                                             {
                                                 id: '168c8693-7240-0001-0000-000000002df4',
@@ -30499,8 +29478,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-024',
                                         children: [
                                             {
                                                 id: '168c86b1-2dc0-0001-0000-000000002e00',
@@ -30552,8 +29530,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-025',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-025',
                                         children: [
                                             {
                                                 id: '168c86ce-eb00-0001-0000-000000002e0c',
@@ -30605,8 +29582,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-026',
                                         children: [
                                             {
                                                 id: '168c86ec-a7c0-0001-0000-000000002e18',
@@ -30658,8 +29634,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-027',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-027',
                                         children: [
                                             {
                                                 id: '168c870a-6b80-0001-0000-000000002e24',
@@ -30711,8 +29686,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-028',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-028',
                                         children: [
                                             {
                                                 id: '168c8728-2440-0001-0000-000000002e30',
@@ -30764,8 +29738,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-029',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-029',
                                         children: [
                                             {
                                                 id: '168c8745-dd40-0001-0000-000000002e3c',
@@ -30817,8 +29790,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-030',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-030',
                                         children: [
                                             {
                                                 id: '168c8763-9780-0001-0000-000000002e48',
@@ -30870,8 +29842,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-031',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-031',
                                         children: [
                                             {
                                                 id: '168c8781-5180-0001-0000-000000002e54',
@@ -30923,8 +29894,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-032',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-032',
                                         children: [
                                             {
                                                 id: '168c879f-1340-0001-0000-000000002e60',
@@ -30976,8 +29946,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-033',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-033',
                                         children: [
                                             {
                                                 id: '168c87bc-c6c0-0001-0000-000000002e6c',
@@ -31029,8 +29998,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-034',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-034',
                                         children: [
                                             {
                                                 id: '168c87da-86c0-0001-0000-000000002e78',
@@ -31082,8 +30050,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-035',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-035',
                                         children: [
                                             {
                                                 id: '168c87f8-5140-0001-0000-000000002e84',
@@ -31135,8 +30102,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-036',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-036',
                                         children: [
                                             {
                                                 id: '168c8816-0940-0001-0000-000000002e90',
@@ -31188,8 +30154,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-037',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-037',
                                         children: [
                                             {
                                                 id: '168c8833-c380-0001-0000-000000002e9c',
@@ -31241,8 +30206,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-038',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-038',
                                         children: [
                                             {
                                                 id: '168c8851-7900-0001-0000-000000002ea8',
@@ -31294,8 +30258,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-039',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-039',
                                         children: [
                                             {
                                                 id: '168c886f-3080-0001-0000-000000002eb4',
@@ -31347,8 +30310,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-040',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-040',
                                         children: [
                                             {
                                                 id: '168c888c-e940-0001-0000-000000002ec0',
@@ -31400,8 +30362,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-041',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-041',
                                         children: [
                                             {
                                                 id: '168c88aa-a040-0001-0000-000000002ecc',
@@ -31453,8 +30414,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-042',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-042',
                                         children: [
                                             {
                                                 id: '168c88c8-6f00-0001-0000-000000002ed8',
@@ -31506,8 +30466,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-043',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-043',
                                         children: [
                                             {
                                                 id: '168c88e6-23c0-0001-0000-000000002ee4',
@@ -31559,8 +30518,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-044',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-044',
                                         children: [
                                             {
                                                 id: '168c8903-dd40-0001-0000-000000002ef0',
@@ -31612,8 +30570,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-045',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-045',
                                         children: [
                                             {
                                                 id: '168c8921-9200-0001-0000-000000002efc',
@@ -31665,8 +30622,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-046',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-046',
                                         children: [
                                             {
                                                 id: '168c893f-4680-0001-0000-000000002f08',
@@ -31718,8 +30674,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-047',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-047',
                                         children: [
                                             {
                                                 id: '168c895d-0b40-0001-0000-000000002f14',
@@ -31771,8 +30726,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-048',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-048',
                                         children: [
                                             {
                                                 id: '168c897a-c7c0-0001-0000-000000002f20',
@@ -31824,8 +30778,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-050',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-050',
                                         children: [
                                             {
                                                 id: '168c8998-7d00-0001-0000-000000002f2c',
@@ -31877,8 +30830,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-051',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-051',
                                         children: [
                                             {
                                                 id: '168c89b6-3680-0001-0000-000000002f38',
@@ -31930,8 +30882,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-052',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-18-052',
                                         children: [
                                             {
                                                 id: '168c89d3-ecc0-0001-0000-000000002f44',
@@ -31983,8 +30934,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-001',
                                         children: [
                                             {
                                                 id: '168c89f1-ab00-0001-0000-000000002f50',
@@ -32036,8 +30986,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-002',
                                         children: [
                                             {
                                                 id: '168c8a0f-6c00-0001-0000-000000002f5c',
@@ -32089,8 +31038,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-003',
                                         children: [
                                             {
                                                 id: '168c8a2d-2140-0001-0000-000000002f68',
@@ -32142,8 +31090,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-004',
                                         children: [
                                             {
                                                 id: '168c8a4a-dec0-0001-0000-000000002f74',
@@ -32195,8 +31142,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-005',
                                         children: [
                                             {
                                                 id: '168c8a68-9840-0001-0000-000000002f80',
@@ -32248,8 +31194,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-006',
                                         children: [
                                             {
                                                 id: '168c8a86-5040-0001-0000-000000002f8c',
@@ -32301,8 +31246,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-007',
                                         children: [
                                             {
                                                 id: '168c8aa4-0740-0001-0000-000000002f98',
@@ -32354,8 +31298,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-21-008',
                                         children: [
                                             {
                                                 id: '168c8ac1-c100-0001-0000-000000002fa4',
@@ -32407,8 +31350,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-001',
                                         children: [
                                             {
                                                 id: '168c8adf-7ac0-0001-0000-000000002fb0',
@@ -32460,8 +31402,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-002',
                                         children: [
                                             {
                                                 id: '168c8afd-3740-0001-0000-000000002fbc',
@@ -32513,8 +31454,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-003',
                                         children: [
                                             {
                                                 id: '168c8b1a-f0c0-0001-0000-000000002fc8',
@@ -32566,8 +31506,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-004',
                                         children: [
                                             {
                                                 id: '168c8b38-aa00-0001-0000-000000002fd4',
@@ -32619,8 +31558,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-005',
                                         children: [
                                             {
                                                 id: '168c8b56-5fc0-0001-0000-000000002fe0',
@@ -32672,8 +31610,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-33-006',
                                         children: [
                                             {
                                                 id: '168c8b74-1c40-0001-0000-000000002fec',
@@ -32725,8 +31662,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-001',
                                         children: [
                                             {
                                                 id: '168c8b91-d3c0-0001-0000-000000002ff8',
@@ -32778,8 +31714,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-002',
                                         children: [
                                             {
                                                 id: '168c8baf-9cc0-0001-0000-000000003004',
@@ -32831,8 +31766,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-004',
                                         children: [
                                             {
                                                 id: '168c8bcd-5580-0001-0000-000000003010',
@@ -32884,8 +31818,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-005',
                                         children: [
                                             {
                                                 id: '168c8beb-1100-0001-0000-00000000301c',
@@ -32937,8 +31870,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-006',
                                         children: [
                                             {
                                                 id: '168c8c08-d040-0001-0000-000000003028',
@@ -32990,8 +31922,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-007',
                                         children: [
                                             {
                                                 id: '168c8c26-8a80-0001-0000-000000003034',
@@ -33043,8 +31974,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-008',
                                         children: [
                                             {
                                                 id: '168c8c44-4680-0001-0000-000000003040',
@@ -33096,8 +32026,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-009',
                                         children: [
                                             {
                                                 id: '168c8c61-ff80-0001-0000-00000000304c',
@@ -33149,8 +32078,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-010',
                                         children: [
                                             {
                                                 id: '168c8c7f-b740-0001-0000-000000003058',
@@ -33202,8 +32130,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-011',
                                         children: [
                                             {
                                                 id: '168c8c9d-7040-0001-0000-000000003064',
@@ -33255,8 +32182,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-012',
                                         children: [
                                             {
                                                 id: '168c8cbb-2b00-0001-0000-000000003070',
@@ -33308,8 +32234,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-013',
                                         children: [
                                             {
                                                 id: '168c8cd8-e4c0-0001-0000-00000000307c',
@@ -33361,8 +32286,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-014',
                                         children: [
                                             {
                                                 id: '168c8cf6-a2c0-0001-0000-000000003088',
@@ -33414,8 +32338,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-015',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-015',
                                         children: [
                                             {
                                                 id: '168c8d14-5bc0-0001-0000-000000003094',
@@ -33467,8 +32390,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-016',
                                         children: [
                                             {
                                                 id: '168c8d32-1380-0001-0000-0000000030a0',
@@ -33520,8 +32442,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-017',
                                         children: [
                                             {
                                                 id: '168c8d4f-cdc0-0001-0000-0000000030ac',
@@ -33573,8 +32494,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-018',
                                         children: [
                                             {
                                                 id: '168c8d6d-85c0-0001-0000-0000000030b8',
@@ -33626,8 +32546,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-019',
                                         children: [
                                             {
                                                 id: '168c8d8b-4880-0001-0000-0000000030c4',
@@ -33679,8 +32598,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-022',
                                         children: [
                                             {
                                                 id: '168c8da9-1f00-0001-0000-0000000030d0',
@@ -33732,8 +32650,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-023',
                                         children: [
                                             {
                                                 id: '168c8dc6-d700-0001-0000-0000000030dc',
@@ -33785,8 +32702,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-024',
                                         children: [
                                             {
                                                 id: '168c8de4-9a80-0001-0000-0000000030e8',
@@ -33838,8 +32754,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-025',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-025',
                                         children: [
                                             {
                                                 id: '168c8e02-5840-0001-0000-0000000030f4',
@@ -33891,8 +32806,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-026',
                                         children: [
                                             {
                                                 id: '168c8e20-1580-0001-0000-000000003100',
@@ -33944,8 +32858,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-027',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-45-027',
                                         children: [
                                             {
                                                 id: '168c8e3d-d0c0-0001-0000-00000000310c',
@@ -33997,8 +32910,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-52-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-52-001',
                                         children: [
                                             {
                                                 id: '168c8e5b-8b80-0001-0000-000000003118',
@@ -34050,8 +32962,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-52-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-52-002',
                                         children: [
                                             {
                                                 id: '168c8e79-4a00-0001-0000-000000003124',
@@ -34103,8 +33014,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-001',
                                         children: [
                                             {
                                                 id: '168c8e97-0400-0001-0000-000000003130',
@@ -34156,8 +33066,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-002',
                                         children: [
                                             {
                                                 id: '168c8eb4-bc80-0001-0000-00000000313c',
@@ -34209,8 +33118,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-003',
                                         children: [
                                             {
                                                 id: '168c8ed2-7700-0001-0000-000000003148',
@@ -34262,8 +33170,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-004',
                                         children: [
                                             {
                                                 id: '168c8ef0-3740-0001-0000-000000003154',
@@ -34315,8 +33222,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-005',
                                         children: [
                                             {
                                                 id: '168c8f0d-f400-0001-0000-000000003160',
@@ -34368,8 +33274,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-006',
                                         children: [
                                             {
                                                 id: '168c8f2c-aac0-0001-0000-00000000316c',
@@ -34421,8 +33326,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-007',
                                         children: [
                                             {
                                                 id: '168c8f49-6640-0001-0000-000000003178',
@@ -34474,8 +33378,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-008',
                                         children: [
                                             {
                                                 id: '168c8f67-1dc0-0001-0000-000000003184',
@@ -34527,8 +33430,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-009',
                                         children: [
                                             {
                                                 id: '168c8f84-db80-0001-0000-000000003190',
@@ -34580,8 +33482,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-010',
                                         children: [
                                             {
                                                 id: '168c8fa2-9800-0001-0000-00000000319c',
@@ -34633,8 +33534,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-011',
                                         children: [
                                             {
                                                 id: '168c8fc0-51c0-0001-0000-0000000031a8',
@@ -34686,8 +33586,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-012',
                                         children: [
                                             {
                                                 id: '168c8fde-0ac0-0001-0000-0000000031b4',
@@ -34739,8 +33638,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-013',
                                         children: [
                                             {
                                                 id: '168c8ffb-cbc0-0001-0000-0000000031c0',
@@ -34792,8 +33690,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-014',
                                         children: [
                                             {
                                                 id: '168c9019-8c00-0001-0000-0000000031cc',
@@ -34845,8 +33742,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-015',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-015',
                                         children: [
                                             {
                                                 id: '168c9037-4b00-0001-0000-0000000031d8',
@@ -34898,8 +33794,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-016',
                                         children: [
                                             {
                                                 id: '168c9055-0640-0001-0000-0000000031e4',
@@ -34951,8 +33846,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-017',
                                         children: [
                                             {
                                                 id: '168c9072-c000-0001-0000-0000000031f0',
@@ -35004,8 +33898,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-018',
                                         children: [
                                             {
                                                 id: '168c9090-7c00-0001-0000-0000000031fc',
@@ -35057,8 +33950,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-019',
                                         children: [
                                             {
                                                 id: '168c90ae-3c00-0001-0000-000000003208',
@@ -35110,8 +34002,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-020',
                                         children: [
                                             {
                                                 id: '168c90cb-f800-0001-0000-000000003214',
@@ -35163,8 +34054,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-021',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-021',
                                         children: [
                                             {
                                                 id: '168c90e9-b280-0001-0000-000000003220',
@@ -35216,8 +34106,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-022',
                                         children: [
                                             {
                                                 id: '168c9107-6f00-0001-0000-00000000322c',
@@ -35269,8 +34158,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-023',
                                         children: [
                                             {
                                                 id: '168c9125-27c0-0001-0000-000000003238',
@@ -35322,8 +34210,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-024',
                                         children: [
                                             {
                                                 id: '168c9142-ec80-0001-0000-000000003244',
@@ -35375,8 +34262,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-025',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-025',
                                         children: [
                                             {
                                                 id: '168c9160-a800-0001-0000-000000003250',
@@ -35428,8 +34314,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-026',
                                         children: [
                                             {
                                                 id: '168c917e-62c0-0001-0000-00000000325c',
@@ -35481,8 +34366,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-028',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-028',
                                         children: [
                                             {
                                                 id: '168c919c-1d80-0001-0000-000000003268',
@@ -35534,8 +34418,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-029',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-029',
                                         children: [
                                             {
                                                 id: '168c91b9-d600-0001-0000-000000003274',
@@ -35587,8 +34470,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-030',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-030',
                                         children: [
                                             {
                                                 id: '168c91d7-9040-0001-0000-000000003280',
@@ -35640,8 +34522,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-031',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-031',
                                         children: [
                                             {
                                                 id: '168c91f5-5140-0001-0000-00000000328c',
@@ -35693,8 +34574,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-032',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-032',
                                         children: [
                                             {
                                                 id: '168c9213-13c0-0001-0000-000000003298',
@@ -35746,8 +34626,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-033',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-033',
                                         children: [
                                             {
                                                 id: '168c9230-dd80-0001-0000-0000000032a4',
@@ -35799,8 +34678,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-034',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-034',
                                         children: [
                                             {
                                                 id: '168c924e-9600-0001-0000-0000000032b0',
@@ -35852,8 +34730,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-035',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-035',
                                         children: [
                                             {
                                                 id: '168c926c-5240-0001-0000-0000000032bc',
@@ -35905,8 +34782,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-036',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-036',
                                         children: [
                                             {
                                                 id: '168c928a-0f40-0001-0000-0000000032c8',
@@ -35958,8 +34834,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-037',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-037',
                                         children: [
                                             {
                                                 id: '168c92a7-cf80-0001-0000-0000000032d4',
@@ -36011,8 +34886,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-038',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-038',
                                         children: [
                                             {
                                                 id: '168c92c5-8e00-0001-0000-0000000032e0',
@@ -36064,8 +34938,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-039',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-039',
                                         children: [
                                             {
                                                 id: '168c92e3-4e00-0001-0000-0000000032ec',
@@ -36117,8 +34990,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-040',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-040',
                                         children: [
                                             {
                                                 id: '168c9301-06c0-0001-0000-0000000032f8',
@@ -36170,8 +35042,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-041',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-041',
                                         children: [
                                             {
                                                 id: '168c931e-c1c0-0001-0000-000000003304',
@@ -36223,8 +35094,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-042',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-042',
                                         children: [
                                             {
                                                 id: '168c933c-8180-0001-0000-000000003310',
@@ -36276,8 +35146,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-043',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-043',
                                         children: [
                                             {
                                                 id: '168c935a-3f40-0001-0000-00000000331c',
@@ -36329,8 +35198,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-044',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-044',
                                         children: [
                                             {
                                                 id: '168c9377-fc00-0001-0000-000000003328',
@@ -36382,8 +35250,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-045',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-045',
                                         children: [
                                             {
                                                 id: '168c9395-bb40-0001-0000-000000003334',
@@ -36435,8 +35302,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-046',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-046',
                                         children: [
                                             {
                                                 id: '168c93b3-8c80-0001-0000-000000003340',
@@ -36488,8 +35354,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-047',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-047',
                                         children: [
                                             {
                                                 id: '168c93d1-4fc0-0001-0000-00000000334c',
@@ -36541,8 +35406,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-048',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-048',
                                         children: [
                                             {
                                                 id: '168c93ef-0e80-0001-0000-000000003358',
@@ -36594,8 +35458,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-049',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-049',
                                         children: [
                                             {
                                                 id: '168c940c-c900-0001-0000-000000003364',
@@ -36647,8 +35510,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-050',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-050',
                                         children: [
                                             {
                                                 id: '168c942a-8800-0001-0000-000000003370',
@@ -36700,8 +35562,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-051',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-051',
                                         children: [
                                             {
                                                 id: '168c9448-4480-0001-0000-00000000337c',
@@ -36753,8 +35614,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-052',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-052',
                                         children: [
                                             {
                                                 id: '168c9466-04c0-0001-0000-000000003388',
@@ -36806,8 +35666,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-053',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-053',
                                         children: [
                                             {
                                                 id: '168c9483-be00-0001-0000-000000003394',
@@ -36859,8 +35718,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-054',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-054',
                                         children: [
                                             {
                                                 id: '168c94a1-7b40-0001-0000-0000000033a0',
@@ -36912,8 +35770,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-055',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-055',
                                         children: [
                                             {
                                                 id: '168c94bf-3740-0001-0000-0000000033ac',
@@ -36965,8 +35822,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-056',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-056',
                                         children: [
                                             {
                                                 id: '168c94dc-f100-0001-0000-0000000033b8',
@@ -37018,8 +35874,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-057',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-057',
                                         children: [
                                             {
                                                 id: '168c94fa-b500-0001-0000-0000000033c4',
@@ -37071,8 +35926,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-058',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-058',
                                         children: [
                                             {
                                                 id: '168c9518-6f80-0001-0000-0000000033d0',
@@ -37124,8 +35978,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-059',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-059',
                                         children: [
                                             {
                                                 id: '168c9536-3140-0001-0000-0000000033dc',
@@ -37177,8 +36030,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-060',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-060',
                                         children: [
                                             {
                                                 id: '168c9553-f1c0-0001-0000-0000000033e8',
@@ -37230,8 +36082,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-061',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-061',
                                         children: [
                                             {
                                                 id: '168c9571-ad80-0001-0000-0000000033f4',
@@ -37283,8 +36134,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-062',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-062',
                                         children: [
                                             {
                                                 id: '168c958f-6d40-0001-0000-000000003400',
@@ -37336,8 +36186,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-063',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-063',
                                         children: [
                                             {
                                                 id: '168c95ad-2b40-0001-0000-00000000340c',
@@ -37389,8 +36238,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-064',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-064',
                                         children: [
                                             {
                                                 id: '168c95ca-e880-0001-0000-000000003418',
@@ -37442,8 +36290,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-065',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-065',
                                         children: [
                                             {
                                                 id: '168c95e8-a3c0-0001-0000-000000003424',
@@ -37495,8 +36342,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-066',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-066',
                                         children: [
                                             {
                                                 id: '168c9606-6480-0001-0000-000000003430',
@@ -37548,8 +36394,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-067',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-067',
                                         children: [
                                             {
                                                 id: '168c9624-25c0-0001-0000-00000000343c',
@@ -37601,8 +36446,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-068',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-068',
                                         children: [
                                             {
                                                 id: '168c9641-e340-0001-0000-000000003448',
@@ -37654,8 +36498,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-069',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-069',
                                         children: [
                                             {
                                                 id: '168c965f-a140-0001-0000-000000003454',
@@ -37707,8 +36550,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-070',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-070',
                                         children: [
                                             {
                                                 id: '168c967d-6280-0001-0000-000000003460',
@@ -37760,8 +36602,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-071',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-071',
                                         children: [
                                             {
                                                 id: '168c969b-2140-0001-0000-00000000346c',
@@ -37813,8 +36654,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-072',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-072',
                                         children: [
                                             {
                                                 id: '168c96b8-db40-0001-0000-000000003478',
@@ -37866,8 +36706,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-073',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-073',
                                         children: [
                                             {
                                                 id: '168c96d6-a480-0001-0000-000000003484',
@@ -37919,8 +36758,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-074',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-074',
                                         children: [
                                             {
                                                 id: '168c96f4-6240-0001-0000-000000003490',
@@ -37972,8 +36810,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-075',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-075',
                                         children: [
                                             {
                                                 id: '168c9712-1ec0-0001-0000-00000000349c',
@@ -38025,8 +36862,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-076',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-076',
                                         children: [
                                             {
                                                 id: '168c972f-de40-0001-0000-0000000034a8',
@@ -38078,8 +36914,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-077',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-077',
                                         children: [
                                             {
                                                 id: '168c974d-9ac0-0001-0000-0000000034b4',
@@ -38131,8 +36966,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-078',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-078',
                                         children: [
                                             {
                                                 id: '168c976b-5d00-0001-0000-0000000034c0',
@@ -38184,8 +37018,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-079',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-079',
                                         children: [
                                             {
                                                 id: '168c9789-1e00-0001-0000-0000000034cc',
@@ -38237,8 +37070,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-080',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-080',
                                         children: [
                                             {
                                                 id: '168c97a6-da40-0001-0000-0000000034d8',
@@ -38290,8 +37122,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-081',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-081',
                                         children: [
                                             {
                                                 id: '168c97c4-95c0-0001-0000-0000000034e4',
@@ -38343,8 +37174,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-082',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-082',
                                         children: [
                                             {
                                                 id: '168c97e2-5240-0001-0000-0000000034f0',
@@ -38396,8 +37226,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-083',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-083',
                                         children: [
                                             {
                                                 id: '168c9800-1100-0001-0000-0000000034fc',
@@ -38449,8 +37278,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-084',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-084',
                                         children: [
                                             {
                                                 id: '168c981d-d040-0001-0000-000000003508',
@@ -38502,8 +37330,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-085',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-085',
                                         children: [
                                             {
                                                 id: '168c983b-9080-0001-0000-000000003514',
@@ -38555,8 +37382,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-086',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-086',
                                         children: [
                                             {
                                                 id: '168c9859-5440-0001-0000-000000003520',
@@ -38608,8 +37434,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-087',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-087',
                                         children: [
                                             {
                                                 id: '168c9877-1480-0001-0000-00000000352c',
@@ -38661,8 +37486,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-088',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-088',
                                         children: [
                                             {
                                                 id: '168c9894-d200-0001-0000-000000003538',
@@ -38714,8 +37538,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-089',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-089',
                                         children: [
                                             {
                                                 id: '168c98b2-9140-0001-0000-000000003544',
@@ -38767,8 +37590,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-090',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-090',
                                         children: [
                                             {
                                                 id: '168c98d0-5180-0001-0000-000000003550',
@@ -38820,8 +37642,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-091',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-091',
                                         children: [
                                             {
                                                 id: '168c98ee-0f80-0001-0000-00000000355c',
@@ -38873,8 +37694,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-092',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-092',
                                         children: [
                                             {
                                                 id: '168c990b-cc40-0001-0000-000000003568',
@@ -38926,8 +37746,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-093',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-093',
                                         children: [
                                             {
                                                 id: '168c9929-8b40-0001-0000-000000003574',
@@ -38979,8 +37798,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-094',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-094',
                                         children: [
                                             {
                                                 id: '168c9947-4d40-0001-0000-000000003580',
@@ -39032,8 +37850,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-095',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-095',
                                         children: [
                                             {
                                                 id: '168c9965-0b40-0001-0000-00000000358c',
@@ -39085,8 +37902,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-096',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-56-096',
                                         children: [
                                             {
                                                 id: '168c9982-c880-0001-0000-000000003598',
@@ -39138,8 +37954,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-001',
                                         children: [
                                             {
                                                 id: '168c99a0-8e40-0001-0000-0000000035a4',
@@ -39191,8 +38006,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-002',
                                         children: [
                                             {
                                                 id: '168c99be-4c00-0001-0000-0000000035b0',
@@ -39244,8 +38058,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-003',
                                         children: [
                                             {
                                                 id: '168c99dc-19c0-0001-0000-0000000035bc',
@@ -39297,8 +38110,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-004',
                                         children: [
                                             {
                                                 id: '168c99f9-da40-0001-0000-0000000035c8',
@@ -39350,8 +38162,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-005',
                                         children: [
                                             {
                                                 id: '168c9a17-9900-0001-0000-0000000035d4',
@@ -39403,8 +38214,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-006',
                                         children: [
                                             {
                                                 id: '168c9a35-5e80-0001-0000-0000000035e0',
@@ -39456,8 +38266,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-007',
                                         children: [
                                             {
                                                 id: '168c9a53-1b40-0001-0000-0000000035ec',
@@ -39509,8 +38318,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-008',
                                         children: [
                                             {
                                                 id: '168c9a70-da00-0001-0000-0000000035f8',
@@ -39562,8 +38370,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-009',
                                         children: [
                                             {
                                                 id: '168c9a8e-9a80-0001-0000-000000003604',
@@ -39615,8 +38422,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-010',
                                         children: [
                                             {
                                                 id: '168c9aac-5740-0001-0000-000000003610',
@@ -39668,8 +38474,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-011',
                                         children: [
                                             {
                                                 id: '168c9aca-1840-0001-0000-00000000361c',
@@ -39721,8 +38526,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-012',
                                         children: [
                                             {
                                                 id: '168c9ae7-d4c0-0001-0000-000000003628',
@@ -39774,8 +38578,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-013',
                                         children: [
                                             {
                                                 id: '168c9b05-9900-0001-0000-000000003634',
@@ -39827,8 +38630,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-014',
                                         children: [
                                             {
                                                 id: '168c9b23-58c0-0001-0000-000000003640',
@@ -39880,8 +38682,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-015',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-015',
                                         children: [
                                             {
                                                 id: '168c9b41-1b80-0001-0000-00000000364c',
@@ -39933,8 +38734,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-016',
                                         children: [
                                             {
                                                 id: '168c9b5e-dcc0-0001-0000-000000003658',
@@ -39986,8 +38786,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-017',
                                         children: [
                                             {
                                                 id: '168c9b7c-9b00-0001-0000-000000003664',
@@ -40039,8 +38838,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-018',
                                         children: [
                                             {
                                                 id: '168c9b9a-6400-0001-0000-000000003670',
@@ -40092,8 +38890,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-019',
                                         children: [
                                             {
                                                 id: '168c9bb8-2840-0001-0000-00000000367c',
@@ -40145,8 +38942,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-63-020',
                                         children: [
                                             {
                                                 id: '168c9bd5-e880-0001-0000-000000003688',
@@ -40198,8 +38994,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-001',
                                         children: [
                                             {
                                                 id: '168c9bf3-aa80-0001-0000-000000003694',
@@ -40251,8 +39046,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-002',
                                         children: [
                                             {
                                                 id: '168c9c11-6b80-0001-0000-0000000036a0',
@@ -40304,8 +39098,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-003',
                                         children: [
                                             {
                                                 id: '168c9c2f-27c0-0001-0000-0000000036ac',
@@ -40357,8 +39150,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-004',
                                         children: [
                                             {
                                                 id: '168c9c4c-ea80-0001-0000-0000000036b8',
@@ -40410,8 +39202,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-005',
                                         children: [
                                             {
                                                 id: '168c9c6a-a740-0001-0000-0000000036c4',
@@ -40463,8 +39254,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-006',
                                         children: [
                                             {
                                                 id: '168c9c88-6700-0001-0000-0000000036d0',
@@ -40516,8 +39306,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-007',
                                         children: [
                                             {
                                                 id: '168c9ca6-22c0-0001-0000-0000000036dc',
@@ -40569,8 +39358,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-008',
                                         children: [
                                             {
                                                 id: '168c9cc3-e600-0001-0000-0000000036e8',
@@ -40622,8 +39410,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-64-009',
                                         children: [
                                             {
                                                 id: '168c9ce1-a2c0-0001-0000-0000000036f4',
@@ -40675,8 +39462,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-001',
                                         children: [
                                             {
                                                 id: '168c9cff-64c0-0001-0000-000000003700',
@@ -40728,8 +39514,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-002',
                                         children: [
                                             {
                                                 id: '168c9d1d-2e40-0001-0000-00000000370c',
@@ -40781,8 +39566,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-003',
                                         children: [
                                             {
                                                 id: '168c9d3a-ee80-0001-0000-000000003718',
@@ -40834,8 +39618,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-004',
                                         children: [
                                             {
                                                 id: '168c9d58-ad00-0001-0000-000000003724',
@@ -40887,8 +39670,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-005',
                                         children: [
                                             {
                                                 id: '168c9d76-6dc0-0001-0000-000000003730',
@@ -40940,8 +39722,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-006',
                                         children: [
                                             {
                                                 id: '168c9d94-2cc0-0001-0000-00000000373c',
@@ -40993,8 +39774,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-007',
                                         children: [
                                             {
                                                 id: '168c9db1-eec0-0001-0000-000000003748',
@@ -41046,8 +39826,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-008',
                                         children: [
                                             {
                                                 id: '168c9dcf-ac00-0001-0000-000000003754',
@@ -41099,8 +39878,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-009',
                                         children: [
                                             {
                                                 id: '168c9ded-6e00-0001-0000-000000003760',
@@ -41152,8 +39930,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-010',
                                         children: [
                                             {
                                                 id: '168c9e0b-4000-0001-0000-00000000376c',
@@ -41205,8 +39982,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-011',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-011',
                                         children: [
                                             {
                                                 id: '168c9e29-0100-0001-0000-000000003778',
@@ -41258,8 +40034,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-012',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-012',
                                         children: [
                                             {
                                                 id: '168c9e46-bdc0-0001-0000-000000003784',
@@ -41311,8 +40086,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-013',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-013',
                                         children: [
                                             {
                                                 id: '168c9e64-7f80-0001-0000-000000003790',
@@ -41364,8 +40138,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-014',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-014',
                                         children: [
                                             {
                                                 id: '168c9e82-3c40-0001-0000-00000000379c',
@@ -41417,8 +40190,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-015',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-015',
                                         children: [
                                             {
                                                 id: '168c9e9f-ff00-0001-0000-0000000037a8',
@@ -41470,8 +40242,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-016',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-016',
                                         children: [
                                             {
                                                 id: '168c9ebd-c2c0-0001-0000-0000000037b4',
@@ -41523,8 +40294,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-017',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-017',
                                         children: [
                                             {
                                                 id: '168c9edb-8500-0001-0000-0000000037c0',
@@ -41576,8 +40346,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-018',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-018',
                                         children: [
                                             {
                                                 id: '168c9ef9-4c00-0001-0000-0000000037cc',
@@ -41629,8 +40398,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-019',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-019',
                                         children: [
                                             {
                                                 id: '168c9f17-1000-0001-0000-0000000037d8',
@@ -41682,8 +40450,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-020',
                                         children: [
                                             {
                                                 id: '168c9f34-cfc0-0001-0000-0000000037e4',
@@ -41735,8 +40502,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-021',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-021',
                                         children: [
                                             {
                                                 id: '168c9f52-9740-0001-0000-0000000037f0',
@@ -41788,8 +40554,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-022',
                                         children: [
                                             {
                                                 id: '168c9f70-5840-0001-0000-0000000037fc',
@@ -41841,8 +40606,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-023',
                                         children: [
                                             {
                                                 id: '168c9f8e-1700-0001-0000-000000003808',
@@ -41894,8 +40658,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-024',
                                         children: [
                                             {
                                                 id: '168c9fab-d440-0001-0000-000000003814',
@@ -41947,8 +40710,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-025',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-025',
                                         children: [
                                             {
                                                 id: '168c9fc9-9700-0001-0000-000000003820',
@@ -42000,8 +40762,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-026',
                                         children: [
                                             {
                                                 id: '168c9fe7-5800-0001-0000-00000000382c',
@@ -42053,8 +40814,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-027',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-027',
                                         children: [
                                             {
                                                 id: '168ca005-17c0-0001-0000-000000003838',
@@ -42106,8 +40866,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-028',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-028',
                                         children: [
                                             {
                                                 id: '168ca022-db80-0001-0000-000000003844',
@@ -42159,8 +40918,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-029',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-029',
                                         children: [
                                             {
                                                 id: '168ca040-9ac0-0001-0000-000000003850',
@@ -42212,8 +40970,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-030',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-030',
                                         children: [
                                             {
                                                 id: '168ca05e-5c40-0001-0000-00000000385c',
@@ -42265,8 +41022,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-031',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-031',
                                         children: [
                                             {
                                                 id: '168ca07c-2fc0-0001-0000-000000003868',
@@ -42318,8 +41074,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-032',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-032',
                                         children: [
                                             {
                                                 id: '168ca09a-0840-0001-0000-000000003874',
@@ -42371,8 +41126,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-033',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-033',
                                         children: [
                                             {
                                                 id: '168ca0b7-cb80-0001-0000-000000003880',
@@ -42424,8 +41178,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-034',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-034',
                                         children: [
                                             {
                                                 id: '168ca0d5-a0c0-0001-0000-00000000388c',
@@ -42477,8 +41230,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-035',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-035',
                                         children: [
                                             {
                                                 id: '168ca0f3-6540-0001-0000-000000003898',
@@ -42530,8 +41282,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-036',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-036',
                                         children: [
                                             {
                                                 id: '168ca111-2a00-0001-0000-0000000038a4',
@@ -42583,8 +41334,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-037',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-037',
                                         children: [
                                             {
                                                 id: '168ca12e-eac0-0001-0000-0000000038b0',
@@ -42636,8 +41386,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-038',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-038',
                                         children: [
                                             {
                                                 id: '168ca14c-af80-0001-0000-0000000038bc',
@@ -42689,8 +41438,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-039',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-039',
                                         children: [
                                             {
                                                 id: '168ca16a-7540-0001-0000-0000000038c8',
@@ -42742,8 +41490,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-040',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-040',
                                         children: [
                                             {
                                                 id: '168ca188-35c0-0001-0000-0000000038d4',
@@ -42795,8 +41542,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-041',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-66-041',
                                         children: [
                                             {
                                                 id: '168ca1a6-00c0-0001-0000-0000000038e0',
@@ -42848,8 +41594,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-001',
                                         children: [
                                             {
                                                 id: '168ca1c3-cb80-0001-0000-0000000038ec',
@@ -42901,8 +41646,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-002',
                                         children: [
                                             {
                                                 id: '168ca1e1-9a80-0001-0000-0000000038f8',
@@ -42954,8 +41698,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-003',
                                         children: [
                                             {
                                                 id: '168ca1ff-6980-0001-0000-000000003904',
@@ -43007,8 +41750,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-67-004',
                                         children: [
                                             {
                                                 id: '168ca21d-3000-0001-0000-000000003910',
@@ -43060,8 +41802,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-001',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-001',
                                         children: [
                                             {
                                                 id: '168ca23a-fc80-0001-0000-00000000391c',
@@ -43113,8 +41854,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-002',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-002',
                                         children: [
                                             {
                                                 id: '168ca258-c400-0001-0000-000000003928',
@@ -43166,8 +41906,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-003',
                                         children: [
                                             {
                                                 id: '168ca276-8780-0001-0000-000000003934',
@@ -43219,8 +41958,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-004',
                                         children: [
                                             {
                                                 id: '168ca294-6700-0001-0000-000000003940',
@@ -43272,8 +42010,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-005',
                                         children: [
                                             {
                                                 id: '168ca2b2-4a00-0001-0000-00000000394c',
@@ -43325,8 +42062,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-006',
                                         children: [
                                             {
                                                 id: '168ca2d0-0f80-0001-0000-000000003958',
@@ -43378,8 +42114,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-007',
                                         children: [
                                             {
                                                 id: '168ca2ed-dd80-0001-0000-000000003964',
@@ -43431,8 +42166,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-008',
                                         children: [
                                             {
                                                 id: '168ca30b-aa80-0001-0000-000000003970',
@@ -43484,8 +42218,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-009',
                                         children: [
                                             {
                                                 id: '168ca329-81c0-0001-0000-00000000397c',
@@ -43537,8 +42270,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-73-010',
                                         children: [
                                             {
                                                 id: '168ca347-4a00-0001-0000-000000003988',
@@ -43590,8 +42322,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-003',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-003',
                                         children: [
                                             {
                                                 id: '168ca365-1200-0001-0000-000000003994',
@@ -43643,8 +42374,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-004',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-004',
                                         children: [
                                             {
                                                 id: '168ca382-d840-0001-0000-0000000039a0',
@@ -43696,8 +42426,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-005',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-005',
                                         children: [
                                             {
                                                 id: '168ca3a0-a540-0001-0000-0000000039ac',
@@ -43749,8 +42478,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-006',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-006',
                                         children: [
                                             {
                                                 id: '168ca3be-67c0-0001-0000-0000000039b8',
@@ -43802,8 +42530,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-007',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-007',
                                         children: [
                                             {
                                                 id: '168ca3dc-2f00-0001-0000-0000000039c4',
@@ -43855,8 +42582,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-008',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-008',
                                         children: [
                                             {
                                                 id: '168ca3f9-f680-0001-0000-0000000039d0',
@@ -43908,8 +42634,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-009',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-009',
                                         children: [
                                             {
                                                 id: '168ca417-cac0-0001-0000-0000000039dc',
@@ -43961,8 +42686,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-010',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-010',
                                         children: [
                                             {
                                                 id: '168ca435-9380-0001-0000-0000000039e8',
@@ -44014,8 +42738,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-020',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-020',
                                         children: [
                                             {
                                                 id: '168ca453-61c0-0001-0000-0000000039f4',
@@ -44067,8 +42790,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-021',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-021',
                                         children: [
                                             {
                                                 id: '168ca471-2880-0001-0000-000000003a00',
@@ -44120,8 +42842,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-022',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-022',
                                         children: [
                                             {
                                                 id: '168ca48e-ec40-0001-0000-000000003a0c',
@@ -44173,8 +42894,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-023',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-023',
                                         children: [
                                             {
                                                 id: '168ca4ac-b7c0-0001-0000-000000003a18',
@@ -44226,8 +42946,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-024',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-024',
                                         children: [
                                             {
                                                 id: '168ca4ca-8180-0001-0000-000000003a24',
@@ -44279,8 +42998,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-025',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-025',
                                         children: [
                                             {
                                                 id: '168ca4e8-4e80-0001-0000-000000003a30',
@@ -44332,8 +43050,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-026',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-026',
                                         children: [
                                             {
                                                 id: '168ca506-1100-0001-0000-000000003a3c',
@@ -44385,8 +43102,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-027',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-027',
                                         children: [
                                             {
                                                 id: '168ca523-d480-0001-0000-000000003a48',
@@ -44438,8 +43154,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-028',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-028',
                                         children: [
                                             {
                                                 id: '168ca541-9d80-0001-0000-000000003a54',
@@ -44491,8 +43206,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-029',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-029',
                                         children: [
                                             {
                                                 id: '168ca55f-69c0-0001-0000-000000003a60',
@@ -44544,8 +43258,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-030',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-030',
                                         children: [
                                             {
                                                 id: '168ca57d-32c0-0001-0000-000000003a6c',
@@ -44597,8 +43310,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-031',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-031',
                                         children: [
                                             {
                                                 id: '168ca59a-f3c0-0001-0000-000000003a78',
@@ -44650,8 +43362,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-032',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-032',
                                         children: [
                                             {
                                                 id: '168ca5b8-c080-0001-0000-000000003a84',
@@ -44703,8 +43414,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-033',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-033',
                                         children: [
                                             {
                                                 id: '168ca5d6-8800-0001-0000-000000003a90',
@@ -44756,8 +43466,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-034',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-034',
                                         children: [
                                             {
                                                 id: '168ca5f4-4e00-0001-0000-000000003a9c',
@@ -44809,8 +43518,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-036',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-036',
                                         children: [
                                             {
                                                 id: '168ca612-17c0-0001-0000-000000003aa8',
@@ -44862,8 +43570,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-037',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-037',
                                         children: [
                                             {
                                                 id: '168ca62f-dec0-0001-0000-000000003ab4',
@@ -44915,8 +43622,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-038',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-038',
                                         children: [
                                             {
                                                 id: '168ca64d-a180-0001-0000-000000003ac0',
@@ -44968,8 +43674,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-039',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-039',
                                         children: [
                                             {
                                                 id: '168ca66b-6b40-0001-0000-000000003acc',
@@ -45021,8 +43726,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-040',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-040',
                                         children: [
                                             {
                                                 id: '168ca689-3840-0001-0000-000000003ad8',
@@ -45074,8 +43778,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-041',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-041',
                                         children: [
                                             {
                                                 id: '168ca6a6-ff00-0001-0000-000000003ae4',
@@ -45127,8 +43830,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-042',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-042',
                                         children: [
                                             {
                                                 id: '168ca6c4-ce40-0001-0000-000000003af0',
@@ -45180,8 +43882,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-043',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-043',
                                         children: [
                                             {
                                                 id: '168ca6e2-9200-0001-0000-000000003afc',
@@ -45233,8 +43934,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-044',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-044',
                                         children: [
                                             {
                                                 id: '168ca700-5840-0001-0000-000000003b08',
@@ -45286,8 +43986,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-045',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-045',
                                         children: [
                                             {
                                                 id: '168ca71e-27c0-0001-0000-000000003b14',
@@ -45339,8 +44038,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-046',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-046',
                                         children: [
                                             {
                                                 id: '168ca73b-f900-0001-0000-000000003b20',
@@ -45392,8 +44090,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-047',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-047',
                                         children: [
                                             {
                                                 id: '168ca759-bf80-0001-0000-000000003b2c',
@@ -45445,8 +44142,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-048',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-048',
                                         children: [
                                             {
                                                 id: '168ca777-90c0-0001-0000-000000003b38',
@@ -45498,8 +44194,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-049',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-049',
                                         children: [
                                             {
                                                 id: '168ca795-5f00-0001-0000-000000003b44',
@@ -45551,8 +44246,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-050',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / azk / azk-74-050',
                                         children: [
                                             {
                                                 id: '168ca7b3-3380-0001-0000-000000003b50',
@@ -45606,8 +44300,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-001',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-001',
                                 children: [
                                     {
                                         id: '168c2222-a4c0-0001-0000-000000000d12',
@@ -45618,8 +44311,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -45631,8 +44323,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -45657,8 +44348,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / FW',
                                         children: []
                                     },
                                     {
@@ -45683,8 +44373,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-001 / ILO',
                                         children: []
                                     },
                                     {
@@ -45711,8 +44400,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-002',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-002',
                                 children: [
                                     {
                                         id: '168c2268-9980-0001-0000-000000000d2e',
@@ -45723,8 +44411,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -45736,8 +44423,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -45762,8 +44448,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / FW',
                                         children: []
                                     },
                                     {
@@ -45788,8 +44473,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-002 / ILO',
                                         children: []
                                     },
                                     {
@@ -45816,8 +44500,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-003',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-003',
                                 children: []
                             },
                             {
@@ -45829,8 +44512,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-004',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-004',
                                 children: [
                                     {
                                         id: '168c2286-8f00-0001-0000-000000000d3a',
@@ -45841,8 +44523,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-004 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-004 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -45854,8 +44535,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-004 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-004 / FW',
                                         children: []
                                     }
                                 ]
@@ -45869,8 +44549,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-005',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-005',
                                 children: [
                                     {
                                         id: '168c229a-86c0-0001-0000-000000000d42',
@@ -45881,8 +44560,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-005 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-005 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -45894,8 +44572,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-005 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-005 / FW',
                                         children: []
                                     }
                                 ]
@@ -45909,8 +44586,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-006',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006',
                                 children: [
                                     {
                                         id: '168c2344-2c40-0001-0000-000000000d86',
@@ -45960,8 +44636,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / DC',
                                         children: []
                                     },
                                     {
@@ -45973,8 +44648,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / FW',
                                         children: []
                                     },
                                     {
@@ -46025,8 +44699,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / ILO',
                                         children: []
                                     },
                                     {
@@ -46038,8 +44711,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -46051,8 +44723,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SAN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SAN',
                                         children: []
                                     },
                                     {
@@ -46064,8 +44735,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SAN2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SAN2',
                                         children: []
                                     },
                                     {
@@ -46077,8 +44747,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SCCM',
                                         children: []
                                     },
                                     {
@@ -46103,8 +44772,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SRV_COM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SRV_COM',
                                         children: []
                                     },
                                     {
@@ -46116,8 +44784,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SRV_LIM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-006 / SRV_LIM',
                                         children: []
                                     },
                                     {
@@ -46144,8 +44811,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-007',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-007',
                                 children: [
                                     {
                                         id: '168c2358-2980-0001-0000-000000000d8e',
@@ -46156,8 +44822,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-007 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-007 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46169,8 +44834,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-007 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-007 / FW',
                                         children: []
                                     }
                                 ]
@@ -46184,8 +44848,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-008',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008',
                                 children: [
                                     {
                                         id: '168c238a-15c0-0001-0000-000000000da2',
@@ -46196,8 +44859,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46261,8 +44923,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / DC',
                                         children: []
                                     },
                                     {
@@ -46274,8 +44935,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / FW',
                                         children: []
                                     },
                                     {
@@ -46326,8 +44986,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / ILO',
                                         children: []
                                     },
                                     {
@@ -46339,8 +44998,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -46352,8 +45010,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / SAN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / SAN',
                                         children: []
                                     },
                                     {
@@ -46365,8 +45022,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-008 / SCCM',
                                         children: []
                                     },
                                     {
@@ -46432,8 +45088,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-009',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-009',
                                 children: [
                                     {
                                         id: '168c2429-ea80-0001-0000-000000000ddf',
@@ -46444,8 +45099,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-009 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-009 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46457,8 +45111,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-009 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-009 / FW',
                                         children: []
                                     }
                                 ]
@@ -46472,8 +45125,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-011',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-011',
                                 children: [
                                     {
                                         id: '168c2470-3200-0001-0000-000000000dfb',
@@ -46484,8 +45136,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46497,8 +45148,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -46523,8 +45173,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / FW',
                                         children: []
                                     },
                                     {
@@ -46549,8 +45198,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-011 / ILO',
                                         children: []
                                     },
                                     {
@@ -46577,8 +45225,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-012',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-012',
                                 children: [
                                     {
                                         id: '168c24a2-1ac0-0001-0000-000000000e0f',
@@ -46615,8 +45262,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -46628,8 +45274,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / FW',
                                         children: []
                                     },
                                     {
@@ -46641,8 +45286,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-012 / ILO',
                                         children: []
                                     },
                                     {
@@ -46669,8 +45313,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-013',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-013',
                                 children: [
                                     {
                                         id: '168c24f2-6700-0001-0000-000000000e2f',
@@ -46681,8 +45324,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46694,8 +45336,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -46720,8 +45361,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / FW',
                                         children: []
                                     },
                                     {
@@ -46746,8 +45386,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-013 / ILO',
                                         children: []
                                     },
                                     {
@@ -46774,8 +45413,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-014',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-014',
                                 children: [
                                     {
                                         id: '168c2506-5e80-0001-0000-000000000e37',
@@ -46786,8 +45424,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-014 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-014 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46799,8 +45436,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-014 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-014 / FW',
                                         children: []
                                     }
                                 ]
@@ -46814,8 +45450,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-015',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-015',
                                 children: [
                                     {
                                         id: '168c252e-5100-0001-0000-000000000e47',
@@ -46826,8 +45461,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46839,8 +45473,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / FW',
                                         children: []
                                     },
                                     {
@@ -46852,8 +45485,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-015 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -46880,8 +45512,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-016',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-016',
                                 children: [
                                     {
                                         id: '168c256a-46c0-0001-0000-000000000e5f',
@@ -46892,8 +45523,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -46905,8 +45535,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -46931,8 +45560,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / FW',
                                         children: []
                                     },
                                     {
@@ -46957,8 +45585,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-016 / ILO',
                                         children: []
                                     },
                                     {
@@ -46985,8 +45612,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-017',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-017',
                                 children: [
                                     {
                                         id: '168c2588-42c0-0001-0000-000000000e6b',
@@ -46997,8 +45623,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-017 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-017 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47010,8 +45635,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-017 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-017 / FW',
                                         children: []
                                     }
                                 ]
@@ -47025,8 +45649,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-019',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-019',
                                 children: [
                                     {
                                         id: '168c25ce-2e40-0001-0000-000000000e87',
@@ -47037,8 +45660,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47050,8 +45672,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47076,8 +45697,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / FW',
                                         children: []
                                     },
                                     {
@@ -47102,8 +45722,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-019 / ILO',
                                         children: []
                                     },
                                     {
@@ -47130,8 +45749,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-020',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-020',
                                 children: [
                                     {
                                         id: '168c260a-2880-0001-0000-000000000e9f',
@@ -47142,8 +45760,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47155,8 +45772,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47181,8 +45797,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / FW',
                                         children: []
                                     },
                                     {
@@ -47207,8 +45822,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-020 / ILO',
                                         children: []
                                     },
                                     {
@@ -47235,8 +45849,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-021',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-021',
                                 children: [
                                     {
                                         id: '168c265a-2840-0001-0000-000000000ebf',
@@ -47247,8 +45860,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47260,8 +45872,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47286,8 +45897,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / FW',
                                         children: []
                                     },
                                     {
@@ -47312,8 +45922,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-021 / ILO',
                                         children: []
                                     },
                                     {
@@ -47340,8 +45949,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-022',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022',
                                 children: [
                                     {
                                         id: '168c26a0-2640-0001-0000-000000000edb',
@@ -47352,8 +45960,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47365,8 +45972,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47378,8 +45984,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / FW',
                                         children: []
                                     },
                                     {
@@ -47404,8 +46009,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / ILO',
                                         children: []
                                     },
                                     {
@@ -47417,8 +46021,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -47430,8 +46033,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-022 / SCCM',
                                         children: []
                                     },
                                     {
@@ -47458,8 +46060,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-023',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023',
                                 children: [
                                     {
                                         id: '168c26fa-4fc0-0001-0000-000000000eff',
@@ -47470,8 +46071,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47483,8 +46083,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47509,8 +46108,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / FW',
                                         children: []
                                     },
                                     {
@@ -47535,8 +46133,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / ILO',
                                         children: []
                                     },
                                     {
@@ -47548,8 +46145,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-023 / SCCM',
                                         children: []
                                     },
                                     {
@@ -47589,8 +46185,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-025',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025',
                                 children: [
                                     {
                                         id: '168c2754-5d00-0001-0000-000000000f23',
@@ -47601,8 +46196,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47614,8 +46208,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47640,8 +46233,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / FW',
                                         children: []
                                     },
                                     {
@@ -47666,8 +46258,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / ILO',
                                         children: []
                                     },
                                     {
@@ -47679,8 +46270,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-025 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -47707,8 +46297,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-026',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-026',
                                 children: [
                                     {
                                         id: '168c2768-6340-0001-0000-000000000f2b',
@@ -47719,8 +46308,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-026 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-026 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47732,8 +46320,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-026 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-026 / FW',
                                         children: []
                                     }
                                 ]
@@ -47747,8 +46334,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-027',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-027',
                                 children: [
                                     {
                                         id: '168c27af-4d00-0001-0000-000000000f47',
@@ -47759,8 +46345,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47772,8 +46357,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -47798,8 +46382,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / FW',
                                         children: []
                                     },
                                     {
@@ -47824,8 +46407,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-027 / ILO',
                                         children: []
                                     },
                                     {
@@ -47852,8 +46434,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-028',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-028',
                                 children: [
                                     {
                                         id: '168c27c3-4c80-0001-0000-000000000f4f',
@@ -47864,8 +46445,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-028 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-028 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47877,8 +46457,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-028 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-028 / FW',
                                         children: []
                                     }
                                 ]
@@ -47892,8 +46471,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-029',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-029',
                                 children: [
                                     {
                                         id: '168c27d7-49c0-0001-0000-000000000f57',
@@ -47904,8 +46482,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-029 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-029 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47917,8 +46494,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-029 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-029 / FW',
                                         children: []
                                     }
                                 ]
@@ -47932,8 +46508,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-030',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-030',
                                 children: [
                                     {
                                         id: '168c27f5-4940-0001-0000-000000000f63',
@@ -47944,8 +46519,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -47957,8 +46531,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / FW',
                                         children: []
                                     },
                                     {
@@ -47970,8 +46543,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-030 / IS EPT',
                                         children: []
                                     }
                                 ]
@@ -47985,8 +46557,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-031',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-031',
                                 children: [
                                     {
                                         id: '168c2813-4780-0001-0000-000000000f6f',
@@ -47997,8 +46568,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48010,8 +46580,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -48023,8 +46592,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-031 / FW',
                                         children: []
                                     }
                                 ]
@@ -48038,8 +46606,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-032',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-032',
                                 children: [
                                     {
                                         id: '168c2827-3e40-0001-0000-000000000f77',
@@ -48050,8 +46617,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-032 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-032 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48063,8 +46629,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-032 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-032 / FW',
                                         children: []
                                     }
                                 ]
@@ -48078,8 +46643,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-033',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033',
                                 children: [
                                     {
                                         id: '168c28e5-4c40-0001-0000-000000000fc3',
@@ -48090,8 +46654,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48142,8 +46705,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / DC',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / DC',
                                         children: []
                                     },
                                     {
@@ -48155,8 +46717,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / FW',
                                         children: []
                                     },
                                     {
@@ -48207,8 +46768,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / ILO',
                                         children: []
                                     },
                                     {
@@ -48220,8 +46780,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / IS EPT',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / IS EPT',
                                         children: []
                                     },
                                     {
@@ -48233,8 +46792,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SAN',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SAN',
                                         children: []
                                     },
                                     {
@@ -48246,8 +46804,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SAN2',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SAN2',
                                         children: []
                                     },
                                     {
@@ -48259,8 +46816,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SCCM',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-033 / SCCM',
                                         children: []
                                     },
                                     {
@@ -48339,8 +46895,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-034',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-034',
                                 children: [
                                     {
                                         id: '168c28f9-46c0-0001-0000-000000000fcb',
@@ -48351,8 +46906,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-034 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-034 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48364,8 +46918,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-034 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-034 / FW',
                                         children: []
                                     }
                                 ]
@@ -48379,8 +46932,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-035',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-035',
                                 children: [
                                     {
                                         id: '168c2935-5280-0001-0000-000000000fe3',
@@ -48391,8 +46943,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48404,8 +46955,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -48430,8 +46980,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / FW',
                                         children: []
                                     },
                                     {
@@ -48456,8 +47005,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ILO',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-035 / ILO',
                                         children: []
                                     },
                                     {
@@ -48484,8 +47032,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-036',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-036',
                                 children: [
                                     {
                                         id: '168c295d-64c0-0001-0000-000000000ff3',
@@ -48496,8 +47043,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48509,8 +47055,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -48522,8 +47067,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-036 / FW',
                                         children: []
                                     }
                                 ]
@@ -48537,8 +47081,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-038',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-038',
                                 children: [
                                     {
                                         id: '168c2971-c9c0-0001-0000-000000000ffb',
@@ -48549,8 +47092,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48562,8 +47104,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -48575,8 +47116,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-038 / FW',
                                         children: []
                                     }
                                 ]
@@ -48590,8 +47130,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-039',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-039',
                                 children: [
                                     {
                                         id: '168c298f-c940-0001-0000-000000001007',
@@ -48602,8 +47141,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48615,8 +47153,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / ASUTP',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / ASUTP',
                                         children: []
                                     },
                                     {
@@ -48628,8 +47165,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-039 / FW',
                                         children: []
                                     }
                                 ]
@@ -48643,8 +47179,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-040',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-040',
                                 children: [
                                     {
                                         id: '168c29ad-c400-0001-0000-000000001013',
@@ -48655,8 +47190,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-040 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-040 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48668,8 +47202,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-040 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-040 / FW',
                                         children: []
                                     }
                                 ]
@@ -48683,8 +47216,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-041',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-041',
                                 children: [
                                     {
                                         id: '168c29c1-c0c0-0001-0000-00000000101b',
@@ -48695,8 +47227,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-041 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-041 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48708,8 +47239,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-041 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-041 / FW',
                                         children: []
                                     }
                                 ]
@@ -48723,8 +47253,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-042',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-042',
                                 children: [
                                     {
                                         id: '168c29d5-c300-0001-0000-000000001023',
@@ -48735,8 +47264,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-042 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-042 / ACO_MNG',
                                         children: []
                                     },
                                     {
@@ -48748,8 +47276,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-042 / FW',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-042 / FW',
                                         children: []
                                     }
                                 ]
@@ -48763,8 +47290,7 @@ export const TREE_DATA = [
                                 isRoot: false,
                                 isInvalidPredicate: false,
                                 isSlow: false,
-                                treePath:
-                                    'Территориальные группы / ООО "Башнефть-Розница" / bnr-043',
+                                treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-043',
                                 children: [
                                     {
                                         id: '168c2a25-c500-0001-0000-000000001043',
@@ -48775,8 +47301,7 @@ export const TREE_DATA = [
                                         isRoot: false,
                                         isInvalidPredicate: false,
                                         isSlow: false,
-                                        treePath:
-                                            'Территориальные группы / ООО "Башнефть-Розница" / bnr-043 / ACO_MNG',
+                                        treePath: 'Территориальные группы / ООО "Башнефть-Розница" / bnr-043 / ACO_MNG',
                                         children: []
                                     }
                                 ]

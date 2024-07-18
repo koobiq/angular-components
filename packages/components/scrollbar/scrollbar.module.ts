@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { KbqScrollbar } from './scrollbar.component';
-import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from './scrollbar.types';
 import { KbqScrollbarDirective } from './scrollbar.directive';
+import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from './scrollbar.types';
 
 @NgModule({
     imports: [],
@@ -9,5 +9,4 @@ import { KbqScrollbarDirective } from './scrollbar.directive';
     exports: [KbqScrollbar, KbqScrollbarDirective],
     providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
 })
-export class KbqScrollbarModule {
-}
+export class KbqScrollbarModule {}

@@ -1,10 +1,14 @@
 // todo пока не делаем, перенесено из материала, но у нас в доках таких простых списков нет.
 import {
-    AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, QueryList,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChildren,
+    ElementRef,
+    QueryList,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
-
 
 @Component({
     selector: 'kbq-list',
@@ -15,7 +19,6 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqList {}
-
 
 @Component({
     selector: 'kbq-list-item, a[kbq-list-item]',

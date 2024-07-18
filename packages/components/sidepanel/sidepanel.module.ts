@@ -7,7 +7,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
 import {
     KbqSidepanelActions,
@@ -17,7 +16,6 @@ import {
     KbqSidepanelHeader
 } from './sidepanel-directives';
 import { KbqSidepanelService } from './sidepanel.service';
-
 
 @NgModule({
     imports: [
@@ -32,8 +30,7 @@ import { KbqSidepanelService } from './sidepanel.service';
     ],
     providers: [
         KbqSidepanelService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
-    ],
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }],
     declarations: [
         KbqSidepanelContainerComponent,
         KbqSidepanelClose,

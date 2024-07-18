@@ -2,9 +2,7 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqBadgeColors } from '@koobiq/components/badge';
-
 import { KbqRiskLevelModule } from '../../components/risk-level';
-
 
 @Component({
     selector: 'app',
@@ -15,7 +13,6 @@ import { KbqRiskLevelModule } from '../../components/risk-level';
 export class DemoComponent {
     colors = KbqBadgeColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

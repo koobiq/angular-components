@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title button-toggle-tooltip
  */

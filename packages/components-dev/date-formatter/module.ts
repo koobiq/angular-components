@@ -11,19 +11,16 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     DateFormatter,
-    KbqFormattersModule,
+    KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
     KbqLocaleService,
-    KbqLocaleServiceModule,
-    KBQ_DATE_FORMATS
-    // KBQ_LOCALE_ID,
-    // KBQ_DEFAULT_LOCALE_DATA_FACTORY
+    KbqLocaleServiceModule
 } from '@koobiq/components/core';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { DateTime } from 'luxon';
 import { delay, distinctUntilChanged } from 'rxjs';
-
 
 @Component({
     selector: 'app',
@@ -344,13 +341,11 @@ export class DemoComponent {
         public adapter: DateAdapter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
     ) {
-
         this.languageList = this.localeService.locales.items;
-        this.selectedLanguage = this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
+        this.selectedLanguage =
+            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
 
-        this.localeService.changes
-            .pipe(distinctUntilChanged(), delay(0))
-            .subscribe(this.onLocaleChange);
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 
     setLocale($event: KbqRadioChange) {
@@ -374,7 +369,7 @@ export class DemoComponent {
         this.populateDurationTextShort(locale);
 
         this.cdr.markForCheck();
-    }
+    };
 
     private populateRangeShort(locale: string) {
         this.formatter.setLocale(locale);
@@ -384,8 +379,8 @@ export class DemoComponent {
 
         shortRange.date.currentMonth = this.formatter.rangeShortDate(now.set({ day: 1 }), now.set({ day: 10 }));
         shortRange.date.currentMonthNotCurrentYear = this.formatter.rangeShortDate(
-            now.set({ day: 1 }).plus({ years: 1}),
-            now.set({ day: 10 }).plus({ years: 1})
+            now.set({ day: 1 }).plus({ years: 1 }),
+            now.set({ day: 10 }).plus({ years: 1 })
         );
         shortRange.date.notCurrentYear = this.formatter.rangeShortDate(
             now.set({ day: 1, month: 1 }),
@@ -407,12 +402,12 @@ export class DemoComponent {
         shortRange.dateTime.sameDateCurrentYearSeconds = this.formatter.rangeShortDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         shortRange.dateTime.sameDateCurrentYearMilliseconds = this.formatter.rangeShortDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         shortRange.dateTime.sameDateNotCurrentYear = this.formatter.rangeShortDateTime(
@@ -422,12 +417,12 @@ export class DemoComponent {
         shortRange.dateTime.sameDateNotCurrentYearSeconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         shortRange.dateTime.sameDateNotCurrentYearMilliseconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         shortRange.dateTime.notCurrentMonth = this.formatter.rangeShortDateTime(
@@ -437,12 +432,12 @@ export class DemoComponent {
         shortRange.dateTime.notCurrentMonthSeconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         shortRange.dateTime.notCurrentMonthMilliseconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         shortRange.dateTime.startsNotCurrentYear = this.formatter.rangeShortDateTime(
@@ -452,12 +447,12 @@ export class DemoComponent {
         shortRange.dateTime.startsNotCurrentYearSeconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         shortRange.dateTime.startsNotCurrentYearMilliseconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         shortRange.dateTime.endsNotCurrentYear = this.formatter.rangeShortDateTime(
@@ -467,12 +462,12 @@ export class DemoComponent {
         shortRange.dateTime.endsNotCurrentYearSeconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         shortRange.dateTime.endsNotCurrentYearMilliseconds = this.formatter.rangeShortDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
     }
 
@@ -498,40 +493,70 @@ export class DemoComponent {
 
         longOpenedRange.dateTime.onlyStart = this.formatter.openedRangeDateTime(now, null, formatterTemplate);
         longOpenedRange.dateTime.onlyStartSeconds = this.formatter.openedRangeDateTime(
-            now, null, formatterTemplate, true
+            now,
+            null,
+            formatterTemplate,
+            true
         );
         longOpenedRange.dateTime.onlyStartMilliseconds = this.formatter.openedRangeDateTime(
-            now, null, formatterTemplate, false, true
+            now,
+            null,
+            formatterTemplate,
+            false,
+            true
         );
 
         longOpenedRange.dateTime.onlyStartNotCurrentYear = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate
         );
         longOpenedRange.dateTime.onlyStartNotCurrentYearSeconds = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate, true
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate,
+            true
         );
         longOpenedRange.dateTime.onlyStartNotCurrentYearMilliseconds = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate, false, true
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate,
+            false,
+            true
         );
 
-        longOpenedRange.dateTime.onlyEnd = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate
-        );
+        longOpenedRange.dateTime.onlyEnd = this.formatter.openedRangeDateTime(null, now, formatterTemplate);
         longOpenedRange.dateTime.onlyEndSeconds = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate, true
+            null,
+            now,
+            formatterTemplate,
+            true
         );
         longOpenedRange.dateTime.onlyEndMilliseconds = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate, false, true
+            null,
+            now,
+            formatterTemplate,
+            false,
+            true
         );
 
         longOpenedRange.dateTime.onlyEndNotCurrentYear = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate
         );
         longOpenedRange.dateTime.onlyEndNotCurrentYearSeconds = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate, true
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate,
+            true
         );
         longOpenedRange.dateTime.onlyEndNotCurrentYearMilliseconds = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate, false, true
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate,
+            false,
+            true
         );
     }
 
@@ -542,16 +567,8 @@ export class DemoComponent {
         const now = this.adapter.today();
         const formatterTemplate = this.formatter.config.rangeTemplates.openedRange.short;
 
-        shortOpenedRange.date.onlyStart = this.formatter.openedRangeDate(
-            now,
-            null,
-            formatterTemplate
-        );
-        shortOpenedRange.date.onlyEnd = this.formatter.openedRangeDate(
-            null,
-            now,
-            formatterTemplate
-        );
+        shortOpenedRange.date.onlyStart = this.formatter.openedRangeDate(now, null, formatterTemplate);
+        shortOpenedRange.date.onlyEnd = this.formatter.openedRangeDate(null, now, formatterTemplate);
         shortOpenedRange.date.onlyStartNotCurrentYear = this.formatter.openedRangeDate(
             now.plus({ years: 1 }),
             null,
@@ -563,44 +580,72 @@ export class DemoComponent {
             formatterTemplate
         );
 
-        shortOpenedRange.dateTime.onlyStart = this.formatter.openedRangeDateTime(
-            now, null, formatterTemplate
-        );
+        shortOpenedRange.dateTime.onlyStart = this.formatter.openedRangeDateTime(now, null, formatterTemplate);
         shortOpenedRange.dateTime.onlyStartSeconds = this.formatter.openedRangeDateTime(
-            now, null, formatterTemplate, true
+            now,
+            null,
+            formatterTemplate,
+            true
         );
         shortOpenedRange.dateTime.onlyStartMilliseconds = this.formatter.openedRangeDateTime(
-            now, null, formatterTemplate, false, true
+            now,
+            null,
+            formatterTemplate,
+            false,
+            true
         );
 
         shortOpenedRange.dateTime.onlyStartNotCurrentYear = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate
         );
         shortOpenedRange.dateTime.onlyStartNotCurrentYearSeconds = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate, true
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate,
+            true
         );
         shortOpenedRange.dateTime.onlyStartNotCurrentYearMilliseconds = this.formatter.openedRangeDateTime(
-            now.plus({ years: 1 }), null, formatterTemplate, false, true
+            now.plus({ years: 1 }),
+            null,
+            formatterTemplate,
+            false,
+            true
         );
 
-        shortOpenedRange.dateTime.onlyEnd = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate
-        );
+        shortOpenedRange.dateTime.onlyEnd = this.formatter.openedRangeDateTime(null, now, formatterTemplate);
         shortOpenedRange.dateTime.onlyEndSeconds = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate, true
+            null,
+            now,
+            formatterTemplate,
+            true
         );
         shortOpenedRange.dateTime.onlyEndMilliseconds = this.formatter.openedRangeDateTime(
-            null, now, formatterTemplate, false, true
+            null,
+            now,
+            formatterTemplate,
+            false,
+            true
         );
 
         shortOpenedRange.dateTime.onlyEndNotCurrentYear = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate
         );
         shortOpenedRange.dateTime.onlyEndNotCurrentYearSeconds = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate, true
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate,
+            true
         );
         shortOpenedRange.dateTime.onlyEndNotCurrentYearMilliseconds = this.formatter.openedRangeDateTime(
-            null, now.plus({ years: 1 }), formatterTemplate, false, true
+            null,
+            now.plus({ years: 1 }),
+            formatterTemplate,
+            false,
+            true
         );
     }
 
@@ -618,13 +663,13 @@ export class DemoComponent {
         middleRange.dateTime.currentYearSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ day: 1 }),
             now.set({ day: 10 }),
-            {seconds: true}
+            { seconds: true }
         );
 
         middleRange.dateTime.currentYearMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ day: 1 }),
             now.set({ day: 10 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         middleRange.dateTime.sameDateCurrentYear = this.formatter.rangeMiddleDateTime(
@@ -634,12 +679,12 @@ export class DemoComponent {
         middleRange.dateTime.sameDateCurrentYearSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 10, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         middleRange.dateTime.sameDateCurrentYearMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 10, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         middleRange.dateTime.sameDateNotCurrentYear = this.formatter.rangeMiddleDateTime(
@@ -649,12 +694,12 @@ export class DemoComponent {
         middleRange.dateTime.sameDateNotCurrentYearSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         middleRange.dateTime.sameDateNotCurrentYearMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         middleRange.dateTime.notCurrentMonth = this.formatter.rangeMiddleDateTime(
@@ -664,12 +709,12 @@ export class DemoComponent {
         middleRange.dateTime.notCurrentMonthSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         middleRange.dateTime.notCurrentMonthMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         middleRange.dateTime.startsNotCurrentYear = this.formatter.rangeMiddleDateTime(
@@ -679,12 +724,12 @@ export class DemoComponent {
         middleRange.dateTime.startsNotCurrentYearSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         middleRange.dateTime.startsNotCurrentYearMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         middleRange.dateTime.endsNotCurrentYear = this.formatter.rangeMiddleDateTime(
@@ -694,12 +739,12 @@ export class DemoComponent {
         middleRange.dateTime.endsNotCurrentYearSeconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 1, day: 1 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         middleRange.dateTime.endsNotCurrentYearMilliseconds = this.formatter.rangeMiddleDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 1, day: 1 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
     }
 
@@ -711,8 +756,8 @@ export class DemoComponent {
 
         longRange.date.currentMonth = this.formatter.rangeLongDate(now.set({ day: 1 }), now.set({ day: 10 }));
         longRange.date.currentMonthNotCurrentYear = this.formatter.rangeLongDate(
-            now.set({ day: 1 }).plus({ years: 1}),
-            now.set({ day: 10 }).plus({ years: 1})
+            now.set({ day: 1 }).plus({ years: 1 }),
+            now.set({ day: 10 }).plus({ years: 1 })
         );
         longRange.date.notCurrentYear = this.formatter.rangeLongDate(
             now.set({ month: 1, day: 1 }),
@@ -733,12 +778,12 @@ export class DemoComponent {
         longRange.dateTime.sameDateCurrentYearSeconds = this.formatter.rangeLongDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         longRange.dateTime.sameDateCurrentYearMilliseconds = this.formatter.rangeLongDateTime(
             now.set({ day: 10, hour: 10, minute: 14 }),
             now.set({ day: 10, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         longRange.dateTime.sameDateNotCurrentYear = this.formatter.rangeLongDateTime(
@@ -748,12 +793,12 @@ export class DemoComponent {
         longRange.dateTime.sameDateNotCurrentYearSeconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         longRange.dateTime.sameDateNotCurrentYearMilliseconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         longRange.dateTime.notCurrentMonth = this.formatter.rangeLongDateTime(
@@ -763,12 +808,12 @@ export class DemoComponent {
         longRange.dateTime.notCurrentMonthSeconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         longRange.dateTime.notCurrentMonthMilliseconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         longRange.dateTime.startsNotCurrentYear = this.formatter.rangeLongDateTime(
@@ -778,12 +823,12 @@ export class DemoComponent {
         longRange.dateTime.startsNotCurrentYearSeconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         longRange.dateTime.startsNotCurrentYearMilliseconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1, hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
 
         longRange.dateTime.endsNotCurrentYear = this.formatter.rangeLongDateTime(
@@ -793,12 +838,12 @@ export class DemoComponent {
         longRange.dateTime.endsNotCurrentYearSeconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {seconds: true}
+            { seconds: true }
         );
         longRange.dateTime.endsNotCurrentYearMilliseconds = this.formatter.rangeLongDateTime(
             now.set({ month: 1, day: 1, hour: 10, minute: 14 }),
             now.set({ month: 2, day: 1 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }),
-            {milliseconds: true}
+            { milliseconds: true }
         );
     }
 
@@ -812,48 +857,46 @@ export class DemoComponent {
             now.minus({ years: 1, days: 2 })
         );
         relativeShort.beforeYesterdayCurrentYear = this.formatter.relativeShortDate(now.minus({ days: 2 }));
-        relativeShort.beforeYesterdayCurrentYearSeconds = this.formatter.relativeShortDateTime(
-            now.minus({ days: 2 }), {seconds: true}
-        );
+        relativeShort.beforeYesterdayCurrentYearSeconds = this.formatter.relativeShortDateTime(now.minus({ days: 2 }), {
+            seconds: true
+        });
         relativeShort.beforeYesterdayCurrentYearMilliseconds = this.formatter.relativeShortDateTime(
-            now.minus({ days: 2 }), {milliseconds: true}
+            now.minus({ days: 2 }),
+            { milliseconds: true }
         );
 
         relativeShort.yesterday = this.formatter.relativeShortDate(now.minus({ days: 1 }));
-        relativeShort.yesterdaySeconds = this.formatter.relativeShortDateTime(
-            now.minus({ days: 1 }), {seconds: true}
-        );
-        relativeShort.yesterdayMilliseconds = this.formatter.relativeShortDateTime(
-            now.minus({ days: 1 }), {milliseconds: true}
-        );
+        relativeShort.yesterdaySeconds = this.formatter.relativeShortDateTime(now.minus({ days: 1 }), {
+            seconds: true
+        });
+        relativeShort.yesterdayMilliseconds = this.formatter.relativeShortDateTime(now.minus({ days: 1 }), {
+            milliseconds: true
+        });
 
         relativeShort.today = this.formatter.relativeShortDate(now.minus({ hours: 1 }));
-        relativeShort.todaySeconds = this.formatter.relativeShortDateTime(
-            now.minus({ hours: 1 }), {seconds: true}
-        );
-        relativeShort.todayMilliseconds = this.formatter.relativeShortDateTime(
-            now.minus({ hours: 1 }), {milliseconds: true}
-        );
+        relativeShort.todaySeconds = this.formatter.relativeShortDateTime(now.minus({ hours: 1 }), { seconds: true });
+        relativeShort.todayMilliseconds = this.formatter.relativeShortDateTime(now.minus({ hours: 1 }), {
+            milliseconds: true
+        });
 
         relativeShort.tomorrow = this.formatter.relativeShortDate(now.plus({ days: 1, hours: 1 }));
-        relativeShort.tomorrowSeconds = this.formatter.relativeShortDateTime(
-            now.plus({ days: 1, hours: 1 }), {seconds: true}
-        );
-        relativeShort.tomorrowMilliseconds = this.formatter.relativeShortDateTime(
-            now.plus({ days: 1, hours: 1 }), {milliseconds: true}
-        );
+        relativeShort.tomorrowSeconds = this.formatter.relativeShortDateTime(now.plus({ days: 1, hours: 1 }), {
+            seconds: true
+        });
+        relativeShort.tomorrowMilliseconds = this.formatter.relativeShortDateTime(now.plus({ days: 1, hours: 1 }), {
+            milliseconds: true
+        });
 
         relativeShort.afterTomorrowCurrentYear = this.formatter.relativeShortDate(now.plus({ days: 2 }));
-        relativeShort.afterTomorrowCurrentYearSeconds = this.formatter.relativeShortDateTime(
-            now.plus({ days: 2 }), {seconds: true}
-        );
+        relativeShort.afterTomorrowCurrentYearSeconds = this.formatter.relativeShortDateTime(now.plus({ days: 2 }), {
+            seconds: true
+        });
         relativeShort.afterTomorrowCurrentYearMilliseconds = this.formatter.relativeShortDateTime(
-            now.plus({ days: 2 }), {milliseconds: true}
+            now.plus({ days: 2 }),
+            { milliseconds: true }
         );
 
-        relativeShort.afterTomorrowNotCurrentYear = this.formatter.relativeShortDate(
-            now.plus({ years: 1, days: 2 })
-        );
+        relativeShort.afterTomorrowNotCurrentYear = this.formatter.relativeShortDate(now.plus({ years: 1, days: 2 }));
     }
 
     private populateRelativeLong(locale: string) {
@@ -862,36 +905,45 @@ export class DemoComponent {
         const relativeLong = this.lang.relative.long;
         const now = this.adapter.today();
 
-        relativeLong.beforeYesterdayNotCurrentYear = this.formatter.relativeLongDate(
-            now.minus({ years: 1, days: 2 })
-        );
+        relativeLong.beforeYesterdayNotCurrentYear = this.formatter.relativeLongDate(now.minus({ years: 1, days: 2 }));
         relativeLong.beforeYesterdayCurrentYear = this.formatter.relativeLongDate(now.minus({ days: 2 }));
-        relativeLong.beforeYesterdayCurrentYearSeconds = this.formatter.relativeLongDateTime(now.minus({ days: 2 }), {seconds: true});
+        relativeLong.beforeYesterdayCurrentYearSeconds = this.formatter.relativeLongDateTime(now.minus({ days: 2 }), {
+            seconds: true
+        });
         relativeLong.beforeYesterdayCurrentYearMilliseconds = this.formatter.relativeLongDateTime(
-            now.minus({ days: 2 }), {milliseconds: true}
+            now.minus({ days: 2 }),
+            { milliseconds: true }
         );
 
         relativeLong.yesterday = this.formatter.relativeLongDate(now.minus({ days: 1 }));
-        relativeLong.yesterdaySeconds = this.formatter.relativeLongDateTime(now.minus({ days: 1 }), {seconds: true});
-        relativeLong.yesterdayMilliseconds = this.formatter.relativeLongDateTime(now.minus({ days: 1 }), {milliseconds: true});
+        relativeLong.yesterdaySeconds = this.formatter.relativeLongDateTime(now.minus({ days: 1 }), { seconds: true });
+        relativeLong.yesterdayMilliseconds = this.formatter.relativeLongDateTime(now.minus({ days: 1 }), {
+            milliseconds: true
+        });
 
         relativeLong.today = this.formatter.relativeLongDate(now.minus({ hours: 1 }));
-        relativeLong.todaySeconds = this.formatter.relativeLongDateTime(now.minus({ hours: 1 }), {seconds: true});
-        relativeLong.todayMilliseconds = this.formatter.relativeLongDateTime(now.minus({ hours: 1 }), {milliseconds: true});
+        relativeLong.todaySeconds = this.formatter.relativeLongDateTime(now.minus({ hours: 1 }), { seconds: true });
+        relativeLong.todayMilliseconds = this.formatter.relativeLongDateTime(now.minus({ hours: 1 }), {
+            milliseconds: true
+        });
 
         relativeLong.tomorrow = this.formatter.relativeLongDate(now.plus({ days: 1, hours: 1 }));
-        relativeLong.tomorrowSeconds = this.formatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {seconds: true});
-        relativeLong.tomorrowMilliseconds = this.formatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {milliseconds: true});
+        relativeLong.tomorrowSeconds = this.formatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {
+            seconds: true
+        });
+        relativeLong.tomorrowMilliseconds = this.formatter.relativeLongDateTime(now.plus({ days: 1, hours: 1 }), {
+            milliseconds: true
+        });
 
         relativeLong.afterTomorrowCurrentYear = this.formatter.relativeLongDate(now.plus({ days: 2 }));
-        relativeLong.afterTomorrowCurrentYearSeconds = this.formatter.relativeLongDateTime(now.plus({ days: 2 }), {seconds: true});
-        relativeLong.afterTomorrowCurrentYearMilliseconds = this.formatter.relativeLongDateTime(
-            now.plus({ days: 2 }), {milliseconds: true}
-        );
+        relativeLong.afterTomorrowCurrentYearSeconds = this.formatter.relativeLongDateTime(now.plus({ days: 2 }), {
+            seconds: true
+        });
+        relativeLong.afterTomorrowCurrentYearMilliseconds = this.formatter.relativeLongDateTime(now.plus({ days: 2 }), {
+            milliseconds: true
+        });
 
-        relativeLong.afterTomorrowNotCurrentYear = this.formatter.relativeLongDate(
-            now.plus({ years: 1, days: 2 })
-        );
+        relativeLong.afterTomorrowNotCurrentYear = this.formatter.relativeLongDate(now.plus({ years: 1, days: 2 }));
     }
 
     private populateAbsoluteShort(locale: string) {
@@ -905,14 +957,22 @@ export class DemoComponent {
         absoluteShort.date.notCurrentYear = this.formatter.absoluteShortDate(now.minus({ years: 1 }));
 
         absoluteShort.dateTime.currentYear = this.formatter.absoluteShortDateTime(now);
-        absoluteShort.dateTime.currentYearSeconds = this.formatter.absoluteShortDateTime(now, {seconds: true});
-        absoluteShort.dateTime.currentYearSecondsForced = this.formatter.absoluteShortDateTime(now, {seconds: true, currYear: true});
-        absoluteShort.dateTime.currentYearMilliseconds = this.formatter.absoluteShortDateTime(now, {milliseconds: true});
+        absoluteShort.dateTime.currentYearSeconds = this.formatter.absoluteShortDateTime(now, { seconds: true });
+        absoluteShort.dateTime.currentYearSecondsForced = this.formatter.absoluteShortDateTime(now, {
+            seconds: true,
+            currYear: true
+        });
+        absoluteShort.dateTime.currentYearMilliseconds = this.formatter.absoluteShortDateTime(now, {
+            milliseconds: true
+        });
 
         absoluteShort.dateTime.notCurrentYear = this.formatter.absoluteShortDateTime(now.minus({ years: 1 }));
-        absoluteShort.dateTime.notCurrentYearSeconds = this.formatter.absoluteShortDateTime(now.minus({ years: 1 }), {seconds: true});
+        absoluteShort.dateTime.notCurrentYearSeconds = this.formatter.absoluteShortDateTime(now.minus({ years: 1 }), {
+            seconds: true
+        });
         absoluteShort.dateTime.notCurrentYearMilliseconds = this.formatter.absoluteShortDateTime(
-            now.minus({ years: 1 }), {milliseconds: true}
+            now.minus({ years: 1 }),
+            { milliseconds: true }
         );
     }
 
@@ -927,14 +987,22 @@ export class DemoComponent {
         absoluteLong.date.notCurrentYear = this.formatter.absoluteLongDate(now.minus({ years: 1 }));
 
         absoluteLong.dateTime.currentYear = this.formatter.absoluteLongDateTime(now);
-        absoluteLong.dateTime.currentYearSeconds = this.formatter.absoluteLongDateTime(now, {seconds: true});
-        absoluteLong.dateTime.currentYearSecondsForced = this.formatter.absoluteLongDateTime(now, {seconds: true, currYear: true});
-        absoluteLong.dateTime.currentYearMilliseconds = this.formatter.absoluteLongDateTime(now, {milliseconds: true});
+        absoluteLong.dateTime.currentYearSeconds = this.formatter.absoluteLongDateTime(now, { seconds: true });
+        absoluteLong.dateTime.currentYearSecondsForced = this.formatter.absoluteLongDateTime(now, {
+            seconds: true,
+            currYear: true
+        });
+        absoluteLong.dateTime.currentYearMilliseconds = this.formatter.absoluteLongDateTime(now, {
+            milliseconds: true
+        });
 
         absoluteLong.dateTime.notCurrentYear = this.formatter.absoluteLongDateTime(now.minus({ years: 1 }));
-        absoluteLong.dateTime.notCurrentYearSeconds = this.formatter.absoluteLongDateTime(now.minus({ years: 1 }), {seconds: true});
+        absoluteLong.dateTime.notCurrentYearSeconds = this.formatter.absoluteLongDateTime(now.minus({ years: 1 }), {
+            seconds: true
+        });
         absoluteLong.dateTime.notCurrentYearMilliseconds = this.formatter.absoluteLongDateTime(
-            now.minus({ years: 1 }), {milliseconds: true}
+            now.minus({ years: 1 }),
+            { milliseconds: true }
         );
     }
 
@@ -971,30 +1039,42 @@ export class DemoComponent {
 
         duration.seconds = this.formatter.durationLong(start, start.plus({ second: 21 }));
 
-        duration.minutesSeconds = this.formatter.durationLong(start, start.plus({minute: 1, second: 25}));
-        duration.minutes = this.formatter.durationLong(start, start.plus({minute: 22}));
-        duration.minutesMoreThanHour = this.formatter.durationLong(start, start.plus({hour: 2}), ['minutes']);
+        duration.minutesSeconds = this.formatter.durationLong(start, start.plus({ minute: 1, second: 25 }));
+        duration.minutes = this.formatter.durationLong(start, start.plus({ minute: 22 }));
+        duration.minutesMoreThanHour = this.formatter.durationLong(start, start.plus({ hour: 2 }), ['minutes']);
 
         duration.hoursMinutes = this.formatter.durationLong(start, start.plus({ hour: 1, minute: 21 }));
         duration.hoursMinutesMoreThanDay = this.formatter.durationLong(
-            start, start.plus({day: 1, hour: 8, minute: 20}), ['hours', 'minutes']
+            start,
+            start.plus({ day: 1, hour: 8, minute: 20 }),
+            ['hours', 'minutes']
         );
-        duration.hours = this.formatter.durationLong(start, start.plus({day: 1, hour: 8, minute: 20}), ['hours']);
+        duration.hours = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
-        duration.daysHours = this.formatter.durationLong(start, start.plus({day: 1, hour: 8, minute: 25}));
-        duration.days = this.formatter.durationLong(start, start.plus({day: 2, hour: 8}), ['days']);
-        duration.daysMoreThanWeek = this.formatter.durationLong(start, start.plus({day: 21}), ['days']);
+        duration.daysHours = this.formatter.durationLong(start, start.plus({ day: 1, hour: 8, minute: 25 }));
+        duration.days = this.formatter.durationLong(start, start.plus({ day: 2, hour: 8 }), ['days']);
+        duration.daysMoreThanWeek = this.formatter.durationLong(start, start.plus({ day: 21 }), ['days']);
 
-        duration.weeksDays = this.formatter.durationLong(start, start.plus({day: 15}));
-        duration.weeks = this.formatter.durationLong(start, start.plus({day: 15}), ['weeks']);
+        duration.weeksDays = this.formatter.durationLong(start, start.plus({ day: 15 }));
+        duration.weeks = this.formatter.durationLong(start, start.plus({ day: 15 }), ['weeks']);
 
-        duration.monthsWeeks = this.formatter.durationLong(start, start.plus({month: 1, day: 25}));
-        duration.months = this.formatter.durationLong(start, start.plus({month: 2}), ['months']);
-        duration.monthsWithFract = this.formatter.durationLong(start, start.plus({month: 2, day: 16}), ['months'], true);
+        duration.monthsWeeks = this.formatter.durationLong(start, start.plus({ month: 1, day: 25 }));
+        duration.months = this.formatter.durationLong(start, start.plus({ month: 2 }), ['months']);
+        duration.monthsWithFract = this.formatter.durationLong(
+            start,
+            start.plus({ month: 2, day: 16 }),
+            ['months'],
+            true
+        );
 
-        duration.yearsMonth = this.formatter.durationLong(start, start.plus({year: 3, month: 11}));
-        duration.years = this.formatter.durationLong(start, start.plus({year: 5, month: 9}), ['years']);
-        duration.yearsWithFract = this.formatter.durationLong(start, start.plus({year: 5, month: 9}), ['years'], true);
+        duration.yearsMonth = this.formatter.durationLong(start, start.plus({ year: 3, month: 11 }));
+        duration.years = this.formatter.durationLong(start, start.plus({ year: 5, month: 9 }), ['years']);
+        duration.yearsWithFract = this.formatter.durationLong(
+            start,
+            start.plus({ year: 5, month: 9 }),
+            ['years'],
+            true
+        );
     }
 
     private populateDurationTextShort(locale: string) {
@@ -1004,31 +1084,49 @@ export class DemoComponent {
         const now = this.adapter.today();
         const start = now.set({ day: 10, hour: 0, minute: 0, second: 0, millisecond: 0 });
 
-        duration.secondsMilliseconds = this.formatter.durationShort(start, start.plus({second: 21, millisecond: 365}), ['seconds', 'milliseconds']);
-        duration.seconds = this.formatter.durationShort(start, start.plus({second: 21, millisecond: 365}));
+        duration.secondsMilliseconds = this.formatter.durationShort(
+            start,
+            start.plus({ second: 21, millisecond: 365 }),
+            ['seconds', 'milliseconds']
+        );
+        duration.seconds = this.formatter.durationShort(start, start.plus({ second: 21, millisecond: 365 }));
 
-        duration.minutesSeconds = this.formatter.durationShort(start, start.plus({minute: 1, second: 25}));
-        duration.minutes = this.formatter.durationShort(start, start.plus({minute: 22}));
-        duration.minutesMoreThanHour = this.formatter.durationShort(start, start.plus({hour: 2}), ['minutes']);
+        duration.minutesSeconds = this.formatter.durationShort(start, start.plus({ minute: 1, second: 25 }));
+        duration.minutes = this.formatter.durationShort(start, start.plus({ minute: 22 }));
+        duration.minutesMoreThanHour = this.formatter.durationShort(start, start.plus({ hour: 2 }), ['minutes']);
 
         duration.hoursMinutes = this.formatter.durationShort(start, start.plus({ hour: 1, minute: 21 }));
-        duration.hoursMinutesMoreThanDay = this.formatter.durationShort(start, start.plus({day: 1, hour: 8, minute: 20}), ['hours', 'minutes']);
-        duration.hours = this.formatter.durationShort(start, start.plus({day: 1, hour: 8, minute: 20}), ['hours']);
+        duration.hoursMinutesMoreThanDay = this.formatter.durationShort(
+            start,
+            start.plus({ day: 1, hour: 8, minute: 20 }),
+            ['hours', 'minutes']
+        );
+        duration.hours = this.formatter.durationShort(start, start.plus({ day: 1, hour: 8, minute: 20 }), ['hours']);
 
-        duration.daysHours = this.formatter.durationShort(start, start.plus({day: 1, hour: 8}));
-        duration.days = this.formatter.durationShort(start, start.plus({day: 2, hour: 8}), ['days']);
-        duration.daysMoreThanWeek = this.formatter.durationShort(start, start.plus({day: 15}), ['days']);
+        duration.daysHours = this.formatter.durationShort(start, start.plus({ day: 1, hour: 8 }));
+        duration.days = this.formatter.durationShort(start, start.plus({ day: 2, hour: 8 }), ['days']);
+        duration.daysMoreThanWeek = this.formatter.durationShort(start, start.plus({ day: 15 }), ['days']);
 
-        duration.weeksDays = this.formatter.durationShort(start, start.plus({day: 15}));
-        duration.weeks = this.formatter.durationShort(start, start.plus({day: 15}), ['weeks']);
+        duration.weeksDays = this.formatter.durationShort(start, start.plus({ day: 15 }));
+        duration.weeks = this.formatter.durationShort(start, start.plus({ day: 15 }), ['weeks']);
 
-        duration.monthsWeeks = this.formatter.durationShort(start, start.plus({month: 1, day: 25}));
-        duration.months = this.formatter.durationShort(start, start.plus({month: 2}), ['months']);
-        duration.monthsWithFract = this.formatter.durationShort(start, start.plus({month: 2, day: 16}), ['months'], true);
+        duration.monthsWeeks = this.formatter.durationShort(start, start.plus({ month: 1, day: 25 }));
+        duration.months = this.formatter.durationShort(start, start.plus({ month: 2 }), ['months']);
+        duration.monthsWithFract = this.formatter.durationShort(
+            start,
+            start.plus({ month: 2, day: 16 }),
+            ['months'],
+            true
+        );
 
-        duration.yearsMonth = this.formatter.durationShort(start, start.plus({year: 3, month: 11}));
-        duration.years = this.formatter.durationShort(start, start.plus({year: 1}), ['years']);
-        duration.yearsWithFract = this.formatter.durationShort(start, start.plus({year: 5, month: 9}), ['years'], true);
+        duration.yearsMonth = this.formatter.durationShort(start, start.plus({ year: 3, month: 11 }));
+        duration.years = this.formatter.durationShort(start, start.plus({ year: 1 }), ['years']);
+        duration.yearsWithFract = this.formatter.durationShort(
+            start,
+            start.plus({ year: 5, month: 9 }),
+            ['years'],
+            true
+        );
     }
 }
 

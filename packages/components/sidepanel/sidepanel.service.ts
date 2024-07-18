@@ -11,15 +11,13 @@ import {
     SkipSelf,
     TemplateRef
 } from '@angular/core';
-
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import {
-    KbqSidepanelContainerComponent,
     KBQ_SIDEPANEL_WITH_INDENT,
-    KBQ_SIDEPANEL_WITH_SHADOW
+    KBQ_SIDEPANEL_WITH_SHADOW,
+    KbqSidepanelContainerComponent
 } from './sidepanel-container.component';
 import { KbqSidepanelRef } from './sidepanel-ref';
-
 
 /** Injection token that can be used to specify default sidepanel options. */
 export const KBQ_SIDEPANEL_DEFAULT_OPTIONS = new InjectionToken<KbqSidepanelConfig>('kbq-sidepanel-default-options');
@@ -30,9 +28,9 @@ export class KbqSidepanelService implements OnDestroy {
 
     /** Keeps track of the currently-open sidepanels. */
     get openedSidepanels(): KbqSidepanelRef[] {
-        return this.parentSidepanelService ?
-            this.parentSidepanelService.openedSidepanels :
-            this.openedSidepanelsAtThisLevel;
+        return this.parentSidepanelService
+            ? this.parentSidepanelService.openedSidepanels
+            : this.openedSidepanelsAtThisLevel;
     }
 
     constructor(
@@ -49,7 +47,8 @@ export class KbqSidepanelService implements OnDestroy {
     }
 
     open<T, D = any>(
-        componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: KbqSidepanelConfig<D>
+        componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+        config?: KbqSidepanelConfig<D>
     ): KbqSidepanelRef<T> {
         const fullConfig = {
             ...(this.defaultOptions || new KbqSidepanelConfig()),
@@ -67,14 +66,10 @@ export class KbqSidepanelService implements OnDestroy {
 
         if (componentOrTemplateRef instanceof TemplateRef) {
             container.attachTemplatePortal(
-                new TemplatePortal<T>(
-                    componentOrTemplateRef,
-                    null!,
-                    {
-                        $implicit: fullConfig.data,
-                        sidepanelRef: ref
-                    } as any
-                )
+                new TemplatePortal<T>(componentOrTemplateRef, null!, {
+                    $implicit: fullConfig.data,
+                    sidepanelRef: ref
+                } as any)
             );
         } else {
             const portal = new ComponentPortal(
@@ -88,8 +83,7 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         this.openedSidepanels.push(ref);
-        ref.afterClosed()
-            .subscribe(() => this.removeOpenSidepanel(ref));
+        ref.afterClosed().subscribe(() => this.removeOpenSidepanel(ref));
 
         container.enter();
 
@@ -146,7 +140,6 @@ export class KbqSidepanelService implements OnDestroy {
         sidepanelRef: KbqSidepanelRef<T>,
         sidepanelContainer: KbqSidepanelContainerComponent
     ): Injector {
-
         // The KbqSidepanelContainerComponent is injected in the portal as the KbqSidepanelContainerComponent and
         // the sidepanel's content are created out of the same ViewContainerRef and as such, are siblings for injector
         // purposes. To allow the hierarchy that is expected, the KbqSidepanelContainerComponent is explicitly
@@ -182,8 +175,7 @@ export class KbqSidepanelService implements OnDestroy {
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         const reversedOpenedSidepanels = [...sidepanels.reverse()];
 
-        reversedOpenedSidepanels
-            .forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
+        reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
     }
 
     private getBackdropClass(config: KbqSidepanelConfig): string {
@@ -191,12 +183,13 @@ export class KbqSidepanelService implements OnDestroy {
             return config.backdropClass;
         }
 
-        const hasOpenedSidepanelWithBackdrop = this.openedSidepanels
-            .some((sidepanelRef) => sidepanelRef.config.hasBackdrop!);
+        const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
+            (sidepanelRef) => sidepanelRef.config.hasBackdrop!
+        );
 
-        return config.requiredBackdrop || !hasOpenedSidepanelWithBackdrop ?
-            'cdk-overlay-dark-backdrop' :
-            'cdk-overlay-transparent-backdrop';
+        return config.requiredBackdrop || !hasOpenedSidepanelWithBackdrop
+            ? 'cdk-overlay-dark-backdrop'
+            : 'cdk-overlay-transparent-backdrop';
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {

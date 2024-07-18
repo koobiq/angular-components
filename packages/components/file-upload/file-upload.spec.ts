@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DELETE, TAB } from '@koobiq/cdk/keycodes';
@@ -10,16 +11,18 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-
 import { createFile } from './file-drop.spec';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
-export function dispatchDropEvent(component: any, fixture: ComponentFixture<any>, fileName = 'test.file', type?: string) {
+export function dispatchDropEvent(
+    component: any,
+    fixture: ComponentFixture<any>,
+    fileName = 'test.file',
+    type?: string
+) {
     const fakeDropEvent = createFakeEvent('drop');
     const fakeItem = createFile(fileName, type);
     (fakeDropEvent as any).dataTransfer = { items: [fakeItem] };
@@ -27,7 +30,6 @@ export function dispatchDropEvent(component: any, fixture: ComponentFixture<any>
     dispatchEvent(component.elementRef.nativeElement.querySelector('.kbq-file-upload'), fakeDropEvent);
     fixture.detectChanges();
 }
-
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
 const fileItemRowCssClass = 'multiple__uploaded-item';
@@ -41,9 +43,7 @@ const maxFileExceeded = (file: File): string | null => {
     const maxMbytes = 5;
     const maxSize = maxMbytes * mega;
 
-    return maxSize !== undefined && (file?.size ?? 0) > maxSize
-        ? `Exceeded with (${ maxSize / mega } Mb)`
-        : null;
+    return maxSize !== undefined && (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
 };
 
 describe('MultipleFileUploadComponent', () => {
@@ -54,8 +54,7 @@ describe('MultipleFileUploadComponent', () => {
         await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
             declarations: [BasicMultipleFileUpload, ControlValueAccessorMultipleFileUpload]
-        })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(BasicMultipleFileUpload);
         component = fixture.componentInstance;
@@ -112,10 +111,9 @@ describe('MultipleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeFalsy();
+            });
 
             dispatchKeyboardEvent(
                 fixture.debugElement.query(By.css(`.${fileItemRowCssClass}`)).nativeElement,
@@ -141,10 +139,9 @@ describe('MultipleFileUploadComponent', () => {
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalled();
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeTruthy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeTruthy();
+            });
 
             subscription.unsubscribe();
         });
@@ -153,10 +150,9 @@ describe('MultipleFileUploadComponent', () => {
             spyOn(component, 'onChange');
             component.disabled = true;
             fixture.detectChanges();
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeFalsy();
+            });
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'test.file');
@@ -171,10 +167,9 @@ describe('MultipleFileUploadComponent', () => {
             spyOn(component, 'onChange');
             component.disabled = false;
             fixture.detectChanges();
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeTruthy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeTruthy();
+            });
 
             dispatchDropEvent(component, fixture);
             fixture.detectChanges();
@@ -188,10 +183,9 @@ describe('MultipleFileUploadComponent', () => {
             spyOn(component, 'onChange');
             component.disabled = true;
             fixture.detectChanges();
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeFalsy();
+            });
 
             dispatchDropEvent(component, fixture);
 
@@ -212,10 +206,9 @@ describe('MultipleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChanged
-                .subscribe((value) => {
-                    expect(value.length).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+                expect(value.length).toBeFalsy();
+            });
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
             fixture.detectChanges();
@@ -244,7 +237,7 @@ describe('MultipleFileUploadComponent', () => {
     });
 
     describe('with ControlValueAccessor', () => {
-        beforeEach( () => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ControlValueAccessorMultipleFileUpload);
             component = fixture.componentInstance;
             fixture.detectChanges();
@@ -299,7 +292,7 @@ describe('MultipleFileUploadComponent', () => {
 
             expect(component.control.touched).toBeTrue();
         });
-    })
+    });
 });
 
 describe('SingleFileUploadComponent', () => {
@@ -312,8 +305,7 @@ describe('SingleFileUploadComponent', () => {
                 BasicSingleFileUpload,
                 ControlValueAccessorSingleFileUpload
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(BasicSingleFileUpload);
         component = fixture.componentInstance;
@@ -367,10 +359,9 @@ describe('SingleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChange
-                .subscribe((value) => {
-                    expect(value).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChange.subscribe((value) => {
+                expect(value).toBeFalsy();
+            });
 
             dispatchKeyboardEvent(
                 component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`),
@@ -396,10 +387,9 @@ describe('SingleFileUploadComponent', () => {
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalled();
-            const subscription = component.fileUpload.fileQueueChange
-                .subscribe((value) => {
-                    expect(value).toBeTruthy();
-                });
+            const subscription = component.fileUpload.fileQueueChange.subscribe((value) => {
+                expect(value).toBeTruthy();
+            });
 
             subscription.unsubscribe();
         });
@@ -427,10 +417,9 @@ describe('SingleFileUploadComponent', () => {
             flush();
 
             expect(component.onChange).toHaveBeenCalled();
-            const subscription = component.fileUpload.fileQueueChange
-                .subscribe((value) => {
-                    expect(value).toBeTruthy();
-                });
+            const subscription = component.fileUpload.fileQueueChange.subscribe((value) => {
+                expect(value).toBeTruthy();
+            });
 
             subscription.unsubscribe();
         }));
@@ -458,10 +447,9 @@ describe('SingleFileUploadComponent', () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChange
-                .subscribe((value) => {
-                    expect(value).toBeFalsy();
-                });
+            const subscription = component.fileUpload.fileQueueChange.subscribe((value) => {
+                expect(value).toBeFalsy();
+            });
 
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
             subscription.unsubscribe();
@@ -480,7 +468,10 @@ describe('SingleFileUploadComponent', () => {
             fixture.detectChanges();
             flush();
 
-            dispatchMouseEvent(fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement, 'mouseenter');
+            dispatchMouseEvent(
+                fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
+                'mouseenter'
+            );
             fixture.detectChanges();
             flush();
 
@@ -510,7 +501,7 @@ describe('SingleFileUploadComponent', () => {
     });
 
     describe('with ControlValueAccessor', () => {
-        beforeEach( () => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ControlValueAccessorSingleFileUpload);
             component = fixture.componentInstance;
             fixture.detectChanges();
@@ -563,7 +554,7 @@ describe('SingleFileUploadComponent', () => {
 
             expect(component.control.touched).toBeTrue();
         });
-    })
+    });
 
     // TODO: real-life scenario & test results with the same data are different
     xdescribe('with accepted files list', () => {
@@ -605,19 +596,20 @@ describe('SingleFileUploadComponent', () => {
 
             expect(component.onChange).toHaveBeenCalledTimes(1);
         }));
-    })
+    });
 });
-
 
 @Component({
     selector: '',
     template: `
         <div style="max-width: 350px;">
-            <kbq-single-file-upload #fileUpload
-                                    [accept]="accept"
-                                    [customValidation]="validation"
-                                    [disabled]="disabled"
-                                    (fileQueueChange)="onChange($event)">
+            <kbq-single-file-upload
+                #fileUpload
+                [accept]="accept"
+                [customValidation]="validation"
+                [disabled]="disabled"
+                (fileQueueChange)="onChange($event)"
+            >
             </kbq-single-file-upload>
         </div>
     `
@@ -640,11 +632,13 @@ class BasicSingleFileUpload {
     selector: '',
     template: `
         <div style="max-width: 350px;">
-            <kbq-file-upload #fileUpload
-                                    [formControl]="control"
-                                    [accept]="accept"
-                                    [customValidation]="validation"
-                                    (fileQueueChange)="onChange($event)">
+            <kbq-file-upload
+                #fileUpload
+                [formControl]="control"
+                [accept]="accept"
+                [customValidation]="validation"
+                (fileQueueChange)="onChange($event)"
+            >
             </kbq-file-upload>
         </div>
     `
@@ -663,15 +657,16 @@ class ControlValueAccessorSingleFileUpload {
     }
 }
 
-
 @Component({
     selector: '',
     template: `
         <div style="max-width: 350px;">
-            <kbq-multiple-file-upload #fileUpload
-                                      [disabled]="disabled"
-                                      [customValidation]="validation"
-                                      (fileQueueChanged)="onChange($event)">
+            <kbq-multiple-file-upload
+                #fileUpload
+                [disabled]="disabled"
+                [customValidation]="validation"
+                (fileQueueChanged)="onChange($event)"
+            >
             </kbq-multiple-file-upload>
         </div>
     `
@@ -693,11 +688,13 @@ class BasicMultipleFileUpload {
     selector: '',
     template: `
         <div style="max-width: 350px;">
-            <kbq-multiple-file-upload #fileUpload
-                                    [formControl]="control"
-                                    [accept]="accept"
-                                    [customValidation]="validation"
-                                    (fileQueueChanged)="onChange($event)">
+            <kbq-multiple-file-upload
+                #fileUpload
+                [formControl]="control"
+                [accept]="accept"
+                [customValidation]="validation"
+                (fileQueueChanged)="onChange($event)"
+            >
             </kbq-multiple-file-upload>
         </div>
     `

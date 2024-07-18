@@ -12,34 +12,30 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTreeModule } from '@koobiq/components/tree';
-
+import { TreeAccessRightsExample } from './tree-access-rights/tree-access-rights-example';
 import { TreeActionButtonExample } from './tree-action-button/tree-action-button-example';
 import { TreeCheckedFilteringExample } from './tree-checked-filtering/tree-checked-filtering-example';
 import { TreeCustomFilteringExample } from './tree-custom-filtering/tree-custom-filtering-example';
+import { TreeDescendantsSubcategoriesExample } from './tree-descendants-subcategories/tree-descendants-subcategories-example';
 import { TreeFilteringExample } from './tree-filtering/tree-filtering-example';
 import { TreeLazyloadExample } from './tree-lazyload/tree-lazyload-example';
 import { TreeMultipleCheckboxExample } from './tree-multiple-checkbox/tree-multiple-checkbox-example';
-import {
-    TreeMultipleChecklistExample
-} from './tree-multiple-checklist/tree-multiple-checklist-example';
+import { TreeMultipleChecklistExample } from './tree-multiple-checklist/tree-multiple-checklist-example';
 import { TreeMultipleKeyboardExample } from './tree-multiple-keyboard/tree-multiple-keyboard-example';
 import { TreeOverviewExample } from './tree-overview/tree-overview-example';
-import { TreeDescendantsSubcategoriesExample } from './tree-descendants-subcategories/tree-descendants-subcategories-example';
-import { TreeAccessRightsExample } from './tree-access-rights/tree-access-rights-example';
-
 
 export {
+    TreeAccessRightsExample,
     TreeActionButtonExample,
-    TreeOverviewExample,
+    TreeCheckedFilteringExample,
+    TreeCustomFilteringExample,
+    TreeDescendantsSubcategoriesExample,
+    TreeFilteringExample,
+    TreeLazyloadExample,
     TreeMultipleCheckboxExample,
     TreeMultipleChecklistExample,
     TreeMultipleKeyboardExample,
-    TreeFilteringExample,
-    TreeCustomFilteringExample,
-    TreeCheckedFilteringExample,
-    TreeLazyloadExample,
-    TreeDescendantsSubcategoriesExample,
-    TreeAccessRightsExample
+    TreeOverviewExample
 };
 
 const EXAMPLES = [

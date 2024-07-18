@@ -1,13 +1,9 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
 import { ToggleOverviewExample } from './toggle-overview/toggle-overview-example';
 
-
-export {
-    ToggleOverviewExample
-};
+export { ToggleOverviewExample };
 
 const EXAMPLES = [
     ToggleOverviewExample

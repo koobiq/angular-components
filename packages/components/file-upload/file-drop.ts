@@ -1,12 +1,9 @@
-import { Directive, Output, EventEmitter } from '@angular/core';
-
+import { Directive, EventEmitter, Output } from '@angular/core';
 import { KbqFile } from './file-upload';
-
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
 const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectoryEntry => !!entry && entry.isDirectory;
 const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !!entry && entry.isFile;
-
 
 @Directive({
     selector: '[kbqFileDrop]',
@@ -58,8 +55,6 @@ export class KbqFileDropDirective {
     }
 }
 
-
-
 const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
     const queue: (FileSystemEntry | Promise<FileSystemEntry[]>)[] = [item];
     const result: Promise<KbqFile>[] = [];
@@ -78,12 +73,10 @@ const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
             const fileEntry = next;
             result.push(
                 new Promise((resolve, reject) => {
-                    fileEntry.file(
-                        (file) => {
-                            (file as KbqFile).fullPath = fileEntry.fullPath;
-                            resolve(file as KbqFile);
-                        },
-                        reject);
+                    fileEntry.file((file) => {
+                        (file as KbqFile).fullPath = fileEntry.fullPath;
+                        resolve(file as KbqFile);
+                    }, reject);
                 })
             );
         }

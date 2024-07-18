@@ -4,19 +4,17 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ENTER, COMMA, TAB, SPACE } from '@koobiq/cdk/keycodes';
+import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-
 import { KbqTagsModule } from './index';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
 import { KbqTagList } from './tag-list.component';
-
 
 describe('KbqTagInput', () => {
     let fixture: ComponentFixture<any>;
@@ -30,15 +28,18 @@ describe('KbqTagInput', () => {
         TestBed.configureTestingModule({
             imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule, NoopAnimationsModule],
             declarations: [TestTagInput],
-            providers: [{
-                provide: Directionality, useFactory: () => {
-                    return {
-                        value: dir.toLowerCase(),
-                        // tslint:disable-next-line: no-inferred-empty-object-type
-                        change: new Subject()
-                    };
+            providers: [
+                {
+                    provide: Directionality,
+                    useFactory: () => {
+                        return {
+                            value: dir.toLowerCase(),
+                            // tslint:disable-next-line: no-inferred-empty-object-type
+                            change: new Subject()
+                        };
+                    }
                 }
-            }]
+            ]
         });
 
         TestBed.compileComponents();
@@ -152,7 +153,6 @@ describe('KbqTagInput', () => {
             testTagInput.addOnPaste = false;
             fixture.detectChanges();
 
-
             // tslint:disable-next-line:no-object-literal-type-assertion
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
             expect(testTagInput.add).not.toHaveBeenCalled();
@@ -189,10 +189,9 @@ describe('KbqTagInput', () => {
                 { keyCode: TAB, key: 'Tab' },
                 { keyCode: SPACE, key: ' ' }
             ];
-            const SEPARATOR_EVENTS = separators
-                .map(({ keyCode, key }) => createKeyboardEvent(
-                    'keydown', keyCode, inputNativeElement, key
-                ));
+            const SEPARATOR_EVENTS = separators.map(({ keyCode, key }) =>
+                createKeyboardEvent('keydown', keyCode, inputNativeElement, key)
+            );
 
             spyOn(testTagInput, 'add');
             tagInputDirective.separatorKeyCodes = separators.map((separator) => separator.keyCode);
@@ -206,19 +205,20 @@ describe('KbqTagInput', () => {
         it('emits (tagEnd) when the separator keys are configured globally', () => {
             fixture.destroy();
 
-            TestBed
-                .resetTestingModule()
+            TestBed.resetTestingModule()
                 .configureTestingModule({
                     imports: [KbqTagsModule, KbqFormFieldModule, PlatformModule, NoopAnimationsModule],
                     declarations: [TestTagInput],
-                    providers: [{
-                        provide: KBQ_TAGS_DEFAULT_OPTIONS,
-                        // tslint:disable-next-line: no-object-literal-type-assertion
-                        useValue: {
-                            separatorKeyCodes: [COMMA],
-                            separators: { [COMMA]: { symbol: /,/, key: ',' } }
-                        } as KbqTagsDefaultOptions
-                    }]
+                    providers: [
+                        {
+                            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+                            // tslint:disable-next-line: no-object-literal-type-assertion
+                            useValue: {
+                                separatorKeyCodes: [COMMA],
+                                separators: { [COMMA]: { symbol: /,/, key: ',' } }
+                            } as KbqTagsDefaultOptions
+                        }
+                    ]
                 })
                 .compileComponents();
 
@@ -255,16 +255,18 @@ describe('KbqTagInput', () => {
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList></kbq-tag-list>
-            <input [kbqTagInputFor]="tagList"
-                   [kbqTagInputAddOnBlur]="addOnBlur"
-                   [kbqTagInputAddOnPaste]="addOnPaste"
-                   (kbqTagInputTokenEnd)="add($event)"
-                   [placeholder]="placeholder"/>
+            <input
+                [kbqTagInputFor]="tagList"
+                [kbqTagInputAddOnBlur]="addOnBlur"
+                [kbqTagInputAddOnPaste]="addOnPaste"
+                (kbqTagInputTokenEnd)="add($event)"
+                [placeholder]="placeholder"
+            />
         </kbq-form-field>
     `
 })
 class TestTagInput {
-    @ViewChild(KbqTagList, {static: false}) tagListInstance: KbqTagList;
+    @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;
 
     addOnBlur: boolean = false;
     addOnPaste: boolean = false;

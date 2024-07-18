@@ -5,12 +5,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { CopyButtonModule } from '../copy-button/copy-button';
 import { StackblitzButtonModule } from '../stackblitz';
-
 import { DocExampleViewer } from './doc-example-viewer';
-
 
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({

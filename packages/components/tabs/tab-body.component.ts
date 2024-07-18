@@ -1,30 +1,28 @@
 import { AnimationEvent } from '@angular/animations';
-import { Directionality, Direction } from '@angular/cdk/bidi';
-import { TemplatePortal, CdkPortalOutlet } from '@angular/cdk/portal';
+import { Direction, Directionality } from '@angular/cdk/bidi';
+import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import {
-    Component,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Input,
-    Inject,
-    Output,
+    Component,
+    ComponentFactoryResolver,
+    Directive,
+    ElementRef,
     EventEmitter,
+    Inject,
+    Input,
     OnDestroy,
     OnInit,
-    ElementRef,
-    Directive,
     Optional,
-    ViewEncapsulation,
-    ChangeDetectionStrategy,
-    ComponentFactoryResolver,
+    Output,
+    ViewChild,
     ViewContainerRef,
-    forwardRef,
-    ViewChild
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-
 import { kbqTabsAnimations } from './tabs-animations';
-
 
 /**
  * These position states are used internally as animation states for the tab body. Setting the
@@ -62,7 +60,6 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     }
 })
 export class KbqTabBody implements OnInit, OnDestroy {
-
     /** The shifted index position of the tab body, where zero represents the active center tab. */
     @Input()
     set position(position: number) {
@@ -86,7 +83,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     @Output() readonly onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
     /** The portal host inside of this container into which the tab body content will be loaded. */
-    @ViewChild(CdkPortalOutlet, {static: false}) portalHost: CdkPortalOutlet;
+    @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
 
     /** The tab body content to display. */
     @Input('content') content: TemplatePortal;
@@ -111,11 +108,10 @@ export class KbqTabBody implements OnInit, OnDestroy {
         changeDetectorRef: ChangeDetectorRef
     ) {
         if (this.dir && changeDetectorRef) {
-            this.dirChangeSubscription = this.dir.change
-                .subscribe((direction: Direction) => {
-                    this.computePositionAnimationState(direction);
-                    changeDetectorRef.markForCheck();
-                });
+            this.dirChangeSubscription = this.dir.change.subscribe((direction: Direction) => {
+                this.computePositionAnimationState(direction);
+                changeDetectorRef.markForCheck();
+            });
         }
     }
 
@@ -205,7 +201,8 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     constructor(
         componentFactoryResolver: ComponentFactoryResolver,
         viewContainerRef: ViewContainerRef,
-        @Inject(forwardRef(() => KbqTabBody)) private readonly host: KbqTabBody) {
+        @Inject(forwardRef(() => KbqTabBody)) private readonly host: KbqTabBody
+    ) {
         super(componentFactoryResolver, viewContainerRef);
     }
 
@@ -221,8 +218,9 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
                 }
             });
 
-        this.leavingSub = this.host.afterLeavingCenter
-            .subscribe(() => { this.detach(); });
+        this.leavingSub = this.host.afterLeavingCenter.subscribe(() => {
+            this.detach();
+        });
     }
 
     /** Clean up centering subscription. */

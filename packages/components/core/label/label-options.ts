@@ -1,9 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
-
 /** InjectionToken that can be used to specify the global label options. */
-export const KBQ_LABEL_GLOBAL_OPTIONS =
-    new InjectionToken<LabelOptions>('kbq-label-global-options');
+export const KBQ_LABEL_GLOBAL_OPTIONS = new InjectionToken<LabelOptions>('kbq-label-global-options');
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'never' | 'auto';

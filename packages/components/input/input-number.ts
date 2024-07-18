@@ -14,15 +14,32 @@ import {
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
-    END, C, V, X, A, Z, DELETE, BACKSPACE, TAB, ENTER,
-    ESCAPE, NUMPAD_MINUS, DASH,
-    FF_MINUS, LEFT_ARROW, RIGHT_ARROW, HOME, UP_ARROW, DOWN_ARROW, isFunctionKey,
-    isNumberKey, isNumpadKey
+    A,
+    BACKSPACE,
+    C,
+    DASH,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    FF_MINUS,
+    HOME,
+    isFunctionKey,
+    isNumberKey,
+    isNumpadKey,
+    LEFT_ARROW,
+    NUMPAD_MINUS,
+    RIGHT_ARROW,
+    TAB,
+    UP_ARROW,
+    V,
+    X,
+    Z
 } from '@koobiq/cdk/keycodes';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
-
 
 export const BIG_STEP = 10;
 export const SMALL_STEP = 1;
@@ -48,8 +65,8 @@ export function getPrecision(value: number): number {
 
     return arr.length === 1
         ? 1
-        // tslint:disable-next-line:no-magic-numbers
-        :  Math.pow(10, arr[1].length);
+        : // tslint:disable-next-line:no-magic-numbers
+          Math.pow(10, arr[1].length);
 }
 
 export function add(value1: number, value2: number): number {
@@ -216,13 +233,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             });
         }
 
-        this.allNumberLocaleConfigs = this.localeService?.locales.items
-            .map((localeItem: { id: string; name: string }) => {
+        this.allNumberLocaleConfigs = this.localeService?.locales.items.map(
+            (localeItem: { id: string; name: string }) => {
                 return { id: localeItem.id, config: this.localeService.locales[localeItem.id].input.number };
-            });
+            }
+        );
 
-        this.localeSubscription = this.localeService?.changes
-            .subscribe(this.updateLocaleParams);
+        this.localeSubscription = this.localeService?.changes.subscribe(this.updateLocaleParams);
     }
 
     ngAfterContentInit(): void {
@@ -283,34 +300,33 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const isCtrlX = (e) => e.keyCode === X && (e.ctrlKey || e.metaKey);
         const isCtrlZ = (e) => e.keyCode === Z && (e.ctrlKey || e.metaKey);
 
-        const isPeriod = (e) => this.numberLocaleConfig.groupSeparator.includes(e.key)
-            || [this.numberLocaleConfig.fractionSeparator, '.'].includes(e.key);
+        const isPeriod = (e) =>
+            this.numberLocaleConfig.groupSeparator.includes(e.key) ||
+            [this.numberLocaleConfig.fractionSeparator, '.'].includes(e.key);
 
         const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
         const serviceKeys = [DELETE, BACKSPACE, TAB, ESCAPE, ENTER];
         const arrows = [LEFT_ARROW, RIGHT_ARROW];
-        const allowedKeys =  [HOME, END].concat(arrows).concat(serviceKeys).concat(minuses);
+        const allowedKeys = [HOME, END].concat(arrows).concat(serviceKeys).concat(minuses);
 
-        if (
-            minuses.includes(keyCode) &&
-            (this.viewValue.includes(event.key) || this.min >= 0)
-        ) {
+        if (minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0)) {
             event.preventDefault();
 
             return;
         }
 
         if (isPeriod(event)) {
-            if (event.key === this.numberLocaleConfig.fractionSeparator &&
-                this.viewValue.indexOf(this.numberLocaleConfig.fractionSeparator) !== -1) {
+            if (
+                event.key === this.numberLocaleConfig.fractionSeparator &&
+                this.viewValue.indexOf(this.numberLocaleConfig.fractionSeparator) !== -1
+            ) {
                 event.preventDefault();
 
                 return;
             }
         }
 
-        if (allowedKeys.indexOf(keyCode) !== -1 ||
-            [
+        if (allowedKeys.indexOf(keyCode) !== -1 || [
                 isCtrlA,
                 isCtrlC,
                 isCtrlV,
@@ -318,13 +334,12 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 isCtrlZ,
                 isFunctionKey,
                 isPeriod
-            ].some((fn) => fn(event))
-        ) {
+            ].some((fn) => fn(event))) {
             // let it happen, don't do anything
             return;
         }
         // Ensure that it is not a number and stop the keypress
-        if (event.shiftKey || !isNumberKey(event) && !isNumpadKey(event)) {
+        if (event.shiftKey || (!isNumberKey(event) && !isNumpadKey(event))) {
             event.preventDefault();
 
             // process steps
@@ -358,9 +373,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                     if (Math.abs(this.viewValue.length - currentValueLength) === offsetWhenSeparatorAdded) {
                         const cursorPosition = Math.max(
                             0,
-                            (this.nativeElement.selectionStart || 0) + Math.sign(
-                                this.viewValue.length - currentValueLength
-                            )
+                            (this.nativeElement.selectionStart || 0) +
+                                Math.sign(this.viewValue.length - currentValueLength)
                         );
 
                         this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
@@ -375,7 +389,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     onPaste(event: ClipboardEvent) {
         this.valueFromPaste = this.checkAndNormalizeLocalizedNumber(event.clipboardData?.getData('text'));
-        if (this.valueFromPaste === null) { event.preventDefault(); }
+        if (this.valueFromPaste === null) {
+            event.preventDefault();
+        }
     }
 
     stepUp(step: number) {
@@ -433,19 +449,22 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             return null;
         }
 
-        const separator = this.numberLocaleConfig.groupSeparator.includes(' ')
-        && this.numberLocaleConfig.fractionSeparator === ','
-            ? /[,.]/
-            : this.numberLocaleConfig.fractionSeparator;
+        const separator =
+            this.numberLocaleConfig.groupSeparator.includes(' ') && this.numberLocaleConfig.fractionSeparator === ','
+                ? /[,.]/
+                : this.numberLocaleConfig.fractionSeparator;
 
-        const [intPart, fractionPart] = this.viewValue.split(separator)
+        const [intPart, fractionPart] = this.viewValue
+            .split(separator)
             .map((valuePart) => this.normalizeNumber(valuePart));
 
         return this.createLocalizedNumberFromParts(+intPart, fractionPart);
     }
 
     private formatNumber(value: number | null | undefined): string | null {
-        if (value === null || value === undefined) { return null; }
+        if (value === null || value === undefined) {
+            return null;
+        }
 
         const [intPart, fractionPart] = value.toString().split('.');
 
@@ -459,46 +478,53 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         };
 
         if (this.withThousandSeparator && this.numberLocaleConfig.startFormattingFrom) {
-            formatOptions.useGrouping = intPart >= Math.pow(
-                // tslint:disable-next-line:no-magic-numbers
-                10, this.numberLocaleConfig.startFormattingFrom
-            );
+            formatOptions.useGrouping =
+                intPart >=
+                Math.pow(
+                    // tslint:disable-next-line:no-magic-numbers
+                    10,
+                    this.numberLocaleConfig.startFormattingFrom
+                );
         }
 
         const localeId = this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
-        const formattedFractionPart = fractionPart?.split('')
-            .map((numChar) => formatter.format(+numChar)).join('');
+        const formattedFractionPart = fractionPart
+            ?.split('')
+            .map((numChar) => formatter.format(+numChar))
+            .join('');
 
         return formattedFractionPart === undefined
             ? formatter.format(intPart)
-            : `${ formatter.format(intPart) }${ this.numberLocaleConfig.fractionSeparator }${ formattedFractionPart }`;
+            : `${formatter.format(intPart)}${this.numberLocaleConfig.fractionSeparator}${formattedFractionPart}`;
     }
 
     /**
      * Method that returns a string representation of a number without localized separators
      */
     private normalizeNumber(value: string | null | undefined, customConfig?: NumberLocaleConfig): string {
-        if (value === null || value === undefined) { return ''; }
+        if (value === null || value === undefined) {
+            return '';
+        }
 
         const { groupSeparator, fractionSeparator } = customConfig || this.numberLocaleConfig;
         const groupSeparatorRegexp = new RegExp(`[${groupSeparator.join('')}]`, 'g');
         const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
 
-        return value.toString()
-            .replace(groupSeparatorRegexp, '')
-            .replace(fractionSeparatorRegexp, '.');
+        return value.toString().replace(groupSeparatorRegexp, '').replace(fractionSeparatorRegexp, '.');
     }
 
     private updateLocaleParams = (id: string) => {
         this.numberLocaleConfig = this.localeService.locales[id].input.number;
 
         this.setViewValue(this.formatNumber(this.value));
-    }
+    };
 
     private checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
-        if (num === null || num === undefined) { return null; }
+        if (num === null || num === undefined) {
+            return null;
+        }
 
         /* if some locale input config satisfies pasted number, try to normalize with selected locale config */
         let numberOutput: number | null = null;

@@ -1,13 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
-
 function emptyFormValidator(): ValidatorFn {
     return (g: AbstractControl | FormGroup): ValidationErrors | null => {
         return g.get('firstName')?.value && g.get('lastName')?.value ? null : { empty: true };
     };
 }
-
 
 /**
  * @title validation-small

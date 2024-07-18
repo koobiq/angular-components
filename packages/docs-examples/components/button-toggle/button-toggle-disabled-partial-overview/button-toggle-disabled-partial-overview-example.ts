@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-
 /**
  * @title button-toggle-disabled-partial
  */
@@ -9,5 +8,4 @@ import { Component } from '@angular/core';
     templateUrl: 'button-toggle-disabled-partial-overview-example.html',
     styleUrls: ['button-toggle-disabled-partial-overview-example.css']
 })
-export class ButtonToggleDisabledPartialOverviewExample {
-}
+export class ButtonToggleDisabledPartialOverviewExample {}

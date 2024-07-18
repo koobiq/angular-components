@@ -1,7 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-
 import { koobiqVersion, koobiqVersionFull } from '../../version';
 import { NavbarProperty, NavbarPropertyParameters } from '../navbar/navbar-property';
 

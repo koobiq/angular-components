@@ -1,21 +1,9 @@
 /* tslint:disable:no-empty */
 
-import {
-    AfterContentInit,
-    Directive,
-    Inject,
-    OnDestroy,
-    Optional
-} from '@angular/core';
-import {
-    END,
-    HOME,
-    SPACE,
-    ESCAPE
-} from '@koobiq/cdk/keycodes';
+import { AfterContentInit, Directive, Inject, OnDestroy, Optional } from '@angular/core';
+import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
-
 
 @Directive({
     selector: 'kbq-select-trigger, [kbq-select-trigger]',
@@ -28,7 +16,6 @@ export class KbqSelectTrigger {}
     standalone: true
 })
 export class KbqSelectMatcher {}
-
 
 @Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',

@@ -1,11 +1,9 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
+import { ThemeService } from '@koobiq/components/core';
+import { Observable, Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
-
-import { DocStates } from '../doс-states';
 import { DocCategory, DocumentationItems } from '../documentation-items';
-import { KbqTheme, ThemeService } from '@koobiq/components/core';
-
+import { DocStates } from '../doс-states';
 
 @Component({
     selector: 'docs-welcome',
@@ -25,7 +23,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
         private elementRef: ElementRef,
         private docStates: DocStates,
         private docItems: DocumentationItems,
-        private themeService: ThemeService,
+        private themeService: ThemeService
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
             .pipe(
@@ -37,9 +35,9 @@ export class WelcomeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.docCategories = this.docItems.getCategories().filter(category => category.isPreviewed);
+        this.docCategories = this.docItems.getCategories().filter((category) => category.isPreviewed);
         this.currentTheme$ = this.themeService.current.pipe(
-            map(currentTheme => currentTheme.className.replace('theme-', ''))
+            map((currentTheme) => currentTheme.className.replace('theme-', ''))
         );
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
@@ -50,5 +48,5 @@ export class WelcomeComponent implements OnInit, OnDestroy {
 
     checkOverflow = () => {
         this.docStates.viewerTopOverflown.next(this.elementRef.nativeElement.scrollTop > 0);
-    }
+    };
 }

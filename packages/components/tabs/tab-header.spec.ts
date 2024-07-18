@@ -5,31 +5,19 @@ import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
-    waitForAsync,
     ComponentFixture,
+    TestBed,
     discardPeriodicTasks,
     fakeAsync,
-    TestBed,
+    flush,
     tick,
-    flush
+    waitForAsync
 } from '@angular/core/testing';
-import {
-    END,
-    ENTER,
-    HOME,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE
-} from '@koobiq/cdk/keycodes';
-import {
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/cdk/testing';
+import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
+import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { Subject } from 'rxjs';
-
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
-
 
 describe('KbqTabHeader', () => {
     let dir: Direction = 'ltr';
@@ -66,15 +54,12 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
 
             appComponent = fixture.componentInstance;
-            tabListContainer =
-                appComponent.tabHeader.tabListContainer.nativeElement;
+            tabListContainer = appComponent.tabHeader.tabListContainer.nativeElement;
         });
 
         it('should initialize to the selected index', () => {
             fixture.detectChanges();
-            expect(appComponent.tabHeader.focusIndex).toBe(
-                appComponent.selectedIndex
-            );
+            expect(appComponent.tabHeader.focusIndex).toBe(appComponent.selectedIndex);
         });
 
         it('should send focus change event', () => {
@@ -140,11 +125,7 @@ describe('KbqTabHeader', () => {
 
             // Select the focused index 2
             expect(appComponent.selectedIndex).toBe(0);
-            const enterEvent = dispatchKeyboardEvent(
-                tabListContainer,
-                'keydown',
-                ENTER
-            );
+            const enterEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
             fixture.detectChanges();
             expect(appComponent.selectedIndex).toBe(2);
             expect(enterEvent.defaultPrevented).toBe(true);
@@ -156,11 +137,7 @@ describe('KbqTabHeader', () => {
 
             // Select the focused 0 using space.
             expect(appComponent.selectedIndex).toBe(2);
-            const spaceEvent = dispatchKeyboardEvent(
-                tabListContainer,
-                'keydown',
-                SPACE
-            );
+            const spaceEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', SPACE);
             fixture.detectChanges();
             expect(appComponent.selectedIndex).toBe(0);
             expect(spaceEvent.defaultPrevented).toBe(true);
@@ -171,11 +148,7 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(3);
 
-            const event = dispatchKeyboardEvent(
-                tabListContainer,
-                'keydown',
-                HOME
-            );
+            const event = dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
             fixture.detectChanges();
 
             expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -200,11 +173,7 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-            const event = dispatchKeyboardEvent(
-                tabListContainer,
-                'keydown',
-                END
-            );
+            const event = dispatchKeyboardEvent(tabListContainer, 'keydown', END);
             fixture.detectChanges();
 
             expect(appComponent.tabHeader.focusIndex).toBe(3);
@@ -236,17 +205,13 @@ describe('KbqTabHeader', () => {
 
             it('should show width when tab list width exceeds container', () => {
                 fixture.detectChanges();
-                expect(appComponent.tabHeader.showPaginationControls).toBe(
-                    false
-                );
+                expect(appComponent.tabHeader.showPaginationControls).toBe(false);
 
                 // Add enough tabs that it will obviously exceed the width
                 appComponent.addTabsForScrolling();
                 fixture.detectChanges();
 
-                expect(appComponent.tabHeader.showPaginationControls).toBe(
-                    true
-                );
+                expect(appComponent.tabHeader.showPaginationControls).toBe(true);
             });
 
             it('should scroll to show the focused tab label', () => {
@@ -255,12 +220,9 @@ describe('KbqTabHeader', () => {
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
                 // Focus on the last tab, expect this to be the maximum scroll distance.
-                appComponent.tabHeader.focusIndex =
-                    appComponent.tabs.length - 1;
+                appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
                 fixture.detectChanges();
-                expect(appComponent.tabHeader.scrollDistance).toBe(
-                    appComponent.tabHeader.getMaxScrollDistance()
-                );
+                expect(appComponent.tabHeader.scrollDistance).toBe(appComponent.tabHeader.getMaxScrollDistance());
 
                 // Focus on the first tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = 0;
@@ -273,8 +235,7 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
-                appComponent.tabHeader.focusIndex =
-                    appComponent.tabs.length - 1;
+                appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
                 fixture.detectChanges();
                 const previousMaxScrollDistance = appComponent.tabHeader.getMaxScrollDistance();
 
@@ -309,12 +270,9 @@ describe('KbqTabHeader', () => {
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
                 // Focus on the last tab, expect this to be the maximum scroll distance.
-                appComponent.tabHeader.focusIndex =
-                    appComponent.tabs.length - 1;
+                appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
                 fixture.detectChanges();
-                expect(appComponent.tabHeader.scrollDistance).toBe(
-                    appComponent.tabHeader.getMaxScrollDistance()
-                );
+                expect(appComponent.tabHeader.scrollDistance).toBe(appComponent.tabHeader.getMaxScrollDistance());
 
                 // Focus on the first tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = 0;
@@ -347,25 +305,32 @@ interface ITab {
 
 @Component({
     template: `
-  <div [dir]="dir">
-    <kbq-tab-header [selectedIndex]="selectedIndex"
-               (indexFocused)="focusedIndex = $event"
-               (selectFocusedIndex)="selectedIndex = $event">
-      <div kbqTabLabelWrapper class="label-content" style="min-width: 30px; width: 30px"
-           *ngFor="let tab of tabs; let i = index"
-           [disabled]="!!tab.disabled"
-           (click)="selectedIndex = i">
-         {{tab.label}}
-      </div>
-    </kbq-tab-header>
-  </div>
-  `,
+        <div [dir]="dir">
+            <kbq-tab-header
+                [selectedIndex]="selectedIndex"
+                (indexFocused)="focusedIndex = $event"
+                (selectFocusedIndex)="selectedIndex = $event"
+            >
+                <div
+                    kbqTabLabelWrapper
+                    class="label-content"
+                    style="min-width: 30px; width: 30px"
+                    *ngFor="let tab of tabs; let i = index"
+                    [disabled]="!!tab.disabled"
+                    (click)="selectedIndex = i"
+                >
+                    {{ tab.label }}
+                </div>
+            </kbq-tab-header>
+        </div>
+    `,
     styles: [
         `
             :host {
                 width: 130px;
             }
         `
+
     ]
 })
 class SimpleTabHeaderApp {
@@ -376,11 +341,10 @@ class SimpleTabHeaderApp {
         { label: 'tab one' },
         { label: 'tab one' },
         { label: 'tab one' },
-        { label: 'tab one' }
-    ];
+        { label: 'tab one' }];
     dir: Direction = 'ltr';
 
-    @ViewChild(KbqTabHeader, {static: true})
+    @ViewChild(KbqTabHeader, { static: true })
     tabHeader: KbqTabHeader;
 
     constructor() {
@@ -388,11 +352,6 @@ class SimpleTabHeaderApp {
     }
 
     addTabsForScrolling() {
-        this.tabs.push(
-            { label: 'new' },
-            { label: 'new' },
-            { label: 'new' },
-            { label: 'new' }
-        );
+        this.tabs.push({ label: 'new' }, { label: 'new' }, { label: 'new' }, { label: 'new' });
     }
 }

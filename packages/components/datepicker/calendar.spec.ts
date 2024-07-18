@@ -1,21 +1,16 @@
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-unbound-method
 import { Component, LOCALE_ID } from '@angular/core';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxonDateAdapter, KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
-import {
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/cdk/testing';
+import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
-
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerModule } from './datepicker-module';
-
 
 describe('KbqCalendar', () => {
     let adapter: LuxonDateAdapter;
@@ -35,8 +30,7 @@ describe('KbqCalendar', () => {
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
-                { provide: LOCALE_ID, useValue: 'ru-RU' }
-            ]
+                { provide: LOCALE_ID, useValue: 'ru-RU' }]
         });
 
         TestBed.compileComponents();
@@ -100,7 +94,7 @@ describe('KbqCalendar', () => {
 
         it('should complete the stateChanges stream', () => {
             const spy = jasmine.createSpy('complete spy');
-            const subscription = calendarInstance.stateChanges.subscribe({complete: spy});
+            const subscription = calendarInstance.stateChanges.subscribe({ complete: spy });
 
             fixture.destroy();
 
@@ -186,21 +180,18 @@ describe('KbqCalendar', () => {
             testComponent.startAt = adapter.createDate(2016, 1, 1);
             fixture.detectChanges();
 
-            const prevButton =
-                calendarElement.querySelector('.kbq-calendar-header__previous-button') as HTMLButtonElement;
+            const prevButton = calendarElement.querySelector(
+                '.kbq-calendar-header__previous-button'
+            ) as HTMLButtonElement;
 
-            expect(prevButton.disabled)
-                .withContext('previous button should not be disabled')
-                .toBe(false);
+            expect(prevButton.disabled).withContext('previous button should not be disabled').toBe(false);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20160201');
 
             prevButton.click();
             fixture.detectChanges();
 
-            expect(prevButton.disabled)
-                .withContext('previous button should be disabled')
-                .toBe(true);
+            expect(prevButton.disabled).withContext('previous button should be disabled').toBe(true);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20160101');
 
@@ -214,21 +205,16 @@ describe('KbqCalendar', () => {
             testComponent.startAt = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();
 
-            const nextButton =
-                calendarElement.querySelector('.kbq-calendar-header__next-button') as HTMLButtonElement;
+            const nextButton = calendarElement.querySelector('.kbq-calendar-header__next-button') as HTMLButtonElement;
 
-            expect(nextButton.disabled)
-                .withContext('next button should not be disabled')
-                .toBe(false);
+            expect(nextButton.disabled).withContext('next button should not be disabled').toBe(false);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20171201');
 
             nextButton.click();
             fixture.detectChanges();
 
-            expect(nextButton.disabled)
-                .withContext('next button should be disabled')
-                .toBe(true);
+            expect(nextButton.disabled).withContext('next button should be disabled').toBe(true);
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20180101');
 
             nextButton.click();
@@ -358,15 +344,14 @@ describe('KbqCalendar', () => {
     });
 });
 
-
 @Component({
-    template: `
-        <kbq-calendar
-            [startAt]="startDate"
-            [(selected)]="selected"
-            (yearSelected)="selectedYear=$event"
-            (monthSelected)="selectedMonth=$event">
-        </kbq-calendar>`
+    template: ` <kbq-calendar
+        [startAt]="startDate"
+        [(selected)]="selected"
+        (yearSelected)="selectedYear = $event"
+        (monthSelected)="selectedMonth = $event"
+    >
+    </kbq-calendar>`
 })
 class StandardCalendar {
     selected: DateTime;
@@ -377,11 +362,8 @@ class StandardCalendar {
     constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
-
 @Component({
-    template: `
-        <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></kbq-calendar>
-    `
+    template: ` <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></kbq-calendar> `
 })
 class CalendarWithMinMax {
     startAt: DateTime;
@@ -391,15 +373,8 @@ class CalendarWithMinMax {
     constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
-
 @Component({
-    template: `
-        <kbq-calendar
-            [startAt]="startDate"
-            [(selected)]="selected"
-            [dateFilter]="dateFilter">
-        </kbq-calendar>
-    `
+    template: ` <kbq-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter"> </kbq-calendar> `
 })
 class CalendarWithDateFilter {
     selected: DateTime;
@@ -412,14 +387,9 @@ class CalendarWithDateFilter {
     }
 }
 
-
 @Component({
     template: `
-        <kbq-calendar
-            [startAt]="startAt"
-            (selectedChange)="select($event)"
-            [selected]="selected"
-            [minDate]="selected">
+        <kbq-calendar [startAt]="startAt" (selectedChange)="select($event)" [selected]="selected" [minDate]="selected">
         </kbq-calendar>
     `
 })

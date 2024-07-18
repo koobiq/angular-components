@@ -1,13 +1,11 @@
 import { Version } from './parse-version';
 import { VersionType } from './publish-branches';
 
-
 /** Type of a new release */
 export type ReleaseType = VersionType | 'stable-release' | 'bump-prerelease';
 
 /** Creates a new version that can be used for the given release type. */
-export function createNewVersion(currentVersion: Version, releaseType: ReleaseType):
-    Version {
+export function createNewVersion(currentVersion: Version, releaseType: ReleaseType): Version {
     // Clone the version object in order to keep the original version info un-modified.
     const newVersion = currentVersion.clone();
 

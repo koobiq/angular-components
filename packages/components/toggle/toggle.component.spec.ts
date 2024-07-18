@@ -1,13 +1,11 @@
 // tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, flush } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 import { KbqToggleComponent, KbqToggleModule } from './index';
-
 
 describe('KbqToggle', () => {
     let fixture: ComponentFixture<any>;
@@ -48,8 +46,8 @@ describe('KbqToggle', () => {
             toggleNativeElement = toggleDebugElement.nativeElement;
             toggleInstance = toggleDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
-            labelElement = <HTMLLabelElement> toggleNativeElement.querySelector('label');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
+            labelElement = <HTMLLabelElement>toggleNativeElement.querySelector('label');
         });
 
         it('should add and remove the checked state', () => {
@@ -137,7 +135,7 @@ describe('KbqToggle', () => {
         });
 
         it('should project the toggle content into the label element', () => {
-            const label = <HTMLLabelElement> toggleNativeElement.querySelector('.kbq-toggle-label');
+            const label = <HTMLLabelElement>toggleNativeElement.querySelector('.kbq-toggle-label');
             expect(label.textContent!.trim()).toBe('Simple toggle');
         });
 
@@ -234,7 +232,6 @@ describe('KbqToggle', () => {
                 expect(toggleNativeElement.classList.contains('kbq-primary')).toBe(false);
                 expect(toggleNativeElement.classList.contains('kbq-accent')).toBe(true);
                 expect(toggleNativeElement.classList.contains('custom-class')).toBe(true);
-
             });
         });
     });
@@ -248,7 +245,7 @@ describe('KbqToggle', () => {
             fixture = TestBed.createComponent(ToggleWithAriaLabel);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
 
             fixture.detectChanges();
             expect(inputElement.getAttribute('aria-label')).toBe('Super effective');
@@ -271,7 +268,7 @@ describe('KbqToggle', () => {
             fixture = TestBed.createComponent(ToggleWithAriaLabelledby);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
 
             fixture.detectChanges();
             expect(inputElement.getAttribute('aria-labelledby')).toBe('some-id');
@@ -281,7 +278,7 @@ describe('KbqToggle', () => {
             fixture = TestBed.createComponent(SingleToggle);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
 
             fixture.detectChanges();
             expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
@@ -301,7 +298,7 @@ describe('KbqToggle', () => {
             testComponent = fixture.debugElement.componentInstance;
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
         });
 
         it('should preserve any given tabIndex', () => {
@@ -320,7 +317,6 @@ describe('KbqToggle', () => {
 
             expect(inputElement.tabIndex).toBe(13);
         });
-
     });
 
     describe('using ViewChild', () => {
@@ -339,7 +335,7 @@ describe('KbqToggle', () => {
 
         it('should toggle disabledness correctly', () => {
             const toggleInstance = toggleDebugElement.componentInstance;
-            const inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            const inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
             expect(toggleInstance.disabled).toBe(false);
             expect(toggleNativeElement.classList).not.toContain('kbq-disabled');
             expect(inputElement.tabIndex).toBe(0);
@@ -369,9 +365,9 @@ describe('KbqToggle', () => {
         });
 
         it('should assign a unique id to each toggle', () => {
-            const [firstId, secondId] =
-                fixture.debugElement.queryAll(By.directive(KbqToggleComponent))
-                    .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
+            const [firstId, secondId] = fixture.debugElement
+                .queryAll(By.directive(KbqToggleComponent))
+                .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
 
             expect(firstId).toMatch(/kbq-toggle-\d+-input/);
             expect(secondId).toMatch(/kbq-toggle-\d+-input/);
@@ -392,7 +388,7 @@ describe('KbqToggle', () => {
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
             toggleInstance = toggleDebugElement.componentInstance;
-            inputElement = <HTMLInputElement> toggleNativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
         });
 
         it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
@@ -432,7 +428,7 @@ describe('KbqToggle', () => {
 
         it('should forward name value to input element', () => {
             const toggleElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
-            const inputElement = <HTMLInputElement> toggleElement.nativeElement.querySelector('input');
+            const inputElement = <HTMLInputElement>toggleElement.nativeElement.querySelector('input');
 
             expect(inputElement.getAttribute('name')).toBe('test-name');
         });
@@ -451,7 +447,7 @@ describe('KbqToggle', () => {
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleInstance = toggleDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
-            inputElement = <HTMLInputElement> toggleDebugElement.nativeElement.querySelector('input');
+            inputElement = <HTMLInputElement>toggleDebugElement.nativeElement.querySelector('input');
         });
 
         it('should toggle the disabled state', () => {
@@ -479,8 +475,7 @@ describe('KbqToggle', () => {
 
             const toggleDebugEl = fixture.debugElement.query(By.directive(KbqToggleComponent));
 
-            toggleInnerContainer = toggleDebugEl
-                .query(By.css('.kbq-toggle-layout')).nativeElement;
+            toggleInnerContainer = toggleDebugEl.query(By.css('.kbq-toggle-layout')).nativeElement;
         });
 
         it('should not add the "name" attribute if it is not passed in', () => {
@@ -496,19 +491,19 @@ describe('KbqToggle', () => {
 });
 
 @Component({
-    template: `
-        <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
-            <kbq-toggle
-                [id]="toggleId"
-                [labelPosition]="labelPos"
-                [checked]="value"
-                [disabled]="isDisabled"
-                [color]="toggleColor"
-                (click)="onToggleClick($event)"
-                (change)="onToggleChange($event)">
-                Simple toggle
-            </kbq-toggle>
-        </div>`
+    template: ` <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
+        <kbq-toggle
+            [id]="toggleId"
+            [labelPosition]="labelPos"
+            [checked]="value"
+            [disabled]="isDisabled"
+            [color]="toggleColor"
+            (click)="onToggleClick($event)"
+            (change)="onToggleChange($event)"
+        >
+            Simple toggle
+        </kbq-toggle>
+    </div>`
 })
 class SingleToggle {
     labelPos: 'left' | 'right' = 'left';
@@ -523,32 +518,27 @@ class SingleToggle {
     onToggleChange: (event?: any) => void = () => {};
 }
 
-
 @Component({
     template: `
-    <form>
-      <kbq-toggle name="cb" [(ngModel)]="isGood">Be good</kbq-toggle>
-    </form>
-  `
+        <form>
+            <kbq-toggle name="cb" [(ngModel)]="isGood">Be good</kbq-toggle>
+        </form>
+    `
 })
 class ToggleWithFormDirectives {
     isGood: boolean = false;
 }
 
-@Component(({
+@Component({
     template: `
-    <kbq-toggle>Option 1</kbq-toggle>
-    <kbq-toggle>Option 2</kbq-toggle>
-  `
-}))
+        <kbq-toggle>Option 1</kbq-toggle>
+        <kbq-toggle>Option 2</kbq-toggle>
+    `
+})
 class MultipleToggles {}
 
 @Component({
-    template: `
-    <kbq-toggle
-        [tabIndex]="customTabIndex"
-        [disabled]="isDisabled">
-    </kbq-toggle>`
+    template: ` <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled"> </kbq-toggle>`
 })
 class ToggleWithTabIndex {
     customTabIndex: number = 7;
@@ -556,11 +546,10 @@ class ToggleWithTabIndex {
 }
 
 @Component({
-    template: `
-    <kbq-toggle></kbq-toggle>`
+    template: ` <kbq-toggle></kbq-toggle>`
 })
 class ToggleUsingViewChild {
-    @ViewChild(KbqToggleComponent, {static: false}) toggle;
+    @ViewChild(KbqToggleComponent, { static: false }) toggle;
 
     set isDisabled(value: boolean) {
         this.toggle.disabled = value;
@@ -570,20 +559,17 @@ class ToggleUsingViewChild {
 @Component({
     template: `<kbq-toggle aria-label="Super effective"></kbq-toggle>`
 })
-class ToggleWithAriaLabel {
-}
+class ToggleWithAriaLabel {}
 
 @Component({
     template: `<kbq-toggle aria-labelledby="some-id"></kbq-toggle>`
 })
-class ToggleWithAriaLabelledby {
-}
+class ToggleWithAriaLabelledby {}
 
 @Component({
     template: `<kbq-toggle name="test-name"></kbq-toggle>`
 })
-class ToggleWithNameAttribute {
-}
+class ToggleWithNameAttribute {}
 
 @Component({
     template: `<kbq-toggle [formControl]="formControl"></kbq-toggle>`

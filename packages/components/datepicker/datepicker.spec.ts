@@ -6,8 +6,8 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, FactoryProvider, Type, ValueProvider, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,14 +23,11 @@ import {
 import { DateAdapter, KBQ_DATE_FORMATS, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
-
 import { KbqInputModule } from '../input/index';
-
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggle } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerIntl, KbqDatepickerModule } from './index';
-
 
 describe('KbqDatepicker', () => {
     // Creates a test component fixture.
@@ -38,8 +35,8 @@ describe('KbqDatepicker', () => {
         component: Type<any>,
         imports: Type<any>[] = [],
         providers: (FactoryProvider | ValueProvider)[] = [],
-        entryComponents: Type<any>[] = []): ComponentFixture<any> {
-
+        entryComponents: Type<any>[] = []
+    ): ComponentFixture<any> {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -167,83 +164,69 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker.open();
                 fixture.detectChanges();
 
-                expect(testComponent.datepicker.opened)
-                    .withContext('Expected datepicker to be open.')
-                    .toBe(true);
+                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be open.').toBe(true);
 
                 dispatchKeyboardEvent(fixture.nativeElement.querySelector('input'), 'keydown', ESCAPE);
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.datepicker.opened)
-                    .withContext('Expected datepicker to be closed.')
-                    .toBe(false);
+                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be closed.').toBe(false);
             }));
 
-            it(
-                'clicking the currently selected date should close the calendar without firing selectedChanged',
-                fakeAsync(() => {
-                    const selectedChangedSpy =
-                        spyOn(testComponent.datepicker.selectedChanged, 'next').and.callThrough();
+            it('clicking the currently selected date should close the calendar without firing selectedChanged', fakeAsync(() => {
+                const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'next').and.callThrough();
 
-                    for (let changeCount = 1; changeCount < 3; changeCount++) {
-                        const currentDay = changeCount;
-                        testComponent.datepicker.open();
-                        fixture.detectChanges();
-
-                        expect(document.querySelector('kbq-datepicker__content')).not.toBeNull();
-
-                        if (currentDay === 1) {
-                            expect(testComponent.datepickerInput.value?.toISO())
-                                .toEqual(DateTime.local(2020, 1, currentDay).toISO());
-                        }
-
-                        if (currentDay === 2) {
-                            expect(testComponent.datepickerInput.value?.toISO())
-                                .toEqual(DateTime.local(2020, 1, currentDay).toISO());
-                        }
-
-                        const cells = document.querySelectorAll('.kbq-calendar__body-cell');
-                        dispatchMouseEvent(cells[1], 'click');
-                        fixture.detectChanges();
-                        flush();
-                    }
-
-                    expect(selectedChangedSpy.calls.count()).toEqual(1);
-
-                    expect(testComponent.datepickerInput.value?.toISO())
-                        .toEqual(DateTime.local(2020, 1, 2).toISO());
-                })
-            );
-
-            it(
-                'pressing enter on the currently selected date should close the calendar without firing selectedChanged',
-                () => {
-                    const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'next')
-                        .and.callThrough();
-
+                for (let changeCount = 1; changeCount < 3; changeCount++) {
+                    const currentDay = changeCount;
                     testComponent.datepicker.open();
                     fixture.detectChanges();
 
-                    const calendarBodyEl = document.querySelector('.kbq-calendar__body') as HTMLElement;
-                    expect(calendarBodyEl).not.toBeNull();
-                    expect(testComponent.datepickerInput.value?.toISO())
-                        .toEqual(DateTime.local(2020, 1, 1).toISO());
+                    expect(document.querySelector('kbq-datepicker__content')).not.toBeNull();
 
-                    dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+                    if (currentDay === 1) {
+                        expect(testComponent.datepickerInput.value?.toISO()).toEqual(
+                            DateTime.local(2020, 1, currentDay).toISO()
+                        );
+                    }
+
+                    if (currentDay === 2) {
+                        expect(testComponent.datepickerInput.value?.toISO()).toEqual(
+                            DateTime.local(2020, 1, currentDay).toISO()
+                        );
+                    }
+
+                    const cells = document.querySelectorAll('.kbq-calendar__body-cell');
+                    dispatchMouseEvent(cells[1], 'click');
                     fixture.detectChanges();
-
-                    fixture.whenStable().then(() => {
-                        expect(selectedChangedSpy.calls.count()).toEqual(0);
-                        expect(testComponent.datepickerInput.value?.toISO())
-                            .toEqual(DateTime.local(2020, 1, 1).toISO());
-                    });
+                    flush();
                 }
-            );
+
+                expect(selectedChangedSpy.calls.count()).toEqual(1);
+
+                expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 2).toISO());
+            }));
+
+            it('pressing enter on the currently selected date should close the calendar without firing selectedChanged', () => {
+                const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'next').and.callThrough();
+
+                testComponent.datepicker.open();
+                fixture.detectChanges();
+
+                const calendarBodyEl = document.querySelector('.kbq-calendar__body') as HTMLElement;
+                expect(calendarBodyEl).not.toBeNull();
+                expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
+
+                dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+                fixture.detectChanges();
+
+                fixture.whenStable().then(() => {
+                    expect(selectedChangedSpy.calls.count()).toEqual(0);
+                    expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
+                });
+            });
 
             it('startAt should fallback to input value', () => {
-                expect(testComponent.datepicker.startAt?.toISO())
-                    .toEqual(DateTime.local(2020, 1, 1).toISO());
+                expect(testComponent.datepicker.startAt?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
             });
 
             it('should not throw when given wrong data type', () => {
@@ -298,8 +281,8 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(testComponent.datepicker.opened).toBe(false);
-                }))
-            );
+                })
+            ));
 
             it('should close the datepicker using ALT + UP_ARROW', fakeAsync(() => {
                 const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -442,8 +425,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('explicit startAt should override input value', () => {
-                expect(testComponent.datepicker.startAt?.toISO())
-                    .toEqual(DateTime.local(2010, 1, 1).toISO());
+                expect(testComponent.datepicker.startAt?.toISO()).toEqual(DateTime.local(2010, 1, 1).toISO());
             });
         });
 
@@ -579,33 +561,41 @@ describe('KbqDatepicker', () => {
 
                 testComponent.datepicker.select(originDateTime);
 
-                expect(testComponent.adapter.toIso8601(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.toIso8601(originDateTime as DateTime));
+                expect(testComponent.adapter.toIso8601(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.toIso8601(originDateTime as DateTime)
+                );
 
                 const newDate = testComponent.adapter.createDate(2018, 1, 1);
 
                 testComponent.datepicker.select(newDate);
 
-                expect(testComponent.adapter.getYear(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getYear(newDate));
+                expect(testComponent.adapter.getYear(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getYear(newDate)
+                );
 
-                expect(testComponent.adapter.getMonth(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getMonth(newDate));
+                expect(testComponent.adapter.getMonth(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getMonth(newDate)
+                );
 
-                expect(testComponent.adapter.getDate(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getDate(newDate));
+                expect(testComponent.adapter.getDate(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getDate(newDate)
+                );
 
-                expect(testComponent.adapter.getHours(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getHours(originDateTime));
+                expect(testComponent.adapter.getHours(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getHours(originDateTime)
+                );
 
-                expect(testComponent.adapter.getMinutes(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getMinutes(originDateTime));
+                expect(testComponent.adapter.getMinutes(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getMinutes(originDateTime)
+                );
 
-                expect(testComponent.adapter.getSeconds(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getSeconds(originDateTime));
+                expect(testComponent.adapter.getSeconds(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getSeconds(originDateTime)
+                );
 
-                expect(testComponent.adapter.getMilliseconds(testComponent.selected as DateTime))
-                    .toEqual(testComponent.adapter.getMilliseconds(originDateTime));
+                expect(testComponent.adapter.getMilliseconds(testComponent.selected as DateTime)).toEqual(
+                    testComponent.adapter.getMilliseconds(originDateTime)
+                );
             }));
         });
 
@@ -703,7 +693,6 @@ describe('KbqDatepicker', () => {
 
                 dispatchMouseEvent(toggle, 'click');
                 fixture.detectChanges();
-
             });
 
             it('should not open calendar when toggle clicked if input is disabled', () => {
@@ -730,29 +719,24 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 input.focus();
-                expect(document.activeElement)
-                    .withContext('Expected input to be focused.')
-                    .toBe(input);
+                expect(document.activeElement).withContext('Expected input to be focused.').toBe(input);
 
                 fixture.componentInstance.datepicker.open();
                 fixture.detectChanges();
 
                 const pane = document.querySelector('.cdk-overlay-pane')!;
 
-                expect(pane)
-                    .withContext('Expected calendar to be open.')
-                    .toBeTruthy();
+                expect(pane).withContext('Expected calendar to be open.').toBeTruthy();
 
                 fixture.componentInstance.datepicker.close();
                 fixture.detectChanges();
 
-                expect(document.activeElement)
-                    .withContext('Expected focus to be restored to input.')
-                    .toBe(input);
+                expect(document.activeElement).withContext('Expected focus to be restored to input.').toBe(input);
             });
 
             it('should re-render when the i18n labels change', inject(
-                [KbqDatepickerIntl], (intl: KbqDatepickerIntl) => {
+                [KbqDatepickerIntl],
+                (intl: KbqDatepickerIntl) => {
                     const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
                     intl.openCalendarLabel = 'Open the calendar, perhaps?';
@@ -760,7 +744,8 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
-                }));
+                }
+            ));
 
             it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
                 const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle')).nativeElement;
@@ -830,8 +815,7 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).toContain('ng-invalid');
             }));
 
             it('should mark invalid when value is after max', fakeAsync(() => {
@@ -841,8 +825,7 @@ describe('KbqDatepicker', () => {
 
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).toContain('ng-invalid');
             }));
 
             it('should not mark invalid when value equals min', fakeAsync(() => {
@@ -851,8 +834,7 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .not.toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             }));
 
             it('should not mark invalid when value equals max', fakeAsync(() => {
@@ -861,8 +843,7 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .not.toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             }));
 
             it('should not mark invalid when value is between min and max', fakeAsync(() => {
@@ -871,8 +852,7 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .not.toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             }));
 
             it('should change selected year in calendar if input year is less than MIN', fakeAsync(() => {
@@ -889,8 +869,9 @@ describe('KbqDatepicker', () => {
 
                 expect(fixture.componentInstance.date?.year).not.toEqual(fixture.componentInstance.minDate.year);
                 expect(fixture.componentInstance.date?.year).toEqual(invalidYearLessThanMin);
-                expect(fixture.debugElement.queryAll(By.css(yearSelectValuePath))[1].nativeElement.textContent)
-                    .toContain(invalidYearLessThanMin.toString());
+                expect(
+                    fixture.debugElement.queryAll(By.css(yearSelectValuePath))[1].nativeElement.textContent
+                ).toContain(invalidYearLessThanMin.toString());
             }));
         });
 
@@ -917,16 +898,14 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).toContain('ng-invalid');
 
                 testComponent.date = DateTime.local(2017, 1, 2);
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
 
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .not.toContain('ng-invalid');
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             }));
 
             it('should disable filtered calendar cells', () => {
@@ -1027,7 +1006,6 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
             }));
 
-
             it('should set datepicker selected value to null when input cleaned up', fakeAsync(() => {
                 expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
@@ -1102,7 +1080,6 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.closedSpy).toHaveBeenCalled();
             }));
-
         });
 
         describe('datepicker that opens on focus', () => {
@@ -1128,9 +1105,7 @@ describe('KbqDatepicker', () => {
                 (fixture.componentInstance.datepicker as any)._focusedElementBeforeOpen = input;
 
                 // Ensure that the datepicker is actually open.
-                expect(testComponent.datepicker.opened)
-                    .withContext('Expected datepicker to be open.')
-                    .toBe(true);
+                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be open.').toBe(true);
 
                 // Close the datepicker.
                 testComponent.datepicker.close();
@@ -1143,18 +1118,22 @@ describe('KbqDatepicker', () => {
                 // Flush out the scheduled tasks.
                 flush();
 
-                expect(testComponent.datepicker.opened)
-                    .withContext('Expected datepicker to be closed.')
-                    .toBe(false);
+                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be closed.').toBe(false);
             }));
         });
 
         describe('datepicker directionality', () => {
             it('should pass along the directionality to the popup', () => {
-                const fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule], [{
-                    provide: Directionality,
-                    useValue: ({ value: 'rtl' })
-                }]);
+                const fixture = createComponent(
+                    StandardDatepicker,
+                    [KbqLuxonDateModule],
+                    [
+                        {
+                            provide: Directionality,
+                            useValue: { value: 'rtl' }
+                        }
+                    ]
+                );
 
                 fixture.detectChanges();
                 fixture.componentInstance.datepicker.open();
@@ -1167,10 +1146,16 @@ describe('KbqDatepicker', () => {
 
             it('should update the popup direction if the directionality value changes', fakeAsync(() => {
                 const dirProvider = { value: 'ltr' };
-                const fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule], [{
-                    provide: Directionality,
-                    useFactory: () => dirProvider
-                }]);
+                const fixture = createComponent(
+                    StandardDatepicker,
+                    [KbqLuxonDateModule],
+                    [
+                        {
+                            provide: Directionality,
+                            useFactory: () => dirProvider
+                        }
+                    ]
+                );
 
                 fixture.detectChanges();
                 fixture.componentInstance.datepicker.open();
@@ -1198,8 +1183,7 @@ describe('KbqDatepicker', () => {
 
     describe('with missing DateAdapter and KBQ_DATE_FORMATS', () => {
         it('should throw when created', () => {
-            expect(() => createComponent(StandardDatepicker))
-                .toThrowError(/KbqDatepicker: No provider found for .*/);
+            expect(() => createComponent(StandardDatepicker)).toThrowError(/KbqDatepicker: No provider found for .*/);
         });
     });
 
@@ -1235,10 +1219,9 @@ describe('KbqDatepicker', () => {
     });
 });
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [value]="date">
+        <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [disabled]="disabled" [opened]="opened"></kbq-datepicker>
     `
 })
@@ -1250,28 +1233,24 @@ class StandardDatepicker {
     @ViewChild(KbqDatepickerInput, { static: false }) datepickerInput: KbqDatepickerInput<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d"><input [kbqDatepicker]="d">
+        <input [kbqDatepicker]="d" /><input [kbqDatepicker]="d" />
         <kbq-datepicker #d></kbq-datepicker>
     `
 })
 class MultiInputDatepicker {}
 
-
 @Component({
-    template: `
-        <kbq-datepicker #d></kbq-datepicker>`
+    template: ` <kbq-datepicker #d></kbq-datepicker>`
 })
 class NoInputDatepicker {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [value]="date">
+        <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [startAt]="startDate"></kbq-datepicker>
     `
 })
@@ -1281,10 +1260,9 @@ class DatepickerWithStartAt {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [(ngModel)]="selected" [kbqDatepicker]="d">
+        <input [(ngModel)]="selected" [kbqDatepicker]="d" />
         <kbq-datepicker #d></kbq-datepicker>
     `
 })
@@ -1296,10 +1274,9 @@ class DatepickerWithNgModel {
     constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
-
 @Component({
     template: `
-        <input [formControl]="formControl" [kbqDatepicker]="d">
+        <input [formControl]="formControl" [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
     `
@@ -1311,10 +1288,9 @@ class DatepickerWithFormControl {
     @ViewChild(KbqDatepickerToggle, { static: false }) datepickerToggle: KbqDatepickerToggle<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d">
+        <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
     `
@@ -1324,10 +1300,9 @@ class DatepickerWithToggle {
     @ViewChild(KbqDatepickerInput, { static: false }) input: KbqDatepickerInput<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d">
+        <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d">
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>
@@ -1336,10 +1311,9 @@ class DatepickerWithToggle {
 })
 class DatepickerWithCustomIcon {}
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
+        <input [kbqDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
     `
@@ -1351,10 +1325,9 @@ class DatepickerWithMinAndMaxValidation {
     maxDate = DateTime.local(2020, 1, 1);
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [(ngModel)]="date" [kbqDatepickerFilter]="filter">
+        <input [kbqDatepicker]="d" [(ngModel)]="date" [kbqDatepickerFilter]="filter" />
         <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
         <kbq-datepicker #d></kbq-datepicker>
     `
@@ -1365,14 +1338,15 @@ class DatepickerWithFilterAndValidation {
     filter = (date: DateTime) => date.get('day') !== 1;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d"
-               (change)="onChange()"
-               [(ngModel)]="value"
-               (dateChange)="onDateChange($event)"
-               (dateInput)="onDateInput()">
+        <input
+            [kbqDatepicker]="d"
+            (change)="onChange()"
+            [(ngModel)]="value"
+            (dateChange)="onDateChange($event)"
+            (dateInput)="onDateInput()"
+        />
         <kbq-datepicker #d></kbq-datepicker>
     `
 })
@@ -1388,10 +1362,9 @@ class DatepickerWithChangeAndInputEvents {
     onDateInput() {}
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [(ngModel)]="date">
+        <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d></kbq-datepicker>
     `
 })
@@ -1401,10 +1374,9 @@ class DatepickerWithi18n {
     @ViewChild(KbqDatepickerInput, { static: false }) datepickerInput: KbqDatepickerInput<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max">
+        <input [kbqDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max" />
         <kbq-datepicker #d [startAt]="startAt"></kbq-datepicker>
     `
 })
@@ -1418,10 +1390,9 @@ class DatepickerWithISOStrings {
     @ViewChild(KbqDatepickerInput, { static: false }) datepickerInput: KbqDatepickerInput<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [(ngModel)]="selected" [kbqDatepicker]="d">
+        <input [(ngModel)]="selected" [kbqDatepicker]="d" />
         <kbq-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></kbq-datepicker>
     `
 })
@@ -1432,10 +1403,9 @@ class DatepickerWithEvents {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input (focus)="d.open()" [kbqDatepicker]="d">
+        <input (focus)="d.open()" [kbqDatepicker]="d" />
         <kbq-datepicker #d="kbqDatepicker"></kbq-datepicker>
     `
 })
@@ -1443,10 +1413,9 @@ class DatepickerOpeningOnFocus {
     @ViewChild(KbqDatepicker, { static: false }) datepicker: KbqDatepicker<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="assignedDatepicker" [value]="date">
+        <input [kbqDatepicker]="assignedDatepicker" [value]="date" />
         <kbq-datepicker #d></kbq-datepicker>
     `
 })
@@ -1457,10 +1426,9 @@ class DelayedDatepicker {
     assignedDatepicker: KbqDatepicker<DateTime>;
 }
 
-
 @Component({
     template: `
-        <input [kbqDatepicker]="d">
+        <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [tabIndex]="7" [for]="d">
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>

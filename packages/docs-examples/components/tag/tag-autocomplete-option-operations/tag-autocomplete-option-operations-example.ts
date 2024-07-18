@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/co
 import { FormControl } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList } from '@koobiq/components/tags';
-import { merge, Observable } from 'rxjs';
+import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
@@ -20,7 +20,7 @@ export class TagAutocompleteOptionOperationsExample {
 
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
     @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('tagInput', {read: KbqTagInput, static: false}) tagInputDirective: KbqTagInput;
+    @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;
     @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
 
     control = new FormControl();
@@ -33,18 +33,20 @@ export class TagAutocompleteOptionOperationsExample {
     get canCreate(): boolean {
         const cleanedValue: string = (this.control.value || '').trim();
 
-        return !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))]
-            .every((tag) => tag !== cleanedValue);
+        return (
+            !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
+        );
     }
 
     ngAfterViewInit(): void {
         this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable()
-                .pipe(map((selectedTags: KbqTag[]) => {
+            this.tagList.tagChanges.asObservable().pipe(
+                map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag: any) => tag.value);
 
                     return this.allTags.filter((tag) => !values.includes(tag));
-                })),
+                })
+            ),
             this.control.valueChanges.pipe(map(this.onControlValueChanges))
         );
     }
@@ -102,7 +104,7 @@ export class TagAutocompleteOptionOperationsExample {
         if (!target || target.tagName !== this.kbqOptionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
                 input: this.tagInput.nativeElement,
-                value : this.tagInput.nativeElement.value
+                value: this.tagInput.nativeElement.value
             };
 
             this.onCreate(kbqTagEvent);
@@ -112,20 +114,20 @@ export class TagAutocompleteOptionOperationsExample {
     private filter(value: string): string[] {
         const filterValue = value.toLowerCase();
 
-        return [...new Set(this.allTags.concat(this.selectedTags))]
-            .filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
+        return [...new Set(this.allTags.concat(this.selectedTags))].filter(
+            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
+        );
     }
 
     private onControlValueChanges = (value: any) => {
-        const typedText = ((value?.new) ? value.value : value)?.trim();
-        const filteredTagsByInput =  typedText ? this.filter(typedText) : this.allTags.slice();
+        const typedText = (value?.new ? value.value : value)?.trim();
+        const filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
 
-        const inputAndSelectionTagsDiff = filteredTagsByInput
-            .filter((tag) => !this.selectedTags.includes(tag));
+        const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
 
         // check for scenario where duplicate exists but also can create/select other tags
         this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
 
         return inputAndSelectionTagsDiff;
-    }
+    };
 }

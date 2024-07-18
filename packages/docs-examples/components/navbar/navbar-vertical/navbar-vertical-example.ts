@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 
-
 /**
  * @title Vertical Navbar
  */

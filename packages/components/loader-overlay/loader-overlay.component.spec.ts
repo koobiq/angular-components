@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-
 import {
     KbqLoaderOverlay,
     KbqLoaderOverlayCaption,
@@ -13,9 +12,7 @@ import {
     KbqLoaderOverlayText
 } from './index';
 
-
 describe('KbqLoaderOverlay', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -79,18 +76,14 @@ describe('KbqLoaderOverlay', () => {
     });
 });
 
-
 @Component({
     selector: 'overlay-with-params',
-    template: `
-        <div class="loader-overlay-container">
-            text text text text text text text text text text text text text text text text text text text text
+    template: ` <div class="loader-overlay-container">
+        text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay
-                [text]="'Создание отчета'"
-                [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
-            </kbq-loader-overlay>
-        </div>`
+        <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'">
+        </kbq-loader-overlay>
+    </div>`
 })
 class OverlayWithParams {
     @ViewChild(KbqLoaderOverlay) overlay: KbqLoaderOverlay;
@@ -98,32 +91,27 @@ class OverlayWithParams {
 
 @Component({
     selector: 'overlay-no-params',
-    template: `
-        <div class="loader-overlay-container">
-            text text text text text text text text text text text text text text text text text text text text
+    template: ` <div class="loader-overlay-container">
+        text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay></kbq-loader-overlay>
-        </div>`
+        <kbq-loader-overlay></kbq-loader-overlay>
+    </div>`
 })
 class OverlayNoParams {}
 
 @Component({
     selector: 'overlay-with-external-params',
-    template: `
-        <div class="loader-overlay-container">
-            text text text text text text text text text text text text text text text text text text text text
+    template: ` <div class="loader-overlay-container">
+        text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay>
-                <kbq-progress-spinner
-                    kbq-loader-overlay-indicator
-                    [mode]="'indeterminate'"
-                    [color]="themePalette.Error">
-                </kbq-progress-spinner>
+        <kbq-loader-overlay>
+            <kbq-progress-spinner kbq-loader-overlay-indicator [mode]="'indeterminate'" [color]="themePalette.Error">
+            </kbq-progress-spinner>
 
-                <div kbq-loader-overlay-text>Создание отчета</div>
-                <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
-            </kbq-loader-overlay>
-        </div>`
+            <div kbq-loader-overlay-text>Создание отчета</div>
+            <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
+        </kbq-loader-overlay>
+    </div>`
 })
 class OverlayWithExternalParams {
     themePalette = ThemePalette;

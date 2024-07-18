@@ -5,15 +5,14 @@ import {
     ElementRef,
     Input,
     NgModuleFactory,
-    ɵNgModuleFactory,
     Type,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ɵNgModuleFactory
 } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { KbqCodeFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
+import { Observable, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /** Preferred order for files of an example displayed in the viewer. */
 const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title empty-state-content
  */

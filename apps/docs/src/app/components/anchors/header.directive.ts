@@ -1,7 +1,5 @@
 import { Directive, ElementRef } from '@angular/core';
-
 import { DocStates } from '../doс-states';
-
 
 @Directive({
     selector: '[docs-header]',

@@ -43,7 +43,6 @@ export const timezones = [
         countryName: 'Соединенные Штаты'
     },
     {
-
         offset: '-08:00:00',
         associatedZones: [
             {
@@ -51,35 +50,30 @@ export const timezones = [
                 city: 'Джуно',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Metlakatla',
                 city: 'Метлакатла',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Nome',
                 city: 'Ном',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Sitka',
                 city: 'Ситка',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Yakutat',
                 city: 'Якутат',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             }
         ],
         id: 'America/Anchorage',
@@ -95,7 +89,6 @@ export const timezones = [
                 city: 'Санта-Изабел',
                 countryCode: 'MX',
                 countryName: 'Мексика'
-
             }
         ],
         id: 'America/Tijuana',
@@ -111,21 +104,18 @@ export const timezones = [
                 city: 'Ванкувер',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Dawson',
                 city: 'Доусон',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Whitehorse',
                 city: 'Уайтхорс',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             }
         ],
         id: 'America/Los_Angeles',
@@ -134,7 +124,6 @@ export const timezones = [
         countryName: 'Соединенные Штаты'
     },
     {
-
         offset: '-07:00:00',
         associatedZones: [
             {
@@ -142,28 +131,24 @@ export const timezones = [
                 city: 'Доусон-Крик',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Creston',
                 city: 'Крестон',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Fort_Nelson',
                 city: 'Форт Нельсон',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Hermosillo',
                 city: 'Эрмосильо',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             }
         ],
         id: 'America/Phoenix',
@@ -172,7 +157,6 @@ export const timezones = [
         countryName: 'Соединенные Штаты'
     },
     {
-
         offset: '-06:00:00',
         associatedZones: [
             {
@@ -180,7 +164,6 @@ export const timezones = [
                 city: 'Масатлан',
                 countryCode: 'MX',
                 countryName: 'Мексика'
-
             }
         ],
         id: 'America/Chihuahua',
@@ -189,7 +172,6 @@ export const timezones = [
         countryName: 'Мексика'
     },
     {
-
         offset: '-06:00:00',
         associatedZones: [
             {
@@ -197,42 +179,36 @@ export const timezones = [
                 city: 'Эдмонтон',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Cambridge_Bay',
                 city: 'Кеймбридж-Бей',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Inuvik',
                 city: 'Инувик',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Yellowknife',
                 city: 'Йеллоунайф',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Ojinaga',
                 city: 'Охинага',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Boise',
                 city: 'Бойсе',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             }
         ],
         id: 'America/Denver',
@@ -241,7 +217,6 @@ export const timezones = [
         countryName: 'Соединенные Штаты'
     },
     {
-
         offset: '-06:00:00',
         associatedZones: [
             {
@@ -249,42 +224,36 @@ export const timezones = [
                 city: 'Белиз',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             },
             {
                 id: 'America/Costa_Rica',
                 city: 'Коста-Рика',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             },
             {
                 id: 'Pacific/Galapagos',
                 city: 'Галапагосские о-ва',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             },
             {
                 id: 'America/Tegucigalpa',
                 city: 'Тегусигальпа',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             },
             {
                 id: 'America/Managua',
                 city: 'Манагуа',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             },
             {
                 id: 'America/El_Salvador',
                 city: 'Сальвадор',
                 countryCode: 'GT',
                 countryName: 'Гватемала'
-
             }
         ],
         id: 'America/Guatemala',
@@ -293,7 +262,6 @@ export const timezones = [
         countryName: 'Гватемала'
     },
     {
-
         offset: '-06:00:00',
         associatedZones: [
             {
@@ -301,7 +269,6 @@ export const timezones = [
                 city: 'Свифт-Керрент',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             }
         ],
         id: 'America/Regina',
@@ -310,7 +277,6 @@ export const timezones = [
         countryName: 'Канада'
     },
     {
-
         offset: '-05:00:00',
         associatedZones: [
             {
@@ -318,77 +284,66 @@ export const timezones = [
                 city: 'Виннипег',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Rainy_River',
                 city: 'Рейни-Ривер',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Rankin_Inlet',
                 city: 'Ранкин-Инлет',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Resolute',
                 city: 'Резольют',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Matamoros',
                 city: 'Матаморос',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Indiana/Knox',
                 city: 'Нокс, Индиана',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Indiana/Tell_City',
                 city: 'Телл-Сити',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/Menominee',
                 city: 'Меномини',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/North_Dakota/Beulah',
                 city: 'Бойла, Северная Дакота',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/North_Dakota/Center',
                 city: 'Центр, Северная Дакота',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             },
             {
                 id: 'America/North_Dakota/New_Salem',
                 city: 'Нью-Сейлем, Северная Дакота',
                 countryCode: 'US',
                 countryName: 'Соединенные Штаты'
-
             }
         ],
         id: 'America/Chicago',
@@ -629,7 +584,6 @@ export const timezones = [
         countryName: 'о-ва Тёркс и Кайкос'
     },
     {
-
         offset: '-04:00:00',
         associatedZones: [],
         id: 'America/Asuncion',
@@ -638,7 +592,6 @@ export const timezones = [
         countryName: 'Парагвай'
     },
     {
-
         offset: '-04:00:00',
         associatedZones: [],
         id: 'America/Caracas',
@@ -647,7 +600,6 @@ export const timezones = [
         countryName: 'Венесуэла'
     },
     {
-
         offset: '-04:00:00',
         associatedZones: [
             {
@@ -655,7 +607,6 @@ export const timezones = [
                 city: 'Кампу-Гранди',
                 countryCode: 'BR',
                 countryName: 'Бразилия'
-
             }
         ],
         id: 'America/Cuiaba',
@@ -664,7 +615,6 @@ export const timezones = [
         countryName: 'Бразилия'
     },
     {
-
         offset: '-04:00:00',
         associatedZones: [
             {
@@ -672,189 +622,162 @@ export const timezones = [
                 city: 'Антигуа',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Anguilla',
                 city: 'Ангилья',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Aruba',
                 city: 'Аруба',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Barbados',
                 city: 'Барбадос',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/St_Barthelemy',
                 city: 'Сен-Бартелеми',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Kralendijk',
                 city: 'Кралендейк',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Manaus',
                 city: 'Манаус',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Boa_Vista',
                 city: 'Боа-Виста',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Porto_Velho',
                 city: 'Порту-Велью',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Blanc-Sablon',
                 city: 'Бланк-Саблон',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Curacao',
                 city: 'Кюрасао',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Dominica',
                 city: 'Доминика',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Santo_Domingo',
                 city: 'Санто-Доминго',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Grenada',
                 city: 'Гренада',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Guadeloupe',
                 city: 'Гваделупа',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Guyana',
                 city: 'Гайана',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/St_Kitts',
                 city: 'Сент-Китс',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/St_Lucia',
                 city: 'Сент-Люсия',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Marigot',
                 city: 'Мариго',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Martinique',
                 city: 'Мартиника',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Montserrat',
                 city: 'Монтсеррат',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Puerto_Rico',
                 city: 'Пуэрто-Рико',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Lower_Princes',
                 city: 'Лоуэр-Принсес-Куортер',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Port_of_Spain',
                 city: 'Порт-оф-Спейн',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/St_Vincent',
                 city: 'Сент-Винсент',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/Tortola',
                 city: 'Тортола',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             },
             {
                 id: 'America/St_Thomas',
                 city: 'Сент-Томас',
                 countryCode: 'BO',
                 countryName: 'Боливия'
-
             }
         ],
         id: 'America/La_Paz',
@@ -863,7 +786,6 @@ export const timezones = [
         countryName: 'Боливия'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [
             {
@@ -871,35 +793,30 @@ export const timezones = [
                 city: 'Бермудские о-ва',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             },
             {
                 id: 'America/Glace_Bay',
                 city: 'Глейс-Бей',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             },
             {
                 id: 'America/Goose_Bay',
                 city: 'Гус-Бей',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             },
             {
                 id: 'America/Moncton',
                 city: 'Монктон',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             },
             {
                 id: 'America/Thule',
                 city: 'Туле',
                 countryCode: 'CA',
                 countryName: 'Канада'
-
             }
         ],
         id: 'America/Halifax',
@@ -908,7 +825,6 @@ export const timezones = [
         countryName: 'Канада'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [],
         id: 'America/Santiago',
@@ -917,7 +833,6 @@ export const timezones = [
         countryName: 'Чили'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [],
         id: 'America/Araguaina',
@@ -926,7 +841,6 @@ export const timezones = [
         countryName: 'Бразилия'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [],
         id: 'America/Sao_Paulo',
@@ -935,7 +849,6 @@ export const timezones = [
         countryName: 'Бразилия'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [
             {
@@ -943,56 +856,48 @@ export const timezones = [
                 city: 'Ротера',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Fortaleza',
                 city: 'Форталеза',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Belem',
                 city: 'Белен',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Maceio',
                 city: 'Масейо',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Recife',
                 city: 'Ресифи',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Santarem',
                 city: 'Сантарен',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'Atlantic/Stanley',
                 city: 'Стэнли',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             },
             {
                 id: 'America/Paramaribo',
                 city: 'Парамарибо',
                 countryCode: 'GF',
                 countryName: 'Французская Гвиана'
-
             }
         ],
         id: 'America/Cayenne',
@@ -1001,7 +906,6 @@ export const timezones = [
         countryName: 'Французская Гвиана'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [
             {
@@ -1009,77 +913,66 @@ export const timezones = [
                 city: 'Ла-Риоха',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/Rio_Gallegos',
                 city: 'Рио-Гальегос',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/Salta',
                 city: 'Сальта',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/San_Juan',
                 city: 'Сан-Хуан',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/San_Luis',
                 city: 'Сан-Луис',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/Tucuman',
                 city: 'Тукуман',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Argentina/Ushuaia',
                 city: 'Ушуая',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Catamarca',
                 city: 'Катамарка',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Cordoba',
                 city: 'Кордова',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Jujuy',
                 city: 'Жужуй',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             },
             {
                 id: 'America/Mendoza',
                 city: 'Мендоса',
                 countryCode: 'AR',
                 countryName: 'Аргентина'
-
             }
         ],
         id: 'America/Buenos_Aires',
@@ -1088,7 +981,6 @@ export const timezones = [
         countryName: 'Аргентина'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [],
         id: 'America/Montevideo',
@@ -1097,7 +989,6 @@ export const timezones = [
         countryName: 'Уругвай'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [
             {
@@ -1105,7 +996,6 @@ export const timezones = [
                 city: 'Палмер',
                 countryCode: 'CL',
                 countryName: 'Чили'
-
             }
         ],
         id: 'America/Punta_Arenas',
@@ -1114,7 +1004,6 @@ export const timezones = [
         countryName: 'Чили'
     },
     {
-
         offset: '-03:00:00',
         associatedZones: [],
         id: 'America/Bahia',
@@ -1123,7 +1012,6 @@ export const timezones = [
         countryName: 'Бразилия'
     },
     {
-
         offset: '-02:30:00',
         associatedZones: [],
         id: 'America/St_Johns',
@@ -1132,7 +1020,6 @@ export const timezones = [
         countryName: 'Канада'
     },
     {
-
         offset: '-02:00:00',
         associatedZones: [],
         id: 'America/Godthab',
@@ -1141,7 +1028,6 @@ export const timezones = [
         countryName: 'Гренландия'
     },
     {
-
         offset: '-02:00:00',
         associatedZones: [],
         id: 'America/Miquelon',
@@ -1150,7 +1036,6 @@ export const timezones = [
         countryName: 'Сен-Пьер и Микелон'
     },
     {
-
         offset: '-01:00:00',
         associatedZones: [],
         id: 'Atlantic/Cape_Verde',
@@ -1159,7 +1044,6 @@ export const timezones = [
         countryName: 'Кабо-Верде'
     },
     {
-
         offset: '00:00:00',
         associatedZones: [
             {
@@ -1167,7 +1051,6 @@ export const timezones = [
                 city: 'Скорсбисунн',
                 countryCode: 'PT',
                 countryName: 'Португалия'
-
             }
         ],
         id: 'Atlantic/Azores',
@@ -1176,7 +1059,6 @@ export const timezones = [
         countryName: 'Португалия'
     },
     {
-
         offset: '00:00:00',
         associatedZones: [
             {
@@ -1184,91 +1066,78 @@ export const timezones = [
                 city: 'Уагадугу',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Abidjan',
                 city: 'Абиджан',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Accra',
                 city: 'Аккра',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Banjul',
                 city: 'Банжул',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Conakry',
                 city: 'Конакри',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Bissau',
                 city: 'Бисау',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Monrovia',
                 city: 'Монровия',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Bamako',
                 city: 'Бамако',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Nouakchott',
                 city: 'Нуакшот',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Atlantic/St_Helena',
                 city: 'о-в Святой Елены',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Freetown',
                 city: 'Фритаун',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Dakar',
                 city: 'Дакар',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             },
             {
                 id: 'Africa/Lome',
                 city: 'Ломе',
                 countryCode: 'IS',
                 countryName: 'Исландия'
-
             }
         ],
         id: 'Atlantic/Reykjavik',
@@ -1277,7 +1146,6 @@ export const timezones = [
         countryName: 'Исландия'
     },
     {
-
         offset: '01:00:00',
         associatedZones: [
             {
@@ -1285,7 +1153,6 @@ export const timezones = [
                 city: 'Эль-Аюн',
                 countryCode: 'MA',
                 countryName: 'Марокко'
-
             }
         ],
         id: 'Africa/Casablanca',
@@ -1294,7 +1161,6 @@ export const timezones = [
         countryName: 'Марокко'
     },
     {
-
         offset: '01:00:00',
         associatedZones: [
             {
@@ -1302,56 +1168,48 @@ export const timezones = [
                 city: 'Канарские о-ва',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Atlantic/Faeroe',
                 city: 'Фарерские о-ва',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Europe/Guernsey',
                 city: 'Гернси',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Europe/Dublin',
                 city: 'Дублин',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Europe/Isle_of_Man',
                 city: 'о-в Мэн',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Europe/Jersey',
                 city: 'Джерси',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Europe/Lisbon',
                 city: 'Лиссабон',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             },
             {
                 id: 'Atlantic/Madeira',
                 city: 'Мадейра',
                 countryCode: 'GB',
                 countryName: 'Великобритания'
-
             }
         ],
         id: 'Europe/London',
@@ -1360,7 +1218,6 @@ export const timezones = [
         countryName: 'Великобритания'
     },
     {
-
         offset: '01:00:00',
         associatedZones: [
             {
@@ -1368,91 +1225,78 @@ export const timezones = [
                 city: 'Луанда',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Porto-Novo',
                 city: 'Порто-Ново',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Kinshasa',
                 city: 'Киншаса',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Bangui',
                 city: 'Банги',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Brazzaville',
                 city: 'Браззавиль',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Douala',
                 city: 'Дуала',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Algiers',
                 city: 'Алжир',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Libreville',
                 city: 'Либревиль',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Malabo',
                 city: 'Малабо',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Niamey',
                 city: 'Ниамей',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Sao_Tome',
                 city: 'Сан-Томе',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Ndjamena',
                 city: 'Нджамена',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             },
             {
                 id: 'Africa/Tunis',
                 city: 'Тунис',
                 countryCode: 'NG',
                 countryName: 'Нигерия'
-
             }
         ],
         id: 'Africa/Lagos',
@@ -1461,7 +1305,6 @@ export const timezones = [
         countryName: 'Нигерия'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [
             {
@@ -1469,112 +1312,96 @@ export const timezones = [
                 city: 'Андорра',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Vienna',
                 city: 'Вена',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Zurich',
                 city: 'Цюрих',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Busingen',
                 city: 'Бюзинген-на-Верхнем-Рейне',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Gibraltar',
                 city: 'Гибралтар',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Rome',
                 city: 'Рим',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Vaduz',
                 city: 'Вадуц',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Luxembourg',
                 city: 'Люксембург',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Monaco',
                 city: 'Монако',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Malta',
                 city: 'Мальта',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Amsterdam',
                 city: 'Амстердам',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Oslo',
                 city: 'Осло',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Stockholm',
                 city: 'Стокгольм',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Arctic/Longyearbyen',
                 city: 'Лонгйир',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/San_Marino',
                 city: 'Сан-Марино',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             },
             {
                 id: 'Europe/Vatican',
                 city: 'Ватикан',
                 countryCode: 'DE',
                 countryName: 'Германия'
-
             }
         ],
         id: 'Europe/Berlin',
@@ -1583,7 +1410,6 @@ export const timezones = [
         countryName: 'Германия'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [
             {
@@ -1591,42 +1417,36 @@ export const timezones = [
                 city: 'Тирана',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             },
             {
                 id: 'Europe/Prague',
                 city: 'Прага',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             },
             {
                 id: 'Europe/Podgorica',
                 city: 'Подгорица',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             },
             {
                 id: 'Europe/Belgrade',
                 city: 'Белград',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             },
             {
                 id: 'Europe/Ljubljana',
                 city: 'Любляна',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             },
             {
                 id: 'Europe/Bratislava',
                 city: 'Братислава',
                 countryCode: 'HU',
                 countryName: 'Венгрия'
-
             }
         ],
         id: 'Europe/Budapest',
@@ -1635,7 +1455,6 @@ export const timezones = [
         countryName: 'Венгрия'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [
             {
@@ -1643,28 +1462,24 @@ export const timezones = [
                 city: 'Брюссель',
                 countryCode: 'FR',
                 countryName: 'Франция'
-
             },
             {
                 id: 'Europe/Copenhagen',
                 city: 'Копенгаген',
                 countryCode: 'FR',
                 countryName: 'Франция'
-
             },
             {
                 id: 'Europe/Madrid',
                 city: 'Мадрид',
                 countryCode: 'FR',
                 countryName: 'Франция'
-
             },
             {
                 id: 'Africa/Ceuta',
                 city: 'Сеута',
                 countryCode: 'FR',
                 countryName: 'Франция'
-
             }
         ],
         id: 'Europe/Paris',
@@ -1673,7 +1488,6 @@ export const timezones = [
         countryName: 'Франция'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [
             {
@@ -1681,21 +1495,18 @@ export const timezones = [
                 city: 'Сараево',
                 countryCode: 'PL',
                 countryName: 'Польша'
-
             },
             {
                 id: 'Europe/Zagreb',
                 city: 'Загреб',
                 countryCode: 'PL',
                 countryName: 'Польша'
-
             },
             {
                 id: 'Europe/Skopje',
                 city: 'Скопье',
                 countryCode: 'PL',
                 countryName: 'Польша'
-
             }
         ],
         id: 'Europe/Warsaw',
@@ -1704,7 +1515,6 @@ export const timezones = [
         countryName: 'Польша'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [],
         id: 'Africa/Cairo',
@@ -1713,7 +1523,6 @@ export const timezones = [
         countryName: 'Египет'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [
             {
@@ -1721,70 +1530,60 @@ export const timezones = [
                 city: 'Бужумбура',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Gaborone',
                 city: 'Габороне',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Lubumbashi',
                 city: 'Лубумбаши',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Maseru',
                 city: 'Масеру',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Blantyre',
                 city: 'Блантайр',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Maputo',
                 city: 'Мапуту',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Kigali',
                 city: 'Кигали',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Mbabane',
                 city: 'Мбабане',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Lusaka',
                 city: 'Лусака',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             },
             {
                 id: 'Africa/Harare',
                 city: 'Хараре',
                 countryCode: 'ZA',
                 countryName: 'Южно-Африканская Республика'
-
             }
         ],
         id: 'Africa/Johannesburg',
@@ -1793,7 +1592,6 @@ export const timezones = [
         countryName: 'Южно-Африканская Республика'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [],
         id: 'Europe/Kaliningrad',
@@ -1802,7 +1600,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [],
         id: 'Africa/Khartoum',
@@ -1811,7 +1608,6 @@ export const timezones = [
         countryName: 'Судан'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [],
         id: 'Africa/Tripoli',
@@ -1820,7 +1616,6 @@ export const timezones = [
         countryName: 'Ливия'
     },
     {
-
         offset: '02:00:00',
         associatedZones: [],
         id: 'Africa/Windhoek',
@@ -1829,7 +1624,6 @@ export const timezones = [
         countryName: 'Намибия'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Asia/Amman',
@@ -1838,7 +1632,6 @@ export const timezones = [
         countryName: 'Иордания'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -1846,21 +1639,18 @@ export const timezones = [
                 city: 'Фамагуста',
                 countryCode: 'RO',
                 countryName: 'Румыния'
-
             },
             {
                 id: 'Asia/Nicosia',
                 city: 'Никосия',
                 countryCode: 'RO',
                 countryName: 'Румыния'
-
             },
             {
                 id: 'Europe/Athens',
                 city: 'Афины',
                 countryCode: 'RO',
                 countryName: 'Румыния'
-
             }
         ],
         id: 'Europe/Bucharest',
@@ -1869,7 +1659,6 @@ export const timezones = [
         countryName: 'Румыния'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Asia/Beirut',
@@ -1878,7 +1667,6 @@ export const timezones = [
         countryName: 'Ливан'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Europe/Chisinau',
@@ -1887,7 +1675,6 @@ export const timezones = [
         countryName: 'Молдова'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Asia/Damascus',
@@ -1896,7 +1683,6 @@ export const timezones = [
         countryName: 'Сирия'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -1904,7 +1690,6 @@ export const timezones = [
                 city: 'Газа',
                 countryCode: 'PS',
                 countryName: 'Палестинские территории'
-
             }
         ],
         id: 'Asia/Hebron',
@@ -1913,7 +1698,6 @@ export const timezones = [
         countryName: 'Палестинские территории'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -1921,56 +1705,48 @@ export const timezones = [
                 city: 'Мариехамн',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Sofia',
                 city: 'София',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Tallinn',
                 city: 'Таллин',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Helsinki',
                 city: 'Хельсинки',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Vilnius',
                 city: 'Вильнюс',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Riga',
                 city: 'Рига',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Uzhgorod',
                 city: 'Ужгород',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             },
             {
                 id: 'Europe/Zaporozhye',
                 city: 'Запорожье',
                 countryCode: 'UA',
                 countryName: 'Украина'
-
             }
         ],
         id: 'Europe/Kiev',
@@ -1979,7 +1755,6 @@ export const timezones = [
         countryName: 'Украина'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Asia/Jerusalem',
@@ -1988,7 +1763,6 @@ export const timezones = [
         countryName: 'Израиль'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Asia/Baghdad',
@@ -1997,7 +1771,6 @@ export const timezones = [
         countryName: 'Ирак'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Europe/Istanbul',
@@ -2006,7 +1779,6 @@ export const timezones = [
         countryName: 'Турция'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -2014,28 +1786,24 @@ export const timezones = [
                 city: 'Бахрейн',
                 countryCode: 'SA',
                 countryName: 'Саудовская Аравия'
-
             },
             {
                 id: 'Asia/Kuwait',
                 city: 'Кувейт',
                 countryCode: 'SA',
                 countryName: 'Саудовская Аравия'
-
             },
             {
                 id: 'Asia/Qatar',
                 city: 'Катар',
                 countryCode: 'SA',
                 countryName: 'Саудовская Аравия'
-
             },
             {
                 id: 'Asia/Aden',
                 city: 'Аден',
                 countryCode: 'SA',
                 countryName: 'Саудовская Аравия'
-
             }
         ],
         id: 'Asia/Riyadh',
@@ -2044,7 +1812,6 @@ export const timezones = [
         countryName: 'Саудовская Аравия'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [],
         id: 'Europe/Minsk',
@@ -2053,7 +1820,6 @@ export const timezones = [
         countryName: 'Беларусь'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -2061,21 +1827,18 @@ export const timezones = [
                 city: 'Киров',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             },
             {
                 id: 'Europe/Volgograd',
                 city: 'Волгоград',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             },
             {
                 id: 'Europe/Simferopol',
                 city: 'Симферополь',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             }
         ],
         id: 'Europe/Moscow',
@@ -2084,7 +1847,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '03:00:00',
         associatedZones: [
             {
@@ -2092,77 +1854,66 @@ export const timezones = [
                 city: 'Сёва',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Djibouti',
                 city: 'Джибути',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Asmera',
                 city: 'Асмэра',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Addis_Ababa',
                 city: 'Аддис-Абеба',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Indian/Comoro',
                 city: 'Коморы',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Indian/Antananarivo',
                 city: 'Антананариву',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Mogadishu',
                 city: 'Могадишо',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Juba',
                 city: 'Джуба',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Dar_es_Salaam',
                 city: 'Дар-эс-Салам',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Africa/Kampala',
                 city: 'Кампала',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             },
             {
                 id: 'Indian/Mayotte',
                 city: 'Майотта',
                 countryCode: 'KE',
                 countryName: 'Кения'
-
             }
         ],
         id: 'Africa/Nairobi',
@@ -2171,7 +1922,6 @@ export const timezones = [
         countryName: 'Кения'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [
             {
@@ -2179,7 +1929,6 @@ export const timezones = [
                 city: 'Маскат',
                 countryCode: 'AE',
                 countryName: 'ОАЭ'
-
             }
         ],
         id: 'Asia/Dubai',
@@ -2188,7 +1937,6 @@ export const timezones = [
         countryName: 'ОАЭ'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [
             {
@@ -2196,7 +1944,6 @@ export const timezones = [
                 city: 'Ульяновск',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             }
         ],
         id: 'Europe/Astrakhan',
@@ -2205,7 +1952,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [],
         id: 'Asia/Baku',
@@ -2214,7 +1960,6 @@ export const timezones = [
         countryName: 'Азербайджан'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [],
         id: 'Europe/Samara',
@@ -2223,7 +1968,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [
             {
@@ -2231,14 +1975,12 @@ export const timezones = [
                 city: 'Реюньон',
                 countryCode: 'MU',
                 countryName: 'Маврикий'
-
             },
             {
                 id: 'Indian/Mahe',
                 city: 'Маэ',
                 countryCode: 'MU',
                 countryName: 'Маврикий'
-
             }
         ],
         id: 'Indian/Mauritius',
@@ -2247,7 +1989,6 @@ export const timezones = [
         countryName: 'Маврикий'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [],
         id: 'Europe/Saratov',
@@ -2256,7 +1997,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [],
         id: 'Asia/Tbilisi',
@@ -2265,7 +2005,6 @@ export const timezones = [
         countryName: 'Грузия'
     },
     {
-
         offset: '04:00:00',
         associatedZones: [],
         id: 'Asia/Yerevan',
@@ -2274,7 +2013,6 @@ export const timezones = [
         countryName: 'Армения'
     },
     {
-
         offset: '04:30:00',
         associatedZones: [],
         id: 'Asia/Tehran',
@@ -2283,7 +2021,6 @@ export const timezones = [
         countryName: 'Иран'
     },
     {
-
         offset: '04:30:00',
         associatedZones: [],
         id: 'Asia/Kabul',
@@ -2292,7 +2029,6 @@ export const timezones = [
         countryName: 'Афганистан'
     },
     {
-
         offset: '05:00:00',
         associatedZones: [
             {
@@ -2300,70 +2036,60 @@ export const timezones = [
                 city: 'Моусон',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Oral',
                 city: 'Уральск',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Aqtau',
                 city: 'Актау',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Aqtobe',
                 city: 'Актобе',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Atyrau',
                 city: 'Атырау',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Indian/Maldives',
                 city: 'Мальдивы',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Indian/Kerguelen',
                 city: 'Кергелен',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Dushanbe',
                 city: 'Душанбе',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Ashgabat',
                 city: 'Ашхабад',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             },
             {
                 id: 'Asia/Samarkand',
                 city: 'Самарканд',
                 countryCode: 'UZ',
                 countryName: 'Узбекистан'
-
             }
         ],
         id: 'Asia/Tashkent',
@@ -2372,7 +2098,6 @@ export const timezones = [
         countryName: 'Узбекистан'
     },
     {
-
         offset: '05:00:00',
         associatedZones: [],
         id: 'Asia/Yekaterinburg',
@@ -2381,7 +2106,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '05:00:00',
         associatedZones: [],
         id: 'Asia/Karachi',
@@ -2390,7 +2114,6 @@ export const timezones = [
         countryName: 'Пакистан'
     },
     {
-
         offset: '05:30:00',
         associatedZones: [],
         id: 'Asia/Calcutta',
@@ -2399,7 +2122,6 @@ export const timezones = [
         countryName: 'Индия'
     },
     {
-
         offset: '05:30:00',
         associatedZones: [],
         id: 'Asia/Colombo',
@@ -2408,7 +2130,6 @@ export const timezones = [
         countryName: 'Шри-Ланка'
     },
     {
-
         offset: '05:45:00',
         associatedZones: [],
         id: 'Asia/Katmandu',
@@ -2417,7 +2138,6 @@ export const timezones = [
         countryName: 'Непал'
     },
     {
-
         offset: '06:00:00',
         associatedZones: [
             {
@@ -2425,35 +2145,30 @@ export const timezones = [
                 city: 'Восток',
                 countryCode: 'KZ',
                 countryName: 'Казахстан'
-
             },
             {
                 id: 'Asia/Urumqi',
                 city: 'Урумчи',
                 countryCode: 'KZ',
                 countryName: 'Казахстан'
-
             },
             {
                 id: 'Indian/Chagos',
                 city: 'Чагос',
                 countryCode: 'KZ',
                 countryName: 'Казахстан'
-
             },
             {
                 id: 'Asia/Bishkek',
                 city: 'Бишкек',
                 countryCode: 'KZ',
                 countryName: 'Казахстан'
-
             },
             {
                 id: 'Asia/Qyzylorda',
                 city: 'Кызылорда',
                 countryCode: 'KZ',
                 countryName: 'Казахстан'
-
             }
         ],
         id: 'Asia/Almaty',
@@ -2462,7 +2177,6 @@ export const timezones = [
         countryName: 'Казахстан'
     },
     {
-
         offset: '06:00:00',
         associatedZones: [
             {
@@ -2470,7 +2184,6 @@ export const timezones = [
                 city: 'Тхимпху',
                 countryCode: 'BD',
                 countryName: 'Бангладеш'
-
             }
         ],
         id: 'Asia/Dhaka',
@@ -2479,7 +2192,6 @@ export const timezones = [
         countryName: 'Бангладеш'
     },
     {
-
         offset: '06:00:00',
         associatedZones: [],
         id: 'Asia/Omsk',
@@ -2488,7 +2200,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '06:30:00',
         associatedZones: [
             {
@@ -2496,7 +2207,6 @@ export const timezones = [
                 city: 'Кокосовые о-ва',
                 countryCode: 'MM',
                 countryName: 'Мьянма (Бирма)'
-
             }
         ],
         id: 'Asia/Rangoon',
@@ -2505,7 +2215,6 @@ export const timezones = [
         countryName: 'Мьянма (Бирма)'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [
             {
@@ -2513,49 +2222,42 @@ export const timezones = [
                 city: 'Дейвис',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Indian/Christmas',
                 city: 'о-в Рождества',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Asia/Jakarta',
                 city: 'Джакарта',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Asia/Pontianak',
                 city: 'Понтианак',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Asia/Phnom_Penh',
                 city: 'Пномпень',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Asia/Vientiane',
                 city: 'Вьентьян',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             },
             {
                 id: 'Asia/Saigon',
                 city: 'Хошимин',
                 countryCode: 'TH',
                 countryName: 'Таиланд'
-
             }
         ],
         id: 'Asia/Bangkok',
@@ -2564,7 +2266,6 @@ export const timezones = [
         countryName: 'Таиланд'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [],
         id: 'Asia/Barnaul',
@@ -2573,7 +2274,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [],
         id: 'Asia/Hovd',
@@ -2582,7 +2282,6 @@ export const timezones = [
         countryName: 'Монголия'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [
             {
@@ -2590,7 +2289,6 @@ export const timezones = [
                 city: 'Новокузнецк',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             }
         ],
         id: 'Asia/Krasnoyarsk',
@@ -2599,7 +2297,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [],
         id: 'Asia/Novosibirsk',
@@ -2608,7 +2305,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '07:00:00',
         associatedZones: [],
         id: 'Asia/Tomsk',
@@ -2617,7 +2313,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [
             {
@@ -2625,14 +2320,12 @@ export const timezones = [
                 city: 'Гонконг',
                 countryCode: 'CN',
                 countryName: 'Китай'
-
             },
             {
                 id: 'Asia/Macau',
                 city: 'Макао',
                 countryCode: 'CN',
                 countryName: 'Китай'
-
             }
         ],
         id: 'Asia/Shanghai',
@@ -2641,7 +2334,6 @@ export const timezones = [
         countryName: 'Китай'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [],
         id: 'Asia/Irkutsk',
@@ -2650,7 +2342,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [
             {
@@ -2658,35 +2349,30 @@ export const timezones = [
                 city: 'Бруней',
                 countryCode: 'SG',
                 countryName: 'Сингапур'
-
             },
             {
                 id: 'Asia/Makassar',
                 city: 'Макасар',
                 countryCode: 'SG',
                 countryName: 'Сингапур'
-
             },
             {
                 id: 'Asia/Kuala_Lumpur',
                 city: 'Куала-Лумпур',
                 countryCode: 'SG',
                 countryName: 'Сингапур'
-
             },
             {
                 id: 'Asia/Kuching',
                 city: 'Кучинг',
                 countryCode: 'SG',
                 countryName: 'Сингапур'
-
             },
             {
                 id: 'Asia/Manila',
                 city: 'Манила',
                 countryCode: 'SG',
                 countryName: 'Сингапур'
-
             }
         ],
         id: 'Asia/Singapore',
@@ -2695,7 +2381,6 @@ export const timezones = [
         countryName: 'Сингапур'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [
             {
@@ -2703,7 +2388,6 @@ export const timezones = [
                 city: 'Кейси',
                 countryCode: 'AU',
                 countryName: 'Австралия'
-
             }
         ],
         id: 'Australia/Perth',
@@ -2712,7 +2396,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [],
         id: 'Asia/Taipei',
@@ -2721,7 +2404,6 @@ export const timezones = [
         countryName: 'Тайвань'
     },
     {
-
         offset: '08:00:00',
         associatedZones: [
             {
@@ -2729,7 +2411,6 @@ export const timezones = [
                 city: 'Чойбалсан',
                 countryCode: 'MN',
                 countryName: 'Монголия'
-
             }
         ],
         id: 'Asia/Ulaanbaatar',
@@ -2738,7 +2419,6 @@ export const timezones = [
         countryName: 'Монголия'
     },
     {
-
         offset: '08:30:00',
         associatedZones: [],
         id: 'Asia/Pyongyang',
@@ -2747,7 +2427,6 @@ export const timezones = [
         countryName: 'КНДР'
     },
     {
-
         offset: '08:45:00',
         associatedZones: [],
         id: 'Australia/Eucla',
@@ -2756,7 +2435,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '09:00:00',
         associatedZones: [],
         id: 'Asia/Chita',
@@ -2765,7 +2443,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '09:00:00',
         associatedZones: [
             {
@@ -2773,21 +2450,18 @@ export const timezones = [
                 city: 'Джаяпура',
                 countryCode: 'JP',
                 countryName: 'Япония'
-
             },
             {
                 id: 'Pacific/Palau',
                 city: 'Палау',
                 countryCode: 'JP',
                 countryName: 'Япония'
-
             },
             {
                 id: 'Asia/Dili',
                 city: 'Дили',
                 countryCode: 'JP',
                 countryName: 'Япония'
-
             }
         ],
         id: 'Asia/Tokyo',
@@ -2796,7 +2470,6 @@ export const timezones = [
         countryName: 'Япония'
     },
     {
-
         offset: '09:00:00',
         associatedZones: [],
         id: 'Asia/Seoul',
@@ -2805,7 +2478,6 @@ export const timezones = [
         countryName: 'Республика Корея'
     },
     {
-
         offset: '09:00:00',
         associatedZones: [
             {
@@ -2813,7 +2485,6 @@ export const timezones = [
                 city: 'Хандыга',
                 countryCode: 'RU',
                 countryName: 'Россия'
-
             }
         ],
         id: 'Asia/Yakutsk',
@@ -2822,7 +2493,6 @@ export const timezones = [
         countryName: 'Россия'
     },
     {
-
         offset: '09:30:00',
         associatedZones: [
             {
@@ -2830,7 +2500,6 @@ export const timezones = [
                 city: 'Брокен-Хилл',
                 countryCode: 'AU',
                 countryName: 'Австралия'
-
             }
         ],
         id: 'Australia/Adelaide',
@@ -2839,7 +2508,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '09:30:00',
         associatedZones: [],
         id: 'Australia/Darwin',
@@ -2848,7 +2516,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '10:00:00',
         associatedZones: [
             {
@@ -2856,7 +2523,6 @@ export const timezones = [
                 city: 'Линдеман',
                 countryCode: 'AU',
                 countryName: 'Австралия'
-
             }
         ],
         id: 'Australia/Brisbane',
@@ -2865,7 +2531,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '10:00:00',
         associatedZones: [
             {
@@ -2873,7 +2538,6 @@ export const timezones = [
                 city: 'Мельбурн',
                 countryCode: 'AU',
                 countryName: 'Австралия'
-
             }
         ],
         id: 'Australia/Sydney',
@@ -2882,7 +2546,6 @@ export const timezones = [
         countryName: 'Австралия'
     },
     {
-
         offset: '10:00:00',
         associatedZones: [
             {
@@ -2890,28 +2553,24 @@ export const timezones = [
                 city: 'Дюмон-д’Юрвиль',
                 countryCode: 'PG',
                 countryName: 'Папуа — Новая Гвинея'
-
             },
             {
                 id: 'Pacific/Truk',
                 city: 'Трук',
                 countryCode: 'PG',
                 countryName: 'Папуа — Новая Гвинея'
-
             },
             {
                 id: 'Pacific/Guam',
                 city: 'Гуам',
                 countryCode: 'PG',
                 countryName: 'Папуа — Новая Гвинея'
-
             },
             {
                 id: 'Pacific/Saipan',
                 city: 'Сайпан',
                 countryCode: 'PG',
                 countryName: 'Папуа — Новая Гвинея'
-
             }
         ],
         id: 'Pacific/Port_Moresby',
@@ -2920,7 +2579,6 @@ export const timezones = [
         countryName: 'Папуа — Новая Гвинея'
     },
     {
-
         offset: '10:00:00',
         associatedZones: [
             {
@@ -2928,7 +2586,6 @@ export const timezones = [
                 city: 'Керри',
                 countryCode: 'AU',
                 countryName: 'Австралия'
-
             }
         ],
         id: 'Australia/Hobart',
@@ -3013,7 +2670,6 @@ export const timezones = [
                 city: 'Понпеи',
                 countryCode: 'SB',
                 countryName: 'Соломоновы Острова'
-
             },
             {
                 id: 'Pacific/Kosrae',

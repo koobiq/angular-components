@@ -1,2 +1,2 @@
-export * from './dl.module';
 export * from './dl.component';
+export * from './dl.module';

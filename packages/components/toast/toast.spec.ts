@@ -1,25 +1,21 @@
 /* tslint:disable:no-magic-numbers */
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
-import {
-    TestBed,
-    inject,
-    tick,
-    waitForAsync,
-    fakeAsync,
-    flush,
-    discardPeriodicTasks
-} from '@angular/core/testing';
+import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { KbqToastModule } from './toast.module';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
-import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
 
-const MOCK_TOAST_DATA: KbqToastData = { style: 'warning', title: 'Warning', content: 'Message Content', closeButton: true };
+const MOCK_TOAST_DATA: KbqToastData = {
+    style: 'warning',
+    title: 'Warning',
+    content: 'Message Content',
+    closeButton: true
+};
 
 describe('ToastService', () => {
     let toastService: KbqToastService;
@@ -32,18 +28,14 @@ describe('ToastService', () => {
         TestBed.configureTestingModule({
             imports: [CommonModule, KbqToastModule, BrowserAnimationsModule],
             declarations: [KbqToastButtonWrapperComponent]
-        })
-        .compileComponents();
+        }).compileComponents();
     }));
 
-    beforeEach(inject(
-        [KbqToastService, OverlayContainer],
-        (ts: KbqToastService, oc: OverlayContainer) => {
-            toastService = ts;
-            overlayContainer = oc;
-            overlayContainerElement = oc.getContainerElement();
-        }
-    ));
+    beforeEach(inject([KbqToastService, OverlayContainer], (ts: KbqToastService, oc: OverlayContainer) => {
+        toastService = ts;
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+    }));
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
@@ -55,7 +47,8 @@ describe('ToastService', () => {
             testComponent = fixture.componentInstance;
         });
 
-        afterEach(fakeAsync(() => { // wait all openModals to be closed to clean up the ModalManager as it is globally static
+        afterEach(fakeAsync(() => {
+            // wait all openModals to be closed to clean up the ModalManager as it is globally static
             overlayContainer.ngOnDestroy();
             fixture.detectChanges();
             tick(1000);
@@ -114,8 +107,9 @@ describe('ToastService', () => {
             tick(600);
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
 
-            const button = toast.ref.location.nativeElement
-                .querySelector('[kbq-toast-close-button]') as HTMLButtonElement;
+            const button = toast.ref.location.nativeElement.querySelector(
+                '[kbq-toast-close-button]'
+            ) as HTMLButtonElement;
             button.click();
 
             fixture.detectChanges();
@@ -130,7 +124,7 @@ describe('ToastService', () => {
 
         it('should create one toast directly through service', fakeAsync(() => {
             spyOn(toastService, 'show');
-            toastService.show(MOCK_TOAST_DATA,  600);
+            toastService.show(MOCK_TOAST_DATA, 600);
 
             fixture.detectChanges();
             tick(600);
@@ -155,7 +149,6 @@ describe('ToastService', () => {
             expect(testComponent.show).toHaveBeenCalledTimes(1);
         }));
     });
-
 });
 
 describe('Standalone ToastService', () => {
@@ -176,33 +169,31 @@ describe('Standalone ToastService', () => {
             takeUntil(destroy$)
         );
 
-        service.show(MOCK_TOAST_DATA,  3000);
+        service.show(MOCK_TOAST_DATA, 3000);
         expect(service.toasts.length).toEqual(1);
         tick(3100);
         destroy$.next();
-        tick()
+        tick();
 
         expect(service.toasts.length).toEqual(0);
         flush();
         discardPeriodicTasks();
-    }))
+    }));
 
     it('should call timer outsideAngular', fakeAsync(() => {
         const destroy$ = new Subject<void>();
         service = TestBed.inject(KbqToastService);
         service.timer.subscribe(() => expect(NgZone.isInAngularZone()).toBeFalsy());
-        service.timer = service.timer.pipe(
-            takeUntil(destroy$)
-        );
+        service.timer = service.timer.pipe(takeUntil(destroy$));
 
-        service.show(MOCK_TOAST_DATA,  3000);
+        service.show(MOCK_TOAST_DATA, 3000);
         tick(3100);
         destroy$.next();
 
         flush();
         discardPeriodicTasks();
     }));
-})
+});
 
 @Component({
     selector: 'kbq-toast-test-button',

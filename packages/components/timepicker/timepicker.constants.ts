@@ -19,7 +19,7 @@ export const TIMEFORMAT_PLACEHOLDERS: { [timeFormat: string]: string } = {
 export const TimeFormatToLocaleKeys: Record<TimeFormats, 'full' | 'short'> = {
     [TimeFormats.HHmmss]: 'full',
     [TimeFormats.HHmm]: 'short'
-}
+};
 
 export const DEFAULT_TIME_FORMAT: TimeFormats = TimeFormats.HHmm;
 

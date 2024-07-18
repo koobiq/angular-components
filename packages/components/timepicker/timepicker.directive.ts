@@ -22,25 +22,27 @@ import {
     Validators
 } from '@angular/forms';
 import {
-    DOWN_ARROW,
-    UP_ARROW,
-    HOME,
-    END,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    SPACE,
-    DELETE,
     BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
     hasModifierKey,
+    HOME,
+    isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
-    isHorizontalMovement,
-    TAB
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService,
+    DateAdapter,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
@@ -49,20 +51,19 @@ import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { noop, Subject, Subscription } from 'rxjs';
 
 import {
+    AM_PM_FORMAT_REGEXP,
     DEFAULT_TIME_FORMAT,
-    HOURS_PER_DAY,
     HOURS_MINUTES_REGEXP,
     HOURS_MINUTES_SECONDS_REGEXP,
     HOURS_ONLY_REGEXP,
+    HOURS_PER_DAY,
     MINUTES_PER_HOUR,
     SECONDS_PER_MINUTE,
     TIMEFORMAT_PLACEHOLDERS,
     TimeFormats,
-    TimeParts,
-    AM_PM_FORMAT_REGEXP,
-    TimeFormatToLocaleKeys
+    TimeFormatToLocaleKeys,
+    TimeParts
 } from './timepicker.constants';
-
 
 /** @docs-private */
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any = {
@@ -78,12 +79,10 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
-
 let uniqueComponentIdSuffix: number = 0;
 
 const shortFormatSize: number = 5;
 const fullFormatSize: number = 8;
-
 
 @Directive({
     selector: 'input[kbqTimepicker]',
@@ -109,8 +108,7 @@ const fullFormatSize: number = 8;
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
-    ]
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
 })
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
     /**
@@ -201,10 +199,12 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     set format(formatValue: TimeFormats) {
-        this._format = Object
-            .keys(TimeFormats)
-            .map((timeFormatKey) => TimeFormats[timeFormatKey])
-            .indexOf(formatValue) > -1 ? formatValue : DEFAULT_TIME_FORMAT;
+        this._format =
+            Object.keys(TimeFormats)
+                .map((timeFormatKey) => TimeFormats[timeFormatKey])
+                .indexOf(formatValue) > -1
+                ? formatValue
+                : DEFAULT_TIME_FORMAT;
 
         if (this.defaultPlaceholder) {
             this._placeholder = this.timeFormatPlaceholder;
@@ -260,7 +260,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
     @Input()
     set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
-        if (!tooltip) { return; }
+        if (!tooltip) {
+            return;
+        }
 
         tooltip.enterDelay = validationTooltipShowDelay;
         tooltip.trigger = 'manual';
@@ -268,7 +270,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         tooltip.initListeners();
 
         this.incorrectInput.subscribe(() => {
-            if (tooltip.isOpen) { return; }
+            if (tooltip.isOpen) {
+                return;
+            }
 
             tooltip.show();
 
@@ -324,8 +328,10 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
     /** Localized placeholder */
     get timeFormatPlaceholder(): string {
-        return this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]]
-            || TIMEFORMAT_PLACEHOLDERS[this.format];
+        return (
+            this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]] ||
+            TIMEFORMAT_PLACEHOLDERS[this.format]
+        );
     }
 
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
@@ -350,8 +356,10 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         if (!this.dateAdapter) {
-            throw Error(`KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +
-                `modules at your application root or provide a custom implementation or use exists ones.`);
+            throw Error(
+                `KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +
+                    `modules at your application root or provide a custom implementation or use exists ones.`
+            );
         }
 
         this.validator = Validators.compose([this.parseValidator, this.minValidator, this.maxValidator]);
@@ -361,8 +369,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
-        this.localeSubscription = dateAdapter.localeChanges
-            .subscribe(this.updateLocaleParams);
+        this.localeSubscription = dateAdapter.localeChanges.subscribe(this.updateLocaleParams);
     }
 
     ngOnDestroy(): void {
@@ -389,7 +396,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) { return; }
+        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) {
+            return;
+        }
 
         this.setViewValue(this.formatUserPaste(this.viewValue));
 
@@ -403,7 +412,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
         const newTimeObj = this.getDateFromTimeString(value);
 
-        if (!newTimeObj) { return; }
+        if (!newTimeObj) {
+            return;
+        }
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format));
 
@@ -441,7 +452,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.value = newTimeObj;
         this.onChange(newTimeObj);
         this.stateChanges.next();
-    }
+    };
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -461,7 +472,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             this.incorrectInput.emit();
         } else if (
             (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
-            event.ctrlKey || event.metaKey ||
+            event.ctrlKey ||
+            event.metaKey ||
             [DELETE, BACKSPACE, TAB].includes(keyCode)
         ) {
             noop();
@@ -522,7 +534,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     private formatUserPaste(value: string) {
-        if (value.match(AM_PM_FORMAT_REGEXP)) { return value; }
+        if (value.match(AM_PM_FORMAT_REGEXP)) {
+            return value;
+        }
 
         const match: RegExpMatchArray | null = value.match(
             /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/
@@ -536,9 +550,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
         return this.replaceNumbers(
             Object.values(match.groups)
-            // tslint:disable-next-line:no-magic-numbers
-            .map((group) => (group || '').padStart(2, '0'))
-            .join(':')
+                // tslint:disable-next-line:no-magic-numbers
+                .map((group) => (group || '').padStart(2, '0'))
+                .join(':')
         );
     }
 
@@ -563,7 +577,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private replaceNumbers(value: string): string {
         let formattedValue: string = value;
 
-        const match: RegExpMatchArray | null = value.match(/^(?<hours>\d{0,4}):?(?<minutes>\d{0,4}):?(?<seconds>\d{0,4})$/);
+        const match: RegExpMatchArray | null = value.match(
+            /^(?<hours>\d{0,4}):?(?<minutes>\d{0,4}):?(?<seconds>\d{0,4})$/
+        );
 
         if (match?.groups) {
             const { hours, minutes, seconds } = match.groups;
@@ -586,7 +602,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
     /** Checks whether the input is invalid based on the native validation. */
     private isBadInput(): boolean {
-        const validity = (<HTMLInputElement> this.elementRef.nativeElement).validity;
+        const validity = (<HTMLInputElement>this.elementRef.nativeElement).validity;
 
         return validity && validity.badInput;
     }
@@ -604,7 +620,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
                 setTimeout(this.onInput);
             }
         } else if (this.selectionStart !== this.selectionEnd) {
-
             let cursorPos = this.selectionStart as number;
 
             const nextDividerPos: number = this.viewValue.indexOf(':', cursorPos);
@@ -620,7 +635,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     private verticalArrowKeyHandler(keyCode: number): void {
-        if (!this.value) { return; }
+        if (!this.value) {
+            return;
+        }
 
         let changedTime;
 
@@ -644,7 +661,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     private horizontalArrowKeyHandler(keyCode: number): void {
-        if (!this.value) { return; }
+        if (!this.value) {
+            return;
+        }
 
         let cursorPos = this.selectionStart as number;
 
@@ -686,11 +705,17 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             default:
         }
 
-        if (seconds > SECONDS_PER_MINUTE) { seconds = 0; }
+        if (seconds > SECONDS_PER_MINUTE) {
+            seconds = 0;
+        }
 
-        if (minutes > MINUTES_PER_HOUR) { minutes = 0; }
+        if (minutes > MINUTES_PER_HOUR) {
+            minutes = 0;
+        }
 
-        if (hours > HOURS_PER_DAY) { hours = 0; }
+        if (hours > HOURS_PER_DAY) {
+            hours = 0;
+        }
 
         return this.dateAdapter.createDateTime(
             this.dateAdapter.getYear(this.value),
@@ -721,11 +746,17 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             default:
         }
 
-        if (seconds < 0) { seconds = SECONDS_PER_MINUTE; }
+        if (seconds < 0) {
+            seconds = SECONDS_PER_MINUTE;
+        }
 
-        if (minutes < 0) { minutes = MINUTES_PER_HOUR; }
+        if (minutes < 0) {
+            minutes = MINUTES_PER_HOUR;
+        }
 
-        if (hours < 0) { hours = HOURS_PER_DAY; }
+        if (hours < 0) {
+            hours = HOURS_PER_DAY;
+        }
 
         return this.dateAdapter.createDateTime(
             this.dateAdapter.getYear(this.value),
@@ -777,13 +808,17 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
      * @description Create time string for displaying inside input element of UI
      */
     private getTimeStringFromDate(value: D | null, timeFormat: TimeFormats): string {
-        if (!value || !this.dateAdapter.isValid(value)) { return ''; }
+        if (!value || !this.dateAdapter.isValid(value)) {
+            return '';
+        }
 
         return this.dateAdapter.format(value, timeFormat);
     }
 
     private getDateFromTimeString(timeString: string): D | null {
-        if (!timeString) { return null; }
+        if (!timeString) {
+            return null;
+        }
 
         const date = this.value || this.dateAdapter.today();
 
@@ -836,29 +871,29 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
-        return this.focused ||
-            this.empty ||
-            this.lastValueValid ? null : { kbqTimepickerParse: { text: this.viewValue } };
-    }
+        return this.focused || this.empty || this.lastValueValid
+            ? null
+            : { kbqTimepickerParse: { text: this.viewValue } };
+    };
 
     private minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
 
-        return !this.min || !controlValue || this.dateAdapter.compareDateTime(this.min, controlValue) <= 0 ?
-            null :
-            { kbqTimepickerLowerThenMin: { min: this.min, actual: controlValue } };
-    }
+        return !this.min || !controlValue || this.dateAdapter.compareDateTime(this.min, controlValue) <= 0
+            ? null
+            : { kbqTimepickerLowerThenMin: { min: this.min, actual: controlValue } };
+    };
 
     private maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
 
-        return !this.max || !controlValue || this.dateAdapter.compareDateTime(this.max, controlValue) >= 0 ?
-                null :
-                { kbqTimepickerHigherThenMax: { max: this.max, actual: controlValue } };
-    }
+        return !this.max || !controlValue || this.dateAdapter.compareDateTime(this.max, controlValue) >= 0
+            ? null
+            : { kbqTimepickerHigherThenMax: { max: this.max, actual: controlValue } };
+    };
 
     private getValidDateOrNull(obj: any): D | null {
-        return (this.dateAdapter.isDateInstance(obj) && this.dateAdapter.isValid(obj)) ? obj : null;
+        return this.dateAdapter.isDateInstance(obj) && this.dateAdapter.isValid(obj) ? obj : null;
     }
 
     private setViewValue(value: string) {
@@ -872,12 +907,13 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     private setControl(control: AbstractControl) {
-        if (this.control) { return; }
+        if (this.control) {
+            return;
+        }
 
         this.control = control;
 
-        this.control.valueChanges
-            .subscribe((value) => this._value = value);
+        this.control.valueChanges.subscribe((value) => (this._value = value));
     }
 
     // tslint:disable-next-line:no-empty

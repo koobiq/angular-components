@@ -1,8 +1,7 @@
 import { Component, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
-
 import {
     Direction,
     KbqGutterDirective,
@@ -12,13 +11,11 @@ import {
     KbqSplitterModule
 } from './index';
 
-
 function createTestComponent<T>(component: Type<T>) {
-    TestBed
-        .resetTestingModule()
+    TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [ KbqSplitterModule ],
-            declarations: [ component ],
+            imports: [KbqSplitterModule],
+            declarations: [component],
             providers: []
         })
         .compileComponents();
@@ -26,25 +23,20 @@ function createTestComponent<T>(component: Type<T>) {
     return TestBed.createComponent<T>(component);
 }
 
-function checkDirection<T>(fixture: ComponentFixture<T>,
-                           direction: Direction,
-                           guttersCount: number,
-                           gutterSize: number) {
-
+function checkDirection<T>(
+    fixture: ComponentFixture<T>,
+    direction: Direction,
+    guttersCount: number,
+    gutterSize: number
+) {
     const splitter = fixture.debugElement.query(By.directive(KbqSplitterComponent));
     const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
 
-    const expectedDirection = direction === Direction.Vertical
-        ? 'column'
-        : 'row';
+    const expectedDirection = direction === Direction.Vertical ? 'column' : 'row';
 
-    const expectedWidth = (direction === Direction.Vertical)
-        ? ''
-        : `${gutterSize}px`;
+    const expectedWidth = direction === Direction.Vertical ? '' : `${gutterSize}px`;
 
-    const expectedHeight = (direction === Direction.Vertical)
-        ? `${gutterSize}px`
-        : '100%';
+    const expectedHeight = direction === Direction.Vertical ? `${gutterSize}px` : '100%';
 
     expect(splitter.nativeElement.style.flexDirection).toBe(expectedDirection);
 
@@ -52,7 +44,6 @@ function checkDirection<T>(fixture: ComponentFixture<T>,
     expect(gutters.every((gutter) => gutter.nativeElement.style.width === expectedWidth)).toBe(true);
     expect(gutters.every((gutter) => gutter.nativeElement.style.height === expectedHeight)).toBe(true);
 }
-
 
 @Component({
     selector: 'kbq-demo-spllitter',
@@ -79,7 +70,6 @@ class KbqSplitterDefaultDirection {}
 class KbqSplitterDirection {
     direction: Direction = Direction.Vertical;
 }
-
 
 @Component({
     selector: 'kbq-demo-spllitter',
@@ -131,8 +121,6 @@ class DynamicData {
     @ViewChild('areaB', { static: false, read: KbqSplitterAreaDirective }) areaB: KbqSplitterAreaDirective;
 }
 
-
-
 describe('KbqSplitter', () => {
     describe('direction', () => {
         it('should be default', () => {
@@ -149,7 +137,6 @@ describe('KbqSplitter', () => {
 
             expect(areas.length).toBe(expectedAreasCount);
         });
-
 
         it('should be horizontal', () => {
             const fixture = createTestComponent(KbqSplitterDirection);
@@ -189,9 +176,13 @@ describe('KbqSplitter', () => {
 
             expect(fixture.componentInstance.gutterPositionChange).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.areaASizeChange).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.areaASizeChange).toHaveBeenCalledWith(fixture.componentInstance.areaA.getSize());
+            expect(fixture.componentInstance.areaASizeChange).toHaveBeenCalledWith(
+                fixture.componentInstance.areaA.getSize()
+            );
             expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledWith(fixture.componentInstance.areaB.getSize());
+            expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledWith(
+                fixture.componentInstance.areaB.getSize()
+            );
         }));
     });
     describe('ghost', () => {
@@ -322,7 +313,7 @@ describe('KbqSplitter', () => {
             const update = () => {
                 fixture.detectChanges();
                 tick();
-            }
+            };
 
             const fixture = createTestComponent(DynamicData);
             const componentInstance = fixture.componentInstance;
@@ -336,7 +327,9 @@ describe('KbqSplitter', () => {
             update();
 
             expect(componentInstance.areaA).toBeFalsy();
-            expect(+(componentInstance.areaB as any).elementRef.nativeElement.style.order).not.toEqual(areaBInitialOrder);
+            expect(+(componentInstance.areaB as any).elementRef.nativeElement.style.order).not.toEqual(
+                areaBInitialOrder
+            );
         }));
-    })
+    });
 });
