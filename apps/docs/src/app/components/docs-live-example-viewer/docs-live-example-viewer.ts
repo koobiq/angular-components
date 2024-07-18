@@ -114,7 +114,7 @@ export class DocsLiveExampleViewer {
                     (a, b) =>
                         preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
-                this.files.push(...results);
+                this.files.push(...this.prepareCodeFiles(results));
             },
             error: (error) => {
                 console.error('Error fetching the files', error);
@@ -180,5 +180,14 @@ export class DocsLiveExampleViewer {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), this.scrollIntoViewDelay);
             }
         }
+    }
+
+    private prepareCodeFiles(codeFiles: ExampleFileData[]) {
+        const filteredFiles = codeFiles.filter((file) => file.content);
+        if (filteredFiles.length === 1) {
+            /* If there is only one non-empty document in the example, then show the block without tabs */
+            filteredFiles[0].filename = null;
+        }
+        return filteredFiles;
     }
 }
