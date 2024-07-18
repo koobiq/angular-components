@@ -159,6 +159,10 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         setTimeout(() => this.tree.highlightSelectedOption());
     };
 
+    hasChild(_: number, nodeData: TreeFlatNode) {
+        return nodeData.expandable;
+    }
+
     toggle($event: MouseEvent, node) {
         if (node.id !== 'icons') {
             this.treeControl.toggle(node);
