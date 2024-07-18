@@ -9,10 +9,11 @@
     <div class="docs-live-example__footer">
         <span kbq-link
               pseudo
-              [style.visibility]="isSourceShown ? 'hidden' : null"
               (click)="toggleSourceView()"
-              (keydown.enter)="toggleSourceView()">
-            Показать пример кода
+              (keydown.enter)="toggleSourceView()"
+              [ngSwitch]="isSourceShown">
+
+            {{ isSourceShown ? 'Скрыть пример кода' : 'Показать пример кода' }}
         </span>
 
         <docs-stackblitz-button [exampleId]="exampleId"></docs-stackblitz-button>
@@ -24,7 +25,7 @@
         *ngIf="isSourceShown"
         [lineNumbers]="true"
         [filled]="true"
-        [codeFiles]="this.files">
+        [codeFiles]="files">
     </kbq-code-block>
 </ng-container>
 
