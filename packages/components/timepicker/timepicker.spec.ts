@@ -1,22 +1,24 @@
 // tslint:disable no-magic-numbers
-import { Component, ViewChild } from '@angular/core';
-import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { Component, DebugElement, Inject, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DOWN_ARROW, ONE, SPACE, TWO, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchFakeEvent, dispatchEvent } from '@koobiq/cdk/testing';
-import { DateAdapter } from '@koobiq/components/core';
+import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 
-import { KbqTimepicker, KbqTimepickerModule } from './index';
+import {
+    DEFAULT_TIME_FORMAT,
+    KbqTimepicker,
+    KbqTimepickerModule,
+    TIMEFORMAT_PLACEHOLDERS,
+    TimeFormats,
+    TimeFormatToLocaleKeys
+} from './index';
 
 
 @Component({
@@ -787,3 +789,77 @@ describe('KbqTimepicker with null model value', () => {
         expect(testComponent.model.toString()).toContain('2020-01-01T18:09');
     }));
 });
+
+@Component({
+    selector: 'test-app',
+    template: `
+        <kbq-form-field>
+            <i kbqPrefix kbq-icon="mc-clock_16"></i>
+            <input kbqTimepicker
+                   [format]="timeFormat"
+                   [(ngModel)]="model">
+        </kbq-form-field>`
+})
+class TimepickerWithLocaleChange {
+    timeFormat: TimeFormats;
+    model: any = null;
+
+    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
+    }
+}
+
+
+describe('with Locale change', () => {
+    let fixture: ComponentFixture<TimepickerWithLocaleChange>;
+    let testComponent: TimepickerWithLocaleChange;
+    let inputElementDebug: DebugElement;
+
+    const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string => testComponent
+        .localeService.current.timepicker.placeholder[TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]];
+
+    beforeEach(fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                FormsModule,
+                KbqFormFieldModule,
+                KbqTimepickerModule,
+                KbqIconModule,
+                KbqLuxonDateModule
+            ],
+            declarations: [TimepickerWithLocaleChange]
+        });
+        TestBed.compileComponents();
+
+        fixture = TestBed.createComponent(TimepickerWithLocaleChange);
+        testComponent = fixture.debugElement.componentInstance;
+        inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
+
+        fixture.detectChanges();
+    }));
+
+    it('should get placeholder from localeService',() => {
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+        expect(getPlaceholderForCurrentLocale()).toEqual(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+    });
+
+    it('should update placeholder of nativeElement on locale change',() => {
+        testComponent.localeService.setLocale('en-US');
+        fixture.detectChanges();
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale());
+    });
+
+    it('should apply localized format on format change',() => {
+        const selectedFormat = TimeFormats.HHmmss;
+        testComponent.timeFormat = selectedFormat;
+        fixture.detectChanges();
+
+        expect(getPlaceholderForCurrentLocale(selectedFormat)).toEqual(TIMEFORMAT_PLACEHOLDERS[selectedFormat]);
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale(selectedFormat));
+
+        testComponent.localeService.setLocale('en-US');
+        fixture.detectChanges();
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            getPlaceholderForCurrentLocale(selectedFormat)
+        );
+    });
+})

@@ -4,6 +4,7 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    Inject,
     Input,
     OnDestroy,
     Optional,
@@ -39,13 +40,13 @@ import {
     TAB
 } from '@koobiq/cdk/keycodes';
 import {
-    DateAdapter,
+    DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
-import { noop, Subject } from 'rxjs';
+import { noop, Subject, Subscription } from 'rxjs';
 
 import {
     DEFAULT_TIME_FORMAT,
@@ -58,7 +59,8 @@ import {
     TIMEFORMAT_PLACEHOLDERS,
     TimeFormats,
     TimeParts,
-    AM_PM_FORMAT_REGEXP
+    AM_PM_FORMAT_REGEXP,
+    TimeFormatToLocaleKeys
 } from './timepicker.constants';
 
 
@@ -205,7 +207,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
             .indexOf(formatValue) > -1 ? formatValue : DEFAULT_TIME_FORMAT;
 
         if (this.defaultPlaceholder) {
-            this._placeholder = TIMEFORMAT_PLACEHOLDERS[this._format];
+            this._placeholder = this.timeFormatPlaceholder;
         }
 
         if (this.value) {
@@ -320,6 +322,12 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.elementRef.nativeElement.selectionEnd = value;
     }
 
+    /** Localized placeholder */
+    get timeFormatPlaceholder(): string {
+        return this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]]
+            || TIMEFORMAT_PLACEHOLDERS[this.format];
+    }
+
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
     private readonly validator: ValidatorFn | null;
@@ -333,10 +341,13 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private onChange: (value: any) => void;
     private onTouched: () => void;
 
+    private localeSubscription = Subscription.EMPTY;
+
     constructor(
         private elementRef: ElementRef,
         private renderer: Renderer2,
-        @Optional() private dateAdapter: DateAdapter<any>
+        @Optional() private dateAdapter: DateAdapter<any>,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         if (!this.dateAdapter) {
             throw Error(`KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +
@@ -349,10 +360,14 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
+
+        this.localeSubscription = dateAdapter.localeChanges
+            .subscribe(this.updateLocaleParams);
     }
 
     ngOnDestroy(): void {
         this.stateChanges.complete();
+        this.localeSubscription.unsubscribe();
     }
 
     getSize(): number {
@@ -867,4 +882,13 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
     // tslint:disable-next-line:no-empty
     private validatorOnChange = () => {};
+
+    private updateLocaleParams = () => {
+        if (!this.defaultPlaceholder) return;
+
+        // update via private property instead of setter to save it as default placeholder
+        this._placeholder = this.timeFormatPlaceholder;
+        // update value so view value will be also updated
+        this.value = this._value;
+    };
 }
