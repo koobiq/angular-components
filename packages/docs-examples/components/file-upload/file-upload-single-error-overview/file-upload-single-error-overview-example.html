@@ -1,8 +1,15 @@
 <kbq-single-file-upload
     inputId="file-upload-single-error-overview"
     [errors]="errors"
-    (fileQueueChange)="onChange($event)">
-    <i kbq-icon="mc-file-empty_16" *ngIf="!errors.length"></i>
-    <i kbq-icon="mc-error_16" *ngIf="errors.length"></i>
+    (fileQueueChange)="onChange($event)"
+>
+    <i
+        *ngIf="!errors.length"
+        kbq-icon="mc-file-empty_16"
+    ></i>
+    <i
+        *ngIf="errors.length"
+        kbq-icon="mc-error_16"
+    ></i>
     <span hint>Максимальный размер файла 5 МБ</span>
 </kbq-single-file-upload>

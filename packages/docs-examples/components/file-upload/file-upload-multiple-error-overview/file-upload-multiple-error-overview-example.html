@@ -1,12 +1,22 @@
 <kbq-multiple-file-upload
     inputId="file-upload-multiple-error-overview"
-    [files]="files"
     [errors]="errors"
-    (fileQueueChanged)="onChange($event)">
-    <ng-template #kbqFileIcon let-file>
-        <i kbq-icon="mc-file-empty_16" *ngIf="!file.hasError"></i>
+    [files]="files"
+    (fileQueueChanged)="onChange($event)"
+>
+    <ng-template
+        #kbqFileIcon
+        let-file
+    >
+        <i
+            *ngIf="!file.hasError"
+            kbq-icon="mc-file-empty_16"
+        ></i>
         <!-- Can be any other icon from package -->
-        <i kbq-icon="mc-file-empty_16" *ngIf="file.hasError"></i>
+        <i
+            *ngIf="file.hasError"
+            kbq-icon="mc-file-empty_16"
+        ></i>
     </ng-template>
     <span hint>Максимальный размер файла 5 МБ</span>
 </kbq-multiple-file-upload>

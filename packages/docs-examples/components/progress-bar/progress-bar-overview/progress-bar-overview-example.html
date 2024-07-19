@@ -1,7 +1,17 @@
 <div class="example-progress-bar-group">
-    <kbq-progress-bar class="example-progress-bar" [value]="percent"></kbq-progress-bar>
+    <kbq-progress-bar
+        class="example-progress-bar"
+        [value]="percent"
+    ></kbq-progress-bar>
     <kbq-form-field>
-        <input kbqInput [(ngModel)]="percent" type="number" min="0" max="100" step="5">
+        <input
+            kbqInput
+            max="100"
+            min="0"
+            step="5"
+            type="number"
+            [(ngModel)]="percent"
+        />
         <kbq-stepper></kbq-stepper>
     </kbq-form-field>
 </div>

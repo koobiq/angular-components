@@ -39,16 +39,24 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled" />
+            <input
+                [(ngModel)]="value"
+                [disabled]="disabled"
+                kbqInputPassword
+            />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
                 [kbqTooltipHidden]="'Показать пароль'"
             ></kbq-password-toggle>
 
-            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64"
-                >От 8 до 64 символов</kbq-password-hint
+            <kbq-password-hint
+                [rule]="passwordRules.Length"
+                [min]="8"
+                [max]="64"
             >
+                От 8 до 64 символов
+            </kbq-password-hint>
 
             <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
 
@@ -56,8 +64,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
             <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols"
-                >Только латинские буквы, цифры, пробелы и спецсимволы
+            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">
+                Только латинские буквы, цифры, пробелы и спецсимволы
             </kbq-password-hint>
         </kbq-form-field>
     `
@@ -72,13 +80,20 @@ class KbqPasswordInputDefault {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" />
+            <input
+                [(ngModel)]="value"
+                kbqInputPassword
+            />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipHidden]="'Показать пароль'"
             ></kbq-password-toggle>
 
-            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
+            <kbq-password-hint
+                [rule]="passwordRules.Custom"
+                [regex]="regex"
+                [checkRule]="checkFunc"
+            >
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
@@ -94,13 +109,21 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled" />
+            <input
+                [(ngModel)]="value"
+                [disabled]="disabled"
+                kbqInputPassword
+            />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipHidden]="'Показать пароль'"
             ></kbq-password-toggle>
 
-            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
+            <kbq-password-hint
+                [rule]="passwordRules.Custom"
+                [regex]="regex"
+                [checkRule]="checkFunc"
+            >
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
@@ -127,7 +150,10 @@ class KbqPasswordInputCustomPasswordRule {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [formControl]="formControl" />
+            <input
+                [formControl]="formControl"
+                kbqInputPassword
+            />
         </kbq-form-field>
     `
 })
@@ -137,9 +163,15 @@ class KbqPasswordInputWithFormControl {
 
 @Component({
     template: `
-        <form [formGroup]="reactiveForm" novalidate>
+        <form
+            [formGroup]="reactiveForm"
+            novalidate
+        >
             <kbq-form-field>
-                <input kbqInputPassword formControlName="reactiveInputValue" />
+                <input
+                    kbqInputPassword
+                    formControlName="reactiveInputValue"
+                />
             </kbq-form-field>
         </form>
     `

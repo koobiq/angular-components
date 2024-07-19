@@ -62,7 +62,8 @@ export class SidepanelDemoComponent {
 
 @Component({
     selector: 'example-sidepanel',
-    template: ` <kbq-sidepanel-header [closeable]="true">
+    template: `
+        <kbq-sidepanel-header [closeable]="true">
             Sidepanel Component Content Sidepanel Component Content Sidepanel Component Content
         </kbq-sidepanel-header>
 
@@ -74,15 +75,23 @@ export class SidepanelDemoComponent {
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button [color]="'contrast'" (click)="openComponentSidepanel()">
+                <button
+                    [color]="'contrast'"
+                    (click)="openComponentSidepanel()"
+                    kbq-button
+                >
                     <span>Open another sidepanel</span>
                 </button>
 
-                <button kbq-button kbq-sidepanel-close>
+                <button
+                    kbq-button
+                    kbq-sidepanel-close
+                >
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>
-        </kbq-sidepanel-footer>`,
+        </kbq-sidepanel-footer>
+    `,
     host: {
         class: 'layout-column flex'
     }

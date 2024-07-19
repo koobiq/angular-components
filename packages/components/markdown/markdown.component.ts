@@ -16,8 +16,15 @@ import { KbqMarkdownService } from './markdown.service';
     styleUrls: ['./markdown.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
-        <pre class="markdown-input" #contentWrapper ngPreserveWhitespaces><ng-content></ng-content></pre>
-        <div class="markdown-output" [innerHtml]="resultHtml"></div>
+        <pre
+            class="markdown-input"
+            #contentWrapper
+            ngPreserveWhitespaces
+        ><ng-content></ng-content></pre>
+        <div
+            class="markdown-output"
+            [innerHtml]="resultHtml"
+        ></div>
     `,
     host: {
         class: 'kbq-markdown'

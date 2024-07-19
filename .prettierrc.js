@@ -1,6 +1,26 @@
 // @ts-check
 
 /**
+ * @type {import('prettier-plugin-organize-attributes').PrettierPluginOrganizeAttributesParserOptions}
+ */
+const organizeAttributesPluginAngularConfig = {
+    attributeGroups: [
+        '$ANGULAR_STRUCTURAL_DIRECTIVE',
+        '$ANGULAR_ELEMENT_REF',
+        '$ID',
+        '$DEFAULT',
+        '$CLASS',
+        '$ANGULAR_INPUT',
+        '$ANGULAR_TWO_WAY_BINDING',
+        '$ANGULAR_OUTPUT',
+        '$ANGULAR_ANIMATION',
+        '$ANGULAR_ANIMATION_INPUT'
+    ],
+    attributeSort: 'ASC',
+    attributeIgnoreCase: true
+};
+
+/**
  * @type {import('prettier').Options}
  */
 const config = {
@@ -9,7 +29,10 @@ const config = {
     useTabs: false,
     singleQuote: true,
     trailingComma: 'none',
+    singleAttributePerLine: true,
+    htmlWhitespaceSensitivity: 'ignore',
     plugins: [
+        'prettier-plugin-organize-attributes',
         'prettier-plugin-organize-imports',
         // should be last
         'prettier-plugin-multiline-arrays'
@@ -22,19 +45,29 @@ const config = {
             }
         },
         {
-            files: [
-                '.component.html',
-                '.page.html'
-            ],
+            files: ['*.xml'],
             options: {
-                parser: 'angular'
+                parser: 'xml',
+                plugins: ['@prettier/plugin-xml']
             }
         },
         {
             files: ['*.html'],
             options: {
-                parser: 'html',
-                singleQuote: false
+                parser: 'angular',
+                ...organizeAttributesPluginAngularConfig
+            }
+        },
+        {
+            files: ['index.html'],
+            options: {
+                parser: 'html'
+            }
+        },
+        {
+            files: '*.svg',
+            options: {
+                parser: 'html'
             }
         }
     ]

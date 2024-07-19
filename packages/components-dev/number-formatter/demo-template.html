@@ -1,16 +1,25 @@
 <kbq-form-field class="number-input">
-    <input kbqInput [(ngModel)]="value" type="number" placeholder="Number">
-</kbq-form-field>&nbsp;
+    <input
+        kbqInput
+        placeholder="Number"
+        type="number"
+        [(ngModel)]="value"
+    />
+</kbq-form-field>
+&nbsp;
 
-
-<button kbq-dropdown-item *ngFor="let language of locales;"
-        [class.mc-selected]="language.selected"
-        (click)="selectLanguage(language)">
+<button
+    *ngFor="let language of locales"
+    kbq-dropdown-item
+    [class.mc-selected]="language.selected"
+    (click)="selectLanguage(language)"
+>
     {{ language.name }}
 </button>
 
 <div class="kbq-subheading">
-    <label>KBQ_LOCALE_ID: </label><span>{{ this.localeService.id | json }}</span>
+    <label>KBQ_LOCALE_ID:</label>
+    <span>{{ this.localeService.id | json }}</span>
 </div>
 
 <div class="kbq-subheading">
@@ -114,7 +123,7 @@
         </div>
         <div class="layout-row row-border">
             <div class="flex">locale ru</div>
-            <div class="flex">{{ 1000 | kbqRoundNumber : 'ru-RU' }}</div>
+            <div class="flex">{{ 1000 | kbqRoundNumber: 'ru-RU' }}</div>
         </div>
     </div>
 </div>

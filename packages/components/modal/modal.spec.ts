@@ -530,11 +530,25 @@ describe('KbqModal', () => {
 @Component({
     selector: 'mc-modal-by-service-from-dropdown',
     template: `
-        <kbq-modal [(kbqVisible)]="nonServiceModalVisible" kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"></kbq-modal>
-        <button kbq-button class="template-button" [kbqDropdownTriggerFor]="dropdown">Open modal from dropdown</button>
+        <kbq-modal
+            [(kbqVisible)]="nonServiceModalVisible"
+            kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
+        ></kbq-modal>
+        <button
+            class="template-button"
+            [kbqDropdownTriggerFor]="dropdown"
+            kbq-button
+        >
+            Open modal from dropdown
+        </button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button kbq-dropdown-item (click)="showConfirm()">open Component Modal</button>
+                <button
+                    (click)="showConfirm()"
+                    kbq-dropdown-item
+                >
+                    open Component Modal
+                </button>
             </ng-template>
         </kbq-dropdown>
     `,
@@ -565,14 +579,19 @@ class ModalByServiceFromDropdownComponent {
 }
 
 @Component({
-    template: `Modal Content`
+    template: `
+        Modal Content
+    `
 })
 class TestModalContentComponent {}
 
 @Component({
     selector: 'kbq-modal-by-service',
     template: `
-        <kbq-modal [(kbqVisible)]="nonServiceModalVisible" kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"></kbq-modal>
+        <kbq-modal
+            [(kbqVisible)]="nonServiceModalVisible"
+            kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
+        ></kbq-modal>
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service

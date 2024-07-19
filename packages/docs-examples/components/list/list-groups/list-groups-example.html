@@ -1,6 +1,13 @@
 <kbq-list-selection>
-    <kbq-optgroup *ngFor="let group of pokemonTypes" [label]="group.name" [disabled]="group.disabled">
-        <kbq-list-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
+    <kbq-optgroup
+        *ngFor="let group of pokemonTypes"
+        [disabled]="group.disabled"
+        [label]="group.name"
+    >
+        <kbq-list-option
+            *ngFor="let pokemon of group.pokemon"
+            [value]="pokemon.value"
+        >
             {{ pokemon.viewValue }}
         </kbq-list-option>
     </kbq-optgroup>

@@ -1,7 +1,7 @@
 <docs-sidenav
     class="kbq-scrollbar"
-    [class.docs-sidenav_opened]="opened"
     [class.docs-sidenav_closed]="!opened"
+    [class.docs-sidenav_opened]="opened"
     [@openCloseSidenav]="opened ? 'open' : 'closed'"
 ></docs-sidenav>
 
@@ -12,5 +12,8 @@
 
     <router-outlet></router-outlet>
 
-    <div class="docs-overlay" [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"></div>
+    <div
+        class="docs-overlay"
+        [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"
+    ></div>
 </div>

@@ -103,7 +103,9 @@ export class KbqNavbarTitle implements AfterViewInit {
 @Component({
     selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
     exportAs: 'kbqNavbarBrand',
-    template: `<ng-content></ng-content>`,
+    template: `
+        <ng-content></ng-content>
+    `,
     host: {
         class: 'kbq-navbar-brand',
         '[class.kbq-hovered]': 'hovered'
@@ -536,16 +538,18 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     selector: 'kbq-navbar-toggle',
     template: `
         <i
-            kbq-icon
+            *ngIf="!customIcon"
             [class.mc-angle-left-M_16]="navbar.expanded"
             [class.mc-angle-right-M_16]="!navbar.expanded"
-            *ngIf="!customIcon"
-        >
-        </i>
+            kbq-icon
+        ></i>
 
         <ng-content select="[kbq-icon]"></ng-content>
 
-        <div class="kbq-navbar-item__title" *ngIf="navbar.expanded">
+        <div
+            class="kbq-navbar-item__title"
+            *ngIf="navbar.expanded"
+        >
             <ng-content select="kbq-navbar-title"></ng-content>
         </div>
     `,

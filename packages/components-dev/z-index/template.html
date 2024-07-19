@@ -1,22 +1,16 @@
-<kbq-dropdown
-    #horizontalNavbarDropdown_1="kbqDropdown">
-
+<kbq-dropdown #horizontalNavbarDropdown_1="kbqDropdown">
     <button kbq-dropdown-item>Point 1</button>
     <button kbq-dropdown-item>Point 2</button>
     <button kbq-dropdown-item>Point 3</button>
 </kbq-dropdown>
 
-<kbq-dropdown
-    #horizontalNavbarDropdown_2="kbqDropdown">
-
+<kbq-dropdown #horizontalNavbarDropdown_2="kbqDropdown">
     <button kbq-dropdown-item>Point 1</button>
     <button kbq-dropdown-item>Point 2</button>
     <button kbq-dropdown-item>Point 3</button>
 </kbq-dropdown>
 
-<kbq-dropdown
-    #horizontalNavbarDropdown_3="kbqDropdown">
-
+<kbq-dropdown #horizontalNavbarDropdown_3="kbqDropdown">
     <button kbq-dropdown-item>Point 1</button>
     <button kbq-dropdown-item>Point 2</button>
     <button kbq-dropdown-item>Point 3</button>
@@ -26,15 +20,37 @@
     <kbq-navbar-container>
         <kbq-navbar-item
             #horizontalNavbarDropdownTrigger_1="kbqDropdownTrigger"
+            [class.kbq-active]="horizontalNavbarDropdownTrigger_1.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarDropdown_1"
-            [class.kbq-active]="horizontalNavbarDropdownTrigger_1.opened">
-
+        >
             <i kbq-icon="mc-bento_16"></i>
         </kbq-navbar-item>
 
-        <a href="#" kbq-navbar-brand>
+        <a
+            href="#"
+            kbq-navbar-brand
+        >
             <kbq-navbar-logo>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 25c0 2.63 0 4.09.955 5.045C2.909 31 4.37 31 7 31h18c2.63 0 4.09 0 5.045-.955C31 29.091 31 27.63 31 25V7c0-2.63 0-4.09-.955-5.045C29.091 1 27.63 1 25 1H7c-2.63 0-4.09 0-5.045.955C1 2.909 1 4.37 1 7v18Z" fill="red"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.376 13.314v3.057c0 1.456.625 2.02 2.017 2.02h2.071v2.462h-2.572c-2.82 0-4.165-1.466-4.165-4.168V7h2.65v3.851h4.087v2.463h-4.088Zm-9.247 5.272c-1.444 0-2.48-1.15-2.48-2.734s1.036-2.734 2.48-2.734c1.454 0 2.509 1.15 2.509 2.734s-1.055 2.734-2.51 2.734Zm.576-7.93c-1.13 0-2.163.414-2.826 1.157h-.23v-.962H7v13.853h2.65V19.89h.229c.614.67 1.61 1.158 2.826 1.158 2.724 0 4.583-2.191 4.583-5.197 0-3.006-1.859-5.197-4.583-5.197Z" fill="#fff"/></svg>
+                <svg
+                    fill="none"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    width="32"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        clip-rule="evenodd"
+                        d="M1 25c0 2.63 0 4.09.955 5.045C2.909 31 4.37 31 7 31h18c2.63 0 4.09 0 5.045-.955C31 29.091 31 27.63 31 25V7c0-2.63 0-4.09-.955-5.045C29.091 1 27.63 1 25 1H7c-2.63 0-4.09 0-5.045.955C1 2.909 1 4.37 1 7v18Z"
+                        fill="red"
+                        fill-rule="evenodd"
+                    />
+                    <path
+                        clip-rule="evenodd"
+                        d="M21.376 13.314v3.057c0 1.456.625 2.02 2.017 2.02h2.071v2.462h-2.572c-2.82 0-4.165-1.466-4.165-4.168V7h2.65v3.851h4.087v2.463h-4.088Zm-9.247 5.272c-1.444 0-2.48-1.15-2.48-2.734s1.036-2.734 2.48-2.734c1.454 0 2.509 1.15 2.509 2.734s-1.055 2.734-2.51 2.734Zm.576-7.93c-1.13 0-2.163.414-2.826 1.157h-.23v-.962H7v13.853h2.65V19.89h.229c.614.67 1.61 1.158 2.826 1.158 2.724 0 4.583-2.191 4.583-5.197 0-3.006-1.859-5.197-4.583-5.197Z"
+                        fill="#fff"
+                        fill-rule="evenodd"
+                    />
+                </svg>
             </kbq-navbar-logo>
             <kbq-navbar-title>Incident Processing Center</kbq-navbar-title>
         </a>
@@ -47,9 +63,15 @@
 
         <kbq-navbar-item>
             <kbq-form-field>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
 
-                <input kbqInput placeholder="Placeholder" />
+                <input
+                    kbqInput
+                    placeholder="Placeholder"
+                />
 
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
@@ -77,19 +99,19 @@
 
         <kbq-navbar-item
             #horizontalNavbarDropdownTrigger_2="kbqDropdownTrigger"
-            [kbqDropdownTriggerFor]="horizontalNavbarDropdown_2"
             [class.kbq-active]="horizontalNavbarDropdownTrigger_2.opened"
-            [collapsable]="false">
-
+            [collapsable]="false"
+            [kbqDropdownTriggerFor]="horizontalNavbarDropdown_2"
+        >
             <kbq-navbar-title>База знаний</kbq-navbar-title>
         </kbq-navbar-item>
 
         <kbq-navbar-item
             #horizontalNavbarDropdownTrigger_3="kbqDropdownTrigger"
-            [kbqDropdownTriggerFor]="horizontalNavbarDropdown_3"
             [class.kbq-active]="horizontalNavbarDropdownTrigger_3.opened"
-            [collapsable]="false">
-
+            [collapsable]="false"
+            [kbqDropdownTriggerFor]="horizontalNavbarDropdown_3"
+        >
             <kbq-navbar-title>Еще</kbq-navbar-title>
         </kbq-navbar-item>
 
@@ -104,9 +126,16 @@
 
         <kbq-navbar-item>
             <kbq-form-field>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
 
-                <input kbqInput placeholder="Placeholder" tabindex="-1"/>
+                <input
+                    kbqInput
+                    placeholder="Placeholder"
+                    tabindex="-1"
+                />
 
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
@@ -116,18 +145,22 @@
     </kbq-navbar-container>
 
     <kbq-navbar-container>
-        <kbq-navbar-item >
+        <kbq-navbar-item>
             <i kbq-icon="mc-search_16"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-item
             #popover="kbqPopover"
-            [class.kbq-active]="popover.isOpen"
             kbqPopover
-            [kbqPopoverPlacement]="popUpPlacements.BottomRight"
+            [class.kbq-active]="popover.isOpen"
+            [kbqPopoverContent]="
+                'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '
+            "
             [kbqPopoverHeader]="'Центр уведомлений'"
-            [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '">
-            <i kbq-icon="mc-bell-o_16"></i><span class="kbq-badge kbq-badge_mini kbq-badge_solid kbq-badge_info">5</span>
+            [kbqPopoverPlacement]="popUpPlacements.BottomRight"
+        >
+            <i kbq-icon="mc-bell-o_16"></i>
+            <span class="kbq-badge kbq-badge_mini kbq-badge_solid kbq-badge_info">5</span>
         </kbq-navbar-item>
 
         <kbq-navbar-item>
@@ -141,117 +174,150 @@
 </kbq-navbar>
 
 <ng-template #controls>
-        <div class="demo-block flex-50">
+    <div class="demo-block flex-50">
+        <button
+            kbq-button
+            class="example-button"
+            (click)="showManyActonToast(controls)"
+        >
+            Show toast
+        </button>
+
+        <br />
+
+        <button
+            kbq-button
+            class="example-button"
+            (click)="showModal(modalTitle, controls)"
+        >
+            show modal
+        </button>
+
+        <br />
+
+        <button
+            kbq-button
+            class="example-button"
+            (click)="openTemplateSidepanel()"
+        >
+            show sidepanel
+        </button>
+
+        <br />
+
+        <button
+            kbq-button
+            kbqPopover
+            class="example-button"
+            [kbqPopoverContent]="'customContent'"
+        >
+            show popover
+        </button>
+
+        <br />
+
+        <button
+            kbq-button
+            class="example-button"
+            [kbqTooltip]="'inputText'"
+        >
+            show tooltip
+        </button>
+
+        <br />
+
+        <button
+            kbq-button
+            [kbqDropdownTriggerFor]="appDropdownWithNested"
+        >
+            nested dropdown
+            <i kbq-icon="mc-angle-down-S_16"></i>
+        </button>
+
+        <br />
+
+        <kbq-dropdown #appDropdownWithNested="kbqDropdown">
             <button
-                class="example-button"
-                kbq-button
-                (click)="showManyActonToast(controls)">
-                Show toast
+                kbq-dropdown-item
+                [kbqDropdownTriggerFor]="appDropdownNested"
+            >
+                1 level (1)
             </button>
+            <button kbq-dropdown-item>1 level (2)</button>
+            <button kbq-dropdown-item>1 level (3)</button>
+        </kbq-dropdown>
 
-            <br>
-
+        <kbq-dropdown #appDropdownNested="kbqDropdown">
             <button
-                class="example-button"
-                kbq-button
-                (click)="showModal(modalTitle, controls)">
-                show modal
+                kbq-dropdown-item
+                [kbqDropdownTriggerFor]="appDropdownNestedNested"
+            >
+                2 level (1)
             </button>
+            <button kbq-dropdown-item>2 level (2)</button>
+            <button kbq-dropdown-item>2 level (3)</button>
+        </kbq-dropdown>
 
-            <br>
+        <kbq-dropdown #appDropdownNestedNested="kbqDropdown">
+            <button kbq-dropdown-item>3 level (1)</button>
+            <button kbq-dropdown-item>3 level (2)</button>
+            <button kbq-dropdown-item>3 level (3)</button>
+        </kbq-dropdown>
+    </div>
 
-            <button
-                class="example-button"
-                kbq-button
-                (click)="openTemplateSidepanel()">
-                show sidepanel
-            </button>
+    <kbq-form-field>
+        <kbq-select
+            [placeholder]="'placeholder'"
+            [(value)]="selectValue"
+        >
+            <kbq-option
+                disabled
+                [value]="'Disabled'"
+            >
+                Disabled
+            </kbq-option>
+            <kbq-option [value]="'Normal'">Normal</kbq-option>
+            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option [value]="'Focused'">Focused</kbq-option>
+            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option [value]="'Selected2'">Selected2</kbq-option>
+            <kbq-option [value]="'Selected3'">Selected3</kbq-option>
+            <kbq-option [value]="'Selected4'">Selected4</kbq-option>
+            <kbq-option [value]="'Selected5'">Selected5</kbq-option>
+            <kbq-option [value]="'Selected6'">Selected6</kbq-option>
+            <kbq-option [value]="'Selected7'">Selected7</kbq-option>
+            <kbq-option [value]="'Selected8'">Selected8</kbq-option>
+            <kbq-option [value]="'Selected9'">Selected9</kbq-option>
+            <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+            <kbq-select-footer class="kbq-select__footer_icon">
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
+                    (click)="showModal(modalTitle, controls)"
+                >
+                    <i kbq-icon="kbq-upload-to-cloud_16"></i>
+                    Добавить
+                </button>
 
-            <br>
+                <button
+                    kbq-button
+                    class="example-button"
+                    (click)="showManyActonToast(controls)"
+                >
+                    Show toast
+                </button>
 
-            <button
-                class="example-button"
-                kbq-button
-                kbqPopover
-                [kbqPopoverContent]="'customContent'">
-                show popover
-            </button>
-
-            <br>
-
-            <button
-                class="example-button"
-                kbq-button
-                [kbqTooltip]="'inputText'">
-                show tooltip
-            </button>
-
-            <br>
-
-            <button kbq-button [kbqDropdownTriggerFor]="appDropdownWithNested">
-                nested dropdown <i kbq-icon="mc-angle-down-S_16"></i>
-            </button>
-
-            <br>
-
-            <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">1 level (1)</button>
-                <button kbq-dropdown-item>1 level (2)</button>
-                <button kbq-dropdown-item>1 level (3)</button>
-            </kbq-dropdown>
-
-            <kbq-dropdown #appDropdownNested="kbqDropdown">
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">2 level (1)</button>
-                <button kbq-dropdown-item>2 level (2)</button>
-                <button kbq-dropdown-item>2 level (3)</button>
-            </kbq-dropdown>
-
-            <kbq-dropdown #appDropdownNestedNested="kbqDropdown">
-                <button kbq-dropdown-item>3 level (1)</button>
-                <button kbq-dropdown-item>3 level (2)</button>
-                <button kbq-dropdown-item>3 level (3)</button>
-            </kbq-dropdown>
-        </div>
-
-        <kbq-form-field>
-            <kbq-select [(value)]="selectValue" [placeholder]="'placeholder'">
-                <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
-                <kbq-option [value]="'Normal'">Normal</kbq-option>
-                <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-                <kbq-option [value]="'Focused'">Focused</kbq-option>
-                <kbq-option [value]="'Selected'">Selected</kbq-option>
-                <kbq-option [value]="'Selected1'">Selected1</kbq-option>
-                <kbq-option [value]="'Selected2'">Selected2</kbq-option>
-                <kbq-option [value]="'Selected3'">Selected3</kbq-option>
-                <kbq-option [value]="'Selected4'">Selected4</kbq-option>
-                <kbq-option [value]="'Selected5'">Selected5</kbq-option>
-                <kbq-option [value]="'Selected6'">Selected6</kbq-option>
-                <kbq-option [value]="'Selected7'">Selected7</kbq-option>
-                <kbq-option [value]="'Selected8'">Selected8</kbq-option>
-                <kbq-option [value]="'Selected9'">Selected9</kbq-option>
-                <kbq-option [value]="'Selected10'">Selected10</kbq-option>
-                <kbq-select-footer class="kbq-select__footer_icon">
-                    <button kbq-button class="kbq-button_transparent" (click)="showModal(modalTitle, controls)">
-                        <i kbq-icon="kbq-upload-to-cloud_16"></i>
-                        Добавить
-                    </button>
-
-                    <button
-                        class="example-button"
-                        kbq-button
-                        (click)="showManyActonToast(controls)">
-                        Show toast
-                    </button>
-
-                    <button
-                        class="example-button"
-                        kbq-button
-                        (click)="openTemplateSidepanel()">
-                        show sidepanel
-                    </button>
-                </kbq-select-footer>
-            </kbq-select>
-        </kbq-form-field>
+                <button
+                    kbq-button
+                    class="example-button"
+                    (click)="openTemplateSidepanel()"
+                >
+                    show sidepanel
+                </button>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
 </ng-template>
 
 <div style="height: 200vh; margin-top: 64px">
@@ -263,11 +329,12 @@
 </ng-template>
 
 <ng-template #sipanelTemplate>
-    <kbq-sidepanel-header [closeable]="true">
-        Sidepanel Template Content
-    </kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
 
-    <kbq-sidepanel-body class="layout-padding" cdk-scrollable>
+    <kbq-sidepanel-body
+        cdk-scrollable
+        class="layout-padding"
+    >
         <div class="kbq-subheading">Sidepanel Template Body</div>
 
         <ng-container *ngTemplateOutlet="controls"></ng-container>
@@ -279,12 +346,20 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
+            <button
+                cdkFocusInitial
+                kbq-button
+                [color]="'contrast'"
+                (click)="openTemplateSidepanel()"
+            >
                 <span>Open another sidepanel</span>
             </button>
         </kbq-sidepanel-actions>
         <kbq-sidepanel-actions align="right">
-            <button kbq-button kbq-sidepanel-close>
+            <button
+                kbq-button
+                kbq-sidepanel-close
+            >
                 <span>Close</span>
             </button>
         </kbq-sidepanel-actions>

@@ -33,7 +33,11 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <textarea kbqTextarea [(ngModel)]="value" required></textarea>
+            <textarea
+                [(ngModel)]="value"
+                kbqTextarea
+                required
+            ></textarea>
         </kbq-form-field>
     `
 })
@@ -45,7 +49,12 @@ class KbqTextareaInvalid {
     template: `
         <form #form="ngForm">
             <kbq-form-field>
-                <textarea kbqTextarea [(ngModel)]="value" name="control" required> </textarea>
+                <textarea
+                    [(ngModel)]="value"
+                    kbqTextarea
+                    name="control"
+                    required
+                ></textarea>
             </kbq-form-field>
 
             <button type="submit"></button>
@@ -59,18 +68,31 @@ class KbqFormFieldWithNgModelInForm {
 }
 
 @Component({
-    template: ` <kbq-form-field>
-        <textarea kbqTextarea class="kbq-textarea_monospace" [(ngModel)]="value"></textarea>
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <textarea
+                class="kbq-textarea_monospace"
+                [(ngModel)]="value"
+                kbqTextarea
+            ></textarea>
+        </kbq-form-field>
+    `
 })
 class KbqTextareaWithMonospace {
     value: string = 'test';
 }
 
 @Component({
-    template: ` <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled"></textarea>
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <textarea
+                [(ngModel)]="value"
+                [placeholder]="placeholder"
+                [disabled]="disabled"
+                kbqTextarea
+            ></textarea>
+        </kbq-form-field>
+    `
 })
 class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
@@ -79,9 +101,15 @@ class KbqTextareaForBehaviors {
 }
 
 @Component({
-    template: ` <kbq-form-field>
-        <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <textarea
+                [(ngModel)]="value"
+                [canGrow]="false"
+                kbqTextarea
+            ></textarea>
+        </kbq-form-field>
+    `
 })
 class KbqTextareaGrowOff {
     value: string = 'test\ntest\ntest';
@@ -90,9 +118,11 @@ class KbqTextareaGrowOff {
 }
 
 @Component({
-    template: ` <kbq-form-field kbqFormFieldWithoutBorders>
-        <textarea kbqTextarea></textarea>
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <textarea kbqTextarea></textarea>
+        </kbq-form-field>
+    `
 })
 class KbqFormFieldWithoutBorders {}
 

@@ -312,12 +312,12 @@ interface ITab {
                 (selectFocusedIndex)="selectedIndex = $event"
             >
                 <div
-                    kbqTabLabelWrapper
                     class="label-content"
-                    style="min-width: 30px; width: 30px"
                     *ngFor="let tab of tabs; let i = index"
                     [disabled]="!!tab.disabled"
                     (click)="selectedIndex = i"
+                    kbqTabLabelWrapper
+                    style="min-width: 30px; width: 30px"
                 >
                     {{ tab.label }}
                 </div>

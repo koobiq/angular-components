@@ -1,8 +1,18 @@
 <label>Enter countries to see autocomplete</label>
 <kbq-form-field>
-    <input type="text" kbqInput [kbqAutocomplete]="auto" [formControl]="control"/>
+    <input
+        kbqInput
+        type="text"
+        [formControl]="control"
+        [kbqAutocomplete]="auto"
+    />
 
     <kbq-autocomplete #auto="kbqAutocomplete">
-        <kbq-option *ngFor="let option of filteredOptions | async" [value]="option">{{ option }}</kbq-option>
+        <kbq-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="option"
+        >
+            {{ option }}
+        </kbq-option>
     </kbq-autocomplete>
 </kbq-form-field>

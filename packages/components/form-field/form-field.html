@@ -1,6 +1,12 @@
-<div class="kbq-form-field__container" (click)="onContainerClick($event)" #connectionContainer>
-
-    <div class="kbq-form-field__prefix" *ngIf="hasPrefix">
+<div
+    #connectionContainer
+    class="kbq-form-field__container"
+    (click)="onContainerClick($event)"
+>
+    <div
+        *ngIf="hasPrefix"
+        class="kbq-form-field__prefix"
+    >
         <ng-content select="[kbqPrefix]"></ng-content>
     </div>
 
@@ -8,21 +14,32 @@
         <ng-content></ng-content>
     </div>
 
-    <div class="kbq-form-field__suffix" *ngIf="hasSuffix">
+    <div
+        *ngIf="hasSuffix"
+        class="kbq-form-field__suffix"
+    >
         <ng-content select="[kbqSuffix]"></ng-content>
     </div>
 
-    <div class="kbq-form-field__cleaner"
-         *ngIf="canShowCleaner && !hasSuffix"
-         (click)="clearValue($event)">
+    <div
+        *ngIf="canShowCleaner && !hasSuffix"
+        class="kbq-form-field__cleaner"
+        (click)="clearValue($event)"
+    >
         <ng-content select="kbq-cleaner"></ng-content>
     </div>
 
     <ng-content select="kbq-password-toggle"></ng-content>
 
-    <ng-content *ngIf="canShowStepper" select="kbq-stepper"></ng-content>
+    <ng-content
+        *ngIf="canShowStepper"
+        select="kbq-stepper"
+    ></ng-content>
 </div>
 
-<div class="kbq-form-field__hint" *ngIf="hasHint || passwordHints.length">
+<div
+    *ngIf="hasHint || passwordHints.length"
+    class="kbq-form-field__hint"
+>
     <ng-content select="kbq-hint, kbq-password-hint"></ng-content>
 </div>

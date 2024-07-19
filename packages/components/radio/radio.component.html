@@ -1,17 +1,26 @@
-<label class="kbq-radio-label" [attr.for]="inputId" #label>
-    <input type="radio"
-           class="kbq-radio-input cdk-visually-hidden"
-           #input
-           [id]="inputId"
-           [checked]="checked"
-           [disabled]="disabled"
-           [tabIndex]="tabIndex"
-           [attr.name]="name"
-           [required]="required"
-           (change)="onInputChange($event)"
-           (click)="onInputClick($event)">
+<label
+    #label
+    class="kbq-radio-label"
+    [attr.for]="inputId"
+>
+    <input
+        #input
+        type="radio"
+        class="kbq-radio-input cdk-visually-hidden"
+        [attr.name]="name"
+        [checked]="checked"
+        [disabled]="disabled"
+        [id]="inputId"
+        [required]="required"
+        [tabIndex]="tabIndex"
+        (change)="onInputChange($event)"
+        (click)="onInputClick($event)"
+    />
 
-    <div class="kbq-radio-label-content" [class.kbq-radio-label-before]="labelPosition == 'before'">
+    <div
+        class="kbq-radio-label-content"
+        [class.kbq-radio-label-before]="labelPosition == 'before'"
+    >
         <div class="kbq-radio-button__outer-circle">
             <div class="kbq-radio-button__inner-circle"></div>
         </div>

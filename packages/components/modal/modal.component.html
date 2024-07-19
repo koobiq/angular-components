@@ -4,34 +4,46 @@
 </ng-template>
 
 <div>
-    <div *ngIf="kbqMask"
-         class="kbq-modal-mask"
-         [ngClass]="maskAnimationClassMap"
-         [class.kbq-modal-mask-hidden]="hidden"
-         [ngStyle]="kbqMaskStyle">
-    </div>
+    <div
+        *ngIf="kbqMask"
+        class="kbq-modal-mask"
+        [class.kbq-modal-mask-hidden]="hidden"
+        [ngClass]="maskAnimationClassMap"
+        [ngStyle]="kbqMaskStyle"
+    ></div>
 
-    <div (mousedown)="onClickMask($event)"
-         class="kbq-modal-wrap {{ kbqWrapClassName }}"
-         [style.display]="hidden ? 'none' : ''"
-         tabindex="-1">
-
-        <div #modalContainer
-             class="kbq-modal {{ kbqClassName }} kbq-modal_{{ kbqSize }}"
-             [ngClass]="modalAnimationClassMap"
-             [class.kbq-modal_no-footer]="!kbqFooter"
-             [ngStyle]="kbqStyle"
-             [style.width]="kbqWidth | toCssUnit"
-             [style.transform-origin]="transformOrigin">
-
-            <div class="kbq-modal-content" cdkTrapFocus>
+    <div
+        tabindex="-1"
+        class="kbq-modal-wrap {{ kbqWrapClassName }}"
+        [style.display]="hidden ? 'none' : ''"
+        (mousedown)="onClickMask($event)"
+    >
+        <div
+            #modalContainer
+            class="kbq-modal {{ kbqClassName }} kbq-modal_{{ kbqSize }}"
+            [class.kbq-modal_no-footer]="!kbqFooter"
+            [ngClass]="modalAnimationClassMap"
+            [ngStyle]="kbqStyle"
+            [style.transform-origin]="transformOrigin"
+            [style.width]="kbqWidth | toCssUnit"
+        >
+            <div
+                cdkTrapFocus
+                class="kbq-modal-content"
+            >
                 <ng-container [ngSwitch]="true">
-                    <ng-container *ngSwitchCase="isModalType('default')"
-                                  [ngTemplateOutlet]="tplContentDefault"></ng-container>
-                    <ng-container *ngSwitchCase="isModalType('confirm')"
-                                  [ngTemplateOutlet]="tplContentConfirm"></ng-container>
-                    <ng-container *ngSwitchCase="isModalType('custom')"
-                                  [ngTemplateOutlet]="tplContentCustom"></ng-container>
+                    <ng-container
+                        *ngSwitchCase="isModalType('default')"
+                        [ngTemplateOutlet]="tplContentDefault"
+                    ></ng-container>
+                    <ng-container
+                        *ngSwitchCase="isModalType('confirm')"
+                        [ngTemplateOutlet]="tplContentConfirm"
+                    ></ng-container>
+                    <ng-container
+                        *ngSwitchCase="isModalType('custom')"
+                        [ngTemplateOutlet]="tplContentCustom"
+                    ></ng-container>
                 </ng-container>
             </div>
         </div>
@@ -42,72 +54,108 @@
     <ng-container #bodyContainer></ng-container>
 </ng-template>
 
-
 <!-- [Predefined] Default Modal Content -->
 <ng-template #tplContentDefault>
-    <div *ngIf="kbqTitle" class="kbq-modal-header" kbq-title [class.kbq-modal-body_top-overflow]="isTopOverflow">
+    <div
+        *ngIf="kbqTitle"
+        kbq-title
+        class="kbq-modal-header"
+        [class.kbq-modal-body_top-overflow]="isTopOverflow"
+    >
         <div class="kbq-modal-title">
             <ng-container [ngSwitch]="true">
-                <ng-container *ngSwitchCase="isTemplateRef(kbqTitle)" [ngTemplateOutlet]="$any(kbqTitle)"></ng-container>
+                <ng-container
+                    *ngSwitchCase="isTemplateRef(kbqTitle)"
+                    [ngTemplateOutlet]="$any(kbqTitle)"
+                ></ng-container>
                 <ng-container *ngSwitchCase="isNonEmptyString(kbqTitle)">
                     <div [innerHTML]="kbqTitle"></div>
                 </ng-container>
             </ng-container>
         </div>
 
-        <button *ngIf="kbqClosable"
-                kbq-button
-                [color]="'contrast'"
-                (click)="onClickCloseBtn()"
-                class="kbq-modal-close kbq-button_transparent">
-            <i kbq-icon="mc-close-L_16" [color]="componentColors.Contrast"></i>
+        <button
+            *ngIf="kbqClosable"
+            kbq-button
+            class="kbq-modal-close kbq-button_transparent"
+            [color]="'contrast'"
+            (click)="onClickCloseBtn()"
+        >
+            <i
+                kbq-icon="mc-close-L_16"
+                [color]="componentColors.Contrast"
+            ></i>
         </button>
     </div>
-    <div class="kbq-modal-body kbq-scrollbar" #modalBody [ngStyle]="kbqBodyStyle" (scroll)="checkOverflow()">
+    <div
+        #modalBody
+        class="kbq-modal-body kbq-scrollbar"
+        [ngStyle]="kbqBodyStyle"
+        (scroll)="checkOverflow()"
+    >
         <ng-container #bodyContainer>
-            <ng-container *ngIf="!isComponent(kbqContent)" [ngSwitch]="true">
-                <ng-container *ngSwitchCase="isTemplateRef(kbqContent)" [ngTemplateOutlet]="$any(kbqContent)"></ng-container>
+            <ng-container
+                *ngIf="!isComponent(kbqContent)"
+                [ngSwitch]="true"
+            >
+                <ng-container
+                    *ngSwitchCase="isTemplateRef(kbqContent)"
+                    [ngTemplateOutlet]="$any(kbqContent)"
+                ></ng-container>
                 <ng-container *ngSwitchCase="isNonEmptyString(kbqContent)">
                     <div [innerHTML]="kbqContent"></div>
                 </ng-container>
-                <ng-container *ngSwitchDefault [ngTemplateOutlet]="tplOriginContent"></ng-container>
+                <ng-container
+                    *ngSwitchDefault
+                    [ngTemplateOutlet]="tplOriginContent"
+                ></ng-container>
             </ng-container>
         </ng-container>
     </div>
-    <div *ngIf="kbqFooter || kbqOkText || kbqCancelText"
-         class="kbq-modal-footer"
-         [class.kbq-modal-body_bottom-overflow]="isBottomOverflow">
+    <div
+        *ngIf="kbqFooter || kbqOkText || kbqCancelText"
+        class="kbq-modal-footer"
+        [class.kbq-modal-body_bottom-overflow]="isBottomOverflow"
+    >
         <ng-container [ngSwitch]="true">
-            <ng-container *ngSwitchCase="isTemplateRef(kbqFooter)" [ngTemplateOutlet]="$any(kbqFooter)"></ng-container>
+            <ng-container
+                *ngSwitchCase="isTemplateRef(kbqFooter)"
+                [ngTemplateOutlet]="$any(kbqFooter)"
+            ></ng-container>
             <ng-container *ngSwitchCase="isNonEmptyString(kbqFooter)">
                 <div [innerHTML]="kbqFooter"></div>
             </ng-container>
             <ng-container *ngSwitchCase="isModalButtons(kbqFooter)">
                 <ng-container *ngFor="let button of $any(kbqFooter)">
                     <button
+                        *ngIf="getButtonCallableProp(button, 'show')"
                         kbq-button
                         [attr.autofocus]="button.autoFocus"
                         [attr.kbq-modal-main-action]="button.kbqModalMainAction"
-                        *ngIf="getButtonCallableProp(button, 'show')"
-                        [disabled]="getButtonCallableProp(button, 'disabled')"
                         [class.kbq-progress]="getButtonCallableProp(button, 'loading')"
+                        [color]="button.type"
+                        [disabled]="getButtonCallableProp(button, 'disabled')"
                         (click)="onButtonClick(button)"
-                        [color]="button.type">
+                    >
                         {{ button.label }}
                     </button>
                 </ng-container>
             </ng-container>
             <ng-container *ngSwitchDefault>
                 <button
-                    [attr.autofocus]="true"
                     *ngIf="kbqOkText"
                     kbq-button
+                    [attr.autofocus]="true"
                     [color]="componentColors.Contrast"
-                    (click)="onClickOkCancel('ok')">
-
+                    (click)="onClickOkCancel('ok')"
+                >
                     {{ okText }}
                 </button>
-                <button *ngIf="kbqCancelText" kbq-button (click)="onClickOkCancel('cancel')">
+                <button
+                    *ngIf="kbqCancelText"
+                    kbq-button
+                    (click)="onClickOkCancel('cancel')"
+                >
                     {{ cancelText }}
                 </button>
             </ng-container>
@@ -118,31 +166,48 @@
 
 <!-- [Predefined] Confirm Modal Content -->
 <ng-template #tplContentConfirm>
-    <div class="kbq-modal-body" [ngStyle]="kbqBodyStyle">
-            <ng-container #bodyContainer>
-                <ng-container *ngIf="!isComponent(kbqContent)" [ngSwitch]="true">
-                    <ng-container *ngSwitchCase="isTemplateRef(kbqContent)"
-                                  [ngTemplateOutlet]="$any(kbqContent)">
-                    </ng-container>
-                    <ng-container *ngSwitchCase="isNonEmptyString(kbqContent)">
-                        <div [innerHTML]="kbqContent"></div>
-                    </ng-container>
-                    <ng-container *ngSwitchDefault [ngTemplateOutlet]="tplOriginContent"></ng-container>
+    <div
+        class="kbq-modal-body"
+        [ngStyle]="kbqBodyStyle"
+    >
+        <ng-container #bodyContainer>
+            <ng-container
+                *ngIf="!isComponent(kbqContent)"
+                [ngSwitch]="true"
+            >
+                <ng-container
+                    *ngSwitchCase="isTemplateRef(kbqContent)"
+                    [ngTemplateOutlet]="$any(kbqContent)"
+                ></ng-container>
+                <ng-container *ngSwitchCase="isNonEmptyString(kbqContent)">
+                    <div [innerHTML]="kbqContent"></div>
                 </ng-container>
+                <ng-container
+                    *ngSwitchDefault
+                    [ngTemplateOutlet]="tplOriginContent"
+                ></ng-container>
             </ng-container>
+        </ng-container>
     </div>
-    <div class="kbq-confirm-footer" *ngIf="kbqOkText || kbqCancelText">
+    <div
+        *ngIf="kbqOkText || kbqCancelText"
+        class="kbq-confirm-footer"
+    >
         <button
-            kbq-button
-            [color]="kbqOkType"
-            [attr.autofocus]="true"
             *ngIf="kbqOkText"
-            (click)="onClickOkCancel('ok')">
-
+            kbq-button
+            [attr.autofocus]="true"
+            [color]="kbqOkType"
+            (click)="onClickOkCancel('ok')"
+        >
             {{ okText }}
         </button>
 
-        <button kbq-button *ngIf="kbqCancelText" (click)="onClickOkCancel('cancel')">
+        <button
+            *ngIf="kbqCancelText"
+            kbq-button
+            (click)="onClickOkCancel('cancel')"
+        >
             {{ cancelText }}
         </button>
     </div>

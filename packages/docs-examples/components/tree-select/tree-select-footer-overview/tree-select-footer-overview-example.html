@@ -1,18 +1,25 @@
 <kbq-form-field>
-    <kbq-tree-select
-        [(ngModel)]="selected">
+    <kbq-tree-select [(ngModel)]="selected">
         <kbq-tree-selection
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <i kbq-icon="mc-angle-down-S_16"
-                   [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                   kbqTreeNodeToggle>
-                </i>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <i
+                    kbq-icon="mc-angle-down-S_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -20,7 +27,10 @@
         <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
 
         <kbq-select-footer>
-            <a href="/components/tree-select/overview" kbq-link>
+            <a
+                href="/components/tree-select/overview"
+                kbq-link
+            >
                 <span class="kbq-link__text">Ссылка</span>
                 <i kbq-icon="mc-external-link_16"></i>
             </a>

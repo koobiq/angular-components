@@ -1,35 +1,68 @@
-<button kbq-button (click)="toggleDisabled()">Toggle Disabled</button>
+<button
+    kbq-button
+    (click)="toggleDisabled()"
+>
+    Toggle Disabled
+</button>
 
-<button kbq-button (click)="startLoading()">Loading imitation for single and multiple</button>
-<button kbq-button (click)="startIndeterminateLoading()">Indeterminate Loading imitation for single and multiple</button>
+<button
+    kbq-button
+    (click)="startLoading()"
+>
+    Loading imitation for single and multiple
+</button>
+<button
+    kbq-button
+    (click)="startIndeterminateLoading()"
+>
+    Indeterminate Loading imitation for single and multiple
+</button>
 
-<button kbq-button (click)="checkValidation()">Call validation from outside</button>
+<button
+    kbq-button
+    (click)="checkValidation()"
+>
+    Call validation from outside
+</button>
 
-<br><br>
+<br />
+<br />
 
 <kbq-radio-group
     class="example-radio-group"
-    (change)="setFormat($event)">
+    (change)="setFormat($event)"
+>
     <kbq-radio-button
         *ngFor="let language of languageList"
-        [value]="language"
+        class="example-radio-button"
         [checked]="language.id === selectedLanguage.id"
-        class="example-radio-button">
+        [value]="language"
+    >
         {{ language.id }}
     </kbq-radio-button>
-    <br>
+    <br />
 </kbq-radio-group>
 
-<br><br>
+<br />
+<br />
 
 <div class="layout-row layout-align-space-between">
     <div>
         <div class="dev-container">
-            <div class="kbq-subheading">Single file upload with ControlValueAccessor </div><br>
-            <kbq-checkbox class="layout-margin-bottom-s" [checked]="control.disabled" (change)="control.disabled ? control.enable() : control.disable()">disabled</kbq-checkbox>
+            <div class="kbq-subheading">Single file upload with ControlValueAccessor</div>
+            <br />
+            <kbq-checkbox
+                class="layout-margin-bottom-s"
+                [checked]="control.disabled"
+                (change)="control.disabled ? control.enable() : control.disable()"
+            >
+                disabled
+            </kbq-checkbox>
             <div class="kbq-caption_mono">file name: {{ control.value?.file?.name }}</div>
-            <kbq-file-upload class="layout-margin-bottom-s"
-                             [formControl]="control">
+            <kbq-file-upload
+                class="layout-margin-bottom-s"
+                [formControl]="control"
+            >
                 <i kbq-icon="mc-info_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
@@ -40,35 +73,55 @@
         </div>
 
         <div class="dev-container">
-            <div class="kbq-subheading">Single file upload with ControlValueAccessor & Form</div><br>
+            <div class="kbq-subheading">Single file upload with ControlValueAccessor & Form</div>
+            <br />
             <span class="kbq-body_mono_strong">Validation after submit</span>
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                <kbq-file-upload class="layout-margin-bottom-s"
-                                 [disabled]="disabled"
-                                 formControlName="file-upload">
+            <form
+                [formGroup]="form"
+                (ngSubmit)="onSubmit()"
+            >
+                <kbq-file-upload
+                    formControlName="file-upload"
+                    class="layout-margin-bottom-s"
+                    [disabled]="disabled"
+                >
                     <i kbq-icon="mc-info_16"></i>
                 </kbq-file-upload>
-                <button kbq-button type="submit" (click)="onSubmit()">Submit</button>
+                <button
+                    kbq-button
+                    type="submit"
+                    (click)="onSubmit()"
+                >
+                    Submit
+                </button>
             </form>
         </div>
 
         <div class="dev-container">
-            <div class="kbq-subheading">Single file upload</div><br>
-            <div class="kbq-body_strong">with customValidation</div><br>
-            <kbq-file-upload [disabled]="disabled"
-                             [accept]="accept"
-                             [customValidation]="validation">
+            <div class="kbq-subheading">Single file upload</div>
+            <br />
+            <div class="kbq-body_strong">with customValidation</div>
+            <br />
+            <kbq-file-upload
+                [accept]="accept"
+                [customValidation]="validation"
+                [disabled]="disabled"
+            >
                 <i kbq-icon="mc-info_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
         </div>
 
         <div class="dev-container">
-            <div class="kbq-subheading">Single file upload</div><br>
-            <div class="kbq-body_strong">with validation outside</div><br>
-            <kbq-file-upload [disabled]="disabled"
-                             [accept]="accept"
-                             [errors]="errorMessagesForSingle">
+            <div class="kbq-subheading">Single file upload</div>
+            <br />
+            <div class="kbq-body_strong">with validation outside</div>
+            <br />
+            <kbq-file-upload
+                [accept]="accept"
+                [disabled]="disabled"
+                [errors]="errorMessagesForSingle"
+            >
                 <i kbq-icon="mc-info_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
@@ -77,12 +130,15 @@
 
     <div>
         <div class="dev-container">
-            <div class="kbq-subheading">Multiple file upload</div><br>
-            <kbq-multiple-file-upload [disabled]="disabled"
-                                      [errors]="errorMessagesForMultiple"
-                                      [files]="files"
-                                      [progressMode]="'indeterminate'"
-                                      (fileQueueChanged)="addFileMultiple($event)">
+            <div class="kbq-subheading">Multiple file upload</div>
+            <br />
+            <kbq-multiple-file-upload
+                [disabled]="disabled"
+                [errors]="errorMessagesForMultiple"
+                [files]="files"
+                [progressMode]="'indeterminate'"
+                (fileQueueChanged)="addFileMultiple($event)"
+            >
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="mc-file-empty_16"></i>
                 </ng-template>
@@ -90,16 +146,21 @@
             </kbq-multiple-file-upload>
         </div>
 
-        <div class="dev-container" custom-text>
-            <div class="kbq-subheading">Multiple file with custom text</div><br>
+        <div
+            custom-text
+            class="dev-container"
+        >
+            <div class="kbq-subheading">Multiple file with custom text</div>
+            <br />
             <kbq-file-upload
+                multiple
                 [accept]="accept"
                 [disabled]="disabled"
                 [errors]="errorMessagesForMultiple"
                 [files]="files"
-                (fileQueueChanged)="addFileMultiple($event)"
                 [progressMode]="'indeterminate'"
-                multiple>
+                (fileQueueChanged)="addFileMultiple($event)"
+            >
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="mc-file-empty_16"></i>
                 </ng-template>
@@ -107,12 +168,17 @@
             </kbq-file-upload>
         </div>
 
-        <div class="dev-container" custom-text>
-            <div class="kbq-subheading">Multiple file with ControlValueAccessor</div><br>
+        <div
+            custom-text
+            class="dev-container"
+        >
+            <div class="kbq-subheading">Multiple file with ControlValueAccessor</div>
+            <br />
             <kbq-file-upload
+                multiple
                 [formControl]="multipleFileUploadControl"
                 [progressMode]="'indeterminate'"
-                multiple>
+            >
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="mc-file-empty_16"></i>
                 </ng-template>
@@ -121,31 +187,42 @@
         </div>
 
         <div class="dev-container">
-            <div class="kbq-subheading">Multiple file upload with ControlValueAccessor & Form</div><br>
+            <div class="kbq-subheading">Multiple file upload with ControlValueAccessor & Form</div>
+            <br />
             <span class="kbq-body_mono_strong">Validation after submit</span>
-            <form [formGroup]="formMultiple" (ngSubmit)="onSubmit()">
-                <kbq-file-upload class="layout-margin-bottom-s"
-                                 formControlName="file-upload"
-                                 [progressMode]="'indeterminate'"
-                                 multiple
+            <form
+                [formGroup]="formMultiple"
+                (ngSubmit)="onSubmit()"
+            >
+                <kbq-file-upload
+                    formControlName="file-upload"
+                    multiple
+                    class="layout-margin-bottom-s"
+                    [progressMode]="'indeterminate'"
                 >
                     <ng-template #kbqFileIcon>
                         <i kbq-icon="mc-file-empty_16"></i>
                     </ng-template>
                 </kbq-file-upload>
-                <button kbq-button type="submit" (click)="onSubmit()">Submit</button>
+                <button
+                    kbq-button
+                    type="submit"
+                    (click)="onSubmit()"
+                >
+                    Submit
+                </button>
             </form>
         </div>
 
         <div class="dev-container">
-            <div class="kbq-subheading">Multiple file upload compact</div><br>
+            <div class="kbq-subheading">Multiple file upload compact</div>
+            <br />
             <file-upload-compact
                 [disabled]="disabled"
                 [errorMessagesForMultiple]="errorMessagesForMultiple"
                 [files]="files"
-                (addedFile)="addFileMultiple($event)">
-            </file-upload-compact>
+                (addedFile)="addFileMultiple($event)"
+            ></file-upload-compact>
         </div>
-
     </div>
 </div>

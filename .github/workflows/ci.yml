@@ -26,6 +26,9 @@ jobs:
       - name: Spell Checking
         run: yarn run cspell --no-progress
 
+      - name: Prettier
+        run: yarn run prettier:lint
+
       - name: Stylelint
         run: yarn run stylelint
 

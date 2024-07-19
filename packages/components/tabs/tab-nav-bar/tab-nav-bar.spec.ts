@@ -137,11 +137,11 @@ describe('KbqTabNavBar', () => {
     template: `
         <nav kbq-tab-nav-bar>
             <a
-                kbq-tab-link
                 *ngFor="let tab of tabs; let index = index"
                 [active]="activeIndex === index"
                 [disabled]="disabled"
                 (click)="activeIndex = index"
+                kbq-tab-link
             >
                 Tab link {{ label }}
             </a>
@@ -162,7 +162,12 @@ class SimpleTabNavBarTestApp {
 @Component({
     template: `
         <nav kbq-tab-nav-bar>
-            <a kbq-tab-link *ngIf="!isDestroyed">Link</a>
+            <a
+                *ngIf="!isDestroyed"
+                kbq-tab-link
+            >
+                Link
+            </a>
         </nav>
     `
 })
@@ -173,7 +178,12 @@ class TabLinkWithNgIf {
 @Component({
     template: `
         <nav kbq-tab-nav-bar>
-            <a kbq-tab-link [tabIndex]="tabIndex">TabIndex Link</a>
+            <a
+                [tabIndex]="tabIndex"
+                kbq-tab-link
+            >
+                TabIndex Link
+            </a>
         </nav>
     `
 })

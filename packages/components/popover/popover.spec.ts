@@ -291,24 +291,73 @@ describe('KbqPopover', () => {
 @Component({
     selector: 'kbq-popover-test-component',
     template: `
-        <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
+        <button
+            #test1
+            [kbqTrigger]="'hover'"
+            [kbqPopoverContent]="'_TEST1'"
+            kbqPopover
+        >
+            _TEST1asdasd
+        </button>
         <button
             #test2
-            kbqPopover
             [kbqTrigger]="'manual'"
             [kbqPopoverVisible]="popoverVisibility"
+            kbqPopover
             kbqPopoverContent="_TEST2"
         >
             _TEST2
         </button>
-        <button #test3 kbqPopover [kbqTrigger]="'focus'" [kbqPopoverContent]="'_TEST3'">_TEST3</button>
+        <button
+            #test3
+            [kbqTrigger]="'focus'"
+            [kbqPopoverContent]="'_TEST3'"
+            kbqPopover
+        >
+            _TEST3
+        </button>
 
-        <button #test4 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverHeader]="'_TEST4'">_TEST4</button>
-        <button #test5 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST5'">_TEST5</button>
-        <button #test6 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverFooter]="'_TEST6'">_TEST6</button>
+        <button
+            #test4
+            [kbqTrigger]="'hover'"
+            [kbqPopoverHeader]="'_TEST4'"
+            kbqPopover
+        >
+            _TEST4
+        </button>
+        <button
+            #test5
+            [kbqTrigger]="'hover'"
+            [kbqPopoverContent]="'_TEST5'"
+            kbqPopover
+        >
+            _TEST5
+        </button>
+        <button
+            #test6
+            [kbqTrigger]="'hover'"
+            [kbqPopoverFooter]="'_TEST6'"
+            kbqPopover
+        >
+            _TEST6
+        </button>
 
-        <button #test7 kbqPopover [kbqPopoverClass]="'_TEST7'" [kbqPopoverContent]="'_TEST7'">_TEST7</button>
-        <button #test8 kbqPopover [kbqPopoverClass]="'_TEST8'" [kbqPopoverContent]="'_TEST8'">_TEST8</button>
+        <button
+            #test7
+            [kbqPopoverClass]="'_TEST7'"
+            [kbqPopoverContent]="'_TEST7'"
+            kbqPopover
+        >
+            _TEST7
+        </button>
+        <button
+            #test8
+            [kbqPopoverClass]="'_TEST8'"
+            [kbqPopoverContent]="'_TEST8'"
+            kbqPopover
+        >
+            _TEST8
+        </button>
     `
 })
 class KbqPopoverTestComponent {
@@ -327,10 +376,33 @@ class KbqPopoverTestComponent {
 @Component({
     selector: 'kbq-popover-test-component',
     template: `
-        <button #test8 kbqPopoverConfirm>_TEST8</button>
-        <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
-        <button #test10 kbqPopoverConfirm kbqPopoverConfirmButtonText="new button text">_TEST10</button>
-        <button #test11 kbqPopoverConfirm (confirm)="onConfirm()">_TEST11</button>
+        <button
+            #test8
+            kbqPopoverConfirm
+        >
+            _TEST8
+        </button>
+        <button
+            #test9
+            kbqPopoverConfirm
+            kbqPopoverConfirmText="new confirm text"
+        >
+            _TEST9
+        </button>
+        <button
+            #test10
+            kbqPopoverConfirm
+            kbqPopoverConfirmButtonText="new button text"
+        >
+            _TEST10
+        </button>
+        <button
+            #test11
+            (confirm)="onConfirm()"
+            kbqPopoverConfirm
+        >
+            _TEST11
+        </button>
     `
 })
 class KbqPopoverConfirmTestComponent {
@@ -346,7 +418,14 @@ class KbqPopoverConfirmTestComponent {
 
 @Component({
     selector: 'kbq-popover-test-with-providers-component',
-    template: ` <button #test12 kbqPopoverConfirm>_TEST12</button> `,
+    template: `
+        <button
+            #test12
+            kbqPopoverConfirm
+        >
+            _TEST12
+        </button>
+    `,
     providers: [
         { provide: KBQ_POPOVER_CONFIRM_TEXT, useValue: 'provided confirm text' },
         { provide: KBQ_POPOVER_CONFIRM_BUTTON_TEXT, useValue: 'provided button text' }

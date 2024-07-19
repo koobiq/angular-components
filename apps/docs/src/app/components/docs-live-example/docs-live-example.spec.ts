@@ -59,7 +59,9 @@ describe('docs-live-example', () => {
 
 @Component({
     selector: 'test',
-    template: ` <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`
+    template: `
+        <docs-live-example [documentUrl]="documentUrl"></docs-live-example>
+    `
 })
 class DocViewerTestComponent {
     documentUrl = '//koobiq.io/simple-doc.html';

@@ -1,33 +1,39 @@
 <kbq-tree-selection
-    [(ngModel)]="modelValue"
     [dataSource]="dataSource"
-    [treeControl]="treeControl">
+    [treeControl]="treeControl"
+    [(ngModel)]="modelValue"
+>
     <kbq-tree-option
         *kbqTreeNodeDef="let node"
         kbqTreeNodePadding
+        [class.kbq-selected]="selectedState(node)"
         [disabled]="node.name === 'tests'"
+        (click)="onOptionClick($event, node)"
         (keydown.enter)="fileSelectionToggle(node)"
         (keydown.space)="fileSelectionToggle(node)"
-        (click)="onOptionClick($event, node)"
-        [class.kbq-selected]="selectedState(node)">
-
-        <kbq-checkbox class= "tree-example-checkbox" [disabled]="node.name === 'tests'"
-                     [checked]="checklistSelection.isSelected(node)"></kbq-checkbox>
+    >
+        <kbq-checkbox
+            class="tree-example-checkbox"
+            [checked]="checklistSelection.isSelected(node)"
+            [disabled]="node.name === 'tests'"
+        ></kbq-checkbox>
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 
     <kbq-tree-option
         *kbqTreeNodeDef="let node; when: hasChild"
         kbqTreeNodePadding
+        [class.kbq-selected]="selectedState(node)"
+        (click)="onOptionClick($event, node)"
         (keydown.enter)="fileSelectionToggle(node)"
         (keydown.space)="fileSelectionToggle(node)"
-        (click)="onOptionClick($event, node)"
-        [class.kbq-selected]="selectedState(node)">
-
+    >
         <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
-        <kbq-checkbox class= "tree-example-checkbox"
-                     [checked]="descendantsAllSelected(node)"
-                     [indeterminate]="descendantsPartiallySelected(node)"></kbq-checkbox>
+        <kbq-checkbox
+            class="tree-example-checkbox"
+            [checked]="descendantsAllSelected(node)"
+            [indeterminate]="descendantsPartiallySelected(node)"
+        ></kbq-checkbox>
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 </kbq-tree-selection>

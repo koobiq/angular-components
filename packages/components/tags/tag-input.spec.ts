@@ -259,8 +259,8 @@ describe('KbqTagInput', () => {
                 [kbqTagInputFor]="tagList"
                 [kbqTagInputAddOnBlur]="addOnBlur"
                 [kbqTagInputAddOnPaste]="addOnPaste"
-                (kbqTagInputTokenEnd)="add($event)"
                 [placeholder]="placeholder"
+                (kbqTagInputTokenEnd)="add($event)"
             />
         </kbq-form-field>
     `

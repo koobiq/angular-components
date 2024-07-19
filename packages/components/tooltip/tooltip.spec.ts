@@ -164,8 +164,20 @@ describe('KbqTooltip', () => {
     template: `
         <ng-template #template>title-template</ng-template>
 
-        <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
-        <a #titleTemplate [kbqTooltip]="template">Show</a>
+        <a
+            #titleString
+            [kbqTooltip]="'title-string'"
+            [kbqTrigger]="'hover'"
+            [kbqPlacement]="'top'"
+        >
+            Show
+        </a>
+        <a
+            #titleTemplate
+            [kbqTooltip]="template"
+        >
+            Show
+        </a>
     `
 })
 class KbqTooltipTestNewComponent {
@@ -185,12 +197,36 @@ class KbqTooltipTestNewComponent {
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     template: `
-        <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
+        <a
+            #mostSimpleTrigger
+            [kbqTooltip]="'MOST-SIMPLE'"
+        >
+            Show
+        </a>
 
-        <span #normalTrigger [kbqTooltip]="'NORMAL'" [kbqTrigger]="'hover'" [kbqPlacement]="'right'">Show</span>
+        <span
+            #normalTrigger
+            [kbqTooltip]="'NORMAL'"
+            [kbqTrigger]="'hover'"
+            [kbqPlacement]="'right'"
+        >
+            Show
+        </span>
 
-        <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
-        <span #visibleTrigger [kbqTooltip]="'VISIBLE'" [kbqVisible]="visible">Show</span>
+        <span
+            #focusTrigger
+            [kbqTooltip]="'FOCUS'"
+            [kbqTrigger]="'focus'"
+        >
+            Show
+        </span>
+        <span
+            #visibleTrigger
+            [kbqTooltip]="'VISIBLE'"
+            [kbqVisible]="visible"
+        >
+            Show
+        </span>
     `
 })
 class KbqTooltipTestWrapperComponent {
@@ -207,7 +243,12 @@ class KbqTooltipTestWrapperComponent {
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
     template: `
-        <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
+        <span
+            #disabledAttribute
+            [kbqTooltip]="'DISABLED'"
+            [kbqTrigger]="'manual'"
+            [kbqTooltipDisabled]="true"
+        >
             Disabled
         </span>
     `
