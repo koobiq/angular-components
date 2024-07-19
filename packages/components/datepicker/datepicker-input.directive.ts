@@ -1097,14 +1097,34 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         } else if ([END, PAGE_DOWN].includes(keyCode)) {
             cursorPos = this.viewValue.length;
         } else if (keyCode === LEFT_ARROW) {
+            this.fixEmptyDigit();
+
             cursorPos = cursorPos === 0 ? this.viewValue.length : cursorPos - 1;
         } else if (keyCode === RIGHT_ARROW) {
+            this.fixEmptyDigit();
+
             const nextSeparatorPos: number = this.viewValue.indexOf(this.separator, cursorPos);
 
             cursorPos = nextSeparatorPos ? nextSeparatorPos + 1 : 0;
         }
 
+
         this.selectDigitByCursor(cursorPos);
+    }
+
+    private fixEmptyDigit() {
+        const hasEmptyDigit = this.viewValue
+            .split(this.separator)
+            .map((part) => part.length)
+            .some((item) => !item);
+
+        if (hasEmptyDigit && this.value) {
+            const year = this.adapter.getYear(this.value);
+            const month = this.adapter.getMonth(this.value);
+            const day = this.adapter.getDate(this.value);
+
+            this.value = this.createDate(year, month, day);
+        }
     }
 
     private selectDigitByCursor(cursorPos: number): void {
