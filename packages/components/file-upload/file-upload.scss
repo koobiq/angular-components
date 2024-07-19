@@ -25,9 +25,7 @@
         }
 
         .data-text-end {
-            max-width: 100%;
             flex: 1 0 auto;
-            text-overflow: ellipsis;
             overflow: hidden;
             white-space: pre;
         }
