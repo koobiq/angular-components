@@ -6,7 +6,8 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { Subject, delay } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { DocCategory, DocumentationItems } from '../documentation-items';
+
+import { DocCategory, DocumentationItems, documentationItemSections } from '../documentation-items';
 import { DocStates } from '../doс-states';
 
 enum TreeNodeType {
@@ -154,7 +155,11 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     needSelectDefaultItem = () => {
-        this._selectedItem = this.router.url.replace('/', '').replace('/overview', '');
+        // remove extra path endpoints so tree node can be selected
+        this._selectedItem = documentationItemSections.reduce(
+            (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
+            this.router.url.replace('/', '')
+        );
 
         setTimeout(() => this.tree.highlightSelectedOption());
     };
