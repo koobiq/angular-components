@@ -184,7 +184,7 @@
         "linter:docs": "eslint -c ./packages/docs/.eslintrc.json ./packages/docs",
         "stylelint": "stylelint '**/*.(css|scss)'",
         "cspell": "cspell '**/*.md' --unique",
-        "prettier": "prettier '**/*.{css,scss,md,yml,json,js,ts,xml,html,svg}'",
+        "prettier": "prettier '**/*.{css,scss,md,yml,json,js,ts,xml,html}'",
         "prettier:lint": "yarn run prettier --check",
         "prettier:fix": "yarn run prettier --list-different --write",
         "release:extract-changelog": "ts-node --project tools/extract-release-notes/tsconfig.json tools/extract-release-notes",

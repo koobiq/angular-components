@@ -63,12 +63,6 @@ const config = {
             options: {
                 parser: 'html'
             }
-        },
-        {
-            files: '*.svg',
-            options: {
-                parser: 'html'
-            }
         }
     ]
 };
