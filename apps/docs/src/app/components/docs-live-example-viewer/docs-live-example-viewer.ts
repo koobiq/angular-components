@@ -97,12 +97,13 @@ export class DocsLiveExampleViewer {
         const docsContentPath = `docs-content/examples-source/${this.exampleData.packagePath}`;
 
         const observables = this.exampleData.files.map((fileName) => {
+            const language = this.determineLanguage(fileName);
             const importPath = `${docsContentPath}/${fileName}`;
             return this.fetchCode(importPath).pipe(
                 map((content) => ({
-                    filename: this.determineLanguage(fileName),
+                    filename: language,
                     content: content,
-                    language: this.determineLanguage(fileName)
+                    language
                 }))
             );
         });
@@ -114,7 +115,7 @@ export class DocsLiveExampleViewer {
                     (a, b) =>
                         preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
-                this.files.push(...results);
+                this.files.push(...this.prepareCodeFiles(results));
             },
             error: (error) => {
                 console.error('Error fetching the files', error);
@@ -180,5 +181,14 @@ export class DocsLiveExampleViewer {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), this.scrollIntoViewDelay);
             }
         }
+    }
+
+    private prepareCodeFiles(codeFiles: ExampleFileData[]) {
+        const filteredFiles = codeFiles.filter((file) => file.content);
+        if (filteredFiles.length === 1) {
+            /* If there is only one non-empty document in the example, then show the block without tabs */
+            filteredFiles[0].filename = null;
+        }
+        return filteredFiles;
     }
 }
