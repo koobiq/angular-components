@@ -29,7 +29,7 @@
 
 // Include all typography for the components.
 @mixin docs-typography($tokens, $config, $md-config) {
-    @include typography.kbq-typography-level-to-styles($config, body);
+    @include typography.kbq-typography-level-to-styles($config, text-normal);
 
     @include koobiq-typography($tokens, $config, $md-config);
 
