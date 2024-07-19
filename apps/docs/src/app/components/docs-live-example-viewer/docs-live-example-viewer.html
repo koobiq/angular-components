@@ -29,11 +29,11 @@
     <kbq-code-block
         *ngIf="isSourceShown"
         [codeFiles]="this.files"
+        [codeFiles]="files"
+        [filled]="true"
         [filled]="true"
         [lineNumbers]="true"
-        [filled]="true"
-        [codeFiles]="files">
-    </kbq-code-block>
+    ></kbq-code-block>
 </ng-container>
 
 <ng-template #lostExample>

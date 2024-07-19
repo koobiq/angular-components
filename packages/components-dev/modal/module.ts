@@ -241,8 +241,8 @@ export class KbqModalCustomComponent {
     selector: 'kbq-modal-full-custom-component',
     template: `
         <kbq-modal-title>
-            Modal Title,Modal Title,Modal Title,Modal Title,Modal
-             Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,
+            Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
+            Title,Modal Title,Modal Title,Modal Title,
         </kbq-modal-title>
 
         <kbq-modal-body>
