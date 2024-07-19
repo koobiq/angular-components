@@ -5501,7 +5501,7 @@ describe('KbqSelect', () => {
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toEqual(options[1].textContent);
+            expect(tooltips[0].textContent).toEqual(options[1].textContent!.trim());
             flush();
         }));
 

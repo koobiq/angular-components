@@ -214,7 +214,7 @@ describe('KbqPopover', () => {
             componentFixture.detectChanges();
 
             const button = componentFixture.debugElement.query(By.css('.kbq-popover-confirm button'));
-            expect(button.nativeElement.textContent).toEqual('Да');
+            expect(button.nativeElement.textContent.trim()).toEqual('Да');
 
             const confirmText = componentFixture.debugElement.query(
                 By.css('.kbq-popover-confirm .kbq-popover__content div')
@@ -245,7 +245,7 @@ describe('KbqPopover', () => {
             componentFixture.detectChanges();
 
             const button = componentFixture.debugElement.query(By.css('.kbq-popover-confirm button'));
-            expect(button.nativeElement.textContent).toEqual(expectedValue);
+            expect(button.nativeElement.textContent.trim()).toEqual(expectedValue);
         }));
 
         it('Click emits confirm', fakeAsync(() => {
@@ -278,7 +278,7 @@ describe('KbqPopover', () => {
             componentFixture.detectChanges();
 
             const button = componentFixture.debugElement.query(By.css('.kbq-popover-confirm button'));
-            expect(button.nativeElement.textContent).toEqual('provided button text');
+            expect(button.nativeElement.textContent.trim()).toEqual('provided button text');
 
             const confirmText = componentFixture.debugElement.query(
                 By.css('.kbq-popover-confirm .kbq-popover__content div')

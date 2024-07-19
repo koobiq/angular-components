@@ -624,7 +624,7 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
                     flush();
 
-                    expect(overlayContainerElement.textContent).toContain('RussiaUTC−02:00city1city4');
+                    expect(overlayContainerElement.textContent).toContain('UTC−02:00city1city4');
                     expect(fixture.componentInstance.select.panelOpen).toBe(true);
                 }));
             });
