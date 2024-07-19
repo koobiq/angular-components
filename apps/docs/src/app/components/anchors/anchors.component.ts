@@ -15,6 +15,8 @@ interface KbqDocsAnchor {
     element: HTMLElement;
 }
 
+const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
+
 @Component({
     selector: 'docs-anchors',
     templateUrl: './anchors.component.html',
@@ -76,7 +78,7 @@ export class AnchorsComponent implements OnDestroy {
         }
 
         this.pathName = router.url.split('#')[0];
-        localStorage.setItem('PT_nextRoute', this.pathName);
+        localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
 
         this.router.events
             .pipe(
@@ -87,7 +89,7 @@ export class AnchorsComponent implements OnDestroy {
                 const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
-                    localStorage.setItem('PT_nextRoute', rootUrl);
+                    localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
 
                     this.pathName = rootUrl;
                 }
