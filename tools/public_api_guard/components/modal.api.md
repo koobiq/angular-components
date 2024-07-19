@@ -76,7 +76,7 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
 // @public (undocumented)
 export class KbqModalBody {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [mcModalBody]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
 }
@@ -246,7 +246,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
 // @public (undocumented)
 export class KbqModalFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [mcModalFooter]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalFooter, never>;
 }
@@ -322,7 +322,7 @@ export class KbqModalService {
 // @public (undocumented)
 export class KbqModalTitle {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [mcModalTitle]", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
 }
