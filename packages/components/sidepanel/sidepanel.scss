@@ -40,10 +40,12 @@ $tokens: meta.module-variables(tokens) !default;
 
         &.kbq-sidepanel_small {
             width: kbq-css-variable(sidepanel-size-small-width);
+            max-width: kbq-css-variable(sidepanel-size-small-width);
         }
 
         &.kbq-sidepanel_medium {
             width: kbq-css-variable(sidepanel-size-medium-width);
+            max-width: kbq-css-variable(sidepanel-size-medium-width);
         }
 
         &.kbq-sidepanel_large {
