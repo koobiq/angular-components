@@ -672,7 +672,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         }
     }
 
-
     private horizontalArrowKeyHandler(keyCode: number): void {
         if (!this.value) {
             return;

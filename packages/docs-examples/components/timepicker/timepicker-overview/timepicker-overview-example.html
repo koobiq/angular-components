@@ -7,20 +7,36 @@
             </kbq-select>
         </kbq-form-field>
 
-        <kbq-checkbox class="" [(ngModel)]="isIconVisible">Show icon</kbq-checkbox>
-        <kbq-checkbox class="" [(ngModel)]="isDisabled">Disabled</kbq-checkbox>
+        <kbq-checkbox
+            class=""
+            [(ngModel)]="isIconVisible"
+        >
+            Show icon
+        </kbq-checkbox>
+        <kbq-checkbox
+            class=""
+            [(ngModel)]="isDisabled"
+        >
+            Disabled
+        </kbq-checkbox>
     </div>
 
     <kbq-form-field
+        #tooltip="kbqWarningTooltip"
         class="example-timepicker-element"
         [kbqWarningTooltip]="'Только цифры'"
-        #tooltip="kbqWarningTooltip">
-
-        <i *ngIf="isIconVisible" kbqPrefix kbq-icon="mc-clock_16"></i>
-        <input kbqTimepicker
-               [(ngModel)]="value"
-               [disabled]="isDisabled"
-               [format]="timeFormat"
-               [kbqValidationTooltip]="tooltip">
+    >
+        <i
+            *ngIf="isIconVisible"
+            kbq-icon="mc-clock_16"
+            kbqPrefix
+        ></i>
+        <input
+            kbqTimepicker
+            [disabled]="isDisabled"
+            [format]="timeFormat"
+            [kbqValidationTooltip]="tooltip"
+            [(ngModel)]="value"
+        />
     </kbq-form-field>
 </div>

@@ -1,19 +1,32 @@
-<div class="kbq-alert__icon" [class.kbq-alert__icon_title]="title" *ngIf="iconItem || icon">
+<div
+    *ngIf="iconItem || icon"
+    class="kbq-alert__icon"
+    [class.kbq-alert__icon_title]="title"
+>
     <ng-content select="[kbq-icon-item],[kbq-icon]"></ng-content>
 </div>
 
-<div class="kbq-alert__content" [class.kbq-alert__content_title]="title">
+<div
+    class="kbq-alert__content"
+    [class.kbq-alert__content_title]="title"
+>
     <ng-content select="[kbq-alert-title]"></ng-content>
 
     <div class="kbq-alert__text">
         <ng-content></ng-content>
     </div>
 
-    <div class="kbq-alert__button-stack" *ngIf="control">
+    <div
+        *ngIf="control"
+        class="kbq-alert__button-stack"
+    >
         <ng-content select="[kbq-alert-control]"></ng-content>
     </div>
 </div>
 
-<div class="kbq-alert__close-button" [hidden]="!closeButton">
+<div
+    class="kbq-alert__close-button"
+    [hidden]="!closeButton"
+>
     <ng-content select="[kbq-alert-close-button]"></ng-content>
 </div>

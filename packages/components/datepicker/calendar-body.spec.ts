@@ -99,16 +99,18 @@ describe('KbqCalendarBody', () => {
 });
 
 @Component({
-    template: ` <table
-        kbq-calendar-body
-        [rows]="rows"
-        [todayValue]="todayValue"
-        [selectedValue]="selectedValue"
-        [labelMinRequiredCells]="labelMinRequiredCells"
-        [numCols]="numCols"
-        [activeCell]="10"
-        (selectedValueChange)="onSelect($event)"
-    ></table>`
+    template: `
+        <table
+            [rows]="rows"
+            [todayValue]="todayValue"
+            [selectedValue]="selectedValue"
+            [labelMinRequiredCells]="labelMinRequiredCells"
+            [numCols]="numCols"
+            [activeCell]="10"
+            (selectedValueChange)="onSelect($event)"
+            kbq-calendar-body
+        ></table>
+    `
 })
 class StandardCalendarBody {
     rows = [

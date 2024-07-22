@@ -1,19 +1,21 @@
 <kbq-tab-group
     [class.kbq-focused]="hasFocus"
-    (selectedTabChange)="onSelectTab($event)">
+    (selectedTabChange)="onSelectTab($event)"
+>
     <kbq-tab
         *ngFor="let codeFile of codeFiles; let i = index"
-        [disabled]="singleFile">
-
+        [disabled]="singleFile"
+    >
         <ng-template kbq-tab-label>{{ codeFile.filename }}</ng-template>
 
-        <pre class="kbq-code-block__code kbq-scrollbar"
-             #codeContent
-             [style.max-height]="getMaxHeight()"
-             [class.kbq-code-block__code_soft-wrap]="softWrap"
-             [class.kbq-code-block__code_view-all]="viewAll"
-             (scroll)="checkOverflow(codeContent)"
-            ><kbq-actionbar-block
+        <pre
+            #codeContent
+            class="kbq-code-block__code kbq-scrollbar"
+            [class.kbq-code-block__code_soft-wrap]="softWrap"
+            [class.kbq-code-block__code_view-all]="viewAll"
+            [style.max-height]="getMaxHeight()"
+            (scroll)="checkOverflow(codeContent)"
+        ><kbq-actionbar-block
             [class.kbq-actionbar-block_floating]="noHeader"
             [config]="config"
             [codeFiles]="codeFiles"
@@ -35,21 +37,30 @@
                (blur)="hasFocus = false">
             </code></pre>
 
-        <div class="kbq-code-block__show-more"
-             *ngIf="maxHeight"
-             [class.kbq-code-block__show-more_expanded]="viewAll"
-             [class.kbq-code-block__show-more_collapsed]="!viewAll">
+        <div
+            *ngIf="maxHeight"
+            class="kbq-code-block__show-more"
+            [class.kbq-code-block__show-more_collapsed]="!viewAll"
+            [class.kbq-code-block__show-more_expanded]="viewAll"
+        >
             <span class="bg-wrapper">
                 <button
+                    kbq-button
                     [color]="'theme'"
                     [kbqStyle]="'transparent'"
-                    kbq-button
+                    (click)="onShowMoreClick(codeContent)"
                     (keydown.enter)="onEnter(codeContent)"
-                    (click)="onShowMoreClick(codeContent)">
-                <i kbq-icon="mc-angle-down-L_16" *ngIf="!viewAll"></i>
-                <i kbq-icon="mc-angle-up-L_16" *ngIf="viewAll"></i>
-                    {{ viewAll ? config.viewLessText : config.viewAllText}}
-            </button>
+                >
+                    <i
+                        *ngIf="!viewAll"
+                        kbq-icon="mc-angle-down-L_16"
+                    ></i>
+                    <i
+                        *ngIf="viewAll"
+                        kbq-icon="mc-angle-up-L_16"
+                    ></i>
+                    {{ viewAll ? config.viewLessText : config.viewAllText }}
+                </button>
             </span>
         </div>
     </kbq-tab>

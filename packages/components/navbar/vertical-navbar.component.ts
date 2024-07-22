@@ -22,7 +22,11 @@ import { KbqFocusableComponent } from './navbar.component';
     selector: 'kbq-vertical-navbar',
     exportAs: 'KbqVerticalNavbar',
     template: `
-        <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
+        <div
+            class="kbq-vertical-navbar__container"
+            [class.kbq-collapsed]="!expanded"
+            [class.kbq-expanded]="expanded"
+        >
             <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
             <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle"></ng-content>
         </div>

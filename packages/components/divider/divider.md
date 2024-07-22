@@ -39,15 +39,28 @@
     <kbq-list-item *ngFor="let folder of folders; last as last">
         <kbq-icon kbq-list-icon>folder</kbq-icon>
         <h4 kbq-line>{{folder.name}}</h4>
-        <p kbq-line class="demo-2">{{folder.updated}}</p>
-        <kbq-divider [inset]="true" *ngIf="!last"></kbq-divider>
+        <p
+            class="demo-2"
+            kbq-line
+        >
+            {{folder.updated}}
+        </p>
+        <kbq-divider
+            [inset]="true"
+            *ngIf="!last"
+        ></kbq-divider>
     </kbq-list-item>
     <kbq-divider></kbq-divider>
     <h3>Notes</h3>
     <kbq-list-item *ngFor="let note of notes">
         <kbq-icon kbq-list-icon>note</kbq-icon>
         <h4 kbq-line>{{note.name}}</h4>
-        <p kbq-line class="demo-2">{{note.updated}}</p>
+        <p
+            class="demo-2"
+            kbq-line
+        >
+            {{note.updated}}
+        </p>
     </kbq-list-item>
 </kbq-list>
 ```

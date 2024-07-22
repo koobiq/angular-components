@@ -3,7 +3,9 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
     selector: 'kbq-long-component',
-    template: ` <p *ngFor="let item of longText">{{ item }}</p> `
+    template: `
+        <p *ngFor="let item of longText">{{ item }}</p>
+    `
 })
 export class KbqLongComponent {
     longText: any = [];
@@ -21,7 +23,14 @@ export class KbqLongComponent {
  */
 @Component({
     selector: 'modal-scroll-example',
-    template: `<button kbq-button (click)="createLongModal()">Open Modal</button>`,
+    template: `
+        <button
+            (click)="createLongModal()"
+            kbq-button
+        >
+            Open Modal
+        </button>
+    `,
     styleUrls: ['modal-scroll-example.css'],
     encapsulation: ViewEncapsulation.None
 })

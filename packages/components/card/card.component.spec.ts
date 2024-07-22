@@ -58,7 +58,13 @@ describe('MсCard', () => {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-card [selected]="selected" [readonly]="readonly" (selectedChange)="increment()"> </kbq-card> `
+    template: `
+        <kbq-card
+            [selected]="selected"
+            [readonly]="readonly"
+            (selectedChange)="increment()"
+        ></kbq-card>
+    `
 })
 class TestApp {
     readonly = false;

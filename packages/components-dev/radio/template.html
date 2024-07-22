@@ -2,9 +2,12 @@
     <div class="dev-container layout-padding-right-xl">
         <kbq-radio-group
             [(ngModel)]="favoriteFruit"
-            (change)="onChange($event)">
-
-            <kbq-radio-button *ngFor="let season of fruits" [value]="season">
+            (change)="onChange($event)"
+        >
+            <kbq-radio-button
+                *ngFor="let season of fruits"
+                [value]="season"
+            >
                 {{ season }}
                 <kbq-hint>kbq-hint</kbq-hint>
             </kbq-radio-button>
@@ -12,45 +15,43 @@
 
         <kbq-radio-group
             [(ngModel)]="favoriteFruit"
-            (change)="onChange($event)">
-
+            (change)="onChange($event)"
+        >
             <kbq-radio-button
-                [color]="themePalette.Error"
                 *ngFor="let season of fruits"
-                [value]="season">
+                [color]="themePalette.Error"
+                [value]="season"
+            >
                 {{ season }}
                 <kbq-hint>kbq-hint</kbq-hint>
             </kbq-radio-button>
         </kbq-radio-group>
 
-        <div class="example-selected-value">Your favorite fruit is: {{favoriteFruit}}</div>
+        <div class="example-selected-value">Your favorite fruit is: {{ favoriteFruit }}</div>
 
         <p class="kbq-headline">Disabled buttons</p>
 
         <kbq-radio-group
+            [disabled]="isDisabled"
             [name]="'my_options'"
-            [disabled]="isDisabled">
+        >
             <kbq-radio-button [value]="'option_1'">
-                <kbq-hint>kbq-hint</kbq-hint>Option 1
+                <kbq-hint>kbq-hint</kbq-hint>
+                Option 1
             </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'option_2'">
-                Option 2
-            </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'option_3'">
-                Option 3
-            </kbq-radio-button>
+            <kbq-radio-button [value]="'option_2'">Option 2</kbq-radio-button>
+            <kbq-radio-button [value]="'option_3'">Option 3</kbq-radio-button>
         </kbq-radio-group>
 
         <p class="kbq-headline">Disabled selected buttons</p>
         <kbq-radio-group>
             <kbq-radio-button
                 *ngFor="let data of selectionList"
-                [name]="data.value"
-                [disabled]="true"
                 [checked]="data.selected"
-                [value]="data.value">
+                [disabled]="true"
+                [name]="data.value"
+                [value]="data.value"
+            >
                 {{ data.name }}
             </kbq-radio-button>
         </kbq-radio-group>
@@ -60,9 +61,12 @@
         <kbq-radio-group
             [big]="true"
             [(ngModel)]="favoriteFruit"
-            (change)="onChange($event)">
-
-            <kbq-radio-button *ngFor="let season of fruits" [value]="season">
+            (change)="onChange($event)"
+        >
+            <kbq-radio-button
+                *ngFor="let season of fruits"
+                [value]="season"
+            >
                 {{ season }}
                 <kbq-hint>kbq-hint</kbq-hint>
             </kbq-radio-button>
@@ -71,46 +75,44 @@
         <kbq-radio-group
             [big]="true"
             [(ngModel)]="favoriteFruit"
-            (change)="onChange($event)">
-
+            (change)="onChange($event)"
+        >
             <kbq-radio-button
-                [color]="themePalette.Error"
                 *ngFor="let season of fruits"
-                [value]="season">
+                [color]="themePalette.Error"
+                [value]="season"
+            >
                 {{ season }}
                 <kbq-hint>kbq-hint</kbq-hint>
             </kbq-radio-button>
         </kbq-radio-group>
 
-        <div class="example-selected-value">Your favorite fruit is: {{favoriteFruit}}</div>
+        <div class="example-selected-value">Your favorite fruit is: {{ favoriteFruit }}</div>
 
         <p class="kbq-headline">Disabled buttons</p>
 
         <kbq-radio-group
             [big]="true"
+            [disabled]="isDisabled"
             [name]="'my_options'"
-            [disabled]="isDisabled">
+        >
             <kbq-radio-button [value]="'option_1'">
-                <kbq-hint>kbq-hint</kbq-hint>Option 1
+                <kbq-hint>kbq-hint</kbq-hint>
+                Option 1
             </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'option_2'">
-                Option 2
-            </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'option_3'">
-                Option 3
-            </kbq-radio-button>
+            <kbq-radio-button [value]="'option_2'">Option 2</kbq-radio-button>
+            <kbq-radio-button [value]="'option_3'">Option 3</kbq-radio-button>
         </kbq-radio-group>
 
         <p class="kbq-headline">Disabled selected buttons</p>
         <kbq-radio-group [big]="true">
             <kbq-radio-button
                 *ngFor="let data of selectionList"
-                [name]="data.value"
-                [disabled]="true"
                 [checked]="data.selected"
-                [value]="data.value">
+                [disabled]="true"
+                [name]="data.value"
+                [value]="data.value"
+            >
                 {{ data.name }}
             </kbq-radio-button>
         </kbq-radio-group>

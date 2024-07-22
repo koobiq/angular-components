@@ -1,37 +1,51 @@
 <div class="kbq-code-block__fade-gradient"></div>
 
-<button kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        *ngIf="multiLine"
-        [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
-        (click)="toggleSoftWrap.emit()">
-    <i *ngIf="!softWrap" kbq-icon="mc-word-wrap_16"></i>
-    <i *ngIf="softWrap" kbq-icon="mc-word-wrap-slash_16"></i>
+<button
+    *ngIf="multiLine"
+    kbq-button
+    [color]="'contrast'"
+    [kbqStyle]="'transparent'"
+    [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
+    (click)="toggleSoftWrap.emit()"
+>
+    <i
+        *ngIf="!softWrap"
+        kbq-icon="mc-word-wrap_16"
+    ></i>
+    <i
+        *ngIf="softWrap"
+        kbq-icon="mc-word-wrap-slash_16"
+    ></i>
 </button>
 
-<button kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        [kbqTooltip]="config.downloadTooltip"
-        (click)="downloadCode.emit()">
+<button
+    kbq-button
+    [color]="'contrast'"
+    [kbqStyle]="'transparent'"
+    [kbqTooltip]="config.downloadTooltip"
+    (click)="downloadCode.emit()"
+>
     <i kbq-icon="mc-download_16"></i>
 </button>
 
-<button kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        #copyTooltip="kbqTooltip"
-        [kbqTooltip]="copyTooltipText"
-        (click)="onCopy()">
+<button
+    #copyTooltip="kbqTooltip"
+    kbq-button
+    [color]="'contrast'"
+    [kbqStyle]="'transparent'"
+    [kbqTooltip]="copyTooltipText"
+    (click)="onCopy()"
+>
     <i kbq-icon="mc-copy-o_16"></i>
 </button>
 
-<button kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        *ngIf="codeFiles[selectedTabIndex].link"
-        [kbqTooltip]="config.openExternalSystemTooltip"
-        (click)="openExternalSystem.emit()">
+<button
+    *ngIf="codeFiles[selectedTabIndex].link"
+    kbq-button
+    [color]="'contrast'"
+    [kbqStyle]="'transparent'"
+    [kbqTooltip]="config.openExternalSystemTooltip"
+    (click)="openExternalSystem.emit()"
+>
     <i kbq-icon="mc-external-link_16"></i>
 </button>

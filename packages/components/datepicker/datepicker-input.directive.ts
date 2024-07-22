@@ -1108,7 +1108,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             cursorPos = nextSeparatorPos ? nextSeparatorPos + 1 : 0;
         }
 
-
         this.selectDigitByCursor(cursorPos);
     }
 

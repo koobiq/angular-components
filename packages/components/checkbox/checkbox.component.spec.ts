@@ -824,22 +824,27 @@ describe('KbqCheckbox', () => {
 
 /** Simple component for testing a single checkbox. */
 @Component({
-    template: ` <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
-        <kbq-checkbox
-            [id]="checkboxId"
-            [required]="isRequired"
-            [labelPosition]="labelPos"
-            [checked]="isChecked"
-            [(indeterminate)]="isIndeterminate"
-            [disabled]="isDisabled"
-            [color]="checkboxColor"
-            [value]="checkboxValue"
-            (click)="onCheckboxClick($event)"
-            (change)="onCheckboxChange($event)"
+    template: `
+        <div
+            (click)="parentElementClicked = true"
+            (keyup)="parentElementKeyedUp = true"
         >
-            Simple checkbox
-        </kbq-checkbox>
-    </div>`
+            <kbq-checkbox
+                [(indeterminate)]="isIndeterminate"
+                [id]="checkboxId"
+                [required]="isRequired"
+                [labelPosition]="labelPos"
+                [checked]="isChecked"
+                [disabled]="isDisabled"
+                [color]="checkboxColor"
+                [value]="checkboxValue"
+                (click)="onCheckboxClick($event)"
+                (change)="onCheckboxChange($event)"
+            >
+                Simple checkbox
+            </kbq-checkbox>
+        </div>
+    `
 })
 class SingleCheckbox {
     labelPos: 'before' | 'after' = 'after';
@@ -861,7 +866,12 @@ class SingleCheckbox {
 @Component({
     template: `
         <form>
-            <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
+            <kbq-checkbox
+                [(ngModel)]="isGood"
+                name="cb"
+            >
+                Be good
+            </kbq-checkbox>
         </form>
     `
 })
@@ -871,7 +881,14 @@ class CheckboxWithFormDirectives {
 
 /** Simple component for testing an KbqCheckbox with required ngModel. */
 @Component({
-    template: `<kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>`
+    template: `
+        <kbq-checkbox
+            [(ngModel)]="isGood"
+            [required]="isRequired"
+        >
+            Be good
+        </kbq-checkbox>
+    `
 })
 class CheckboxWithNgModel {
     isGood: boolean = false;
@@ -889,7 +906,12 @@ class MultipleCheckboxes {}
 
 /** Simple test component with tabIndex */
 @Component({
-    template: ` <kbq-checkbox [tabIndex]="customTabIndex" [disabled]="isDisabled"> </kbq-checkbox>`
+    template: `
+        <kbq-checkbox
+            [tabIndex]="customTabIndex"
+            [disabled]="isDisabled"
+        ></kbq-checkbox>
+    `
 })
 class CheckboxWithTabIndex {
     customTabIndex: number = 7;
@@ -898,7 +920,9 @@ class CheckboxWithTabIndex {
 
 /** Simple test component that accesses KbqCheckbox using ViewChild. */
 @Component({
-    template: ` <kbq-checkbox></kbq-checkbox>`
+    template: `
+        <kbq-checkbox></kbq-checkbox>
+    `
 })
 class CheckboxUsingViewChild {
     @ViewChild(KbqCheckbox, { static: false }) checkbox;
@@ -910,25 +934,33 @@ class CheckboxUsingViewChild {
 
 /** Simple test component with an aria-label set. */
 @Component({
-    template: `<kbq-checkbox aria-label="Super effective"></kbq-checkbox>`
+    template: `
+        <kbq-checkbox aria-label="Super effective"></kbq-checkbox>
+    `
 })
 class CheckboxWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
 @Component({
-    template: `<kbq-checkbox aria-labelledby="some-id"></kbq-checkbox>`
+    template: `
+        <kbq-checkbox aria-labelledby="some-id"></kbq-checkbox>
+    `
 })
 class CheckboxWithAriaLabelledby {}
 
 /** Simple test component with name attribute */
 @Component({
-    template: `<kbq-checkbox name="test-name"></kbq-checkbox>`
+    template: `
+        <kbq-checkbox name="test-name"></kbq-checkbox>
+    `
 })
 class CheckboxWithNameAttribute {}
 
 /** Simple test component with change event */
 @Component({
-    template: `<kbq-checkbox (change)="lastEvent = $event"></kbq-checkbox>`
+    template: `
+        <kbq-checkbox (change)="lastEvent = $event"></kbq-checkbox>
+    `
 })
 class CheckboxWithChangeEvent {
     lastEvent: KbqCheckboxChange;
@@ -936,7 +968,9 @@ class CheckboxWithChangeEvent {
 
 /** Test component with reactive forms */
 @Component({
-    template: `<kbq-checkbox [formControl]="formControl"></kbq-checkbox>`
+    template: `
+        <kbq-checkbox [formControl]="formControl"></kbq-checkbox>
+    `
 })
 class CheckboxWithFormControl {
     formControl = new UntypedFormControl();
@@ -944,7 +978,9 @@ class CheckboxWithFormControl {
 
 /** Test component without label */
 @Component({
-    template: `<kbq-checkbox>{{ label }}</kbq-checkbox>`
+    template: `
+        <kbq-checkbox>{{ label }}</kbq-checkbox>
+    `
 })
 class CheckboxWithoutLabel {
     label: string;

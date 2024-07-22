@@ -1,8 +1,15 @@
 <div class="kbq-sidepanel-wrapper">
+    <div
+        *ngIf="withIndent"
+        class="kbq-sidepanel-indent"
+        (click)="exit()"
+    ></div>
 
-    <div *ngIf="withIndent" class="kbq-sidepanel-indent" (click)="exit()"></div>
-
-    <div class="kbq-sidepanel-content" cdkTrapFocus cdkTrapFocusAutoCapture>
+    <div
+        cdkTrapFocus
+        cdkTrapFocusAutoCapture
+        class="kbq-sidepanel-content"
+    >
         <ng-template cdkPortalOutlet></ng-template>
     </div>
 </div>

@@ -1,41 +1,77 @@
-<button kbq-button [kbqDropdownTriggerFor]="appDropdown">
-    dropdown <i kbq-icon="mc-angle-down-S_16"></i>
+<button
+    kbq-button
+    [kbqDropdownTriggerFor]="appDropdown"
+>
+    dropdown
+    <i kbq-icon="mc-angle-down-S_16"></i>
 </button>
 
-<kbq-dropdown #appDropdown="kbqDropdown"
-             [navigationWithWrap]="true"
-             [class]="'max-width'">
-
+<kbq-dropdown
+    #appDropdown="kbqDropdown"
+    [class]="'max-width'"
+    [navigationWithWrap]="true"
+>
     <button kbq-dropdown-item>Text Normal</button>
 
-    <button kbq-dropdown-item><i kbq-icon="mc-info-o_16" [color]="'contrast'"></i>Text Normal</button>
-
     <button kbq-dropdown-item>
-        Text Normal<div class="kbq-dropdown-item__caption">Caption</div>
+        <i
+            kbq-icon="mc-info-o_16"
+            [color]="'contrast'"
+        ></i>
+        Text Normal
     </button>
 
     <button kbq-dropdown-item>
-        <i kbq-icon="mc-info-o_16" [color]="'contrast'"></i>Text Normal
+        Text Normal
         <div class="kbq-dropdown-item__caption">Caption</div>
     </button>
 
     <button kbq-dropdown-item>
-        <i kbq-icon="mc-circle-8_16" [color]="'contrast'"></i>Text Normal
+        <i
+            kbq-icon="mc-info-o_16"
+            [color]="'contrast'"
+        ></i>
+        Text Normal
+        <div class="kbq-dropdown-item__caption">Caption</div>
     </button>
 
-    <button kbq-dropdown-item kbq-title>Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and very long text</button>
+    <button kbq-dropdown-item>
+        <i
+            kbq-icon="mc-circle-8_16"
+            [color]="'contrast'"
+        ></i>
+        Text Normal
+    </button>
+
+    <button
+        kbq-dropdown-item
+        kbq-title
+    >
+        Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
+        very long text
+    </button>
 
     <kbq-divider></kbq-divider>
 
     <div class="kbq-dropdown__group-header">Header</div>
 
-    <button kbq-dropdown-item disabled>Disabled</button>
+    <button
+        disabled
+        kbq-dropdown-item
+    >
+        Disabled
+    </button>
 
     <kbq-divider></kbq-divider>
 
     <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
 
-    <button kbq-dropdown-item disabled>Disabled</button>
+    <button
+        disabled
+        kbq-dropdown-item
+    >
+        Disabled
+    </button>
 
     <kbq-divider></kbq-divider>
 

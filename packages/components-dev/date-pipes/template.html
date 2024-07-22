@@ -1,7 +1,9 @@
 <div class="common-container kbq-body">
-    <br><br><br>
+    <br />
+    <br />
+    <br />
     <header class="kbq-display-3">pipe's</header>
-    <br>
+    <br />
     <header class="kbq-display-3">Absolute date</header>
     <div class="common-container">
         <h3>Long format</h3>
@@ -18,8 +20,8 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDate (current year forced shown)</div>
-                <div class="flex">{{ obj.absolute.long.date.currentYear | absoluteLongDate:true }}</div>
-                <div class="flex">{{ iso.absolute.long.date.currentYear | absoluteLongDate:true }}</div>
+                <div class="flex">{{ obj.absolute.long.date.currentYear | absoluteLongDate: true }}</div>
+                <div class="flex">{{ iso.absolute.long.date.currentYear | absoluteLongDate: true }}</div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDate (not current year)</div>
@@ -40,18 +42,34 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDateTime (current year) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.long.dateTime.currentYear | absoluteLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.long.dateTime.currentYear | absoluteLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDateTime (current year forced shown) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime:{seconds: true, currYear: true} }}</div>
-                <div class="flex">{{ iso.absolute.long.dateTime.currentYear | absoluteLongDateTime:{seconds: true, currYear: true} }}</div>
+                <div class="flex">
+                    {{
+                        obj.absolute.long.dateTime.currentYear | absoluteLongDateTime: { seconds: true, currYear: true }
+                    }}
+                </div>
+                <div class="flex">
+                    {{
+                        iso.absolute.long.dateTime.currentYear | absoluteLongDateTime: { seconds: true, currYear: true }
+                    }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDateTime (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.long.dateTime.currentYear | absoluteLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.long.dateTime.currentYear | absoluteLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.long.dateTime.currentYear | absoluteLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -62,13 +80,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDateTime (not current year) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteLongDateTime (not current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.long.dateTime.notCurrentYear | absoluteLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
         </div>
     </div>
@@ -87,8 +113,8 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDate (current year forced shown)</div>
-                <div class="flex">{{ obj.absolute.short.date.currentYear | absoluteShortDate:true }}</div>
-                <div class="flex">{{ iso.absolute.short.date.currentYear | absoluteShortDate:true }}</div>
+                <div class="flex">{{ obj.absolute.short.date.currentYear | absoluteShortDate: true }}</div>
+                <div class="flex">{{ iso.absolute.short.date.currentYear | absoluteShortDate: true }}</div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDate (not current year)</div>
@@ -104,18 +130,36 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDateTime (current year) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.short.dateTime.currentYear | absoluteShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.short.dateTime.currentYear | absoluteShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.short.dateTime.currentYear | absoluteShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.short.dateTime.currentYear | absoluteShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDateTime (current year forced shown) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.short.dateTime.currentYear | absoluteShortDateTime:{seconds: true, currYear: true} }}</div>
-                <div class="flex">{{ iso.absolute.short.dateTime.currentYear | absoluteShortDateTime:{seconds: true, currYear: true} }}</div>
+                <div class="flex">
+                    {{
+                        obj.absolute.short.dateTime.currentYear
+                            | absoluteShortDateTime: { seconds: true, currYear: true }
+                    }}
+                </div>
+                <div class="flex">
+                    {{
+                        iso.absolute.short.dateTime.currentYear
+                            | absoluteShortDateTime: { seconds: true, currYear: true }
+                    }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDateTime (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.absolute.short.dateTime.currentYear | absoluteShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.short.dateTime.currentYear | absoluteShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.short.dateTime.currentYear | absoluteShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.short.dateTime.currentYear | absoluteShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -126,18 +170,26 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDateTime (not current year) (with seconds)</div>
-                <div class="flex">{{ obj.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">absoluteShortDateTime (not current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.absolute.short.dateTime.notCurrentYear | absoluteShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
         </div>
     </div>
 
-    <br>
+    <br />
     <header class="kbq-display-3">Relative date</header>
     <div class="common-container">
         <h3>Long format</h3>
@@ -163,14 +215,22 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Before yesterday (current year) (with seconds)</div>
-                <div class="flex">{{ obj.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime: { seconds: true } }}
+                </div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Before yesterday (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.long.beforeYesterdayCurrentYear | relativeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -182,14 +242,14 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Yesterday (with seconds)</div>
-                <div class="flex">{{ obj.relative.long.yesterday | relativeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.yesterday | relativeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.yesterday | relativeLongDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.yesterday | relativeLongDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Yesterday (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.long.yesterday | relativeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.yesterday | relativeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.yesterday | relativeLongDateTime: { milliseconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.yesterday | relativeLongDateTime: { milliseconds: true } }}</div>
             </div>
             <div class="row-border"></div>
 
@@ -201,14 +261,14 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Today (with seconds)</div>
-                <div class="flex">{{ obj.relative.long.today | relativeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.today | relativeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.today | relativeLongDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.today | relativeLongDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Today (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.long.today | relativeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.today | relativeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.today | relativeLongDateTime: { milliseconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.today | relativeLongDateTime: { milliseconds: true } }}</div>
             </div>
             <div class="row-border"></div>
 
@@ -220,14 +280,14 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Tomorrow (with seconds)</div>
-                <div class="flex">{{ obj.relative.long.tomorrow | relativeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.tomorrow | relativeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.tomorrow | relativeLongDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.tomorrow | relativeLongDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Tomorrow (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.long.tomorrow | relativeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.tomorrow | relativeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">{{ obj.relative.long.tomorrow | relativeLongDateTime: { milliseconds: true } }}</div>
+                <div class="flex">{{ iso.relative.long.tomorrow | relativeLongDateTime: { milliseconds: true } }}</div>
             </div>
             <div class="row-border"></div>
 
@@ -239,14 +299,22 @@
 
             <div class="layout-row row-border">
                 <div class="flex">After tomorrow (current year) (with seconds)</div>
-                <div class="flex">{{ obj.relative.long.afterTomorrowCurrentYear | relativeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.afterTomorrowCurrentYear | relativeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.long.afterTomorrowCurrentYear | relativeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.long.afterTomorrowCurrentYear | relativeLongDateTime: { seconds: true } }}
+                </div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">After tomorrow (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.long.afterTomorrowCurrentYear | relativeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.long.afterTomorrowCurrentYear | relativeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.long.afterTomorrowCurrentYear | relativeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.long.afterTomorrowCurrentYear | relativeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -281,14 +349,22 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Before yesterday (current year) (with seconds)</div>
-                <div class="flex">{{ obj.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime: { seconds: true } }}
+                </div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Before yesterday (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.beforeYesterdayCurrentYear | relativeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -300,14 +376,18 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Yesterday (with seconds)</div>
-                <div class="flex">{{ obj.relative.short.yesterday | relativeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.yesterday | relativeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.short.yesterday | relativeShortDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.short.yesterday | relativeShortDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Yesterday (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.short.yesterday | relativeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.yesterday | relativeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.yesterday | relativeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.yesterday | relativeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -319,14 +399,14 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Today (with seconds)</div>
-                <div class="flex">{{ obj.relative.short.today | relativeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.today | relativeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.short.today | relativeShortDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.short.today | relativeShortDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Today (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.short.today | relativeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.today | relativeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">{{ obj.relative.short.today | relativeShortDateTime: { milliseconds: true } }}</div>
+                <div class="flex">{{ iso.relative.short.today | relativeShortDateTime: { milliseconds: true } }}</div>
             </div>
             <div class="row-border"></div>
 
@@ -338,14 +418,18 @@
 
             <div class="layout-row row-border">
                 <div class="flex">Tomorrow (with seconds)</div>
-                <div class="flex">{{ obj.relative.short.tomorrow | relativeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.tomorrow | relativeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">{{ obj.relative.short.tomorrow | relativeShortDateTime: { seconds: true } }}</div>
+                <div class="flex">{{ iso.relative.short.tomorrow | relativeShortDateTime: { seconds: true } }}</div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">Tomorrow (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.short.tomorrow | relativeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.tomorrow | relativeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.tomorrow | relativeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.tomorrow | relativeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -357,14 +441,22 @@
 
             <div class="layout-row row-border">
                 <div class="flex">After tomorrow (current year) (with seconds)</div>
-                <div class="flex">{{ obj.relative.short.afterTomorrowCurrentYear | relativeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.afterTomorrowCurrentYear | relativeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.afterTomorrowCurrentYear | relativeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.afterTomorrowCurrentYear | relativeShortDateTime: { seconds: true } }}
+                </div>
             </div>
 
             <div class="layout-row row-border">
                 <div class="flex">After tomorrow (current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.relative.short.afterTomorrowCurrentYear | relativeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.relative.short.afterTomorrowCurrentYear | relativeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.relative.short.afterTomorrowCurrentYear | relativeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.relative.short.afterTomorrowCurrentYear | relativeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -376,7 +468,7 @@
         </div>
     </div>
 
-    <br>
+    <br />
     <header class="kbq-display-3">Date range</header>
     <div class="common-container">
         <h3>Long format</h3>
@@ -415,13 +507,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (the same day, current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (the same day, current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.sameDateCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -432,13 +532,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (the same day, not current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (the same day, not current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.sameDateNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -449,13 +557,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (not current month) (with seconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.notCurrentMonth | rangeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.notCurrentMonth | rangeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.notCurrentMonth | rangeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.notCurrentMonth | rangeLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (not current month) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.notCurrentMonth | rangeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.notCurrentMonth | rangeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.notCurrentMonth | rangeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.notCurrentMonth | rangeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -466,13 +582,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (start date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (start date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.startsNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -483,13 +607,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (end date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeLongDateTime (end date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.long.dateTime.endsNotCurrentYear | rangeLongDateTime: { milliseconds: true } }}
+                </div>
             </div>
         </div>
     </div>
@@ -508,13 +640,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.currentYear | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.currentYear | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.currentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.currentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.currentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.currentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.currentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.currentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
             <div class="layout-row row-border">
@@ -524,13 +664,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (the same day) (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (the same day) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.sameDateCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
             <div class="layout-row row-border">
@@ -540,13 +688,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (the same day, not current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (the same day, not current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.sameDateNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
             <div class="layout-row row-border">
@@ -556,13 +712,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (not current month) (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (not current month) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.notCurrentMonth | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
             <div class="layout-row row-border">
@@ -572,13 +736,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (start date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (start date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.startsNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
             <div class="layout-row row-border">
@@ -588,13 +760,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (end date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeMiddleDateTime (end date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.middle.dateTime.endsNotCurrentYear | rangeMiddleDateTime: { milliseconds: true } }}
+                </div>
             </div>
         </div>
     </div>
@@ -635,13 +815,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (the same day, current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (the same day, current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.sameDateCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -652,13 +840,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (the same day, not current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (the same day, not current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.sameDateNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -669,13 +865,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (not current month) (with seconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.notCurrentMonth | rangeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.notCurrentMonth | rangeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.notCurrentMonth | rangeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.notCurrentMonth | rangeShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (not current month) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.notCurrentMonth | rangeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.notCurrentMonth | rangeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.notCurrentMonth | rangeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.notCurrentMonth | rangeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -686,13 +890,21 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (start date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (start date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.startsNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
             <div class="row-border"></div>
 
@@ -703,15 +915,22 @@
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (end date is not in current year) (with seconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime:{seconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime: { seconds: true } }}
+                </div>
             </div>
             <div class="layout-row row-border">
                 <div class="flex">rangeShortDateTime (end date is not in current year) (with milliseconds)</div>
-                <div class="flex">{{ obj.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
-                <div class="flex">{{ iso.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime:{milliseconds: true} }}</div>
+                <div class="flex">
+                    {{ obj.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
+                <div class="flex">
+                    {{ iso.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
+                </div>
             </div>
         </div>
     </div>
 </div>
-

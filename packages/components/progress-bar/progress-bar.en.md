@@ -38,7 +38,10 @@ To show indeterminate progress
 Or for determinate progress
 
 ```html
-<kbq-progress-bar [mode]="'determinate'" [value]="30"></kbq-progress-bar>
+<kbq-progress-bar
+    [mode]="'determinate'"
+    [value]="30"
+></kbq-progress-bar>
 ```
 
 <!-- example(progress-bar-indeterminate) -->

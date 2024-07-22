@@ -1,14 +1,14 @@
 <kbq-toggle
-    class="kbq-toggle_small"
     style="margin: 10px 0"
-    [(ngModel)]="lineWrap">
+    class="kbq-toggle_small"
+    [(ngModel)]="lineWrap"
+>
     Перевод строк
 </kbq-toggle>
 
 <kbq-code-block
+    [codeFiles]="files"
+    [filled]="false"
     [lineNumbers]="true"
     [softWrap]="lineWrap"
-    [filled]="false"
-    [codeFiles]="files">
-</kbq-code-block>
-
+></kbq-code-block>

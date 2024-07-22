@@ -9,7 +9,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'test-app',
     template: `
         <kbq-form-field>
-            <input kbqInput [formControl]="testControl" type="text" />
+            <input
+                [formControl]="testControl"
+                kbqInput
+                type="text"
+            />
         </kbq-form-field>
     `
 })

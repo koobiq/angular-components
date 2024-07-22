@@ -609,8 +609,7 @@ describe('SingleFileUploadComponent', () => {
                 [customValidation]="validation"
                 [disabled]="disabled"
                 (fileQueueChange)="onChange($event)"
-            >
-            </kbq-single-file-upload>
+            ></kbq-single-file-upload>
         </div>
     `
 })
@@ -638,8 +637,7 @@ class BasicSingleFileUpload {
                 [accept]="accept"
                 [customValidation]="validation"
                 (fileQueueChange)="onChange($event)"
-            >
-            </kbq-file-upload>
+            ></kbq-file-upload>
         </div>
     `
 })
@@ -666,8 +664,7 @@ class ControlValueAccessorSingleFileUpload {
                 [disabled]="disabled"
                 [customValidation]="validation"
                 (fileQueueChanged)="onChange($event)"
-            >
-            </kbq-multiple-file-upload>
+            ></kbq-multiple-file-upload>
         </div>
     `
 })
@@ -694,8 +691,7 @@ class BasicMultipleFileUpload {
                 [accept]="accept"
                 [customValidation]="validation"
                 (fileQueueChanged)="onChange($event)"
-            >
-            </kbq-multiple-file-upload>
+            ></kbq-multiple-file-upload>
         </div>
     `
 })

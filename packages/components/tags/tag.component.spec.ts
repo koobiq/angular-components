@@ -348,23 +348,25 @@ describe('Tags', () => {
 });
 
 @Component({
-    template: ` <kbq-tag-list>
-        <div *ngIf="shouldShow">
-            <kbq-tag
-                [selectable]="selectable"
-                [removable]="removable"
-                [color]="color"
-                [selected]="selected"
-                [disabled]="disabled"
-                (focus)="tagFocus($event)"
-                (destroyed)="tagDestroy($event)"
-                (selectionChange)="tagSelectionChange($event)"
-                (removed)="tagRemove($event)"
-            >
-                {{ name }}
-            </kbq-tag>
-        </div>
-    </kbq-tag-list>`
+    template: `
+        <kbq-tag-list>
+            <div *ngIf="shouldShow">
+                <kbq-tag
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    [color]="color"
+                    [selected]="selected"
+                    [disabled]="disabled"
+                    (focus)="tagFocus($event)"
+                    (destroyed)="tagDestroy($event)"
+                    (selectionChange)="tagSelectionChange($event)"
+                    (removed)="tagRemove($event)"
+                >
+                    {{ name }}
+                </kbq-tag>
+            </div>
+        </kbq-tag-list>
+    `
 })
 class SingleTag {
     disabled: boolean = false;
@@ -384,6 +386,8 @@ class SingleTag {
 }
 
 @Component({
-    template: ` <kbq-basic-tag>{{ name }}</kbq-basic-tag>`
+    template: `
+        <kbq-basic-tag>{{ name }}</kbq-basic-tag>
+    `
 })
 class BasicTag {}

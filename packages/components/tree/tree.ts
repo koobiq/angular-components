@@ -4,7 +4,9 @@ import { KbqTreeBase } from './tree-base';
 @Component({
     selector: 'kbq-tree',
     exportAs: 'kbqTree',
-    template: `<ng-container kbqTreeNodeOutlet></ng-container>`,
+    template: `
+        <ng-container kbqTreeNodeOutlet></ng-container>
+    `,
     styleUrls: ['./tree.scss'],
     host: {
         class: 'kbq-tree'

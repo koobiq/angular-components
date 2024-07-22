@@ -1,84 +1,103 @@
 <div class="kbq-calendar-header__select-group">
     <kbq-select
-        class="kbq-calendar-header__select"
         #monthSelect="kbqSelect"
-        [value]="selectedMonth"
+        class="kbq-calendar-header__select"
         [panelClass]="'kbq-calendar-select-panel'"
-        (selectionChange)="onMonthSelected($event.value)">
-
-        <button class="layout-padding-right-xs"
-                kbq-button
-                [kbqStyle]="'transparent'"
-                [color]="'contrast'"
-                kbq-select-matcher
-                [class.kbq-active]="monthSelect.panelOpen"
-                [tabindex]="-1">
+        [value]="selectedMonth"
+        (selectionChange)="onMonthSelected($event.value)"
+    >
+        <button
+            kbq-button
+            kbq-select-matcher
+            class="layout-padding-right-xs"
+            [class.kbq-active]="monthSelect.panelOpen"
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            [tabindex]="-1"
+        >
             {{ monthSelect.triggerValue }}
 
-            <i class="layout-padding-left-3xs" kbq-icon="mc-angle-down-S_16" [color]="'contrast'"></i>
+            <i
+                kbq-icon="mc-angle-down-S_16"
+                class="layout-padding-left-3xs"
+                [color]="'contrast'"
+            ></i>
         </button>
 
-        <kbq-option *ngFor="let month of monthNames"
-                   [kbqTooltipDisabled]="true"
-                   [value]="month.value">
+        <kbq-option
+            *ngFor="let month of monthNames"
+            [kbqTooltipDisabled]="true"
+            [value]="month.value"
+        >
             {{ month.name }}
         </kbq-option>
     </kbq-select>
 
     <kbq-select
         #yearSelect="kbqSelect"
-        [value]="selectedYear"
         [panelClass]="'kbq-calendar-select-panel'"
-        (selectionChange)="onYearSelected($event.value.name)">
-        <button class="layout-padding-right-xs"
-                kbq-button
-                [kbqStyle]="'transparent'"
-                [color]="'contrast'"
-                kbq-select-matcher
-                [class.kbq-active]="yearSelect.panelOpen"
-                [tabindex]="-1">
+        [value]="selectedYear"
+        (selectionChange)="onYearSelected($event.value.name)"
+    >
+        <button
+            kbq-button
+            kbq-select-matcher
+            class="layout-padding-right-xs"
+            [class.kbq-active]="yearSelect.panelOpen"
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            [tabindex]="-1"
+        >
             {{ selectedYear.value }}
 
-            <i class="layout-padding-left-3xs" kbq-icon="mc-angle-down-S_16"></i>
+            <i
+                kbq-icon="mc-angle-down-S_16"
+                class="layout-padding-left-3xs"
+            ></i>
         </button>
 
-        <kbq-option *ngFor="let year of years"
-                   [kbqTooltipDisabled]="true"
-                   [value]="year">
+        <kbq-option
+            *ngFor="let year of years"
+            [kbqTooltipDisabled]="true"
+            [value]="year"
+        >
             {{ year.value }}
         </kbq-option>
     </kbq-select>
 </div>
 
 <div class="kbq-calendar-header__button-group">
-    <button kbq-button
-            class="kbq-calendar-header__previous-button"
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-            [tabindex]="-1"
-            [disabled]="previousDisabled"
-            (click)="selectPreviousMonth()">
-
+    <button
+        kbq-button
+        class="kbq-calendar-header__previous-button"
+        [color]="'contrast'"
+        [disabled]="previousDisabled"
+        [kbqStyle]="'transparent'"
+        [tabindex]="-1"
+        (click)="selectPreviousMonth()"
+    >
         <i kbq-icon="mc-angle-left-L_16"></i>
     </button>
 
-    <button kbq-button
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-            [tabindex]="-1"
-            (click)="selectCurrentDate()">
-
+    <button
+        kbq-button
+        [color]="'contrast'"
+        [kbqStyle]="'transparent'"
+        [tabindex]="-1"
+        (click)="selectCurrentDate()"
+    >
         <i kbq-icon="mc-circle-8_16"></i>
     </button>
 
-    <button kbq-button
-            class="kbq-calendar-header__next-button"
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-            [tabindex]="-1"
-            [disabled]="nextDisabled"
-            (click)="selectNextMonth()">
-
+    <button
+        kbq-button
+        class="kbq-calendar-header__next-button"
+        [color]="'contrast'"
+        [disabled]="nextDisabled"
+        [kbqStyle]="'transparent'"
+        [tabindex]="-1"
+        (click)="selectNextMonth()"
+    >
         <i kbq-icon="mc-angle-right-L_16"></i>
     </button>
 </div>

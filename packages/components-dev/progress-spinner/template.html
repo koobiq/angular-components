@@ -11,21 +11,26 @@
     <div>
         <ul class="spinners">
             <li class="spinner-container">
-                <kbq-progress-spinner [value]="percent" [mode]="mode"></kbq-progress-spinner>
+                <kbq-progress-spinner
+                    [mode]="mode"
+                    [value]="percent"
+                ></kbq-progress-spinner>
             </li>
 
             <li class="spinner-container">
                 <kbq-progress-spinner
+                    [mode]="mode"
                     [value]="percent"
-                    [mode]="mode">
+                >
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                 </kbq-progress-spinner>
             </li>
 
             <li class="spinner-container">
                 <kbq-progress-spinner
+                    [mode]="mode"
                     [value]="percent"
-                    [mode]="mode">
+                >
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                     <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>
                 </kbq-progress-spinner>
@@ -33,23 +38,29 @@
         </ul>
         <ul class="spinners">
             <li class="spinner-container">
-                <kbq-progress-spinner [size]="'big'" [value]="percent" [mode]="mode"></kbq-progress-spinner>
+                <kbq-progress-spinner
+                    [mode]="mode"
+                    [size]="'big'"
+                    [value]="percent"
+                ></kbq-progress-spinner>
             </li>
 
             <li class="spinner-container">
                 <kbq-progress-spinner
+                    [mode]="mode"
                     [size]="'big'"
                     [value]="percent"
-                    [mode]="mode">
+                >
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                 </kbq-progress-spinner>
             </li>
 
             <li class="spinner-container">
                 <kbq-progress-spinner
+                    [mode]="mode"
                     [size]="'big'"
                     [value]="percent"
-                    [mode]="mode">
+                >
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                     <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>
                 </kbq-progress-spinner>
@@ -58,8 +69,16 @@
     </div>
 </div>
 <div class="container">
-    <span class="percent">100%</span> <kbq-progress-spinner [value]="100" [size]="'big'"></kbq-progress-spinner>
+    <span class="percent">100%</span>
+    <kbq-progress-spinner
+        [size]="'big'"
+        [value]="100"
+    ></kbq-progress-spinner>
 </div>
 <div class="container">
-    <span class="percent">0%</span> <kbq-progress-spinner [value]="0" [size]="'big'"></kbq-progress-spinner>
+    <span class="percent">0%</span>
+    <kbq-progress-spinner
+        [size]="'big'"
+        [value]="0"
+    ></kbq-progress-spinner>
 </div>

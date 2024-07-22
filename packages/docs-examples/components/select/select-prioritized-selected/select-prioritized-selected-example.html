@@ -2,9 +2,12 @@
     <kbq-select
         [multiple]="true"
         [(value)]="selected"
-        (openedChange)="openedChange($event)">
-
-        <kbq-option *ngFor="let option of options" [value]="option">
+        (openedChange)="openedChange($event)"
+    >
+        <kbq-option
+            *ngFor="let option of options"
+            [value]="option"
+        >
             <span [innerHTML]="option"></span>
         </kbq-option>
 

@@ -85,12 +85,12 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
     selector: 'file-upload-compact',
     template: `
         <kbq-multiple-file-upload
-            size="compact"
             [disabled]="disabled"
             [inputId]="'test-compact'"
             [errors]="errorMessagesForMultiple"
             [files]="files"
             (fileQueueChanged)="addedFiles($event)"
+            size="compact"
         >
             <ng-template #kbqFileIcon>
                 <i kbq-icon="mc-file-empty_16"></i>

@@ -305,13 +305,16 @@ describe('KbqSidepanelService', () => {
 
 @Component({
     template: `
-        <kbq-sidepanel-header [closeable]="true"> Sidepanel Component Content </kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">Sidepanel Component Content</kbq-sidepanel-header>
 
         <kbq-sidepanel-body><div class="kbq-subheading">Sidepanel Component Body</div></kbq-sidepanel-body>
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions align="right">
-                <button kbq-button kbq-sidepanel-close>
+                <button
+                    kbq-button
+                    kbq-sidepanel-close
+                >
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>
@@ -323,12 +326,22 @@ class ComponentForSidepanel {}
 @Component({
     selector: 'kbq-sidepanel-from-dropdown',
     template: `
-        <button kbq-button class="template-button" [kbqDropdownTriggerFor]="dropdown" #trigger="kbqDropdownTrigger">
+        <button
+            class="template-button"
+            #trigger="kbqDropdownTrigger"
+            [kbqDropdownTriggerFor]="dropdown"
+            kbq-button
+        >
             Open sidepanel from dropdown
         </button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button kbq-dropdown-item (click)="showSidepanel()">open Component Sidepanel</button>
+                <button
+                    (click)="showSidepanel()"
+                    kbq-dropdown-item
+                >
+                    open Component Sidepanel
+                </button>
             </ng-template>
         </kbq-dropdown>
     `,
@@ -356,9 +369,14 @@ class SimpleSidepanelExample {
 }
 
 @Component({
-    template: `<ng-template let-data let-sidepanelRef="sidepanelRef">
-        {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}</ng-template
-    >`
+    template: `
+        <ng-template
+            let-data
+            let-sidepanelRef="sidepanelRef"
+        >
+            {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}
+        </ng-template>
+    `
 })
 class ComponentWithTemplateForSidepanel {
     localValue: string;
@@ -375,7 +393,9 @@ class ComponentWithTemplateForSidepanel {
 
 @Component({
     selector: 'root-component',
-    template: `<div></div>`
+    template: `
+        <div></div>
+    `
 })
 class RootComponent {}
 

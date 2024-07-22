@@ -1,32 +1,37 @@
-<div class="kbq-tab-header__pagination kbq-tab-header__pagination_before"
-     #previousPaginator
-     [class.kbq-disabled]="disableScrollBefore"
-     (click)="handlePaginatorClick('before')"
-     (mousedown)="handlePaginatorPress('before', $event)"
-     (touchend)="stopInterval()">
-
+<div
+    #previousPaginator
+    class="kbq-tab-header__pagination kbq-tab-header__pagination_before"
+    [class.kbq-disabled]="disableScrollBefore"
+    (click)="handlePaginatorClick('before')"
+    (mousedown)="handlePaginatorPress('before', $event)"
+    (touchend)="stopInterval()"
+>
     <i kbq-icon="mc-angle-left-M_16"></i>
 </div>
 
-<div class="kbq-tab-header__content"
-     #tabListContainer
-     (keydown)="handleKeydown($event)">
-
-    <div class="kbq-tab-list"
-         #tabList
-         (cdkObserveContent)="onContentChanges()">
+<div
+    #tabListContainer
+    class="kbq-tab-header__content"
+    (keydown)="handleKeydown($event)"
+>
+    <div
+        #tabList
+        class="kbq-tab-list"
+        (cdkObserveContent)="onContentChanges()"
+    >
         <div class="kbq-tab-list__content">
             <ng-content></ng-content>
         </div>
     </div>
 </div>
 
-<div class="kbq-tab-header__pagination kbq-tab-header__pagination_after"
-     #nextPaginator
-     [class.kbq-disabled]="disableScrollAfter"
-     (mousedown)="handlePaginatorPress('after', $event)"
-     (click)="handlePaginatorClick('after')"
-     (touchend)="stopInterval()">
-
+<div
+    #nextPaginator
+    class="kbq-tab-header__pagination kbq-tab-header__pagination_after"
+    [class.kbq-disabled]="disableScrollAfter"
+    (click)="handlePaginatorClick('after')"
+    (mousedown)="handlePaginatorPress('after', $event)"
+    (touchend)="stopInterval()"
+>
     <i kbq-icon="mc-angle-right-M_16"></i>
 </div>
