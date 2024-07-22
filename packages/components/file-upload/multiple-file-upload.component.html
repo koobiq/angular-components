@@ -13,19 +13,9 @@
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
+                        <!-- prettier-ignore -->
                         <span class="multiple__caption">
-                            {{ separatedCaptionText[0] }}
-                            <label
-                                kbq-link
-                                pseudo
-                                [disabled]="disabled"
-                                [for]="inputId"
-                                [tabIndex]="-1"
-                            >
-                                {{ config.browseLink }}
-                                <ng-container *ngTemplateOutlet="inputTemplate"></ng-container>
-                            </label>
-                            {{ separatedCaptionText[1] }}
+                            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate"></ng-container></label>{{ separatedCaptionText[1] }}
                         </span>
                     </div>
                 </div>
@@ -102,9 +92,7 @@
                                 [minVisibleLength]="10"
                             ></span>
                         </div>
-                        <div class="kbq-file-upload__size">
-                            {{ file.file.size | kbqDataSize }}
-                        </div>
+                        <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
                         <div class="kbq-file-upload__action">
                             <i
                                 kbq-icon-button="mc-close-circle_16"
