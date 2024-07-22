@@ -36,6 +36,7 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-sidepanel-container_right {
         height: 100%;
         top: 0;
+        max-width: 100%;
 
         &.kbq-sidepanel_small {
             width: kbq-css-variable(sidepanel-size-small-width);
@@ -49,7 +50,6 @@ $tokens: meta.module-variables(tokens) !default;
 
         &.kbq-sidepanel_large {
             width: kbq-css-variable(sidepanel-size-large-width);
-            max-width: kbq-css-variable(sidepanel-size-large-width);
         }
 
         .kbq-sidepanel-indent {
