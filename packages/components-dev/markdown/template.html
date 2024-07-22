@@ -3,6 +3,8 @@
     <kbq-markdown [markdownText]="markdownText"></kbq-markdown>
 
     <h4>Through content</h4>
+
+    <!-- prettier-ignore -->
     <kbq-markdown ngPreserveWhitespaces>
 # H1 Basic Syntax
 ## H2
@@ -142,6 +144,8 @@ X^2^
     </kbq-markdown>
 
     <h4>Through service</h4>
-    <div class="kbq-markdown" [innerHTML]="parsedByService"></div>
+    <div
+        class="kbq-markdown"
+        [innerHTML]="parsedByService"
+    ></div>
 </div>
-

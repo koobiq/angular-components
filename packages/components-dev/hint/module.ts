@@ -5,7 +5,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -15,7 +14,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 export class DemoComponent {
     colors = KbqComponentColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

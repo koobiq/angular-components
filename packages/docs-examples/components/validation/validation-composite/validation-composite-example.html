@@ -1,24 +1,33 @@
 <div class="docs-width layout-padding">
-    <form class="kbq-form-horizontal"
-          [formGroup]="compositeFormGroup"
-          [class.validation-error]="compositeFormGroup.errors?.range"
-          novalidate>
-
+    <form
+        novalidate
+        class="kbq-form-horizontal"
+        [class.validation-error]="compositeFormGroup.errors?.range"
+        [formGroup]="compositeFormGroup"
+    >
         <div class="kbq-form__fieldset">
             <div class="kbq-form__legend">Диапазоны IP-адресов</div>
 
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">Начало диапазона</label>
                 <kbq-form-field
-                    class="kbq-form__control"
-                    [kbqWarningTooltip]="'Только цифры'"
-                    [kbqEnterDelay]="10"
                     #startTooltip="kbqWarningTooltip"
+                    class="kbq-form__control"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.Top"
                     [kbqTrigger]="'manual'"
-                    [kbqPlacement]="popUpPlacements.Top">
-                    <input kbqInput formControlName="start" (input)="onInput($event, startTooltip, 'start')">
+                    [kbqWarningTooltip]="'Только цифры'"
+                >
+                    <input
+                        formControlName="start"
+                        kbqInput
+                        (input)="onInput($event, startTooltip, 'start')"
+                    />
 
-                    <kbq-hint [color]="themePalette.Error" *ngIf="compositeFormGroup.controls.start.invalid">
+                    <kbq-hint
+                        *ngIf="compositeFormGroup.controls.start.invalid"
+                        [color]="themePalette.Error"
+                    >
                         IP-адрес не соответствует стандартам RFC
                     </kbq-hint>
 
@@ -29,15 +38,23 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">Окончание</label>
                 <kbq-form-field
-                    class="kbq-form__control"
-                    [kbqWarningTooltip]="'Только цифры и точки'"
-                    [kbqEnterDelay]="10"
                     #endTooltip="kbqWarningTooltip"
+                    class="kbq-form__control"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.Top"
                     [kbqTrigger]="'manual'"
-                    [kbqPlacement]="popUpPlacements.Top">
-                    <input kbqInput formControlName="end" (input)="onInput($event, endTooltip, 'end')">
+                    [kbqWarningTooltip]="'Только цифры и точки'"
+                >
+                    <input
+                        formControlName="end"
+                        kbqInput
+                        (input)="onInput($event, endTooltip, 'end')"
+                    />
 
-                    <kbq-hint [color]="themePalette.Error" *ngIf="compositeFormGroup.controls.end.invalid">
+                    <kbq-hint
+                        *ngIf="compositeFormGroup.controls.end.invalid"
+                        [color]="themePalette.Error"
+                    >
                         IP-адрес не соответствует стандартам RFC
                     </kbq-hint>
 
@@ -45,7 +62,11 @@
                 </kbq-form-field>
             </div>
 
-            <kbq-hint style="margin-top: 4px" [color]="themePalette.Error" *ngIf="compositeFormGroup.errors?.range">
+            <kbq-hint
+                *ngIf="compositeFormGroup.errors?.range"
+                style="margin-top: 4px"
+                [color]="themePalette.Error"
+            >
                 IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
             </kbq-hint>
         </div>

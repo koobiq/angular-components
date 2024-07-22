@@ -2,7 +2,7 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -10,13 +10,11 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule, KbqSelectChange } from '@koobiq/components/select';
+import { KbqSelectChange, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { merge, Observable, of } from 'rxjs';
+import { Observable, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { OPTIONS } from './options';
-
 
 @Component({
     selector: 'app',
@@ -45,7 +43,11 @@ export class DemoComponent implements OnInit {
     optionCounter = 0;
 
     options: string[] = OPTIONS.sort();
-    selectedOptionsAsObject = [{ id: 3, name: 'Anapa' }, { id: 55, name: 'Lyubertsy' }, { id: 114, name: 'Tomsk' }];
+    selectedOptionsAsObject = [
+        { id: 3, name: 'Anapa' },
+        { id: 55, name: 'Lyubertsy' },
+        { id: 114, name: 'Tomsk' }
+    ];
     optionsObj: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
@@ -59,14 +61,12 @@ export class DemoComponent implements OnInit {
     ngOnInit(): void {
         this.filteredOptions = merge(
             of(OPTIONS),
-            this.searchCtrl.valueChanges
-                .pipe(map((value) => this.getFilteredOptions(value)))
+            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
 
         this.filteredMultipleOptions = merge(
             of(OPTIONS),
-            this.multipleSearchCtrl.valueChanges
-                .pipe(map((value) => this.getFilteredOptions(value)))
+            this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }
 
@@ -97,15 +97,13 @@ export class DemoComponent implements OnInit {
     }
 
     private getFilteredOptions(value): string[] {
-        const searchFilter = (value && value.new) ? value.value : value;
+        const searchFilter = value && value.new ? value.value : value;
 
         return searchFilter
-            ? this.options.filter((option) =>
-                option.toLowerCase().includes((searchFilter.toLowerCase())))
+            ? this.options.filter((option) => option.toLowerCase().includes(searchFilter.toLowerCase()))
             : this.options;
     }
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -117,7 +115,6 @@ export class DemoComponent implements OnInit {
         KbqButtonModule,
         KbqSelectModule,
         KbqHighlightModule,
-
         KbqButtonModule,
         KbqInputModule,
         KbqFormFieldModule,

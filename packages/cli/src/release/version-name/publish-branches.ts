@@ -1,6 +1,5 @@
 import { Version } from './parse-version';
 
-
 export type VersionType = 'major' | 'minor' | 'patch';
 
 /** Determines the allowed branch names for publishing the specified version. */

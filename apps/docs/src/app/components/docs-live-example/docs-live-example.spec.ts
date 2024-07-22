@@ -2,12 +2,9 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { DocsAppTestingModule } from '../../testing/testing-module';
-
 import { DocsLiveExample } from './docs-live-example';
 import { DocsLiveExampleModule } from './docs-live-example-module';
-
 
 describe('docs-live-example', () => {
     let http: HttpTestingController;
@@ -46,7 +43,6 @@ describe('docs-live-example', () => {
         expect(docViewer.componentInstance.textContent).toBe('my docs page');
     });
 
-
     it('should correct hash based links', () => {
         const fixture = TestBed.createComponent(DocViewerTestComponent);
         fixture.componentInstance.documentUrl = `//koobiq.io/doc-with-links.html`;
@@ -64,7 +60,8 @@ describe('docs-live-example', () => {
 @Component({
     selector: 'test',
     template: `
-        <docs-live-example [documentUrl]="documentUrl"></docs-live-example>`
+        <docs-live-example [documentUrl]="documentUrl"></docs-live-example>
+    `
 })
 class DocViewerTestComponent {
     documentUrl = '//koobiq.io/simple-doc.html';

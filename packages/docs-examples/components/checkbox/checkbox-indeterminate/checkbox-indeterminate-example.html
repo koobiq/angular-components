@@ -1,5 +1,17 @@
 <div class="kbq-body">
-    <kbq-checkbox  [checked]="parentChecked" [indeterminate]="parentIndeterminate" (change)="toggleChecked()" > All fruits</kbq-checkbox>
-    <p *ngFor="let fruit of fruits; let i = index"><kbq-checkbox [checked]="fruit.checked" (change)="updateCheckboxes(i)" >{{fruit.name}}</kbq-checkbox>
+    <kbq-checkbox
+        [checked]="parentChecked"
+        [indeterminate]="parentIndeterminate"
+        (change)="toggleChecked()"
+    >
+        All fruits
+    </kbq-checkbox>
+    <p *ngFor="let fruit of fruits; let i = index">
+        <kbq-checkbox
+            [checked]="fruit.checked"
+            (change)="updateCheckboxes(i)"
+        >
+            {{ fruit.name }}
+        </kbq-checkbox>
+    </p>
 </div>
-

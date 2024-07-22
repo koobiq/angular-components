@@ -1,33 +1,43 @@
 <label
-    [attr.for]="inputId"
     class="kbq-toggle-layout"
-    [class.left]="labelPosition === 'left'">
-
-    <input #input
-           type="checkbox"
-           role="switch"
-           class="kbq-toggle-input cdk-visually-hidden"
-           [id]="inputId"
-           [checked]="checked"
-           [attr.value]="value"
-           [disabled]="disabled"
-           [attr.name]="name"
-           [tabIndex]="tabIndex"
-           [attr.aria-label]="ariaLabel || null"
-           [attr.aria-labelledby]="ariaLabelledby"
-           [attr.aria-checked]="getAriaChecked()"
-           (click)="onInputClick($event)"
-           (change)="onChangeEvent($event)"/>
+    [attr.for]="inputId"
+    [class.left]="labelPosition === 'left'"
+>
+    <input
+        #input
+        role="switch"
+        type="checkbox"
+        class="kbq-toggle-input cdk-visually-hidden"
+        [attr.aria-checked]="getAriaChecked()"
+        [attr.aria-label]="ariaLabel || null"
+        [attr.aria-labelledby]="ariaLabelledby"
+        [attr.name]="name"
+        [attr.value]="value"
+        [checked]="checked"
+        [disabled]="disabled"
+        [id]="inputId"
+        [tabIndex]="tabIndex"
+        (change)="onChangeEvent($event)"
+        (click)="onInputClick($event)"
+    />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar">
-            <div class="kbq-toggle__circle" [@switch]="checked"></div>
+            <div
+                class="kbq-toggle__circle"
+                [@switch]="checked"
+            ></div>
         </div>
     </div>
 
-    <div class="kbq-toggle__content"
-         [class.left]="labelPosition === 'left'"
-         [class.right]="labelPosition === 'right'">
-        <span class="kbq-toggle-label" (cdkObserveContent)="onLabelTextChange()">
+    <div
+        class="kbq-toggle__content"
+        [class.left]="labelPosition === 'left'"
+        [class.right]="labelPosition === 'right'"
+    >
+        <span
+            class="kbq-toggle-label"
+            (cdkObserveContent)="onLabelTextChange()"
+        >
             <ng-content></ng-content>
         </span>
 

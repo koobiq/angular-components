@@ -1,8 +1,6 @@
 import { escapeRegExp } from '@koobiq/components/core';
-
 import { BaseTreeControl } from './base-tree-control';
 import { FilterByViewValue, FilterParentsForNodes, FlatTreeControlFilter } from './flat-tree-control.filters';
-
 
 export function defaultCompareValues(firstValue: string, secondValue: string): boolean {
     return firstValue === secondValue;
@@ -35,10 +33,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
     ) {
         super();
 
-        this.setFilters(
-            new FilterByViewValue<T>(this),
-            new FilterParentsForNodes<T>(this)
-        );
+        this.setFilters(new FilterByViewValue<T>(this), new FilterParentsForNodes<T>(this));
     }
 
     getFilters(): FlatTreeControlFilter<T>[] {
@@ -65,9 +60,10 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
         // If we reach a node whose level is greater than the level of the tree node, we hit a
         // sibling of an ancestor.
-        for (let i = startIndex + 1;
-             i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
-             i++
+        for (
+            let i = startIndex + 1;
+            i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
+            i++
         ) {
             results.push(this.dataNodes[i]);
         }
@@ -104,12 +100,11 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
 
         let result: T[] = [];
 
-        this.filters
-            .forEach((filter, index, filters) => {
-                const prevFilter = filters[index - 1] || null;
+        this.filters.forEach((filter, index, filters) => {
+            const prevFilter = filters[index - 1] || null;
 
-                result = filter.handle(value, prevFilter);
-            });
+            result = filter.handle(value, prevFilter);
+        });
 
         this.filterModel.clear();
         this.filterModel.select(...result);
@@ -119,13 +114,11 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
 
         this.updateFilterValue(value || result);
 
-        Promise.resolve()
-            .then(() => this.restoreExpansionState());
+        Promise.resolve().then(() => this.restoreExpansionState());
     }
 
     private updateFilterValue(value: T[] | string | null) {
-        Promise.resolve()
-            .then(() => this.filterValue.next(value));
+        Promise.resolve().then(() => this.filterValue.next(value));
     }
 
     private saveExpansionState() {

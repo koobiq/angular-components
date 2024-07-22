@@ -1,9 +1,13 @@
 <div>
-    <br><br><br>
+    <br />
+    <br />
+    <br />
 
-    <span kbq-link
-          pseudo
-          [kbqDropdownTriggerFor]="dropdown">
+    <span
+        kbq-link
+        pseudo
+        [kbqDropdownTriggerFor]="dropdown"
+    >
         Select
     </span>
 
@@ -12,155 +16,242 @@
             <button
                 *ngFor="let pool of pools"
                 kbq-dropdown-item
+                [kbqDropdownTriggerData]="{ domains: pool.domains }"
                 [kbqDropdownTriggerFor]="domainsDropdown"
-                [kbqDropdownTriggerData]="{domains: pool.domains}">
-                {{pool.name}}
+            >
+                {{ pool.name }}
             </button>
         </ng-template>
     </kbq-dropdown>
 
     <kbq-dropdown #domainsDropdown>
-        <ng-template kbqDropdownContent let-domains="domains">
+        <ng-template
+            kbqDropdownContent
+            let-domains="domains"
+        >
             <button
                 *ngFor="let domain of domains"
                 kbq-dropdown-item
                 (click)="selectDomain(domain.id)"
             >
-                {{domain.name}}
+                {{ domain.name }}
             </button>
         </ng-template>
     </kbq-dropdown>
 
-    <br><br><br>
+    <br />
+    <br />
+    <br />
 
-    <button kbq-button
-            [ngClass]="{ 'kbq-active': isDropdownOpen}"
-            [kbqDropdownTriggerFor]="appDropdown"
-            (dropdownOpened)="dropdownOpened()"
-            (dropdownClosed)="dropdownClosed()">
+    <button
+        kbq-button
+        [kbqDropdownTriggerFor]="appDropdown"
+        [ngClass]="{ 'kbq-active': isDropdownOpen }"
+        (dropdownClosed)="dropdownClosed()"
+        (dropdownOpened)="dropdownOpened()"
+    >
         dropdown
         <i kbq-icon="mc-angle-down-S_16"></i>
     </button>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <button kbq-button
-            [ngClass]="{ 'kbq-active': isDropdownOpen}"
-            [kbqDropdownTriggerFor]="appDropdown"
-            (dropdownOpened)="dropdownOpened()"
-            (dropdownClosed)="dropdownClosed()">
+    <button
+        kbq-button
+        [kbqDropdownTriggerFor]="appDropdown"
+        [ngClass]="{ 'kbq-active': isDropdownOpen }"
+        (dropdownClosed)="dropdownClosed()"
+        (dropdownOpened)="dropdownOpened()"
+    >
         <i kbq-icon="mc-info_16"></i>
         <i kbq-icon="mc-angle-down-S_16"></i>
     </button>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Contrast" [kbqDropdownTriggerFor]="appDropdown">
+    <button
+        kbq-button
+        [color]="colors.Contrast"
+        [kbqDropdownTriggerFor]="appDropdown"
+        [kbqStyle]="styles.Transparent"
+    >
         dropdown
         <i kbq-icon="mc-angle-down-S_16"></i>
     </button>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <kbq-dropdown #appDropdown="kbqDropdown"
-                 [overlapTriggerY]="true"
-                 [overlapTriggerX]="false">
-            <button kbq-dropdown-item>Text Normal</button>
+    <kbq-dropdown
+        #appDropdown="kbqDropdown"
+        [overlapTriggerX]="false"
+        [overlapTriggerY]="true"
+    >
+        <button kbq-dropdown-item>Text Normal</button>
 
-            <button kbq-dropdown-item><i kbq-icon="mc-info-o_16" [color]="'contrast'"></i>Text Normal</button>
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="mc-info-o_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+        </button>
 
-            <button kbq-dropdown-item>
-                Text Normal<div class="kbq-dropdown-item__caption">Caption</div>
-            </button>
+        <button kbq-dropdown-item>
+            Text Normal
+            <div class="kbq-dropdown-item__caption">Caption</div>
+        </button>
 
-            <button kbq-dropdown-item>
-                <i kbq-icon="mc-info-o_16" [color]="'contrast'"></i>Text Normal
-                <div class="kbq-dropdown-item__caption">Caption</div>
-            </button>
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="mc-info-o_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+            <div class="kbq-dropdown-item__caption">Caption</div>
+        </button>
 
-            <button kbq-dropdown-item>
-                <i kbq-icon="mc-circle-8_16" [color]="'contrast'"></i>Text Normal
-            </button>
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="mc-circle-8_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+        </button>
 
-            <button kbq-dropdown-item kbq-title>Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and very long text</button>
+        <button
+            kbq-dropdown-item
+            kbq-title
+        >
+            Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
+            very long text
+        </button>
 
-            <kbq-divider></kbq-divider>
+        <kbq-divider></kbq-divider>
 
-            <div class="kbq-dropdown__group-header">Header</div>
+        <div class="kbq-dropdown__group-header">Header</div>
 
-            <button kbq-dropdown-item disabled>Disabled</button>
+        <button
+            disabled
+            kbq-dropdown-item
+        >
+            Disabled
+        </button>
 
-            <kbq-divider></kbq-divider>
+        <kbq-divider></kbq-divider>
 
-            <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
+        <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
 
-            <button kbq-dropdown-item disabled>Disabled</button>
+        <button
+            disabled
+            kbq-dropdown-item
+        >
+            Disabled
+        </button>
 
-            <kbq-divider></kbq-divider>
+        <kbq-divider></kbq-divider>
 
-            <button kbq-dropdown-item>Point 2</button>
+        <button kbq-dropdown-item>Point 2</button>
 
-            <button kbq-dropdown-item>Point 3</button>
+        <button kbq-dropdown-item>Point 3</button>
 
-            <button kbq-dropdown-item>Link</button>
-        </kbq-dropdown>
+        <button kbq-dropdown-item>Link</button>
+    </kbq-dropdown>
 
     <div>
-        <input kbqInput type="text" [(ngModel)]="someValue">
+        <input
+            kbqInput
+            type="text"
+            [(ngModel)]="someValue"
+        />
     </div>
 
-    <br>
+    <br />
 
-    <button kbq-button [kbqDropdownTriggerFor]="appDropdownLazy" [kbqDropdownTriggerData]="{someValue: someValue}">
+    <button
+        kbq-button
+        [kbqDropdownTriggerData]="{ someValue: someValue }"
+        [kbqDropdownTriggerFor]="appDropdownLazy"
+    >
         dropdown lazy
         <i kbq-icon="mc-angle-down-S_16"></i>
     </button>
 
     <kbq-dropdown #appDropdownLazy="kbqDropdown">
-        <ng-template kbqDropdownContent  let-someValue="someValue">
+        <ng-template
+            kbqDropdownContent
+            let-someValue="someValue"
+        >
             <button kbq-dropdown-item>
                 Point 1
                 <span class="kbq-dropdown-item__caption">Some info</span>
             </button>
-            <button kbq-dropdown-item>Value: {{someValue}}</button>
+            <button kbq-dropdown-item>Value: {{ someValue }}</button>
         </ng-template>
     </kbq-dropdown>
 
-
-    <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Contrast" [kbqDropdownTriggerFor]="kbqTitleAppDropdown">
+    <button
+        kbq-button
+        [color]="colors.Contrast"
+        [kbqDropdownTriggerFor]="kbqTitleAppDropdown"
+        [kbqStyle]="styles.Transparent"
+    >
         Dropdown with KbqTitle
         <i kbq-icon="mc-angle-down-S_16"></i>
     </button>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <kbq-dropdown #kbqTitleAppDropdown="kbqDropdown"
-                 [overlapTriggerY]="true"
-                 [overlapTriggerX]="false">
+    <kbq-dropdown
+        #kbqTitleAppDropdown="kbqDropdown"
+        [overlapTriggerX]="false"
+        [overlapTriggerY]="true"
+    >
         <button kbq-dropdown-item>Text Normal</button>
 
-        <button kbq-dropdown-item kbq-title>Text Normal и very very very very very very very very long textText Normal и very very very very very very very very long text</button>
+        <button
+            kbq-dropdown-item
+            kbq-title
+        >
+            Text Normal и very very very very very very very very long textText Normal и very very very very very very
+            very very long text
+        </button>
     </kbq-dropdown>
 </div>
 
-<br><br><br>
+<br />
+<br />
+<br />
 
-<button kbq-button [kbqDropdownTriggerFor]="appDropdownWithNested">
-    nested dropdown <i kbq-icon="mc-angle-down-S_16"></i>
+<button
+    kbq-button
+    [kbqDropdownTriggerFor]="appDropdownWithNested"
+>
+    nested dropdown
+    <i kbq-icon="mc-angle-down-S_16"></i>
 </button>
 
 <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">1 level (1)</button>
+    <button
+        kbq-dropdown-item
+        [kbqDropdownTriggerFor]="appDropdownNested"
+    >
+        1 level (1)
+    </button>
     <button kbq-dropdown-item>1 level (2)</button>
     <button kbq-dropdown-item>1 level (3)</button>
 </kbq-dropdown>
 
 <kbq-dropdown #appDropdownNested="kbqDropdown">
-    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">2 level (1)</button>
+    <button
+        kbq-dropdown-item
+        [kbqDropdownTriggerFor]="appDropdownNestedNested"
+    >
+        2 level (1)
+    </button>
     <button kbq-dropdown-item>2 level (2)</button>
     <button kbq-dropdown-item>2 level (3)</button>
 </kbq-dropdown>
@@ -170,6 +261,3 @@
     <button kbq-dropdown-item>3 level (2)</button>
     <button kbq-dropdown-item>3 level (3)</button>
 </kbq-dropdown>
-
-
-

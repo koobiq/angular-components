@@ -6,36 +6,36 @@ import {
     AfterContentInit,
     Attribute,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    ContentChild,
     ContentChildren,
+    Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
-    Input,
-    Output,
-    QueryList,
-    ViewEncapsulation,
-    ChangeDetectorRef,
     Inject,
+    Input,
+    NgZone,
     OnDestroy,
     OnInit,
-    ViewChild,
-    NgZone,
     Optional,
-    ContentChild,
-    Directive
+    Output,
+    QueryList,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FocusKeyManager, IFocusableOption } from '@koobiq/cdk/a11y';
 import {
-    hasModifierKey,
-    isCopy,
-    isSelectAll,
-    isVerticalMovement,
     DOWN_ARROW,
     END,
     ENTER,
+    hasModifierKey,
     HOME,
+    isCopy,
+    isSelectAll,
+    isVerticalMovement,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -46,24 +46,23 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
-    mixinDisabled,
-    toBoolean,
     CanDisableCtor,
-    HasTabIndexCtor,
-    mixinTabIndex,
     HasTabIndex,
-    MultipleMode,
-    KbqOptgroup,
+    HasTabIndexCtor,
     KBQ_OPTION_ACTION_PARENT,
+    KBQ_TITLE_TEXT_REF,
+    KbqOptgroup,
     KbqOptionActionComponent,
     KbqTitleTextRef,
-    KBQ_TITLE_TEXT_REF
+    mixinDisabled,
+    mixinTabIndex,
+    MultipleMode,
+    toBoolean
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith, take, takeUntil } from 'rxjs/operators';
-
 
 // tslint:disable-next-line:naming-convention
 export interface KbqOptionEvent {
@@ -76,15 +75,24 @@ export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: any = {
 };
 
 export class KbqListSelectionChange {
-    constructor(public source: KbqListSelection, public option: KbqListOption) {}
+    constructor(
+        public source: KbqListSelection,
+        public option: KbqListOption
+    ) {}
 }
 
 export class KbqListSelectAllEvent<T> {
-    constructor(public source: KbqListSelection, public options: T[]) {}
+    constructor(
+        public source: KbqListSelection,
+        public options: T[]
+    ) {}
 }
 
 export class KbqListCopyEvent<T> {
-    constructor(public source: KbqListSelection, public option: T) {}
+    constructor(
+        public source: KbqListSelection,
+        public option: T
+    ) {}
 }
 
 /** @docs-private */
@@ -93,19 +101,22 @@ export class KbqListSelectionBase {
 }
 
 /** @docs-private */
-export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeof KbqListSelectionBase
-    = mixinTabIndex(mixinDisabled(KbqListSelectionBase));
-
+export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeof KbqListSelectionBase = mixinTabIndex(
+    mixinDisabled(KbqListSelectionBase)
+);
 
 @Component({
     selector: 'kbq-list-selection',
     exportAs: 'kbqListSelection',
     template: `
-        <div [attr.tabindex]="tabIndex"
-             (focus)="focus()"
-             (blur)="blur()">
+        <div
+            [attr.tabindex]="tabIndex"
+            (focus)="focus()"
+            (blur)="blur()"
+        >
             <ng-content></ng-content>
-        </div>`,
+        </div>
+    `,
     styleUrls: ['./list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -122,9 +133,10 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
     preserveWhitespaces: false
 })
-export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit,
-    ControlValueAccessor {
-
+export class KbqListSelection
+    extends KbqListSelectionMixinBase
+    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor
+{
     keyManager: FocusKeyManager<KbqListOption>;
 
     @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption>;
@@ -182,7 +194,8 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     }
 
     // Emits a change event whenever the selected state of an option changes.
-    @Output() readonly selectionChange: EventEmitter<KbqListSelectionChange> = new EventEmitter<KbqListSelectionChange>();
+    @Output() readonly selectionChange: EventEmitter<KbqListSelectionChange> =
+        new EventEmitter<KbqListSelectionChange>();
 
     selectionModel: SelectionModel<KbqListOption>;
 
@@ -241,37 +254,35 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
             .withVerticalOrientation(!this.horizontal)
             .withHorizontalOrientation(this.horizontal ? 'ltr' : null);
 
-        this.keyManager.tabOut
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(() => {
-                this._tabIndex = -1;
+        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+            this._tabIndex = -1;
 
-                setTimeout(() => {
-                    this._tabIndex = this.userTabIndex || 0;
-                    this.changeDetectorRef.markForCheck();
-                });
+            setTimeout(() => {
+                this._tabIndex = this.userTabIndex || 0;
+                this.changeDetectorRef.markForCheck();
             });
+        });
 
         if (this._value) {
             this.setOptionsFromValues(this._value);
         }
 
-        this.selectionModel.changed
-            .pipe(takeUntil(this.destroyed))
-            .subscribe((event) => {
-                for (const item of event.added) { item.selected = true; }
+        this.selectionModel.changed.pipe(takeUntil(this.destroyed)).subscribe((event) => {
+            for (const item of event.added) {
+                item.selected = true;
+            }
 
-                for (const item of event.removed) { item.selected = false; }
-            });
+            for (const item of event.removed) {
+                item.selected = false;
+            }
+        });
 
-        this.options.changes
-            .pipe(startWith(null), takeUntil(this.destroyed))
-            .subscribe(() => {
-                this.resetOptions();
+        this.options.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+            this.resetOptions();
 
-                // Check to see if we need to update our tab index
-                this.updateTabIndex();
-            });
+            // Check to see if we need to update our tab index
+            this.updateTabIndex();
+        });
 
         this.updateScrollSize();
     }
@@ -283,7 +294,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     }
 
     focus(): void {
-        if (this.options.length === 0) { return; }
+        if (this.options.length === 0) {
+            return;
+        }
 
         this.keyManager.setFirstItemActive();
     }
@@ -310,7 +323,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     }
 
     updateScrollSize(): void {
-        if (this.horizontal || !this.options.first) { return; }
+        if (this.horizontal || !this.options.first) {
+            return;
+        }
 
         this.keyManager.withScrollSize(Math.floor(this.getHeight() / this.options.first.getHeight()));
     }
@@ -319,7 +334,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
         } else if (ctrlKey) {
-            if (!this.canDeselectLast(option)) { return; }
+            if (!this.canDeselectLast(option)) {
+                return;
+            }
 
             this.selectionModel.toggle(option);
         } else if (this.autoSelect) {
@@ -337,7 +354,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
         } else if (ctrlKey) {
-            if (!this.canDeselectLast(option)) { return; }
+            if (!this.canDeselectLast(option)) {
+                return;
+            }
         } else if (this.autoSelect) {
             this.options.forEach((item) => item.setSelected(false));
             option.setSelected(true);
@@ -352,10 +371,12 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     selectActiveOptions(): void {
         const options = this.options.toArray();
         let fromIndex = this.keyManager.previousActiveItemIndex;
-        let toIndex = this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex;
+        let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
         const selectedOptionState = options[fromIndex].selected;
 
-        if (toIndex === fromIndex) { return; }
+        if (toIndex === fromIndex) {
+            return;
+        }
 
         if (fromIndex > toIndex) {
             [fromIndex, toIndex] = [toIndex, fromIndex];
@@ -395,7 +416,7 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     // Implemented as a part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
         if (this.options) {
-            this.options.forEach((option) => option.disabled = isDisabled);
+            this.options.forEach((option) => (option.disabled = isDisabled));
         }
     }
 
@@ -436,7 +457,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
 
     // Removes an option from the selection list and updates the active item.
     removeOptionFromList(option: KbqListOption) {
-        if (!option.hasFocus) { return; }
+        if (!option.hasFocus) {
+            return;
+        }
 
         const optionIndex = this.getOptionIndex(option);
 
@@ -537,17 +560,15 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     }
 
     private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges
-            .subscribe((event) => {
-                const index: number = this.options.toArray().indexOf(event.option);
+        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
+            const index: number = this.options.toArray().indexOf(event.option);
 
-                if (this.isValidIndex(index)) {
-                    this.keyManager.updateActiveItem(index);
-                }
-            });
+            if (this.isValidIndex(index)) {
+                this.keyManager.updateActiveItem(index);
+            }
+        });
 
-        this.optionBlurSubscription = this.optionBlurChanges
-            .subscribe(() => this.blur());
+        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
     }
 
     /** Checks whether any of the options is focused. */
@@ -588,17 +609,17 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     private onChange: (value: any) => void = (_: any) => {};
 
     private selectAllOptions() {
-        const optionsToSelect = this.options
-            .filter((option) => !option.disabled);
+        const optionsToSelect = this.options.filter((option) => !option.disabled);
 
-        optionsToSelect
-            .forEach((option) => option.setSelected(true));
+        optionsToSelect.forEach((option) => option.setSelected(true));
 
         this.onSelectAll.emit(new KbqListSelectAllEvent(this, optionsToSelect));
     }
 
     private copyActiveOption() {
-        if (!this.keyManager.activeItem) { return; }
+        if (!this.keyManager.activeItem) {
+            return;
+        }
 
         const option = this.keyManager.activeItem;
 
@@ -613,7 +634,6 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
         option.preventBlur = false;
     }
 }
-
 
 @Directive({
     selector: '[kbq-list-option-caption]',
@@ -682,7 +702,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     private inputsInitialized = false;
 
     @Input()
-    get value(): any { return this._value; }
+    get value(): any {
+        return this._value;
+    }
     set value(newValue: any) {
         if (this.selected && newValue !== this.value && this.inputsInitialized) {
             this.selected = false;
@@ -777,7 +799,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         if (this.selected) {
             // We have to delay this until the next tick in order
             // to avoid changed after checked errors.
-            Promise.resolve().then(() => this.selected = false);
+            Promise.resolve().then(() => (this.selected = false));
         }
 
         this.listSelection.removeOptionFromList(this);
@@ -792,7 +814,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     setSelected(selected: boolean) {
-        if (this._selected === selected || !this.listSelection.selectionModel) { return; }
+        if (this._selected === selected || !this.listSelection.selectionModel) {
+            return;
+        }
 
         this._selected = selected;
 
@@ -812,15 +836,21 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     handleClick($event) {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         this.listSelection.setSelectedOptionsByClick(
-            this, hasModifierKey($event, 'shiftKey'), hasModifierKey($event, 'ctrlKey')
+            this,
+            hasModifierKey($event, 'shiftKey'),
+            hasModifierKey($event, 'ctrlKey')
         );
     }
 
     onKeydown($event) {
-        if (!this.actionButton) { return; }
+        if (!this.actionButton) {
+            return;
+        }
 
         if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
             this.actionButton.focus();
@@ -830,7 +860,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     focus() {
-        if (this.disabled || this.hasFocus || this.actionButton?.hasFocus) { return; }
+        if (this.disabled || this.hasFocus || this.actionButton?.hasFocus) {
+            return;
+        }
 
         this.elementRef.nativeElement.focus();
 
@@ -844,7 +876,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     blur(): void {
-        if (this.preventBlur) { return; }
+        if (this.preventBlur) {
+            return;
+        }
 
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
@@ -857,7 +891,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
                 this.ngZone.run(() => {
                     this.hasFocus = false;
 
-                    if (this.actionButton?.hasFocus) { return; }
+                    if (this.actionButton?.hasFocus) {
+                        return;
+                    }
 
                     this.onBlur.next({ option: this });
                 });

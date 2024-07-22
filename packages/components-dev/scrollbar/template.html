@@ -6,30 +6,30 @@
             <h4>Simple example</h4>
             <div
                 kbq-scrollbar
-                [options]="options"
-                [events]="events"
-                (onScroll)="onScroll($event)"
                 style="height: 300px; max-width: 200px"
+                [events]="events"
+                [options]="options"
+                (onScroll)="onScroll($event)"
             >
                 <div style="width: 400px">{{ longText }}</div>
             </div>
 
-            <div> Scrolls count:  {{ scrollCounter }} </div>
+            <div>Scrolls count: {{ scrollCounter }}</div>
 
             <div style="position: relative">
                 <div
                     #scrollbarRef="kbqScrollbar"
                     kbq-scrollbar
-                    (onScroll)="cdr.markForCheck()"
                     style="height: 300px; max-width: 400px"
+                    (onScroll)="cdr.markForCheck()"
                 >
                     <div style="width: 400px">{{ longText }}</div>
                 </div>
                 <button
+                    *ngIf="scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0"
                     kbq-button
                     class="button_scroll-top"
-                    (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth'})"
-                    *ngIf="scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0"
+                    (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
                 >
                     Scroll To Top
                 </button>
@@ -44,17 +44,24 @@
                     <div style="width: 400px">{{ longText }}</div>
                 </div>
             </div>
-
         </div>
 
         <div>
             <h2>Scrollbar Via CSS</h2>
 
             <h3>Horizontal</h3>
-            <textarea class="kbq-scrollbar with-horizontal" style="height: 300px; width: 400px; overflow-y: auto; resize: none;">{{ longText }}</textarea>
+            <textarea
+                style="height: 300px; width: 400px; overflow-y: auto; resize: none"
+                class="kbq-scrollbar with-horizontal"
+                >{{ longText }}</textarea
+            >
 
             <h3>Buttons & Resize corner</h3>
-            <textarea class="kbq-scrollbar with-buttons" style="height: 300px; width: 400px; overflow-y: auto;">{{ longText }}</textarea>
+            <textarea
+                style="height: 300px; width: 400px; overflow-y: auto"
+                class="kbq-scrollbar with-buttons"
+                >{{ longText }}</textarea
+            >
         </div>
     </div>
 </div>

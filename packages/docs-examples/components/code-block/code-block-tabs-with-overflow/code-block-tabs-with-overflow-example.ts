@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeTs = `class Greeter {
   @format("Hello, %s")
   greeting: string;
@@ -45,7 +44,6 @@ body {
     -moz-box-sizing:border-box;
     box-sizing:border-box;
 }`;
-
 
 /**
  * @title Basic code-block-tabs

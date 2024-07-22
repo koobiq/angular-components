@@ -12,16 +12,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, NavigationStart, UrlSegment } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, UrlSegment } from '@angular/router';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { filter, Subject } from 'rxjs';
+import { Subject, filter } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-
 import { AnchorsComponent } from '../anchors/anchors.component';
 import { DocItem, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
-
 
 @Component({
     selector: 'docs-component-viewer',
@@ -84,7 +82,6 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
     }
 }
 
-
 @Directive()
 export class BaseOverviewComponent implements OnDestroy {
     readonly animationDone = new Subject<boolean>();
@@ -100,7 +97,9 @@ export class BaseOverviewComponent implements OnDestroy {
     @ViewChild(AnchorsComponent, { static: false }) anchors: AnchorsComponent;
 
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/overviews/components/${this.componentDocItem.id}.html`;
     }
@@ -122,7 +121,7 @@ export class BaseOverviewComponent implements OnDestroy {
                 filter((p) => !!p),
                 takeUntil(this.destroyed)
             )
-            .subscribe((d) => this.componentDocItem = d);
+            .subscribe((d) => (this.componentDocItem = d));
 
         this.currentUrl = this.getRoute(router.url);
 
@@ -184,9 +183,8 @@ export class BaseOverviewComponent implements OnDestroy {
 
     private resetAnimation = () => {
         this.animationState = 'fadeIn';
-    }
+    };
 }
-
 
 const animations = [
     trigger('fadeInOut', [
@@ -194,8 +192,8 @@ const animations = [
         state('fadeOut', style({ opacity: 0 })),
         transition('fadeOut => fadeIn', [animate('300ms')])
     ])
-];
 
+];
 
 @Component({
     templateUrl: './component-overview.template.html',
@@ -209,7 +207,9 @@ const animations = [
 })
 export class CdkOverviewComponent extends BaseOverviewComponent {
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/cdk/${this.componentDocItem.id}.html`;
     }
@@ -225,7 +225,6 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
     }
 }
 
-
 @Component({
     templateUrl: './component-overview.template.html',
     host: {
@@ -238,7 +237,9 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
 })
 export class ComponentOverviewComponent extends BaseOverviewComponent {
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/overviews/${this.componentDocItem.id}.html`;
     }
@@ -254,7 +255,6 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
     }
 }
 
-
 @Component({
     templateUrl: './component-overview.template.html',
     host: {
@@ -267,7 +267,9 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
 })
 export class ComponentApiComponent extends BaseOverviewComponent {
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/api-docs/components-${this.componentDocItem.apiId}.html`;
     }
@@ -283,7 +285,6 @@ export class ComponentApiComponent extends BaseOverviewComponent {
     }
 }
 
-
 @Component({
     templateUrl: './component-overview.template.html',
     host: {
@@ -296,7 +297,9 @@ export class ComponentApiComponent extends BaseOverviewComponent {
 })
 export class CdkApiComponent extends BaseOverviewComponent {
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/api-docs/cdk-${this.componentDocItem.id}.html`;
     }
@@ -312,7 +315,6 @@ export class CdkApiComponent extends BaseOverviewComponent {
     }
 }
 
-
 @Component({
     templateUrl: 'component-example.template.html',
     host: {
@@ -325,7 +327,9 @@ export class CdkApiComponent extends BaseOverviewComponent {
 })
 export class ComponentExamplesComponent extends BaseOverviewComponent {
     get docItemUrl(): string {
-        if (!this.componentDocItem) { return null; }
+        if (!this.componentDocItem) {
+            return null;
+        }
 
         return `docs-content/examples/examples.${this.componentDocItem.id}.html`;
     }

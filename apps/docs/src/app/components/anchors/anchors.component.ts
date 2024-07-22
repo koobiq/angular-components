@@ -1,9 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, fromEvent, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, filter, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-
 
 interface KbqDocsAnchor {
     href: string;
@@ -15,6 +14,8 @@ interface KbqDocsAnchor {
     level: number;
     element: HTMLElement;
 }
+
+const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
 
 @Component({
     selector: 'docs-anchors',
@@ -70,15 +71,14 @@ export class AnchorsComponent implements OnDestroy {
         private ref: ChangeDetectorRef,
         @Inject(DOCUMENT) private document: Document
     ) {
-        this.isSmoothScrollSupported  = 'scrollBehavior' in this.scrollContainer.style;
+        this.isSmoothScrollSupported = 'scrollBehavior' in this.scrollContainer.style;
 
         if (!this.isSmoothScrollSupported) {
             this.debounceTime = this.noSmoothScrollDebounce;
         }
 
-        this.currentUrl = router.url.split('#')[0];
-        localStorage.setItem('PT_nextRoute', this.currentUrl);
-        this.pathName = this.router.url;
+        this.pathName = router.url.split('#')[0];
+        localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
 
         this.router.events
             .pipe(
@@ -88,20 +88,17 @@ export class AnchorsComponent implements OnDestroy {
             .subscribe((event) => {
                 const [rootUrl] = router.url.split('#');
 
-                if (rootUrl !== this.currentUrl) {
-                    localStorage.setItem('PT_nextRoute', rootUrl);
+                if (rootUrl !== this.pathName) {
+                    localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
 
-                    this.currentUrl = rootUrl;
-                    this.pathName = this.router.url;
+                    this.pathName = rootUrl;
                 }
             });
     }
 
     ngOnInit() {
         // attached to anchor's change in the address bar manually or by clicking on the anchor
-        this.route.fragment
-            .pipe(takeUntil(this.destroyed))
-            .subscribe((fragment) => this.fragment = fragment || '');
+        this.route.fragment.pipe(takeUntil(this.destroyed)).subscribe((fragment) => (this.fragment = fragment || ''));
     }
 
     ngOnDestroy() {
@@ -124,7 +121,8 @@ export class AnchorsComponent implements OnDestroy {
 
         if (target) {
             target.scrollTop += this.headerHeight;
-            target.scrollIntoView();
+            // scroll after docs-sidepanel scrolled
+            setTimeout(() => target.scrollIntoView());
         } else {
             this.scrollContainer.scroll(0, 0);
         }
@@ -132,22 +130,19 @@ export class AnchorsComponent implements OnDestroy {
         this.scrollSubscription?.unsubscribe();
 
         this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
-            .pipe(
-                takeUntil(this.destroyed),
-                debounceTime(this.debounceTime)
-            )
+            .pipe(takeUntil(this.destroyed), debounceTime(this.debounceTime))
             .subscribe(this.onScroll);
 
         this.ref.detectChanges();
     }
 
     /* TODO Техдолг: при изменении ширины экрана должен переопределяться параметр top
-    *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы происходит после window:resize */
+     *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы происходит после window:resize */
     onResize() {
         const headers = Array.from(this.document.querySelectorAll(this.headerSelectors));
 
         for (let i = 0; i < this.anchors.length; i++) {
-            const {top} = headers[i].getBoundingClientRect();
+            const { top } = headers[i].getBoundingClientRect();
             this.anchors[i].top = top;
         }
 
@@ -161,7 +156,9 @@ export class AnchorsComponent implements OnDestroy {
     private updateActiveAnchor() {
         let anchor = this.getAnchorByHref(this.fragment);
 
-        if (!anchor) { return; }
+        if (!anchor) {
+            return;
+        }
 
         if (this.isScrolledToEnd()) {
             // tslint:disable-next-line:no-parameter-reassignment
@@ -179,9 +176,8 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     private createAnchors(): KbqDocsAnchor[] {
-        return Array
-            .from(this.document.querySelectorAll(this.headerSelectors))
-            .map((header: HTMLElement, i): KbqDocsAnchor => {
+        return Array.from(this.document.querySelectorAll(this.headerSelectors)).map(
+            (header: HTMLElement, i): KbqDocsAnchor => {
                 return {
                     href: header ? `${header.id}` : '',
                     name: header.innerText.trim(),
@@ -190,7 +186,8 @@ export class AnchorsComponent implements OnDestroy {
                     level: this.getLevel(header.classList),
                     element: header
                 };
-            });
+            }
+        );
     }
 
     private getHeaderTopOffset(header: HTMLElement) {
@@ -200,8 +197,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     private getLevel(classList): number {
-        const className = Array.from<string>(classList)
-            .find((name) => name.startsWith('kbq-markdown__'));
+        const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__'));
 
         return [
             'kbq-markdown__h3',
@@ -217,13 +213,12 @@ export class AnchorsComponent implements OnDestroy {
             return;
         }
 
-        this.anchors
-            .forEach((anchor, i, anchors) => {
-                if (this.isLinkActive(anchor, anchors[i + 1])) {
-                    this.setActiveAnchor(anchor);
-                }
-            });
-    }
+        this.anchors.forEach((anchor, i, anchors) => {
+            if (this.isLinkActive(anchor, anchors[i + 1])) {
+                this.setActiveAnchor(anchor);
+            }
+        });
+    };
 
     private isLinkActive(currentLink, nextLink): boolean {
         // A link is active if the scroll position is lower than the anchor position + headerHeight*anchorHeaderCoef
@@ -232,7 +227,7 @@ export class AnchorsComponent implements OnDestroy {
     }
 
     private setActiveAnchor(anchor: KbqDocsAnchor) {
-        this.anchors.forEach((item) => item.active = false);
+        this.anchors.forEach((item) => (item.active = false));
 
         anchor.active = true;
 

@@ -14,14 +14,16 @@
 
 <br />
 
-<button kbq-button [color]="'contrast'" (click)="openSidepanel()">
+<button
+    kbq-button
+    [color]="'contrast'"
+    (click)="openSidepanel()"
+>
     <span>Open sidepanel</span>
 </button>
 
 <ng-template>
-    <kbq-sidepanel-header [closeable]="true">
-        Sidepanel Template Content
-    </kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
     <kbq-sidepanel-body class="layout-padding">
         <div class="kbq-subheading">Sidepanel Template Body</div>
 
@@ -32,17 +34,23 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openSidepanel()">
+            <button
+                cdkFocusInitial
+                kbq-button
+                [color]="'contrast'"
+                (click)="openSidepanel()"
+            >
                 <span>Open another sidepanel</span>
             </button>
         </kbq-sidepanel-actions>
 
         <kbq-sidepanel-actions align="right">
-            <button kbq-button kbq-sidepanel-close>
+            <button
+                kbq-button
+                kbq-sidepanel-close
+            >
                 <span>Close</span>
             </button>
         </kbq-sidepanel-actions>
     </kbq-sidepanel-footer>
 </ng-template>
-
-

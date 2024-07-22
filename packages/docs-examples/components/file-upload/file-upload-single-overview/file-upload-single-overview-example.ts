@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
-
 /**
  * @title Button's colors
  */

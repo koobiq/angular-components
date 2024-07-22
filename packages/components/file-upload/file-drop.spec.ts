@@ -2,13 +2,14 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent, dispatchEvent } from '@koobiq/cdk/testing';
-
+import { dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFileDropDirective } from './file-drop';
 import { KbqFile } from './file-upload';
 
-
-export const createFile = (name: string, type?: string): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry>} => ({
+export const createFile = (
+    name: string,
+    type?: string
+): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry> } => ({
     kind: 'file',
     webkitGetAsEntry: () => createFSFile(name, type)
 });
@@ -22,7 +23,7 @@ const createFSFile = (name: string, type = '') => {
         isDirectory: false,
         isFile: true,
         file: (successCb) => successCb(file)
-    }
+    };
 };
 
 describe('FileDropDirective', () => {
@@ -90,14 +91,13 @@ describe('FileDropDirective', () => {
         expect(component.onDrop).not.toHaveBeenCalled();
     });
 
-
     it('FileDropDirective: drop folder', fakeAsync(() => {
         const event = new CustomEvent('CustomEvent');
         event.initCustomEvent('drop');
         const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeFiles = [
-            createFSFile('test1'), createFSFile('test2')
-        ];
+            createFSFile('test1'),
+            createFSFile('test2')];
 
         const fakeDirectoryItem = {
             kind: 'file',

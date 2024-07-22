@@ -1,7 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
-
 /**
  * @title Sidepanel modal mode
  */
@@ -14,7 +13,7 @@ import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/si
 export class SidepanelModalModeExample {
     position = KbqSidepanelPosition.Right;
 
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
     array = new Array(this.arrayLength); // tslint:disable-line

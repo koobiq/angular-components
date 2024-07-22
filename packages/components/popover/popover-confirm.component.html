@@ -1,13 +1,21 @@
-<div class="kbq-popover-confirm kbq-popover"
-     cdkTrapFocus="true"
-     cdkTrapFocusAutoCapture="true"
-     [ngClass]="classMap"
-     [@state]="visibility"
-     (@state.start)="animationStart()"
-     (@state.done)="animationDone($event)">
+<div
+    cdkTrapFocus="true"
+    cdkTrapFocusAutoCapture="true"
+    class="kbq-popover-confirm kbq-popover"
+    [ngClass]="classMap"
+    (@state.done)="animationDone($event)"
+    (@state.start)="animationStart()"
+    [@state]="visibility"
+>
     <div class="kbq-popover__content">
         <div>{{ confirmText }}</div>
-        <button kbq-button [color]="'contrast'" (click)="onConfirm.next()">{{confirmButtonText}}</button>
+        <button
+            kbq-button
+            [color]="'contrast'"
+            (click)="onConfirm.next()"
+        >
+            {{ confirmButtonText }}
+        </button>
     </div>
 
     <div class="kbq-popover__arrow"></div>

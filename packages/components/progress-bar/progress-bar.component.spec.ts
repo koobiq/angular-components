@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqProgressBarModule, ProgressBarMode } from './index';
-
 
 // tslint:disable no-magic-numbers
 const percentPairs = [
     [40, 40],
     [-50, 0],
     [140, 100]
+
 ];
 // tslint:enable no-magic-numbers
 
@@ -113,16 +112,15 @@ describe('KbqProgressBar', () => {
     });
 });
 
-
 @Component({
     selector: 'test-app',
     template: `
         <kbq-progress-bar
-             class="first"
-             [id]="id"
-             [value]="value"
-             [mode]="mode">
-        </kbq-progress-bar>
+            class="first"
+            [id]="id"
+            [value]="value"
+            [mode]="mode"
+        ></kbq-progress-bar>
         <kbq-progress-bar class="default"></kbq-progress-bar>
     `
 })

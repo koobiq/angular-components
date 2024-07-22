@@ -1,16 +1,23 @@
 <kbq-tree-selection
     multiple="checkbox"
-    [(ngModel)]="modelValue"
     [dataSource]="dataSource"
-    [treeControl]="treeControl">
-
-    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
+    [treeControl]="treeControl"
+    [(ngModel)]="modelValue"
+>
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node"
+        kbqTreeNodePadding
+        [disabled]="node.name === 'tests'"
+    >
         <i kbq-icon="mc-info-o_16"></i>
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 
-    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+    <kbq-tree-option
+        *kbqTreeNodeDef="let node; when: hasChild"
+        kbqTreeNodePadding
+    >
         <i kbq-icon="mc-info-o_16"></i>
 
         <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>

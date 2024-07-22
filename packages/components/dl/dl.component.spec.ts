@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './index';
-
 
 describe('KbqDl', () => {
     beforeEach(fakeAsync(() => {
@@ -45,7 +43,10 @@ describe('KbqDl', () => {
             <kbq-dd>Иванов Иван</kbq-dd>
 
             <kbq-dt>Описание</kbq-dt>
-            <kbq-dd>Здесь нужно добавить очень длинное описание, но Я не знаю, что еще можно сюда добавить, поэтому Вы видите этот текст.</kbq-dd>
+            <kbq-dd>
+                Здесь нужно добавить очень длинное описание, но Я не знаю, что еще можно сюда добавить, поэтому Вы
+                видите этот текст.
+            </kbq-dd>
         </kbq-dl>
     `
 })

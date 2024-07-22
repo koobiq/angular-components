@@ -3,19 +3,16 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-icon-button {
     &:not(.kbq-disabled) {
         cursor: pointer;
     }
 
-    padding:
-        kbq-css-variable(icon-button-size-small-vertical-padding)
+    padding: kbq-css-variable(icon-button-size-small-vertical-padding)
         kbq-css-variable(icon-button-size-small-horizontal-padding);
 
     &.kbq-icon-button_small {
-        padding:
-            kbq-css-variable(icon-button-size-normal-vertical-padding)
+        padding: kbq-css-variable(icon-button-size-normal-vertical-padding)
             kbq-css-variable(icon-button-size-normal-horizontal-padding);
     }
 }

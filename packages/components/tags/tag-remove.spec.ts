@@ -1,10 +1,8 @@
 // tslint:disable: no-empty
 import { Component, DebugElement } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqTag, KbqTagsModule } from './index';
-
 
 describe('Tag Remove', () => {
     let fixture: ComponentFixture<TestTag>;
@@ -54,7 +52,12 @@ describe('Tag Remove', () => {
 
 @Component({
     template: `
-        <kbq-tag [removable]="removable" (removed)="didRemove()"><a kbqTagRemove></a></kbq-tag>
+        <kbq-tag
+            [removable]="removable"
+            (removed)="didRemove()"
+        >
+            <a kbqTagRemove></a>
+        </kbq-tag>
     `
 })
 class TestTag {

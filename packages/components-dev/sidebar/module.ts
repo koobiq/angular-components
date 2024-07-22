@@ -4,9 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
-
 import { KbqButtonModule } from '../../components/button';
-
 
 @Component({
     selector: 'app',
@@ -39,7 +37,6 @@ export class DemoComponent {
         this.leftSplitterState = !this.leftSplitterState;
     }
 }
-
 
 @NgModule({
     declarations: [

@@ -1,26 +1,27 @@
 /* tslint:disable:no-magic-numbers max-func-body-length no-reserved-keywords */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+// tslint:disable-next-line:rxjs-no-internal
 import { C } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { SizeS } from '@koobiq/design-tokens';
-// tslint:disable-next-line:rxjs-no-internal
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
-
 import {
-    KbqTreeSelection,
+    FilterByValues,
+    FilterByViewValue,
+    FilterParentsForNodes,
+    FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    FlatTreeControl,
+    KbqTreeNodePadding,
     KbqTreeOption,
-    KbqTreeNodePadding, FilterByValues, FilterByViewValue, FilterParentsForNodes
+    KbqTreeSelection
 } from './index';
-
 
 describe('KbqTreeSelection', () => {
     let treeElement: HTMLElement;
@@ -45,17 +46,22 @@ describe('KbqTreeSelection', () => {
 
                 configureKbqTreeTestingModule(
                     [SimpleKbqTreeApp],
-                    [{
-                        provide: Clipboard, useFactory: () => ({
-                            copy: (value) => {
-                                const originalClipboard = new Clipboard(document);
-                                originalClipboard.copy(value);
-                                clipboardContent = value;
-                            }
-                        })
-                    }, {
-                        provide: AsyncScheduler, useValue: testScheduler
-                    }]
+                    [
+                        {
+                            provide: Clipboard,
+                            useFactory: () => ({
+                                copy: (value) => {
+                                    const originalClipboard = new Clipboard(document);
+                                    originalClipboard.copy(value);
+                                    clipboardContent = value;
+                                }
+                            })
+                        },
+                        {
+                            provide: AsyncScheduler,
+                            useValue: testScheduler
+                        }
+                    ]
                 );
                 fixture = TestBed.createComponent(SimpleKbqTreeApp);
 
@@ -70,9 +76,7 @@ describe('KbqTreeSelection', () => {
             it('with rendered dataNodes', () => {
                 const nodes = getNodes(treeElement);
 
-                expect(nodes)
-                    .withContext('Expect nodes to be defined')
-                    .toBeDefined();
+                expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
                 expect(nodes[0].classList).toContain('customNodeClass');
             });
 
@@ -83,7 +87,11 @@ describe('KbqTreeSelection', () => {
                 expectFlatTreeToMatch(
                     treeElement,
                     28,
-                    [`rootNode_1`], [`Pictures`], [`Documents`], [`Downloads`], [`Applications`]
+                    [`rootNode_1`],
+                    [`Pictures`],
+                    [`Documents`],
+                    [`Downloads`],
+                    [`Applications`]
                 );
             });
 
@@ -132,7 +140,7 @@ describe('KbqTreeSelection', () => {
                     expect(treeOptions[2].componentInstance.hasFocus).toBeTrue();
 
                     const copyKeyEvent = createKeyboardEvent('keydown', C);
-                    Object.defineProperty(copyKeyEvent, 'ctrlKey', {get: () => true});
+                    Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
                     component.tree.onKeyDown(copyKeyEvent);
                     fixture.detectChanges();
 
@@ -169,7 +177,11 @@ describe('KbqTreeSelection', () => {
                 expectFlatTreeToMatch(
                     treeElement,
                     40,
-                    [`rootNode_1`], [`Pictures`], [`Documents`], [`Downloads`], [`Applications`]
+                    [`rootNode_1`],
+                    [`Pictures`],
+                    [`Documents`],
+                    [`Downloads`],
+                    [`Applications`]
                 );
 
                 (getNodes(treeElement)[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
@@ -272,8 +284,6 @@ describe('KbqTreeSelection', () => {
 
                 component = fixture.componentInstance;
                 treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
-
-
 
                 fixture.detectChanges();
             });
@@ -411,13 +421,11 @@ describe('KbqTreeSelection', () => {
                         const nodes = getNodes(treeElement);
 
                         fixture.detectChanges();
-                        component.tree.renderedOptions
-                            .toArray()
-                            .forEach((option, index) => {
-                                if (index < 3) {
-                                    option.selected = true;
-                                }
-                            });
+                        component.tree.renderedOptions.toArray().forEach((option, index) => {
+                            if (index < 3) {
+                                option.selected = true;
+                            }
+                        });
 
                         testScheduler.flush();
 
@@ -428,7 +436,7 @@ describe('KbqTreeSelection', () => {
                         const targetNode: HTMLElement = nodes[0] as HTMLElement;
 
                         const event = createMouseEvent('click');
-                        Object.defineProperty(event, 'shiftKey', {get: () => true});
+                        Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                         component.tree.keyManager.setActiveItem(0);
                         dispatchEvent(targetNode, event);
@@ -460,7 +468,11 @@ describe('KbqTreeSelection', () => {
                 expectFlatTreeToMatch(
                     treeElement,
                     40,
-                    [`>>>rootNode_1`], [`Pictures`], [`Documents`], [`Downloads`], [`Applications`]
+                    [`>>>rootNode_1`],
+                    [`Pictures`],
+                    [`Documents`],
+                    [`Downloads`],
+                    [`Applications`]
                 );
             });
         });
@@ -598,7 +610,7 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should output selected nodes including parents when filtered by modelValue', fakeAsync(() => {
-                component.modelValue = [ 'rootNode_1', 'Sun', 'Woods', 'PhotoBoothLibrary'];
+                component.modelValue = ['rootNode_1', 'Sun', 'Woods', 'PhotoBoothLibrary'];
                 fixture.detectChanges();
                 tick();
 
@@ -612,9 +624,9 @@ describe('KbqTreeSelection', () => {
             it('should apply different filters together', fakeAsync(() => {
                 component.treeControl.filterNodes('app');
                 tick();
-                const filteredNodesLengthOnlyByText = component.tree.renderedOptions
-                    .map((option) => option.value).length;
-
+                const filteredNodesLengthOnlyByText = component.tree.renderedOptions.map(
+                    (option) => option.value
+                ).length;
 
                 component.treeControl.filterNodes(null);
                 fixture.detectChanges();
@@ -634,7 +646,6 @@ describe('KbqTreeSelection', () => {
         });
     });
 });
-
 
 export const DATA_OBJECT = {
     rootNode_1: 'app',
@@ -726,7 +737,7 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
                 missedExpectations.push(`Expected node level to be 0 but was ${actualLevel}`);
             }
         } else {
-            const expectedLevel = `${((expectedNode.length - 1) * expectedPaddingIndent) + 12}px`;
+            const expectedLevel = `${(expectedNode.length - 1) * expectedPaddingIndent + 12}px`;
 
             if (actualLevel !== expectedLevel) {
                 missedExpectations.push(`Expected node level to be ${expectedLevel} but was ${actualLevel}`);
@@ -750,12 +761,15 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
     template: `
         <kbq-tree-selection
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-
+            [treeControl]="treeControl"
+        >
             <kbq-tree-option
-                *kbqTreeNodeDef="let node" class="customNodeClass"
-                kbqTreeNodePadding [kbqTreeNodePaddingIndent]="28"
-                kbqTreeNodeToggle>
+                class="customNodeClass"
+                *kbqTreeNodeDef="let node"
+                [kbqTreeNodePaddingIndent]="28"
+                kbqTreeNodePadding
+                kbqTreeNodeToggle
+            >
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -773,7 +787,10 @@ class SimpleKbqTreeApp {
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
 
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
@@ -800,7 +817,7 @@ class SimpleKbqTreeApp {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 }
 
 abstract class TreeParams {
@@ -813,7 +830,10 @@ abstract class TreeParams {
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -841,22 +861,28 @@ abstract class TreeParams {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 }
 
 @Component({
     template: `
         <kbq-tree-selection
             [(ngModel)]="modelValue"
-            multiple="keyboard"
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            [treeControl]="treeControl"
+            multiple="keyboard"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -877,16 +903,22 @@ class KbqTreeAppMultiple extends TreeParams {
     template: `
         <kbq-tree-selection
             [ngModel]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
             (ngModelChange)="onModelValueChange($event)"
             multiple="checkbox"
-            [dataSource]="dataSource"
-            [treeControl]="treeControl">
-
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -922,13 +954,19 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
     template: `
         <kbq-tree-selection
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -951,7 +989,10 @@ class KbqTreeAppWithToggle {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
 
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -969,7 +1010,7 @@ class KbqTreeAppWithToggle {
 
     getViewValue = (node: FileFlatNode): string => {
         return `${node.name}.${node.type || ''}`;
-    }
+    };
 
     isExpandable = (node: FileFlatNode) => node.expandable;
 
@@ -985,19 +1026,26 @@ class KbqTreeAppWithToggle {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 }
 
 @Component({
     template: `
-        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
             <kbq-tree-option
                 *kbqTreeNodeDef="let node; when: isSpecial"
-                kbqTreeNodePadding>
+                kbqTreeNodePadding
+            >
                 >>>{{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -1016,7 +1064,10 @@ class WhenNodeKbqTreeApp {
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1043,7 +1094,7 @@ class WhenNodeKbqTreeApp {
         flatNode.isSpecial = !node.children;
 
         return flatNode;
-    }
+    };
 
     isSpecial = (_: number, node: FileFlatNode) => node.isSpecial;
 }
@@ -1052,13 +1103,19 @@ class WhenNodeKbqTreeApp {
     template: `
         <kbq-tree-selection
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -1076,7 +1133,10 @@ class FiltrationKbqTreeApp {
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
 
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -1091,7 +1151,7 @@ class FiltrationKbqTreeApp {
 
     getViewValue = (node: FileFlatNode): string => {
         return `${node.name}.${node.type || ''}`;
-    }
+    };
 
     isExpandable = (node: FileFlatNode) => node.expandable;
 
@@ -1107,7 +1167,7 @@ class FiltrationKbqTreeApp {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;

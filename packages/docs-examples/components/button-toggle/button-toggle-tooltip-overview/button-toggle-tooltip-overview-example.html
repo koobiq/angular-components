@@ -1,19 +1,28 @@
 <div class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
-    <kbq-button-toggle-group [(ngModel)]="model" class="kbq-button-toggle-group_stretched">
-        <kbq-button-toggle [value]="i"
-                           *ngFor="let toggle of group; let i = index">
-                {{ toggle }}
+    <kbq-button-toggle-group
+        class="kbq-button-toggle-group_stretched"
+        [(ngModel)]="model"
+    >
+        <kbq-button-toggle
+            *ngFor="let toggle of group; let i = index"
+            [value]="i"
+        >
+            {{ toggle }}
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
 
 <div>
-    <kbq-button-toggle-group [(ngModel)]="model" class="kbq-button-toggle-group_stretched">
-        <kbq-button-toggle [value]="i"
-                           *ngFor="let toggle of group; let i = index">
-                <i kbq-icon="mc-stop_16"></i><span>{{ toggle }}</span>
+    <kbq-button-toggle-group
+        class="kbq-button-toggle-group_stretched"
+        [(ngModel)]="model"
+    >
+        <kbq-button-toggle
+            *ngFor="let toggle of group; let i = index"
+            [value]="i"
+        >
+            <i kbq-icon="mc-stop_16"></i>
+            <span>{{ toggle }}</span>
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
-
-

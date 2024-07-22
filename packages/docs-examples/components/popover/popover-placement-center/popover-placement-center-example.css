@@ -13,7 +13,7 @@
     width: 90px;
     position: relative;
 
-    border: 1px solid #B3B3B2;
+    border: 1px solid #b3b3b2;
     border-radius: 8px;
 }
 
@@ -21,12 +21,12 @@
     height: 16px;
     width: 16px;
     position: absolute;
-    background: #338FCB;;
+    background: #338fcb;
     cursor: pointer;
 }
 
 .active {
-    background: #CB3C33;
+    background: #cb3c33;
 }
 
 .popover-trigger-top {

@@ -1,18 +1,21 @@
 <kbq-list-selection
     [autoSelect]="false"
-    [(ngModel)]="selected">
-    <kbq-list-option *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
-                    [value]="'Item {{ item }}'">
+    [(ngModel)]="selected"
+>
+    <kbq-list-option
+        *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+        [value]="'Item {{ item }}'"
+    >
         Item {{ item }}
 
         <kbq-option-action
-            [kbqTooltip]="'Tooltip text'"
+            [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="'right'"
-            [kbqDropdownTriggerFor]="dropdown">
-        </kbq-option-action>
+            [kbqTooltip]="'Tooltip text'"
+        ></kbq-option-action>
     </kbq-list-option>
 </kbq-list-selection>
-<br>
+<br />
 <div>Selected: {{ selected }}</div>
 
 <kbq-dropdown #dropdown>

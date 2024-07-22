@@ -8,7 +8,6 @@
 @use 'navbar-item_vertical';
 @use 'navbar-item_horizontal';
 
-
 .kbq-navbar-item {
     box-sizing: border-box;
 
@@ -26,8 +25,15 @@
 
     & .kbq-button-icon {
         position: absolute;
+        padding-left: kbq-css-variable(size-xs);
+        padding-right: kbq-css-variable(size-xs);
         top: 50%;
         transform: translateY(-50%);
+    }
+
+    &:before {
+        position: absolute;
+        content: '';
     }
 
     &:after {
@@ -40,10 +46,12 @@
     }
 
     &.kbq-horizontal {
+        /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
         @extend navbar-item_horizontal !optional;
     }
 
     &.kbq-vertical {
+        /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
         @extend navbar-item_vertical !optional;
     }
 }
@@ -108,4 +116,3 @@ a.kbq-navbar-title {
         z-index: 1;
     }
 }
-

@@ -1,25 +1,27 @@
 <div class="common-container kbq-body p-fixed">
-
     <kbq-radio-group
         class="example-radio-group"
-        (change)="setLocale($event)">
-        <kbq-radio-button *ngFor="let language of languageList"
-                          [value]="language"
-                          [checked]="language.name === selectedLanguage.name"
-                          class="example-radio-button">
+        (change)="setLocale($event)"
+    >
+        <kbq-radio-button
+            *ngFor="let language of languageList"
+            class="example-radio-button"
+            [checked]="language.name === selectedLanguage.name"
+            [value]="language"
+        >
             {{ language.name }}
         </kbq-radio-button>
     </kbq-radio-group>
 
     <div class="kbq-subheading">
-        <label>MC_LOCALE_ID: </label><span>{{ this.localeService.id | json }}</span>
+        <label>MC_LOCALE_ID:</label>
+        <span>{{ this.localeService.id | json }}</span>
     </div>
 </div>
 
-
 <div class="common-container kbq-body">
-    <br>
-    <br>
+    <br />
+    <br />
     <header class="kbq-display-3">Absolute date</header>
     <div class="common-container">
         <h3>Long format</h3>
@@ -128,7 +130,7 @@
         </div>
     </div>
 
-    <br>
+    <br />
     <header class="kbq-display-3">Relative date</header>
     <div class="common-container">
         <h3>Long format</h3>
@@ -331,7 +333,7 @@
         </div>
     </div>
 
-    <br>
+    <br />
     <header class="kbq-display-3">Date range</header>
     <h2>Closed range</h2>
     <div class="common-container">
@@ -619,7 +621,6 @@
         </div>
     </div>
 
-
     <h2>Opened range</h2>
     <div class="common-container">
         <h3>Short format</h3>
@@ -665,11 +666,15 @@
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYear }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">openedRangeShortDateTime (only start, start date is not in current year) (with seconds)</div>
+                <div class="flex">
+                    openedRangeShortDateTime (only start, start date is not in current year) (with seconds)
+                </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYearSeconds }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">openedRangeShortDateTime (only start, start date is not in current year) (with milliseconds)</div>
+                <div class="flex">
+                    openedRangeShortDateTime (only start, start date is not in current year) (with milliseconds)
+                </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYearMilliseconds }}</div>
             </div>
             <div class="row-border"></div>
@@ -693,11 +698,15 @@
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYear }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">openedRangeShortDateTime (only end, end date is not in current year) (with seconds)</div>
+                <div class="flex">
+                    openedRangeShortDateTime (only end, end date is not in current year) (with seconds)
+                </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYearSeconds }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">openedRangeShortDateTime (only end, end date is not in current year) (with milliseconds)</div>
+                <div class="flex">
+                    openedRangeShortDateTime (only end, end date is not in current year) (with milliseconds)
+                </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYearMilliseconds }}</div>
             </div>
             <div class="row-border"></div>
@@ -747,11 +756,15 @@
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYear }}</div>
                 </div>
                 <div class="layout-row row-border">
-                    <div class="flex">openedRangeLongDateTime (only start, start date is not in current year) (with seconds)</div>
+                    <div class="flex">
+                        openedRangeLongDateTime (only start, start date is not in current year) (with seconds)
+                    </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYearSeconds }}</div>
                 </div>
                 <div class="layout-row row-border">
-                    <div class="flex">openedRangeLongDateTime (only start, start date is not in current year) (with milliseconds)</div>
+                    <div class="flex">
+                        openedRangeLongDateTime (only start, start date is not in current year) (with milliseconds)
+                    </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYearMilliseconds }}</div>
                 </div>
                 <div class="row-border"></div>
@@ -775,18 +788,22 @@
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYear }}</div>
                 </div>
                 <div class="layout-row row-border">
-                    <div class="flex">openedRangeLongDateTime (only end, end date is not in current year) (with seconds)</div>
+                    <div class="flex">
+                        openedRangeLongDateTime (only end, end date is not in current year) (with seconds)
+                    </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYearSeconds }}</div>
                 </div>
                 <div class="layout-row row-border">
-                    <div class="flex">openedRangeLongDateTime (only end, end date is not in current year) (with milliseconds)</div>
+                    <div class="flex">
+                        openedRangeLongDateTime (only end, end date is not in current year) (with milliseconds)
+                    </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYearMilliseconds }}</div>
                 </div>
                 <div class="row-border"></div>
             </div>
         </div>
     </div>
-    <br>
+    <br />
     <header class="kbq-display-3">Time duration</header>
     <div class="common-container">
         <h3>The shortest format</h3>
@@ -896,7 +913,6 @@
                 <div class="flex">Years with fraction</div>
                 <div class="flex">{{ lang.duration.long.yearsWithFract }}</div>
             </div>
-
         </div>
 
         <h3>Short format</h3>
@@ -981,8 +997,6 @@
                 <div class="flex">Years with fraction</div>
                 <div class="flex">{{ lang.duration.short.yearsWithFract }}</div>
             </div>
-
         </div>
     </div>
-
 </div>

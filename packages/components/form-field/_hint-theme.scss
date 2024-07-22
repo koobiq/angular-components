@@ -5,7 +5,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-hint-color($component, $type, $style-name) {
     $style: map.get($component, $type, $style-name);
 
@@ -15,7 +14,6 @@
         color: kbq-css-variable(hint-#{$type}-#{$style-name}-icon, map.get($style, icon)) !important;
     }
 }
-
 
 @mixin kbq-hint-theme($theme) {
     $hint: map.get(map.get($theme, components), hint);

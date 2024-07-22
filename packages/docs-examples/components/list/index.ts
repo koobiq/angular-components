@@ -5,20 +5,18 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { ListActionButtonExample } from './list-action-button/list-action-button-example';
 import { ListGroupsExample } from './list-groups/list-groups-example';
 import { ListMultipleCheckboxExample } from './list-multiple-checkbox/list-multiple-checkbox-example';
 import { ListMultipleKeyboardExample } from './list-multiple-keyboard/list-multiple-keyboard-example';
 import { ListOverviewExample } from './list-overview/list-overview-example';
 
-
 export {
-    ListOverviewExample,
+    ListActionButtonExample,
+    ListGroupsExample,
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
-    ListGroupsExample,
-    ListActionButtonExample
+    ListOverviewExample
 };
 
 const EXAMPLES = [

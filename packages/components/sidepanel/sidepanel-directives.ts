@@ -1,17 +1,6 @@
-import {
-    Component,
-    Directive,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnInit,
-    Optional,
-    SimpleChanges
-} from '@angular/core';
-
+import { Component, Directive, ElementRef, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
-
 
 /**
  * Button that will close the current sidepanel.
@@ -63,16 +52,24 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 @Component({
     selector: 'kbq-sidepanel-header',
     template: `
-        <div class="kbq-sidepanel-title" kbq-title>
+        <div
+            class="kbq-sidepanel-title"
+            kbq-title
+        >
             <ng-content></ng-content>
         </div>
 
-        <button *ngIf="closeable"
-                kbq-button
-                kbq-sidepanel-close
+        <button
+            *ngIf="closeable"
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            kbq-button
+            kbq-sidepanel-close
+        >
+            <i
                 [color]="'contrast'"
-                [kbqStyle]="'transparent'">
-            <i kbq-icon="mc-close-L_16" [color]="'contrast'"></i>
+                kbq-icon="mc-close-L_16"
+            ></i>
         </button>
     `,
     host: {
@@ -128,7 +125,5 @@ function getClosestSidepanel(element: ElementRef<HTMLElement>, openSidepanels: K
         parent = parent.parentElement;
     }
 
-    return parent ?
-        openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) :
-        null;
+    return parent ? openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) : null;
 }

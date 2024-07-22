@@ -1,6 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-
 // @ts-ignore
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -18,7 +17,6 @@ const localeDataSet = {
     'fa-IR': faIRLocaleDataSet
 };
 
-
 /**
  * @title Basic Select
  */
@@ -34,12 +32,11 @@ export class SelectMultipleOverviewExample {
     options: string[] = [];
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes
-            .subscribe(this.update)
+        this.localeService.changes.subscribe(this.update);
     }
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
         this.selected = [];
-    }
+    };
 }

@@ -13,9 +13,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
-
 import { KbqTreeSelect } from './tree-select.component';
-
 
 @NgModule({
     imports: [

@@ -17,7 +17,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    forwardRef,
     Host,
     Inject,
     InjectionToken,
@@ -25,22 +24,17 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    ViewContainerRef
+    ViewContainerRef,
+    forwardRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import {
-    KbqOption,
-    KbqOptionSelectionChange,
-    KeyboardNavigationHandler
-} from '@koobiq/components/core';
+import { KbqOption, KbqOptionSelectionChange, KeyboardNavigationHandler } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
-import { Subscription, defer, fromEvent, merge, of as observableOf, Subject, Observable } from 'rxjs';
-import { filter, take, switchMap, delay, tap, map } from 'rxjs/operators';
-
+import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
+import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
-
 
 /**
  * The following style constants are necessary to save here in order
@@ -54,8 +48,9 @@ export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 export const AUTOCOMPLETE_BORDER_WIDTH: number = 2;
 
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
-export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('kbq-autocomplete-scroll-strategy');
+export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
+    'kbq-autocomplete-scroll-strategy'
+);
 
 export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
     return () => overlay.scrollStrategies.reposition();
@@ -82,11 +77,12 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
  * @docs-private
  */
 export function getKbqAutocompleteMissingPanelError(): Error {
-    return Error('Attempting to open an undefined instance of `kbq-autocomplete`. ' +
-        'Make sure that the id passed to the `kbqAutocomplete` is correct and that ' +
-        'you\'re attempting to open it after the ngAfterContentInit hook.');
+    return Error(
+        'Attempting to open an undefined instance of `kbq-autocomplete`. ' +
+            'Make sure that the id passed to the `kbqAutocomplete` is correct and that ' +
+            "you're attempting to open it after the ngAfterContentInit hook."
+    );
 }
-
 
 @Directive({
     selector: `input[kbqAutocomplete], textarea[kbqAutocomplete]`,
@@ -104,8 +100,9 @@ export function getKbqAutocompleteMissingPanelError(): Error {
     exportAs: 'kbqAutocompleteTrigger',
     providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
-export class KbqAutocompleteTrigger implements
-    AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
+export class KbqAutocompleteTrigger
+    implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
+{
     // @ts-ignore
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
         if (this.autocomplete && this.autocomplete.options) {
@@ -114,9 +111,10 @@ export class KbqAutocompleteTrigger implements
 
         // If there are any subscribers before `ngAfterViewInit`, the `autocomplete` will be undefined.
         // Return a stream that we'll replace with the real one once everything is in place.
-        return this.zone.onStable
-            .asObservable()
-            .pipe(take(1), switchMap(() => this.optionSelections));
+        return this.zone.onStable.asObservable().pipe(
+            take(1),
+            switchMap(() => this.optionSelections)
+        );
     });
 
     /** The currently active option, coerced to MatOption type. */
@@ -226,15 +224,14 @@ export class KbqAutocompleteTrigger implements
 
     ngAfterViewInit(): void {
         if (this.autocomplete) {
-            this.autocomplete.keyManager?.change
-                .subscribe(() => {
-                    if (this.panelOpen) {
-                        this.scrollActiveOptionIntoView();
-                        this.elementRef.nativeElement.focus();
-                    } else if (!this.panelOpen && this.autocomplete.keyManager.activeItem) {
-                        this.autocomplete.keyManager.activeItem?.selectViaInteraction();
-                    }
-                });
+            this.autocomplete.keyManager?.change.subscribe(() => {
+                if (this.panelOpen) {
+                    this.scrollActiveOptionIntoView();
+                    this.elementRef.nativeElement.focus();
+                } else if (!this.panelOpen && this.autocomplete.keyManager.activeItem) {
+                    this.autocomplete.keyManager.activeItem?.selectViaInteraction();
+                }
+            });
         }
     }
 
@@ -264,7 +261,9 @@ export class KbqAutocompleteTrigger implements
     }
 
     closePanel(): void {
-        if (!this.overlayAttached) { return; }
+        if (!this.overlayAttached) {
+            return;
+        }
 
         if (this.panelOpen) {
             this.autocomplete.closed.emit();
@@ -308,19 +307,16 @@ export class KbqAutocompleteTrigger implements
             this.autocomplete.keyManager.tabOut.pipe(filter(() => this.overlayAttached)),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
-            this.overlayRef ?
-                this.overlayRef.detachments().pipe(filter(() => this.overlayAttached)) :
-                observableOf()
+            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached)) : observableOf()
         ).pipe(
             // Normalize the output so we return a consistent type.
-            map((event) => event instanceof KbqOptionSelectionChange ? event : null)
+            map((event) => (event instanceof KbqOptionSelectionChange ? event : null))
         );
     }
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: any): void {
-        Promise.resolve(null)
-            .then(() => this.setTriggerValue(value));
+        Promise.resolve(null).then(() => this.setTriggerValue(value));
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -421,19 +417,22 @@ export class KbqAutocompleteTrigger implements
             fromEvent(this.document, 'click') as Observable<MouseEvent>,
             // tslint:disable-next-line: no-unnecessary-type-assertion
             fromEvent(this.document, 'touchend') as Observable<TouchEvent>
-        )
-            .pipe(filter((event) => {
-
+        ).pipe(
+            filter((event) => {
                 const clickTarget = event.target as HTMLElement;
                 const formField = this.formField ? this.formField.elementRef.nativeElement : null;
                 const customOrigin = this.connectedTo ? this.connectedTo.elementRef.nativeElement : null;
 
-                return this.overlayAttached &&
+                return (
+                    this.overlayAttached &&
                     clickTarget !== this.elementRef.nativeElement &&
                     (!formField || !formField.contains(clickTarget)) &&
                     (!customOrigin || !customOrigin.contains(clickTarget)) &&
-                    (!!this.overlayRef && !this.overlayRef.overlayElement.contains(clickTarget));
-            }));
+                    !!this.overlayRef &&
+                    !this.overlayRef.overlayElement.contains(clickTarget)
+                );
+            })
+        );
     }
 
     /**
@@ -445,52 +444,52 @@ export class KbqAutocompleteTrigger implements
         // refocused when they come back. In this case we want to skip the first focus event, if the
         // pane was closed, in order to avoid reopening it unintentionally.
         this.canOpenOnNextFocus = this.document.activeElement !== this.elementRef.nativeElement || this.panelOpen;
-    }
+    };
 
     /**
      * This method listens to a stream of panel closing actions and resets the
      * stream every time the option list changes.
      */
     private subscribeToClosingActions(): Subscription {
-        const firstStable = this.zone.onStable.asObservable()
-            .pipe(take(1));
-        const optionChanges = this.autocomplete.options.changes
-            .pipe(
-                tap(() => this.positionStrategy.reapplyLastPosition()),
-                // Defer emitting to the stream until the next tick, because changing
-                // bindings in here will cause "changed after checked" errors.
-                delay(0)
-            );
+        const firstStable = this.zone.onStable.asObservable().pipe(take(1));
+        const optionChanges = this.autocomplete.options.changes.pipe(
+            tap(() => this.positionStrategy.reapplyLastPosition()),
+            // Defer emitting to the stream until the next tick, because changing
+            // bindings in here will cause "changed after checked" errors.
+            delay(0)
+        );
 
         // When the zone is stable initially, and when the option list changes...
-        return merge(firstStable, optionChanges)
-            .pipe(
-                // create a new stream of panelClosingActions, replacing any previous streams
-                // that were created, and flatten it so our stream only emits closing events...
-                switchMap(() => {
-                    const wasOpen = this.panelOpen;
-                    this.resetActiveItem();
-                    this.autocomplete.setVisibility();
+        return (
+            merge(firstStable, optionChanges)
+                .pipe(
+                    // create a new stream of panelClosingActions, replacing any previous streams
+                    // that were created, and flatten it so our stream only emits closing events...
+                    switchMap(() => {
+                        const wasOpen = this.panelOpen;
+                        this.resetActiveItem();
+                        this.autocomplete.setVisibility();
 
-                    if (this.panelOpen) {
-                        this.overlayRef!.updatePosition();
+                        if (this.panelOpen) {
+                            this.overlayRef!.updatePosition();
 
-                        // If the `panelOpen` state changed, we need to make sure to emit the `opened`
-                        // event, because we may not have emitted it when the panel was attached. This
-                        // can happen if the users opens the panel and there are no options, but the
-                        // options come in slightly later or as a result of the value changing.
-                        if (wasOpen !== this.panelOpen) {
-                            this.autocomplete.opened.emit();
+                            // If the `panelOpen` state changed, we need to make sure to emit the `opened`
+                            // event, because we may not have emitted it when the panel was attached. This
+                            // can happen if the users opens the panel and there are no options, but the
+                            // options come in slightly later or as a result of the value changing.
+                            if (wasOpen !== this.panelOpen) {
+                                this.autocomplete.opened.emit();
+                            }
                         }
-                    }
 
-                    return this.panelClosingActions;
-                }),
-                // when the first closing event occurs...
-                take(1)
-            )
-            // set the value, close the panel, and complete.
-            .subscribe((event) => this.setValueAndClose(event));
+                        return this.panelClosingActions;
+                    }),
+                    // when the first closing event occurs...
+                    take(1)
+                )
+                // set the value, close the panel, and complete.
+                .subscribe((event) => this.setValueAndClose(event))
+        );
     }
 
     /** Destroys the autocomplete suggestion panel. */
@@ -503,9 +502,8 @@ export class KbqAutocompleteTrigger implements
     }
 
     private setTriggerValue(value: any): void {
-        const toDisplay = this.autocomplete && this.autocomplete.displayWith ?
-            this.autocomplete.displayWith(value) :
-            value;
+        const toDisplay =
+            this.autocomplete && this.autocomplete.displayWith ? this.autocomplete.displayWith(value) : value;
 
         // Simply falling back to an empty string if the display value is falsy does not work properly.
         // The display value can also be the number zero and shouldn't fall back to an empty string.
@@ -603,7 +601,8 @@ export class KbqAutocompleteTrigger implements
             this.autocomplete.opened.emit();
         }
 
-        this.zone.onStable.asObservable()
+        this.zone.onStable
+            .asObservable()
             .pipe(take(1))
             .subscribe(() => this.resetActiveItem());
     }
@@ -618,7 +617,8 @@ export class KbqAutocompleteTrigger implements
     }
 
     private getOverlayPosition(): PositionStrategy {
-        this.positionStrategy = this.overlay.position()
+        this.positionStrategy = this.overlay
+            .position()
             .flexibleConnectedTo(this.getConnectedElement())
             .withFlexibleDimensions(false)
             .withPush(false)

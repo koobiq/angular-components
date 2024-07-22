@@ -1,17 +1,16 @@
-import { TemplatePortal, DomPortalOutlet } from '@angular/cdk/portal';
+import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
-    Directive,
-    TemplateRef,
-    ComponentFactoryResolver,
     ApplicationRef,
-    Injector,
-    ViewContainerRef,
+    ComponentFactoryResolver,
+    Directive,
     Inject,
-    OnDestroy
+    Injector,
+    OnDestroy,
+    TemplateRef,
+    ViewContainerRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
-
 
 /**
  * Dropdown content that will be rendered lazily once the dropdown is opened.

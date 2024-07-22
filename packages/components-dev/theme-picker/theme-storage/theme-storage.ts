@@ -1,6 +1,5 @@
 // tslint:disable:no-console
-import { Injectable, EventEmitter } from '@angular/core';
-
+import { EventEmitter, Injectable } from '@angular/core';
 
 export interface IDocsSiteTheme {
     href: string;
@@ -9,7 +8,6 @@ export interface IDocsSiteTheme {
     isDark?: boolean;
     isDefault?: boolean;
 }
-
 
 @Injectable()
 export class ThemeStorage {

@@ -1,10 +1,8 @@
 /* tslint:disable:no-magic-numbers */
 
 import { Component, ViewEncapsulation } from '@angular/core';
-import { getZonesGroupedByCountry, KbqTimezoneGroup, KbqTimezoneZone } from '@koobiq/components/timezone';
-
+import { KbqTimezoneGroup, KbqTimezoneZone, getZonesGroupedByCountry } from '@koobiq/components/timezone';
 import { timezones } from '../mock';
-
 
 /**
  * @title Timezone overview
@@ -21,14 +19,16 @@ export class TimezoneOverviewExample {
     data: KbqTimezoneGroup[];
 
     constructor() {
-         const zones: KbqTimezoneZone[] = timezones
-            .map(({ associatedZones, ...zone }) => ({
-                ...zone,
-                cities: Array.isArray(associatedZones)
-                    ? associatedZones.map(({city}) => city).sort().join(', ')
-                    : ''
-            }));
+        const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
+            ...zone,
+            cities: Array.isArray(associatedZones)
+                ? associatedZones
+                      .map(({ city }) => city)
+                      .sort()
+                      .join(', ')
+                : ''
+        }));
 
-         this.data = getZonesGroupedByCountry(zones, 'Другие страны');
+        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
     }
 }

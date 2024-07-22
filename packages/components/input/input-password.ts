@@ -15,10 +15,8 @@ import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-
 import { KbqInputMixinBase } from './input';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
 
 let nextUniqueId = 0;
 
@@ -39,13 +37,17 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(input)': 'onInput()'
     },
-    providers: [{
-        provide: KbqFormFieldControl, useExisting: KbqInputPassword
-    }]
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInputPassword
+        }
+    ]
 })
-export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck,
-    CanUpdateErrorState, OnChanges {
-
+export class KbqInputPassword
+    extends KbqInputMixinBase
+    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges
+{
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -148,7 +150,9 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     }
 
     set value(value: string) {
-        if (value === this.value) { return; }
+        if (value === this.value) {
+            return;
+        }
 
         this._inputValueAccessor.value = value;
         this.stateChanges.next(null);
@@ -234,7 +238,9 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
 
     /** Callback for the cases where the focused state of the input changes. */
     focusChanged(isFocused: boolean) {
-        if (isFocused === this.focused) { return; }
+        if (isFocused === this.focused) {
+            return;
+        }
 
         this.focused = isFocused;
         this.stateChanges.next({ focused: this.focused });

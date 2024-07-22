@@ -1,5 +1,11 @@
 <ng-template>
-    <div class="kbq-autocomplete-panel kbq-scrollbar" role="listbox" [id]="id" [ngClass]="classList" #panel>
+    <div
+        #panel
+        role="listbox"
+        class="kbq-autocomplete-panel kbq-scrollbar"
+        [id]="id"
+        [ngClass]="classList"
+    >
         <ng-content></ng-content>
     </div>
 </ng-template>

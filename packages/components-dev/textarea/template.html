@@ -1,47 +1,78 @@
 <div class="container">
-
     <kbq-form-field class="kbq-focused">
-        <textarea kbqTextarea [(ngModel)]="value" rows="4" placeholder="Placeholder"></textarea>
+        <textarea
+            kbqTextarea
+            placeholder="Placeholder"
+            rows="4"
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
     <header>Resizable:</header>
 
     <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value" [canGrow]="false" rows="4" placeholder="Placeholder"></textarea>
+        <textarea
+            kbqTextarea
+            placeholder="Placeholder"
+            rows="4"
+            [canGrow]="false"
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
     <header>Without placeholder:</header>
     <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value"></textarea>
+        <textarea
+            kbqTextarea
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 
-    <br><br>
+    <br />
+    <br />
 
     <header>With placeholder:</header>
 
     <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder"></textarea>
+        <textarea
+            kbqTextarea
+            placeholder="Placeholder"
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 
-    <br><br>
+    <br />
+    <br />
 
     <header>With placeholder and disabled:</header>
 
     <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder" [disabled]="true"></textarea>
+        <textarea
+            kbqTextarea
+            placeholder="Placeholder"
+            [disabled]="true"
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 
-    <br><br>
+    <br />
+    <br />
 
     <header>Invalid:</header>
 
     <kbq-form-field>
-        <textarea kbqTextarea [(ngModel)]="value" placeholder="Placeholder" [required]="true" title="Field is required"></textarea>
+        <textarea
+            kbqTextarea
+            placeholder="Placeholder"
+            title="Field is required"
+            [required]="true"
+            [(ngModel)]="value"
+        ></textarea>
     </kbq-form-field>
 </div>

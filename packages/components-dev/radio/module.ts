@@ -6,7 +6,6 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 
-
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],

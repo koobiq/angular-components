@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -13,7 +12,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 export class DemoComponent {
     url = 'http://localhost:3003/';
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

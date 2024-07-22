@@ -1,3 +1,18 @@
+# 17.0.0-rc.10 (2024-07-17)
+
+### Koobiq
+
+ * bug fix  **badge:** outline badges borders color ([#DS-3640](https://github.com/koobiq/angular-components/issues/issue/DS-3640))  ([#139](https://github.com/koobiq/angular-components/issues/139)) ([dbe5a60](https://github.com/koobiq/angular-components/commit/dbe5a606c7e5be2749245bad372c793dba182bf2))
+ * bug fix  **button:** background for filled-contrast-fade-[off/on]-states-disabled-background ([53fd6e6](https://github.com/koobiq/angular-components/commit/53fd6e635a558625f7908422b74a344082842f28))
+ * bug fix  **docs,toast:** single stack of toasts ([#DS-2541](https://github.com/koobiq/angular-components/issues/issue/DS-2541)) ([#140](https://github.com/koobiq/angular-components/issues/140)) ([7bcd539](https://github.com/koobiq/angular-components/commit/7bcd53908c09439add656e0744351c7aa91cad9e))
+ * bug fix  **docs:** fixed Algolia crawler ([1a9d5d4](https://github.com/koobiq/angular-components/commit/1a9d5d40387ffe3214e1ba953b34e449b6ce08bd))
+ * bug fix  **docs:** highlight selected item ([#DS-2597](https://github.com/koobiq/angular-components/issues/issue/DS-2597)) ([#137](https://github.com/koobiq/angular-components/issues/137)) ([70a78a5](https://github.com/koobiq/angular-components/commit/70a78a546697800466e5acb06e9841acd995b8a8))
+ * bug fix  **select:** "show more" text calculations ([#DS-2649](https://github.com/koobiq/angular-components/issues/issue/DS-2649)) ([#135](https://github.com/koobiq/angular-components/issues/135)) ([6d2d962](https://github.com/koobiq/angular-components/commit/6d2d962699a39f48f5c322b9a1c2df7ed7b3895d))
+ * feature  added prettier support for markdown and yaml ([#DS-2650](https://github.com/koobiq/angular-components/issues/issue/DS-2650)) ([#133](https://github.com/koobiq/angular-components/issues/133)) ([ca5d770](https://github.com/koobiq/angular-components/commit/ca5d770eb27cbb0b028d74e252c9a45dac778ea4))
+ * feature  added prettier support for stylelint ([#DS-2568](https://github.com/koobiq/angular-components/issues/issue/DS-2568)) ([#130](https://github.com/koobiq/angular-components/issues/130)) ([eb9ff28](https://github.com/koobiq/angular-components/commit/eb9ff28fac3a0ae7a33c8e3afb4b3b84f86c4415))
+ * feature  **docs:** theming article rewrite ([#DS-2544](https://github.com/koobiq/angular-components/issues/issue/DS-2544)) ([#114](https://github.com/koobiq/angular-components/issues/114)) ([14756c3](https://github.com/koobiq/angular-components/commit/14756c34d80549a8a2220e198e67e0fbc7e5f719))
+ * feature  **empty-state:** added empty-state ([#DS-2572](https://github.com/koobiq/angular-components/issues/issue/DS-2572)) ([#129](https://github.com/koobiq/angular-components/issues/129)) ([d0fe7d8](https://github.com/koobiq/angular-components/commit/d0fe7d84dcac86b0a1be4deb2f20935de31e58d0))
+
 # 17.0.0-rc.9 (2024-07-10)
 
 ### Koobiq

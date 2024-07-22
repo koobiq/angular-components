@@ -17,7 +17,6 @@ import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/componen
 import { Observable, Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-
 @Directive({
     selector: '[kbq-title]',
     exportAs: 'kbqTitle',
@@ -79,7 +78,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
-            .subscribe(() => this.disabled = !this.isOverflown);
+            .subscribe(() => (this.disabled = !this.isOverflown));
 
         this.mutationSubscription = this.createMutationObserver()
             .pipe(throttleTime(this.debounceInterval))
@@ -88,10 +87,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                 this.content = this.viewValue;
             });
 
-        this.focusMonitorSubscription = this.focusMonitor.monitor(this.elementRef).subscribe(
-            (origin) => (origin === 'keyboard')
-                ? this.handleElementEnter() : this.hideTooltip()
-        );
+        this.focusMonitorSubscription = this.focusMonitor
+            .monitor(this.elementRef)
+            .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.hideTooltip()));
     }
 
     ngOnDestroy() {
@@ -113,11 +111,12 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     private createMutationObserver(): Observable<MutationRecord[]> {
         return new Observable((observer) => {
-            const mutationObserver = new MutationObserver(
-                (mutations) => observer.next(mutations)
-            );
+            const mutationObserver = new MutationObserver((mutations) => observer.next(mutations));
             mutationObserver.observe(this.parent, {
-                characterData: true, attributes: false, childList: true, subtree: true
+                characterData: true,
+                attributes: false,
+                childList: true,
+                subtree: true
             });
 
             return () => mutationObserver.disconnect();

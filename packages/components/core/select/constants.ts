@@ -1,6 +1,5 @@
-import { ScrollStrategy, Overlay, RepositionScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
-
 
 /** The max height of the select's overlay panel */
 export const SELECT_PANEL_MAX_HEIGHT = 224;
@@ -18,10 +17,8 @@ export const SELECT_PANEL_INDENT_PADDING_X = SELECT_PANEL_PADDING_X * 2;
  */
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
-
 /** Injection token that determines the scroll handling while a select is open. */
-export const KBQ_SELECT_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('kbq-select-scroll-strategy');
+export const KBQ_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-select-scroll-strategy');
 
 /** @docs-private */
 export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy {

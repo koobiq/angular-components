@@ -1,38 +1,55 @@
 <div class="layout-margin docs-width">
-    <kbq-alert [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true" *ngIf="showServerErrors">
-        <i kbq-icon="mc-info_16" [color]="'error'"></i>
+    <kbq-alert
+        *ngIf="showServerErrors"
+        [alertColor]="'error'"
+        [alertStyle]="'colored'"
+        [compact]="true"
+    >
+        <i
+            kbq-icon="mc-info_16"
+            [color]="'error'"
+        ></i>
         <div kbq-alert-title>Не удается получить ответ от сервера</div>
         При попытке отправить данные сервер не ответил, попробуйте снова
     </kbq-alert>
 
-    <form class="kbq-form-vertical"
-          [formGroup]="globalErrorForm"
-          (ngSubmit)="submitGlobalErrorForm()"
-          novalidate>
-
+    <form
+        novalidate
+        class="kbq-form-vertical"
+        [formGroup]="globalErrorForm"
+        (ngSubmit)="submitGlobalErrorForm()"
+    >
         <div class="kbq-form__fieldset">
             <div class="kbq-form__row">
                 <div class="kbq-form__label">Имя</div>
                 <kbq-form-field class="kbq-form__control">
-                    <input kbqInput formControlName="firstName">
+                    <input
+                        formControlName="firstName"
+                        kbqInput
+                    />
                 </kbq-form-field>
             </div>
 
             <div class="kbq-form__row">
                 <div class="kbq-form__label">Фамилия</div>
                 <kbq-form-field class="kbq-form__control">
-                    <input kbqInput formControlName="lastName">
+                    <input
+                        formControlName="lastName"
+                        kbqInput
+                    />
                 </kbq-form-field>
             </div>
 
             <div class="kbq-form__row">
-                <button class="flex-40"
-                        #submitButton
-                        type="submit"
-                        kbq-button
-                        [color]="'contrast'"
-                        [class.kbq-progress]="inProgress"
-                        [disabled]="inProgress">
+                <button
+                    #submitButton
+                    kbq-button
+                    type="submit"
+                    class="flex-40"
+                    [class.kbq-progress]="inProgress"
+                    [color]="'contrast'"
+                    [disabled]="inProgress"
+                >
                     Отправить
                 </button>
             </div>

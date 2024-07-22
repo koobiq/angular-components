@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -14,7 +13,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 export class DemoComponent {
     colors = KbqBadgeColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

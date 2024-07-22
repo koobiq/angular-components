@@ -23,6 +23,6 @@ const docsContent = async () => {
     for (const task of [markdownDocsKoobiq, markdownDocsCdk, markdownDocsExamples]) {
         await task();
     }
-}
+};
 
 docsContent();

@@ -1,4 +1,10 @@
-<button kbq-button class="modal-example-button" (click)="createTplModal(tplTitle, tplContent, tplFooter)">Delete</button>
+<button
+    kbq-button
+    class="modal-example-button"
+    (click)="createTplModal(tplTitle, tplContent, tplFooter)"
+>
+    Delete
+</button>
 
 <ng-template #tplTitle>
     <span>Заголовок окна</span>
@@ -9,13 +15,28 @@
 </ng-template>
 <ng-template #tplFooter>
     <div class="layout-row flex-grow layout-align-space-between">
-        <button kbq-button (click)="destroyTplModal()">Доп. действие</button>
+        <button
+            kbq-button
+            (click)="destroyTplModal()"
+        >
+            Доп. действие
+        </button>
 
         <span>
-            <button kbq-button kbq-modal-main-action [color]="'contrast'" (click)="destroyTplModal()">
+            <button
+                kbq-button
+                kbq-modal-main-action
+                [color]="'contrast'"
+                (click)="destroyTplModal()"
+            >
                 Сохранить
             </button>
-            <button kbq-button (click)="destroyTplModal()">Отмена</button>
+            <button
+                kbq-button
+                (click)="destroyTplModal()"
+            >
+                Отмена
+            </button>
         </span>
     </div>
 </ng-template>

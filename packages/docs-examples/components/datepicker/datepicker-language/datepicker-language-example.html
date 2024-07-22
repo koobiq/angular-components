@@ -1,13 +1,17 @@
 <kbq-form-field
-    (click)="picker.toggle()"
+    #tooltip="kbqWarningTooltip"
     [kbqWarningTooltip]="'Только цифры'"
-    #tooltip="kbqWarningTooltip">
-
+    (click)="picker.toggle()"
+>
     <input
         [formControl]="selectedDate"
         [kbqDatepicker]="picker"
-        [kbqValidationTooltip]="tooltip"/>
-    <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+        [kbqValidationTooltip]="tooltip"
+    />
+    <i
+        kbq-icon="mc-calendar_16"
+        kbqSuffix
+    ></i>
     <kbq-datepicker #picker></kbq-datepicker>
 </kbq-form-field>
 

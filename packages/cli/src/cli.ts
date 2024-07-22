@@ -2,7 +2,6 @@
 import { program } from 'commander';
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
-
 import { PublishReleaseCITask } from './release/publish-release-ci';
 import { PublishReleaseFromDistTask } from './release/publish-release-from-dist';
 import { PublishReleaseCIGithubTask } from './release/publish-release-github-ci';

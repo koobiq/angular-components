@@ -1,10 +1,8 @@
-import { exec, ExecOptions } from 'child_process';
-import { statSync } from 'fs';
-import { join } from 'path';
-
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
-
+import { ExecOptions, exec } from 'child_process';
+import { statSync } from 'fs';
+import { join } from 'path';
 import { ITypescriptBuilderOptions } from './schema';
 
 export async function executeCommand(command: string, cwd?: string): Promise<string> {

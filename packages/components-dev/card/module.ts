@@ -1,8 +1,6 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { KbqCardModule } from '../../components/card';
-
 
 @Component({
     selector: 'app',
@@ -11,13 +9,11 @@ import { KbqCardModule } from '../../components/card';
     encapsulation: ViewEncapsulation.None
 })
 export class CardsDemoComponent {
-
     s1 = false;
     s2 = false;
     s3 = false;
     s4 = false;
 }
-
 
 @NgModule({
     declarations: [CardsDemoComponent],

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, ViewEncapsulation } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 
-
 @Component({
     selector: 'table[kbq-table]',
     exportAs: 'kbqTable',
@@ -17,7 +16,6 @@ import { KbqButton } from '@koobiq/components/button';
 export class KbqTable {
     @Input() border: boolean = false;
 }
-
 
 @Directive({
     selector: 'kbq-table td',

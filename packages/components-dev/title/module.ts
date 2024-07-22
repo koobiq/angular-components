@@ -17,14 +17,39 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-
 const options = [
-    'One', 'Two', 'Three', 'Four', 'Five', 'Longest text (0123456789 qwertyuiopasdfghjklzxcvbnm)', 'Волгоград',
-    'Воронеж', 'Ейск', 'Екабпилс', 'Екатеринбург', 'Екатериновка', 'Екатеринославка', 'Екаша', 'Екибастуз',
-    'Екпинди', 'Елань', 'Елец', 'Казань', 'Краснодар', 'Красноярск', 'Москва', 'Нижний Новгород', 'Новосибирск',
-    'Омск', 'Пермь', 'Ростов-на-Дону',  'Самара', 'Санкт-Петербург', 'Уфа', 'Челябинск'
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five',
+    'Longest text (0123456789 qwertyuiopasdfghjklzxcvbnm)',
+    'Волгоград',
+    'Воронеж',
+    'Ейск',
+    'Екабпилс',
+    'Екатеринбург',
+    'Екатериновка',
+    'Екатеринославка',
+    'Екаша',
+    'Екибастуз',
+    'Екпинди',
+    'Елань',
+    'Елец',
+    'Казань',
+    'Краснодар',
+    'Красноярск',
+    'Москва',
+    'Нижний Новгород',
+    'Новосибирск',
+    'Омск',
+    'Пермь',
+    'Ростов-на-Дону',
+    'Самара',
+    'Санкт-Петербург',
+    'Уфа',
+    'Челябинск'
 ];
-
 
 @Component({
     selector: 'app',
@@ -42,11 +67,10 @@ export class DemoComponent implements OnInit {
     formControl = new UntypedFormControl('', Validators.required);
 
     ngOnInit(): void {
-        this.filteredOptions = this.formControl.valueChanges
-            .pipe(
-                startWith(''),
-                map((value) => this.filter(value))
-            );
+        this.filteredOptions = this.formControl.valueChanges.pipe(
+            startWith(''),
+            map((value) => this.filter(value))
+        );
     }
 
     onSelectionChange($event: KbqAutocompleteSelectedEvent) {
@@ -63,7 +87,6 @@ export class DemoComponent implements OnInit {
         return options.filter((option) => option.toLowerCase().includes(filterValue));
     }
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

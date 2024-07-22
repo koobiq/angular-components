@@ -1,12 +1,7 @@
 /* tslint:disable:no-reserved-keywords object-literal-key-quotes */
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import {
-    FlatTreeControl,
-    KbqTreeFlatDataSource,
-    KbqTreeFlattener, KbqTreeSelection
-} from '@koobiq/components/tree';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { Subscription } from 'rxjs';
-
 
 export class FileNode {
     children: FileNode[];
@@ -25,7 +20,7 @@ export class FileFlatNode {
 
 const allDescendantsSelected = <T>(descendants: T[], selectionList: any) => {
     return descendants.every((descendant) => selectionList.includes(descendant));
-}
+};
 
 const recursiveDeselect = (node: any, control: FlatTreeControl<any>) => {
     const descendants: any[] = control.getDescendants(node);
@@ -40,7 +35,7 @@ const recursiveDeselect = (node: any, control: FlatTreeControl<any>) => {
         }
     }
     return descendantsForDeselection;
-}
+};
 
 /**
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
@@ -120,7 +115,6 @@ export const DATA_OBJECT = {
     tests: ''
 };
 
-
 abstract class TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
@@ -128,9 +122,20 @@ abstract class TreeParams {
     treeData: FileNode[];
 
     constructor() {
-        this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue, undefined, undefined, this.isDisabled);
+        this.treeControl = new FlatTreeControl(
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            undefined,
+            undefined,
+            this.isDisabled
+        );
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -148,11 +153,11 @@ abstract class TreeParams {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 
-    isDisabled = (node: any ): boolean => {
+    isDisabled = (node: any): boolean => {
         return node.disabled;
-    }
+    };
 
     isExpandable = (node: FileFlatNode) => node.expandable;
 
@@ -168,7 +173,7 @@ abstract class TreeParams {
         flatNode.expandable = !!node.children?.length;
 
         return flatNode;
-    }
+    };
 }
 
 /**
@@ -192,7 +197,9 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
 
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
-    constructor() { super(); }
+    constructor() {
+        super();
+    }
 
     ngAfterViewInit(): void {
         const handleSingleOption = (items, cb) => {
@@ -204,7 +211,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
         };
 
         this.selectionChangeSubscription = this.tree.selectionModel.changed.subscribe(({ added, removed }) => {
-            handleSingleOption(added, ((singleItemOrParent: any) => {
+            handleSingleOption(added, (singleItemOrParent: any) => {
                 if (singleItemOrParent.expandable) {
                     const descendants = this.treeControl.getDescendants(singleItemOrParent);
                     if (!allDescendantsSelected(descendants, this.tree.selectionModel.selected)) {
@@ -214,7 +221,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                                 (descendant as any).disabled = true;
                             }
                         });
-                        setTimeout(() => this.tree.selectionModel.select(...descendants as any[]));
+                        setTimeout(() => this.tree.selectionModel.select(...(descendants as any[])));
                     }
                 }
 
@@ -224,7 +231,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                         singleItemOrParent.singleSelected = true;
                     }
                 });
-            }));
+            });
 
             handleSingleOption(removed, (singleItemOrParent: any) => {
                 const parents = this.treeControl.getParents(singleItemOrParent, []);
@@ -232,7 +239,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                 const descendantsForDeselection: any[] = recursiveDeselect(singleItemOrParent, this.treeControl);
                 if (descendantsForDeselection.length) {
                     this.tree.selectionModel.deselect(...descendantsForDeselection);
-                    descendantsForDeselection.forEach((descendant) => descendant.disabled = undefined);
+                    descendantsForDeselection.forEach((descendant) => (descendant.disabled = undefined));
                 }
 
                 // set disabled if any parent selected
@@ -252,7 +259,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                     singleItemOrParent.singleSelected = undefined;
                 }, 0);
             });
-        })
+        });
     }
 
     ngOnDestroy(): void {
@@ -261,7 +268,8 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
 
     onModelChange($event) {
         this.modelValue = $event;
-        this.filteredModel = this.tree.selectionModel.selected.filter((option: any) => !(option).disabled)
-            .map((node: any) => this.treeControl.getValue(node))
+        this.filteredModel = this.tree.selectionModel.selected
+            .filter((option: any) => !option.disabled)
+            .map((node: any) => this.treeControl.getValue(node));
     }
 }

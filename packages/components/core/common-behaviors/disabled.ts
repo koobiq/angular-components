@@ -1,7 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-
 import { AbstractConstructor, Constructor } from './constructor';
-
 
 export interface CanDisable {
     disabled: boolean;

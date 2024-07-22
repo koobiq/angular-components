@@ -6,14 +6,14 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    forwardRef,
     Inject,
     Input,
     OnDestroy,
     Optional,
     Output,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -23,15 +23,13 @@ import {
     CanDisableCtor,
     HasTabIndex,
     HasTabIndexCtor,
+    KbqComponentColors,
     mixinColor,
     mixinDisabled,
     mixinTabIndex,
-    KbqComponentColors,
     toBoolean
 } from '@koobiq/components/core';
-
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
-
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
@@ -77,12 +75,8 @@ export class KbqCheckboxBase {
 }
 
 /** @docs-private */
-export const KbqCheckboxMixinBase:
-    HasTabIndexCtor &
-    CanColorCtor &
-    CanDisableCtor &
-    typeof KbqCheckboxBase = mixinTabIndex(mixinColor(mixinDisabled(KbqCheckboxBase), KbqComponentColors.Theme));
-
+export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCtor & typeof KbqCheckboxBase =
+    mixinTabIndex(mixinColor(mixinDisabled(KbqCheckboxBase), KbqComponentColors.Theme));
 
 /**
  * A Koobiq checkbox component. Supports all of the functionality of an HTML5 checkbox,
@@ -112,9 +106,10 @@ export const KbqCheckboxMixinBase:
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex {
-
+export class KbqCheckbox
+    extends KbqCheckboxMixinBase
+    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex
+{
     @Input() big: boolean = false;
 
     /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
@@ -209,8 +204,7 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
             if (this._indeterminate) {
                 this.transitionCheckState(TransitionCheckState.Indeterminate);
             } else {
-                this.transitionCheckState(
-                    this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+                this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
             }
 
             this.indeterminateChange.emit(this._indeterminate);
@@ -282,7 +276,7 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
     }
 
     getAriaChecked(): 'true' | 'false' | 'mixed' {
-        return this.checked ? 'true' : (this.indeterminate ? 'mixed' : 'false');
+        return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
     }
 
     /** Toggles the `checked` state of the checkbox. */
@@ -311,7 +305,6 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
         if (!this.disabled && this.clickAction !== 'noop') {
             // When user manually click on the checkbox, `indeterminate` is set to false.
             if (this.indeterminate && this.clickAction !== 'check') {
-
                 Promise.resolve().then(() => {
                     this._indeterminate = false;
                     this.indeterminateChange.emit(this._indeterminate);
@@ -319,8 +312,7 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
             }
 
             this.toggle();
-            this.transitionCheckState(
-                this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+            this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because
@@ -352,7 +344,9 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
         const oldState = this.currentCheckState;
         const element: HTMLElement = this.elementRef.nativeElement;
 
-        if (oldState === newState) { return; }
+        if (oldState === newState) {
+            return;
+        }
 
         if (this.currentAnimationClass.length > 0) {
             element.classList.remove(this.currentAnimationClass);

@@ -8,6 +8,7 @@
         "autoselect",
         "behaviour",
         "codeowners",
+        "commitlint",
         "cvedetails",
         "datepicker",
         "dgeni",

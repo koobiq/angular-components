@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 
-
 /**
  * @title popover-placement-edges
  */
@@ -12,7 +11,15 @@ import { PopUpPlacements } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None
 })
 export class PopoverPlacementEdgesExample {
-    placements = [PopUpPlacements.TopLeft, PopUpPlacements.TopRight, PopUpPlacements.BottomLeft, PopUpPlacements.BottomRight,
-        PopUpPlacements.LeftBottom, PopUpPlacements.LeftTop, PopUpPlacements.RightBottom, PopUpPlacements.RightTop];
+    placements = [
+        PopUpPlacements.TopLeft,
+        PopUpPlacements.TopRight,
+        PopUpPlacements.BottomLeft,
+        PopUpPlacements.BottomRight,
+        PopUpPlacements.LeftBottom,
+        PopUpPlacements.LeftTop,
+        PopUpPlacements.RightBottom,
+        PopUpPlacements.RightTop
+    ];
     activePlacement: PopUpPlacements | null;
 }

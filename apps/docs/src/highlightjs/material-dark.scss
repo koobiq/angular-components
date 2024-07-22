@@ -3,7 +3,6 @@
  */
 @mixin hljs-dark-theme() {
     .code-block {
-
         .hljs {
             display: block;
             overflow-x: auto;
@@ -26,7 +25,7 @@
             height: 44px;
             width: 100%;
             opacity: 1;
-            background: linear-gradient(0deg, rgba(#2b2b2b,1) 0%, rgba(#2b2b2b,0.5) 50%, rgba(#2b2b2b,0) 100%);
+            background: linear-gradient(0deg, rgba(#2b2b2b, 1) 0%, rgba(#2b2b2b, 0.5) 50%, rgba(#2b2b2b, 0) 100%);
 
             &_hidden {
                 opacity: 0;

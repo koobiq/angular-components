@@ -1,12 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    Input,
-    ElementRef,
-    OnDestroy,
-    ChangeDetectorRef,
-    Directive,
-    ContentChild
-} from '@angular/core';
+import { ChangeDetectorRef, ContentChild, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import {
     CanDisable,
     CanDisableCtor,
@@ -18,13 +11,13 @@ import {
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
-
 /** @docs-private */
 export class KbqLinkBase {}
 
 /** @docs-private */
-export const KbqLinkMixinBase: HasTabIndexCtor & CanDisableCtor &
-    typeof KbqLinkBase = mixinTabIndex(mixinDisabled(KbqLinkBase));
+export const KbqLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqLinkBase = mixinTabIndex(
+    mixinDisabled(KbqLinkBase)
+);
 
 export const baseURLRegex = /^http(s)?:\/\//;
 
@@ -48,7 +41,6 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.print]': 'printUrl'
     }
 })
-
 export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
     @Input()
     get disabled() {

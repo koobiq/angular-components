@@ -10,7 +10,6 @@ import {
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange } from '@koobiq/components/tree-select';
 
-
 export class FileNode {
     children: FileNode[];
     name: string;
@@ -127,12 +126,13 @@ export class TreeSelectChildSelectionOverviewExample {
     @ViewChild(KbqTreeSelection) selection: KbqTreeSelection;
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
@@ -153,7 +153,9 @@ export class TreeSelectChildSelectionOverviewExample {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select.selectionModel.selected.includes(parent);
@@ -177,25 +179,25 @@ export class TreeSelectChildSelectionOverviewExample {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 }

@@ -1,26 +1,48 @@
 <div class="layout-row flex-100">
     <div class="layout-column">
         <kbq-alert [alertColor]="alertColors.Error">
-            <i kbq-icon-item="mc-error_16" [color]="colors.Error"></i>
+            <i
+                kbq-icon-item="mc-error_16"
+                [color]="colors.Error"
+            ></i>
             <div kbq-alert-title>Default</div>
             {{ text }}
         </kbq-alert>
 
-        <kbq-alert [compact]="true"  [alertColor]="alertColors.Error">
-            <i kbq-icon="mc-error_16" [color]="colors.Error"></i>
+        <kbq-alert
+            [alertColor]="alertColors.Error"
+            [compact]="true"
+        >
+            <i
+                kbq-icon="mc-error_16"
+                [color]="colors.Error"
+            ></i>
             <div kbq-alert-title>Default</div>
             {{ text }}
         </kbq-alert>
     </div>
     <div class="layout-column">
-        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored">
-            <i kbq-icon-item="mc-error_16" [color]="colors.Error"></i>
+        <kbq-alert
+            [alertColor]="alertColors.Error"
+            [alertStyle]="alertStyles.Colored"
+        >
+            <i
+                kbq-icon-item="mc-error_16"
+                [color]="colors.Error"
+            ></i>
             <div kbq-alert-title>Colored</div>
             {{ text }}
         </kbq-alert>
 
-        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
-            <i kbq-icon="mc-error_16" [color]="colors.Error"></i>
+        <kbq-alert
+            [alertColor]="alertColors.Error"
+            [alertStyle]="alertStyles.Colored"
+            [compact]="true"
+        >
+            <i
+                kbq-icon="mc-error_16"
+                [color]="colors.Error"
+            ></i>
             <div kbq-alert-title>Colored</div>
             {{ text }}
         </kbq-alert>

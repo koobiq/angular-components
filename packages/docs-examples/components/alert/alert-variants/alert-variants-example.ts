@@ -4,7 +4,6 @@ import { KbqAlertColors, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
-
 /**
  * @title Alert Variants
  */
@@ -14,11 +13,11 @@ import { KbqComponentColors } from '@koobiq/components/core';
     styleUrls: ['alert-variants-example.css'],
     animations: [
         trigger('hideShowAnimator', [
-            state('true' , style({ opacity: 1, display: '' })),
+            state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
+            transition('true => false', animate('.2s'))])
+
     ],
     encapsulation: ViewEncapsulation.None
 })
@@ -27,5 +26,6 @@ export class AlertVariantsExample {
     style = KbqButtonStyles;
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;
-    text = 'Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.';
+    text =
+        'Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.';
 }

@@ -2,7 +2,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
 
-
 export class FileNode {
     children: FileNode[];
     name: string;
@@ -114,12 +113,13 @@ export class TreeSelectMultipleOverviewExample {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -140,25 +140,25 @@ export class TreeSelectMultipleOverviewExample {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 }

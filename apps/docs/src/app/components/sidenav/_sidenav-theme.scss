@@ -1,32 +1,33 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-sidenav-theme($theme) {
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
-    $states-background: map-get(map-get($theme, states), background);
+    $background: map.get($theme, background);
+    $foreground: map.get($theme, foreground);
+    $states-background: map.get(map.get($theme, states), background);
 
     .docs-sidenav {
-        background-color: map-get($background, bg-secondary);
+        background-color: map.get($background, bg-secondary);
 
         .docs-sidenav__header-text path {
-            fill: map-get($foreground, contrast);
+            fill: map.get($foreground, contrast);
         }
 
         .kbq-tree-option:hover {
-            background: map-get($states-background, transparent-hover);
+            background: map.get($states-background, transparent-hover);
         }
 
         .kbq-tree-option.kbq-selected,
         .kbq-tree-option.kbq-selected:hover {
-            background: map-get($states-background, transparent-active);
+            background: map.get($states-background, transparent-active);
         }
     }
 
     @media (width <= 768px) {
         .docs-sidenav {
-            background-color: map-get($background, bg);
+            background-color: map.get($background, bg);
         }
     }
 }

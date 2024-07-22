@@ -1,12 +1,13 @@
 const { join } = require('path');
 const { constants } = require('karma');
 
-
 module.exports = () => {
-
     return {
         basePath: '',
-        frameworks: ['jasmine', '@angular-devkit/build-angular'],
+        frameworks: [
+            'jasmine',
+            '@angular-devkit/build-angular'
+        ],
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
@@ -24,11 +25,12 @@ module.exports = () => {
             sourceMap: true
         },
 
-        reporters: ['dots', 'junit'],
-
-        files: [
-            { pattern: '../../dist/components/prebuilt-themes/light-theme.css', included: true, watched: true },
+        reporters: [
+            'dots',
+            'junit'
         ],
+
+        files: [{ pattern: '../../dist/components/prebuilt-themes/light-theme.css', included: true, watched: true }],
 
         port: 9876,
         colors: true,
@@ -47,13 +49,13 @@ module.exports = () => {
         },
 
         customLaunchers: {
-            'ChromeHeadlessLocal': {
-                'base': 'ChromeHeadless',
-                'flags': [
+            ChromeHeadlessLocal: {
+                base: 'ChromeHeadless',
+                flags: [
                     '--window-size=1024,768',
                     '--no-sandbox'
                 ],
-                'debug': true
+                debug: true
             }
         },
 

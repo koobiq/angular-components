@@ -7,12 +7,14 @@ import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/a
 import {
     DateAdapter,
     DateFormatter,
-    KbqFormattersModule,
     KBQ_DATE_LOCALE,
-    KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService, KBQ_DEFAULT_LOCALE_DATA_FACTORY
+    KBQ_DEFAULT_LOCALE_DATA_FACTORY,
+    KBQ_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
+    KbqLocaleService
 } from '@koobiq/components/core';
 import { DateTime, DateTimeUnit } from 'luxon';
-
 
 describe('Date formatter', () => {
     let adapter: LuxonDateAdapter;
@@ -43,7 +45,6 @@ describe('Date formatter', () => {
     beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
         adapter = d;
         formatter = f;
-
 
         currentDate = adapter.createDateTime(adapter.today().year, 5, 15, 0, 0, 0, 0);
     }));
@@ -79,8 +80,9 @@ describe('Date formatter', () => {
             describe('Relative short (relativeShortDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
+                    );
                 });
 
                 it('before yesterday, more than 2 days ago', () => {
@@ -88,13 +90,15 @@ describe('Date formatter', () => {
 
                     let date = currentDate.minus({ days: 3 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
+                    );
 
                     date = currentDate.minus({ days: 5 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
+                    );
                 });
 
                 it('yesterday', () => {
@@ -102,35 +106,29 @@ describe('Date formatter', () => {
 
                     let date = currentDate.minus({ days: 1 }).startOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
 
                     date = currentDate.minus({ days: 1 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
 
                     date = currentDate.minus({ days: 1 }).endOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
                 });
 
                 it('today', () => {
                     let date = adapter.today().startOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
 
                     date = adapter.today();
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
 
                     date = adapter.today().endOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
                 });
 
                 it('tomorrow', () => {
@@ -138,18 +136,15 @@ describe('Date formatter', () => {
 
                     let date = currentDate.plus({ days: 1 }).startOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
 
                     date = currentDate.plus({ days: 1 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
 
                     date = currentDate.plus({ days: 1 }).endOf('day');
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
                 });
 
                 it('after tomorrow (current year)', () => {
@@ -157,41 +152,45 @@ describe('Date formatter', () => {
 
                     let date = currentDate.plus({ days: 3 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
+                    );
 
                     date = currentDate.plus({ days: 5 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH}, ${TIME}`)
+                    );
                 });
 
                 it('after tomorrow (other year)', () => {
                     const date = currentDate.plus({ years: 1 });
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
+                    );
                 });
 
                 it('with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeShortDateTime(date, { milliseconds: true }))
-                        .toBe(date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
+                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeShortDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`));
+                    expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
 
             describe('Relative long (relativeLongDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = currentDate.minus({ years: 1 });
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
                 });
 
                 it('before yesterday, more than 2 days ago', () => {
@@ -199,13 +198,11 @@ describe('Date formatter', () => {
 
                     let date = currentDate.minus({ days: 3 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
 
                     date = currentDate.minus({ days: 5 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
                 });
 
                 it('yesterday', () => {
@@ -213,35 +210,29 @@ describe('Date formatter', () => {
 
                     let date = currentDate.minus({ days: 1 }).startOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
 
                     date = currentDate.minus({ days: 1 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
 
                     date = currentDate.minus({ days: 1 }).endOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Вчера, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Вчера, ${date.toFormat(TIME)}`);
                 });
 
                 it('today', () => {
                     let date = adapter.today().startOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
 
                     date = adapter.today();
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
 
                     date = adapter.today().endOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Сегодня, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Сегодня, ${date.toFormat(TIME)}`);
                 });
 
                 it('tomorrow', () => {
@@ -249,18 +240,15 @@ describe('Date formatter', () => {
 
                     let date = currentDate.plus({ days: 1 }).startOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
 
                     date = currentDate.plus({ days: 1 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
 
                     date = currentDate.plus({ days: 1 }).endOf('day');
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Завтра, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeLongDate(date)).toBe(`Завтра, ${date.toFormat(TIME)}`);
                 });
 
                 it('after tomorrow (current year)', () => {
@@ -268,33 +256,32 @@ describe('Date formatter', () => {
 
                     let date = currentDate.plus({ days: 3 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
 
                     date = currentDate.plus({ days: 5 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
                 });
 
                 it('after tomorrow (other year)', () => {
                     const date = currentDate.plus({ years: 1 });
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
                 });
 
                 it('with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeShortDateTime(date, { milliseconds: true }))
-                        .toBe(date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
+                        date.toFormat(`Сегодня, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeShortDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`));
+                    expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `Сегодня, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
         });
@@ -304,71 +291,77 @@ describe('Date formatter', () => {
                 it('absoluteShortDate', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDate(date))
-                        .toBe(adapter.format(date, DAY_SHORT_MONTH));
+                    expect(formatter.absoluteShortDate(date)).toBe(adapter.format(date, DAY_SHORT_MONTH));
                 });
 
                 it('absoluteShortDate (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDate(date, true))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`));
+                    expect(formatter.absoluteShortDate(date, true)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`)
+                    );
                 });
 
                 it('absoluteShortDate (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteShortDate(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`));
+                    expect(formatter.absoluteShortDate(date)).toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}`));
                 });
 
                 it('absoluteShortDateTime', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date, { currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteShortDateTime(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with milliseconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with seconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
 
@@ -376,71 +369,71 @@ describe('Date formatter', () => {
                 it('absoluteLongDate', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDate(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}`));
+                    expect(formatter.absoluteLongDate(date)).toBe(date.toFormat(`${DAY_MONTH}`));
                 });
 
                 it('absoluteLongDate (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDate(date, true))
-                        .toBe(date.toFormat(`${DAY_MONTH} ${YEAR}`));
+                    expect(formatter.absoluteLongDate(date, true)).toBe(date.toFormat(`${DAY_MONTH} ${YEAR}`));
                 });
 
                 it('absoluteLongDate (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteLongDate(date))
-                        .toBe(date.toFormat(`${DAY_MONTH} ${YEAR}`));
+                    expect(formatter.absoluteLongDate(date)).toBe(date.toFormat(`${DAY_MONTH} ${YEAR}`));
                 });
 
                 it('absoluteLongDateTime', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date)).toBe(date.toFormat(`${DAY_MONTH}, ${TIME}`));
                 });
 
                 it('absoluteLongDateTime (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { currYear: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date, { currYear: true })).toBe(
+                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteLongDateTime (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteLongDateTime(date))
-                        .toBe(date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date)).toBe(date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}`));
                 });
 
                 it('absoluteLongDateTime with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true })).toBe(
+                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with milliseconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true })).toBe(
+                        date.toFormat(`${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with seconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_MONTH} ${YEAR}, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
         });
@@ -463,8 +456,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY}`);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(`${startString}${DASH}${endString}`);
                     });
 
                     it('rangeShortDate (other month)', () => {
@@ -474,8 +466,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDate (startDate is other year)', () => {
@@ -485,8 +478,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDate (endDate is other year)', () => {
@@ -496,8 +490,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -514,8 +509,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (same day)', () => {
@@ -525,8 +521,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (same day, other year)', () => {
@@ -536,8 +533,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH} ${YEAR}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (other month)', () => {
@@ -547,8 +545,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (startDate is other year)', () => {
@@ -558,8 +557,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (endDate is other year)', () => {
@@ -569,8 +569,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with seconds)', () => {
@@ -580,19 +581,27 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate, {seconds: true}))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate, { seconds: true })).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with milliseconds)', () => {
                         const startDate = adapter.today().set({ day: 1 });
                         const endDate = startDate.plus({ days: 10 });
 
-                        const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`);
-                        const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`);
+                        const startString = adapter.format(
+                            startDate,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
+                        );
+                        const endString = adapter.format(
+                            endDate,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
+                        );
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate, {milliseconds: true}))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate, { milliseconds: true })).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -609,8 +618,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY}`);
                         const endString = adapter.format(endDate, `${endDateFormat}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(`${startString}${DASH}${endString}`);
                     });
 
                     it('rangeLongDate (other month)', () => {
@@ -620,8 +628,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, `${endDateFormat}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeLongDate (startDate is other year)', () => {
@@ -631,8 +640,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeLongDate (endDate is other year)', () => {
@@ -642,8 +652,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -660,8 +671,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (same day)', () => {
@@ -669,12 +681,12 @@ describe('Date formatter', () => {
                         const endDate = startDate.plus({ minutes: 1 });
 
                         const startString = adapter.format(
-                            startDate, `${DAY_MONTH}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
+                            startDate,
+                            `${DAY_MONTH}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
                         );
                         const endString = adapter.format(endDate, `${UNTIL.toLocaleLowerCase()}${NBSP}${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${startString} ${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(`${startString} ${endString}`);
                     });
 
                     it('rangeLongDateTime (same day, other year)', () => {
@@ -682,12 +694,12 @@ describe('Date formatter', () => {
                         const endDate = startDate.plus({ minutes: 1 });
 
                         const startString = adapter.format(
-                            startDate, `${DAY_MONTH} ${YEAR}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
+                            startDate,
+                            `${DAY_MONTH} ${YEAR}, ${FROM.toLocaleLowerCase()}${NBSP}${TIME}`
                         );
                         const endString = adapter.format(endDate, `${UNTIL.toLocaleLowerCase()}${NBSP}${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${startString} ${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(`${startString} ${endString}`);
                     });
 
                     it('rangeLongDateTime (other month)', () => {
@@ -697,8 +709,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (startDate is other year)', () => {
@@ -708,8 +721,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (endDate is other year)', () => {
@@ -719,8 +733,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM}${NBSP}${startString} ${UNTIL.toLocaleLowerCase()}${NBSP}${endString}`
+                        );
                     });
                 });
 
@@ -737,8 +752,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (same day)', () => {
@@ -748,8 +764,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (same day, other year)', () => {
@@ -759,8 +776,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH} ${YEAR}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (other month)', () => {
@@ -770,8 +788,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (startDate is other year)', () => {
@@ -781,8 +800,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (endDate is other year)', () => {
@@ -792,8 +812,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
             });
@@ -814,32 +835,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeShortDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDate (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDate (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDate (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
 
@@ -858,50 +875,46 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDateTime (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDateTime (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDateTime (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDateTime (with seconds)', () => {
-
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, null, {seconds: true}))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate, null, { seconds: true })).toBe(
+                            `${FROM}${NBSP}${startString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with milliseconds)', () => {
-
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}${MILLISECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, null, {milliseconds: true}))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate, null, { milliseconds: true })).toBe(
+                            `${FROM}${NBSP}${startString}`
+                        );
                     });
                 });
 
@@ -920,32 +933,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeLongDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDate (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeLongDate (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDate (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
 
@@ -964,32 +973,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDateTime (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeLongDateTime (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDateTime (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
             });
@@ -1016,8 +1021,9 @@ describe('Date formatter', () => {
             describe('Relative short (relativeShortDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
+                    );
                 });
 
                 it('before yesterday, more than 2 days ago', () => {
@@ -1025,95 +1031,15 @@ describe('Date formatter', () => {
 
                     let date = currentDate.minus({ days: 3 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
+                    );
 
                     date = currentDate.minus({ days: 5 });
 
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`));
-                });
-
-                it('yesterday', () => {
-                    mockAdapterAndFormatterForRelativeTests();
-
-                    const date = currentDate
-                        .minus({ days: 1 });
-
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Yesterday, ${date.toFormat(TIME)}`);
-                });
-
-                it('today', () => {
-                    const date = adapter.today();
-
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Today, ${date.toFormat(TIME)}`);
-                });
-
-                it('tomorrow', () => {
-                    mockAdapterAndFormatterForRelativeTests();
-
-                    const date = currentDate.plus({ days: 1 });
-
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(`Tomorrow, ${date.toFormat(TIME)}`);
-                });
-
-                it('after tomorrow (current year)', () => {
-                    mockAdapterAndFormatterForRelativeTests();
-
-                    let date = currentDate.plus({ days: 3 });
-
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`));
-
-                    date = currentDate.plus({ days: 5 });
-
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`));
-                });
-
-                it('after tomorrow (other year)', () => {
-                    const date = adapter.createDate(2015).plus({ days: 3 });
-                    expect(formatter.relativeShortDate(date))
-                        .toBe(adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`));
-                });
-
-                it('with milliseconds', () => {
-                    const date = adapter.today();
-
-                    expect(formatter.relativeShortDateTime(date, { milliseconds: true }))
-                        .toBe(`Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`);
-                });
-
-                it('with seconds', () => {
-                    const date = adapter.today();
-
-                    expect(formatter.relativeShortDateTime(date, { seconds: true }))
-                        .toBe(`Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`);
-                });
-            });
-
-            describe('Relative long (relativeLongDate method)', () => {
-                it('before yesterday (other year)', () => {
-                    const date = adapter.createDate(2015).minus({ days: 3 });
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
-                });
-
-                it('before yesterday, more than 2 days ago', () => {
-                    mockAdapterAndFormatterForRelativeTests();
-
-                    let date = currentDate.minus({ days: 3 });
-
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
-
-                    date = currentDate.minus({ days: 5 });
-
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
+                    );
                 });
 
                 it('yesterday', () => {
@@ -1121,15 +1047,13 @@ describe('Date formatter', () => {
 
                     const date = currentDate.minus({ days: 1 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Yesterday, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Yesterday, ${date.toFormat(TIME)}`);
                 });
 
                 it('today', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Today, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Today, ${date.toFormat(TIME)}`);
                 });
 
                 it('tomorrow', () => {
@@ -1137,8 +1061,7 @@ describe('Date formatter', () => {
 
                     const date = currentDate.plus({ days: 1 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(`Tomorrow, ${date.toFormat(TIME)}`);
+                    expect(formatter.relativeShortDate(date)).toBe(`Tomorrow, ${date.toFormat(TIME)}`);
                 });
 
                 it('after tomorrow (current year)', () => {
@@ -1146,33 +1069,112 @@ describe('Date formatter', () => {
 
                     let date = currentDate.plus({ days: 3 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
+                    );
 
                     date = currentDate.plus({ days: 5 });
 
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${TIME}`)
+                    );
                 });
 
                 it('after tomorrow (other year)', () => {
                     const date = adapter.createDate(2015).plus({ days: 3 });
-                    expect(formatter.relativeLongDate(date))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
+                    expect(formatter.relativeShortDate(date)).toBe(
+                        adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
+                    );
                 });
 
                 it('with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeLongDateTime(date, { milliseconds: true }))
-                        .toBe(`Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`);
+                    expect(formatter.relativeShortDateTime(date, { milliseconds: true })).toBe(
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`
+                    );
                 });
 
                 it('with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.relativeLongDateTime(date, { seconds: true }))
-                        .toBe(`Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`);
+                    expect(formatter.relativeShortDateTime(date, { seconds: true })).toBe(
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`
+                    );
+                });
+            });
+
+            describe('Relative long (relativeLongDate method)', () => {
+                it('before yesterday (other year)', () => {
+                    const date = adapter.createDate(2015).minus({ days: 3 });
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
+                });
+
+                it('before yesterday, more than 2 days ago', () => {
+                    mockAdapterAndFormatterForRelativeTests();
+
+                    let date = currentDate.minus({ days: 3 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+
+                    date = currentDate.minus({ days: 5 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                });
+
+                it('yesterday', () => {
+                    mockAdapterAndFormatterForRelativeTests();
+
+                    const date = currentDate.minus({ days: 1 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(`Yesterday, ${date.toFormat(TIME)}`);
+                });
+
+                it('today', () => {
+                    const date = adapter.today();
+
+                    expect(formatter.relativeLongDate(date)).toBe(`Today, ${date.toFormat(TIME)}`);
+                });
+
+                it('tomorrow', () => {
+                    mockAdapterAndFormatterForRelativeTests();
+
+                    const date = currentDate.plus({ days: 1 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(`Tomorrow, ${date.toFormat(TIME)}`);
+                });
+
+                it('after tomorrow (current year)', () => {
+                    mockAdapterAndFormatterForRelativeTests();
+
+                    let date = currentDate.plus({ days: 3 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+
+                    date = currentDate.plus({ days: 5 });
+
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}`));
+                });
+
+                it('after tomorrow (other year)', () => {
+                    const date = adapter.createDate(2015).plus({ days: 3 });
+                    expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
+                });
+
+                it('with milliseconds', () => {
+                    const date = adapter.today();
+
+                    expect(formatter.relativeLongDateTime(date, { milliseconds: true })).toBe(
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}${MILLISECONDS}`)}`
+                    );
+                });
+
+                it('with seconds', () => {
+                    const date = adapter.today();
+
+                    expect(formatter.relativeLongDateTime(date, { seconds: true })).toBe(
+                        `Today, ${date.toFormat(`${TIME}:${SECONDS}`)}`
+                    );
                 });
             });
         });
@@ -1182,71 +1184,77 @@ describe('Date formatter', () => {
                 it('absoluteShortDate', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDate(date))
-                        .toBe(adapter.format(date, DAY_SHORT_MONTH));
+                    expect(formatter.absoluteShortDate(date)).toBe(adapter.format(date, DAY_SHORT_MONTH));
                 });
 
                 it('absoluteShortDate (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDate(date, true))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`));
+                    expect(formatter.absoluteShortDate(date, true)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`)
+                    );
                 });
 
                 it('absoluteShortDate (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteShortDate(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`));
+                    expect(formatter.absoluteShortDate(date)).toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}`));
                 });
 
                 it('absoluteShortDateTime', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date, { currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteShortDateTime(date))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteShortDateTime(date)).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with milliseconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { milliseconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`)
+                    );
                 });
 
                 it('absoluteShortDateTime with seconds (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteShortDateTime(date, { seconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
 
@@ -1254,70 +1262,70 @@ describe('Date formatter', () => {
                 it('absoluteLongDate', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDate(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}`));
+                    expect(formatter.absoluteLongDate(date)).toBe(date.toFormat(`${DAY_MONTH}`));
                 });
                 it('absoluteLongDate  (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDate(date, true))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}`));
+                    expect(formatter.absoluteLongDate(date, true)).toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}`));
                 });
 
                 it('absoluteLongDate (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteLongDate(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}`));
+                    expect(formatter.absoluteLongDate(date)).toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}`));
                 });
 
                 it('absoluteLongDateTime', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date)).toBe(date.toFormat(`${DAY_MONTH}, ${TIME}`));
                 });
 
                 it('absoluteLongDateTime  (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { currYear: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date, { currYear: true })).toBe(
+                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`)
+                    );
                 });
 
                 it('absoluteLongDateTime (other year)', () => {
                     const date = adapter.createDate(2015);
 
-                    expect(formatter.absoluteLongDateTime(date))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`));
+                    expect(formatter.absoluteLongDateTime(date)).toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}`));
                 });
 
                 it('absoluteLongDateTime with milliseconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true })).toBe(
+                        date.toFormat(`${DAY_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with milliseconds  (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true }))
-                        .toBe(date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { milliseconds: true, currYear: true })).toBe(
+                        date.toFormat(`${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}${MILLISECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with seconds', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { seconds: true }))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { seconds: true })).toBe(
+                        adapter.format(date, `${DAY_MONTH}, ${TIME}:${SECONDS}`)
+                    );
                 });
 
                 it('absoluteLongDateTime with seconds  (current year forced shown)', () => {
                     const date = adapter.today();
 
-                    expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true }))
-                        .toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`));
+                    expect(formatter.absoluteLongDateTime(date, { seconds: true, currYear: true })).toBe(
+                        adapter.format(date, `${DAY_MONTH}, ${YEAR}, ${TIME}:${SECONDS}`)
+                    );
                 });
             });
         });
@@ -1340,8 +1348,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, `${DAY}`);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(`${startString}${DASH}${endString}`);
                     });
 
                     it('rangeShortDate (other month)', () => {
@@ -1351,8 +1358,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDate (startDate is other year)', () => {
@@ -1362,8 +1370,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}, ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDate (endDate is other year)', () => {
@@ -1373,8 +1382,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}, ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -1391,8 +1401,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (same day)', () => {
@@ -1402,8 +1413,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (same day, other year)', () => {
@@ -1413,8 +1425,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_SHORT_MONTH}, ${YEAR}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (other month)', () => {
@@ -1424,8 +1437,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (startDate is other year)', () => {
@@ -1435,8 +1449,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (endDate is other year)', () => {
@@ -1446,8 +1461,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with seconds)', () => {
@@ -1457,19 +1473,27 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate, {seconds: true}))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate, { seconds: true })).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with milliseconds)', () => {
                         const startDate = adapter.today().set({ day: 1 });
                         const endDate = startDate.plus({ days: 10 });
 
-                        const startString = adapter.format(startDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`);
-                        const endString = adapter.format(endDate, `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`);
+                        const startString = adapter.format(
+                            startDate,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
+                        );
+                        const endString = adapter.format(
+                            endDate,
+                            `${DAY_SHORT_MONTH}, ${TIME}:${SECONDS}${MILLISECONDS}`
+                        );
 
-                        expect(formatter.rangeShortDateTime(startDate, endDate, {milliseconds: true}))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeShortDateTime(startDate, endDate, { milliseconds: true })).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -1486,8 +1510,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, DAY);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(`${startString}${DASH}${endString}`);
                     });
 
                     it('rangeLongDate (other month)', () => {
@@ -1497,8 +1520,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, `${endDateFormat}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeLongDate (startDate is other year)', () => {
@@ -1508,8 +1532,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}, ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeLongDate (endDate is other year)', () => {
@@ -1519,8 +1544,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${startDateFormat}, ${YEAR}`);
                         const endString = adapter.format(endDate, `${endDateFormat}, ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeLongDate(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
 
@@ -1537,8 +1563,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM} ${startString} to${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM} ${startString} to${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (same day)', () => {
@@ -1548,8 +1575,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, 'from'${NBSP}${TIME}`);
                         const endString = adapter.format(endDate, `'to'${NBSP}${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${startString} ${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(`${startString} ${endString}`);
                     });
 
                     it('rangeLongDateTime (same day, other year)', () => {
@@ -1559,8 +1585,7 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, ${YEAR}, 'from'${NBSP}${TIME}`);
                         const endString = adapter.format(endDate, `'to'${NBSP}${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${startString} ${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(`${startString} ${endString}`);
                     });
 
                     it('rangeLongDateTime (other month)', () => {
@@ -1570,8 +1595,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM} ${startString} to${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM} ${startString} to${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (startDate is other year)', () => {
@@ -1581,8 +1607,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM} ${startString} to${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM} ${startString} to${NBSP}${endString}`
+                        );
                     });
 
                     it('rangeLongDateTime (endDate is other year)', () => {
@@ -1592,8 +1619,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate, endDate))
-                            .toBe(`${FROM} ${startString} to${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(startDate, endDate)).toBe(
+                            `${FROM} ${startString} to${NBSP}${endString}`
+                        );
                     });
                 });
 
@@ -1610,8 +1638,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (same day)', () => {
@@ -1621,8 +1650,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (same day, other year)', () => {
@@ -1632,8 +1662,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${TIME}`);
                         const endString = adapter.format(endDate, `${TIME}, ${DAY_MONTH}, ${YEAR}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (other month)', () => {
@@ -1643,8 +1674,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, startDateFormat);
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (startDate is other year)', () => {
@@ -1654,8 +1686,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
 
                     it('rangeMiddleDateTime (endDate is other year)', () => {
@@ -1665,8 +1698,9 @@ describe('Date formatter', () => {
                         const startString = adapter.format(startDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
                         const endString = adapter.format(endDate, `${DAY_MONTH}, ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeMiddleDateTime(startDate, endDate))
-                            .toBe(`${startString}${LONG_DASH}${endString}`);
+                        expect(formatter.rangeMiddleDateTime(startDate, endDate)).toBe(
+                            `${startString}${LONG_DASH}${endString}`
+                        );
                     });
                 });
             });
@@ -1687,32 +1721,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeShortDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDate (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDate (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDate (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeShortDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
 
@@ -1731,49 +1761,46 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeShortDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDateTime (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeShortDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDateTime (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeShortDateTime (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${DAY_SHORT_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeShortDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeShortDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeShortDateTime (with seconds)', () => {
-
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, null, {seconds: true}))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate, null, { seconds: true })).toBe(
+                            `${FROM}${NBSP}${startString}`
+                        );
                     });
 
                     it('rangeShortDateTime (with milliseconds)', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, `${startDateFormat}:${SECONDS}${MILLISECONDS}`);
 
-                        expect(formatter.rangeShortDateTime(startDate, null, {milliseconds: true}))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeShortDateTime(startDate, null, { milliseconds: true })).toBe(
+                            `${FROM}${NBSP}${startString}`
+                        );
                     });
                 });
 
@@ -1792,33 +1819,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeLongDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDate (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeLongDate (startDate is other year)', () => {
-                        const startDate = adapter.today()
-                            .minus({ years: 1 });
+                        const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${startDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDate(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDate (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${endDateFormat} ${YEAR}`);
 
-                        expect(formatter.rangeLongDate(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDate(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
 
@@ -1837,32 +1859,28 @@ describe('Date formatter', () => {
                         const startDate = adapter.today();
                         const startString = adapter.format(startDate, startDateFormat);
 
-                        expect(formatter.rangeLongDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDateTime (only endDate)', () => {
                         const endDate = adapter.today();
                         const endString = adapter.format(endDate, endDateFormat);
 
-                        expect(formatter.rangeLongDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
 
                     it('rangeLongDateTime (startDate is other year)', () => {
                         const startDate = adapter.today().minus({ years: 1 });
                         const startString = adapter.format(startDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(startDate))
-                            .toBe(`${FROM}${NBSP}${startString}`);
+                        expect(formatter.rangeLongDateTime(startDate)).toBe(`${FROM}${NBSP}${startString}`);
                     });
 
                     it('rangeLongDateTime (endDate is other year)', () => {
                         const endDate = adapter.today().plus({ years: 1 });
                         const endString = adapter.format(endDate, `${DAY_MONTH} ${YEAR}, ${TIME}`);
 
-                        expect(formatter.rangeLongDateTime(null, endDate))
-                            .toBe(`${UNTIL}${NBSP}${endString}`);
+                        expect(formatter.rangeLongDateTime(null, endDate)).toBe(`${UNTIL}${NBSP}${endString}`);
                     });
                 });
             });
@@ -1890,66 +1908,64 @@ describe('Date formatter', () => {
             });
 
             it('seconds', () => {
-                const startDate = endDate.minus({second, millisecond});
+                const startDate = endDate.minus({ second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate))
-                    .toBe(`0:${second}`);
+                expect(formatter.durationShortest(startDate, endDate)).toBe(`0:${second}`);
             });
 
             it('seconds and milliseconds', () => {
-                const startDate = endDate.minus({second, millisecond});
+                const startDate = endDate.minus({ second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate, true, true))
-                    .toBe(`0:${second},${millisecond}`);
+                expect(formatter.durationShortest(startDate, endDate, true, true)).toBe(`0:${second},${millisecond}`);
             });
 
             it('minutes and seconds', () => {
-                const startDate = endDate.minus({minute, second, millisecond});
+                const startDate = endDate.minus({ minute, second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate))
-                    .toBe(`${minute}:${second}`);
+                expect(formatter.durationShortest(startDate, endDate)).toBe(`${minute}:${second}`);
             });
 
             it('only minutes < 10 min', () => {
-                const startDate = endDate.minus({minute, second, millisecond});
+                const startDate = endDate.minus({ minute, second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate, false))
-                    .toBe(`0:${String(minute).padStart(2, '0')}`);
+                expect(formatter.durationShortest(startDate, endDate, false)).toBe(
+                    `0:${String(minute).padStart(2, '0')}`
+                );
             });
 
             it('only minutes > 10 min', () => {
                 const minutes = 35;
-                const startDate = endDate.minus({minute: minutes, second, millisecond});
+                const startDate = endDate.minus({ minute: minutes, second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate, false))
-                    .toBe(`0:${minutes}`);
+                expect(formatter.durationShortest(startDate, endDate, false)).toBe(`0:${minutes}`);
             });
 
             it('minutes, seconds and milliseconds', () => {
-                const startDate = endDate.minus({minute, second, millisecond});
+                const startDate = endDate.minus({ minute, second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate, true, true))
-                    .toBe(`${minute}:${second},${millisecond}`);
+                expect(formatter.durationShortest(startDate, endDate, true, true)).toBe(
+                    `${minute}:${second},${millisecond}`
+                );
             });
 
             it('hours, minutes and seconds', () => {
                 hour = 5;
-                const startDate = endDate.minus({hour, minute, second, millisecond});
+                const startDate = endDate.minus({ hour, minute, second, millisecond });
 
-                expect(formatter.durationShortest(startDate, endDate))
-                    .toBe(`${hour}:${String(minute).padStart(2, '0')}:${second}`);
+                expect(formatter.durationShortest(startDate, endDate)).toBe(
+                    `${hour}:${String(minute).padStart(2, '0')}:${second}`
+                );
             });
-
         });
 
         const testTextFormat = (locale, formatterName, plurals, separator) => {
-
             const testPluralUnits = (value, unit) => {
                 it(`plural unit: ${value} ${unit}`, () => {
-                    const startDate = endDate.minus({[unit]: value});
+                    const startDate = endDate.minus({ [unit]: value });
 
-                    expect(formatter[formatterName](startDate, endDate, [unit]))
-                        .toBe(`${value} ${plurals[unit][pr.select(value)]}`);
+                    expect(formatter[formatterName](startDate, endDate, [unit])).toBe(
+                        `${value} ${plurals[unit][pr.select(value)]}`
+                    );
                 });
             };
 
@@ -1966,87 +1982,84 @@ describe('Date formatter', () => {
             });
 
             it('minutes and seconds', () => {
-                const startDate = endDate.minus({minute, second});
+                const startDate = endDate.minus({ minute, second });
                 const firstValue = `${minute} ${plurals.minute[pr.select(minute)]}`;
                 const secondValue = `${second} ${plurals.second[pr.select(second)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             it('hours and minutes', () => {
-                const startDate = endDate.minus({hour, minute});
+                const startDate = endDate.minus({ hour, minute });
                 const firstValue = `${hour} ${plurals.hour[pr.select(hour)]}`;
                 const secondValue = `${minute} ${plurals.minute[pr.select(minute)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             it('hours and minutes (more then 24 hours)', () => {
                 hour = 32;
-                const startDate = endDate.minus({hour, minute});
+                const startDate = endDate.minus({ hour, minute });
                 const firstValue = `${hour} ${plurals.hour[pr.select(hour)]}`;
                 const secondValue = `${minute} ${plurals.minute[pr.select(minute)]}`;
 
-                expect(formatter[formatterName](startDate, endDate, ['hours', 'minutes']))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate, ['hours', 'minutes'])).toBe(
+                    `${firstValue}${separator}${secondValue}`
+                );
             });
 
             it('days and hours', () => {
-                const startDate = endDate.minus({day, hour});
+                const startDate = endDate.minus({ day, hour });
                 const firstValue = `${day} ${plurals.day[pr.select(day)]}`;
                 const secondValue = `${hour} ${plurals.hour[pr.select(hour)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             it('days and hours (more than 1 week)', () => {
                 day = 10;
-                const startDate = endDate.minus({day, hour});
+                const startDate = endDate.minus({ day, hour });
                 const firstValue = `${day} ${plurals.day[pr.select(day)]}`;
                 const secondValue = `${hour} ${plurals.hour[pr.select(hour)]}`;
 
-                expect(formatter[formatterName](startDate, endDate, ['days', 'hours']))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate, ['days', 'hours'])).toBe(
+                    `${firstValue}${separator}${secondValue}`
+                );
             });
 
             it('weeks and days', () => {
-                const startDate = endDate.minus({week, day});
+                const startDate = endDate.minus({ week, day });
                 const firstValue = `${week} ${plurals.week[pr.select(week)]}`;
                 const secondValue = `${day} ${plurals.day[pr.select(day)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             it('weeks and days (more than 1 month)', () => {
                 week = 6;
-                const startDate = endDate.minus({week, day});
+                const startDate = endDate.minus({ week, day });
                 const firstValue = `${week} ${plurals.week[pr.select(week)]}`;
                 const secondValue = `${day} ${plurals.day[pr.select(day)]}`;
 
-                expect(formatter[formatterName](startDate, endDate, ['weeks', 'days']))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate, ['weeks', 'days'])).toBe(
+                    `${firstValue}${separator}${secondValue}`
+                );
             });
 
             it('months and weeks', () => {
-                const startDate = endDate.minus({month, week});
+                const startDate = endDate.minus({ month, week });
                 const firstValue = `${month} ${plurals.month[pr.select(month)]}`;
                 const secondValue = `${week} ${plurals.week[pr.select(week)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             it('years and months', () => {
-                const startDate = endDate.minus({year, month});
+                const startDate = endDate.minus({ year, month });
                 const firstValue = `${year} ${plurals.year[pr.select(year)]}`;
                 const secondValue = `${month} ${plurals.month[pr.select(month)]}`;
 
-                expect(formatter[formatterName](startDate, endDate))
-                    .toBe(`${firstValue}${separator}${secondValue}`);
+                expect(formatter[formatterName](startDate, endDate)).toBe(`${firstValue}${separator}${secondValue}`);
             });
 
             const testFractions = (unit, startDateOpts, intPart, expectedValue) => {
@@ -2054,8 +2067,9 @@ describe('Date formatter', () => {
                     const startDate = endDate.minus(startDateOpts);
                     const expectedValueFormatted = new Intl.NumberFormat(locale).format(expectedValue);
 
-                    expect(formatter[formatterName](startDate, endDate, [unit], true))
-                        .toBe(`${expectedValueFormatted} ${intPart === 1 ? (plurals[unit].few || plurals[unit].other) : plurals[unit][pr.select(intPart)]}`);
+                    expect(formatter[formatterName](startDate, endDate, [unit], true)).toBe(
+                        `${expectedValueFormatted} ${intPart === 1 ? plurals[unit].few || plurals[unit].other : plurals[unit][pr.select(intPart)]}`
+                    );
                 });
             };
 
@@ -2075,7 +2089,6 @@ describe('Date formatter', () => {
         };
 
         describe('Text long format', () => {
-
             describe('ru locale', () => {
                 const separator = ' и ';
                 const plurals = {
@@ -2135,11 +2148,9 @@ describe('Date formatter', () => {
 
                 testTextFormat('en-US', 'durationLong', plurals, separator);
             });
-
         });
 
         describe('Text short format', () => {
-
             describe('ru locale', () => {
                 const separator = ' ';
                 const plurals = {
@@ -2168,10 +2179,11 @@ describe('Date formatter', () => {
                 });
 
                 it('seconds and milliseconds', () => {
-                    const startDate = endDate.minus({second, millisecond});
+                    const startDate = endDate.minus({ second, millisecond });
 
-                    expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds']))
-                        .toBe(`${second},${millisecond} ${plurals.second[pr.select(second)]}`);
+                    expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds'])).toBe(
+                        `${second},${millisecond} ${plurals.second[pr.select(second)]}`
+                    );
                 });
 
                 testTextFormat('ru-RU', 'durationShort', plurals, separator);
@@ -2205,12 +2217,13 @@ describe('Date formatter', () => {
                 });
 
                 it('seconds and milliseconds', () => {
-                    const startDate = endDate.minus({second, millisecond});
+                    const startDate = endDate.minus({ second, millisecond });
 
                     const millisecondsViewValue = millisecond < 100 ? `0${millisecond.toString()}` : millisecond;
 
-                    expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds']))
-                        .toBe(`${second}.${millisecondsViewValue} ${plurals.second[pr.select(second)]}`);
+                    expect(formatter.durationShort(startDate, endDate, ['seconds', 'milliseconds'])).toBe(
+                        `${second}.${millisecondsViewValue} ${plurals.second[pr.select(second)]}`
+                    );
                 });
 
                 testTextFormat('en-US', 'durationShort', plurals, separator);
@@ -2251,8 +2264,7 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' }
-                ]
+                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
             }).compileComponents();
         }));
 
@@ -2276,10 +2288,12 @@ describe('Date formatter (imports and providing)', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
-                providers: [{
-                    provide: KBQ_LOCALE_SERVICE,
-                    useFactory: () => new KbqLocaleService('pt-BR', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
-                }]
+                providers: [
+                    {
+                        provide: KBQ_LOCALE_SERVICE,
+                        useFactory: () => new KbqLocaleService('pt-BR', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
+                    }
+                ]
             }).compileComponents();
         }));
 

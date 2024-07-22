@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync } from 'fs';
-
 import { CHANGELOG_FILE_NAME } from '../../packages/cli/src/release/constants';
 import { extractReleaseNotes } from '../../packages/cli/src/release/extract-release-notes';
 

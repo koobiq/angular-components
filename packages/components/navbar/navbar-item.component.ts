@@ -29,17 +29,14 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
-import { EMPTY, merge, Subject } from 'rxjs';
+import { EMPTY, Subject, merge } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-
 import { KbqVerticalNavbar } from './vertical-navbar.component';
-
 
 // tslint:disable-next-line:naming-convention
 export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarFocusableItem;
 }
-
 
 @Directive({
     selector: 'kbq-navbar-logo, [kbq-navbar-logo]',
@@ -53,7 +50,6 @@ export class KbqNavbarLogo {
     readonly hovered = new Subject<boolean>();
 }
 
-
 @Directive({
     selector: 'kbq-navbar-item[bento], [kbq-navbar-item][bento]',
     host: {
@@ -61,7 +57,6 @@ export class KbqNavbarLogo {
     }
 })
 export class KbqNavbarBento {}
-
 
 @Directive({
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
@@ -108,7 +103,9 @@ export class KbqNavbarTitle implements AfterViewInit {
 @Component({
     selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
     exportAs: 'kbqNavbarBrand',
-    template: `<ng-content></ng-content>`,
+    template: `
+        <ng-content></ng-content>
+    `,
     host: {
         class: 'kbq-navbar-brand',
         '[class.kbq-hovered]': 'hovered'
@@ -126,19 +123,14 @@ export class KbqNavbarBrand implements AfterContentInit, OnDestroy {
 
     private destroyed = new Subject<void>();
 
-    constructor(@Optional() private navbar: KbqVerticalNavbar) {
-    }
+    constructor(@Optional() private navbar: KbqVerticalNavbar) {}
 
     ngAfterContentInit(): void {
-        merge(
-            this.logo ? this.logo.hovered : EMPTY as any,
-            this.title ? this.title.hovered : EMPTY as any
-        )
-        .pipe(takeUntil(this.destroyed))
-        .subscribe((value) => this.hovered = !!value);
+        merge(this.logo ? this.logo.hovered : (EMPTY as any), this.title ? this.title.hovered : (EMPTY as any))
+            .pipe(takeUntil(this.destroyed))
+            .subscribe((value) => (this.hovered = !!value));
 
-        this.navbar?.animationDone
-            .subscribe(() => this.title?.checkTextOverflown());
+        this.navbar?.animationDone.subscribe(() => this.title?.checkTextOverflown());
     }
 
     ngOnDestroy(): void {
@@ -147,7 +139,6 @@ export class KbqNavbarBrand implements AfterContentInit, OnDestroy {
     }
 }
 
-
 @Directive({
     selector: 'kbq-navbar-divider',
     host: {
@@ -155,7 +146,6 @@ export class KbqNavbarBrand implements AfterContentInit, OnDestroy {
     }
 })
 export class KbqNavbarDivider {}
-
 
 @Directive({
     selector: 'kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle',
@@ -246,7 +236,9 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     }
 
     onFocusHandler() {
-        if (this.disabled || this.hasFocus) { return; }
+        if (this.disabled || this.hasFocus) {
+            return;
+        }
 
         this.onFocus.next({ item: this });
 
@@ -258,7 +250,9 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     }
 
     focus(origin?: FocusOrigin): void {
-        if (this.disabled || this.hasFocus) { return; }
+        if (this.disabled || this.hasFocus) {
+            return;
+        }
 
         if (origin === 'keyboard') {
             this.focusMonitor.focusVia(this.elementRef, origin);
@@ -290,7 +284,9 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
 
                     this.tooltip?.hide();
 
-                    if (this.button?.hasFocus) { return; }
+                    if (this.button?.hasFocus) {
+                        return;
+                    }
 
                     this.onBlur.next({ item: this });
                 });
@@ -301,7 +297,6 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
         return this.title?.text || '';
     }
 }
-
 
 @Directive({
     selector: 'kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]',
@@ -362,7 +357,6 @@ export class KbqNavbarRectangleElement {
         return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
     }
 }
-
 
 @Component({
     selector: 'kbq-navbar-item, [kbq-navbar-item]',
@@ -457,7 +451,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     }
 
     get hasCroppedText(): boolean {
-        return !!(this.title?.isOverflown);
+        return !!this.title?.isOverflown;
     }
 
     constructor(
@@ -481,12 +475,11 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
             this.dropdownTrigger.openByArrowDown = false;
         }
 
-        this.rectangleElement.state
-            .subscribe(() => {
-                this.collapsed = this.rectangleElement.collapsed;
+        this.rectangleElement.state.subscribe(() => {
+            this.collapsed = this.rectangleElement.collapsed;
 
-                this.changeDetectorRef.detectChanges();
-            });
+            this.changeDetectorRef.detectChanges();
+        });
 
         this._trigger = `${PopUpTriggers.Hover}`;
 
@@ -516,11 +509,13 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     }
 
     onKeyDown($event: KeyboardEvent) {
-        if (!this.hasDropDownTrigger) { return; }
+        if (!this.hasDropDownTrigger) {
+            return;
+        }
 
         if (
-            this.rectangleElement.horizontal && $event.keyCode === DOWN_ARROW ||
-            this.rectangleElement.vertical && $event.keyCode === RIGHT_ARROW
+            (this.rectangleElement.horizontal && $event.keyCode === DOWN_ARROW) ||
+            (this.rectangleElement.vertical && $event.keyCode === RIGHT_ARROW)
         ) {
             this.dropdownTrigger.openedBy = 'keyboard';
             this.dropdownTrigger.open();
@@ -531,28 +526,30 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
     }
 
     private updateCollapsedState() {
-        Promise.resolve()
-            .then(() => {
-                this.isCollapsed = this._collapsed;
+        Promise.resolve().then(() => {
+            this.isCollapsed = this._collapsed;
 
-                this.changeDetectorRef.markForCheck();
-            });
+            this.changeDetectorRef.markForCheck();
+        });
     }
 }
-
 
 @Component({
     selector: 'kbq-navbar-toggle',
     template: `
-        <i kbq-icon
-           [class.mc-angle-left-M_16]="navbar.expanded"
-           [class.mc-angle-right-M_16]="!navbar.expanded"
-           *ngIf="!customIcon">
-        </i>
+        <i
+            *ngIf="!customIcon"
+            [class.mc-angle-left-M_16]="navbar.expanded"
+            [class.mc-angle-right-M_16]="!navbar.expanded"
+            kbq-icon
+        ></i>
 
         <ng-content select="[kbq-icon]"></ng-content>
 
-        <div class="kbq-navbar-item__title" *ngIf="navbar.expanded">
+        <div
+            class="kbq-navbar-item__title"
+            *ngIf="navbar.expanded"
+        >
             <ng-content select="kbq-navbar-title"></ng-content>
         </div>
     `,
@@ -641,7 +638,7 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
         this.changeDetectorRef.markForCheck();
 
         this.hide();
-    }
+    };
 
     private getWindow(): Window {
         return this.document?.defaultView || window;
@@ -651,5 +648,5 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
         if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {
             this.ngZone.run(this.toggle);
         }
-    }
+    };
 }

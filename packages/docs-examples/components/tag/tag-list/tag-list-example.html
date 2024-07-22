@@ -1,6 +1,13 @@
 <kbq-tag-list>
-    <kbq-tag *ngFor="let tag of simpleTags" [value]="tag" (removed)="onRemoveTag(tag)">
+    <kbq-tag
+        *ngFor="let tag of simpleTags"
+        [value]="tag"
+        (removed)="onRemoveTag(tag)"
+    >
         {{ tag }}
-        <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+        <i
+            kbq-icon="mc-close-S_16"
+            kbqTagRemove
+        ></i>
     </kbq-tag>
 </kbq-tag-list>

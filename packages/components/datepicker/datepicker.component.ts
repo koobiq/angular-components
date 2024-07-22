@@ -2,13 +2,7 @@
 // tslint:disable:no-magic-numbers
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Overlay,
-    OverlayConfig,
-    OverlayRef,
-    PositionStrategy,
-    ScrollStrategy
-} from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -30,22 +24,21 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
 import { kbqDatepickerAnimations } from './datepicker-animations';
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 
-
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
-export const KBQ_DATEPICKER_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('kbq-datepicker-scroll-strategy');
+export const KBQ_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
+    'kbq-datepicker-scroll-strategy'
+);
 
 /** @docs-private */
 // tslint:disable-next-line:naming-convention
@@ -103,9 +96,11 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
     ngAfterViewInit() {
-        this.subscriptions.add(this.datepicker.stateChanges.subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        }));
+        this.subscriptions.add(
+            this.datepicker.stateChanges.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        );
     }
 
     ngOnDestroy() {
@@ -118,7 +113,6 @@ export class KbqDatepickerContent<D> implements OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 }
-
 
 // TODO: We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="kbqDatepicker"). We can change this to a directive
@@ -155,8 +149,10 @@ export class KbqDatepicker<D> implements OnDestroy {
     set startAt(value: D | null) {
         const deserializedValue = this.dateAdapter.deserialize(value);
 
-        this._startAt = deserializedValue !== null ?
-            this.dateAdapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
+        this._startAt =
+            deserializedValue !== null
+                ? this.dateAdapter.clampDate(deserializedValue, this.minDate, this.maxDate)
+                : null;
     }
 
     private _startAt: D | null;
@@ -329,20 +325,21 @@ export class KbqDatepicker<D> implements OnDestroy {
         }
 
         this.datepickerInput = input;
-        this.inputSubscription = this.datepickerInput.valueChange
-            .subscribe((value: D | null) => {
-                this.selected = value;
+        this.inputSubscription = this.datepickerInput.valueChange.subscribe((value: D | null) => {
+            this.selected = value;
 
-                if (this.popupComponentRef) {
-                    this.popupComponentRef.instance.calendar.monthView?.init();
-                    this.popupComponentRef.instance.calendar.activeDate = value as D;
-                }
-            });
+            if (this.popupComponentRef) {
+                this.popupComponentRef.instance.calendar.monthView?.init();
+                this.popupComponentRef.instance.calendar.activeDate = value as D;
+            }
+        });
     }
 
     /** Open the calendar. */
     open(): void {
-        if (this._opened || this.disabled) { return; }
+        if (this._opened || this.disabled) {
+            return;
+        }
 
         if (!this.datepickerInput) {
             throw Error('Attempted to open an KbqDatepicker with no associated input.');
@@ -360,16 +357,16 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Close the calendar. */
     close(restoreFocus: boolean = true): void {
-        if (!this._opened) { return; }
+        if (!this._opened) {
+            return;
+        }
 
         if (this.popupComponentRef) {
             const instance = this.popupComponentRef.instance;
 
             instance.startExitAnimation();
 
-            instance.animationDone
-                .pipe(take(1))
-                .subscribe(() => this.destroyOverlay());
+            instance.animationDone.pipe(take(1)).subscribe(() => this.destroyOverlay());
         }
 
         if (restoreFocus) {
@@ -382,7 +379,9 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     toggle(): void {
-        if (this.datepickerInput.isReadOnly) { return; }
+        if (this.datepickerInput.isReadOnly) {
+            return;
+        }
 
         this._opened ? this.close() : this.open();
     }
@@ -399,7 +398,8 @@ export class KbqDatepicker<D> implements OnDestroy {
     private openAsPopup(): void {
         if (!this.calendarPortal) {
             this.calendarPortal = new ComponentPortal<KbqDatepickerContent<D>>(
-                KbqDatepickerContent, this.viewContainerRef
+                KbqDatepickerContent,
+                this.viewContainerRef
             );
         }
 
@@ -412,7 +412,8 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.popupComponentRef.instance.datepicker = this;
 
             // Update the position once the calendar has rendered.
-            this.ngZone.onStable.asObservable()
+            this.ngZone.onStable
+                .asObservable()
                 .pipe(take(1))
                 .subscribe(() => this.popupRef?.updatePosition());
         }
@@ -431,8 +432,7 @@ export class KbqDatepicker<D> implements OnDestroy {
 
         this.popupRef = this.overlay.create(overlayConfig);
 
-        this.closeSubscription = this.closingActions()
-            .subscribe(() => this.close(this.restoreFocus()));
+        this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
     }
 
     private restoreFocus(): boolean {
@@ -449,7 +449,8 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Create the popup PositionStrategy. */
     private createPopupPositionStrategy(): PositionStrategy {
-        return this.overlay.position()
+        return this.overlay
+            .position()
             .flexibleConnectedTo(this.datepickerInput.elementRef)
             .withTransformOriginOn('.kbq-datepicker__content')
             .withFlexibleDimensions(false)

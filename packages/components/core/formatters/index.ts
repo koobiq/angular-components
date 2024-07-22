@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-
 import { DateAdapter, KBQ_DATE_LOCALE } from '../datetime';
-
 import { DateFormatter } from './date/formatter';
 import {
     AbsoluteDateFormatterPipe,
@@ -20,23 +18,19 @@ import {
 } from './date/formatter.pipe';
 import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './number/formatter';
 
-
 @NgModule({
     declarations: [
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
         KbqTableNumberPipe,
-
         AbsoluteDateFormatterPipe,
         AbsoluteDateTimeFormatterPipe,
         AbsoluteDateShortFormatterPipe,
         AbsoluteShortDateTimeFormatterPipe,
-
         RelativeDateFormatterPipe,
         RelativeDateTimeFormatterPipe,
         RelativeShortDateFormatterPipe,
         RelativeShortDateTimeFormatterPipe,
-
         RangeDateFormatterPipe,
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
@@ -47,17 +41,14 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
         KbqTableNumberPipe,
-
         AbsoluteDateFormatterPipe,
         AbsoluteDateTimeFormatterPipe,
         AbsoluteDateShortFormatterPipe,
         AbsoluteShortDateTimeFormatterPipe,
-
         RelativeDateFormatterPipe,
         RelativeDateTimeFormatterPipe,
         RelativeShortDateFormatterPipe,
         RelativeShortDateTimeFormatterPipe,
-
         RangeDateFormatterPipe,
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
@@ -68,7 +59,6 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
 })
 export class KbqFormattersModule {}
 
-
-export * from './number/formatter';
 export * from './date/formatter';
 export * from './date/formatter.pipe';
+export * from './number/formatter';

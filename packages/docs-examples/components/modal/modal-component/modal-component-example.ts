@@ -2,7 +2,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
-
 /**
  * @title Component Modal
  */
@@ -46,23 +45,39 @@ export class ModalComponentExample {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button kbq-button [color]="'contrast'" (click)="destroyModal('close')">
+                <button
+                    [color]="'contrast'"
+                    (click)="destroyModal('close')"
+                    kbq-button
+                >
                     destroy modal in the component
                 </button>
             </p>
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="destroyModal('save')">Save</button>
-            <button kbq-button autofocus (click)="destroyModal('close')">Close</button>
+            <button
+                [color]="'contrast'"
+                (click)="destroyModal('save')"
+                kbq-button
+            >
+                Save
+            </button>
+            <button
+                (click)="destroyModal('close')"
+                kbq-button
+                autofocus
+            >
+                Close
+            </button>
         </div>
-  `
+    `
 })
 export class KbqModalCustomComponent {
     @Input() title: string;
     @Input() subtitle: string;
 
-    constructor(private modal: KbqModalRef) { }
+    constructor(private modal: KbqModalRef) {}
 
     destroyModal(action: 'save' | 'close') {
         this.modal.destroy(action);

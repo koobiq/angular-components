@@ -9,14 +9,8 @@ import {
     Optional,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    CanColor,
-    KBQ_FORM_FIELD_REF,
-    KbqFormFieldRef
-} from '@koobiq/components/core';
-
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
-
 
 @Component({
     selector: `[kbq-icon-item]`,
@@ -34,7 +28,6 @@ import { KbqIcon } from './icon.component';
     }
 })
 export class KbqIconItem extends KbqIcon implements CanColor {
-
     override name = 'KbqIconItem';
 
     @Input() fade: boolean = false;

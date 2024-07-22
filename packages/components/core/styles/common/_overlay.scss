@@ -6,7 +6,7 @@ $overlay-z-index: 1000 !default;
 $overlay-backdrop-z-index: 1000 !default;
 
 // Background color for all of the backdrops
-$overlay-backdrop-color: rgba(0, 0, 0, 0.50) !default;
+$overlay-backdrop-color: rgba(0, 0, 0, 0.5) !default;
 
 // Default backdrop animation is based on the Material Design swift-ease-out.
 $backdrop-animation-duration: 400ms !default;
@@ -116,7 +116,9 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
 
     .cdk-overlay-transparent-backdrop {
         // Define a transition on the visibility so that the `transitionend` event can fire immediately.
-        transition: visibility 1ms linear, opacity 1ms linear;
+        transition:
+            visibility 1ms linear,
+            opacity 1ms linear;
         visibility: hidden;
         opacity: 1;
 
@@ -174,4 +176,3 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         overflow-y: scroll;
     }
 }
-

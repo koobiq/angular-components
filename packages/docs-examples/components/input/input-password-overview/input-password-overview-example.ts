@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PasswordRules } from '@koobiq/components/form-field';
 
-
 /**
  * @title Password Input
  */
@@ -16,11 +15,11 @@ export class InputPasswordOverviewExample {
 
     value = '';
 
-    atLeastNCapitalLetters = (n: number): (value: string) => boolean => {
+    atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {
         return (value: string) => {
             const found = value.match(/[A-Z]/g);
 
             return !!found && found!.length >= n;
         };
-    }
+    };
 }

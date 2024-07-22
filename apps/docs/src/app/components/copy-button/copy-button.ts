@@ -11,7 +11,6 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
-
 @Component({
     selector: 'copy-button',
     templateUrl: './copy-button.html',
@@ -30,24 +29,25 @@ export class CopyButton {
 
     isLabelSuccessVisible = false;
 
-    constructor(private clipboard: Clipboard, private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(
+        private clipboard: Clipboard,
+        private changeDetectorRef: ChangeDetectorRef
+    ) {}
 
     copyContent(): void {
-        if (!this.contentToCopy) { return; }
+        if (!this.contentToCopy) {
+            return;
+        }
 
         this.clipboard.copy(this.contentToCopy);
         this.isLabelSuccessVisible = true;
 
-        setTimeout(
-            () => {
-                this.isLabelSuccessVisible = false;
-                this.changeDetectorRef.markForCheck();
-            },
-            this.successLabelDisplayDelay
-        );
+        setTimeout(() => {
+            this.isLabelSuccessVisible = false;
+            this.changeDetectorRef.markForCheck();
+        }, this.successLabelDisplayDelay);
     }
 }
-
 
 @NgModule({
     imports: [CommonModule, KbqIconModule, KbqLinkModule],

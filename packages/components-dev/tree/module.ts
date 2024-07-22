@@ -22,10 +22,8 @@ import {
     KbqTreeFlattener,
     KbqTreeModule
 } from '@koobiq/components/tree';
-import { debounceTime, Subject } from 'rxjs';
-
+import { Subject, debounceTime } from 'rxjs';
 import { TREE_DATA } from './data';
-
 
 export class FileNode {
     children: FileNode[];
@@ -107,7 +105,6 @@ export const DATA_OBJECT = {
     }
 };
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -120,7 +117,7 @@ export class DemoComponent {
 
     treeControl: FlatTreeControl<FileFlatNode>;
     treeControl2: FlatTreeControl<FileFlatNode>;
-    filterByValues:  FilterByValues<FileFlatNode>;
+    filterByValues: FilterByValues<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
     dataSource: KbqTreeFlatDataSource<any, FileFlatNode>;
@@ -146,16 +143,20 @@ export class DemoComponent {
     };
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
 
         this.treeControl2 = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
 
         this.filterByValues = new FilterByValues<FileFlatNode>(this.treeControl);
@@ -185,7 +186,9 @@ export class DemoComponent {
         this.filterValueChanged.next(value);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) { return nodeData.expandable; }
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
 
     onSelectAll($event) {
         console.log('onSelectAll', $event);
@@ -228,31 +231,30 @@ export class DemoComponent {
         flatNode.expandable = !!node.children && !!node.children?.length;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

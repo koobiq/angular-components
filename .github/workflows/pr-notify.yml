@@ -10,7 +10,6 @@ jobs:
     name: Pull Request Notification
     runs-on: ubuntu-latest
     steps:
-
       - name: Notification
         uses: mattermost/action-mattermost-notify@master
         env:

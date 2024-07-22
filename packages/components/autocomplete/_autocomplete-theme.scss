@@ -4,7 +4,6 @@
 @use '../core/styles/theming/theming';
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-autocomplete-theme($theme) {
     $select-panel: map.get(map.get($theme, components), select-panel);
 

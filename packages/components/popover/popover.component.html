@@ -1,30 +1,51 @@
-<div class="kbq-popover"
-     [cdkTrapFocus]="isTrapFocus"
-     [cdkTrapFocusAutoCapture]="isTrapFocus"
-     [ngClass]="classMap"
-     [@state]="visibility"
-     (@state.start)="animationStart()"
-     (@state.done)="animationDone($event)">
-
-    <div class="kbq-popover__container"
-         [class.kbq-popover__container_with-header]="header"
-         [class.kbq-popover__container_with-footer]="footer">
-        <div class="kbq-popover__header" *ngIf="header">
-            <ng-container *ngIf="isTemplateRef(header)" [ngTemplateOutlet]="$any(header)"></ng-container>
+<div
+    class="kbq-popover"
+    [cdkTrapFocus]="isTrapFocus"
+    [cdkTrapFocusAutoCapture]="isTrapFocus"
+    [ngClass]="classMap"
+    (@state.done)="animationDone($event)"
+    (@state.start)="animationStart()"
+    [@state]="visibility"
+>
+    <div
+        class="kbq-popover__container"
+        [class.kbq-popover__container_with-footer]="footer"
+        [class.kbq-popover__container_with-header]="header"
+    >
+        <div
+            *ngIf="header"
+            class="kbq-popover__header"
+        >
+            <ng-container
+                *ngIf="isTemplateRef(header)"
+                [ngTemplateOutlet]="$any(header)"
+            ></ng-container>
             <ng-container *ngIf="!isTemplateRef(header)">
                 <div class="kbq-popover__header-text">{{ header }}</div>
             </ng-container>
         </div>
 
-        <div class="kbq-popover__content kbq-scrollbar" *ngIf="content">
-            <ng-container *ngIf="isTemplateRef(content)" [ngTemplateOutlet]="$any(content)"></ng-container>
+        <div
+            *ngIf="content"
+            class="kbq-popover__content kbq-scrollbar"
+        >
+            <ng-container
+                *ngIf="isTemplateRef(content)"
+                [ngTemplateOutlet]="$any(content)"
+            ></ng-container>
             <ng-container *ngIf="!isTemplateRef(content)">
                 <div>{{ content }}</div>
             </ng-container>
         </div>
 
-        <div class="kbq-popover__footer" *ngIf="footer">
-            <ng-container *ngIf="isTemplateRef(footer)" [ngTemplateOutlet]="$any(footer)"></ng-container>
+        <div
+            *ngIf="footer"
+            class="kbq-popover__footer"
+        >
+            <ng-container
+                *ngIf="isTemplateRef(footer)"
+                [ngTemplateOutlet]="$any(footer)"
+            ></ng-container>
             <ng-container *ngIf="!isTemplateRef(footer)">
                 <div>{{ footer }}</div>
             </ng-container>

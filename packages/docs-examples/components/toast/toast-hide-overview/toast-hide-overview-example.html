@@ -1,31 +1,83 @@
-<ng-template let-actionText="text" let-toast #action>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">{{ actionText }}</a>
+<ng-template
+    #action
+    let-actionText="text"
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        {{ actionText }}
+    </a>
 </ng-template>
 
-<ng-template #toastActionInfo let-toast>
-    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }"></ng-container>
+<ng-template
+    #toastActionInfo
+    let-toast
+>
+    <ng-container
+        [ngTemplateOutlet]="action"
+        [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }"
+    ></ng-container>
 </ng-template>
-<ng-template #toastActionWarning let-toast>
-    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{ $implicit: toast, text: 'Сменить пароль' }"></ng-container>
+<ng-template
+    #toastActionWarning
+    let-toast
+>
+    <ng-container
+        [ngTemplateOutlet]="action"
+        [ngTemplateOutletContext]="{ $implicit: toast, text: 'Сменить пароль' }"
+    ></ng-container>
 </ng-template>
 
 <ng-template #toastPermanentContentTemplate>
     <kbq-progress-bar
+        *ngIf="progress"
         class="layout-margin-top-m layout-margin-bottom-m"
         [mode]="'indeterminate'"
-        *ngIf="progress">
-    </kbq-progress-bar>
+    ></kbq-progress-bar>
     <div *ngIf="!progress">
-        <span>Импорт файлов завершен </span><i kbq-icon="mc-success_16" class="kbq-success"></i>
+        <span>Импорт файлов завершен</span>
+        <i
+            kbq-icon="mc-success_16"
+            class="kbq-success"
+        ></i>
     </div>
 </ng-template>
 
-<ng-template #toastPermanentActionsTemplate let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
+<ng-template
+    #toastPermanentActionsTemplate
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Отмена
+    </a>
 </ng-template>
 
 <div class="demo-block layout-row">
-    <button kbq-button (click)="showDefaultToast(toastActionInfo)">По таймеру</button>
-    <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">По команде</button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">Ховер или фокус</button>
+    <button
+        kbq-button
+        (click)="showDefaultToast(toastActionInfo)"
+    >
+        По таймеру
+    </button>
+    <button
+        kbq-button
+        (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)"
+    >
+        По команде
+    </button>
+    <button
+        kbq-button
+        (click)="showWarningToast(toastActionWarning)"
+    >
+        Ховер или фокус
+    </button>
 </div>

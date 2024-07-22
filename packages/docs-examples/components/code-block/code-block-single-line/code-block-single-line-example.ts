@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catch(console.error)`;
 
 /**
@@ -17,10 +16,12 @@ export class CodeBlockSingleLineExample {
     files: KbqCodeFile[];
 
     constructor() {
-        this.files = [{
-            filename: '',
-            content: codeTs2,
-            language: 'typescript'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeTs2,
+                language: 'typescript'
+            }
+        ];
     }
 }

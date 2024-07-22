@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-table {
@@ -20,7 +19,7 @@ $tokens: meta.module-variables(tokens) !default;
                     right: kbq-css-variable(table-size-row-padding-horizontal);
                     bottom: kbq-css-variable(table-size-row-padding-vertical);
                     left: kbq-css-variable(table-size-row-padding-horizontal);
-                };
+                }
 
                 vertical-align: baseline;
                 text-align: left;
@@ -40,6 +39,7 @@ $tokens: meta.module-variables(tokens) !default;
         padding-bottom: kbq-css-variable(size-xxs);
     }
 }
+
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & th,

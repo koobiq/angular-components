@@ -5,10 +5,13 @@ kbq-timezone-option - элемент списка таймзон являетс�
 kbq-timezone-select-trigger - позволяет задать кастомное отображение выбранного значения.
 
 ### Timezone
+
 <!-- example(timezone-overview) -->
 
 ### With search
+
 <!-- example(timezone-search-overview) -->
 
 ### With custom trigger
+
 <!-- example(timezone-trigger-overview) -->

@@ -1,9 +1,7 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqRiskLevel, KbqRiskLevelModule } from './index';
-
 
 describe('kbq-risk-level', () => {
     let fixture: ComponentFixture<TestApp>;
@@ -31,7 +29,6 @@ describe('kbq-risk-level', () => {
         expect(alertNativeElement.classList.contains('kbq-risk-level')).toBe(true);
     });
 });
-
 
 @Component({
     selector: 'test-app',

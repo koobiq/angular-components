@@ -1,20 +1,20 @@
 <kbq-calendar-header
-    [(activeDate)]="activeDate"
     [maxDate]="maxDate"
     [minDate]="minDate"
+    [(activeDate)]="activeDate"
     (monthSelected)="monthSelected.emit(activeDate)"
-    (yearSelected)="yearSelected.emit(activeDate)">
-</kbq-calendar-header>
+    (yearSelected)="yearSelected.emit(activeDate)"
+></kbq-calendar-header>
 
 <div class="kbq-calendar__content">
     <kbq-month-view
-        [(activeDate)]="activeDate"
-        [selected]="selected"
+        [dateClass]="dateClass"
         [dateFilter]="dateFilter"
         [maxDate]="maxDate"
         [minDate]="minDate"
-        [dateClass]="dateClass"
+        [selected]="selected"
+        [(activeDate)]="activeDate"
         (selectedChange)="dateSelected($event!)"
-        (userSelection)="userSelected()">
-    </kbq-month-view>
+        (userSelection)="userSelected()"
+    ></kbq-month-view>
 </div>

@@ -1,7 +1,5 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
-
 import { ListKeyManager, ListKeyManagerOption } from './list-key-manager';
-
 
 /**
  * This is the interface for focusable items (used by the FocusKeyManager).

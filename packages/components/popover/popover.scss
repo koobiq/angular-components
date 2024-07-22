@@ -7,9 +7,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 $arrow-size: 12px;
 $trigger-margin: 9px;
@@ -44,10 +42,8 @@ $trigger-margin: 9px;
 .kbq-popover__content {
     overflow-y: auto;
 
-    padding:
-        kbq-css-variable(popover-size-content-padding-top)
-        kbq-css-variable(popover-size-content-padding-horizontal)
-        kbq-css-variable(popover-size-content-padding-bottom);
+    padding: kbq-css-variable(popover-size-content-padding-top)
+        kbq-css-variable(popover-size-content-padding-horizontal) kbq-css-variable(popover-size-content-padding-bottom);
 }
 
 .kbq-popover__container {
@@ -79,11 +75,8 @@ $trigger-margin: 9px;
 
     overflow: hidden;
 
-    padding:
-        kbq-css-variable(popover-size-header-padding-top)
-        kbq-css-variable(popover-size-header-padding-horizontal)
-        kbq-css-variable(popover-size-header-padding-bottom)
-        kbq-css-variable(popover-size-header-padding-horizontal);
+    padding: kbq-css-variable(popover-size-header-padding-top) kbq-css-variable(popover-size-header-padding-horizontal)
+        kbq-css-variable(popover-size-header-padding-bottom) kbq-css-variable(popover-size-header-padding-horizontal);
 
     & .kbq-popover__header-text {
         @include common.kbq-truncate-line();
@@ -91,8 +84,7 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__footer {
-    padding:
-        kbq-css-variable(popover-size-footer-padding-vertical)
+    padding: kbq-css-variable(popover-size-footer-padding-vertical)
         kbq-css-variable(popover-size-footer-padding-horizontal);
 }
 

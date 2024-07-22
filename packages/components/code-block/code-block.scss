@@ -3,13 +3,11 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 $border-radius: kbq-css-variable(code-block-size-container-border-radius);
 $border-width: kbq-css-variable(code-block-size-container-border-width);
 
-/* stylelint-disable no-descending-specificity */
 .kbq-code-block {
     display: block;
     position: relative;
@@ -29,12 +27,11 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         // 4 buttons + margin
         $buttons-margin: calc(32 * 4) + 24px;
 
-        padding:
-            kbq-css-variable(code-block-size-header-padding-vertical)
-            calc(var(
-                --kbq-code-block-size-header-padding-right,
-                map.get($tokens, code-block-size-header-padding-right)
-            ) + $buttons-margin)
+        padding: kbq-css-variable(code-block-size-header-padding-vertical)
+            calc(
+                var(--kbq-code-block-size-header-padding-right, map.get($tokens, code-block-size-header-padding-right)) +
+                    $buttons-margin
+            )
             kbq-css-variable(code-block-size-header-padding-vertical)
             kbq-css-variable(code-block-size-header-padding-left);
 
@@ -54,8 +51,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 
     .kbq-code-block__code {
         > code {
-            padding:
-                kbq-css-variable(code-block-size-with-header-content-padding-top)
+            padding: kbq-css-variable(code-block-size-with-header-content-padding-top)
                 kbq-css-variable(code-block-size-with-header-content-padding-horizontal)
                 kbq-css-variable(code-block-size-with-header-content-padding-bottom)
                 kbq-css-variable(code-block-size-with-header-content-padding-horizontal);
@@ -108,8 +104,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
             position: relative;
 
             & > code {
-                padding:
-                    kbq-css-variable(code-block-size-no-header-content-padding-vertical)
+                padding: kbq-css-variable(code-block-size-no-header-content-padding-vertical)
                     kbq-css-variable(code-block-size-no-header-content-padding-horizontal);
             }
 
@@ -152,7 +147,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     }
 
     &.kbq-code-block__code_soft-wrap {
-        white-space: pre-wrap
+        white-space: pre-wrap;
     }
 
     .hljs-ln {
@@ -200,4 +195,3 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         border-radius: kbq-css-variable(button-size-border-radius);
     }
 }
-/* stylelint-enable no-descending-specificity */

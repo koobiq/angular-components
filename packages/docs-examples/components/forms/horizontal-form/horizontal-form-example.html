@@ -1,9 +1,16 @@
 <div class="kbq-body">
-    <form class="kbq-form-horizontal" novalidate>
+    <form
+        novalidate
+        class="kbq-form-horizontal"
+    >
         <div class="kbq-form__row">
             <label class="kbq-form__label flex-20">Подпись поля</label>
             <kbq-form-field class="kbq-form__control flex-80">
-                <input name="input" kbqInput [(ngModel)]="value">
+                <input
+                    kbqInput
+                    name="input"
+                    [(ngModel)]="value"
+                />
 
                 <kbq-hint>Подсказка под полем</kbq-hint>
             </kbq-form-field>
@@ -12,12 +19,20 @@
         <div class="kbq-form__row">
             <label class="kbq-form__label flex-20">Общая подпись для нескольких полей</label>
             <kbq-form-field class="kbq-form__control flex-50">
-                <input name="input" kbqInput [(ngModel)]="value">
+                <input
+                    kbqInput
+                    name="input"
+                    [(ngModel)]="value"
+                />
 
                 <kbq-hint>Подсказка под полем</kbq-hint>
             </kbq-form-field>
             <kbq-form-field class="kbq-form__control flex-30">
-                <input name="input" kbqInput [(ngModel)]="value">
+                <input
+                    kbqInput
+                    name="input"
+                    [(ngModel)]="value"
+                />
 
                 <kbq-hint>Подсказка под полем</kbq-hint>
             </kbq-form-field>
@@ -26,7 +41,11 @@
         <div class="kbq-form__row">
             <label class="kbq-form__label flex-20">Эксфильтрация данных</label>
             <kbq-form-field class="kbq-form__control flex-80">
-                <input name="input" kbqInput [(ngModel)]="value">
+                <input
+                    kbqInput
+                    name="input"
+                    [(ngModel)]="value"
+                />
             </kbq-form-field>
         </div>
 
@@ -36,7 +55,11 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">Выполнение</label>
                 <kbq-form-field class="kbq-form__control flex-80">
-                    <input name="input" kbqInput [(ngModel)]="value">
+                    <input
+                        kbqInput
+                        name="input"
+                        [(ngModel)]="value"
+                    />
                 </kbq-form-field>
             </div>
 
@@ -45,7 +68,11 @@
                     Длинное название поля в несколько строк с возможным переносом на новую строку
                 </label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput [(ngModel)]="value">
+                    <input
+                        kbqInput
+                        name="input"
+                        [(ngModel)]="value"
+                    />
 
                     <kbq-hint class="one-line">Подсказка под полем</kbq-hint>
                 </kbq-form-field>

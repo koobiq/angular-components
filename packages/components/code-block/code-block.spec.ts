@@ -1,15 +1,12 @@
 /* tslint:disable:no-magic-numbers */
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HighlightModule } from 'ngx-highlightjs';
-
 import { codeHTML, codeXML } from '../../components-dev/code-block/code-files-example';
-
 import { KbqCodeBlockComponent } from './code-block.component';
 import { KbqCodeBlockModule } from './code-block.module';
-
 
 describe('CodeBlockComponent', () => {
     let component: KbqCodeBlockDefault;
@@ -85,8 +82,9 @@ describe('CodeBlockComponent', () => {
         <kbq-code-block
             [filled]="lessContrast"
             [codeFiles]="codeFiles"
-            [maxHeight]="200">
-        </kbq-code-block>`
+            [maxHeight]="200"
+        ></kbq-code-block>
+    `
 })
 class KbqCodeBlockDefault {
     @ViewChild(KbqCodeBlockComponent) codeBlock: KbqCodeBlockComponent;
@@ -103,7 +101,8 @@ class KbqCodeBlockDefault {
             content: codeXML,
             language: 'xml',
             link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
-        }];
+        }
+    ];
 
     lessContrast = true;
 }

@@ -27,22 +27,19 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { ESCAPE, ENTER } from '@koobiq/cdk/keycodes';
+import { ENTER, ESCAPE } from '@koobiq/cdk/keycodes';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { modalUtilObject as ModalUtil } from './modal-util';
 import { IModalButtonOptions, ModalOptions, ModalSize, ModalType, OnClickCallback } from './modal.type';
 
-
 // Duration when perform animations (ms)
 export const MODAL_ANIMATE_DURATION = 200;
 
 type AnimationState = 'enter' | 'leave' | null;
-
 
 @Component({
     selector: 'kbq-modal',
@@ -54,9 +51,10 @@ type AnimationState = 'enter' | 'leave' | null;
         '(keydown)': 'onKeyDown($event)'
     }
 })
-export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
-    implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
-
+export class KbqModalComponent<T = any, R = any>
+    extends KbqModalRef<T, R>
+    implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
+{
     componentColors = KbqComponentColors;
 
     @Input() kbqModalType: ModalType = 'default';
@@ -72,8 +70,12 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     @Input() kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
 
     @Input()
-    get kbqVisible() { return this._kbqVisible; }
-    set kbqVisible(value) { this._kbqVisible = value; }
+    get kbqVisible() {
+        return this._kbqVisible;
+    }
+    set kbqVisible(value) {
+        this._kbqVisible = value;
+    }
 
     private _kbqVisible = false;
 
@@ -88,18 +90,30 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     @Input() kbqCloseByESC: boolean = true;
 
     @Input()
-    get kbqClosable() { return this._kbqClosable; }
-    set kbqClosable(value) { this._kbqClosable = value; }
+    get kbqClosable() {
+        return this._kbqClosable;
+    }
+    set kbqClosable(value) {
+        this._kbqClosable = value;
+    }
     private _kbqClosable = true;
 
     @Input()
-    get kbqMask() { return this._kbqMask; }
-    set kbqMask(value) { this._kbqMask = value; }
+    get kbqMask() {
+        return this._kbqMask;
+    }
+    set kbqMask(value) {
+        this._kbqMask = value;
+    }
     private _kbqMask = true;
 
     @Input()
-    get kbqMaskClosable() { return this._kbqMaskClosable; }
-    set kbqMaskClosable(value) { this._kbqMaskClosable = value; }
+    get kbqMaskClosable() {
+        return this._kbqMaskClosable;
+    }
+    set kbqMaskClosable(value) {
+        this._kbqMaskClosable = value;
+    }
     private _kbqMaskClosable = false;
 
     @Input() kbqMaskStyle: object;
@@ -117,16 +131,24 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     @Input() kbqRestoreFocus = true;
 
     @Input()
-    get kbqOkLoading() { return this._kbqOkLoading; }
-    set kbqOkLoading(value) { this._kbqOkLoading = value; }
+    get kbqOkLoading() {
+        return this._kbqOkLoading;
+    }
+    set kbqOkLoading(value) {
+        this._kbqOkLoading = value;
+    }
     private _kbqOkLoading = false;
 
     @Input() @Output() kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
     @Input() kbqCancelText: string;
 
     @Input()
-    get kbqCancelLoading() { return this._kbqCancelLoading; }
-    set kbqCancelLoading(value) { this._kbqCancelLoading = value; }
+    get kbqCancelLoading() {
+        return this._kbqCancelLoading;
+    }
+    set kbqCancelLoading(value) {
+        this._kbqCancelLoading = value;
+    }
     private _kbqCancelLoading = false;
 
     @Input() @Output() kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
@@ -256,7 +278,9 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     checkOverflow(): void {
         const nativeElement = this.modalBody?.nativeElement;
 
-        if (!nativeElement) { return; }
+        if (!nativeElement) {
+            return;
+        }
 
         const scrollTop: number = nativeElement.scrollTop;
         const offsetHeight: number = nativeElement.offsetHeight;
@@ -264,14 +288,15 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
 
         this.isTopOverflow = scrollTop > 0;
 
-        this.isBottomOverflow = (scrollTop as number + offsetHeight as number) < scrollHeight;
+        this.isBottomOverflow = (((scrollTop as number) + offsetHeight) as number) < scrollHeight;
     }
 
     open() {
         this.focusedElementBeforeOpen = this.document.activeElement;
         this.previouslyFocusedElementOrigin = this.focusMonitor['_lastFocusOrigin'];
 
-        this.focusMonitor.monitor(this.modalContainer, true)
+        this.focusMonitor
+            .monitor(this.modalContainer, true)
             .pipe(take(1))
             .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer));
 
@@ -279,17 +304,16 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     }
 
     close(result?: R) {
-        this.changeVisibleFromInside(false, result)
-            .then(() => {
-                if (this.kbqRestoreFocus && this.focusedElementBeforeOpen) {
-                    this.focusMonitor.focusVia(
-                        this.focusedElementBeforeOpen as HTMLElement,
-                        this.previouslyFocusedElementOrigin
-                    );
+        this.changeVisibleFromInside(false, result).then(() => {
+            if (this.kbqRestoreFocus && this.focusedElementBeforeOpen) {
+                this.focusMonitor.focusVia(
+                    this.focusedElementBeforeOpen as HTMLElement,
+                    this.previouslyFocusedElementOrigin
+                );
 
-                    this.focusedElementBeforeOpen = null;
-                }
-            });
+                this.focusedElementBeforeOpen = null;
+            }
+        });
     }
 
     // Destroy equals Close
@@ -346,10 +370,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     }
 
     onKeyDown(event: KeyboardEvent): void {
-
         // tslint:disable-next-line:deprecation .key isn't supported in Edge
-        if (event.keyCode === ESCAPE && this.container && (this.container instanceof OverlayRef)) {
-
+        if (event.keyCode === ESCAPE && this.container && this.container instanceof OverlayRef) {
             this.close();
             event.preventDefault();
         }
@@ -378,17 +400,13 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
         this.handleCloseResult(type, (doClose) => doClose !== false);
     }
 
-    handleCloseResult(
-        triggerType: 'ok' | 'cancel',
-        canClose: (doClose: boolean | void | {}) => boolean
-    ) {
+    handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
         const trigger = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
         const loadingKey = { ok: 'kbqOkLoading', cancel: 'kbqCancelLoading' }[triggerType];
 
         if (trigger instanceof EventEmitter) {
             trigger.emit(this.getContentComponent());
         } else if (typeof trigger === 'function') {
-
             const result = trigger(this.getContentComponent());
             // Users can return "false" to prevent closing by default
             const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
@@ -446,7 +464,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
         const result = this.getButtonCallableProp(button, 'onClick');
         if (isPromise(result)) {
             button.loading = true;
-            (result as Promise<{}>).then(() => button.loading = false).catch(() => button.loading = false);
+            (result as Promise<{}>).then(() => (button.loading = false)).catch(() => (button.loading = false));
         }
     }
 
@@ -457,18 +475,19 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
             this.changeBodyOverflow(1);
         }
 
-        return Promise
-            .resolve(animation && this.animateTo(visible))
-            // Emit open/close event after animations over
-            .then(() => {
-                if (visible) {
-                    this.kbqAfterOpen.emit();
-                } else {
-                    this.kbqAfterClose.emit(closeResult);
-                    // Show/hide scrollbar when animation is over
-                    this.changeBodyOverflow();
-                }
-            });
+        return (
+            Promise.resolve(animation && this.animateTo(visible))
+                // Emit open/close event after animations over
+                .then(() => {
+                    if (visible) {
+                        this.kbqAfterOpen.emit();
+                    } else {
+                        this.kbqAfterClose.emit(closeResult);
+                        // Show/hide scrollbar when animation is over
+                        this.changeBodyOverflow();
+                    }
+                })
+        );
     }
 
     // Change kbqVisible from inside
@@ -520,19 +539,15 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
 
         // Return when animation is over
         return new Promise((resolve) => {
-            return window.setTimeout(
-                () => {
-                    this.changeAnimationState(null);
-                    resolve(null);
-                },
-                MODAL_ANIMATE_DURATION
-            );
+            return window.setTimeout(() => {
+                this.changeAnimationState(null);
+                resolve(null);
+            }, MODAL_ANIMATE_DURATION);
         });
     }
 
     private formatModalButtons(buttons: IModalButtonOptions<T>[]): IModalButtonOptions<T>[] {
         return buttons.map((button) => {
-
             return {
                 ...{
                     type: 'default',
@@ -555,7 +570,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
     private createDynamicComponent(component: Type<T>) {
         const factory = this.cfr.resolveComponentFactory(component);
         const childInjector = Injector.create({
-            providers: [{provide: KbqModalRef, useValue: this}],
+            providers: [{ provide: KbqModalRef, useValue: this }],
             parent: this.viewContainer.injector
         });
 
@@ -600,8 +615,10 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R>
 
 function isPromise(obj: {} | void): boolean {
     // tslint:disable-next-line: no-unbound-method
-    return !!obj &&
+    return (
+        !!obj &&
         (typeof obj === 'object' || typeof obj === 'function') &&
         typeof (obj as Promise<{}>).then === 'function' &&
-        typeof (obj as Promise<{}>).catch === 'function';
+        typeof (obj as Promise<{}>).catch === 'function'
+    );
 }

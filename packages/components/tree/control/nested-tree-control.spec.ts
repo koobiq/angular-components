@@ -1,7 +1,5 @@
 import { of as observableOf } from 'rxjs';
-
 import { NestedTreeControl } from './nested-tree-control';
-
 
 /* tslint:disable:no-magic-numbers */
 describe('CdkNestedTreeControl', () => {
@@ -21,10 +19,7 @@ describe('CdkNestedTreeControl', () => {
 
             treeControl.expand(node);
 
-
-            expect(treeControl.isExpanded(node))
-                .withContext('Expect second node to be expanded')
-                .toBeTruthy();
+            expect(treeControl.isExpanded(node)).withContext('Expect second node to be expanded').toBeTruthy();
             expect(treeControl.expansionModel.selected)
                 .withContext('Expect second node in expansionModel')
                 .toContain(node);
@@ -34,9 +29,7 @@ describe('CdkNestedTreeControl', () => {
 
             treeControl.toggle(sixthNode);
 
-            expect(treeControl.isExpanded(node))
-                .withContext('Expect second node to stay expanded')
-                .toBeTruthy();
+            expect(treeControl.isExpanded(node)).withContext('Expect second node to stay expanded').toBeTruthy();
             expect(treeControl.expansionModel.selected)
                 .withContext('Expect sixth node in expansionModel')
                 .toContain(sixthNode);
@@ -49,15 +42,9 @@ describe('CdkNestedTreeControl', () => {
 
             treeControl.collapse(node);
 
-            expect(treeControl.isExpanded(node))
-                .withContext('Expect second node to be collapsed')
-                .toBeFalsy();
-            expect(treeControl.expansionModel.selected.length)
-                .withContext('Expect one node in expansionModel')
-                .toBe(1);
-            expect(treeControl.isExpanded(sixthNode))
-                .withContext('Expect sixth node to stay expanded')
-                .toBeTruthy();
+            expect(treeControl.isExpanded(node)).withContext('Expect second node to be collapsed').toBeFalsy();
+            expect(treeControl.expansionModel.selected.length).withContext('Expect one node in expansionModel').toBe(1);
+            expect(treeControl.isExpanded(sixthNode)).withContext('Expect sixth node to stay expanded').toBeTruthy();
             expect(treeControl.expansionModel.selected)
                 .withContext('Expect sixth node in expansionModel')
                 .toContain(sixthNode);
@@ -78,9 +65,7 @@ describe('CdkNestedTreeControl', () => {
                 .withContext(`Expect expanded ${expandedNodesNum} nodes`)
                 .toBe(expandedNodesNum);
 
-            expect(treeControl.isExpanded(nodes[1]))
-                .withContext('Expect second node to be expanded')
-                .toBeTruthy();
+            expect(treeControl.isExpanded(nodes[1])).withContext('Expect second node to be expanded').toBeTruthy();
 
             for (let i = 0; i < numChildren; i++) {
                 expect(treeControl.isExpanded(nodes[1].children[i]))
@@ -106,14 +91,11 @@ describe('CdkNestedTreeControl', () => {
 
             treeControl.collapseAll();
 
-            expect(treeControl.expansionModel.selected.length)
-                .withContext(`Expect no expanded nodes`)
-                .toBe(0);
+            expect(treeControl.expansionModel.selected.length).withContext(`Expect no expanded nodes`).toBe(0);
 
             treeControl.expandAll();
 
-            const totalNumber = numNodes + numNodes * numChildren
-                + numNodes * numChildren * numGrandChildren;
+            const totalNumber = numNodes + numNodes * numChildren + numNodes * numChildren * numGrandChildren;
             expect(treeControl.expansionModel.selected.length)
                 .withContext(`Expect ${totalNumber} expanded nodes`)
                 .toBe(totalNumber);
@@ -138,18 +120,17 @@ export class TestData {
 }
 
 function generateData(dataLength: number, childLength: number, grandChildLength: number = 0): TestData[] {
-    const data = <any> [];
+    const data = <any>[];
     let nextIndex = 0;
 
     for (let i = 0; i < dataLength; i++) {
-        const children = <any> [];
+        const children = <any>[];
         for (let j = 0; j < childLength; j++) {
-            const grandChildren = <any> [];
+            const grandChildren = <any>[];
             for (let k = 0; k < grandChildLength; k++) {
                 grandChildren.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 3));
             }
-            children.push(
-                new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 2, grandChildren));
+            children.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 2, grandChildren));
         }
         data.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 1, children));
     }

@@ -6,13 +6,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-
 import { AutocompleteOverviewExample } from './autocomplete-overview/autocomplete-overview-example';
 
-
-export {
-    AutocompleteOverviewExample
-};
+export { AutocompleteOverviewExample };
 
 const EXAMPLES = [
     AutocompleteOverviewExample
@@ -23,7 +19,6 @@ const EXAMPLES = [
         CommonModule,
         FormsModule,
         KbqAutocompleteModule,
-
         KbqInputModule,
         KbqButtonModule,
         KbqFormFieldModule,

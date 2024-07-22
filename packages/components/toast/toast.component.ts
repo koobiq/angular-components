@@ -5,20 +5,18 @@ import {
     Component,
     Directive,
     ElementRef,
-    forwardRef,
     Inject,
     OnDestroy,
     TemplateRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
-import { BehaviorSubject, merge, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-
 import { kbqToastAnimations } from './toast-animations';
 import { KbqToastService } from './toast.service';
 import { KbqToastData, KbqToastStyle } from './toast.type';
-
 
 @Directive({
     selector: '[kbq-toast-close-button]',
@@ -98,9 +96,14 @@ export class KbqToastComponent implements OnDestroy {
         this.focused.subscribe(this.service.focused);
 
         merge(this.hovered, this.focused)
-            .pipe(takeUntil(this.destroyed), filter((value) => value))
+            .pipe(
+                takeUntil(this.destroyed),
+                filter((value) => value)
+            )
             .subscribe(() => {
-                if (this.ttl === 0) { return; }
+                if (this.ttl === 0) {
+                    return;
+                }
 
                 this.ttl = this.ttl < this.delay ? this.delay : this.ttl;
             });

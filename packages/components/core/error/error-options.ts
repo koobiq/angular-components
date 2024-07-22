@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroupDirective, NgForm, UntypedFormControl } from '@angular/forms';
 
-
 /** Error state matcher that matches when a control is invalid and dirty. */
 @Injectable()
 export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {

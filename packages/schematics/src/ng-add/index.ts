@@ -1,6 +1,5 @@
 import { Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
-
 import { addPackageToPackageJson } from '../utils/package-config';
 import * as messages from './messages';
 import { Schema } from './schema';

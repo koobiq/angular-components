@@ -1,7 +1,6 @@
 import { CdkPortal } from '@angular/cdk/portal';
 import { Directive, InjectionToken } from '@angular/core';
 
-
 export const KBQ_TAB_LABEL = new InjectionToken<KbqTabLabel>('KbqTabLabel');
 
 /** Used to flag tab labels for use with the portal directive */

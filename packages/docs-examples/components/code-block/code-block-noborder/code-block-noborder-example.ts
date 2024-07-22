@@ -3,7 +3,6 @@ import { KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
 
-
 const codeJs2 = `import { Clipboard } from '@angular/cdk/clipboard';
 import {
     Component,
@@ -198,7 +197,6 @@ export class KbqCodeBlockComponent implements OnDestroy {
 }
 `;
 
-
 /**
  * @title Basic code-block-noborder
  */
@@ -209,19 +207,21 @@ export class KbqCodeBlockComponent implements OnDestroy {
     encapsulation: ViewEncapsulation.None
 })
 export class CodeBlockNoborderExample {
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     isOpened = false;
     position = KbqSidepanelPosition.Right;
     files: KbqCodeFile[];
 
     constructor(private sidepanelService: KbqSidepanelService) {
-        this.files = [{
-            filename: '',
-            content: codeJs2,
-            language: 'typescript',
-            link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.ts'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeJs2,
+                language: 'typescript',
+                link: 'https://stackblitz.com/edit/hpwmn8?file=src%2Fapp%2Ftest.ts'
+            }
+        ];
     }
 
     toggleSidepanel() {
@@ -231,9 +231,12 @@ export class CodeBlockNoborderExample {
                 hasBackdrop: false
             });
 
-            sidepanel.afterClosed().pipe(take(1)).subscribe(() => {
-                this.isOpened = false;
-            });
+            sidepanel
+                .afterClosed()
+                .pipe(take(1))
+                .subscribe(() => {
+                    this.isOpened = false;
+                });
             this.isOpened = true;
         } else {
             this.sidepanelService.closeAll();

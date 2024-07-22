@@ -16,10 +16,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
-
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
-
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -27,7 +25,6 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
  * beginning of the list.
  */
 export type ScrollDirection = 'after' | 'before';
-
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group.
@@ -48,7 +45,7 @@ export type ScrollDirection = 'after' | 'before';
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
-        '[class.kbq-tab-header_rtl]': 'getLayoutDirection() == \'rtl\''
+        '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
     }
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {

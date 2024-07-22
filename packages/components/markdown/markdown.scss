@@ -4,7 +4,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-markdown {
@@ -77,7 +76,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         > li {
             &:before {
-                content:counter(li) ".";
+                content: counter(li) '.';
                 counter-increment: li;
                 padding-right: kbq-css-variable(markdown-list-size-ol-number-padding-right);
             }
@@ -166,7 +165,8 @@ $tokens: meta.module-variables(tokens) !default;
             vertical-align: top;
         }
 
-        th, td {
+        th,
+        td {
             padding: kbq-css-variable(markdown-table-size-padding);
             font-weight: 400;
         }

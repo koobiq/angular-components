@@ -5,9 +5,7 @@
 @use '../tokens';
 @use './tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
-
 
 %kbq-select-base {
     box-sizing: border-box;
@@ -46,8 +44,7 @@ $tokens: meta.module-variables(tokens) !default;
         cursor: pointer;
 
         height: calc(
-            var(--kbq-form-field-size-height, $height) -
-            (var(--kbq-form-field-size-border-width, $border-width) * 2)
+            var(--kbq-form-field-size-height, $height) - (var(--kbq-form-field-size-border-width, $border-width) * 2)
         );
     }
 
@@ -56,22 +53,29 @@ $tokens: meta.module-variables(tokens) !default;
         & .kbq-select__matcher {
             $padding-vertical: map.get($tokens, select-size-single-padding-vertical);
 
-            padding:
-                calc(
-                    var(--kbq-select-size-single-padding-vertical, $padding-vertical) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+            padding: calc(
+                    var(--kbq-select-size-single-padding-vertical, $padding-vertical) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-single-padding-right, map.get($tokens, select-size-single-padding-right)) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-single-padding-right, map.get($tokens, select-size-single-padding-right)) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-single-padding-vertical, $padding-vertical) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-single-padding-vertical, $padding-vertical) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-single-padding-left, map.get($tokens, select-size-single-padding-left)) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-single-padding-left, map.get($tokens, select-size-single-padding-left)) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 );
         }
     }
@@ -80,22 +84,29 @@ $tokens: meta.module-variables(tokens) !default;
         & .kbq-select__matcher {
             $padding-vertical: map.get($tokens, select-size-multiple-padding-vertical);
 
-            padding:
-                calc(
-                    var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+            padding: calc(
+                    var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-multiple-padding-right, map.get($tokens,select-size-multiple-padding-right)) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-multiple-padding-right, map.get($tokens, select-size-multiple-padding-right)) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 )
                 calc(
-                    var(--kbq-select-size-multiple-padding-left, map.get($tokens, select-size-multiple-padding-left)) -
-                    var(--kbq-form-field-size-border-width, $border-width)
+                    var(--kbq-select-size-multiple-padding-left, map.get($tokens, select-size-multiple-padding-left)) - var(
+                            --kbq-form-field-size-border-width,
+                            $border-width
+                        )
                 );
 
             .kbq-select__match-container {
@@ -109,12 +120,12 @@ $tokens: meta.module-variables(tokens) !default;
 
                 height: calc(
                     var(--kbq-form-field-size-height, $height) -
-                    (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
+                        (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
                 );
 
                 max-height: calc(
                     var(--kbq-form-field-size-height, $height) -
-                    (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
+                        (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
                 );
 
                 gap: kbq-css-variable(select-size-multiple-content-gap);

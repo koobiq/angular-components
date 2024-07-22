@@ -1,5 +1,4 @@
-import { TemplateRef, InjectionToken } from '@angular/core';
-
+import { InjectionToken, TemplateRef } from '@angular/core';
 
 export enum KbqToastStyle {
     Contrast = 'contrast',

@@ -5,7 +5,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-sidepanel-container_top,
@@ -37,6 +36,7 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-sidepanel-container_right {
         height: 100%;
         top: 0;
+        max-width: 100%;
 
         &.kbq-sidepanel_small {
             width: kbq-css-variable(sidepanel-size-small-width);
@@ -50,7 +50,6 @@ $tokens: meta.module-variables(tokens) !default;
 
         &.kbq-sidepanel_large {
             width: kbq-css-variable(sidepanel-size-large-width);
-            max-width: kbq-css-variable(sidepanel-size-large-width);
         }
 
         .kbq-sidepanel-indent {
@@ -96,7 +95,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 }
 
-/* stylelint-disable */
 .kbq-sidepanel-wrapper {
     display: flex;
     flex: 1;
@@ -108,7 +106,6 @@ $tokens: meta.module-variables(tokens) !default;
     display: flex;
     flex: 0 0 auto;
 }
-/* stylelint-enable */
 
 .kbq-sidepanel-content {
     display: flex;
@@ -127,10 +124,8 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding:
-        kbq-css-variable(sidepanel-size-header-padding-vertical)
-        kbq-css-variable(sidepanel-size-header-padding-right)
-        kbq-css-variable(sidepanel-size-header-padding-vertical)
+    padding: kbq-css-variable(sidepanel-size-header-padding-vertical)
+        kbq-css-variable(sidepanel-size-header-padding-right) kbq-css-variable(sidepanel-size-header-padding-vertical)
         kbq-css-variable(sidepanel-size-header-padding-left);
 
     .kbq-sidepanel-close {
@@ -166,8 +161,7 @@ $tokens: meta.module-variables(tokens) !default;
     flex-flow: row nowrap;
     flex: 0 0 auto;
 
-    padding:
-        kbq-css-variable(sidepanel-size-footer-padding-top)
+    padding: kbq-css-variable(sidepanel-size-footer-padding-top)
         kbq-css-variable(sidepanel-size-footer-padding-horizontal)
         kbq-css-variable(sidepanel-size-footer-padding-bottom);
 
@@ -177,11 +171,11 @@ $tokens: meta.module-variables(tokens) !default;
         flex-direction: row;
         flex: 1;
 
-        &[align="left"] {
+        &[align='left'] {
             justify-content: start;
         }
 
-        &[align="right"] {
+        &[align='right'] {
             justify-content: flex-end;
         }
 

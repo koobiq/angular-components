@@ -1,10 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeOptions } from '@koobiq/date-formatter';
-
 import { DateAdapter } from '../../datetime';
-
 import { DateFormatter } from './formatter';
-
 
 @Pipe({ name: 'absoluteLongDate' })
 export class AbsoluteDateFormatterPipe<D> implements PipeTransform {
