@@ -3,18 +3,16 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import {
-    buttonLeftIconClassName, buttonRightIconClassName,
-    leftIconClassName,
+    buttonLeftIconClassName,
+    buttonRightIconClassName,
     KbqButtonCssStyler,
     KbqButtonModule,
+    leftIconClassName,
     rightIconClassName
 } from './index';
 
-
 describe('KbqButton', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule],
@@ -96,17 +94,12 @@ describe('KbqButton', () => {
             const fixture = TestBed.createComponent(TestApp);
             const buttonNativeElement = fixture.nativeElement.querySelector('button');
 
-            expect(buttonNativeElement.disabled)
-                .withContext('Expected button not to be disabled')
-                .toBeFalsy();
+            expect(buttonNativeElement.disabled).withContext('Expected button not to be disabled').toBeFalsy();
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
-            expect(buttonNativeElement.disabled)
-                .withContext('Expected button to be disabled')
-                .toBeTruthy();
+            expect(buttonNativeElement.disabled).withContext('Expected button to be disabled').toBeTruthy();
         });
-
     });
 
     describe('a[kbq-button]', () => {
@@ -279,7 +272,7 @@ describe('Button with icon', () => {
         setTimeout(() => {
             expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalse();
             expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTrue();
-        },         0);
+        }, 0);
     }));
 
     it('should toggle additional classes on icon removal/reveal', waitForAsync(() => {
@@ -298,25 +291,16 @@ describe('Button with icon', () => {
 
             setTimeout(() => {
                 expect(debugElement.nativeElement.classList.contains(cssClass)).toBeFalse();
-            },         0);
+            }, 0);
         });
     }));
 });
 
-
 @Component({
     selector: 'test-app',
     template: `
-        <button kbq-button type="button"
-                [color]="buttonColor"
-                (click)="increment()"
-                [disabled]="isDisabled">
-        </button>
-        <a href="#" kbq-button
-           [color]="buttonColor"
-           (click)="increment()"
-           [disabled]="isDisabled">
-        </a>
+        <button kbq-button type="button" [color]="buttonColor" (click)="increment()" [disabled]="isDisabled"></button>
+        <a href="#" kbq-button [color]="buttonColor" (click)="increment()" [disabled]="isDisabled"> </a>
     `
 })
 class TestApp {

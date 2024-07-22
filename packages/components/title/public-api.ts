@@ -1,2 +1,2 @@
-export * from './title.module';
 export * from './title.directive';
+export * from './title.module';

@@ -34,7 +34,6 @@ import {
     toBoolean
 } from '@koobiq/components/core';
 
-
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
 
@@ -78,9 +77,10 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
     },
     providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR]
 })
-export class KbqRadioGroup extends KbqRadioGroupMixinBase
-    implements AfterContentInit, ControlValueAccessor, CanDisable {
-
+export class KbqRadioGroup
+    extends KbqRadioGroupMixinBase
+    implements AfterContentInit, ControlValueAccessor, CanDisable
+{
     @Input() big: boolean = false;
 
     /** Name of the radio button group. All radio buttons inside this group will use this name. */
@@ -286,7 +286,7 @@ export class KbqRadioGroup extends KbqRadioGroupMixinBase
     }
 
     private updateRadioButtonNames(): void {
-        this.radios?.forEach((radio) => radio.name = this.name);
+        this.radios?.forEach((radio) => (radio.name = this.name));
     }
 
     /** Updates the `selected` radio button from the internal _value state. */
@@ -308,7 +308,6 @@ export class KbqRadioGroup extends KbqRadioGroupMixinBase
     }
 }
 
-
 // Boilerplate for applying mixins to KbqRadioButton.
 /** @docs-private */
 abstract class KbqRadioButtonBase {
@@ -321,9 +320,9 @@ abstract class KbqRadioButtonBase {
 }
 
 /** @docs-private */
-export const KbqRadioButtonMixinBase:
-    CanColorCtor & HasTabIndexCtor & typeof KbqRadioButtonBase = mixinColor(mixinTabIndex(KbqRadioButtonBase));
-
+export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof KbqRadioButtonBase = mixinColor(
+    mixinTabIndex(KbqRadioButtonBase)
+);
 
 @Component({
     selector: 'kbq-radio-button',
@@ -341,9 +340,10 @@ export const KbqRadioButtonMixinBase:
         '[class.kbq-disabled]': 'disabled'
     }
 })
-export class KbqRadioButton extends KbqRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanColor, HasTabIndex {
-
+export class KbqRadioButton
+    extends KbqRadioButtonMixinBase
+    implements OnInit, AfterViewInit, OnDestroy, CanColor, HasTabIndex
+{
     /** Whether this radio button is checked. */
     @Input()
     get checked(): boolean {
@@ -404,7 +404,6 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase
         const newDisabledState = toBoolean(value);
 
         if (this._disabled !== newDisabledState) {
-
             this._disabled = newDisabledState;
             this.changeDetector.markForCheck();
         }
@@ -451,7 +450,9 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase
     @Input() id: string;
 
     /** ID of the native input element inside `<kbq-radio-button>` */
-    get inputId(): string { return `${this.id || this.uniqueId}-input`; }
+    get inputId(): string {
+        return `${this.id || this.uniqueId}-input`;
+    }
 
     private _labelPosition: 'before' | 'after';
 
@@ -483,12 +484,11 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase
 
         this.radioGroup = radioGroup;
 
-        this.removeUniqueSelectionListener = radioDispatcher
-            .listen((id: string, name: string) => {
-                if (id !== this.id && name === this.name) {
-                    this.checked = false;
-                }
-            });
+        this.removeUniqueSelectionListener = radioDispatcher.listen((id: string, name: string) => {
+            if (id !== this.id && name === this.name) {
+                this.checked = false;
+            }
+        });
     }
 
     ngOnInit() {
@@ -501,13 +501,11 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase
     }
 
     ngAfterViewInit() {
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .subscribe((focusOrigin) => {
-                if (!focusOrigin && this.radioGroup) {
-                    this.radioGroup.touch();
-                }
-            });
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
+            if (!focusOrigin && this.radioGroup) {
+                this.radioGroup.touch();
+            }
+        });
     }
 
     ngOnDestroy() {

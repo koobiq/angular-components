@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-
 import autoprefixer from 'autoprefixer';
+import fs from 'fs';
 import glob from 'glob';
+import path from 'path';
 import postcss from 'postcss';
 import * as sass from 'sass';
 

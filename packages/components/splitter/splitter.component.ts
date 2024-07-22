@@ -8,7 +8,6 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    forwardRef,
     Inject,
     Input,
     NgZone,
@@ -19,10 +18,10 @@ import {
     Renderer2,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 
 interface IArea {
     area: KbqSplitterAreaDirective;
@@ -68,7 +67,6 @@ export enum Direction {
     }
 })
 export class KbqGutterDirective implements OnInit {
-
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -80,7 +78,6 @@ export class KbqGutterDirective implements OnInit {
 
     private _direction: Direction = Direction.Vertical;
 
-
     @Input()
     get order(): number {
         return this._order;
@@ -91,7 +88,6 @@ export class KbqGutterDirective implements OnInit {
     }
 
     private _order: number = 0;
-
 
     @Input()
     get size(): number {
@@ -175,7 +171,6 @@ export class KbqGutterGhostDirective {
 
     private _y: number = 0;
 
-
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -251,7 +246,6 @@ export class KbqSplitterComponent implements OnInit {
 
     private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
-
     @Input()
     get hideGutters(): boolean {
         return this._hideGutters;
@@ -262,7 +256,6 @@ export class KbqSplitterComponent implements OnInit {
     }
 
     private _hideGutters: boolean = false;
-
 
     @Input()
     get direction(): Direction {
@@ -286,7 +279,6 @@ export class KbqSplitterComponent implements OnInit {
 
     private _disabled: boolean = false;
 
-
     @Input()
     get useGhost(): boolean {
         return this._useGhost;
@@ -297,7 +289,6 @@ export class KbqSplitterComponent implements OnInit {
     }
 
     private _useGhost: boolean = false;
-
 
     @Input()
     get gutterSize(): number {
@@ -325,9 +316,7 @@ export class KbqSplitterComponent implements OnInit {
     ) {}
 
     addArea(area: KbqSplitterAreaDirective): void {
-        this.areas.push(
-            this.mapAndOrderArea(area, this.areas.length)
-        );
+        this.areas.push(this.mapAndOrderArea(area, this.areas.length));
         this.changeDetectorRef.detectChanges();
     }
 
@@ -340,11 +329,10 @@ export class KbqSplitterComponent implements OnInit {
     }
 
     ngAfterContentInit() {
-        this.areasChangeSubscription = this.areaRefs.changes
-            .subscribe((data: QueryList<KbqSplitterAreaDirective>) => {
-                this.areas = data.map(this.mapAndOrderArea);
-                this.changeDetectorRef.markForCheck();
-            });
+        this.areasChangeSubscription = this.areaRefs.changes.subscribe((data: QueryList<KbqSplitterAreaDirective>) => {
+            this.areas = data.map(this.mapAndOrderArea);
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngOnDestroy() {
@@ -352,7 +340,9 @@ export class KbqSplitterComponent implements OnInit {
     }
 
     onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number) {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         event.preventDefault();
 
@@ -383,7 +373,10 @@ export class KbqSplitterComponent implements OnInit {
                 this.ghost.y = gutterPosition.y;
 
                 this.ghost.visible = true;
-                this.setStyle(StyleProperty.Cursor, currentGutter.direction === Direction.Vertical ? 'row-resize' : 'col-resize');
+                this.setStyle(
+                    StyleProperty.Cursor,
+                    currentGutter.direction === Direction.Vertical ? 'row-resize' : 'col-resize'
+                );
             }
         } else {
             this.areas.forEach((item) => {
@@ -394,21 +387,14 @@ export class KbqSplitterComponent implements OnInit {
             });
         }
 
-
         this.listeners.push(
-            this.renderer.listen(
-                'document',
-                'mouseup',
-                () => this.onMouseUp(leftArea, rightArea, currentGutter)
-            )
+            this.renderer.listen('document', 'mouseup', () => this.onMouseUp(leftArea, rightArea, currentGutter))
         );
 
         this.ngZone.runOutsideAngular(() => {
             this.listeners.push(
-                this.renderer.listen(
-                    'document',
-                    'mousemove',
-                    (e: MouseEvent) => this.onMouseMove(e, startPoint, leftArea, rightArea, currentGutter)
+                this.renderer.listen('document', 'mousemove', (e: MouseEvent) =>
+                    this.onMouseMove(e, startPoint, leftArea, rightArea, currentGutter)
                 )
             );
         });
@@ -429,7 +415,9 @@ export class KbqSplitterComponent implements OnInit {
             return false;
         });
 
-        if (indexToRemove === -1) { return; }
+        if (indexToRemove === -1) {
+            return;
+        }
 
         this.areas.splice(indexToRemove, 1);
     }
@@ -467,16 +455,16 @@ export class KbqSplitterComponent implements OnInit {
         rightArea: IArea,
         currentGutter: KbqGutterDirective | undefined
     ) {
-        if (!this.isDragging || this.disabled) { return; }
+        if (!this.isDragging || this.disabled) {
+            return;
+        }
 
         const endPoint: IPoint = {
             x: event.screenX,
             y: event.screenY
         };
 
-        const offset = this.isVertical()
-            ? startPoint.y - endPoint.y
-            : startPoint.x - endPoint.x;
+        const offset = this.isVertical() ? startPoint.y - endPoint.y : startPoint.x - endPoint.x;
 
         if (this.useGhost && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
@@ -493,7 +481,7 @@ export class KbqSplitterComponent implements OnInit {
 
             this.ghost[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
         } else {
-           this.resizeAreas(leftArea, rightArea, offset);
+            this.resizeAreas(leftArea, rightArea, offset);
         }
     }
 
@@ -518,11 +506,7 @@ export class KbqSplitterComponent implements OnInit {
         }
     }
 
-    private onMouseUp(
-        leftArea: IArea,
-        rightArea: IArea,
-        currentGutter: KbqGutterDirective | undefined
-    ) {
+    private onMouseUp(leftArea: IArea, rightArea: IArea, currentGutter: KbqGutterDirective | undefined) {
         while (this.listeners.length > 0) {
             const unsubscribe = this.listeners.pop();
 
@@ -533,9 +517,10 @@ export class KbqSplitterComponent implements OnInit {
 
         if (this.useGhost && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
-            const offset = this.ghost.direction === Direction.Vertical ?
-                gutterPosition.y - this.ghost.y :
-                gutterPosition.x - this.ghost.x;
+            const offset =
+                this.ghost.direction === Direction.Vertical
+                    ? gutterPosition.y - this.ghost.y
+                    : gutterPosition.x - this.ghost.x;
             this.resizeAreas(leftArea, rightArea, offset);
             this.ghost.visible = false;
             this.setStyle(StyleProperty.Cursor, 'unset');
@@ -591,8 +576,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
             this.removeStyle(StyleProperty.Width);
         }
 
-        this.splitter.gutterPositionChange
-            .subscribe(this.emitSizeChange);
+        this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
     }
 
     ngOnDestroy(): void {
@@ -604,7 +588,9 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     }
 
     setSize(size: number): void {
-        if (isNaN(size)) { return; }
+        if (isNaN(size)) {
+            return;
+        }
 
         this.setStyle(this.getSizeProperty(), coerceCssPixelValue(coerceNumberProperty(size)));
     }
@@ -631,21 +617,15 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     }
 
     private getMinSizeProperty(): StyleProperty {
-        return this.isVertical()
-            ? StyleProperty.MinHeight
-            : StyleProperty.MinWidth;
+        return this.isVertical() ? StyleProperty.MinHeight : StyleProperty.MinWidth;
     }
 
     private getOffsetSizeProperty(): StyleProperty {
-        return this.isVertical()
-            ? StyleProperty.OffsetHeight
-            : StyleProperty.OffsetWidth;
+        return this.isVertical() ? StyleProperty.OffsetHeight : StyleProperty.OffsetWidth;
     }
 
     private getSizeProperty(): StyleProperty {
-        return this.isVertical()
-            ? StyleProperty.Height
-            : StyleProperty.Width;
+        return this.isVertical() ? StyleProperty.Height : StyleProperty.Width;
     }
 
     private setStyle(style: StyleProperty, value: string | number) {
@@ -658,6 +638,5 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
 
     private emitSizeChange = () => {
         this.sizeChange.emit(this.getSize());
-    }
+    };
 }
-

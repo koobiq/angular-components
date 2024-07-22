@@ -1,3 +1,1 @@
-describe('rendering entry collection to html', () => {
-
-});
+describe('rendering entry collection to html', () => {});

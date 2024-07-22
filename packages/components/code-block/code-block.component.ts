@@ -1,29 +1,24 @@
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    ViewEncapsulation,
-    Input,
+    ElementRef,
     Inject,
     InjectionToken,
-    ChangeDetectionStrategy,
-    Optional,
-    ElementRef,
-    ChangeDetectorRef,
+    Input,
     OnDestroy,
-    ViewChild,
+    Optional,
     Renderer2,
-    AfterViewInit
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
-import { pairwise, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, pairwise } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
-
-import {
-    KbqCodeBlockConfiguration,
-    KbqCodeFile
-} from './code-block.types';
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-
+import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
 export const DEFAULT_EXTENSION = 'txt';
@@ -59,13 +54,12 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
     openExternalSystemTooltip: 'Открыть во внешней системе'
 };
 
-
 const actionBarBlockLeftMargin = 24;
 
 const hasScroll = (element: HTMLElement) => {
-    const { scrollHeight, scrollWidth, clientHeight, clientWidth} = element;
+    const { scrollHeight, scrollWidth, clientHeight, clientWidth } = element;
     return scrollHeight > clientHeight || scrollWidth > clientWidth;
-}
+};
 
 @Component({
     selector: 'kbq-code-block',
@@ -133,24 +127,27 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         // render focus border if origin is keyboard
-        this.codeBlockSubscription = this.currentCodeBlock.pipe(
-            startWith(null),
-            pairwise(),
-            switchMap(([prev, current]) => {
-                if (prev) { this.focusMonitor.stopMonitoring(prev); }
+        this.codeBlockSubscription = this.currentCodeBlock
+            .pipe(
+                startWith(null),
+                pairwise(),
+                switchMap(([prev, current]) => {
+                    if (prev) {
+                        this.focusMonitor.stopMonitoring(prev);
+                    }
 
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                return this.focusMonitor.monitor(current!).pipe(
-                    filter((origin: FocusOrigin) => origin === 'keyboard')
-                );
-            })
-        ).subscribe(() => {
-            this.hasFocus = true;
-            this.changeDetectorRef.markForCheck();
-        });
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    return this.focusMonitor
+                        .monitor(current!)
+                        .pipe(filter((origin: FocusOrigin) => origin === 'keyboard'));
+                })
+            )
+            .subscribe(() => {
+                this.hasFocus = true;
+                this.changeDetectorRef.markForCheck();
+            });
         this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code'));
     }
-
 
     ngOnDestroy(): void {
         this.resizeSubscription.unsubscribe();
@@ -167,7 +164,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         );
 
         this.changeDetectorRef.markForCheck();
-    }
+    };
 
     toggleSoftWrap() {
         this.softWrap = !this.softWrap;
@@ -212,13 +209,13 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.isTopOverflow = false;
 
         setTimeout(this.updateHeader);
-        setTimeout(() => this.currentCodeBlock.next(
-            this.elementRef.nativeElement.querySelector('code')
-        ));
+        setTimeout(() => this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code')));
     }
 
     checkOverflow(currentCodeContentElement: HTMLElement) {
-        if (this.noHeader) { return; }
+        if (this.noHeader) {
+            return;
+        }
         this.isTopOverflow = currentCodeContentElement.scrollTop > 0;
     }
 
@@ -236,18 +233,19 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const currentCodeBlock = currentCodeContent.querySelector('code')!;
 
-        return (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock))
-            && (!!this.maxHeight && this.viewAll || !this.maxHeight);
+        return (
+            (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock)) &&
+            ((!!this.maxHeight && this.viewAll) || !this.maxHeight)
+        );
     }
 
     private updateMultiline = () => {
-        this.multiLine = this.elementRef.nativeElement
-            .querySelectorAll('.hljs-ln-numbers').length > 1;
+        this.multiLine = this.elementRef.nativeElement.querySelectorAll('.hljs-ln-numbers').length > 1;
 
         this.updateHeader();
 
         this.changeDetectorRef.markForCheck();
-    }
+    };
 
     private getFullFileName(codeFile: KbqCodeFile): string {
         const fileName = codeFile.filename || 'code';

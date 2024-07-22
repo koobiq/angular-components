@@ -1,11 +1,4 @@
-import {
-    AfterContentInit,
-    ContentChildren,
-    Directive,
-    ElementRef,
-    QueryList
-} from '@angular/core';
-
+import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } from '@angular/core';
 
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',
@@ -39,7 +32,6 @@ export class KbqFormElement implements AfterContentInit {
         }
     }
 }
-
 
 @Directive({
     selector: '.kbq-form-vertical, .kbq-form-horizontal',

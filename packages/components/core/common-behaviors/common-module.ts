@@ -1,6 +1,5 @@
 import { BidiModule } from '@angular/cdk/bidi';
-import { NgModule, InjectionToken, Optional, Inject, isDevMode } from '@angular/core';
-
+import { Inject, InjectionToken, isDevMode, NgModule, Optional } from '@angular/core';
 
 // Injection token that configures whether the koobiq sanity checks are enabled.
 export const KBQ_SANITY_CHECKS = new InjectionToken<boolean>('kbq-sanity-checks', {
@@ -57,7 +56,7 @@ export class KbqCommonModule {
         if (this._document && !this._document.doctype) {
             console.warn(
                 'Current document does not have a doctype. This may cause ' +
-                'some koobiq components not to behave as expected.'
+                    'some koobiq components not to behave as expected.'
             );
         }
     }
@@ -77,8 +76,8 @@ export class KbqCommonModule {
             if (computedStyle && computedStyle.display !== 'none') {
                 console.warn(
                     'Could not find koobiq core theme. Most koobiq ' +
-                    'components may not work as expected. For more info refer ' +
-                    'to the theming guide: link there'
+                        'components may not work as expected. For more info refer ' +
+                        'to the theming guide: link there'
                 );
             }
 

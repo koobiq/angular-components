@@ -1,7 +1,5 @@
-
-
 export const faIRLocaleData = {
-    select: { hiddenItemsText: '{{ number }} بیشتر'},
+    select: { hiddenItemsText: '{{ number }} بیشتر' },
     datepicker: {
         placeholder: 'روز/ ماه/سال'
     },

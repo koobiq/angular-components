@@ -17,7 +17,7 @@ showConfirm() {
 
 ```ts
 let dialogRef = modalService.open({
-    kbqComponent: CustomComponent,
+    kbqComponent: CustomComponent
 });
 ```
 

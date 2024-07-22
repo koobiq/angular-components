@@ -1,11 +1,9 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 import { TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 

@@ -1,12 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class KbqMeasureScrollbarService {
-
     get scrollBarWidth(): number {
         if (this._scrollBarWidth) {
             return this._scrollBarWidth;
@@ -25,9 +23,7 @@ export class KbqMeasureScrollbarService {
         overflow: 'scroll'
     };
 
-    constructor(
-        @Inject(DOCUMENT) private document: any
-    ) {
+    constructor(@Inject(DOCUMENT) private document: any) {
         this.initScrollBarWidth();
     }
 

@@ -6,7 +6,6 @@ import {
     ComponentRef,
     ElementRef,
     EmbeddedViewRef,
-    forwardRef,
     Inject,
     Injector,
     NgZone,
@@ -14,12 +13,11 @@ import {
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
-    ViewRef
+    ViewRef,
+    forwardRef
 } from '@angular/core';
-
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
-
 
 @Component({
     selector: 'kbq-toast-container',
@@ -45,8 +43,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     ) {
         super(elementRef, scrollDispatcher, ngZone);
 
-        this.service.animation
-            .subscribe(this.dispatchScrollEvent);
+        this.service.animation.subscribe(this.dispatchScrollEvent);
     }
 
     createToast<C>(data: KbqToastData, componentType, onTop: boolean): ComponentRef<C> {
@@ -67,7 +64,9 @@ export class KbqToastContainerComponent extends CdkScrollable {
     remove(viewRef: ViewRef) {
         const index = this.viewContainer.indexOf(viewRef);
 
-        if (index < 0) { return; }
+        if (index < 0) {
+            return;
+        }
 
         this.viewContainer.remove(index);
     }
@@ -81,5 +80,5 @@ export class KbqToastContainerComponent extends CdkScrollable {
 
     dispatchScrollEvent = () => {
         this.elementRef.nativeElement.dispatchEvent(new CustomEvent('scroll'));
-    }
+    };
 }

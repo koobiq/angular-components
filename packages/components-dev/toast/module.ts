@@ -1,36 +1,34 @@
 /* tslint:disable:no-console */
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    NgModule,
-    Component,
-    ViewEncapsulation,
-    TemplateRef,
     ChangeDetectionStrategy,
+    Component,
     ElementRef,
-    ViewChild
+    NgModule,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import {
-    KbqToastStyle,
     KBQ_TOAST_CONFIG,
+    KbqToastComponent,
     KbqToastData,
     KbqToastModule,
-    KbqToastService,
     KbqToastPosition,
-    KbqToastComponent
+    KbqToastService,
+    KbqToastStyle
 } from '@koobiq/components/toast';
-import { ThemePalette } from '@koobiq/components/core';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
-
 import { KbqButtonModule } from '../../components/button';
-
 
 @Component({
     selector: 'kbq-new-toast',
@@ -53,7 +51,6 @@ export class MyToastComponent extends KbqToastComponent {
         console.log('MyToastComponent: ');
     }
 }
-
 
 @Component({
     selector: 'app',
@@ -99,7 +96,13 @@ export class ToastDemoComponent {
     }
 
     showErrorCustomIconToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: 'error', title: 'Не удалось авторизовать 15 агентов', actions, icon: true, iconClass: 'mc-error_16' });
+        this.toastService.show({
+            style: 'error',
+            title: 'Не удалось авторизовать 15 агентов',
+            actions,
+            icon: true,
+            iconClass: 'mc-error_16'
+        });
     }
 
     showIconAndCaption() {
@@ -136,7 +139,10 @@ export class ToastDemoComponent {
     }
 
     showManyActonToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: 'error', title: 'Заголовок', caption: 'Подзаголовок, подробности', actions }, 0);
+        this.toastService.show(
+            { style: 'error', title: 'Заголовок', caption: 'Подзаголовок, подробности', actions },
+            0
+        );
     }
 
     showToastWithInlineLink(caption: TemplateRef<any>) {

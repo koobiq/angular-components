@@ -1,7 +1,5 @@
-
-
 export const esLALocaleData = {
-    select: { hiddenItemsText: '{{ number }} más'},
+    select: { hiddenItemsText: '{{ number }} más' },
     datepicker: {
         placeholder: 'dd/mm/aaaa'
     },

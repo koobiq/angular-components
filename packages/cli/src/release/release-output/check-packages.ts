@@ -1,16 +1,10 @@
 // tslint:disable:no-console
 import chalk from 'chalk';
 import { existsSync } from 'fs';
+import { join } from 'path';
 // tslint:disable-next-line:match-default-export-name
 import glob from 'glob';
-import { join } from 'path';
-
-import {
-    checkKoobiqPackage,
-    checkReleaseBundle,
-    checkTypeDefinitionFile
-} from './output-validations';
-
+import { checkKoobiqPackage, checkReleaseBundle, checkTypeDefinitionFile } from './output-validations';
 
 /** Glob that matches all JavaScript bundle files within a release package. */
 const releaseBundlesGlob = '+(esm5|esm2015|bundles)/*.js';
@@ -40,26 +34,23 @@ export function checkReleasePackage(releasesPath: string, packageName: string): 
         failures.set(message, (failures.get(message) || []).concat(filePath));
     };
 
-    const bundlePaths = sync(releaseBundlesGlob, {cwd: packagePath, absolute: true});
-    const typeDefinitions = sync(releaseTypeDefinitionsGlob, {cwd: packagePath, absolute: true});
+    const bundlePaths = sync(releaseBundlesGlob, { cwd: packagePath, absolute: true });
+    const typeDefinitions = sync(releaseTypeDefinitionsGlob, { cwd: packagePath, absolute: true });
 
     // We want to walk through each bundle within the current package and run
     // release validations that ensure that the bundles are not invalid.
     bundlePaths.forEach((bundlePath) => {
-        checkReleaseBundle(bundlePath)
-            .forEach((message) => addFailure(message, bundlePath));
+        checkReleaseBundle(bundlePath).forEach((message) => addFailure(message, bundlePath));
     });
 
     // Run output validations for all TypeScript definition files within the release output.
     typeDefinitions.forEach((filePath) => {
-        checkTypeDefinitionFile(filePath)
-            .forEach((message) => addFailure(message, filePath));
+        checkTypeDefinitionFile(filePath).forEach((message) => addFailure(message, filePath));
     });
 
     // Special release validation checks for the "koobiq" release package.
     if (packageName === 'koobiq') {
-        checkKoobiqPackage(join(releasesPath, packageName))
-            .forEach(addFailure);
+        checkKoobiqPackage(join(releasesPath, packageName)).forEach(addFailure);
     }
 
     if (!existsSync(join(packagePath, 'LICENSE'))) {

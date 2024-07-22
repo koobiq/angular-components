@@ -8,7 +8,7 @@
         "reportFileName": "<unscopedPackageName>.api.md",
         "reportFolder": "<projectFolder>/../public_api_guard/components"
     },
-    "docModel": { "enabled": false},
+    "docModel": { "enabled": false },
     "dtsRollup": { "enabled": false },
     "tsdocMetadata": { "enabled": false },
     "messages": {

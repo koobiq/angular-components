@@ -3,9 +3,11 @@ import { Component, ViewChild } from '@angular/core';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
-    KbqTreeFlattener, KbqTreeOption, KbqTreeSelection, KbqTreeSelectionChange
+    KbqTreeFlattener,
+    KbqTreeOption,
+    KbqTreeSelection,
+    KbqTreeSelectionChange
 } from '@koobiq/components/tree';
-
 
 export class FileNode {
     children: FileNode[];
@@ -100,7 +102,6 @@ export const DATA_OBJECT = {
     tests: ''
 };
 
-
 abstract class TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
@@ -110,7 +111,10 @@ abstract class TreeParams {
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.treeData = buildFileTree(DATA_OBJECT, 0);
@@ -128,7 +132,7 @@ abstract class TreeParams {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 
     isExpandable = (node: FileFlatNode) => node.expandable;
 
@@ -144,7 +148,7 @@ abstract class TreeParams {
         flatNode.expandable = !!node.children?.length;
 
         return flatNode;
-    }
+    };
 }
 
 /**
@@ -165,7 +169,9 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
 
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
-    constructor() { super(); }
+    constructor() {
+        super();
+    }
 
     onSelectionChange($event: KbqTreeSelectionChange<KbqTreeOption>) {
         const option: KbqTreeOption = $event.option;
@@ -178,7 +184,9 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
     }
 
     private toggleParents(parent) {
-        if (!parent) { return; }
+        if (!parent) {
+            return;
+        }
 
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.tree.selectionModel.selected.includes(parent);

@@ -3,7 +3,6 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn 
 import { PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
-
 function groupValidator(): ValidatorFn {
     return (g: AbstractControl | FormGroup): ValidationErrors | null => {
         const start = g.get('start')?.value;
@@ -14,7 +13,9 @@ function groupValidator(): ValidatorFn {
             const parsedEndIp = end.split('.').map((octet) => parseInt(octet, 10));
 
             for (let i = 0; i < parsedStartIp.length; i++) {
-                if (parsedStartIp[i] > parsedEndIp[i]) { return { range: true }; }
+                if (parsedStartIp[i] > parsedEndIp[i]) {
+                    return { range: true };
+                }
             }
         }
 
@@ -24,13 +25,16 @@ function groupValidator(): ValidatorFn {
 
 function fieldValidator(regex: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-        if (!control.value) { return null; }
+        if (!control.value) {
+            return null;
+        }
 
         return regex.test(control.value) ? null : { pattern: true };
     };
 }
 
-const IP_PATTERN = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+const IP_PATTERN =
+    /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 /**
  * @title validation-composite

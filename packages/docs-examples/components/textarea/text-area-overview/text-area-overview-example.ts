@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Basic textarea
  */
@@ -11,7 +10,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     encapsulation: ViewEncapsulation.None
 })
 export class TextAreaOverviewExample {
-
     disabled: boolean = true;
     required: boolean = true;
     placeholder: string = 'placeholder';

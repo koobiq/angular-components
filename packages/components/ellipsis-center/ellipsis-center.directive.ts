@@ -2,20 +2,22 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
+    AfterViewInit,
     Directive,
     ElementRef,
-    Input,
-    OnInit,
-    OnDestroy,
-    NgZone,
-    ViewContainerRef,
     Inject,
-    Optional, Renderer2, AfterViewInit, NgModule
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Renderer2,
+    ViewContainerRef
 } from '@angular/core';
-import { KbqTooltipTrigger, KBQ_TOOLTIP_SCROLL_STRATEGY } from '@koobiq/components/tooltip';
+import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
 
 const MIN_VISIBLE_LENGTH = 50;
 

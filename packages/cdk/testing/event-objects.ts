@@ -7,17 +7,17 @@ export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
         type,
         false,
         false,
-        window, /* view */
+        window /* view */,
         0,
-        x, /* screenX */
-        y, /* screenY */
-        x, /* clientX */
-        y, /* clientY */
+        x /* screenX */,
+        y /* screenY */,
+        x /* clientX */,
+        y /* clientY */,
         false,
         false,
         false,
         false,
-        button, /* button */
+        button /* button */,
         null
     );
 

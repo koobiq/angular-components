@@ -1,37 +1,39 @@
 // tslint:disable no-magic-numbers
-import { Component, ViewChild } from '@angular/core';
-import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { Component, DebugElement, Inject, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DOWN_ARROW, ONE, SPACE, TWO, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchFakeEvent, dispatchEvent } from '@koobiq/cdk/testing';
-import { DateAdapter } from '@koobiq/components/core';
+import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 
-import { KbqTimepicker, KbqTimepickerModule } from './index';
-
+import {
+    DEFAULT_TIME_FORMAT,
+    KbqTimepicker,
+    KbqTimepickerModule,
+    TIMEFORMAT_PLACEHOLDERS,
+    TimeFormats,
+    TimeFormatToLocaleKeys
+} from './index';
 
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker
-                   [(ngModel)]="timeValue"
-                   #ngModel="ngModel"
-                   [format]="timeFormat"
-                   [min]="minTime"
-                   [max]="maxTime"
-                   [disabled]="isDisabled">
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input
+            kbqTimepicker
+            [(ngModel)]="timeValue"
+            #ngModel="ngModel"
+            [format]="timeFormat"
+            [min]="minTime"
+            [max]="maxTime"
+            [disabled]="isDisabled"
+        />
+    </kbq-form-field>`
 })
 class TestApp {
     @ViewChild('ngModel') ngModel: NgModel;
@@ -79,16 +81,12 @@ describe('KbqTimepicker', () => {
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.disabled)
-                .withContext('input not disabled')
-                .toBe(true);
+            expect(inputElementDebug.nativeElement.disabled).withContext('input not disabled').toBe(true);
 
             testComponent.isDisabled = false;
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.disabled)
-                .withContext('input not disabled')
-                .toBe(false);
+            expect(inputElementDebug.nativeElement.disabled).withContext('input not disabled').toBe(false);
         });
 
         it('Placeholder set on default timeFormat', () => {
@@ -109,25 +107,26 @@ describe('KbqTimepicker', () => {
 
             const originDateTime = testComponent.timeValue;
 
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '10:10:10'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10:10:10'
+                }
+            });
 
             fixture.detectChanges();
 
-            expect(testComponent.adapter.getYear(testComponent.timeValue as DateTime))
-                .toEqual(testComponent.adapter.getYear(originDateTime));
+            expect(testComponent.adapter.getYear(testComponent.timeValue as DateTime)).toEqual(
+                testComponent.adapter.getYear(originDateTime)
+            );
 
-            expect(testComponent.adapter.getMonth(testComponent.timeValue as DateTime))
-                .toEqual(testComponent.adapter.getMonth(originDateTime));
+            expect(testComponent.adapter.getMonth(testComponent.timeValue as DateTime)).toEqual(
+                testComponent.adapter.getMonth(originDateTime)
+            );
 
-            expect(testComponent.adapter.getDate(testComponent.timeValue as DateTime))
-                .toEqual(testComponent.adapter.getDate(originDateTime));
+            expect(testComponent.adapter.getDate(testComponent.timeValue as DateTime)).toEqual(
+                testComponent.adapter.getDate(originDateTime)
+            );
 
             expect(testComponent.adapter.getHours(testComponent.timeValue as DateTime)).toEqual(10);
 
@@ -170,26 +169,20 @@ describe('KbqTimepicker', () => {
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('mismatch time format')
-                .toBe('12:18:28');
+            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('12:18:28');
         });
 
         it('Using HH:mm', () => {
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('mismatch time format')
-                .toBe('12:18');
+            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('12:18');
         });
 
         it('Using default format', () => {
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('mismatch default time format')
-                .toBe('12:18');
+            expect(inputElementDebug.nativeElement.value).withContext('mismatch default time format').toBe('12:18');
         });
 
         it('Using unknown/error/unsupported format', () => {
@@ -208,15 +201,11 @@ describe('KbqTimepicker', () => {
 
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('mismatch time format')
-                .toBe('00:00:00');
+            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('00:00:00');
 
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('mismatch time format')
-                .toBe('00:00');
+            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('00:00');
         }));
     });
 
@@ -251,23 +240,18 @@ describe('KbqTimepicker', () => {
             expect(testComponent.ngModel.valid).toBeTrue();
             expect(inputElementDebug.nativeElement.value).toBe('12:18');
 
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => 'string'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => 'string'
+                }
+            });
 
             fixture.detectChanges();
 
             expect(inputElementDebug.nativeElement.value).toBe('string');
 
-            inputElementDebug.triggerEventHandler(
-                'blur',
-                { target: inputElementDebug.nativeElement }
-            );
+            inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
 
             expect(testComponent.ngModel.valid).toBeFalse();
         });
@@ -275,28 +259,20 @@ describe('KbqTimepicker', () => {
         it('Should not change model on blur', () => {
             const date = testComponent.adapter.toIso8601(testComponent.timeValue);
 
-            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value))
-                .toBe(date);
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value)).toBe(date);
 
-            inputElementDebug.triggerEventHandler(
-                'blur',
-                { target: inputElementDebug.nativeElement }
-            );
+            inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
 
             fixture.detectChanges();
 
-            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value))
-                .toBe(date);
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value)).toBe(date);
         });
 
         it('Add lead zeros on blur', () => {
             expect(testComponent.ngModel.valid).toBeTrue();
             inputElementDebug.nativeElement.value = '1';
 
-            inputElementDebug.triggerEventHandler(
-                'blur',
-                { target: inputElementDebug.nativeElement }
-            );
+            inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
 
             expect(inputElementDebug.nativeElement.value).toBe('01:00');
         });
@@ -342,181 +318,155 @@ describe('KbqTimepicker', () => {
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
 
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '19:01:08'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '19:01:08'
+                }
+            });
             fixture.detectChanges();
             expect(testComponent.timeValue.toString()).toContain('19:01:08');
         });
 
         it('Paste 12h value from clipboard', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '07:15 pm'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '07:15 pm'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('19:15:00');
         });
 
         it('Paste am/pm from clipboard: 1:3 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '1:3 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '1:3 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('01:03:00');
         });
 
         it('Paste am/pm from clipboard: 01:3 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '01:3 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '01:3 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('01:03:00');
         });
 
         it('Paste am/pm from clipboard: 1:30 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '1:30 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '1:30 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('01:30:00');
         });
 
         it('Paste am/pm from clipboard: 01:30 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '01:30 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '01:30 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('01:30:00');
         });
 
         it('Paste am/pm from clipboard: 10:3 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '10:3 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10:3 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('10:03:00');
         });
 
         it('Paste am/pm from clipboard: 10:30 am', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '10:30 am'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10:30 am'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('10:30:00');
         });
 
         it('Paste am/pm from clipboard: 10:30 Pm', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '10:30 pm'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10:30 pm'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('22:30:00');
         });
 
         it('Paste am/pm from clipboard: 12:3 aM', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '12:3 aM'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '12:3 aM'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('00:03:00');
         });
 
         it('Paste am/pm from clipboard: 11:3 PM', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '11:3 PM'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '11:3 PM'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('23:03:00');
         });
 
         it('Paste am/pm from clipboard: 11:3 a', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '11:3 a'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '11:3 a'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('11:03:00');
         });
 
         it('Paste am/pm from clipboard: 11:3 p', () => {
-            inputElementDebug.triggerEventHandler(
-                'paste',
-                {
-                    preventDefault: () => null,
-                    clipboardData: {
-                        getData: () => '11:3 p'
-                    }
-                });
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '11:3 p'
+                }
+            });
             fixture.detectChanges();
 
             expect(testComponent.timeValue.toString()).toContain('23:03:00');
@@ -605,9 +555,7 @@ describe('KbqTimepicker', () => {
             dispatchFakeEvent(inputNativeElement, 'input');
             fixture.detectChanges();
 
-            expect(inputNativeElement.value)
-                .withContext('Failed key-by-key input on 1st key')
-                .toBe('1:00:00');
+            expect(inputNativeElement.value).withContext('Failed key-by-key input on 1st key').toBe('1:00:00');
 
             const key2PressEvent: KeyboardEvent = createKeyboardEvent('keydown', TWO);
             dispatchEvent(inputNativeElement, key2PressEvent);
@@ -619,22 +567,17 @@ describe('KbqTimepicker', () => {
             dispatchFakeEvent(inputNativeElement, 'input');
             fixture.detectChanges();
 
-            expect(inputNativeElement.value)
-                .withContext('Failed key-by-key input on 2nd key')
-                .toBe('12:00:00');
+            expect(inputNativeElement.value).withContext('Failed key-by-key input on 2nd key').toBe('12:00:00');
         });
     });
 });
 
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker
-                   [format]="timeFormat"
-                   [formControl]="formControl">
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
+    </kbq-form-field>`
 })
 class TimePickerWithNullFormControlValue {
     formControl: UntypedFormControl = new UntypedFormControl();
@@ -661,9 +604,7 @@ describe('KbqTimepicker with null formControl value', () => {
         TestBed.compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
-        spyOn(mockedAdapter, 'today').and.returnValue(
-            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
-        );
+        spyOn(mockedAdapter, 'today').and.returnValue(mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5));
 
         fixture = TestBed.createComponent(TimePickerWithNullFormControlValue);
         testComponent = fixture.debugElement.componentInstance;
@@ -678,14 +619,12 @@ describe('KbqTimepicker with null formControl value', () => {
 
         expect(testComponent.formControl.value).toBeNull();
 
-        inputElementDebug.triggerEventHandler(
-            'paste',
-            {
-                preventDefault: () => null,
-                clipboardData: {
-                    getData: () => '19:01:02'
-                }
-            });
+        inputElementDebug.triggerEventHandler('paste', {
+            preventDefault: () => null,
+            clipboardData: {
+                getData: () => '19:01:02'
+            }
+        });
         fixture.detectChanges();
 
         expect(testComponent.formControl.value.toString()).toContain('2020-01-01T19:01:02');
@@ -709,13 +648,10 @@ describe('KbqTimepicker with null formControl value', () => {
 
 @Component({
     selector: 'test-app',
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker
-                   [format]="timeFormat"
-                   [(ngModel)]="model">
-        </kbq-form-field>`
+    template: ` <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
+    </kbq-form-field>`
 })
 class TimePickerWithNullModelValue {
     timeFormat: string;
@@ -728,7 +664,6 @@ describe('KbqTimepicker with null model value', () => {
     let inputElementDebug;
 
     beforeEach(fakeAsync(() => {
-
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -742,9 +677,7 @@ describe('KbqTimepicker with null model value', () => {
         TestBed.compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
-        spyOn(mockedAdapter, 'today').and.returnValue(
-            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
-        );
+        spyOn(mockedAdapter, 'today').and.returnValue(mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5));
 
         fixture = TestBed.createComponent(TimePickerWithNullModelValue);
         testComponent = fixture.debugElement.componentInstance;
@@ -759,14 +692,12 @@ describe('KbqTimepicker with null model value', () => {
 
         expect(testComponent.model).toBeNull();
 
-        inputElementDebug.triggerEventHandler(
-            'paste',
-            {
-                preventDefault: () => null,
-                clipboardData: {
-                    getData: () => '19:01:02'
-                }
-            });
+        inputElementDebug.triggerEventHandler('paste', {
+            preventDefault: () => null,
+            clipboardData: {
+                getData: () => '19:01:02'
+            }
+        });
         fixture.detectChanges();
 
         expect(testComponent.model.toString()).toContain('2020-01-01T19:01:02');
@@ -786,4 +717,79 @@ describe('KbqTimepicker with null model value', () => {
 
         expect(testComponent.model.toString()).toContain('2020-01-01T18:09');
     }));
+});
+
+@Component({
+    selector: 'test-app',
+    template: ` <kbq-form-field>
+        <i kbqPrefix kbq-icon="mc-clock_16"></i>
+        <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
+    </kbq-form-field>`
+})
+class TimepickerWithLocaleChange {
+    timeFormat: TimeFormats;
+    model: any = null;
+
+    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+}
+
+describe('with Locale change', () => {
+    let fixture: ComponentFixture<TimepickerWithLocaleChange>;
+    let testComponent: TimepickerWithLocaleChange;
+    let inputElementDebug: DebugElement;
+
+    const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string =>
+        testComponent.localeService.current.timepicker.placeholder[
+            TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]
+        ];
+
+    beforeEach(fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                FormsModule,
+                KbqFormFieldModule,
+                KbqTimepickerModule,
+                KbqIconModule,
+                KbqLuxonDateModule
+            ],
+            declarations: [TimepickerWithLocaleChange]
+        });
+        TestBed.compileComponents();
+
+        fixture = TestBed.createComponent(TimepickerWithLocaleChange);
+        testComponent = fixture.debugElement.componentInstance;
+        inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
+
+        fixture.detectChanges();
+    }));
+
+    it('should get placeholder from localeService', () => {
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]
+        );
+        expect(getPlaceholderForCurrentLocale()).toEqual(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+    });
+
+    it('should update placeholder of nativeElement on locale change', () => {
+        testComponent.localeService.setLocale('en-US');
+        fixture.detectChanges();
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale());
+    });
+
+    it('should apply localized format on format change', () => {
+        const selectedFormat = TimeFormats.HHmmss;
+        testComponent.timeFormat = selectedFormat;
+        fixture.detectChanges();
+
+        expect(getPlaceholderForCurrentLocale(selectedFormat)).toEqual(TIMEFORMAT_PLACEHOLDERS[selectedFormat]);
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            getPlaceholderForCurrentLocale(selectedFormat)
+        );
+
+        testComponent.localeService.setLocale('en-US');
+        fixture.detectChanges();
+        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+            getPlaceholderForCurrentLocale(selectedFormat)
+        );
+    });
 });

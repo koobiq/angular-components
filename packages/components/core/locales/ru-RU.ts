@@ -1,15 +1,13 @@
-
-
 export const ruRULocaleData = {
-    select: { hiddenItemsText: 'еще {{ number }}'},
+    select: { hiddenItemsText: 'еще {{ number }}' },
     datepicker: {
         placeholder: 'дд.мм.гггг',
         dateInput: 'dd.MM.yyyy'
     },
     timepicker: {
         placeholder: {
-            full: 'hh:mm:ss',
-            short: 'hh:mm'
+            full: 'чч:мм:сс',
+            short: 'чч:мм'
         }
     },
     fileUpload: {

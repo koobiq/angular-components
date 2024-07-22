@@ -1,6 +1,5 @@
-import * as path from 'node:path';
-
 import checker from 'license-checker';
+import * as path from 'node:path';
 import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;
@@ -54,7 +53,7 @@ const ignoredPackages: PackageID[] = [
     'gitconfiglocal@1.0.0',
 
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.0.2',
+    '@cspell/dict-en-common-misspellings@2.0.2'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.

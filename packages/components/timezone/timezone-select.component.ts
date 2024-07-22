@@ -1,8 +1,7 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, Directive, ContentChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, ViewEncapsulation } from '@angular/core';
 import { KBQ_OPTION_PARENT_COMPONENT, KbqSelectSearch } from '@koobiq/components/core';
-import { KbqFormFieldControl, KbqCleaner } from '@koobiq/components/form-field';
+import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSelect } from '@koobiq/components/select';
-
 
 @Directive({ selector: 'kbq-timezone-select-trigger' })
 export class KbqTimezoneSelectTrigger {}

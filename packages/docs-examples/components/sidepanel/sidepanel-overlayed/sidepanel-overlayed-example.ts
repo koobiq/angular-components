@@ -1,7 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
-
 /**
  * @title Sidepanel overlayed
  */

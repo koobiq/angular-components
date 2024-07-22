@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
-import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed
-} from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
-
 @Component({
     selector: 'test-app',
     template: `
         <kbq-form-field>
-            <input kbqInput [formControl]="testControl" type="text"/>
+            <input kbqInput [formControl]="testControl" type="text" />
         </kbq-form-field>
     `
 })

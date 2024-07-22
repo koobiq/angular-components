@@ -1,14 +1,12 @@
 import { Component, Provider, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { createMouseEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { ThemePalette } from '../core';
 import { KbqInput, KbqInputModule } from './index';
 

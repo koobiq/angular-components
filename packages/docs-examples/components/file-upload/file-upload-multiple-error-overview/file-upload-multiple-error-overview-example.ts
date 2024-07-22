@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqFileItem } from '@koobiq/components/file-upload';
 
-
 /**
  * @title file upload single error overview
  */

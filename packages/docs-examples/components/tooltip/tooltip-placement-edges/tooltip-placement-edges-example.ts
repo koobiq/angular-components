@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 
-
 /**
  * @title tooltip-placement-edges
  */
@@ -12,6 +11,14 @@ import { PopUpPlacements } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None
 })
 export class TooltipPlacementEdgesExample {
-    placements = [PopUpPlacements.TopLeft, PopUpPlacements.TopRight, PopUpPlacements.BottomLeft, PopUpPlacements.BottomRight,
-        PopUpPlacements.LeftBottom, PopUpPlacements.LeftTop, PopUpPlacements.RightBottom, PopUpPlacements.RightTop];
+    placements = [
+        PopUpPlacements.TopLeft,
+        PopUpPlacements.TopRight,
+        PopUpPlacements.BottomLeft,
+        PopUpPlacements.BottomRight,
+        PopUpPlacements.LeftBottom,
+        PopUpPlacements.LeftTop,
+        PopUpPlacements.RightBottom,
+        PopUpPlacements.RightTop
+    ];
 }

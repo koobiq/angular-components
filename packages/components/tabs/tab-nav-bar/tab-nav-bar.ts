@@ -23,14 +23,14 @@ import {
 } from '@koobiq/components/core';
 import { delay } from 'rxjs/operators';
 
-
 // Boilerplate for applying mixins to KbqTabLink.
 /** @docs-private */
 export class KbqTabLinkBase {}
 
 /** @docs-private */
-export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor &
-    typeof KbqTabLinkBase = mixinTabIndex(mixinDisabled(KbqTabLinkBase));
+export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqTabLinkBase = mixinTabIndex(
+    mixinDisabled(KbqTabLinkBase)
+);
 
 /**
  * Link inside of a `kbq-tab-nav-bar`.
@@ -108,7 +108,6 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     }
 }
 
-
 /**
  * Navigation component matching the styles of the tab group header.
  */
@@ -142,7 +141,7 @@ export class KbqTabNav implements AfterContentInit {
     ngAfterContentInit(): void {
         this.links.changes
             .pipe(delay(0))
-            .subscribe((links) => links.forEach((link) => link.vertical = this.vertical));
+            .subscribe((links) => links.forEach((link) => (link.vertical = this.vertical)));
 
         this.links.notifyOnChanges();
     }

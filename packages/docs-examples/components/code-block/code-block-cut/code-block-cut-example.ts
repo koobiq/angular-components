@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeJs2 = `function askPassword(ok, fail) {
     if (password == "rockstar") ok();
     let password = prompt("Password?", '');
@@ -25,7 +24,6 @@ let user = {
 
 askPassword(user.loginOk, user.loginFail);`;
 
-
 /**
  * @title Basic code-block-cut
  */
@@ -40,10 +38,12 @@ export class CodeBlockCutExample {
     maxHeight = 200;
 
     constructor() {
-        this.files = [{
-            filename: '',
-            content: codeJs2,
-            language: 'javascript'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeJs2,
+                language: 'javascript'
+            }
+        ];
     }
 }

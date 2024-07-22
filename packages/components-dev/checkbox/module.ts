@@ -4,9 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqPseudoCheckboxModule, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-
 import { KbqCheckboxModule } from '../../components/checkbox';
-
 
 /* tslint:disable:no-trailing-whitespace */
 @Component({

@@ -79,7 +79,10 @@
                         "buildOptimizer": false,
                         "optimization": false,
                         "namedChunks": true,
-                        "allowedCommonJsDependencies": ["highlight.js", "@messageformat/core"]
+                        "allowedCommonJsDependencies": [
+                            "highlight.js",
+                            "@messageformat/core"
+                        ]
                     },
                     "configurations": {
                         "development": {
@@ -208,7 +211,10 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["packages/cdk/**/*.ts", "packages/cdk/**/*.html"]
+                        "lintFilePatterns": [
+                            "packages/cdk/**/*.ts",
+                            "packages/cdk/**/*.html"
+                        ]
                     }
                 }
             }
@@ -245,7 +251,10 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["packages/components/**/*.ts", "packages/components/**/*.html"]
+                        "lintFilePatterns": [
+                            "packages/components/**/*.ts",
+                            "packages/components/**/*.html"
+                        ]
                     }
                 }
             }

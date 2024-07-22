@@ -4,11 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
-
 import { KbqButtonModule, KbqButtonStyles } from '../../components/button';
 import { KbqIconModule } from '../../components/icon';
 import { KbqLinkModule } from '../../components/link';
-
 
 @Component({
     selector: 'app',
@@ -22,7 +20,6 @@ export class DemoComponent {
     alertStyles = KbqAlertStyles;
     style = KbqButtonStyles;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

@@ -1,17 +1,12 @@
 // tslint:disable:no-magic-numbers
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
-import {
-    DateAdapter,
-    KBQ_DATE_LOCALE,
-    KBQ_LOCALE_SERVICE
-} from '@koobiq/components/core';
+import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 
 import { KBQ_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateModule } from './index';
 import { MomentDateAdapter } from './moment-date-adapter';
-
 
 // tslint:disable:one-variable-per-declaration
 const JAN = 0;
@@ -21,11 +16,11 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-           imports: [ MomentDateModule ],
-           providers: [
-               { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
-               { provide: KBQ_LOCALE_SERVICE, useValue: null }
-           ]
+            imports: [MomentDateModule],
+            providers: [
+                { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -34,7 +29,7 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
     }));
 
     it('should take the default locale id from the KBQ_DATE_LOCALE injection token', () => {
-        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('Jan 2, 2017');
+        expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('Jan 2, 2017');
     });
 });
 
@@ -43,11 +38,11 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-           imports: [MomentDateModule],
-           providers: [
-               { provide: LOCALE_ID, useValue: 'en-US' },
-               { provide: KBQ_LOCALE_SERVICE, useValue: null }
-           ]
+            imports: [MomentDateModule],
+            providers: [
+                { provide: LOCALE_ID, useValue: 'en-US' },
+                { provide: KBQ_LOCALE_SERVICE, useValue: null }
+            ]
         }).compileComponents();
     }));
 
@@ -56,7 +51,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
     }));
 
     it('should cascade locale id from the LOCALE_ID injection token to KBQ_DATE_LOCALE', () => {
-        expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('Jan 2, 2017');
+        expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('Jan 2, 2017');
     });
 });
 
@@ -65,7 +60,7 @@ describe('MomentDateAdapter with KBQ_MOMENT_DATE_ADAPTER_OPTIONS override', () =
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-           imports: [MomentDateModule],
+            imports: [MomentDateModule],
             providers: [
                 {
                     provide: KBQ_MOMENT_DATE_ADAPTER_OPTIONS,

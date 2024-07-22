@@ -10,7 +10,8 @@
                 "**/light-theme.scss"
             ],
             "output": ""
-        }, {
+        },
+        {
             "input": "",
             "glob": "*.scss",
             "output": ""

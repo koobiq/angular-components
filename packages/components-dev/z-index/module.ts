@@ -1,14 +1,15 @@
 /* tslint:disable:no-console */
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
-    NgModule,
-    Component,
-    ViewEncapsulation,
-    TemplateRef,
     ChangeDetectionStrategy,
+    Component,
     ElementRef,
-    ViewChild
+    NgModule,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,17 +25,9 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import {
-    KbqToastData,
-    KbqToastModule,
-    KbqToastService,
-    KbqToastComponent
-} from '@koobiq/components/toast';
+import { KbqToastComponent, KbqToastData, KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { KbqButtonModule } from '../../components/button';
-import { OverlayContainer } from '@angular/cdk/overlay';
-
 
 @Component({
     selector: 'kbq-new-toast',
@@ -57,7 +50,6 @@ export class MyToastComponent extends KbqToastComponent {
         console.log('MyToastComponent: ');
     }
 }
-
 
 @Component({
     selector: 'app',

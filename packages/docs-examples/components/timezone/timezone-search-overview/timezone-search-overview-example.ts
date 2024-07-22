@@ -2,12 +2,15 @@
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { getZonesGroupedByCountry, KbqTimezoneGroup, KbqTimezoneZone, offsetFormatter } from '@koobiq/components/timezone';
+import {
+    KbqTimezoneGroup,
+    KbqTimezoneZone,
+    getZonesGroupedByCountry,
+    offsetFormatter
+} from '@koobiq/components/timezone';
 import { Observable, merge, of } from 'rxjs';
-import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
-
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../mock';
-
 
 /**
  * @title Timezone search overview
@@ -29,44 +32,46 @@ export class TimezoneSearchOverviewExample implements OnInit {
         const reRegExpChar: RegExp = /[\/\\^$.*+?()[\]{}|\s]/g;
         const reHasRegExpChar: RegExp = RegExp(reRegExpChar.source);
 
-        const escapedString = (searchString && reHasRegExpChar.test(searchString))
-            ? searchString.replace(reRegExpChar, '\\$&')
-            : searchString;
+        const escapedString =
+            searchString && reHasRegExpChar.test(searchString)
+                ? searchString.replace(reRegExpChar, '\\$&')
+                : searchString;
 
-        return escapedString.replace(/[\-—−]/g, '(\-|—|−)');
+        return escapedString.replace(/[\-—−]/g, '(-|—|−)');
     }
 
     private readonly data: KbqTimezoneZone[];
 
     constructor() {
-        this.data = timezones
-            .map(({ associatedZones, ...zone }) => ({
-                ...zone,
-                cities: Array.isArray(associatedZones)
-                    ? associatedZones.map(({city}) => city).sort().join(', ')
-                    : ''
-            }));
+        this.data = timezones.map(({ associatedZones, ...zone }) => ({
+            ...zone,
+            cities: Array.isArray(associatedZones)
+                ? associatedZones
+                      .map(({ city }) => city)
+                      .sort()
+                      .join(', ')
+                : ''
+        }));
 
-        this.priorityCountry = this.data
-            .find((item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone)
-            ?.countryCode as string;
+        this.priorityCountry = this.data.find(
+            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone
+        )?.countryCode as string;
     }
 
     ngOnInit(): void {
         this.filteredOptions$ = merge(
             of(getZonesGroupedByCountry(this.data, 'Другие страны')),
-            this.searchControl.valueChanges
-                .pipe(
-                    distinctUntilChanged(),
-                    debounceTime(500),
-                    map(() => {
-                        if (!this.searchControl.value) {
-                            return getZonesGroupedByCountry(this.data, 'Другие страны');
-                        }
+            this.searchControl.valueChanges.pipe(
+                distinctUntilChanged(),
+                debounceTime(500),
+                map(() => {
+                    if (!this.searchControl.value) {
+                        return getZonesGroupedByCountry(this.data, 'Другие страны');
+                    }
 
-                        return this.getFilteredData();
-                    })
-                )
+                    return this.getFilteredData();
+                })
+            )
         );
     }
 
@@ -80,8 +85,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
                 timezone.cities
             ];
 
-            return regex.test(fields.join(' '))
-                || fields.some((timezoneValue: string) => regex.test(timezoneValue));
+            return regex.test(fields.join(' ')) || fields.some((timezoneValue: string) => regex.test(timezoneValue));
         });
 
         return getZonesGroupedByCountry(options, 'Другие страны', this.priorityCountry);

@@ -11,7 +11,6 @@
             "@koobiq/components/*": ["../../dist/packages/components/*"],
             "@koobiq/docs-examples/*": ["../../dist/packages/docs-examples/*"],
             "@koobiq/docs-examples": ["../../dist/packages/docs-examples"]
-
         }
     },
     "files": [

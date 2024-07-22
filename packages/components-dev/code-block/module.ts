@@ -6,21 +6,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
-import { KbqCodeFile, KBQ_CODE_BLOCK_CONFIGURATION, KbqCodeBlockModule } from '../../components/code-block';
-
-import {
-    codeTs,
-    codeJs2,
-    codeHTML,
-    codeCs,
-    codeHTML3,
-    codeJson,
-    codeXML,
-    text,
-    codeCSS
-} from './code-files-example';
-
+import { KBQ_CODE_BLOCK_CONFIGURATION, KbqCodeBlockModule, KbqCodeFile } from '../../components/code-block';
+import { codeCSS, codeCs, codeHTML, codeHTML3, codeJs2, codeJson, codeTs, codeXML, text } from './code-files-example';
 
 @Component({
     selector: 'app',
@@ -29,12 +16,11 @@ import {
     templateUrl: './template.html'
 })
 export class DemoComponent {
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     themePalette = ThemePalette;
     files: KbqCodeFile[];
     files4: KbqCodeFile[];
-
 
     constructor() {
         this.files = [
@@ -113,19 +99,21 @@ export class DemoComponent {
         KbqSidepanelModule,
         FormsModule
     ],
-    providers: [{
-        provide: KBQ_CODE_BLOCK_CONFIGURATION,
-        useValue: {
-            softWrapOnTooltip: 'Включить перенос по словам',
-            softWrapOffTooltip: 'Выключить перенос по словам',
-            downloadTooltip: 'Скачать',
-            copiedTooltip: '✓ Скопировано',
-            copyTooltip: 'Скопировать',
-            viewAllText: 'Показать все',
-            viewLessText: 'Свернуть',
-            openExternalSystemTooltip: 'Открыть во внешней системе'
+    providers: [
+        {
+            provide: KBQ_CODE_BLOCK_CONFIGURATION,
+            useValue: {
+                softWrapOnTooltip: 'Включить перенос по словам',
+                softWrapOffTooltip: 'Выключить перенос по словам',
+                downloadTooltip: 'Скачать',
+                copiedTooltip: '✓ Скопировано',
+                copyTooltip: 'Скопировать',
+                viewAllText: 'Показать все',
+                viewLessText: 'Свернуть',
+                openExternalSystemTooltip: 'Открыть во внешней системе'
+            }
         }
-    }],
+    ],
     bootstrap: [DemoComponent]
 })
 export class DemoModule {}

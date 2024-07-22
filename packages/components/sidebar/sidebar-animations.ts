@@ -1,6 +1,5 @@
 import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from '@angular/animations';
 
-
 export enum KbqSidebarAnimationState {
     Opened = 'opened',
     Closed = 'closed'
@@ -15,7 +14,7 @@ export const kbqSidebarAnimations: { readonly sidebarState: AnimationTriggerMeta
                 width: '{{ openedStateWidth }}',
                 maxWidth: '{{ openedStateMaxWidth }}'
             }),
-            { params: { openedStateMinWidth: '', openedStateWidth: '', openedStateMaxWidth: '' }}
+            { params: { openedStateMinWidth: '', openedStateWidth: '', openedStateMaxWidth: '' } }
         ),
         state(
             'closed',
@@ -24,9 +23,10 @@ export const kbqSidebarAnimations: { readonly sidebarState: AnimationTriggerMeta
                 width: '{{ closedStateWidth }}',
                 maxWidth: '{{ closedStateWidth }}'
             }),
-            { params: { closedStateWidth: '' }}
+            { params: { closedStateWidth: '' } }
         ),
         transition('opened => closed', [animate('0.1s')]),
         transition('closed => opened', [animate('0.2s')])
+
     ])
 };

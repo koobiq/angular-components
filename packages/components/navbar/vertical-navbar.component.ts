@@ -6,37 +6,23 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ContentChildren, ElementRef,
+    ContentChildren,
+    ElementRef,
     forwardRef,
     Input,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    DOWN_ARROW,
-    UP_ARROW,
-    TAB,
-    isVerticalMovement,
-    isHorizontalMovement
-} from '@koobiq/cdk/keycodes';
+import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
-
-import {
-    KbqNavbarBento,
-    KbqNavbarItem,
-    KbqNavbarRectangleElement
-} from './navbar-item.component';
+import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
-
 
 @Component({
     selector: 'kbq-vertical-navbar',
     exportAs: 'KbqVerticalNavbar',
     template: `
-        <div class="kbq-vertical-navbar__container"
-             [class.kbq-collapsed]="!expanded"
-             [class.kbq-expanded]="expanded">
-
+        <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
             <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle"></ng-content>
         </div>
@@ -89,8 +75,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 
-        this.animationDone
-            .subscribe(this.updateTooltipForItems);
+        this.animationDone.subscribe(this.updateTooltipForItems);
     }
 
     ngAfterContentInit(): void {
@@ -98,8 +83,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         this.updateExpandedStateForItems();
         this.updateTooltipForItems();
 
-        this.rectangleElements.changes
-            .subscribe(this.setItemsState);
+        this.rectangleElements.changes.subscribe(this.setItemsState);
 
         super.ngAfterContentInit();
 
@@ -141,14 +125,13 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
             item.collapsed = !this.expanded;
             setTimeout(() => item.button?.updateClassModifierForIcons());
         });
-    }
+    };
 
     private updateTooltipForItems = () => {
         this.items.forEach((item) => item.updateTooltip());
-    }
+    };
 
     private setItemsState = () => {
-        Promise.resolve()
-            .then(() => this.rectangleElements?.forEach((item) => item.vertical = true));
-    }
+        Promise.resolve().then(() => this.rectangleElements?.forEach((item) => (item.vertical = true)));
+    };
 }

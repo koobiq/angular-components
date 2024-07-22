@@ -18,11 +18,8 @@ import {
 } from '@angular/core';
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
-
-import { KbqTitleTextRef, KBQ_TITLE_TEXT_REF } from '../title';
-
+import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
-
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -32,7 +29,10 @@ let uniqueIdCounter = 0;
 
 /** Event object emitted by KbqOption when selected or deselected. */
 export class KbqOptionSelectionChange<T = KbqOption> {
-    constructor(public source: T, public isUserInput = false) {}
+    constructor(
+        public source: T,
+        public isUserInput = false
+    ) {}
 }
 
 /**
@@ -56,8 +56,7 @@ export interface KeyboardNavigationHandler {
 /**
  * Injection token used to provide the parent component to options.
  */
-export const KBQ_OPTION_PARENT_COMPONENT =
-    new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
+export const KBQ_OPTION_PARENT_COMPONENT = new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
 
 export abstract class KbqOptionBase {
     value: any;
@@ -143,9 +142,12 @@ export class KbqVirtualOption extends KbqOptionBase {
     templateUrl: 'option.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
-        provide: KBQ_TITLE_TEXT_REF, useExisting: KbqOption
-    }]
+    providers: [
+        {
+            provide: KBQ_TITLE_TEXT_REF,
+            useExisting: KbqOption
+        }
+    ]
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -359,7 +361,6 @@ export function countGroupLabelsBeforeOption(
     options: QueryList<KbqOption>,
     optionGroups: QueryList<KbqOptgroup>
 ): number {
-
     if (optionGroups.length) {
         const optionsArray = options.toArray();
         const groups = optionGroups.toArray();
@@ -394,7 +395,9 @@ export function getOptionScrollPosition(
 ): number {
     const optionOffset = optionIndex * optionHeight;
 
-    if (optionOffset < currentScrollPosition) { return optionOffset; }
+    if (optionOffset < currentScrollPosition) {
+        return optionOffset;
+    }
 
     if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
         return Math.max(0, optionOffset - panelHeight + optionHeight);
@@ -402,4 +405,3 @@ export function getOptionScrollPosition(
 
     return currentScrollPosition;
 }
-

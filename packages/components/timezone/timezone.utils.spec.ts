@@ -1,7 +1,6 @@
 /* tslint:disable:no-magic-numbers */
-import { KbqTimezoneZone, KbqTimezoneGroup } from './timezone.models';
-import { parseOffset, offsetFormatter, timezonesSortComparator, getZonesGroupedByCountry } from './timezone.utils';
-
+import { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
+import { getZonesGroupedByCountry, offsetFormatter, parseOffset, timezonesSortComparator } from './timezone.utils';
 
 const firstTimezone: KbqTimezoneZone = {
     id: 'Europe/city3',
@@ -64,7 +63,10 @@ describe('KbqTimezone utils', () => {
                 {
                     countryCode: 'ru',
                     countryName: 'Other',
-                    zones: [{ ...secondTimezone, countryName: 'Other' }, { ...firstTimezone, countryName: 'Other' }]
+                    zones: [
+                        { ...secondTimezone, countryName: 'Other' },
+                        { ...firstTimezone, countryName: 'Other' }
+                    ]
                 }
             ];
 

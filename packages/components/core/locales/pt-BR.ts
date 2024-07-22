@@ -1,7 +1,5 @@
-
-
 export const ptBRLocaleData = {
-    select: { hiddenItemsText: '{{ number }} mais'},
+    select: { hiddenItemsText: '{{ number }} mais' },
     datepicker: {
         placeholder: 'dd/mm/yyyy'
     },

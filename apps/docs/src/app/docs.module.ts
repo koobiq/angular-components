@@ -5,17 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqToastModule } from '@koobiq/components/toast';
+import { KbqTreeModule } from '@koobiq/components/tree';
 import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
-
 import { AnchorsModule } from './components/anchors/anchors.module';
 import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
 import { DocumentationItems } from './components/documentation-items';
@@ -64,6 +62,7 @@ import { APP_ROUTES } from './docs.module-routes';
         ComponentViewerModule,
         IconsViewerModule,
         SidenavModule
+
     ],
     declarations: [DocsAppComponent, PageNotFoundComponent],
     providers: [

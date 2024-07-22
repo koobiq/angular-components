@@ -1,11 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
-
 import { StackblitzWriter } from './stackblitz-writer';
 
 @Component({

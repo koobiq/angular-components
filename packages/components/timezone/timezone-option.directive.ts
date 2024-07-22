@@ -3,29 +3,27 @@ import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Directive,
     ElementRef,
     Inject,
     NgZone,
     OnDestroy,
     Optional,
-    ViewContainerRef, ChangeDetectorRef
+    ViewContainerRef
 } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqTooltipTrigger, KBQ_TOOLTIP_SCROLL_STRATEGY } from '@koobiq/components/tooltip';
-
+import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTimezoneOption } from './timezone-option.component';
-
 
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
 
-
 @Directive({
-   selector: 'kbq-timezone-option',
-   host: {
-       '(mouseenter)': 'onMouseEnter()',
-       '(mouseleave)': 'onMouseLeave()'
-   }
+    selector: 'kbq-timezone-option',
+    host: {
+        '(mouseenter)': 'onMouseEnter()',
+        '(mouseleave)': 'onMouseLeave()'
+    }
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private resizeObserver: ResizeObserver;

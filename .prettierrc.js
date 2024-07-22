@@ -1,49 +1,43 @@
 // @ts-check
 
 /**
- * @see https://prettier.io/docs/en/options
- * @type {import("prettier").Config}
+ * @type {import('prettier').Options}
  */
 const config = {
     printWidth: 120,
     tabWidth: 4,
     useTabs: false,
     singleQuote: true,
+    trailingComma: 'none',
+    plugins: [
+        'prettier-plugin-organize-imports',
+        // should be last
+        'prettier-plugin-multiline-arrays'
+    ],
     overrides: [
         {
             files: ['*.yml'],
             options: {
-                tabWidth: 2,
-            },
+                tabWidth: 2
+            }
         },
         {
-            files: ['.component.html', '.page.html'],
+            files: [
+                '.component.html',
+                '.page.html'
+            ],
             options: {
-                parser: 'angular',
-            },
+                parser: 'angular'
+            }
         },
         {
             files: ['*.html'],
             options: {
                 parser: 'html',
-                singleQuote: false,
-            },
-        },
-    ],
-    plugins: ['@ianvs/prettier-plugin-sort-imports'],
-    importOrderParserPlugins: ['typescript', 'decorators-legacy'],
-    importOrderTypeScriptVersion: '5.0.0',
-    importOrder: [
-        '<BUILTIN_MODULES>',
-        '',
-        '^@angular/(.*)$',
-        '^rxjs(.*)$',
-        '',
-        '<THIRD_PARTY_MODULES>',
-        '',
-        '^[./]',
-        '',
-    ],
+                singleQuote: false
+            }
+        }
+    ]
 };
 
 module.exports = config;

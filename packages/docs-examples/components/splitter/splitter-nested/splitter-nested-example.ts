@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Direction } from '@koobiq/components/splitter';
 
-
 /**
  * @title Basic Splitter
  */

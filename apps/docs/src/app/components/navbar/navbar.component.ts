@@ -1,11 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqTheme, ThemeService } from '@koobiq/components/core';
-
 import { koobiqVersion } from '../../version';
-import { DocsNavbarState, DocStates } from '../doс-states';
-
-import { NavbarPropertyParameters, NavbarProperty } from './navbar-property';
-
+import { DocStates, DocsNavbarState } from '../doс-states';
+import { NavbarProperty, NavbarPropertyParameters } from './navbar-property';
 
 export enum Themes {
     Default = 'theme-light',
@@ -81,8 +78,7 @@ export class NavbarComponent {
             }
         }
 
-        this.docStates.navbarMenu
-            .subscribe((state) => this.opened = state === DocsNavbarState.opened);
+        this.docStates.navbarMenu.subscribe((state) => (this.opened = state === DocsNavbarState.opened));
     }
 
     toggleMenu() {
@@ -104,5 +100,5 @@ export class NavbarComponent {
         if (this.themeService.themes[0].selected) {
             this.setTheme(0);
         }
-    }
+    };
 }

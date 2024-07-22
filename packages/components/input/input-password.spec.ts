@@ -1,21 +1,18 @@
 /* tslint:disable */
 import { Component, Provider, Type, ViewChild } from '@angular/core';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    ComponentFixtureAutoDetect,
-    flush,
-    tick
-} from '@angular/core/testing';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { KbqFormFieldModule, PasswordRules, KbqPasswordToggle, KbqPasswordHint } from '@koobiq/components/form-field';
+import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import { KbqInputModule, KbqInputPassword } from './index';
-
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -39,15 +36,19 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     return TestBed.createComponent<T>(component);
 }
 
-
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled">
-            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipDisabled]="disabled"
-                                [kbqTooltipHidden]="'Показать пароль'"></kbq-password-toggle>
+            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled" />
+            <kbq-password-toggle
+                [kbqTooltipNotHidden]="'Скрыть пароль'"
+                [kbqTooltipDisabled]="disabled"
+                [kbqTooltipHidden]="'Показать пароль'"
+            ></kbq-password-toggle>
 
-            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64">От 8 до 64 символов</kbq-password-hint>
+            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64"
+                >От 8 до 64 символов</kbq-password-hint
+            >
 
             <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
 
@@ -55,8 +56,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
             <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">Только латинские буквы, цифры, пробелы и
-                спецсимволы
+            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols"
+                >Только латинские буквы, цифры, пробелы и спецсимволы
             </kbq-password-hint>
         </kbq-form-field>
     `
@@ -71,9 +72,11 @@ class KbqPasswordInputDefault {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value">
-            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'"
-                                [kbqTooltipHidden]="'Показать пароль'"></kbq-password-toggle>
+            <input kbqInputPassword [(ngModel)]="value" />
+            <kbq-password-toggle
+                [kbqTooltipNotHidden]="'Скрыть пароль'"
+                [kbqTooltipHidden]="'Показать пароль'"
+            ></kbq-password-toggle>
 
             <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
                 Не менее 5 букв
@@ -91,9 +94,11 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled">
-            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'"
-                                [kbqTooltipHidden]="'Показать пароль'"></kbq-password-toggle>
+            <input kbqInputPassword [(ngModel)]="value" [disabled]="disabled" />
+            <kbq-password-toggle
+                [kbqTooltipNotHidden]="'Скрыть пароль'"
+                [kbqTooltipHidden]="'Показать пароль'"
+            ></kbq-password-toggle>
 
             <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
                 Не менее 5 букв
@@ -122,7 +127,7 @@ class KbqPasswordInputCustomPasswordRule {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [formControl]="formControl">
+            <input kbqInputPassword [formControl]="formControl" />
         </kbq-form-field>
     `
 })
@@ -134,7 +139,7 @@ class KbqPasswordInputWithFormControl {
     template: `
         <form [formGroup]="reactiveForm" novalidate>
             <kbq-form-field>
-                <input kbqInputPassword formControlName="reactiveInputValue">
+                <input kbqInputPassword formControlName="reactiveInputValue" />
             </kbq-form-field>
         </form>
     `
@@ -148,7 +153,6 @@ class KbqPasswordInputWithFormControlName {
         });
     }
 }
-
 
 describe('KbqPasswordInput', () => {
     it('should have toggle', fakeAsync(() => {
@@ -237,8 +241,9 @@ describe('KbqPasswordInput', () => {
         dispatchFakeEvent(input, 'input');
 
         expect(fixture.componentInstance.passwordHint.customCheckRule).toBeTruthy();
-        expect(fixture.componentInstance.passwordHint.hasError)
-            .toEqual(fixture.componentInstance.passwordHint.customCheckRule(valueToTest));
+        expect(fixture.componentInstance.passwordHint.hasError).toEqual(
+            fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
+        );
     }));
 
     it('password length rule', fakeAsync(() => {

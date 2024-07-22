@@ -2,7 +2,6 @@ import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqDividerModule } from '@koobiq/components/divider';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -10,7 +9,6 @@ import { KbqDividerModule } from '@koobiq/components/divider';
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {}
-
 
 @NgModule({
     declarations: [DemoComponent],

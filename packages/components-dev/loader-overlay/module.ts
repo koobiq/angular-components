@@ -6,9 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-
 import { KbqLoaderOverlayModule } from '../../components/loader-overlay';
-
 
 @Component({
     selector: 'app',
@@ -24,7 +22,6 @@ export class LoaderOverlayDemoComponent {
 
     loading = true;
 }
-
 
 @NgModule({
     imports: [

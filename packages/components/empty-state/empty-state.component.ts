@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { KbqIconItem } from '@koobiq/components/icon';
 
-
 @Directive({
     selector: '[kbq-empty-state-icon]',
     host: {
@@ -21,12 +20,13 @@ export class KbqEmptyStateIcon {
     constructor(@Optional() private icon: KbqIconItem) {}
 
     setErrorColor() {
-        if (!this.icon) { return; }
+        if (!this.icon) {
+            return;
+        }
 
         this.icon.color = 'error';
     }
 }
-
 
 @Directive({
     selector: '[kbq-empty-state-text]',
@@ -35,7 +35,6 @@ export class KbqEmptyStateIcon {
     }
 })
 export class KbqEmptyStateText {}
-
 
 @Directive({
     selector: '[kbq-empty-state-title]',
@@ -52,7 +51,6 @@ export class KbqEmptyStateTitle {}
     }
 })
 export class KbqEmptyStateActions {}
-
 
 @Component({
     selector: 'kbq-empty-state',
@@ -84,4 +82,3 @@ export class KbqEmptyState implements AfterContentInit {
         }
     }
 }
-

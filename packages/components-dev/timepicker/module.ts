@@ -1,16 +1,12 @@
 /* tslint:disable:no-magic-numbers */
-import {
-    Component, Inject,
-    NgModule,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
-    FormsModule,
-    ReactiveFormsModule,
     ValidatorFn
 } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,7 +19,6 @@ import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
-
 
 export function customValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => ({ customValidator: { value: control.value } });
@@ -58,9 +53,9 @@ export class TimepickerDemoComponent {
         private adapter: DateAdapter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
     ) {
-
         this.languageList = this.localeService.locales.items;
-        this.selectedLanguage = this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
+        this.selectedLanguage =
+            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
 
         this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
         this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 10, 0);
@@ -114,4 +109,3 @@ export class TimepickerDemoComponent {
     bootstrap: [TimepickerDemoComponent]
 })
 export class DemoModule {}
-

@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 
-
 const defaultMinYear = 1900;
 const defaultMaxYear = 2099;
 
@@ -51,7 +50,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     set maxDate(value: D | null) {
-        if (!value) { return; }
+        if (!value) {
+            return;
+        }
 
         this._maxDate = value;
 
@@ -67,7 +68,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     set minDate(value: D | null) {
-        if (!value) { return; }
+        if (!value) {
+            return;
+        }
 
         this._minDate = value;
 
@@ -90,8 +93,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     @Output() readonly yearSelected = new EventEmitter<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
-        this.monthNames = this.adapter.getMonthNames('long')
-            .map((name, i) => ({ name, value: i }));
+        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => ({ name, value: i }));
     }
 
     ngAfterContentInit(): void {
@@ -121,10 +123,10 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         const daysInMonth = this.adapter.getNumDaysInMonth(this.adapter.createDate(year, month));
 
         this.activeDate = this.adapter.createDate(
-                year,
-                month,
-                Math.min(this.adapter.getDate(this.activeDate), daysInMonth)
-            );
+            year,
+            month,
+            Math.min(this.adapter.getDate(this.activeDate), daysInMonth)
+        );
 
         this.yearSelected.emit(this.activeDate);
         this.activeDateChange.emit(this.activeDate);
@@ -151,15 +153,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     private compareDate(first: D, second: D): number {
-        const normalizedFirst = this.adapter.createDate(
-            this.adapter.getYear(first),
-            this.adapter.getMonth(first)
-        );
+        const normalizedFirst = this.adapter.createDate(this.adapter.getYear(first), this.adapter.getMonth(first));
 
-        const normalizedSecond = this.adapter.createDate(
-            this.adapter.getYear(second),
-            this.adapter.getMonth(second)
-        );
+        const normalizedSecond = this.adapter.createDate(this.adapter.getYear(second), this.adapter.getMonth(second));
 
         return this.adapter.compareDate(normalizedFirst, normalizedSecond);
     }
@@ -168,8 +164,10 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
 
         const year = this.adapter.getYear(this.activeDate);
-        this.selectedYear = this.years.find(({ name }) => name === year)
-            || { name: year, value: this.adapter.getYearName(this.activeDate) };
+        this.selectedYear = this.years.find(({ name }) => name === year) || {
+            name: year,
+            value: this.adapter.getYearName(this.activeDate)
+        };
     }
 
     private updateYearsArray() {

@@ -5,9 +5,7 @@ import { AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef }
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
-
 
 describe('KbqTabBody', () => {
     let dir: Direction = 'ltr';
@@ -27,8 +25,7 @@ describe('KbqTabBody', () => {
                 SimpleTabBodyApp
             ],
             providers: [
-                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }
-            ]
+                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }]
         });
 
         TestBed.compileComponents();
@@ -59,7 +56,6 @@ describe('KbqTabBody', () => {
         });
 
         describe('in LTR direction', () => {
-
             beforeEach(() => {
                 dir = 'ltr';
                 fixture = TestBed.createComponent(SimpleTabBodyApp);
@@ -184,22 +180,21 @@ describe('KbqTabBody', () => {
     });
 });
 
-
 @Component({
     template: `
-    <ng-template>Tab Body Content</ng-template>
-    <kbq-tab-body [content]="content" [position]="position" [origin]="origin"></kbq-tab-body>
-  `
+        <ng-template>Tab Body Content</ng-template>
+        <kbq-tab-body [content]="content" [position]="position" [origin]="origin"></kbq-tab-body>
+    `
 })
 class SimpleTabBodyApp implements AfterContentInit {
     content: TemplatePortal;
     position: number;
     origin: number | null;
 
-    @ViewChild(KbqTabBody, {static: false}) tabBody: KbqTabBody;
-    @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
+    @ViewChild(KbqTabBody, { static: false }) tabBody: KbqTabBody;
+    @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
 
-    constructor(private viewContainerRef: ViewContainerRef) { }
+    constructor(private viewContainerRef: ViewContainerRef) {}
 
     ngAfterContentInit() {
         this.content = new TemplatePortal(this.template, this.viewContainerRef);

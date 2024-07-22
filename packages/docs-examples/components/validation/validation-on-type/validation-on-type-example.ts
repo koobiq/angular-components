@@ -2,7 +2,6 @@ import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 
-
 /**
  * @title validation-on-type
  */

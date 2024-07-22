@@ -1,10 +1,8 @@
 /* tslint:disable:no-reserved-keywords no-parameter-reassignment no-magic-numbers */
 import * as fs from 'fs';
 import * as path from 'path';
-
 import { parseExampleFile } from './parse-example-file';
 import { parseExampleModuleFile } from './parse-example-module-file';
-
 
 interface ExampleMetadata {
     /** Name of the example component. */
@@ -41,33 +39,30 @@ interface AnalyzedExamples {
 /** Inlines the example module template with the specified parsed data. */
 function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
     const { exampleMetadata } = parsedData;
-    const exampleComponents = exampleMetadata.reduce(
-        (result, data) => {
-            if (result[data.id] !== undefined) {
-                throw Error(`Multiple examples with the same id have been discovered: ${data.id}`);
+    const exampleComponents = exampleMetadata.reduce((result, data) => {
+        if (result[data.id] !== undefined) {
+            throw Error(`Multiple examples with the same id have been discovered: ${data.id}`);
+        }
+
+        const splitPackagePath = data.module.packagePath.split('/');
+
+        result[data.id] = {
+            packagePath: data.packagePath,
+            title: data.title,
+            componentName: data.componentName,
+            files: data.files,
+            selector: data.selector,
+            additionalComponents: data.additionalComponents,
+            primaryFile: path.basename(data.sourcePath),
+            module: {
+                name: data.module.name,
+                importSpecifier: data.module.packagePath,
+                importPath: `koobiq-docs-examples-${splitPackagePath[0]}-${splitPackagePath[1]}`
             }
+        };
 
-            const splitPackagePath = data.module.packagePath.split('/');
-
-            result[data.id] = {
-                packagePath: data.packagePath,
-                title: data.title,
-                componentName: data.componentName,
-                files: data.files,
-                selector: data.selector,
-                additionalComponents: data.additionalComponents,
-                primaryFile: path.basename(data.sourcePath),
-                module: {
-                    name: data.module.name,
-                    importSpecifier: data.module.packagePath,
-                    importPath: `koobiq-docs-examples-${splitPackagePath[0]}-${splitPackagePath[1]}`
-                }
-            };
-
-            return result;
-        },
-        {} as any
-    );
+        return result;
+    }, {} as any);
 
     return fs
         .readFileSync(require.resolve('./example-module.template'), 'utf8')
@@ -138,7 +133,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             if (primaryComponent.selector !== expectedSelector) {
                 throw Error(
                     `Example ${exampleId} uses selector: ${primaryComponent.selector}, ` +
-                    `but expected: ${expectedSelector}`
+                        `but expected: ${expectedSelector}`
                 );
             }
 
@@ -171,7 +166,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
         } else {
             throw Error(
                 `Could not find a primary example component in ${sourceFile}. ` +
-                `Ensure that there's a component with an @title annotation.`
+                    `Ensure that there's a component with an @title annotation.`
             );
         }
     }
@@ -179,9 +174,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
     // Walk through all collected examples and find their parent example module. In View Engine,
     // components cannot be lazy-loaded without the associated module being loaded.
     exampleMetadata.forEach((example) => {
-        const parentModule = exampleModules.find((module) =>
-            example.sourcePath.startsWith(module.packagePath)
-        );
+        const parentModule = exampleModules.find((module) => example.sourcePath.startsWith(module.packagePath));
 
         if (!parentModule) {
             throw Error(`Could not determine example module for: ${example.id}`);
@@ -205,15 +198,9 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
 }
 
 /** Asserts that the given file exists for the specified example. */
-function assertReferencedExampleFileExists(
-    baseDir: string,
-    examplePackagePath: string,
-    relativePath: string
-) {
+function assertReferencedExampleFileExists(baseDir: string, examplePackagePath: string, relativePath: string) {
     if (!fs.existsSync(path.join(baseDir, examplePackagePath, relativePath))) {
-        throw Error(
-            `Example "${examplePackagePath}" references "${relativePath}", but file does not exist.`
-        );
+        throw Error(`Example "${examplePackagePath}" references "${relativePath}", but file does not exist.`);
     }
 }
 

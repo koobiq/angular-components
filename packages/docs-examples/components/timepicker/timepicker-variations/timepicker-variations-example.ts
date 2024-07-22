@@ -3,7 +3,6 @@ import { DateAdapter } from '@koobiq/components/core';
 import { TimeFormats } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
 
-
 /**
  * @title Timepicker overview
  */

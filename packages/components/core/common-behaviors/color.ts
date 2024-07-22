@@ -1,7 +1,5 @@
 import { ElementRef } from '@angular/core';
-
 import { AbstractConstructor, Constructor } from './constructor';
-
 
 // tslint:disable-next-line:naming-convention
 export interface CanColor {
@@ -43,35 +41,40 @@ export enum KbqComponentColors {
 }
 
 /** Mixin to augment a directive with a `color` property. */
-export function mixinColor<T extends AbstractConstructor<HasElementRef>>
-    (base: T, defaultColor?: KbqComponentColors | ThemePalette): CanColorCtor & T;
+export function mixinColor<T extends AbstractConstructor<HasElementRef>>(
+    base: T,
+    defaultColor?: KbqComponentColors | ThemePalette
+): CanColorCtor & T;
 
-export function mixinColor<T extends Constructor<HasElementRef>>
-    (base: T, defaultColor: KbqComponentColors | ThemePalette = KbqComponentColors.Empty): CanColorCtor & T {
-        return class extends base {
-            get color(): KbqComponentColors | ThemePalette { return this._color; }
-            set color(value: KbqComponentColors | ThemePalette) {
-                const colorPalette = value || defaultColor;
+export function mixinColor<T extends Constructor<HasElementRef>>(
+    base: T,
+    defaultColor: KbqComponentColors | ThemePalette = KbqComponentColors.Empty
+): CanColorCtor & T {
+    return class extends base {
+        get color(): KbqComponentColors | ThemePalette {
+            return this._color;
+        }
+        set color(value: KbqComponentColors | ThemePalette) {
+            const colorPalette = value || defaultColor;
 
-                if (colorPalette !== this._color) {
-                    if (this._color) {
-                        this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
-                    }
-                    if (colorPalette) {
-                        this.elementRef.nativeElement.classList.add(`kbq-${colorPalette}`);
-                    }
-
-                    this._color = colorPalette;
+            if (colorPalette !== this._color) {
+                if (this._color) {
+                    this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
                 }
+                if (colorPalette) {
+                    this.elementRef.nativeElement.classList.add(`kbq-${colorPalette}`);
+                }
+
+                this._color = colorPalette;
             }
+        }
 
-            private _color: KbqComponentColors | ThemePalette;
+        private _color: KbqComponentColors | ThemePalette;
 
-            constructor(...args: any[]) {
-                super(...args);
+        constructor(...args: any[]) {
+            super(...args);
 
-                this.color = defaultColor;
-            }
-        };
+            this.color = defaultColor;
+        }
+    };
 }
-

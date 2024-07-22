@@ -7,7 +7,6 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    forwardRef,
     Inject,
     Input,
     NgZone,
@@ -15,12 +14,12 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-
 
 @Component({
     selector: `kbq-password-toggle`,
@@ -40,13 +39,10 @@ import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/componen
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-
     @ViewChild(KbqIconButton) icon: KbqIconButton;
     @Input('kbqTooltipNotHidden')
     get content(): string | TemplateRef<any> {
-        return (this.formField.control as any).elementType === 'password' ?
-            this.kbqTooltipHidden :
-            this._content;
+        return (this.formField.control as any).elementType === 'password' ? this.kbqTooltipHidden : this._content;
     }
 
     set content(content: string | TemplateRef<any>) {
@@ -87,8 +83,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     ngAfterViewInit(): void {
-        this.formField.control?.stateChanges
-            .subscribe(this.updateState);
+        this.formField.control?.stateChanges.subscribe(this.updateState);
     }
 
     toggle(event: KeyboardEvent) {
@@ -107,5 +102,5 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         this.icon.hasError = this.formField.control.errorState;
 
         this.changeDetector.markForCheck();
-    }
+    };
 }

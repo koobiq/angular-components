@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { KbqMarkdownService } from 'packages/components/markdown';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -53,7 +52,6 @@ Please make sure to update tests as appropriate.
         this.parsedByService = markdownService.parseToHtml(this.markdownText);
     }
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

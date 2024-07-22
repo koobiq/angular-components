@@ -18,23 +18,20 @@ import {
     CanDisableCtor,
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
-    mixinDisabled,
-    PopUpPlacements
+    PopUpPlacements,
+    mixinDisabled
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
 import { KBQ_POPOVER_SCROLL_STRATEGY } from '@koobiq/components/popover';
 import { Subject } from 'rxjs';
-
 import { KbqTabContent } from './tab-content.directive';
 import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
-
 
 /** @docs-private */
 export class KbqTabBase {}
 
 /** @docs-private */
 export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled(KbqTabBase);
-
 
 @Component({
     selector: 'kbq-tab',
@@ -47,10 +44,9 @@ export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY, KBQ_POPOVER_SCROLL_STRATEGY]
-            .map((token) => KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(
-                token, (overlay) => () => overlay.scrollStrategies.close()
-            ))
+        ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY, KBQ_POPOVER_SCROLL_STRATEGY].map((token) =>
+            KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close())
+        )
     ]
 })
 export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {

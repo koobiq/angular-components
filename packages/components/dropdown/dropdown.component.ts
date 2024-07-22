@@ -15,18 +15,17 @@ import {
     Input,
     NgZone,
     OnDestroy,
+    OnInit,
     Output,
-    TemplateRef,
     QueryList,
+    TemplateRef,
     ViewChild,
-    ViewEncapsulation,
-    OnInit
+    ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
-
 import { kbqDropdownAnimations } from './dropdown-animations';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
@@ -40,7 +39,6 @@ import {
     KbqDropdownPanel
 } from './dropdown.types';
 
-
 @Component({
     selector: 'kbq-dropdown',
     exportAs: 'kbqDropdown',
@@ -53,11 +51,9 @@ import {
         kbqDropdownAnimations.fadeInItems
     ],
     providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
-    ]
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
-
     @Input() navigationWithWrap: boolean = false;
 
     /** Position of the dropdown in the X axis. */
@@ -129,17 +125,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         const previousPanelClass = this.previousPanelClass;
 
         if (previousPanelClass && previousPanelClass.length) {
-            previousPanelClass
-                .split(' ')
-                .forEach((className: string) => this.classList[className] = false);
+            previousPanelClass.split(' ').forEach((className: string) => (this.classList[className] = false));
         }
 
         this.previousPanelClass = classes;
 
         if (classes?.length) {
-            classes
-                .split(' ')
-                .forEach((className: string) => this.classList[className] = true);
+            classes.split(' ').forEach((className: string) => (this.classList[className] = true));
 
             this.elementRef.nativeElement.className = '';
         }
@@ -203,7 +195,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     constructor(
         private elementRef: ElementRef<HTMLElement>,
         private ngZone: NgZone,
-        @Inject(KBQ_DROPDOWN_DEFAULT_OPTIONS) private defaultOptions: KbqDropdownDefaultOptions) { }
+        @Inject(KBQ_DROPDOWN_DEFAULT_OPTIONS) private defaultOptions: KbqDropdownDefaultOptions
+    ) {}
 
     ngOnInit() {
         this.setPositionClasses();
@@ -212,15 +205,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     ngAfterContentInit() {
         this.updateDirectDescendants();
 
-        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems)
-            .withTypeAhead();
+        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead();
 
         if (this.navigationWithWrap) {
             this.keyManager.withWrap();
         }
 
-        this.tabSubscription = this.keyManager.tabOut
-            .subscribe(() => this.closed.emit('tab'));
+        this.tabSubscription = this.keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
 
         // If a user manually (programmatically) focuses a menu item, we need to reflect that focus
         // change back to the key manager. Note that we don't need to unsubscribe here because focused
@@ -365,11 +356,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * when it comes to maintaining the item order.
      */
     private updateDirectDescendants() {
-        this.items.changes
-            .pipe(startWith(this.items))
-            .subscribe((items: QueryList<KbqDropdownItem>) => {
-                this.directDescendantItems.reset(items.filter((item) => item.parentDropdownPanel === this));
-                this.directDescendantItems.notifyOnChanges();
-            });
+        this.items.changes.pipe(startWith(this.items)).subscribe((items: QueryList<KbqDropdownItem>) => {
+            this.directDescendantItems.reset(items.filter((item) => item.parentDropdownPanel === this));
+            this.directDescendantItems.notifyOnChanges();
+        });
     }
 }

@@ -2,7 +2,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
 
-
 export class FileNode {
     children: FileNode[];
     name: string;
@@ -114,19 +113,22 @@ export class TreeOverviewExample {
     modelValue: any = '';
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) { return nodeData.expandable; }
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
 
     private transformer = (node: FileNode, level: number, parent: any) => {
         const flatNode = new FileFlatNode();
@@ -138,27 +140,27 @@ export class TreeOverviewExample {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
-    }
+    };
 }

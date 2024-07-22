@@ -5,13 +5,11 @@ import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalComponent } from './modal.component';
-import { KbqModalBody, KbqModalFooter, KbqModalTitle, KbqModalMainAction } from './modal.directive';
+import { KbqModalBody, KbqModalFooter, KbqModalMainAction, KbqModalTitle } from './modal.directive';
 import { KbqModalService } from './modal.service';
-
 
 @NgModule({
     imports: [
@@ -40,7 +38,6 @@ import { KbqModalService } from './modal.service';
     providers: [
         KbqModalControlService,
         KbqModalService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
-    ]
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
 })
 export class KbqModalModule {}
