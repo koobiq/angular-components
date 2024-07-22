@@ -1,14 +1,22 @@
 <ng-template #customContent>
     Интересно, что это такое?
     <kbq-form-field class="layout-margin-bottom-s">
-        <input kbqInput placeholder="Интересная мысль">
+        <input
+            kbqInput
+            placeholder="Интересная мысль"
+        />
     </kbq-form-field>
 </ng-template>
 
 <ng-template #customFooter>
     <div class="buttons-container">
         <button kbq-button>Действие 2</button>
-        <button kbq-button [color]="'contrast'">Применить</button>
+        <button
+            kbq-button
+            [color]="'contrast'"
+        >
+            Применить
+        </button>
         <button kbq-button>Отмена</button>
     </div>
 </ng-template>
@@ -16,28 +24,28 @@
 <div>
     <button
         *ngIf="closeOnScroll"
+        #popover="kbqPopover"
         kbq-button
         kbqPopover
-        #popover="kbqPopover"
         kbqPopoverHeader="Заголовок поповера"
+        [closeOnScroll]="true"
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
-        [closeOnScroll]="true">
+    >
         Toggle popover
     </button>
 
     <button
         *ngIf="!closeOnScroll"
+        #popover="kbqPopover"
         kbq-button
         kbqPopover
-        #popover="kbqPopover"
         kbqPopoverHeader="Заголовок поповера"
         [kbqPopoverContent]="customContent"
-        [kbqPopoverFooter]="customFooter">
+        [kbqPopoverFooter]="customFooter"
+    >
         Toggle popover
     </button>
 </div>
 
-<kbq-checkbox [(ngModel)]="closeOnScroll">
-    Скрывать при скролле
-</kbq-checkbox>
+<kbq-checkbox [(ngModel)]="closeOnScroll">Скрывать при скролле</kbq-checkbox>

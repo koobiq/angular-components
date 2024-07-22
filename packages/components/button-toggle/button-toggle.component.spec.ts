@@ -619,8 +619,17 @@ describe('KbqButtonToggle without forms', () => {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
-            <kbq-button-toggle [value]="'test1'" *ngIf="renderFirstToggle">Test1</kbq-button-toggle>
+        <kbq-button-toggle-group
+            [(value)]="groupValue"
+            [disabled]="isGroupDisabled"
+            [vertical]="isVertical"
+        >
+            <kbq-button-toggle
+                *ngIf="renderFirstToggle"
+                [value]="'test1'"
+            >
+                Test1
+            </kbq-button-toggle>
             <kbq-button-toggle [value]="'test2'">Test2</kbq-button-toggle>
             <kbq-button-toggle [value]="'test3'">Test3</kbq-button-toggle>
         </kbq-button-toggle-group>
@@ -635,8 +644,15 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
-            <kbq-button-toggle *ngFor="let option of options" [value]="option.value">
+        <kbq-button-toggle-group
+            [(ngModel)]="modelValue"
+            [name]="groupName"
+            (change)="lastEvent = $event"
+        >
+            <kbq-button-toggle
+                *ngFor="let option of options"
+                [value]="option.value"
+            >
                 {{ option.label }}
             </kbq-button-toggle>
         </kbq-button-toggle-group>
@@ -655,7 +671,11 @@ class ButtonToggleGroupWithNgModel {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" multiple>
+        <kbq-button-toggle-group
+            [disabled]="isGroupDisabled"
+            [vertical]="isVertical"
+            multiple
+        >
             <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
             <kbq-button-toggle [value]="'flour'">Flour</kbq-button-toggle>
             <kbq-button-toggle [value]="'sugar'">Sugar</kbq-button-toggle>
@@ -669,7 +689,10 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
     template: `
-        <kbq-button-toggle-group multiple [value]="value">
+        <kbq-button-toggle-group
+            [value]="value"
+            multiple
+        >
             <kbq-button-toggle [value]="0">Eggs</kbq-button-toggle>
             <kbq-button-toggle [value]="null">Flour</kbq-button-toggle>
             <kbq-button-toggle [value]="false">Sugar</kbq-button-toggle>
@@ -683,13 +706,18 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 }
 
 @Component({
-    template: ` <kbq-button-toggle> Yes </kbq-button-toggle> `
+    template: `
+        <kbq-button-toggle>Yes</kbq-button-toggle>
+    `
 })
 class StandaloneButtonToggle {}
 
 @Component({
     template: `
-        <kbq-button-toggle-group (change)="lastEvent = $event" [value]="'red'">
+        <kbq-button-toggle-group
+            [value]="'red'"
+            (change)="lastEvent = $event"
+        >
             <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
             <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
@@ -715,7 +743,10 @@ class ButtonToggleGroupWithFormControl {
 @Component({
     template: `
         <kbq-button-toggle-group [(value)]="value">
-            <kbq-button-toggle *ngFor="let toggle of possibleValues" [value]="toggle">
+            <kbq-button-toggle
+                *ngFor="let toggle of possibleValues"
+                [value]="toggle"
+            >
                 {{ toggle }}
             </kbq-button-toggle>
         </kbq-button-toggle-group>

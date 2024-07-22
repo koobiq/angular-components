@@ -213,7 +213,11 @@ export class KbqModalLongCustomComponent {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
+                <button
+                    [color]="componentColors.Contrast"
+                    (click)="destroyModal()"
+                    kbq-button
+                >
                     destroy modal in the component
                 </button>
             </p>
@@ -237,8 +241,8 @@ export class KbqModalCustomComponent {
     selector: 'kbq-modal-full-custom-component',
     template: `
         <kbq-modal-title>
-            Modal Title,Modal Title,Modal Title,Modal Title,Modal
-             Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,
+            Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
+            Title,Modal Title,Modal Title,Modal Title,
         </kbq-modal-title>
 
         <kbq-modal-body>
@@ -246,15 +250,30 @@ export class KbqModalCustomComponent {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
+                <button
+                    [color]="componentColors.Contrast"
+                    (click)="destroyModal()"
+                    kbq-button
+                >
                     destroy modal in the component
                 </button>
             </p>
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="componentColors.Contrast">Save</button>
-            <button kbq-button autofocus (click)="destroyModal()">Close</button>
+            <button
+                [color]="componentColors.Contrast"
+                kbq-button
+            >
+                Save
+            </button>
+            <button
+                (click)="destroyModal()"
+                kbq-button
+                autofocus
+            >
+                Close
+            </button>
         </div>
     `
 })

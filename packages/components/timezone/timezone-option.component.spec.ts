@@ -4,7 +4,11 @@ import { By } from '@angular/platform-browser';
 import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneModule } from './timezone.module';
 
-@Component({ template: `<kbq-timezone-option [timezone]="zone"></kbq-timezone-option>` })
+@Component({
+    template: `
+        <kbq-timezone-option [timezone]="zone"></kbq-timezone-option>
+    `
+})
 class TimezoneOptionComponent {
     zone = {
         id: 'Europe/city3',

@@ -75,8 +75,20 @@ class KbqSplitterDirection {
     selector: 'kbq-demo-spllitter',
     template: `
         <kbq-splitter (gutterPositionChange)="gutterPositionChange()">
-            <div #areaA kbq-splitter-area (sizeChange)="areaASizeChange($event)">first</div>
-            <div #areaB kbq-splitter-area (sizeChange)="areaBSizeChange($event)">second</div>
+            <div
+                #areaA
+                (sizeChange)="areaASizeChange($event)"
+                kbq-splitter-area
+            >
+                first
+            </div>
+            <div
+                #areaB
+                (sizeChange)="areaBSizeChange($event)"
+                kbq-splitter-area
+            >
+                second
+            </div>
         </kbq-splitter>
     `
 })
@@ -91,9 +103,26 @@ class KbqSplitterEvents {
 @Component({
     selector: 'kbq-demo-spllitter',
     template: `
-        <kbq-splitter #splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
-            <div #areaA kbq-splitter-area style="flex: 1">first</div>
-            <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
+        <kbq-splitter
+            #splitter
+            [direction]="direction"
+            [useGhost]="true"
+            style="width: 500px;"
+        >
+            <div
+                #areaA
+                kbq-splitter-area
+                style="flex: 1"
+            >
+                first
+            </div>
+            <div
+                #areaB
+                kbq-splitter-area
+                style="min-width: 50px"
+            >
+                second
+            </div>
         </kbq-splitter>
     `
 })
@@ -107,9 +136,26 @@ class KbqSplitterGhost {
 @Component({
     selector: 'kbq-demo-spllitter',
     template: `
-        <kbq-splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
-            <div #areaA kbq-splitter-area style="flex: 1" *ngIf="isFirstRendered">first</div>
-            <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
+        <kbq-splitter
+            [direction]="direction"
+            [useGhost]="true"
+            style="width: 500px;"
+        >
+            <div
+                #areaA
+                *ngIf="isFirstRendered"
+                kbq-splitter-area
+                style="flex: 1"
+            >
+                first
+            </div>
+            <div
+                #areaB
+                kbq-splitter-area
+                style="min-width: 50px"
+            >
+                second
+            </div>
         </kbq-splitter>
     `
 })

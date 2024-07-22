@@ -2,7 +2,12 @@
     <h4>Default tabs (filled)</h4>
     <kbq-tab-group>
         <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
-        <kbq-tab [label]="'label 4'" [disabled]="true">Content 4</kbq-tab>
+        <kbq-tab
+            [disabled]="true"
+            [label]="'label 4'"
+        >
+            Content 4
+        </kbq-tab>
         <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
         <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
         <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
@@ -37,8 +42,9 @@
 
     <h4>Transparent tabs (on-surface)</h4>
     <kbq-tab-group
+        [onSurface]="true"
         [transparent]="true"
-        [onSurface]="true">
+    >
         <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
         <kbq-tab [label]="'label 4'">Content 4</kbq-tab>
         <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
@@ -50,16 +56,28 @@
     </kbq-tab-group>
 
     <h4>Default Vertical tabs</h4>
-    <kbq-tab-group class="docs-vertical-tabs" vertical (selectedTabChange)="selectedTabChange($event)" style="height: 100px">
+    <kbq-tab-group
+        style="height: 100px"
+        vertical
+        class="docs-vertical-tabs"
+        (selectedTabChange)="selectedTabChange($event)"
+    >
         <kbq-tab [tabId]="'firstTab'">
             <ng-template kbq-tab-label>
-                <i kbq-icon="mc-play_16"></i>First long long long long long long long long tab name<i kbq-icon="mc-play_16"></i>
+                <i kbq-icon="mc-play_16"></i>
+                First long long long long long long long long tab name
+                <i kbq-icon="mc-play_16"></i>
             </ng-template>
             Content 1
         </kbq-tab>
-        <kbq-tab [tabId]="'Empty'" [empty]="true" [tooltipTitle]="'Text for empty tab'">
+        <kbq-tab
+            [empty]="true"
+            [tabId]="'Empty'"
+            [tooltipTitle]="'Text for empty tab'"
+        >
             <ng-template kbq-tab-label>
-                Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty<i kbq-icon="mc-play_16"></i>
+                Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty
+                <i kbq-icon="mc-play_16"></i>
             </ng-template>
             Empty Content
         </kbq-tab>
@@ -69,36 +87,51 @@
     <h3>Navigation</h3>
 
     <nav kbq-tab-nav-bar>
-        <a kbq-tab-link
-           *ngFor="let link of links"
-           (click)="activeLink = link"
-           [active]="activeLink == link">
-            {{link}}
-        </a>
-
-        <a kbq-tab-link
-           [disabled]="true"
-           (click)="activeLink = 1"
-           [active]="activeLink == 1">
-            <i kbq-icon="mc-play_16"></i>Disabled
-        </a>
-    </nav>
-
-    <br><br><br>
-
-    <nav kbq-tab-nav-bar vertical>
-        <a kbq-tab-link
-           *ngFor="let link of links"
-           (click)="activeLink = link"
-           [active]="activeLink == link">
+        <a
+            *ngFor="let link of links"
+            kbq-tab-link
+            [active]="activeLink == link"
+            (click)="activeLink = link"
+        >
             {{ link }}
         </a>
 
-        <a kbq-tab-link
-           [disabled]="true"
-           (click)="activeLink = 1"
-           [active]="activeLink == 1">
-            <i kbq-icon="mc-play_16"></i>Disabled
+        <a
+            kbq-tab-link
+            [active]="activeLink == 1"
+            [disabled]="true"
+            (click)="activeLink = 1"
+        >
+            <i kbq-icon="mc-play_16"></i>
+            Disabled
+        </a>
+    </nav>
+
+    <br />
+    <br />
+    <br />
+
+    <nav
+        kbq-tab-nav-bar
+        vertical
+    >
+        <a
+            *ngFor="let link of links"
+            kbq-tab-link
+            [active]="activeLink == link"
+            (click)="activeLink = link"
+        >
+            {{ link }}
+        </a>
+
+        <a
+            kbq-tab-link
+            [active]="activeLink == 1"
+            [disabled]="true"
+            (click)="activeLink = 1"
+        >
+            <i kbq-icon="mc-play_16"></i>
+            Disabled
         </a>
     </nav>
 
@@ -135,31 +168,41 @@
         </kbq-tab>
     </kbq-tab-group>
 
-<!--    <kbq-tab-group-->
-<!--        (selectedTabChange)="selectedTabChange($event)"-->
-<!--        style="width: 400px; max-height: 500px">-->
-<!--        <kbq-tab [tabId]="'firstTab'" [disabled]="false">-->
-<!--            <ng-template kbq-tab-label>-->
-<!--                <i kbq-icon="mc-play_16"></i>label 1-->
-<!--            </ng-template>-->
-<!--            <div>-->
-<!--                <kbq-select placeholder="select">-->
-<!--                    <kbq-option value="1">test1</kbq-option>-->
-<!--                    <kbq-option value="2">test2</kbq-option>-->
-<!--                </kbq-select>-->
-<!--                <div style="height: 2000px"></div>-->
-<!--            </div>-->
-<!--        </kbq-tab>-->
-<!--    </kbq-tab-group>-->
+    <!--    <kbq-tab-group-->
+    <!--        (selectedTabChange)="selectedTabChange($event)"-->
+    <!--        style="width: 400px; max-height: 500px">-->
+    <!--        <kbq-tab [tabId]="'firstTab'" [disabled]="false">-->
+    <!--            <ng-template kbq-tab-label>-->
+    <!--                <i kbq-icon="mc-play_16"></i>label 1-->
+    <!--            </ng-template>-->
+    <!--            <div>-->
+    <!--                <kbq-select placeholder="select">-->
+    <!--                    <kbq-option value="1">test1</kbq-option>-->
+    <!--                    <kbq-option value="2">test2</kbq-option>-->
+    <!--                </kbq-select>-->
+    <!--                <div style="height: 2000px"></div>-->
+    <!--            </div>-->
+    <!--        </kbq-tab>-->
+    <!--    </kbq-tab-group>-->
 
     <kbq-tab-group
+        style="width: 400px"
         (selectedTabChange)="selectedTabChange($event)"
-        style="width: 400px">
+    >
         <kbq-tab *ngFor="let tab of tabsWithScroll; let i = index">
             <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-close-S_16" (click)="tabsWithScroll.splice(i, 1)"></i>label {{ tab }}
+                <i
+                    kbq-icon="kbq-close-S_16"
+                    (click)="tabsWithScroll.splice(i, 1)"
+                ></i>
+                label {{ tab }}
             </ng-template>
         </kbq-tab>
     </kbq-tab-group>
-    <button kbq-button (click)="updatedTabs()">Add tab</button>
+    <button
+        kbq-button
+        (click)="updatedTabs()"
+    >
+        Add tab
+    </button>
 </div>

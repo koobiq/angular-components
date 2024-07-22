@@ -197,7 +197,9 @@ describe('Standalone ToastService', () => {
 
 @Component({
     selector: 'kbq-toast-test-button',
-    template: `<button (click)="show()">Show</button>`
+    template: `
+        <button (click)="show()">Show</button>
+    `
 })
 class KbqToastButtonWrapperComponent {
     constructor(public toastService: KbqToastService) {}

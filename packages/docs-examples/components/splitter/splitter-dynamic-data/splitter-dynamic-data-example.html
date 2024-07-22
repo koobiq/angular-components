@@ -1,7 +1,22 @@
-<button kbq-button (click)="isFirstVisible = !isFirstVisible">Change first area visibility</button>
+<button
+    kbq-button
+    (click)="isFirstVisible = !isFirstVisible"
+>
+    Change first area visibility
+</button>
 
 <kbq-splitter>
-    <div kbq-splitter-area *ngIf="isFirstVisible">first</div>
-    <div kbq-splitter-area class="flex">second</div>
+    <div
+        *ngIf="isFirstVisible"
+        kbq-splitter-area
+    >
+        first
+    </div>
+    <div
+        kbq-splitter-area
+        class="flex"
+    >
+        second
+    </div>
     <div kbq-splitter-area>third</div>
 </kbq-splitter>

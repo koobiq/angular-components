@@ -2,9 +2,14 @@ import { Component, Directive } from '@angular/core';
 
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
-    template: `<div class="kbq-modal-title" kbq-title>
-        <ng-content></ng-content>
-    </div>`,
+    template: `
+        <div
+            class="kbq-modal-title"
+            kbq-title
+        >
+            <ng-content></ng-content>
+        </div>
+    `,
     host: {
         class: 'kbq-modal-header'
     }

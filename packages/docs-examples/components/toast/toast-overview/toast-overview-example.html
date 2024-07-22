@@ -1,7 +1,23 @@
-<ng-template #toastAction let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Обновить</a>
+<ng-template
+    #toastAction
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Обновить
+    </a>
 </ng-template>
 
 <div class="demo-block">
-    <button class="example-button" kbq-button (click)="showToast(toastAction)">Показать тост</button>
+    <button
+        kbq-button
+        class="example-button"
+        (click)="showToast(toastAction)"
+    >
+        Показать тост
+    </button>
 </div>

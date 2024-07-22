@@ -324,11 +324,25 @@ describe('MсRadio', () => {
             [value]="groupValue"
             name="test-name"
         >
-            <kbq-radio-button [value]="'fire'" [disabled]="isFirstDisabled" [color]="color">
+            <kbq-radio-button
+                [value]="'fire'"
+                [disabled]="isFirstDisabled"
+                [color]="color"
+            >
                 Charmander
             </kbq-radio-button>
-            <kbq-radio-button [value]="'water'" [color]="color"> Squirtle </kbq-radio-button>
-            <kbq-radio-button [value]="'leaf'" [color]="color"> Bulbasaur </kbq-radio-button>
+            <kbq-radio-button
+                [value]="'water'"
+                [color]="color"
+            >
+                Squirtle
+            </kbq-radio-button>
+            <kbq-radio-button
+                [value]="'leaf'"
+                [color]="color"
+            >
+                Bulbasaur
+            </kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -342,7 +356,9 @@ class RadiosInsideRadioGroup {
 }
 
 @Component({
-    template: `<kbq-radio-button>One</kbq-radio-button>`
+    template: `
+        <kbq-radio-button>One</kbq-radio-button>
+    `
 })
 class DisableableRadioButton {
     @ViewChild(KbqRadioButton, { static: false }) kbqRadioButton;

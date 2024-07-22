@@ -183,7 +183,11 @@ describe('KbqTabBody', () => {
 @Component({
     template: `
         <ng-template>Tab Body Content</ng-template>
-        <kbq-tab-body [content]="content" [position]="position" [origin]="origin"></kbq-tab-body>
+        <kbq-tab-body
+            [content]="content"
+            [position]="position"
+            [origin]="origin"
+        ></kbq-tab-body>
     `
 })
 class SimpleTabBodyApp implements AfterContentInit {

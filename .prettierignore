@@ -21,3 +21,6 @@ CHANGELOG.md
 
 # ignore auto-generated module
 /packages/docs-examples/example-module.ts
+
+# ignore nunjuck templates
+tools/api-gen/rendering/templates

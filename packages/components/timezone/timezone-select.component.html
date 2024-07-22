@@ -1,26 +1,51 @@
-<div cdk-overlay-origin
-     class="kbq-select__trigger"
-     [class.kbq-select__trigger_multiple]="multiple"
-     [class.kbq-select__trigger_single]="!multiple"
-     [class.kbq-select__trigger_empty]="empty"
-     #origin="cdkOverlayOrigin"
-     #trigger>
-
-    <div class="kbq-select__matcher" [ngSwitch]="empty">
-        <span class="kbq-select__placeholder" *ngSwitchCase="true">{{ placeholder || '\u00A0' }}</span>
-        <span *ngSwitchCase="false" [ngSwitch]="!!customTrigger">
-            <div *ngSwitchCase="false" class="kbq-select__match-container">
+<div
+    #origin="cdkOverlayOrigin"
+    #trigger
+    cdk-overlay-origin
+    class="kbq-select__trigger"
+    [class.kbq-select__trigger_empty]="empty"
+    [class.kbq-select__trigger_multiple]="multiple"
+    [class.kbq-select__trigger_single]="!multiple"
+>
+    <div
+        class="kbq-select__matcher"
+        [ngSwitch]="empty"
+    >
+        <span
+            *ngSwitchCase="true"
+            class="kbq-select__placeholder"
+        >
+            {{ placeholder || '\u00A0' }}
+        </span>
+        <span
+            *ngSwitchCase="false"
+            [ngSwitch]="!!customTrigger"
+        >
+            <div
+                *ngSwitchCase="false"
+                class="kbq-select__match-container"
+            >
                 <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
             </div>
-            <ng-content select="kbq-timezone-select-trigger" *ngSwitchCase="true"></ng-content>
+            <ng-content
+                *ngSwitchCase="true"
+                select="kbq-timezone-select-trigger"
+            ></ng-content>
         </span>
 
-        <div class="kbq-select__cleaner" *ngIf="canShowCleaner" (click)="clearValue($event)">
+        <div
+            *ngIf="canShowCleaner"
+            class="kbq-select__cleaner"
+            (click)="clearValue($event)"
+        >
             <ng-content select="kbq-cleaner"></ng-content>
         </div>
 
         <div class="kbq-select__arrow-wrapper">
-            <i class="kbq-select__arrow" kbq-icon="mc-angle-down-S_16"></i>
+            <i
+                kbq-icon="mc-angle-down-S_16"
+                class="kbq-select__arrow"
+            ></i>
         </div>
     </div>
 </div>
@@ -28,36 +53,44 @@
 <ng-template
     cdk-connected-overlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayBackdropClass]="backdropClass"
-    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-    [cdkConnectedOverlayOrigin]="origin"
-    [cdkConnectedOverlayOpen]="panelOpen"
-    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="triggerRect?.width!"
-    [cdkConnectedOverlayWidth]="triggerRect?.width!"
     [cdkConnectedOverlayOffsetY]="offsetY"
-    (backdropClick)="close()"
+    [cdkConnectedOverlayOpen]="panelOpen"
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    [cdkConnectedOverlayWidth]="triggerRect?.width!"
     (attach)="onAttached()"
-    (detach)="close()">
-
-    <div #panel
-         class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
-         [ngClass]="panelClass"
-         [style.transformOrigin]="transformOrigin"
-         [style.font-size.px]="triggerFontSize"
-         (keydown)="handleKeydown($event)">
-
-        <div *ngIf="search" class="kbq-select__search-container">
+    (backdropClick)="close()"
+    (detach)="close()"
+>
+    <div
+        #panel
+        class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
+        [ngClass]="panelClass"
+        [style.font-size.px]="triggerFontSize"
+        [style.transformOrigin]="transformOrigin"
+        (keydown)="handleKeydown($event)"
+    >
+        <div
+            *ngIf="search"
+            class="kbq-select__search-container"
+        >
             <ng-content select="[kbqSelectSearch]"></ng-content>
         </div>
 
-        <div #optionsContainer
-             class="kbq-select__content"
-             [@fadeInContent]="'showing'"
-             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)">
-
-            <div *ngIf="isEmptySearchResult" class="kbq-select__no-options-message">
+        <div
+            #optionsContainer
+            class="kbq-select__content"
+            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
+            [@fadeInContent]="'showing'"
+        >
+            <div
+                *ngIf="isEmptySearchResult"
+                class="kbq-select__no-options-message"
+            >
                 <ng-content select="[kbq-select-search-empty-result]"></ng-content>
             </div>
             <ng-content></ng-content>

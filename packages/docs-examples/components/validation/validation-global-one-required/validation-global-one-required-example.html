@@ -1,8 +1,24 @@
 <div class="layout-margin">
-    <form class="kbq-form-vertical margin docs-width" novalidate>
-        <kbq-alert [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true" *ngIf="showError">
-            <i kbq-icon="mc-info_16" [color]="'error'"></i>
-            Заполните хотя бы одно из полей - <b>Серия</b>, <b>Номер</b> или <b>Фамилия</b>
+    <form
+        novalidate
+        class="kbq-form-vertical margin docs-width"
+    >
+        <kbq-alert
+            *ngIf="showError"
+            [alertColor]="'error'"
+            [alertStyle]="'colored'"
+            [compact]="true"
+        >
+            <i
+                kbq-icon="mc-info_16"
+                [color]="'error'"
+            ></i>
+            Заполните хотя бы одно из полей -
+            <b>Серия</b>
+            ,
+            <b>Номер</b>
+            или
+            <b>Фамилия</b>
         </kbq-alert>
 
         <div class="kbq-form__fieldset">
@@ -10,14 +26,20 @@
                 <div class="kbq-form__row flex-30">
                     <label class="kbq-form__label">Серия</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input name="input" kbqInput>
+                        <input
+                            kbqInput
+                            name="input"
+                        />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row flex-70">
                     <label class="kbq-form__label">Номер</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input name="input" kbqInput>
+                        <input
+                            kbqInput
+                            name="input"
+                        />
                     </kbq-form-field>
                 </div>
             </div>
@@ -26,7 +48,10 @@
                 <div class="kbq-form__row flex-45">
                     <label class="kbq-form__label">Имя</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input name="input" kbqInput>
+                        <input
+                            kbqInput
+                            name="input"
+                        />
 
                         <kbq-hint>Необязательно</kbq-hint>
                     </kbq-form-field>
@@ -35,7 +60,10 @@
                 <div class="kbq-form__row flex-55">
                     <label class="kbq-form__label">Отчество</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input name="input" kbqInput>
+                        <input
+                            kbqInput
+                            name="input"
+                        />
 
                         <kbq-hint>Необязательно</kbq-hint>
                     </kbq-form-field>
@@ -45,19 +73,24 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Фамилия</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input name="input" kbqInput>
+                    <input
+                        kbqInput
+                        name="input"
+                    />
                 </kbq-form-field>
             </div>
         </div>
 
         <div class="kbq-form__row">
-            <button class="flex-40"
-                    type="submit"
-                    kbq-button
-                    [color]="'contrast'"
-                    [class.kbq-progress]="inProgress"
-                    [disabled]="disabled || inProgress"
-                    (click)="checkForm()">
+            <button
+                kbq-button
+                type="submit"
+                class="flex-40"
+                [class.kbq-progress]="inProgress"
+                [color]="'contrast'"
+                [disabled]="disabled || inProgress"
+                (click)="checkForm()"
+            >
                 Отправить
             </button>
         </div>

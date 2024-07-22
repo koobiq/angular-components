@@ -1,12 +1,21 @@
 <kbq-form-field>
     <kbq-timezone-select [(value)]="selected">
         <kbq-timezone-select-trigger>
-            <i kbq-icon="mc-clock_16" class="example-icon"></i>
+            <i
+                kbq-icon="mc-clock_16"
+                class="example-icon"
+            ></i>
             <span>{{ selected }}</span>
         </kbq-timezone-select-trigger>
 
-        <kbq-optgroup *ngFor="let group of data" [label]="group.countryName">
-            <kbq-timezone-option *ngFor="let timezone of group.zones" [timezone]="timezone"></kbq-timezone-option>
+        <kbq-optgroup
+            *ngFor="let group of data"
+            [label]="group.countryName"
+        >
+            <kbq-timezone-option
+                *ngFor="let timezone of group.zones"
+                [timezone]="timezone"
+            ></kbq-timezone-option>
         </kbq-optgroup>
     </kbq-timezone-select>
 </kbq-form-field>

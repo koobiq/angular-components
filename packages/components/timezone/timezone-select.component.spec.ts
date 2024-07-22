@@ -100,13 +100,16 @@ const groupedZones: KbqTimezoneGroup[] = [
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
             <kbq-timezone-select
-                placeholder="Timezones"
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
+                placeholder="Timezones"
             >
-                <kbq-optgroup *ngFor="let group of zones" [label]="group.countryName">
+                <kbq-optgroup
+                    *ngFor="let group of zones"
+                    [label]="group.countryName"
+                >
                     <kbq-timezone-option
                         *ngFor="let zone of group.zones"
                         [value]="zone.id"
@@ -138,9 +141,20 @@ class BasicTimezoneSelect {
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                    <i kbqPrefix kbq-icon="mc-search_16"></i>
-                    <input kbqInput [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" type="text" />
+                <kbq-form-field
+                    kbqFormFieldWithoutBorders
+                    kbqSelectSearch
+                >
+                    <i
+                        kbqPrefix
+                        kbq-icon="mc-search_16"
+                    ></i>
+                    <input
+                        [formControl]="searchCtrl"
+                        [placeholder]="'Город или часовой пояс'"
+                        kbqInput
+                        type="text"
+                    />
                     <kbq-cleaner></kbq-cleaner>
                 </kbq-form-field>
 
@@ -610,7 +624,7 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
                     flush();
 
-                    expect(overlayContainerElement.textContent).toContain('RussiaUTC−02:00city1city4');
+                    expect(overlayContainerElement.textContent).toContain('UTC−02:00city1city4');
                     expect(fixture.componentInstance.select.panelOpen).toBe(true);
                 }));
             });

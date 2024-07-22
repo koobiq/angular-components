@@ -26,7 +26,7 @@ function updatePackageName(categories, name) {
     categories.forEach((category) => category.items.forEach((doc) => (doc.packageName = name)));
 }
 
-export const documentationItemSections = ['overview',  'api', 'examples'];
+export const documentationItemSections = ['overview', 'api', 'examples'];
 
 const MAIN = 'main';
 const COMPONENTS = 'components';

@@ -3,7 +3,11 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqOption, KbqOptionModule } from './index';
 
-@Component({ template: `<kbq-option [disabled]="disabled"></kbq-option>` })
+@Component({
+    template: `
+        <kbq-option [disabled]="disabled"></kbq-option>
+    `
+})
 class OptionWithDisable {
     disabled: boolean;
 }

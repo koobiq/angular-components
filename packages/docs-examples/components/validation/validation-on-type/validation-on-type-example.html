@@ -1,19 +1,25 @@
 <div class="layout-margin docs-width">
-    <form class="kbq-form-vertical"
-          [formGroup]="checkOnFlyForm"
-          novalidate>
-
+    <form
+        novalidate
+        class="kbq-form-vertical"
+        [formGroup]="checkOnFlyForm"
+    >
         <div class="kbq-form__fieldset">
             <div class="kbq-form__row">
                 <div class="kbq-form__label">Название папки</div>
                 <kbq-form-field
-                    class="kbq-form__control"
-                    [kbqWarningTooltip]="'Буквы и цифры'"
-                    [kbqEnterDelay]="10"
                     #tooltip="kbqWarningTooltip"
+                    class="kbq-form__control"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.Top"
                     [kbqTrigger]="'manual'"
-                    [kbqPlacement]="popUpPlacements.Top">
-                    <input kbqInput formControlName="folderName" (input)="onInput($event)">
+                    [kbqWarningTooltip]="'Буквы и цифры'"
+                >
+                    <input
+                        formControlName="folderName"
+                        kbqInput
+                        (input)="onInput($event)"
+                    />
 
                     <kbq-cleaner></kbq-cleaner>
 

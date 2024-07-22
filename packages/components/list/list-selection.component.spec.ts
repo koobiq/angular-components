@@ -967,11 +967,19 @@ describe('should update model after keyboard interaction with multiple mode = ch
 });
 
 @Component({
-    template: ` <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
-        <mat-list-option *ngFor="let option of options" [value]="option">
-            {{ option.label }}
-        </mat-list-option>
-    </mat-selection-list>`
+    template: `
+        <mat-selection-list
+            [(ngModel)]="selectedOptions"
+            [compareWith]="compareWith"
+        >
+            <mat-list-option
+                *ngFor="let option of options"
+                [value]="option"
+            >
+                {{ option.label }}
+            </mat-list-option>
+        </mat-selection-list>
+    `
 })
 class SelectionListWithCustomComparator {
     @ViewChildren(KbqListOption) optionInstances: QueryList<KbqListOption>;
@@ -985,20 +993,43 @@ class SelectionListWithCustomComparator {
 }
 
 @Component({
-    template: ` <kbq-list-selection
-        id="selection-list-1"
-        [autoSelect]="false"
-        [noUnselectLast]="false"
-        multiple="keyboard"
-        (selectionChange)="onValueChange($event)"
-    >
-        <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
-            Inbox (disabled selection-option)
-        </kbq-list-option>
-        <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'"> Starred </kbq-list-option>
-        <kbq-list-option checkboxPosition="before" [value]="'sent-mail'"> Sent Mail </kbq-list-option>
-        <kbq-list-option checkboxPosition="before" [value]="'drafts'" *ngIf="showLastOption"> Drafts </kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection
+            id="selection-list-1"
+            [autoSelect]="false"
+            [noUnselectLast]="false"
+            (selectionChange)="onValueChange($event)"
+            multiple="keyboard"
+        >
+            <kbq-list-option
+                [value]="'inbox'"
+                checkboxPosition="before"
+                disabled="true"
+            >
+                Inbox (disabled selection-option)
+            </kbq-list-option>
+            <kbq-list-option
+                id="testSelect"
+                [value]="'starred'"
+                checkboxPosition="before"
+            >
+                Starred
+            </kbq-list-option>
+            <kbq-list-option
+                [value]="'sent-mail'"
+                checkboxPosition="before"
+            >
+                Sent Mail
+            </kbq-list-option>
+            <kbq-list-option
+                *ngIf="showLastOption"
+                [value]="'drafts'"
+                checkboxPosition="before"
+            >
+                Drafts
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
@@ -1007,40 +1038,64 @@ class SelectionListWithListOptions {
 }
 
 @Component({
-    template: ` <kbq-list-selection
-        multiple="checkbox"
-        [autoSelect]="false"
-        [noUnselectLast]="false"
-        [(ngModel)]="model"
-    >
-        <kbq-list-option [value]="'value1'">value1</kbq-list-option>
-        <kbq-list-option [value]="'value2'">value2</kbq-list-option>
-        <kbq-list-option [value]="'value3'">value3</kbq-list-option>
-        <kbq-list-option [value]="'value4'">value4</kbq-list-option>
-        <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection
+            [(ngModel)]="model"
+            [autoSelect]="false"
+            [noUnselectLast]="false"
+            multiple="checkbox"
+        >
+            <kbq-list-option [value]="'value1'">value1</kbq-list-option>
+            <kbq-list-option [value]="'value2'">value2</kbq-list-option>
+            <kbq-list-option [value]="'value3'">value3</kbq-list-option>
+            <kbq-list-option [value]="'value4'">value4</kbq-list-option>
+            <kbq-list-option
+                [value]="'disabled option'"
+                [disabled]="true"
+            >
+                disabled option
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListMultipleCheckbox {
     model = [];
 }
 
 @Component({
-    template: ` <kbq-list-selection id="selection-list-2">
-        <kbq-list-option checkboxPosition="after"> Inbox (disabled selection-option) </kbq-list-option>
-        <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
-        <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
-        <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection id="selection-list-2">
+            <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
+            <kbq-list-option
+                id="testSelect"
+                checkboxPosition="after"
+            >
+                Starred
+            </kbq-list-option>
+            <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
+            <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
-    template: ` <kbq-list-selection id="selection-list-3" [disabled]="true">
-        <kbq-list-option checkboxPosition="after"> Inbox (disabled selection-option) </kbq-list-option>
-        <kbq-list-option id="testSelect" checkboxPosition="after"> Starred </kbq-list-option>
-        <kbq-list-option checkboxPosition="after"> Sent Mail </kbq-list-option>
-        <kbq-list-option checkboxPosition="after"> Drafts </kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection
+            id="selection-list-3"
+            [disabled]="true"
+        >
+            <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
+            <kbq-list-option
+                id="testSelect"
+                checkboxPosition="after"
+            >
+                Starred
+            </kbq-list-option>
+            <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
+            <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithListDisabled {}
 
@@ -1056,26 +1111,39 @@ class SelectionListWithDisabledOption {
 }
 
 @Component({
-    template: ` <kbq-list-selection>
-        <kbq-list-option [selected]="true">Item</kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection>
+            <kbq-list-option [selected]="true">Item</kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithSelectedOption {}
 
 @Component({
-    template: ` <kbq-list-selection id="selection-list-4">
-        <kbq-list-option checkboxPosition="after" id="123"> Inbox </kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection id="selection-list-4">
+            <kbq-list-option
+                id="123"
+                checkboxPosition="after"
+            >
+                Inbox
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithOnlyOneOption {}
 
 @Component({
-    template: ` <kbq-list-selection [tabIndex]="5"></kbq-list-selection>`
+    template: `
+        <kbq-list-selection [tabIndex]="5"></kbq-list-selection>
+    `
 })
 class SelectionListWithTabindexAttr {}
 
 @Component({
-    template: ` <kbq-list-selection [disabled]="disabled"></kbq-list-selection>`
+    template: `
+        <kbq-list-selection [disabled]="disabled"></kbq-list-selection>
+    `
 })
 class SelectionListWithTabindexInDisabledState {
     tabIndex: number;
@@ -1083,11 +1151,21 @@ class SelectionListWithTabindexInDisabledState {
 }
 
 @Component({
-    template: ` <kbq-list-selection [(ngModel)]="selectedOptions" [autoSelect]="false">
-        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-        <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-        <kbq-list-option [value]="'opt3'" *ngIf="renderLastOption">Option 3</kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection
+            [(ngModel)]="selectedOptions"
+            [autoSelect]="false"
+        >
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option
+                *ngIf="renderLastOption"
+                [value]="'opt3'"
+            >
+                Option 3
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithModel {
     selectedOptions: string[] = [];
@@ -1108,20 +1186,34 @@ class SelectionListWithFormControl {
 }
 
 @Component({
-    template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
-        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-        <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection [(ngModel)]="selectedOptions">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option
+                [value]="'opt2'"
+                selected
+            >
+                Option 2
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithPreselectedOption {
     selectedOptions: string[];
 }
 
 @Component({
-    template: ` <kbq-list-selection [(ngModel)]="selectedOptions">
-        <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-        <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
-    </kbq-list-selection>`
+    template: `
+        <kbq-list-selection [(ngModel)]="selectedOptions">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option
+                [value]="'opt2'"
+                selected
+            >
+                Option 2
+            </kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 class SelectionListWithPreselectedOptionAndModel {
     selectedOptions = ['opt1'];
@@ -1131,7 +1223,12 @@ class SelectionListWithPreselectedOptionAndModel {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-list-selection [formControl]="formControl">
-            <kbq-list-option *ngFor="let opt of opts" [value]="opt">{{ opt }}</kbq-list-option>
+            <kbq-list-option
+                *ngFor="let opt of opts"
+                [value]="opt"
+            >
+                {{ opt }}
+            </kbq-list-option>
         </kbq-list-selection>
     `
 })

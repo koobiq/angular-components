@@ -1,21 +1,29 @@
 <kbq-form-field>
-    <kbq-tree-select
-        [(ngModel)]="selected">
+    <kbq-tree-select [(ngModel)]="selected">
         <kbq-tree-selection
             [dataSource]="dataSource"
-            [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <i kbq-icon="mc-angle-down-S_16"
-                   [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                   kbqTreeNodeToggle>
-                </i>
-                <kbq-progress-spinner *ngIf="node.loading"
-                                     mode="indeterminate">
-                </kbq-progress-spinner>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <i
+                    kbq-icon="mc-angle-down-S_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
+                <kbq-progress-spinner
+                    *ngIf="node.loading"
+                    mode="indeterminate"
+                ></kbq-progress-spinner>
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
         </kbq-tree-selection>

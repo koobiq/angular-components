@@ -108,9 +108,15 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
 @Component({
     selector: 'kbq-list-selection',
     exportAs: 'kbqListSelection',
-    template: ` <div [attr.tabindex]="tabIndex" (focus)="focus()" (blur)="blur()">
-        <ng-content></ng-content>
-    </div>`,
+    template: `
+        <div
+            [attr.tabindex]="tabIndex"
+            (focus)="focus()"
+            (blur)="blur()"
+        >
+            <ng-content></ng-content>
+        </div>
+    `,
     styleUrls: ['./list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

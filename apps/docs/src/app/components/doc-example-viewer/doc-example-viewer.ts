@@ -41,11 +41,17 @@ export class DocExampleFetcher {
 
 @Component({
     selector: 'doc-example-viewer',
-    template: `Loading document...
-        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
+    template: `
+        Loading document...
+        <ng-template
+            cdkPortal
+            let-htmlContent
+            let-contentToCopy="textContent"
+        >
             <copy-button [contentToCopy]="contentToCopy"></copy-button>
             <div [outerHTML]="htmlContent"></div>
-        </ng-template> `,
+        </ng-template>
+    `,
     host: {
         class: 'docs-live-example'
     }

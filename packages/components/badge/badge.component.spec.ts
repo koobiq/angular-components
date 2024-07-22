@@ -32,6 +32,8 @@ describe('MсAlert', () => {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-badge></kbq-badge> `
+    template: `
+        <kbq-badge></kbq-badge>
+    `
 })
 class TestApp {}

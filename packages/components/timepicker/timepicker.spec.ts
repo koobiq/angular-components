@@ -22,18 +22,23 @@ import {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-form-field>
-        <i kbqPrefix kbq-icon="mc-clock_16"></i>
-        <input
-            kbqTimepicker
-            [(ngModel)]="timeValue"
-            #ngModel="ngModel"
-            [format]="timeFormat"
-            [min]="minTime"
-            [max]="maxTime"
-            [disabled]="isDisabled"
-        />
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <i
+                kbqPrefix
+                kbq-icon="mc-clock_16"
+            ></i>
+            <input
+                #ngModel="ngModel"
+                [(ngModel)]="timeValue"
+                [format]="timeFormat"
+                [min]="minTime"
+                [max]="maxTime"
+                [disabled]="isDisabled"
+                kbqTimepicker
+            />
+        </kbq-form-field>
+    `
 })
 class TestApp {
     @ViewChild('ngModel') ngModel: NgModel;
@@ -574,10 +579,19 @@ describe('KbqTimepicker', () => {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-form-field>
-        <i kbqPrefix kbq-icon="mc-clock_16"></i>
-        <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <i
+                kbqPrefix
+                kbq-icon="mc-clock_16"
+            ></i>
+            <input
+                [format]="timeFormat"
+                [formControl]="formControl"
+                kbqTimepicker
+            />
+        </kbq-form-field>
+    `
 })
 class TimePickerWithNullFormControlValue {
     formControl: UntypedFormControl = new UntypedFormControl();
@@ -648,10 +662,19 @@ describe('KbqTimepicker with null formControl value', () => {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-form-field>
-        <i kbqPrefix kbq-icon="mc-clock_16"></i>
-        <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <i
+                kbqPrefix
+                kbq-icon="mc-clock_16"
+            ></i>
+            <input
+                [(ngModel)]="model"
+                [format]="timeFormat"
+                kbqTimepicker
+            />
+        </kbq-form-field>
+    `
 })
 class TimePickerWithNullModelValue {
     timeFormat: string;
@@ -721,10 +744,19 @@ describe('KbqTimepicker with null model value', () => {
 
 @Component({
     selector: 'test-app',
-    template: ` <kbq-form-field>
-        <i kbqPrefix kbq-icon="mc-clock_16"></i>
-        <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
-    </kbq-form-field>`
+    template: `
+        <kbq-form-field>
+            <i
+                kbqPrefix
+                kbq-icon="mc-clock_16"
+            ></i>
+            <input
+                [(ngModel)]="model"
+                [format]="timeFormat"
+                kbqTimepicker
+            />
+        </kbq-form-field>
+    `
 })
 class TimepickerWithLocaleChange {
     timeFormat: TimeFormats;

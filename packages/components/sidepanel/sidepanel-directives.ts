@@ -52,12 +52,24 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 @Component({
     selector: 'kbq-sidepanel-header',
     template: `
-        <div class="kbq-sidepanel-title" kbq-title>
+        <div
+            class="kbq-sidepanel-title"
+            kbq-title
+        >
             <ng-content></ng-content>
         </div>
 
-        <button *ngIf="closeable" kbq-button kbq-sidepanel-close [color]="'contrast'" [kbqStyle]="'transparent'">
-            <i kbq-icon="mc-close-L_16" [color]="'contrast'"></i>
+        <button
+            *ngIf="closeable"
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            kbq-button
+            kbq-sidepanel-close
+        >
+            <i
+                [color]="'contrast'"
+                kbq-icon="mc-close-L_16"
+            ></i>
         </button>
     `,
     host: {

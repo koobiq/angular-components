@@ -1,8 +1,21 @@
 <kbq-form-field>
-    <kbq-select multiple [(value)]="selected">
-        <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-            <i kbqPrefix kbq-icon="mc-search_16"></i>
-            <input kbqInput [formControl]="searchControl" type="text"/>
+    <kbq-select
+        multiple
+        [(value)]="selected"
+    >
+        <kbq-form-field
+            kbqFormFieldWithoutBorders
+            kbqSelectSearch
+        >
+            <i
+                kbq-icon="mc-search_16"
+                kbqPrefix
+            ></i>
+            <input
+                kbqInput
+                type="text"
+                [formControl]="searchControl"
+            />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
 
@@ -12,8 +25,9 @@
 
         <kbq-option
             *ngFor="let option of filteredOptions | async"
-            [value]="option">
-            <span [innerHTML]="option | mcHighlight : searchControl.value"></span>
+            [value]="option"
+        >
+            <span [innerHTML]="option | mcHighlight: searchControl.value"></span>
         </kbq-option>
     </kbq-select>
 </kbq-form-field>

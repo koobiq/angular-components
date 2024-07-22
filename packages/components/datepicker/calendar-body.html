@@ -6,25 +6,29 @@
       percentage of the width (a variant of the trick described here:
       https://www.w3schools.com/howto/howto_css_aspect_ratio.asp).
     -->
-    <td *ngIf="rowIndex === 0 && firstRowOffset"
+    <td
+        *ngIf="rowIndex === 0 && firstRowOffset"
         class="kbq-calendar__body-label"
-        [attr.colspan]="firstRowOffset">
-    </td>
+        [attr.colspan]="firstRowOffset"
+    ></td>
 
-    <td *ngFor="let item of row; let colIndex = index"
+    <td
+        *ngFor="let item of row; let colIndex = index"
         class="kbq-calendar__body-cell"
-        [ngClass]="item.cssClasses!"
-        [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
         [class.kbq-calendar__body_active]="isActiveCell(rowIndex, colIndex)"
-        (click)="cellClicked(item)"
-        [style.width]="cellWidth"
+        [ngClass]="item.cssClasses!"
+        [style.paddingBottom]="cellPadding"
         [style.paddingTop]="cellPadding"
-        [style.paddingBottom]="cellPadding">
-
-        <div class="kbq-calendar__body-cell-content"
-             [class.kbq-disabled]="!item.enabled"
-             [class.kbq-selected]="selectedValue === item.value"
-             [class.kbq-calendar__body-today]="todayValue === item.value">
+        [style.width]="cellWidth"
+        [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
+        (click)="cellClicked(item)"
+    >
+        <div
+            class="kbq-calendar__body-cell-content"
+            [class.kbq-calendar__body-today]="todayValue === item.value"
+            [class.kbq-disabled]="!item.enabled"
+            [class.kbq-selected]="selectedValue === item.value"
+        >
             {{ item.displayValue }}
         </div>
     </td>

@@ -168,7 +168,9 @@ export class KbqNavbarContainer {}
 
 @Component({
     selector: 'kbq-navbar',
-    template: `<ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>`,
+    template: `
+        <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
+    `,
     styleUrls: [
         './navbar.scss',
         './navbar-item.scss',

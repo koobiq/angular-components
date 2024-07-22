@@ -1,36 +1,64 @@
 <div class="container">
-    <form class="margin"
-          [formGroup]="reactiveForm"
-          (ngSubmit)="onSubmitReactiveForm(reactiveForm)"
-          novalidate>
-
-        <div class="kbq-caption">Reactive formControlName</div><br>
+    <form
+        novalidate
+        class="margin"
+        [formGroup]="reactiveForm"
+        (ngSubmit)="onSubmitReactiveForm(reactiveForm)"
+    >
+        <div class="kbq-caption">Reactive formControlName</div>
+        <br />
 
         <kbq-form-field (click)="myReactiveDatepicker.toggle()">
-            <input name="date" formControlName="date" [kbqDatepicker]="myReactiveDatepicker"/>
+            <input
+                formControlName="date"
+                name="date"
+                [kbqDatepicker]="myReactiveDatepicker"
+            />
 
-            <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+            <i
+                kbq-icon="mc-calendar_16"
+                kbqSuffix
+            ></i>
             <kbq-datepicker #myReactiveDatepicker></kbq-datepicker>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker formControlName="time">
+            <i
+                kbq-icon="mc-clock_16"
+                kbqPrefix
+            ></i>
+            <input
+                formControlName="time"
+                kbqTimepicker
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <input name="input" kbqInput formControlName="reactiveInputValue" placeholder="required pattern=[a-zA-Z]*">
+            <input
+                formControlName="reactiveInputValue"
+                kbqInput
+                name="input"
+                placeholder="required pattern=[a-zA-Z]*"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
             <kbq-select formControlName="reactiveSelectValue">
-                <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+                <kbq-option
+                    disabled
+                    [value]="'Disabled'"
+                >
+                    Disabled
+                </kbq-option>
                 <kbq-option [value]="'Normal'">Normal</kbq-option>
                 <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                 <kbq-option [value]="'Focused'">Focused</kbq-option>
@@ -39,24 +67,32 @@
             </kbq-select>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
             <kbq-tree-select formControlName="reactiveTreeSelectValue">
                 <kbq-tree-selection
                     [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+                    [treeControl]="treeControl"
+                >
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding>
+                        kbqTreeNodePadding
+                    >
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
-                        [disabled]="node.name === 'Downloads'">
-                        <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                        [disabled]="node.name === 'Downloads'"
+                    >
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                        ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -67,27 +103,44 @@
             IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
         </kbq-hint>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue">
-                <kbq-tag *ngFor="let tag of reactiveTypeaheadItems" [value]="tag" (removed)="reactiveInputOnRemoveTag(tag)">
+            <kbq-tag-list
+                #inputTagList
+                formControlName="reactiveTypeaheadValue"
+            >
+                <kbq-tag
+                    *ngFor="let tag of reactiveTypeaheadItems"
+                    [value]="tag"
+                    (removed)="reactiveInputOnRemoveTag(tag)"
+                >
                     {{ tag }}
-                    <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
                 </kbq-tag>
-                <input placeholder="New tag..."
-                       formControlName="tagInputFormControl"
-                       [kbqTagInputFor]="inputTagList"
-                       [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                       (kbqTagInputTokenEnd)="reactiveInputOnCreate($event)">
+                <input
+                    formControlName="tagInputFormControl"
+                    placeholder="New tag..."
+                    [kbqTagInputFor]="inputTagList"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (kbqTagInputTokenEnd)="reactiveInputOnCreate($event)"
+                />
             </kbq-tag-list>
         </kbq-form-field>
 
-        <div class="kbq-form-field_error" *ngIf="reactiveForm.controls.reactiveTypeaheadValue.errors">
+        <div
+            *ngIf="reactiveForm.controls.reactiveTypeaheadValue.errors"
+            class="kbq-form-field_error"
+        >
             <div *ngIf="reactiveForm.controls.reactiveTypeaheadValue.errors?.required">error</div>
         </div>
 
-        <br><br>
+        <br />
+        <br />
 
         <button kbq-button>Submit</button>
 
@@ -96,40 +149,69 @@
         </div>
     </form>
 
-    <br><br>
+    <br />
+    <br />
 
-    <form class="margin"
-          [formGroup]="reactiveFormControl"
-          (ngSubmit)="onSubmitReactiveFormControl(reactiveFormControl)"
-          novalidate>
-
-        <div class="kbq-caption">Reactive formControl</div><br>
+    <form
+        novalidate
+        class="margin"
+        [formGroup]="reactiveFormControl"
+        (ngSubmit)="onSubmitReactiveFormControl(reactiveFormControl)"
+    >
+        <div class="kbq-caption">Reactive formControl</div>
+        <br />
 
         <kbq-form-field (click)="myReactiveFormControlDatepicker.toggle()">
-            <input name="date" [formControl]="formControlDate" [kbqDatepicker]="myReactiveFormControlDatepicker"/>
+            <input
+                name="date"
+                [formControl]="formControlDate"
+                [kbqDatepicker]="myReactiveFormControlDatepicker"
+            />
 
-            <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+            <i
+                kbq-icon="mc-calendar_16"
+                kbqSuffix
+            ></i>
             <kbq-datepicker #myReactiveFormControlDatepicker></kbq-datepicker>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker [formControl]="formControlTime">
+            <i
+                kbq-icon="mc-clock_16"
+                kbqPrefix
+            ></i>
+            <input
+                kbqTimepicker
+                [formControl]="formControlTime"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <input name="input" kbqInput [formControl]="formControlInput" placeholder="required pattern=[a-zA-Z]*">
+            <input
+                kbqInput
+                name="input"
+                placeholder="required pattern=[a-zA-Z]*"
+                [formControl]="formControlInput"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
             <kbq-select [formControl]="formControlSelect">
-                <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+                <kbq-option
+                    disabled
+                    [value]="'Disabled'"
+                >
+                    Disabled
+                </kbq-option>
                 <kbq-option [value]="'Normal'">Normal</kbq-option>
                 <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                 <kbq-option [value]="'Focused'">Focused</kbq-option>
@@ -138,24 +220,32 @@
             </kbq-select>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
             <kbq-tree-select [formControl]="formControlTreeSelect">
                 <kbq-tree-selection
                     [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+                    [treeControl]="treeControl"
+                >
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding>
+                        kbqTreeNodePadding
+                    >
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
-                        [disabled]="node.name === 'Downloads'">
-                        <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                        [disabled]="node.name === 'Downloads'"
+                    >
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                        ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -166,29 +256,44 @@
             IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
         </kbq-hint>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <kbq-tag-list #formControlInputTagList [formControl]="formControlTags">
-                <kbq-tag *ngFor="let tag of reactiveFormControlTypeaheadItems"
-                        [value]="tag"
-                        (removed)="reactiveFormControlInputOnRemoveTag(tag)">
+            <kbq-tag-list
+                #formControlInputTagList
+                [formControl]="formControlTags"
+            >
+                <kbq-tag
+                    *ngFor="let tag of reactiveFormControlTypeaheadItems"
+                    [value]="tag"
+                    (removed)="reactiveFormControlInputOnRemoveTag(tag)"
+                >
                     {{ tag }}
-                    <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
                 </kbq-tag>
-                <input placeholder="New tag..."
-                       [formControl]="formControlTagInputFormControl"
-                       [kbqTagInputFor]="formControlInputTagList"
-                       [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                       (kbqTagInputTokenEnd)="reactiveFormControlInputOnCreate($event)">
+                <input
+                    placeholder="New tag..."
+                    [formControl]="formControlTagInputFormControl"
+                    [kbqTagInputFor]="formControlInputTagList"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (kbqTagInputTokenEnd)="reactiveFormControlInputOnCreate($event)"
+                />
             </kbq-tag-list>
         </kbq-form-field>
 
-        <div class="kbq-form-field_error" *ngIf="formControlTags.errors">
+        <div
+            *ngIf="formControlTags.errors"
+            class="kbq-form-field_error"
+        >
             <div *ngIf="formControlTags.errors?.required">error</div>
         </div>
 
-        <br><br>
+        <br />
+        <br />
 
         <button kbq-button>Submit</button>
 
@@ -197,43 +302,79 @@
         </div>
     </form>
 
-    <br><br>
+    <br />
+    <br />
 
-    <form class="margin" #form="ngForm" (ngSubmit)="onSubmitTemplateForm(form)" novalidate>
+    <form
+        #form="ngForm"
+        novalidate
+        class="margin"
+        (ngSubmit)="onSubmitTemplateForm(form)"
+    >
         <div class="kbq-caption">Template form</div>
 
-        <br>
+        <br />
 
         <kbq-form-field (click)="myDatepicker.toggle()">
-            <input name="date" [(ngModel)]="date" [required]="true" [kbqDatepicker]="myDatepicker"/>
+            <input
+                name="date"
+                [kbqDatepicker]="myDatepicker"
+                [required]="true"
+                [(ngModel)]="date"
+            />
 
-            <i kbq-icon="mc-calendar_16" kbqSuffix></i>
+            <i
+                kbq-icon="mc-calendar_16"
+                kbqSuffix
+            ></i>
             <kbq-datepicker #myDatepicker></kbq-datepicker>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-clock_16"></i>
-            <input kbqTimepicker name="time" [(ngModel)]="time" [required]="true">
+            <i
+                kbq-icon="mc-clock_16"
+                kbqPrefix
+            ></i>
+            <input
+                kbqTimepicker
+                name="time"
+                [required]="true"
+                [(ngModel)]="time"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
             <input
-                name="input"
                 kbqInput
-                [(ngModel)]="inputValue"
+                name="input"
                 pattern="[a-zA-Z]*"
-                placeholder="required pattern=[a-zA-Z]*" [required]="true">
+                placeholder="required pattern=[a-zA-Z]*"
+                [required]="true"
+                [(ngModel)]="inputValue"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <kbq-select name="select" [(ngModel)]="selectValue" [required]="true">
-                <kbq-option [value]="'Disabled'" disabled>Disabled</kbq-option>
+            <kbq-select
+                name="select"
+                [required]="true"
+                [(ngModel)]="selectValue"
+            >
+                <kbq-option
+                    disabled
+                    [value]="'Disabled'"
+                >
+                    Disabled
+                </kbq-option>
                 <kbq-option [value]="'Normal'">Normal</kbq-option>
                 <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                 <kbq-option [value]="'Focused'">Focused</kbq-option>
@@ -242,74 +383,118 @@
             </kbq-select>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <kbq-tree-select name="tree-select" [(ngModel)]="treeSelectValue" [required]="true">
+            <kbq-tree-select
+                name="tree-select"
+                [required]="true"
+                [(ngModel)]="treeSelectValue"
+            >
                 <kbq-tree-selection
                     [dataSource]="dataSource"
-                    [treeControl]="treeControl">
+                    [treeControl]="treeControl"
+                >
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding>
+                        kbqTreeNodePadding
+                    >
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
-                        [disabled]="node.name === 'Downloads'">
-                        <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
+                        [disabled]="node.name === 'Downloads'"
+                    >
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                        ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
 
-        <br>
-        <br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <kbq-tag-list name="typeahead" #templateInputTagList [(ngModel)]="typeaheadItems" [required]="true">
-                <kbq-tag *ngFor="let tag of typeaheadItems" [value]="tag" (removed)="inputOnRemoveTag(tag)">
+            <kbq-tag-list
+                #templateInputTagList
+                name="typeahead"
+                [required]="true"
+                [(ngModel)]="typeaheadItems"
+            >
+                <kbq-tag
+                    *ngFor="let tag of typeaheadItems"
+                    [value]="tag"
+                    (removed)="inputOnRemoveTag(tag)"
+                >
                     {{ tag }}
-                    <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
                 </kbq-tag>
-                <input placeholder="New tag..."
-                       [kbqTagInputFor]="templateInputTagList"
-                       [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                       (kbqTagInputTokenEnd)="inputOnCreate($event)">
+                <input
+                    placeholder="New tag..."
+                    [kbqTagInputFor]="templateInputTagList"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (kbqTagInputTokenEnd)="inputOnCreate($event)"
+                />
             </kbq-tag-list>
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <button kbq-button>Submit</button>
     </form>
 
-    <br><br>
+    <br />
+    <br />
 
-    <form class="margin" [formGroup]="formWithCustomValidator"
-          (ngSubmit)="onSubmitFormWithCustomValidator(formWithCustomValidator)"
-          novalidate>
+    <form
+        novalidate
+        class="margin"
+        [formGroup]="formWithCustomValidator"
+        (ngSubmit)="onSubmitFormWithCustomValidator(formWithCustomValidator)"
+    >
         <div class="kbq-caption">formGroup with custom validator</div>
-        <br>
+        <br />
 
         <kbq-form-field>
-            <input kbqInput formControlName="login" placeholder="Login">
+            <input
+                formControlName="login"
+                kbqInput
+                placeholder="Login"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <kbq-form-field>
-            <input kbqInput formControlName="password" placeholder="Password">
+            <input
+                formControlName="password"
+                kbqInput
+                placeholder="Password"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <button kbq-button>Submit</button>
 
-        <div class="kbq-form-field_error" *ngIf="formWithCustomValidator.controls.login.errors">
+        <div
+            *ngIf="formWithCustomValidator.controls.login.errors"
+            class="kbq-form-field_error"
+        >
             <div *ngIf="formWithCustomValidator.controls.login.errors?.required">error</div>
         </div>
     </form>
@@ -317,22 +502,40 @@
     <div class="margin">
         <div class="kbq-caption">formControl</div>
 
-        <br>
+        <br />
 
         <kbq-form-field>
-            <input kbqInput [formControl]="control" type="text" placeholder="Number MaxMin Step">
+            <input
+                kbqInput
+                placeholder="Number MaxMin Step"
+                type="text"
+                [formControl]="control"
+            />
         </kbq-form-field>
 
-        <br><br>
+        <br />
+        <br />
 
         <form #form="ngForm">
             <kbq-form-field>
-                <input kbqInput [(ngModel)]="value" type="text" name="qwe" [required]="true">
+                <input
+                    kbqInput
+                    name="qwe"
+                    type="text"
+                    [required]="true"
+                    [(ngModel)]="value"
+                />
             </kbq-form-field>
 
-            <br><br>
+            <br />
+            <br />
 
-            <button kbq-button type="submit">submit</button>
+            <button
+                kbq-button
+                type="submit"
+            >
+                submit
+            </button>
         </form>
     </div>
 </div>

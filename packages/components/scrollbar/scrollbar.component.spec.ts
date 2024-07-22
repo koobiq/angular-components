@@ -110,13 +110,13 @@ describe('KbqScrollbar', () => {
 @Component({
     template: `
         <div
-            style="height: 300px; max-width: 200px; overflow: auto"
-            kbq-scrollbar
             [options]="options"
             [events]="events"
             (onUpdate)="update()"
             (onInitialize)="initialize()"
             (onScroll)="scroll($event)"
+            style="height: 300px; max-width: 200px; overflow: auto"
+            kbq-scrollbar
         >
             <div style="width: 400px">
                 Vivamus suscipit tortor eget felis porttitor volutpat. Vivamus magna justo, lacinia eget consectetur

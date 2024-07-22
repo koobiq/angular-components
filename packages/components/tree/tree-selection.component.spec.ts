@@ -759,12 +759,15 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
 
 @Component({
     template: `
-        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
             <kbq-tree-option
-                *kbqTreeNodeDef="let node"
                 class="customNodeClass"
-                kbqTreeNodePadding
+                *kbqTreeNodeDef="let node"
                 [kbqTreeNodePaddingIndent]="28"
+                kbqTreeNodePadding
                 kbqTreeNodeToggle
             >
                 {{ node.name }}
@@ -865,15 +868,21 @@ abstract class TreeParams {
     template: `
         <kbq-tree-selection
             [(ngModel)]="modelValue"
-            multiple="keyboard"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
+            multiple="keyboard"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -894,16 +903,22 @@ class KbqTreeAppMultiple extends TreeParams {
     template: `
         <kbq-tree-selection
             [ngModel]="modelValue"
-            (ngModelChange)="onModelValueChange($event)"
-            multiple="checkbox"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
+            (ngModelChange)="onModelValueChange($event)"
+            multiple="checkbox"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -937,12 +952,21 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
 
 @Component({
     template: `
-        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 <kbq-tree-node-toggle></kbq-tree-node-toggle>
 
                 {{ node.name }}
@@ -1007,12 +1031,21 @@ class KbqTreeAppWithToggle {
 
 @Component({
     template: `
-        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: isSpecial" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: isSpecial"
+                kbqTreeNodePadding
+            >
                 >>>{{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -1068,12 +1101,21 @@ class WhenNodeKbqTreeApp {
 
 @Component({
     template: `
-        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>

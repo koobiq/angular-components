@@ -1,7 +1,11 @@
 <div [style.width.px]="navbarContainerWidth">
     <kbq-navbar>
         <kbq-navbar-container>
-            <kbq-navbar-item #disabledItem="kbqNavbarItem" [disabled]="true" (click)="onItemClick(disabledItem)">
+            <kbq-navbar-item
+                #disabledItem="kbqNavbarItem"
+                [disabled]="true"
+                (click)="onItemClick(disabledItem)"
+            >
                 <i kbq-icon="mc-info_16"></i>
                 <kbq-navbar-title>Left icon</kbq-navbar-title>
             </kbq-navbar-item>
@@ -11,7 +15,12 @@
             </kbq-navbar-item>
             <kbq-navbar-brand>
                 <kbq-navbar-logo>
-                    <img style="vertical-align: middle;" width="32" height="32" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAS1JREFUWAljPMUh/J9hAAHTANoNtnrUAaMhMBoCoyEw4CHAgq0k5Hd3YVCY0sfAJiOFTZrh369fDJ+PHGd4kJHH8OvxUwbT72+wqkMXPM0pgi7EgDUE8FkOMoGJjY2B38meQWH6RAwDSRVgxFYZqa5dCjbnXmoOw9937zHMZBYSZDB6ehscEmf5MUMJFiLYfIxuGNYouB0cja6OZnysDmCTlQYHL6+tFTi4cdn++fAxXFJEi2N1AChu+Z0dcBoCToRAyx9k5uNUQ6wEVgeAfA4C56RUGP6+/0CsWWSpw5oLQKkcBMi1HBRCIMAsKACm8RFYHYBPAzFyoDICBJTmTCWonCYOABVQH/cdZPj3ExIS+FyBtRzAp4HacjQJAVIcOeqA0RAYDYHREBjwEAAApR1LyfgAzUMAAAAASUVORK5CYII=" />
+                    <img
+                        height="32"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAS1JREFUWAljPMUh/J9hAAHTANoNtnrUAaMhMBoCoyEw4CHAgq0k5Hd3YVCY0sfAJiOFTZrh369fDJ+PHGd4kJHH8OvxUwbT72+wqkMXPM0pgi7EgDUE8FkOMoGJjY2B38meQWH6RAwDSRVgxFYZqa5dCjbnXmoOw9937zHMZBYSZDB6ehscEmf5MUMJFiLYfIxuGNYouB0cja6OZnysDmCTlQYHL6+tFTi4cdn++fAxXFJEi2N1AChu+Z0dcBoCToRAyx9k5uNUQ6wEVgeAfA4C56RUGP6+/0CsWWSpw5oLQKkcBMi1HBRCIMAsKACm8RFYHYBPAzFyoDICBJTmTCWonCYOABVQH/cdZPj3ExIS+FyBtRzAp4HacjQJAVIcOeqA0RAYDYHREBjwEAAApR1LyfgAzUMAAAAASUVORK5CYII="
+                        style="vertical-align: middle"
+                        width="32"
+                    />
                 </kbq-navbar-logo>
                 <kbq-navbar-title>Brand</kbq-navbar-title>
             </kbq-navbar-brand>

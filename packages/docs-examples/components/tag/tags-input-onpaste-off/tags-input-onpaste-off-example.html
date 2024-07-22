@@ -1,17 +1,26 @@
 <kbq-form-field>
     <kbq-tag-list #tagList>
-        <kbq-tag *ngFor="let tag of tags" [value]="tag" (removed)="onRemoveTag(tag)">
+        <kbq-tag
+            *ngFor="let tag of tags"
+            [value]="tag"
+            (removed)="onRemoveTag(tag)"
+        >
             {{ tag }}
-            <i kbq-icon="mc-close-S_16" kbqTagRemove></i>
+            <i
+                kbq-icon="mc-close-S_16"
+                kbqTagRemove
+            ></i>
         </kbq-tag>
 
         <!-- turn off tag add on paste with Input property -->
-        <input placeholder="New tag..."
-               [formControl]="control"
-               [kbqTagInputFor]="tagList"
-               [kbqTagInputAddOnPaste]="false"
-               [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-               (kbqTagInputTokenEnd)="onCreate($event)" >
+        <input
+            placeholder="New tag..."
+            [formControl]="control"
+            [kbqTagInputAddOnPaste]="false"
+            [kbqTagInputFor]="tagList"
+            [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+            (kbqTagInputTokenEnd)="onCreate($event)"
+        />
         <kbq-cleaner (click)="onClear()"></kbq-cleaner>
     </kbq-tag-list>
 </kbq-form-field>

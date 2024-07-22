@@ -1,31 +1,34 @@
 <kbq-tab-header
     #tabHeader
-    [vertical]="vertical"
     [selectedIndex]="selectedIndex"
+    [vertical]="vertical"
     (indexFocused)="focusChanged($event)"
-    (selectFocusedIndex)="onSelectFocusedIndex($event)">
-
-    <div class="kbq-tab-label"
-         kbqTabLabelWrapper
-         cdkMonitorElementFocus
-         [attr.tabindex]="getTabIndex(tab, i)"
-         [class.kbq-tab-label_horizontal]="!vertical"
-         [class.kbq-tab-label_vertical]="vertical"
-         [class.kbq-tab-label_empty]="tab.empty"
-         [class.kbq-selected]="selectedIndex == i"
-         *ngFor="let tab of tabs; let i = index"
-         [tab]="tab"
-         [id]="getTabLabelId(i)"
-         [disabled]="tab.disabled"
-         (click)="handleClick(tab, tabHeader, i)"
-
-         [kbqTooltip]="tab.tooltipTitle"
-         [kbqTooltipDisabled]="!tab.empty && !tab.isOverflown"
-         [kbqTrigger]="'hover, focus'"
-         [kbqPlacement]="tab.tooltipPlacement">
-
-        <div #labelContent class="kbq-tab-label__content"
-            [class.kbq-tab-label__template]="tab.templateLabel">
+    (selectFocusedIndex)="onSelectFocusedIndex($event)"
+>
+    <div
+        *ngFor="let tab of tabs; let i = index"
+        cdkMonitorElementFocus
+        kbqTabLabelWrapper
+        class="kbq-tab-label"
+        [attr.tabindex]="getTabIndex(tab, i)"
+        [class.kbq-selected]="selectedIndex == i"
+        [class.kbq-tab-label_empty]="tab.empty"
+        [class.kbq-tab-label_horizontal]="!vertical"
+        [class.kbq-tab-label_vertical]="vertical"
+        [disabled]="tab.disabled"
+        [id]="getTabLabelId(i)"
+        [kbqPlacement]="tab.tooltipPlacement"
+        [kbqTooltip]="tab.tooltipTitle"
+        [kbqTooltipDisabled]="!tab.empty && !tab.isOverflown"
+        [kbqTrigger]="'hover, focus'"
+        [tab]="tab"
+        (click)="handleClick(tab, tabHeader, i)"
+    >
+        <div
+            #labelContent
+            class="kbq-tab-label__content"
+            [class.kbq-tab-label__template]="tab.templateLabel"
+        >
             <!-- If there is a label template, use it. -->
             <ng-template [ngIf]="tab.templateLabel">
                 <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
@@ -37,16 +40,19 @@
     </div>
 </kbq-tab-header>
 
-<div class="kbq-tab-body__wrapper" #tabBodyWrapper>
+<div
+    #tabBodyWrapper
+    class="kbq-tab-body__wrapper"
+>
     <kbq-tab-body
         *ngFor="let tab of tabs; let i = index"
-        [id]="getTabContentId(i)"
+        [animationDuration]="animationDuration"
         [class.kbq-tab-body__active]="selectedIndex == i"
         [content]="tab.content!"
-        [position]="tab.position!"
+        [id]="getTabContentId(i)"
         [origin]="tab.origin!"
-        [animationDuration]="animationDuration"
+        [position]="tab.position!"
         (onCentered)="removeTabBodyWrapperHeight()"
-        (onCentering)="setTabBodyWrapperHeight($event)">
-    </kbq-tab-body>
+        (onCentering)="setTabBodyWrapperHeight($event)"
+    ></kbq-tab-body>
 </div>

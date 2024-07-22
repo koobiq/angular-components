@@ -593,7 +593,9 @@ describe('nested KbqTabGroup with enabled animations', () => {
             </kbq-tab>
             <kbq-tab>
                 <ng-template kbq-tab-label>Tab Two</ng-template>
-                <span>Tab </span><span>two</span><span>content</span>
+                <span>Tab</span>
+                <span>two</span>
+                <span>content</span>
             </kbq-tab>
             <kbq-tab>
                 <ng-template kbq-tab-label>Tab Three</ng-template>
@@ -656,8 +658,14 @@ class SimpleDynamicTabsTestApp {
 
 @Component({
     template: `
-        <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
-            <kbq-tab *ngFor="let tab of tabs" label="{{ tab.label }}">
+        <kbq-tab-group
+            class="tab-group"
+            [(selectedIndex)]="selectedIndex"
+        >
+            <kbq-tab
+                *ngFor="let tab of tabs"
+                label="{{ tab.label }}"
+            >
                 {{ tab.content }}
             </kbq-tab>
         </kbq-tab-group>
@@ -731,10 +739,10 @@ class AsyncTabsTestApp implements OnInit {
 @Component({
     template: `
         <kbq-tab-group>
-            <kbq-tab label="Junk food"> Pizza, fries </kbq-tab>
-            <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
-            <kbq-tab [label]="otherLabel"> {{ otherContent }} </kbq-tab>
-            <kbq-tab label="Legumes"> <p #legumes>Peanuts</p> </kbq-tab>
+            <kbq-tab label="Junk food">Pizza, fries</kbq-tab>
+            <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
+            <kbq-tab [label]="otherLabel">{{ otherContent }}</kbq-tab>
+            <kbq-tab label="Legumes"><p #legumes>Peanuts</p></kbq-tab>
         </kbq-tab-group>
     `
 })
@@ -765,7 +773,7 @@ class NestedTabs {}
     selector: 'template-tabs',
     template: `
         <kbq-tab-group>
-            <kbq-tab label="One"> Eager </kbq-tab>
+            <kbq-tab label="One">Eager</kbq-tab>
             <kbq-tab label="Two">
                 <ng-template kbqTabContent>
                     <div class="child">Hi</div>
@@ -779,8 +787,13 @@ class TemplateTabs {}
 @Component({
     template: `
         <kbq-tab-group>
-            <kbq-tab label="Junk food" #pizza> Pizza, fries </kbq-tab>
-            <kbq-tab label="Vegetables"> Broccoli, spinach </kbq-tab>
+            <kbq-tab
+                #pizza
+                label="Junk food"
+            >
+                Pizza, fries
+            </kbq-tab>
+            <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
         </kbq-tab-group>
 
         <div *ngIf="pizza.isActive">pizza is active</div>
@@ -790,14 +803,19 @@ class TabGroupWithIsActiveBinding {}
 
 @Component({
     template: `
-        <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
+        <kbq-tab-group
+            class="tab-group"
+            [(activeTab)]="selectBy"
+        >
             <kbq-tab tabId="first">
                 <ng-template kbq-tab-label>Tab first</ng-template>
                 Tab first content
             </kbq-tab>
             <kbq-tab tabId="second">
                 <ng-template kbq-tab-label>Tab second</ng-template>
-                <span>Tab </span><span>second</span><span>content</span>
+                <span>Tab</span>
+                <span>second</span>
+                <span>content</span>
             </kbq-tab>
             <kbq-tab tabId="last">
                 <ng-template kbq-tab-label>Tab last</ng-template>

@@ -115,7 +115,12 @@ describe('KbqProgressBar', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode"> </kbq-progress-bar>
+        <kbq-progress-bar
+            class="first"
+            [id]="id"
+            [value]="value"
+            [mode]="mode"
+        ></kbq-progress-bar>
         <kbq-progress-bar class="default"></kbq-progress-bar>
     `
 })

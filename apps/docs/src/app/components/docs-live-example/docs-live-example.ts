@@ -22,11 +22,17 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
 
 @Component({
     selector: 'docs-live-example',
-    template: `Loading document...
-        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
+    template: `
+        Loading document...
+        <ng-template
+            cdkPortal
+            let-htmlContent
+            let-contentToCopy="textContent"
+        >
             <copy-button [contentToCopy]="contentToCopy"></copy-button>
             <div [outerHTML]="htmlContent"></div>
-        </ng-template> `,
+        </ng-template>
+    `,
     host: {
         class: 'docs-live-example kbq-markdown'
     }
