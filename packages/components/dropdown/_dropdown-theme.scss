@@ -35,7 +35,7 @@
         }
 
         &.cdk-keyboard-focused {
-            border-color: kbq-css-variable(list-focused-focus-outline, map.get($list-item, focused, focus-outline));
+            border-color: kbq-css-variable(list-states-focused-focus-outline, map.get(map.get($list-item, states-focused), focus-outline));
         }
 
         &.kbq-selected {
