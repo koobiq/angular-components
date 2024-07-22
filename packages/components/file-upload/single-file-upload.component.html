@@ -10,27 +10,9 @@
         class="dropzone"
     >
         <i kbq-icon="mc-upload-to-cloud_24"></i>
+        <!-- prettier-ignore -->
         <span class="dropzone__text">
-            {{ separatedCaptionText[0] }}
-            <label
-                kbq-link
-                pseudo
-                [disabled]="disabled"
-                [for]="inputId"
-                [tabIndex]="-1"
-            >
-                {{ config.browseLink }}
-                <input
-                    #input
-                    type="file"
-                    class="cdk-visually-hidden"
-                    [accept]="acceptedFiles"
-                    [disabled]="disabled"
-                    [id]="inputId"
-                    (change)="onFileSelectedViaClick($event)"
-                />
-            </label>
-            {{ separatedCaptionText[1] }}
+            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}
         </span>
     </div>
 </div>
