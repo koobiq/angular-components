@@ -56,7 +56,7 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError
+    getKbqSelectNonFunctionValueError, KbqLocaleServiceModule, KbqLocaleService, KBQ_LOCALE_SERVICE
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -1888,6 +1888,41 @@ class ChildSelection {
     }
 }
 
+@Component({
+    selector: 'basic-select',
+    template: `
+        <kbq-form-field style="width: 300px;">
+            <kbq-tree-select
+                placeholder="Food"
+                [multiple]="true"
+                [formControl]="control"
+                [tabIndex]="tabIndexOverride"
+                [panelClass]="panelClass"
+            >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                        [disabled]="node.name === 'Downloads'"
+                    >
+                        <i kbq-icon="mc-angle-down-S_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class LocalizedTreeSelect extends BasicTreeSelect {
+    constructor() {
+        super();
+    }
+}
+
 describe('KbqTreeSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -1912,7 +1947,8 @@ describe('KbqTreeSelect', () => {
                 ReactiveFormsModule,
                 FormsModule,
                 NoopAnimationsModule,
-                KbqPseudoCheckboxModule
+                KbqPseudoCheckboxModule,
+                KbqLocaleServiceModule
             ],
             declarations,
             providers: [
@@ -5479,6 +5515,54 @@ describe('KbqTreeSelect', () => {
             });
 
             expect(fixture.componentInstance.control.value).toContain('Applications');
+        }));
+    });
+
+    describe('with localization', () => {
+        beforeEach(waitForAsync(() => configureKbqTreeSelectTestingModule([LocalizedTreeSelect])));
+
+        let fixture: ComponentFixture<LocalizedTreeSelect>;
+        let localeService: KbqLocaleService;
+
+        beforeEach(inject([KBQ_LOCALE_SERVICE], (l: KbqLocaleService) => {
+            localeService = l;
+        }));
+
+        const hideItems = (fixture: ComponentFixture<any>) => {
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+            flush();
+
+            const options = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-tree-option');
+            options.forEach((option) => {
+                option.click();
+                fixture.detectChanges();
+                tick(1);
+                flush();
+            });
+        }
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(LocalizedTreeSelect);
+            fixture.detectChanges();
+        });
+
+        it('should calculate hidden items and output in show more button', fakeAsync(() => {
+            hideItems(fixture);
+
+            expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent)
+                .toContain(fixture.componentInstance.select.hiddenItems);
+        }));
+
+        it('should change show more text according to locale', fakeAsync(() => {
+            hideItems(fixture);
+            localeService.setLocale('en-US');
+            fixture.detectChanges();
+            tick(1);
+            flush();
+
+            expect(fixture.componentInstance.select.hiddenItemsText)
+                .toEqual(localeService.getParams('select').hiddenItemsText);
         }));
     });
 });

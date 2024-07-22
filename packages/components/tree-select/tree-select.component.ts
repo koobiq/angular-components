@@ -69,7 +69,7 @@ import {
     kbqSelectAnimations,
     mixinDisabled,
     mixinErrorState,
-    mixinTabIndex
+    mixinTabIndex, KBQ_LOCALE_SERVICE, KbqLocaleService
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -240,7 +240,7 @@ export class KbqTreeSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
-    @Input() hiddenItemsText: string = 'еще';
+    @Input() hiddenItemsText: string = 'еще {{ number }}';
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -472,9 +472,12 @@ export class KbqTreeSelect
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         @Optional() private readonly parentFormField: KbqFormField,
-        @Optional() @Self() ngControl: NgControl
+        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
+
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -887,6 +890,12 @@ export class KbqTreeSelect
 
         this.changeDetectorRef.markForCheck();
     }
+
+    private updateLocaleParams = () => {
+        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
+
+        this.changeDetectorRef.markForCheck();
+    };
 
     private closingActions() {
         const backdrop = this.overlayDir.overlayRef!.backdropClick();
