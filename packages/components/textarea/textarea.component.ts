@@ -3,23 +3,19 @@ import {
     Directive,
     DoCheck,
     ElementRef,
+    EventEmitter,
+    Host,
     Inject,
+    InjectionToken,
     Input,
+    NgZone,
     OnChanges,
     OnDestroy,
-    Optional,
-    Self,
-    InjectionToken,
-    NgZone,
     OnInit,
-    EventEmitter,
-    Host
+    Optional,
+    Self
 } from '@angular/core';
-import {
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
@@ -28,13 +24,11 @@ import {
     mixinErrorState
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subscription, Subject } from 'rxjs';
-
+import { Subject, Subscription } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
 let nextUniqueId = 0;
-
 
 /** @docs-private */
 export class KbqTextareaBase {
@@ -74,9 +68,10 @@ export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaB
     },
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
 })
-export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldControl<any>, OnInit, OnChanges,
-    OnDestroy, DoCheck, CanUpdateErrorState {
-
+export class KbqTextarea
+    extends KbqTextareaMixinBase
+    implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
+{
     @Input() canGrow: boolean = true;
 
     /** An object used to control when error messages are shown. */
@@ -203,11 +198,9 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
-        this.parent?.animationDone
-            .subscribe(() => this.ngOnInit());
+        this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges
-            .subscribe(this.grow);
+        this.growSubscription = this.stateChanges.subscribe(this.grow);
     }
 
     ngOnInit() {
@@ -220,7 +213,7 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
             // tslint:disable-next-line:no-magic-numbers
             this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
             this.freeRowsHeight = this.lineHeight;
-        })
+        });
 
         setTimeout(this.grow, 0);
     }
@@ -261,7 +254,9 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
 
     /** Grow textarea height to avoid vertical scroll  */
     grow = () => {
-        if (!this.canGrow) { return; }
+        if (!this.canGrow) {
+            return;
+        }
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
@@ -274,7 +269,7 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
             const height = Math.max(this.minHeight, +textarea.scrollHeight + diff + this.freeRowsHeight);
             textarea.style.minHeight = `${height}px`;
         });
-    }
+    };
 
     /** Focuses the textarea. */
     focus(): void {
@@ -322,5 +317,4 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
 
         return validity && validity.badInput;
     }
-
 }

@@ -2,7 +2,6 @@ import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/c
 import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
 
-
 /**
  * @title Sidepanel normal mode
  */
@@ -17,7 +16,7 @@ export class SidepanelNormalModeExample {
 
     isOpened = false;
 
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
     array = new Array(this.arrayLength); // tslint:disable-line
@@ -31,9 +30,12 @@ export class SidepanelNormalModeExample {
                 hasBackdrop: false
             });
 
-            sidepanel.afterClosed().pipe(take(1)).subscribe(() => {
-                this.isOpened = false;
-            });
+            sidepanel
+                .afterClosed()
+                .pipe(take(1))
+                .subscribe(() => {
+                    this.isOpened = false;
+                });
             this.isOpened = true;
         } else {
             this.sidepanelService.closeAll();

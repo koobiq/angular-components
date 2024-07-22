@@ -1,27 +1,14 @@
-import {
-    AfterViewInit,
-    ContentChild,
-    Directive,
-    ElementRef,
-    Input,
-    Renderer2
-} from '@angular/core';
-import {
-    CanDisable,
-    CanDisableCtor,
-    mixinDisabled
-} from '@koobiq/components/core';
-
+import { AfterViewInit, ContentChild, Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { CanDisable, CanDisableCtor, mixinDisabled } from '@koobiq/components/core';
 import { KbqTab } from './tab.component';
-
 
 // Boilerplate for applying mixins to KbqTabLabelWrapper.
 /** @docs-private */
 export class KbqTabLabelWrapperBase {}
 
 /** @docs-private */
-export const KbqTabLabelWrapperMixinBase: CanDisableCtor &
-    typeof KbqTabLabelWrapperBase = mixinDisabled(KbqTabLabelWrapperBase);
+export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWrapperBase =
+    mixinDisabled(KbqTabLabelWrapperBase);
 
 /**
  * Used in the `kbq-tab-group` view to display tab labels.

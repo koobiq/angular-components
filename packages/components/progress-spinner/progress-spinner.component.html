@@ -1,15 +1,17 @@
 <div class="kbq-progress-spinner__inner">
-    <svg focusable="false"
-         preserveAspectRatio="xMidYMid meet"
-         viewBox="0 0 100 100">
-
-        <circle cx="50%"
-                cy="50%"
-                stroke-linecap="round"
-                [attr.r]="svgCircleRadius"
-                class="kbq-progress-spinner__circle"
-                [ngStyle]="{'stroke-dashoffset': mode === 'determinate' ? dashOffsetPercent : null}">
-        </circle>
+    <svg
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 100 100"
+    >
+        <circle
+            cx="50%"
+            cy="50%"
+            stroke-linecap="round"
+            class="kbq-progress-spinner__circle"
+            [attr.r]="svgCircleRadius"
+            [ngStyle]="{ 'stroke-dashoffset': mode === 'determinate' ? dashOffsetPercent : null }"
+        ></circle>
     </svg>
 </div>
 

@@ -8,17 +8,14 @@ import {
     Input,
     Optional,
     Output,
-    ViewEncapsulation,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
-
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
 import { createMissingDateImplError } from './datepicker-errors';
 
-
 const DAYS_PER_WEEK = 7;
-
 
 /**
  * An internal component used to display a single month in the datepicker.
@@ -110,7 +107,6 @@ export class KbqMonthView<D> implements AfterContentInit {
         private changeDetectorRef: ChangeDetectorRef,
         @Optional() public adapter: DateAdapter<D>
     ) {
-
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');
         }
@@ -124,9 +120,7 @@ export class KbqMonthView<D> implements AfterContentInit {
             return { long, narrow: narrowWeekdays[i] };
         });
 
-        this.weekdays = weekdays
-            .slice(firstDayOfWeek)
-            .concat(weekdays.slice(0, firstDayOfWeek));
+        this.weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
         this._activeDate = this.adapter.today();
     }
@@ -158,9 +152,9 @@ export class KbqMonthView<D> implements AfterContentInit {
             this.adapter.getMonth(this.activeDate)
         );
 
-        this.firstWeekOffset = (
-            DAYS_PER_WEEK + this.adapter.getDayOfWeek(firstOfMonth) - this.adapter.getFirstDayOfWeek()
-        ) % DAYS_PER_WEEK;
+        this.firstWeekOffset =
+            (DAYS_PER_WEEK + this.adapter.getDayOfWeek(firstOfMonth) - this.adapter.getFirstDayOfWeek()) %
+            DAYS_PER_WEEK;
 
         this.createWeekCells();
         this.changeDetectorRef.markForCheck();
@@ -187,17 +181,18 @@ export class KbqMonthView<D> implements AfterContentInit {
             const enabled = this.shouldEnableDate(date);
             const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
 
-            this.weeks[this.weeks.length - 1]
-                .push(new KbqCalendarCell(i + 1, dateNames[i], enabled, cellClasses));
+            this.weeks[this.weeks.length - 1].push(new KbqCalendarCell(i + 1, dateNames[i], enabled, cellClasses));
         }
     }
 
     /** Date filter for the month */
     private shouldEnableDate(date: D): boolean {
-        return !!date &&
+        return (
+            !!date &&
             (!this.dateFilter || this.dateFilter(date)) &&
             (!this.minDate || this.adapter.compareDate(date, this.minDate) >= 0) &&
-            (!this.maxDate || this.adapter.compareDate(date, this.maxDate) <= 0);
+            (!this.maxDate || this.adapter.compareDate(date, this.maxDate) <= 0)
+        );
     }
 
     /**
@@ -210,7 +205,11 @@ export class KbqMonthView<D> implements AfterContentInit {
 
     /** Checks whether the 2 dates are non-null and fall within the same month of the same year. */
     private hasSameMonthAndYear(d1: D | null, d2: D | null): boolean {
-        return !!(d1 && d2 && this.adapter.getMonth(d1) === this.adapter.getMonth(d2) &&
-            this.adapter.getYear(d1) === this.adapter.getYear(d2));
+        return !!(
+            d1 &&
+            d2 &&
+            this.adapter.getMonth(d1) === this.adapter.getMonth(d2) &&
+            this.adapter.getYear(d1) === this.adapter.getYear(d2)
+        );
     }
 }

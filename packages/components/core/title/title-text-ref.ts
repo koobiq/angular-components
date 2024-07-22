@@ -1,6 +1,5 @@
 import { ElementRef, InjectionToken } from '@angular/core';
 
-
 export interface KbqTitleTextRef {
     textElement?: ElementRef;
     parentTextElement?: ElementRef;

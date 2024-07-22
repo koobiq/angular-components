@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { KbqLocaleService } from './locale-service';
 
 describe('KbqLocaleService', () => {

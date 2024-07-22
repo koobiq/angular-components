@@ -11,15 +11,8 @@ import {
     Optional,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    CanColor,
-    toBoolean,
-    KBQ_FORM_FIELD_REF,
-    KbqFormFieldRef
-} from '@koobiq/components/core';
-
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef, toBoolean } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
-
 
 @Component({
     selector: `[kbq-icon-button]`,
@@ -69,7 +62,7 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
 
     private _disabled: boolean;
 
-    override name = 'KbqIconButton'
+    override name = 'KbqIconButton';
 
     constructor(
         elementRef: ElementRef,

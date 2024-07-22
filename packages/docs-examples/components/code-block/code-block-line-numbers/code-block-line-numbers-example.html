@@ -1,13 +1,13 @@
 <kbq-toggle
-    class="kbq-toggle_small"
     style="margin: 10px 0"
-    [(ngModel)]="lineNumbers">
+    class="kbq-toggle_small"
+    [(ngModel)]="lineNumbers"
+>
     Нумерация строк
 </kbq-toggle>
 
 <kbq-code-block
-    [lineNumbers]="lineNumbers"
+    [codeFiles]="files"
     [filled]="false"
-    [codeFiles]="files">
-</kbq-code-block>
-
+    [lineNumbers]="lineNumbers"
+></kbq-code-block>

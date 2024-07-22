@@ -573,6 +573,8 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     getSelectedValues(): any[];
     // (undocumented)
+    highlightSelectedOption(): void;
+    // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
     keyManager: FocusKeyManager<KbqTreeOption>;

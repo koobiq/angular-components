@@ -3,18 +3,16 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import {
-    buttonLeftIconClassName, buttonRightIconClassName,
-    leftIconClassName,
+    buttonLeftIconClassName,
+    buttonRightIconClassName,
     KbqButtonCssStyler,
     KbqButtonModule,
+    leftIconClassName,
     rightIconClassName
 } from './index';
 
-
 describe('KbqButton', () => {
-
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule],
@@ -96,17 +94,12 @@ describe('KbqButton', () => {
             const fixture = TestBed.createComponent(TestApp);
             const buttonNativeElement = fixture.nativeElement.querySelector('button');
 
-            expect(buttonNativeElement.disabled)
-                .withContext('Expected button not to be disabled')
-                .toBeFalsy();
+            expect(buttonNativeElement.disabled).withContext('Expected button not to be disabled').toBeFalsy();
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
-            expect(buttonNativeElement.disabled)
-                .withContext('Expected button to be disabled')
-                .toBeTruthy();
+            expect(buttonNativeElement.disabled).withContext('Expected button to be disabled').toBeTruthy();
         });
-
     });
 
     describe('a[kbq-button]', () => {
@@ -279,7 +272,7 @@ describe('Button with icon', () => {
         setTimeout(() => {
             expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalse();
             expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTrue();
-        },         0);
+        }, 0);
     }));
 
     it('should toggle additional classes on icon removal/reveal', waitForAsync(() => {
@@ -298,25 +291,28 @@ describe('Button with icon', () => {
 
             setTimeout(() => {
                 expect(debugElement.nativeElement.classList.contains(cssClass)).toBeFalse();
-            },         0);
+            }, 0);
         });
     }));
 });
 
-
 @Component({
     selector: 'test-app',
     template: `
-        <button kbq-button type="button"
-                [color]="buttonColor"
-                (click)="increment()"
-                [disabled]="isDisabled">
-        </button>
-        <a href="#" kbq-button
-           [color]="buttonColor"
-           (click)="increment()"
-           [disabled]="isDisabled">
-        </a>
+        <button
+            [color]="buttonColor"
+            [disabled]="isDisabled"
+            (click)="increment()"
+            kbq-button
+            type="button"
+        ></button>
+        <a
+            [color]="buttonColor"
+            [disabled]="isDisabled"
+            (click)="increment()"
+            href="#"
+            kbq-button
+        ></a>
     `
 })
 class TestApp {
@@ -332,7 +328,10 @@ class TestApp {
 @Component({
     selector: 'kbq-button-comment-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             <!-- comment-before -->
             <i kbq-icon="mc-angle-down-S_16"></i>
             <!-- comment-after -->
@@ -344,7 +343,10 @@ class KbqButtonCommentCaseTestApp {}
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             <span>Some text</span>
             <i kbq-icon="mc-angle-down-S_16"></i>
         </button>
@@ -355,7 +357,10 @@ class KbqButtonHtmlIconRightCaseTestApp {}
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             <i kbq-icon="mc-angle-down-S_16"></i>
             <span>Some text</span>
         </button>
@@ -369,7 +374,10 @@ class KbqButtonHtmlIconLeftCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             Some text
             <i kbq-icon="mc-angle-down-S_16"></i>
             Some text
@@ -381,8 +389,14 @@ class KbqButtonTextIconCaseTestApp {}
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
-            <i kbq-icon="mc-angle-down-S_16" *ngIf="visible"></i>
+        <button
+            kbq-button
+            type="button"
+        >
+            <i
+                *ngIf="visible"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
             Some text
         </button>
     `
@@ -397,9 +411,15 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             Some text
-            <i kbq-icon="mc-angle-down-S_16" *ngIf="visible"></i>
+            <i
+                *ngIf="visible"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
         </button>
     `
 })
@@ -410,9 +430,15 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             Some text
-            <i kbq-icon="mc-angle-down-S_16" *ngIf="visible"></i>
+            <i
+                *ngIf="visible"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
             Some text
         </button>
     `
@@ -424,11 +450,17 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
+        <button
+            kbq-button
+            type="button"
+        >
             <span>Some text</span>
             <span>Some text</span>
             <span>Some text</span>
-            <i kbq-icon="mc-angle-down-S_16" *ngIf="visible"></i>
+            <i
+                *ngIf="visible"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
             <span>Some text</span>
             <span>Some text</span>
             <span>Some text</span>
@@ -442,9 +474,18 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-comment-case-test-app',
     template: `
-        <button kbq-button type="button">
-            <i id="icon1" kbq-icon="mc-angle-down-S_16"></i>
-            <i id="icon2" kbq-icon="mc-angle-down-S_16"></i>
+        <button
+            kbq-button
+            type="button"
+        >
+            <i
+                id="icon1"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
+            <i
+                id="icon2"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
         </button>
     `
 })
@@ -453,8 +494,14 @@ class KbqButtonTwoIconsCaseTestApp {}
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button kbq-button type="button">
-            <i kbq-icon="mc-angle-down-S_16" *ngIf="visible"></i>
+        <button
+            kbq-button
+            type="button"
+        >
+            <i
+                *ngIf="visible"
+                kbq-icon="mc-angle-down-S_16"
+            ></i>
         </button>
     `
 })

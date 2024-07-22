@@ -4,7 +4,6 @@ import { Component, Injectable, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 
-
 interface INodeResponse {
     id: string;
     name: string;
@@ -33,8 +32,7 @@ class LazyLoadNode {
         public hasChildren = false,
         public loading = false,
         public loaded: boolean = false
-    ) {
-    }
+    ) {}
 }
 
 @Injectable()
@@ -57,22 +55,24 @@ export class LazyLoadDataService {
         });*/
 
         this.dataChange.next(
-            Array(5).fill({}).map((value, index) => {
-                const id = index.toString();
+            Array(5)
+                .fill({})
+                .map((value, index) => {
+                    const id = index.toString();
 
-                return {
-                    ...value,
-                    hasChildren: !(index % 2),
-                    name: `node-${id}`,
-                    id
-                };
-            }).map((nodeResponse: INodeResponse) => {
+                    return {
+                        ...value,
+                        hasChildren: !(index % 2),
+                        name: `node-${id}`,
+                        id
+                    };
+                })
+                .map((nodeResponse: INodeResponse) => {
                     const result = new LazyLoadNode(nodeResponse.id, nodeResponse.name, nodeResponse.hasChildren);
                     this.nodeMap.set(nodeResponse.id, result);
 
                     return result;
-                }
-            )
+                })
         );
     }
 
@@ -110,22 +110,24 @@ export class LazyLoadDataService {
 
         timer(5000).subscribe(() => {
             parent.childrenChange.next(
-                Array(5).fill({}).map((value, index) => {
-                    const childId = `${parent.id}-${index}`.toString();
+                Array(5)
+                    .fill({})
+                    .map((value, index) => {
+                        const childId = `${parent.id}-${index}`.toString();
 
-                    return {
-                        ...value,
-                        hasChildren: !(index % 2),
-                        name: `node-${childId}`,
-                        id: childId
-                    };
-                }).map((nodeResponse: INodeResponse) => {
+                        return {
+                            ...value,
+                            hasChildren: !(index % 2),
+                            name: `node-${childId}`,
+                            id: childId
+                        };
+                    })
+                    .map((nodeResponse: INodeResponse) => {
                         const result = new LazyLoadNode(nodeResponse.id, nodeResponse.name, nodeResponse.hasChildren);
                         this.nodeMap.set(nodeResponse.id, result);
 
                         return result;
-                    }
-                )
+                    })
             );
             parent.loading = false;
             parent.loaded = true;
@@ -175,12 +177,13 @@ export class TreeLazyloadExample {
     nodeMap = new Map<string, LazyLoadFlatNode>();
 
     constructor(private dataService: LazyLoadDataService) {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<LazyLoadFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue
         );
         this.dataSource = new LazyLoadDataSource(this.treeControl, this.treeFlattener, this.dataService);
 
@@ -191,7 +194,6 @@ export class TreeLazyloadExample {
         });
 
         this.dataService.initialize();
-
     }
 
     hasChild(_: number, nodeData: LazyLoadFlatNode): boolean {
@@ -213,7 +215,9 @@ export class TreeLazyloadExample {
         flatNode.expandable = node.hasChildren;
         flatNode.loading = node.loading;
 
-        if (existingNode && existingNode.id === flatNode.id) { return existingNode; }
+        if (existingNode && existingNode.id === flatNode.id) {
+            return existingNode;
+        }
 
         this.nodeMap.set(node.id, flatNode);
 
@@ -222,25 +226,25 @@ export class TreeLazyloadExample {
         }
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: LazyLoadFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: LazyLoadFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: LazyLoadNode): Observable<LazyLoadNode[]> => {
         return node.childrenChange;
-    }
+    };
 
     private getValue = (node: LazyLoadFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: LazyLoadFlatNode): string => {
         return node.name;
-    }
+    };
 }

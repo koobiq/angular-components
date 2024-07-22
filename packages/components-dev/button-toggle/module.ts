@@ -4,10 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-
 import { KbqButtonModule } from '../../components/button';
 import { KbqButtonToggleModule } from '../../components/button-toggle';
-
 
 @Component({
     selector: 'app',
@@ -19,7 +17,6 @@ export class ButtonToggleDemoComponent {
     modelResult: any;
     disabled: boolean;
 }
-
 
 @NgModule({
     declarations: [
@@ -39,4 +36,3 @@ export class ButtonToggleDemoComponent {
     ]
 })
 export class DemoModule {}
-

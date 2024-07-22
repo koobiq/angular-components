@@ -1,7 +1,6 @@
 import { ConnectionPositionPair, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 
-
 export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
     top: {
         originX: 'center',
@@ -232,7 +231,7 @@ export const POSITION_PRIORITY_STRATEGY = {
     rightBottom: RIGHT_BOTTOM_POSITION_PRIORITY
 };
 
-export const POSITION_TO_CSS_MAP: {[key: string]: string} = {
+export const POSITION_TO_CSS_MAP: { [key: string]: string } = {
     top: 'top',
     topLeft: 'top-left',
     topRight: 'top-right',
@@ -262,13 +261,13 @@ function arrayMap<T, S>(array: T[], iteratee: (item: T, index: number, arr: T[])
     const result = Array(length);
 
     while (++index < length) {
-        result[index] = iteratee(array[ index ], index, array);
+        result[index] = iteratee(array[index], index, array);
     }
 
     return result;
 }
 function baseValues<T>(object: T[], props: string[]): T[] {
-    return arrayMap(props,  (key) => object[key]);
+    return arrayMap(props, (key) => object[key]);
 }
 function objectValues<T>(object: T[]): T[] {
     return object === null ? [] : baseValues(object, Object.keys(object));

@@ -1,7 +1,5 @@
-import * as path from 'path';
-
 import { sync as glob } from 'glob';
-
+import * as path from 'path';
 import { generateExampleModule } from './generate-example-module';
 
 /** Path to find the examples */

@@ -1,7 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqSidepanelPosition, KbqSidepanelService, KbqSidepanelSize } from '@koobiq/components/sidepanel';
 
-
 /**
  * @title Sidepanel sizes
  */
@@ -14,7 +13,7 @@ import { KbqSidepanelPosition, KbqSidepanelService, KbqSidepanelSize } from '@ko
 export class SidepanelSizesExample {
     size = KbqSidepanelPosition.Right;
 
-    @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
     array = new Array(this.arrayLength); // tslint:disable-line

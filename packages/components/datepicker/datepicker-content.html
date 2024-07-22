@@ -1,17 +1,15 @@
-<kbq-calendar [id]="datepicker.id"
-             [@fadeInCalendar]="'enter'"
-             [ngClass]="datepicker.panelClass"
-             [dateClass]="datepicker.dateClass"
-
-             [startAt]="datepicker.startAt"
-             [minDate]="datepicker.minDate"
-             [maxDate]="datepicker.maxDate"
-             [dateFilter]="datepicker.dateFilter"
-
-             [selected]="datepicker.selected"
-
-             (selectedChange)="datepicker.select($event)"
-             (yearSelected)="datepicker.selectYear($event)"
-             (monthSelected)="datepicker.selectMonth($event)"
-             (userSelection)="datepicker.close()">
-</kbq-calendar>
+<kbq-calendar
+    [dateClass]="datepicker.dateClass"
+    [dateFilter]="datepicker.dateFilter"
+    [id]="datepicker.id"
+    [maxDate]="datepicker.maxDate"
+    [minDate]="datepicker.minDate"
+    [ngClass]="datepicker.panelClass"
+    [selected]="datepicker.selected"
+    [startAt]="datepicker.startAt"
+    (monthSelected)="datepicker.selectMonth($event)"
+    (selectedChange)="datepicker.select($event)"
+    (userSelection)="datepicker.close()"
+    (yearSelected)="datepicker.selectYear($event)"
+    [@fadeInCalendar]="'enter'"
+></kbq-calendar>

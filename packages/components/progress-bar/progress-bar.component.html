@@ -1,15 +1,19 @@
 <ng-content select="[kbq-progress-bar-text]"></ng-content>
 
-<div class="kbq-progress-bar__inner" [ngSwitch]="mode" [id]="id">
+<div
+    class="kbq-progress-bar__inner"
+    [id]="id"
+    [ngSwitch]="mode"
+>
     <div
         *ngSwitchCase="'indeterminate'"
-        class="kbq-progress-bar__line kbq-progress-bar__line_indeterminate">
-    </div>
+        class="kbq-progress-bar__line kbq-progress-bar__line_indeterminate"
+    ></div>
     <div
         *ngSwitchDefault
         class="kbq-progress-bar__line kbq-progress-bar__line_determinate"
-        [ngStyle]="{ width: percentage + '%' }">
-    </div>
+        [ngStyle]="{ width: percentage + '%' }"
+    ></div>
 </div>
 
 <ng-content select="[kbq-progress-bar-caption]"></ng-content>

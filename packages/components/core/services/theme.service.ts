@@ -1,6 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Subscription, pairwise } from 'rxjs';
-
 
 export interface KbqTheme {
     name: string;
@@ -22,7 +21,7 @@ export const KbqDefaultThemes: KbqTheme[] = [
 ];
 
 @Injectable({ providedIn: 'root' })
-export class ThemeService<T extends KbqTheme | null = KbqTheme> {
+export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
     current: BehaviorSubject<T> = new BehaviorSubject(null as T);
 
     themes: T[] = KbqDefaultThemes as T[];
@@ -33,9 +32,11 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> {
     constructor(private rendererFactory: RendererFactory2) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
 
-        this.subscription = this.current
-            .pipe(pairwise())
-            .subscribe(this.update);
+        this.subscription = this.current.pipe(pairwise()).subscribe(this.update);
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     setThemes(items: T[]) {
@@ -66,5 +67,5 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> {
             this.renderer.addClass(document.body, current.className);
             current.selected = true;
         }
-    }
+    };
 }

@@ -13,16 +13,15 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
-    defaultCompareValues, defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule
+    KbqTreeModule,
+    defaultCompareValues,
+    defaultCompareViewValues
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-
 import { FileFlatNode, FileNode } from '../tree-select/module';
-
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',
@@ -42,7 +41,6 @@ const OPTIONS = [
     'Bryansk',
     'Veliky Novgorod'
 ];
-
 
 export function buildFileTree(value: any, level: number): FileNode[] {
     const data: any[] = [];
@@ -106,7 +104,6 @@ export const DATA_OBJECT = {
     rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
 };
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -160,13 +157,16 @@ export class DemoComponent {
     numberValue: number | null = null;
 
     constructor() {
-        this.treeFlattener = new KbqTreeFlattener(
-            this.transformer, this.getLevel, this.isExpandable, this.getChildren
-        );
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
-            this.getLevel, this.isExpandable, this.getValue, this.getViewValue,
-            defaultCompareValues, defaultCompareViewValues, this.isDisabled
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            defaultCompareValues,
+            defaultCompareViewValues,
+            this.isDisabled
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -187,33 +187,32 @@ export class DemoComponent {
         flatNode.expandable = !!node.children;
 
         return flatNode;
-    }
+    };
 
     private getLevel = (node: FileFlatNode) => {
         return node.level;
-    }
+    };
 
     private isExpandable = (node: FileFlatNode) => {
         return node.expandable;
-    }
+    };
 
     private getChildren = (node: FileNode): FileNode[] => {
         return node.children;
-    }
+    };
 
     private getValue = (node: FileFlatNode): string => {
         return node.name;
-    }
+    };
 
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
-    }
+    };
 
     private isDisabled = (node: FileFlatNode): boolean => {
         return node.name === 'November';
-    }
+    };
 }
-
 
 @NgModule({
     declarations: [DemoComponent],
@@ -221,7 +220,6 @@ export class DemoComponent {
         BrowserAnimationsModule,
         BrowserModule,
         FormsModule,
-
         KbqSelectModule,
         KbqInputModule,
         KbqFormFieldModule,

@@ -4,7 +4,6 @@
 @use '../tokens';
 @use './tokens' as *;
 
-
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
 @mixin kbq-truncate-line() {
@@ -89,22 +88,29 @@
     border-style: solid;
     border-color: transparent;
 
-    padding:
-        calc(
-            var(--kbq-list-size-container-padding-vertical, $padding-vertical) -
-            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+    padding: calc(
+            var(--kbq-list-size-container-padding-vertical, $padding-vertical) - var(
+                    --kbq-list-size-container-focus-outline-width,
+                    $outline-width
+                )
         )
         calc(
-            var(--kbq-list-size-container-padding-right, $padding-right) -
-            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+            var(--kbq-list-size-container-padding-right, $padding-right) - var(
+                    --kbq-list-size-container-focus-outline-width,
+                    $outline-width
+                )
         )
         calc(
-            var(--kbq-list-size-container-padding-vertical, $padding-vertical) -
-            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+            var(--kbq-list-size-container-padding-vertical, $padding-vertical) - var(
+                    --kbq-list-size-container-focus-outline-width,
+                    $outline-width
+                )
         )
         calc(
-            var(--kbq-list-size-container-padding-left, $padding-left) -
-            var(--kbq-list-size-container-focus-outline-width, $outline-width)
+            var(--kbq-list-size-container-padding-left, $padding-left) - var(
+                    --kbq-list-size-container-focus-outline-width,
+                    $outline-width
+                )
         );
 
     .kbq-list-text {
@@ -127,11 +133,8 @@
 
     min-height: 32px;
 
-    padding:
-        kbq-css-variable(list-size-header-padding-top)
-        kbq-css-variable(list-size-header-padding-horizontal)
-        kbq-css-variable(list-size-header-padding-bottom)
-        kbq-css-variable(list-size-header-padding-horizontal);
+    padding: kbq-css-variable(list-size-header-padding-top) kbq-css-variable(list-size-header-padding-horizontal)
+        kbq-css-variable(list-size-header-padding-bottom) kbq-css-variable(list-size-header-padding-horizontal);
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -149,10 +152,8 @@
 
     min-height: 32px;
 
-    padding:
-        kbq-css-variable(list-size-subheading-padding-top)
-        kbq-css-variable(list-size-subheading-padding-horizontal)
-        kbq-css-variable(list-size-subheading-padding-bottom)
+    padding: kbq-css-variable(list-size-subheading-padding-top)
+        kbq-css-variable(list-size-subheading-padding-horizontal) kbq-css-variable(list-size-subheading-padding-bottom)
         kbq-css-variable(list-size-subheading-padding-horizontal);
 
     .kbq-list-text {

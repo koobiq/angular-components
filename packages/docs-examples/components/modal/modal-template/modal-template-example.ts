@@ -2,7 +2,6 @@
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
-
 /**
  * @title Template Modal
  */

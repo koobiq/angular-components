@@ -2,9 +2,7 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
-
 import { KbqIconModule } from '../../components/icon/';
-
 
 @Component({
     selector: 'app',
@@ -15,7 +13,6 @@ import { KbqIconModule } from '../../components/icon/';
 export class DemoComponent {
     colors = KbqComponentColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

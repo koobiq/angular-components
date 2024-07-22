@@ -1,8 +1,6 @@
 @use 'sass:map';
 
-
 @use '../../styles/common/tokens' as *;
-
 
 @mixin kbq-pseudo-checkbox-color($component, $style-name) {
     $style: map.get($component, $style-name);

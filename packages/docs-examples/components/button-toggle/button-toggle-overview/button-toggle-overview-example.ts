@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title button-toggle
  */
@@ -10,5 +9,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['button-toggle-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ButtonToggleOverviewExample {
-}
+export class ButtonToggleOverviewExample {}

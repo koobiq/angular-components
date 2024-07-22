@@ -6,11 +6,11 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    forwardRef,
     Input,
     Output,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -20,12 +20,11 @@ import {
     CanDisableCtor,
     HasTabIndex,
     HasTabIndexCtor,
+    KbqComponentColors,
     mixinColor,
     mixinDisabled,
-    mixinTabIndex,
-    KbqComponentColors
+    mixinTabIndex
 } from '@koobiq/components/core';
-
 
 let nextUniqueId = 0;
 
@@ -37,11 +36,9 @@ export class KbqToggleBase {
 }
 
 /** @docs-private */
-export const KbqToggleMixinBase:
-    HasTabIndexCtor &
-    CanDisableCtor &
-    CanColorCtor &
-    typeof KbqToggleBase = mixinTabIndex(mixinColor(mixinDisabled(KbqToggleBase), KbqComponentColors.Theme));
+export const KbqToggleMixinBase: HasTabIndexCtor & CanDisableCtor & CanColorCtor & typeof KbqToggleBase = mixinTabIndex(
+    mixinColor(mixinDisabled(KbqToggleBase), KbqComponentColors.Theme)
+);
 
 export class KbqToggleChange {
     source: KbqToggleComponent;
@@ -66,18 +63,23 @@ export class KbqToggleChange {
     },
     animations: [
         trigger('switch', [
-            state('true' , style({ left: 'calc(100% - 11px)' })),
+            state('true', style({ left: 'calc(100% - 11px)' })),
             state('false', style({ left: '3px' })),
-            transition('true <=> false', animate('150ms'))
-        ])
-    ],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => KbqToggleComponent), multi: true
-    }]
-})
-export class KbqToggleComponent extends KbqToggleMixinBase
-    implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex {
+            transition('true <=> false', animate('150ms'))])
 
+    ],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => KbqToggleComponent),
+            multi: true
+        }
+    ]
+})
+export class KbqToggleComponent
+    extends KbqToggleMixinBase
+    implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex
+{
     @Input() big: boolean = false;
 
     @ViewChild('input', { static: false }) inputElement: ElementRef;
@@ -136,7 +138,7 @@ export class KbqToggleComponent extends KbqToggleMixinBase
     ) {
         super(elementRef);
 
-        this.id =  this.uniqueId;
+        this.id = this.uniqueId;
 
         this._focusMonitor.monitor(this.elementRef.nativeElement, true);
     }

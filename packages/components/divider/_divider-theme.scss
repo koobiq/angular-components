@@ -2,7 +2,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-divider-theme($theme) {
     $divider: map.get(map.get($theme, components), divider);
 

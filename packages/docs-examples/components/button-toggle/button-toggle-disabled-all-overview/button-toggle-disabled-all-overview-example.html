@@ -1,28 +1,40 @@
 <div class="layout-margin-bottom-m">
-    <kbq-button-toggle-group [(ngModel)]="model" #group1="kbqButtonToggleGroup" disabled>
+    <kbq-button-toggle-group
+        #group1="kbqButtonToggleGroup"
+        disabled
+        [(ngModel)]="model"
+    >
         <kbq-button-toggle [value]="1">
-            <i kbq-icon="mc-info_16"></i>Курьером
+            <i kbq-icon="mc-info_16"></i>
+            Курьером
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
-            <i kbq-icon="mc-info_16"></i>Ослик Экспресс
+            <i kbq-icon="mc-info_16"></i>
+            Ослик Экспресс
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
-            <i kbq-icon="mc-info_16"></i>Почтой Средиземья
+            <i kbq-icon="mc-info_16"></i>
+            Почтой Средиземья
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
 
 <div>
-    <kbq-button-toggle-group #group2="kbqButtonToggleGroup" disabled>
+    <kbq-button-toggle-group
+        #group2="kbqButtonToggleGroup"
+        disabled
+    >
         <kbq-button-toggle [value]="1">
-            <i kbq-icon="mc-info_16"></i>Курьером
+            <i kbq-icon="mc-info_16"></i>
+            Курьером
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
-            <i kbq-icon="mc-info_16"></i>Ослик Экспресс
+            <i kbq-icon="mc-info_16"></i>
+            Ослик Экспресс
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
-            <i kbq-icon="mc-info_16"></i>Почтой Средиземья
+            <i kbq-icon="mc-info_16"></i>
+            Почтой Средиземья
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
-

@@ -35,7 +35,7 @@
                         },
                         {
                             "key": "Content-Security-Policy",
-                            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com https://rsms.me; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://rsms.me; img-src 'self' *; media-src 'self';  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; child-src 'self' blob:; connect-src 'self' https://koobiq.io https://next.koobiq.io https://mc.yandex.ru https://7n2w9akem6-dsn.algolia.net;"
+                            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com https://rsms.me; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://rsms.me; img-src 'self' *; media-src 'self';  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; child-src 'self' blob:; connect-src 'self' https://koobiq.io https://next.koobiq.io https://mc.yandex.ru https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
                         }
                     ]
                 },
@@ -49,6 +49,31 @@
                     ]
                 },
                 {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/*.@(js|css)",
                     "headers": [
                         {
@@ -58,7 +83,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "next",
@@ -99,7 +124,7 @@
                         },
                         {
                             "key": "Content-Security-Policy",
-                            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com https://rsms.me; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://rsms.me; img-src 'self' *; media-src 'self';  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; child-src 'self' blob:; connect-src 'self' https://koobiq.io https://mc.yandex.ru https://7n2w9akem6-dsn.algolia.net;"
+                            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com https://rsms.me; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://rsms.me; img-src 'self' *; media-src 'self';  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; child-src 'self' blob:; connect-src 'self' https://koobiq.io https://mc.yandex.ru https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
                         }
                     ]
                 },
@@ -113,6 +138,31 @@
                     ]
                 },
                 {
+                    "source": "/assets/versions.json",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        },
+                        {
+                            "key": "Cache-Control",
+                            // The versions file should not be cached as it may change
+                            // at any time and otherwise old versions would be rendered.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/assets/stackblitz/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // StackBlitz assets are not hashed and should not be cached.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/*.@(js|css)",
                     "headers": [
                         {
@@ -122,7 +172,7 @@
                     ]
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
             "target": "v16",
@@ -134,7 +184,7 @@
                     "destination": "/index.html"
                 }
             ],
-            "ignore": ["firebase.json", "**/node_modules/**", "**/.*"]
+            "ignore": ["firebase.json", "**/node_modules/**"]
         }
     ]
 }

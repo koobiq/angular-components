@@ -1,10 +1,8 @@
 import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
-import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-
 import { FlatTreeControl } from '../control/flat-tree-control';
 import { TreeControl } from '../control/tree-control';
-
 
 /**
  * Tree flattener to convert a normal type of node to node with children & level information.
@@ -59,11 +57,9 @@ export class KbqTreeFlattener<T, F> {
                 if (Array.isArray(childrenNodes)) {
                     this.flattenChildren(childrenNodes, level, resultNodes, flatNode);
                 } else {
-                    childrenNodes
-                        .pipe(take(1))
-                        .subscribe((children) => {
-                            this.flattenChildren(children, level, resultNodes, flatNode);
-                        });
+                    childrenNodes.pipe(take(1)).subscribe((children) => {
+                        this.flattenChildren(children, level, resultNodes, flatNode);
+                    });
                 }
             }
         }
@@ -104,7 +100,9 @@ export class KbqTreeFlattener<T, F> {
                 expand = expand && currentExpand[i];
             }
 
-            if (expand) { results.push(node); }
+            if (expand) {
+                results.push(node);
+            }
 
             if (this.isExpandable(node)) {
                 currentExpand[this.getLevel(node) + 1] = treeControl.isExpanded(node);
@@ -160,23 +158,24 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
     connect(collectionViewer: CollectionViewer): Observable<F[]> {
         return merge(
             collectionViewer.viewChange,
-            this.treeControl.expansionModel.changed
-                .pipe(map((value) => ({ type: KbqTreeDataSourceChangeTypes.Expansion, value }))),
-            this.treeControl.filterValue
-                .pipe(map((value) => ({ type: KbqTreeDataSourceChangeTypes.Filter, value }))),
+            this.treeControl.expansionModel.changed.pipe(
+                map((value) => ({ type: KbqTreeDataSourceChangeTypes.Expansion, value }))
+            ),
+            this.treeControl.filterValue.pipe(map((value) => ({ type: KbqTreeDataSourceChangeTypes.Filter, value }))),
             this.flattenedData
-        )
-        .pipe(map((changeObj: any): any => {
-            if (changeObj.type === KbqTreeDataSourceChangeTypes.Filter) {
-                if (changeObj.value && changeObj.value.length > 0) {
-                    return this.filterHandler();
-                } else {
-                    return this.expansionHandler(changeObj.value);
+        ).pipe(
+            map((changeObj: any): any => {
+                if (changeObj.type === KbqTreeDataSourceChangeTypes.Filter) {
+                    if (changeObj.value && changeObj.value.length > 0) {
+                        return this.filterHandler();
+                    } else {
+                        return this.expansionHandler(changeObj.value);
+                    }
                 }
-            }
 
-            return this.expansionHandler(changeObj.value);
-        }));
+                return this.expansionHandler(changeObj.value);
+            })
+        );
     }
 
     filterHandler(): F[] {
@@ -196,4 +195,3 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
         // no op
     }
 }
-

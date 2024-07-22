@@ -1,7 +1,6 @@
 /* tslint:disable:naming-convention */
 import { Injectable } from '@angular/core';
 
-
 export interface DocItem {
     id: string;
     name: string;
@@ -24,9 +23,10 @@ export interface DocCategory {
 }
 
 function updatePackageName(categories, name) {
-    categories.forEach((category) => category.items.forEach((doc) => doc.packageName = name));
+    categories.forEach((category) => category.items.forEach((doc) => (doc.packageName = name)));
 }
 
+export const documentationItemSections = ['overview', 'api', 'examples'];
 
 const MAIN = 'main';
 const COMPONENTS = 'components';
@@ -87,6 +87,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: []
                 },
                 {
+                    id: 'customization',
+                    name: 'Кастомизация тем',
+                    svgPreview: 'themes',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false,
+                    examples: []
+                },
+                {
                     id: 'typography',
                     name: 'Типографика',
                     svgPreview: 'typography',
@@ -102,7 +111,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
             id: 'components',
             name: 'Компоненты',
             isPreviewed: true,
-            items:  [
+            items: [
                 {
                     id: 'alert',
                     name: 'Alert',
@@ -214,6 +223,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['dropdown-types']
                 },
                 {
+                    id: 'empty-state',
+                    name: 'Empty state',
+                    svgPreview: 'empty-state',
+                    hasApi: true,
+                    apiId: 'empty-state',
+                    hasExamples: false,
+                    examples: ['empty-state-types']
+                },
+                {
                     id: 'icon',
                     name: 'Icon',
                     svgPreview: 'icons',
@@ -221,7 +239,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'icon',
                     hasExamples: false,
                     examples: ['icon-types']
-                },                {
+                },
+                {
                     id: 'icon-item',
                     name: 'Icon Item',
                     hasApi: true,
@@ -506,62 +525,64 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'tree-select',
                     hasExamples: false,
                     examples: ['treeSelect-types']
-                },
+                }
             ]
         }
     ],
     [OTHER]: [
-       {
-        id: OTHER,
-        name: 'Другое',
-        isPreviewed: true,
-        summary: '',
-        items: [
-            {
-                id: 'date-formatter',
-                name: 'Date formatter',
-                svgPreview: 'date',
-                hasApi: true,
-                apiId: 'date-formatter',
-                hasExamples: false,
-                examples: ['date-formatter-types']
-            },
-            {
-                id: 'forms',
-                name: 'Forms',
-                svgPreview: 'forms',
-                hasApi: true,
-                apiId: 'forms',
-                hasExamples: false,
-                examples: ['forms-types']
-            },
-            {
-                id: 'number-formatter',
-                name: 'Number formatter',
-                svgPreview: 'number',
-                hasApi: true,
-                apiId: 'number-formatter',
-                hasExamples: false,
-                examples: ['number-formatter-types']
-            },
-            {
-                id: 'validation',
-                name: 'Validation',
-                svgPreview: 'validation',
-                hasApi: false,
-                hasExamples: false,
-                examples: ['validation-types']
-            }
-        ],
-       }
+        {
+            id: OTHER,
+            name: 'Другое',
+            isPreviewed: true,
+            summary: '',
+            items: [
+                {
+                    id: 'date-formatter',
+                    name: 'Date formatter',
+                    svgPreview: 'date',
+                    hasApi: true,
+                    apiId: 'date-formatter',
+                    hasExamples: false,
+                    examples: ['date-formatter-types']
+                },
+                {
+                    id: 'forms',
+                    name: 'Forms',
+                    svgPreview: 'forms',
+                    hasApi: true,
+                    apiId: 'forms',
+                    hasExamples: false,
+                    examples: ['forms-types']
+                },
+                {
+                    id: 'number-formatter',
+                    name: 'Number formatter',
+                    svgPreview: 'number',
+                    hasApi: true,
+                    apiId: 'number-formatter',
+                    hasExamples: false,
+                    examples: ['number-formatter-types']
+                },
+                {
+                    id: 'validation',
+                    name: 'Validation',
+                    svgPreview: 'validation',
+                    hasApi: false,
+                    hasExamples: false,
+                    examples: ['validation-types']
+                }
+            ]
+        }
     ],
-    [ICONS]: [{
-        id: 'icons',
-        name: 'Иконки',
-        isPreviewed: false,
-        summary: '',
-        items: [],
-    }],
+    [ICONS]: [
+        {
+            id: 'icons',
+            name: 'Иконки',
+            isPreviewed: false,
+            summary: '',
+            items: []
+        }
+    ],
     [CDK]: [
         {
             id: 'cdk',
@@ -596,21 +617,15 @@ updatePackageName(DOCS[OTHER], OTHER);
 updatePackageName(DOCS[ICONS], ICONS);
 updatePackageName(DOCS[CDK], CDK);
 
+const ALL_MAIN = DOCS[MAIN].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
-const ALL_MAIN = DOCS[MAIN]
-    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_COMPONENTS = DOCS[COMPONENTS].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
-const ALL_COMPONENTS = DOCS[COMPONENTS]
-    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_OTHER = DOCS[OTHER].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
-const ALL_OTHER = DOCS[OTHER]
-    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_ICONS = DOCS[ICONS].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
 
-const ALL_ICONS = DOCS[ICONS]
-    .reduce((result, category) => result.concat(category.items), [] as DocItem[]);
-
-const ALL_CDK = DOCS[CDK]
-    .reduce((result, cdk) => result.concat(cdk.items), [] as DocItem[]);
+const ALL_CDK = DOCS[CDK].reduce((result, cdk) => result.concat(cdk.items), [] as DocItem[]);
 
 const ALL_DOCS = [
     ...ALL_MAIN,
@@ -650,7 +665,9 @@ export class DocumentationItems {
     }
 
     getItemById(id: string, section: string): DocItem | undefined {
-        if (!id) { return; }
+        if (!id) {
+            return;
+        }
 
         return ALL_DOCS.find((doc) => doc.id === id && doc.packageName === section);
     }

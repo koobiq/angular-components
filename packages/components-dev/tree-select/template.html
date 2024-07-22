@@ -1,34 +1,78 @@
-<br><br><br><br><br><br><br>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 <div style="height: 20px">{{ control.value | json }}</div>
 
-<button kbq-button (click)="disabledState = !disabledState">disable</button>&nbsp;
+<button
+    kbq-button
+    (click)="disabledState = !disabledState"
+>
+    disable
+</button>
+&nbsp;
 <!--<button kbq-button (click)="modelValue = 'Application'">setValue: incorrect array</button>&nbsp;-->
 <!--<button kbq-button (click)="modelValue = 'Applications'">setValue: correct array</button>&nbsp;-->
-<button kbq-button (click)="modelValue = null">modelValue = null</button>
+<button
+    kbq-button
+    (click)="modelValue = null"
+>
+    modelValue = null
+</button>
 
-<button kbq-button (click)="multiSelectSelectFormControl.setValue(null)">setValue(null)</button>
-<button kbq-button (click)="multiSelectSelectFormControl.reset()">reset</button>
-<button kbq-button (click)="multiSelectSelectFormControl.setValue(['Pictures'])">setValue</button>
+<button
+    kbq-button
+    (click)="multiSelectSelectFormControl.setValue(null)"
+>
+    setValue(null)
+</button>
+<button
+    kbq-button
+    (click)="multiSelectSelectFormControl.reset()"
+>
+    reset
+</button>
+<button
+    kbq-button
+    (click)="multiSelectSelectFormControl.setValue(['Pictures'])"
+>
+    setValue
+</button>
 
-<br><br><br>
+<br />
+<br />
+<br />
 
 <div class="dev-container">
     <h2 class="kbq-subheading">Custom footer</h2>
     <kbq-form-field>
         <kbq-tree-select
             placeholder="this is placeholder"
-            [multiple]="true"
             [disabled]="disabledState"
             [formControl]="control"
             [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-            (selectionChange)="onSelectionChange($event)"
-            (openedChange)="openedChange($event)"
+            [multiple]="true"
+            (closed)="closed($event)"
             (opened)="opened($event)"
-            (closed)="closed($event)">
-
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" type="text"/>
+            (openedChange)="openedChange($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
@@ -38,27 +82,34 @@
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
-                [treeControl]="treeControl">
+                [treeControl]="treeControl"
+            >
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
 
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node; when: hasChild"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
+                >
                     <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
 
-
-            <div kbq-select-footer class="custom-footer">
+            <div
+                kbq-select-footer
+                class="custom-footer"
+            >
                 <div>Custom footer</div>
             </div>
         </kbq-tree-select>
@@ -70,18 +121,28 @@
     <kbq-form-field>
         <kbq-tree-select
             placeholder="this is placeholder"
-            [multiple]="true"
             [disabled]="disabledState"
             [formControl]="control"
             [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-            (selectionChange)="onSelectionChange($event)"
-            (openedChange)="openedChange($event)"
+            [multiple]="true"
+            (closed)="closed($event)"
             (opened)="opened($event)"
-            (closed)="closed($event)">
-
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" type="text"/>
+            (openedChange)="openedChange($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
@@ -91,46 +152,65 @@
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
-                [treeControl]="treeControl">
+                [treeControl]="treeControl"
+            >
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
 
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node; when: hasChild"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        kbqTreeNodeToggle
+                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                    ></i>
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
-
 
             <kbq-select-footer>Default footer</kbq-select-footer>
         </kbq-tree-select>
     </kbq-form-field>
 
-    <br/><br/>
+    <br />
+    <br />
 
     <kbq-form-field>
         <kbq-tree-select
             placeholder="placeholder for single tree-select"
-            [multiple]="true"
             [disabled]="disabledState"
             [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-            (selectionChange)="onSelectionChange($event)"
-            (openedChange)="openedChange($event)"
+            [multiple]="true"
+            (closed)="closed($event)"
             (opened)="opened($event)"
-            (closed)="closed($event)">
-
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" type="text"/>
+            (openedChange)="openedChange($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
@@ -140,46 +220,65 @@
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
-                [treeControl]="treeControl">
+                [treeControl]="treeControl"
+            >
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
 
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node; when: hasChild"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        kbqTreeNodeToggle
+                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                    ></i>
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
-
 
             <kbq-select-footer>Default footer</kbq-select-footer>
         </kbq-tree-select>
     </kbq-form-field>
 
-    <br/><br/>
+    <br />
+    <br />
 
     <kbq-form-field>
         <kbq-tree-select
             placeholder="placeholder for multiple tree-select"
-            [multiple]="true"
             [disabled]="disabledState"
             [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-            (selectionChange)="onSelectionChange($event)"
-            (openedChange)="openedChange($event)"
+            [multiple]="true"
+            (closed)="closed($event)"
             (opened)="opened($event)"
-            (closed)="closed($event)">
-
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" type="text"/>
+            (openedChange)="openedChange($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
@@ -189,25 +288,33 @@
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
-                [treeControl]="treeControl">
+                [treeControl]="treeControl"
+            >
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
 
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node; when: hasChild"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        kbqTreeNodeToggle
+                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                    ></i>
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
-
 
             <kbq-select-footer>Default footer</kbq-select-footer>
         </kbq-tree-select>
@@ -219,18 +326,28 @@
     <kbq-form-field>
         <kbq-tree-select
             placeholder="this is placeholder"
-            [multiple]="true"
             [disabled]="disabledState"
             [formControl]="control"
             [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-            (selectionChange)="onSelectionChange($event)"
-            (openedChange)="openedChange($event)"
+            [multiple]="true"
+            (closed)="closed($event)"
             (opened)="opened($event)"
-            (closed)="closed($event)">
-
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" type="text"/>
+            (openedChange)="openedChange($event)"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
@@ -240,27 +357,39 @@
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
-                [treeControl]="treeControl">
+                [treeControl]="treeControl"
+            >
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
 
                 <kbq-tree-option
                     *kbqTreeNodeDef="let node; when: hasChild"
+                    kbqTreeNodePadding
                     [checkboxThirdState]="true"
-                    kbqTreeNodePadding>
-
-                    <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
-                    <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                >
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        kbqTreeNodeToggle
+                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                    ></i>
+                    <span
+                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                    ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
 
             <kbq-select-footer class="kbq-select__footer_icon">
-                <button kbq-button class="kbq-button_transparent">
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
+                >
                     <i kbq-icon="mc-upload-to-cloud_16"></i>
                     Добавить
                 </button>
@@ -270,25 +399,43 @@
 </div>
 
 <div class="dev-container">
-    <form class="kbq-form-horizontal" novalidate>
+    <form
+        novalidate
+        class="kbq-form-horizontal"
+    >
         <div class="kbq-form__row">
-            <label class="kbq-form__label" for="select-test">Подпись поля</label>
+            <label
+                for="select-test"
+                class="kbq-form__label"
+            >
+                Подпись поля
+            </label>
             <kbq-form-field class="kbq-form__control flex-80">
                 <kbq-tree-select
                     placeholder="this is placeholder"
-                    [id]="'select-test'"
-                    [multiple]="true"
                     [disabled]="disabledState"
                     [formControl]="control"
                     [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-                    (selectionChange)="onSelectionChange($event)"
-                    (openedChange)="openedChange($event)"
+                    [id]="'select-test'"
+                    [multiple]="true"
+                    (closed)="closed($event)"
                     (opened)="opened($event)"
-                    (closed)="closed($event)">
-
-                    <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                        <i kbqPrefix kbq-icon="mc-search_16"></i>
-                        <input kbqInput [formControl]="searchControl" type="text"/>
+                    (openedChange)="openedChange($event)"
+                    (selectionChange)="onSelectionChange($event)"
+                >
+                    <kbq-form-field
+                        kbqFormFieldWithoutBorders
+                        kbqSelectSearch
+                    >
+                        <i
+                            kbq-icon="mc-search_16"
+                            kbqPrefix
+                        ></i>
+                        <input
+                            kbqInput
+                            type="text"
+                            [formControl]="searchControl"
+                        />
                         <kbq-cleaner></kbq-cleaner>
                     </kbq-form-field>
 
@@ -298,27 +445,42 @@
 
                     <kbq-tree-selection
                         [dataSource]="dataSource"
-                        [treeControl]="treeControl">
+                        [treeControl]="treeControl"
+                    >
                         <kbq-tree-option
                             *kbqTreeNodeDef="let node"
+                            kbqTreeNodePadding
                             [checkboxThirdState]="true"
-                            kbqTreeNodePadding>
-
-                            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                        >
+                            <span
+                                [innerHTML]="
+                                    treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value
+                                "
+                            ></span>
                         </kbq-tree-option>
 
                         <kbq-tree-option
                             *kbqTreeNodeDef="let node; when: hasChild"
+                            kbqTreeNodePadding
                             [checkboxThirdState]="true"
-                            kbqTreeNodePadding>
-
-                            <i kbq-icon="mc-angle-down-S_16" [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'" kbqTreeNodeToggle></i>
-                            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight : treeControl.filterValue.value"></span>
+                        >
+                            <i
+                                kbq-icon="mc-angle-down-S_16"
+                                kbqTreeNodeToggle
+                                [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            ></i>
+                            <span
+                                [innerHTML]="
+                                    treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value
+                                "
+                            ></span>
                         </kbq-tree-option>
                     </kbq-tree-selection>
 
-
-                    <div kbq-select-footer class="custom-footer">
+                    <div
+                        kbq-select-footer
+                        class="custom-footer"
+                    >
                         <div>Custom footer</div>
                     </div>
                 </kbq-tree-select>

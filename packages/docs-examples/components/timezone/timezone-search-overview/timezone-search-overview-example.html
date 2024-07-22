@@ -1,21 +1,31 @@
 <kbq-form-field>
     <kbq-timezone-select [(value)]="selected">
-        <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-            <i kbqPrefix kbq-icon="mc-search_16"></i>
-            <input kbqInput
-                   [formControl]="searchControl"
-                   [placeholder]="'Город или часовой пояс'"
-                   autocomplete="off"
-                   type="text"/>
+        <kbq-form-field
+            kbqFormFieldWithoutBorders
+            kbqSelectSearch
+        >
+            <i
+                kbq-icon="mc-search_16"
+                kbqPrefix
+            ></i>
+            <input
+                autocomplete="off"
+                kbqInput
+                type="text"
+                [formControl]="searchControl"
+                [placeholder]="'Город или часовой пояс'"
+            />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
 
         <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-        <kbq-optgroup *ngFor="let group of (filteredOptions$ | async)" [label]="group.countryName">
+        <kbq-optgroup
+            *ngFor="let group of filteredOptions$ | async"
+            [label]="group.countryName"
+        >
             <kbq-timezone-option
                 *ngFor="let timezone of group.zones"
-
                 [highlightText]="searchPattern"
                 [timezone]="timezone"
             ></kbq-timezone-option>

@@ -1,7 +1,5 @@
-
-
 export const zhCNLocaleData = {
-    select: { hiddenItemsText: '另外 {{ number }} 个'},
+    select: { hiddenItemsText: '另外 {{ number }} 个' },
     datepicker: {
         placeholder: '年/月/日'
     },

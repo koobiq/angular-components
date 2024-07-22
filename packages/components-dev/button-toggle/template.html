@@ -1,83 +1,93 @@
 <div>
     <label>Horizontal Group</label>
     <kbq-button-toggle-group #group1="kbqButtonToggleGroup">
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2">
-            default 2
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            default 3
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="4" [checked]="true" [disabled]="true">
-            <i kbq-icon="mc-angle-down-S_16"></i>default 4
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
+        <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
+        <kbq-button-toggle
+            [checked]="true"
+            [disabled]="true"
+            [value]="4"
+        >
+            <i kbq-icon="mc-angle-down-S_16"></i>
+            default 4
         </kbq-button-toggle>
         <kbq-button-toggle [value]="5">
             <i kbq-icon="mc-angle-down-S_16"></i>
         </kbq-button-toggle>
         <kbq-button-toggle [value]="6">
-            <i kbq-icon="mc-angle-down-S_16"></i>default 6
+            <i kbq-icon="mc-angle-down-S_16"></i>
+            default 6
         </kbq-button-toggle>
         <kbq-button-toggle [value]="7">
             <i kbq-icon="mc-angle-down-S_16"></i>
         </kbq-button-toggle>
     </kbq-button-toggle-group>
-    <div class="example-selected-value">Selected value: {{group1.value}}</div>
+    <div class="example-selected-value">Selected value: {{ group1.value }}</div>
 
-    <br>
+    <br />
 
     <label>DisableGroup</label>
 
-    <br>
+    <br />
 
-    <button kbq-button (click)="disabled = !disabled">Toggle Disabled</button>
+    <button
+        kbq-button
+        (click)="disabled = !disabled"
+    >
+        Toggle Disabled
+    </button>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <kbq-button-toggle-group [disabled]="disabled" #disabledGroup="kbqButtonToggleGroup">
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2" [disabled]="true">
+    <kbq-button-toggle-group
+        #disabledGroup="kbqButtonToggleGroup"
+        [disabled]="disabled"
+    >
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle
+            [disabled]="true"
+            [value]="2"
+        >
             default 2
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            default 3
-        </kbq-button-toggle>
+        <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
         <kbq-button-toggle [value]="4">
             <i kbq-icon="mc-angle-down-S_16"></i>
         </kbq-button-toggle>
     </kbq-button-toggle-group>
-    <div class="example-selected-value">Selected value: {{disabledGroup.value}}</div>
+    <div class="example-selected-value">Selected value: {{ disabledGroup.value }}</div>
 
-    <br>
+    <br />
 
     <label>Multiple Group</label>
-    <kbq-button-toggle-group [multiple]="true" #multipleGroup="kbqButtonToggleGroup">
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2" [disabled]="true">
+    <kbq-button-toggle-group
+        #multipleGroup="kbqButtonToggleGroup"
+        [multiple]="true"
+    >
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle
+            [disabled]="true"
+            [value]="2"
+        >
             default 2
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            default 3
-        </kbq-button-toggle>
+        <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
         <kbq-button-toggle [value]="4">
             <i kbq-icon="mc-angle-down-S_16"></i>
         </kbq-button-toggle>
     </kbq-button-toggle-group>
-    <div class="example-selected-value">Selected value: {{multipleGroup.value}}</div>
+    <div class="example-selected-value">Selected value: {{ multipleGroup.value }}</div>
 
     <label>Group With Overflown text</label>
 
     <kbq-button-toggle-group>
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2" [disabled]="true">
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle
+            [disabled]="true"
+            [value]="2"
+        >
             default 2
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
@@ -86,55 +96,57 @@
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 
-    <br>
+    <br />
 
-<!--    <label>Vertical Group</label>-->
+    <!--    <label>Vertical Group</label>-->
 
-<!--    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" [vertical]="true">-->
-<!--        <kbq-button-toggle [value]="1">-->
-<!--            default 1-->
-<!--        </kbq-button-toggle>-->
-<!--        <kbq-button-toggle [value]="2" [disabled]="true">-->
-<!--            default 2-->
-<!--        </kbq-button-toggle>-->
-<!--        <kbq-button-toggle [value]="3">-->
-<!--            default 3-->
-<!--        </kbq-button-toggle>-->
-<!--        <kbq-button-toggle [value]="4">-->
-<!--            <i kbq-icon="mc-angle-down-S_16"></i>-->
-<!--        </kbq-button-toggle>-->
-<!--    </kbq-button-toggle-group>-->
-<!--    <div class="example-selected-value">Selected value: {{group3.value}}</div>-->
+    <!--    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" [vertical]="true">-->
+    <!--        <kbq-button-toggle [value]="1">-->
+    <!--            default 1-->
+    <!--        </kbq-button-toggle>-->
+    <!--        <kbq-button-toggle [value]="2" [disabled]="true">-->
+    <!--            default 2-->
+    <!--        </kbq-button-toggle>-->
+    <!--        <kbq-button-toggle [value]="3">-->
+    <!--            default 3-->
+    <!--        </kbq-button-toggle>-->
+    <!--        <kbq-button-toggle [value]="4">-->
+    <!--            <i kbq-icon="mc-angle-down-S_16"></i>-->
+    <!--        </kbq-button-toggle>-->
+    <!--    </kbq-button-toggle-group>-->
+    <!--    <div class="example-selected-value">Selected value: {{group3.value}}</div>-->
 
-<!--    <br>-->
+    <!--    <br>-->
 
     <label>Group With Model</label>
 
     <kbq-button-toggle-group [(ngModel)]="modelResult">
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2" [disabled]="true">
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle
+            [disabled]="true"
+            [value]="2"
+        >
             default 2
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            default 3
-        </kbq-button-toggle>
+        <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
     </kbq-button-toggle-group>
-    <div class="example-selected-value">Model result: {{modelResult}}</div>
+    <div class="example-selected-value">Model result: {{ modelResult }}</div>
 </div>
 
 <div class="dev-container responsive">
-    <div class="kbq-subheading">Responsive text with tooltip</div><br>
-    <kbq-button-toggle-group [(ngModel)]="modelResult" style="width: 100%">
-        <kbq-button-toggle [value]="1">
-            default 1
-        </kbq-button-toggle>
-        <kbq-button-toggle [value]="2" [disabled]="true">
+    <div class="kbq-subheading">Responsive text with tooltip</div>
+    <br />
+    <kbq-button-toggle-group
+        style="width: 100%"
+        [(ngModel)]="modelResult"
+    >
+        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
+        <kbq-button-toggle
+            [disabled]="true"
+            [value]="2"
+        >
             default 2
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            default 3 default 3 default 3 default 3
-        </kbq-button-toggle>
+        <kbq-button-toggle [value]="3">default 3 default 3 default 3 default 3</kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>

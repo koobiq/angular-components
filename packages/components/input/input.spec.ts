@@ -1,14 +1,12 @@
 import { Component, Provider, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { createMouseEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { ThemePalette } from '../core';
 import { KbqInput, KbqInputModule } from './index';
 
@@ -28,7 +26,12 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" [required]="true" minlength="4" />
+            <input
+                [(ngModel)]="value"
+                [required]="true"
+                kbqInput
+                minlength="4"
+            />
         </kbq-form-field>
     `
 })
@@ -39,7 +42,11 @@ class KbqInputInvalid {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput kbqInputMonospace [(ngModel)]="value" />
+            <input
+                [(ngModel)]="value"
+                kbqInput
+                kbqInputMonospace
+            />
         </kbq-form-field>
     `
 })
@@ -50,7 +57,12 @@ class KbqInputWithKbqInputMonospace {
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled" />
+            <input
+                [(ngModel)]="value"
+                [placeholder]="placeholder"
+                [disabled]="disabled"
+                kbqInput
+            />
         </kbq-form-field>
     `
 })
@@ -73,7 +85,10 @@ class KbqFormFieldWithHint {}
 @Component({
     template: `
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="mc-search_16"></i>
+            <i
+                kbqPrefix
+                kbq-icon="mc-search_16"
+            ></i>
             <input kbqInput />
         </kbq-form-field>
     `
@@ -84,7 +99,10 @@ class KbqFormFieldWithPrefix {}
     template: `
         <kbq-form-field>
             <input kbqInput />
-            <i kbqSuffix kbq-icon="mc-search_16"></i>
+            <i
+                kbqSuffix
+                kbq-icon="mc-search_16"
+            ></i>
         </kbq-form-field>
     `
 })
@@ -93,7 +111,10 @@ class KbqFormFieldWithSuffix {}
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" />
+            <input
+                [(ngModel)]="value"
+                kbqInput
+            />
             <kbq-cleaner></kbq-cleaner>
         </kbq-form-field>
     `
@@ -114,7 +135,11 @@ class KbqFormFieldWithoutBorders {}
 @Component({
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" required />
+            <input
+                [(ngModel)]="value"
+                kbqInput
+                required
+            />
         </kbq-form-field>
     `
 })
@@ -126,7 +151,12 @@ class KbqFormFieldWithStandaloneNgModel {
     template: `
         <form #form="ngForm">
             <kbq-form-field>
-                <input kbqInput [(ngModel)]="value" name="control" required />
+                <input
+                    [(ngModel)]="value"
+                    kbqInput
+                    name="control"
+                    required
+                />
             </kbq-form-field>
 
             <button type="submit"></button>
@@ -141,10 +171,28 @@ class KbqFormFieldWithNgModelInForm {
 
 @Component({
     template: `
-        <form [formGroup]="reactiveForm" (ngSubmit)="submitReactive()">
-            <kbq-form-field class="kbq-form__control"><input kbqInput formControlName="firstName" /></kbq-form-field>
-            <kbq-form-field class="kbq-form__control"><input kbqInput formControlName="lastName" /></kbq-form-field>
-            <button kbq-button type="submit" [color]="ThemePalette.Primary" [disabled]="reactiveForm.invalid">
+        <form
+            [formGroup]="reactiveForm"
+            (ngSubmit)="submitReactive()"
+        >
+            <kbq-form-field class="kbq-form__control">
+                <input
+                    kbqInput
+                    formControlName="firstName"
+                />
+            </kbq-form-field>
+            <kbq-form-field class="kbq-form__control">
+                <input
+                    kbqInput
+                    formControlName="lastName"
+                />
+            </kbq-form-field>
+            <button
+                [color]="ThemePalette.Primary"
+                [disabled]="reactiveForm.invalid"
+                kbq-button
+                type="submit"
+            >
                 Отправить
             </button>
         </form>

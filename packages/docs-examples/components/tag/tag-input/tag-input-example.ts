@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqTagInputEvent } from '@koobiq/components/tags';
 
-
 /**
  * @title Basic tag input
  */

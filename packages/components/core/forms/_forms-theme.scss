@@ -5,7 +5,6 @@
 @use './forms' as *;
 @use '../styles/common/tokens' as *;
 
-
 @mixin kbq-forms-theme($theme) {
     @include kbq-form-geometry(map.get($theme, tokens));
 

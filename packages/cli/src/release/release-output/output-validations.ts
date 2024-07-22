@@ -1,10 +1,9 @@
 import { existsSync, readFileSync } from 'fs';
+import { dirname, isAbsolute, join } from 'path';
 // tslint:disable-next-line:match-default-export-name
 import glob from 'glob';
-import { dirname, isAbsolute, join } from 'path';
 // tslint:disable-next-line:import-name
 import ts from 'typescript';
-
 
 /** RegExp that matches Angular component inline styles that contain a sourcemap reference. */
 const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
@@ -44,8 +43,11 @@ export function checkTypeDefinitionFile(filePath: string): string[] {
         // Check all dynamic type imports and ensure that the import path is valid within the release
         // output. Note that we don't want to enforce that there are no dynamic type imports because
         // type inference is heavily used within the schematics and is useful in some situations.
-        if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) &&
-            ts.isStringLiteral(node.argument.literal)) {
+        if (
+            ts.isImportTypeNode(node) &&
+            ts.isLiteralTypeNode(node.argument) &&
+            ts.isStringLiteral(node.argument.literal)
+        ) {
             const importPath = node.argument.literal.text;
 
             // In case the type import path starts with a dot, we know that this is a relative path
@@ -73,7 +75,7 @@ export function checkKoobiqPackage(packagePath: string): string[] {
     const themingFilePath = join(packagePath, '_theming.scss');
     const failures: string[] = [];
 
-    if (sync('*.css', {cwd: prebuiltThemesPath}).length === 0) {
+    if (sync('*.css', { cwd: prebuiltThemesPath }).length === 0) {
         failures.push('No prebuilt themes could be found.');
     }
 

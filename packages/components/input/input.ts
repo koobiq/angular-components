@@ -12,11 +12,7 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import {
-    FormGroupDirective,
-    NgControl,
-    NgForm
-} from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
@@ -25,11 +21,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-
 import { getKbqInputUnsupportedTypeError } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
 
 const KBQ_INPUT_INVALID_TYPES = [
     'button',
@@ -65,7 +59,6 @@ export class KbqInputBase {
 /** @docs-private */
 export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = mixinErrorState(KbqInputBase);
 
-
 @Directive({
     selector: `input[kbqInput]`,
     exportAs: 'kbqInput',
@@ -80,13 +73,17 @@ export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = 
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)'
     },
-    providers: [{
-        provide: KbqFormFieldControl, useExisting: KbqInput
-    }]
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInput
+        }
+    ]
 })
-export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck,
-    CanUpdateErrorState, OnChanges {
-
+export class KbqInput
+    extends KbqInputMixinBase
+    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges
+{
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -131,7 +128,9 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
      */
     @Input()
     get disabled(): boolean {
-        if (this.ngControl && this.ngControl.disabled !== null) { return this.ngControl.disabled; }
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            return this.ngControl.disabled;
+        }
 
         return this._disabled;
     }

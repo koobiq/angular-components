@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
-import { CanColorCtor, mixinColor, KbqComponentColors, toBoolean } from '@koobiq/components/core';
-
+import { CanColorCtor, KbqComponentColors, mixinColor, toBoolean } from '@koobiq/components/core';
 
 let nextHintUniqueId = 0;
 
@@ -11,7 +10,6 @@ export class KbqHintBase {
 
 /** @docs-private */
 export const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase = mixinColor(KbqHintBase, KbqComponentColors.Empty);
-
 
 @Component({
     selector: 'kbq-hint',

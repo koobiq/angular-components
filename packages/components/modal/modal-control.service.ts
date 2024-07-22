@@ -1,9 +1,7 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-
 import { KbqModalComponent } from '.';
 import { KbqModalRef } from './modal-ref.class';
-
 
 interface IRegisteredMeta {
     modalRef: KbqModalRef;
@@ -35,9 +33,7 @@ export class KbqModalControlService {
         return this.parentService ? this.parentService.registeredMetaMap : this.rootRegisteredMetaMap;
     }
 
-    constructor(
-        @Optional() @SkipSelf() private parentService: KbqModalControlService) {
-    }
+    constructor(@Optional() @SkipSelf() private parentService: KbqModalControlService) {}
 
     // Register a modal to listen its open/close
     registerModal(modalRef: KbqModalRef): void {
@@ -45,7 +41,7 @@ export class KbqModalControlService {
             const afterOpenSubscription = modalRef.afterOpen.subscribe(() => this.openModals.push(modalRef));
             const afterCloseSubscription = modalRef.afterClose.subscribe(() => this.removeOpenModal(modalRef));
 
-            this.registeredMetaMap.set(modalRef, {modalRef, afterOpenSubscription, afterCloseSubscription});
+            this.registeredMetaMap.set(modalRef, { modalRef, afterOpenSubscription, afterCloseSubscription });
 
             this.handleMultipleMasks(modalRef);
         }
@@ -80,7 +76,8 @@ export class KbqModalControlService {
         const modals = Array.from(this.registeredMetaMap.values()).map((v) => v.modalRef) as KbqModalComponent[];
 
         if (modals.filter((modal) => modal.kbqVisible).length > 1) {
-            const otherModals = modals.splice(0, modals.length - 1)
+            const otherModals = modals
+                .splice(0, modals.length - 1)
                 .filter((modal) => modal.kbqVisible && modal.kbqMask);
 
             // hide other masks

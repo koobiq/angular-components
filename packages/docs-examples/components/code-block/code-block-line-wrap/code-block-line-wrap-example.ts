@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 
-
 const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
   <breakfast_menu></breakfast_menu>
     <food></food>
@@ -11,7 +10,6 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
       <calories>650</calories>
     </food>
   </breakfast_menu>`;
-
 
 /**
  * @title Basic code-block-line-wrap
@@ -27,10 +25,12 @@ export class CodeBlockLineWrapExample {
     lineWrap = true;
 
     constructor() {
-        this.files = [{
-            filename: '',
-            content: codeXML,
-            language: 'xml'
-        }];
+        this.files = [
+            {
+                filename: '',
+                content: codeXML,
+                language: 'xml'
+            }
+        ];
     }
 }

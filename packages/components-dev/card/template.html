@@ -1,80 +1,108 @@
 <div class="container">
     <h3>Обычные</h3>
     <div class="line">
-        <kbq-card class="kbq-card_info" [selected]="s1" (selectedChange)="s1 = !s1">
-            <div class="simple-content">
-                Content
-            </div>
+        <kbq-card
+            class="kbq-card_info"
+            [selected]="s1"
+            (selectedChange)="s1 = !s1"
+        >
+            <div class="simple-content">Content</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_warning" [selected]="s2" (selectedChange)="s2 = !s2">
-            <div class="simple-content">
-                Content 2
-            </div>
+        <kbq-card
+            class="kbq-card_warning"
+            [selected]="s2"
+            (selectedChange)="s2 = !s2"
+        >
+            <div class="simple-content">Content 2</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_success" [selected]="s3" (selectedChange)="s3 = !s3">
-            <div class="simple-content">
-                Content 3
-            </div>
+        <kbq-card
+            class="kbq-card_success"
+            [selected]="s3"
+            (selectedChange)="s3 = !s3"
+        >
+            <div class="simple-content">Content 3</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_error" [selected]="s4" (selectedChange)="s4 = !s4">
-            <div class="simple-content">
-                Content 4
-            </div>
+        <kbq-card
+            class="kbq-card_error"
+            [selected]="s4"
+            (selectedChange)="s4 = !s4"
+        >
+            <div class="simple-content">Content 4</div>
         </kbq-card>
     </div>
     <h3>Белые</h3>
     <div class="line">
-        <kbq-card class="kbq-card_info kbq-card_white" [selected]="s1" (selectedChange)="s1 = !s1">
-            <div class="simple-content">
-                Content
-            </div>
+        <kbq-card
+            class="kbq-card_info kbq-card_white"
+            [selected]="s1"
+            (selectedChange)="s1 = !s1"
+        >
+            <div class="simple-content">Content</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_warning kbq-card_white" [selected]="s2" (selectedChange)="s2 = !s2">
-            <div class="simple-content">
-                Content 2
-            </div>
+        <kbq-card
+            class="kbq-card_warning kbq-card_white"
+            [selected]="s2"
+            (selectedChange)="s2 = !s2"
+        >
+            <div class="simple-content">Content 2</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_success kbq-card_white" [selected]="s3" (selectedChange)="s3 = !s3">
-            <div class="simple-content">
-                Content 3
-            </div>
+        <kbq-card
+            class="kbq-card_success kbq-card_white"
+            [selected]="s3"
+            (selectedChange)="s3 = !s3"
+        >
+            <div class="simple-content">Content 3</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_error kbq-card_white" [selected]="s4" (selectedChange)="s4 = !s4">
-            <div class="simple-content">
-                Content 4
-            </div>
+        <kbq-card
+            class="kbq-card_error kbq-card_white"
+            [selected]="s4"
+            (selectedChange)="s4 = !s4"
+        >
+            <div class="simple-content">Content 4</div>
         </kbq-card>
     </div>
     <h3>Неинтерактивные</h3>
     <div class="line">
-        <kbq-card class="kbq-card_info" [selected]="s1" (selectedChange)="s1 = !s1" [readonly]="true">
-            <div class="simple-content">
-                Content
-            </div>
+        <kbq-card
+            class="kbq-card_info"
+            [readonly]="true"
+            [selected]="s1"
+            (selectedChange)="s1 = !s1"
+        >
+            <div class="simple-content">Content</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_warning" [selected]="s2" (selectedChange)="s2 = !s2" [readonly]="true">
-            <div class="simple-content">
-                Content 2
-            </div>
+        <kbq-card
+            class="kbq-card_warning"
+            [readonly]="true"
+            [selected]="s2"
+            (selectedChange)="s2 = !s2"
+        >
+            <div class="simple-content">Content 2</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_success" [selected]="s3" (selectedChange)="s3 = !s3" [readonly]="true">
-            <div class="simple-content">
-                Content 3
-            </div>
+        <kbq-card
+            class="kbq-card_success"
+            [readonly]="true"
+            [selected]="s3"
+            (selectedChange)="s3 = !s3"
+        >
+            <div class="simple-content">Content 3</div>
         </kbq-card>
 
-        <kbq-card class="kbq-card_error" [selected]="s4" (selectedChange)="s4 = !s4" [readonly]="true">
-            <div class="simple-content">
-                Content 4
-            </div>
+        <kbq-card
+            class="kbq-card_error"
+            [readonly]="true"
+            [selected]="s4"
+            (selectedChange)="s4 = !s4"
+        >
+            <div class="simple-content">Content 4</div>
         </kbq-card>
     </div>
 </div>

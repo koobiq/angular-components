@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
-
 export enum KbqAlertStyles {
     Default = 'default',
     Colored = 'colored'
@@ -85,7 +84,7 @@ export class KbqAlert implements AfterContentInit {
     private _alertColor: string | KbqAlertColors = KbqAlertColors.Contrast;
 
     get isColored(): boolean {
-        return this.alertStyle === KbqAlertStyles.Colored
+        return this.alertStyle === KbqAlertStyles.Colored;
     }
 
     ngAfterContentInit(): void {
@@ -96,4 +95,3 @@ export class KbqAlert implements AfterContentInit {
         }
     }
 }
-

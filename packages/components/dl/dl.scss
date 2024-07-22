@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-dl {
     display: grid;
     column-gap: kbq-css-variable(description-list-size-horizontal-content-gap-horizontal);

@@ -1,17 +1,8 @@
 /* tslint:disable:no-console no-magic-numbers */
-import {
-    Extractor,
-    ExtractorConfig,
-    IConfigFile,
-    ExtractorResult
-} from '@microsoft/api-extractor';
-import {
-    JsonFile,
-    PackageJsonLookup
-} from '@rushstack/node-core-library';
+import { Extractor, ExtractorConfig, ExtractorResult, IConfigFile } from '@microsoft/api-extractor';
+import { JsonFile, PackageJsonLookup } from '@rushstack/node-core-library';
 import chalk from 'chalk';
 import * as path from 'path';
-
 
 const params = process.argv[2];
 
@@ -43,10 +34,8 @@ function runExtractor(folder: string, component: string): ExtractorResult {
     const mainEntryPointFilePath = configObject.mainEntryPointFilePath
         .replace('components', folder)
         .replace('button', component);
-    const reportFolder = configObject!.apiReport!.reportFolder!
-        .replace('components', folder);
-    const reportFileName = configObject!.apiReport!.reportFileName!
-        .replace('<unscopedPackageName>', component);
+    const reportFolder = configObject!.apiReport!.reportFolder!.replace('components', folder);
+    const reportFileName = configObject!.apiReport!.reportFileName!.replace('<unscopedPackageName>', component);
 
     configObject.mainEntryPointFilePath = mainEntryPointFilePath;
     configObject!.apiReport!.reportFolder = reportFolder;
@@ -84,4 +73,3 @@ for (const component of buildConfig.components) {
 }
 
 process.exitCode = hasErrors ? 1 : 0;
-

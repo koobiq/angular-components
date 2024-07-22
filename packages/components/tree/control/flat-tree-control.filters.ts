@@ -1,6 +1,5 @@
 import { FlatTreeControl } from './flat-tree-control';
 
-
 export interface FlatTreeControlFilter<T> {
     result: T[];
 
@@ -14,8 +13,9 @@ export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
 
     handle(value: string | null): T[] {
         const viewValue = value || null;
-        this.result = this.control.dataNodes
-            .filter((node) => this.control.compareViewValues(this.control.getViewValue(node), viewValue));
+        this.result = this.control.dataNodes.filter((node) =>
+            this.control.compareViewValues(this.control.getViewValue(node), viewValue)
+        );
 
         return this.result;
     }
@@ -32,8 +32,7 @@ export class FilterParentsForNodes<T> implements FlatTreeControlFilter<T> {
         this.control.dataNodes
             .filter((node) => prevFilter?.result.includes(node))
             .forEach((node) => {
-                this.control.getParents(node, [])
-                    .forEach((parent) => result.add(parent));
+                this.control.getParents(node, []).forEach((parent) => result.add(parent));
 
                 result.add(node);
             });
@@ -52,8 +51,7 @@ export class FilterByValues<T> implements FlatTreeControlFilter<T> {
     constructor(private control: FlatTreeControl<T>) {}
 
     handle(_, prevFilter?: FlatTreeControlFilter<T>): T[] {
-        const found = this.control.dataNodes
-            .filter((node) => this.values.includes(this.control.getValue(node)));
+        const found = this.control.dataNodes.filter((node) => this.values.includes(this.control.getValue(node)));
 
         this.result = Array.from(new Set([...(prevFilter?.result || []), ...found]));
 
@@ -62,7 +60,7 @@ export class FilterByValues<T> implements FlatTreeControlFilter<T> {
 
     setValues = (values: string[]) => {
         this.values = values;
-    }
+    };
 
     getValues(): string[] {
         return this.values;

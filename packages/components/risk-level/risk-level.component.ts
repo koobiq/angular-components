@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    ViewEncapsulation
-} from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 export enum KbqRiskLevelColors {
     FadeContrast = 'fade-contrast',
@@ -16,7 +10,6 @@ export enum KbqRiskLevelColors {
     Warning = 'warning',
     Error = 'error'
 }
-
 
 @Component({
     selector: 'kbq-risk-level',

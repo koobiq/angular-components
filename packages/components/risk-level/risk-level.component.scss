@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 .kbq-risk-level {
     box-sizing: border-box;
 
@@ -12,9 +11,7 @@
 
     border-style: solid;
 
-    padding:
-        kbq-css-variable(risk-level-size-padding-vertical)
-        kbq-css-variable(risk-level-size-padding-horizontal);
+    padding: kbq-css-variable(risk-level-size-padding-vertical) kbq-css-variable(risk-level-size-padding-horizontal);
 
     border: {
         width: kbq-css-variable(risk-level-size-border-width);

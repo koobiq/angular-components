@@ -4,7 +4,6 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-
 @mixin kbq-progress-spinner-theme($theme) {
     $progress-spinner: map.get(map.get($theme, components), progress-spinner);
 

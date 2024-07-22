@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-
 /**
  * Tree control interface. User can implement TreeControl to expand/collapse dataNodes in the tree.
  * The Tree will use this TreeControl to expand/collapse a node.
@@ -30,7 +29,6 @@ export interface TreeControl<T> {
 
     /** Gets a stream that emits whenever the given data node's children change. */
     getChildren(dataNode: T): Observable<T[]>;
-
 
     /** Whether the data node is expanded or collapsed. Return true if it's expanded. */
     isExpanded(dataNode: T): boolean;

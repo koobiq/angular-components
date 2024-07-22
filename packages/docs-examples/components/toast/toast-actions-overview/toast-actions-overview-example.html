@@ -1,20 +1,76 @@
 <ng-template #toastSingleActonContentTemplate>
-    Политика <span class="kbq-text-normal-strong">Почтовые серверы Windows</span> удалена
+    Политика
+    <span class="kbq-text-normal-strong">Почтовые серверы Windows</span>
+    удалена
 </ng-template>
 
-<ng-template #toastSingleActonActionsTemplate let-toast>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a>
+<ng-template
+    #toastSingleActonActionsTemplate
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Восстановить
+    </a>
 </ng-template>
 
-<ng-template #toastTwoActonActionsTemplate let-toast>
-    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Посмотреть</a>
-    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отклонить</a>
+<ng-template
+    #toastTwoActonActionsTemplate
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        class="layout-margin-right-m"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Посмотреть
+    </a>
+    <a
+        kbq-link
+        pseudo
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Отклонить
+    </a>
 </ng-template>
 
-<ng-template #toastManyActionActionsTemplate let-toast>
-    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Действие 1</a>
-    <a class="layout-margin-right-m" kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Действие 2</a>
-    <a kbq-link pseudo [kbqDropdownTriggerFor]="dropdown"><span class="kbq-link__text">Еще</span> <i kbq-icon="mc-angle-down-S_16"></i></a>
+<ng-template
+    #toastManyActionActionsTemplate
+    let-toast
+>
+    <a
+        kbq-link
+        pseudo
+        class="layout-margin-right-m"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Действие 1
+    </a>
+    <a
+        kbq-link
+        pseudo
+        class="layout-margin-right-m"
+        (click)="toast.close()"
+        (keydown.enter)="toast.close()"
+    >
+        Действие 2
+    </a>
+    <a
+        kbq-link
+        pseudo
+        [kbqDropdownTriggerFor]="dropdown"
+    >
+        <span class="kbq-link__text">Еще</span>
+        <i kbq-icon="mc-angle-down-S_16"></i>
+    </a>
 </ng-template>
 <kbq-dropdown #dropdown="kbqDropdown">
     <button kbq-dropdown-item>Второстепенное действие 1</button>
@@ -26,9 +82,20 @@
 <div class="demo-block layout-row">
     <button
         kbq-button
-        (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)">
+        (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)"
+    >
         Одно действие
     </button>
-    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">Два действия</button>
-    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">Много действий</button>
+    <button
+        kbq-button
+        (click)="showTwoActionToast(toastTwoActonActionsTemplate)"
+    >
+        Два действия
+    </button>
+    <button
+        kbq-button
+        (click)="showManyActionToast(toastManyActionActionsTemplate)"
+    >
+        Много действий
+    </button>
 </div>

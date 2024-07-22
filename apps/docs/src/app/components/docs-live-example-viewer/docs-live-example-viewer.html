@@ -1,18 +1,23 @@
 <div class="docs-live-example__container">
-    <div class="docs-live-example__example" *ngIf="exampleData">
-        <ng-template *ngIf="exampleComponentType && exampleModuleFactory"
-                     [ngComponentOutlet]="exampleComponentType"
-                     [ngComponentOutletNgModuleFactory]="exampleModuleFactory">
-        </ng-template>
+    <div
+        *ngIf="exampleData"
+        class="docs-live-example__example"
+    >
+        <ng-template
+            *ngIf="exampleComponentType && exampleModuleFactory"
+            [ngComponentOutlet]="exampleComponentType"
+            [ngComponentOutletNgModuleFactory]="exampleModuleFactory"
+        ></ng-template>
     </div>
 
     <div class="docs-live-example__footer">
-        <span kbq-link
-              pseudo
-              (click)="toggleSourceView()"
-              (keydown.enter)="toggleSourceView()"
-              [ngSwitch]="isSourceShown">
-
+        <span
+            kbq-link
+            pseudo
+            [ngSwitch]="isSourceShown"
+            (click)="toggleSourceView()"
+            (keydown.enter)="toggleSourceView()"
+        >
             {{ isSourceShown ? 'Скрыть пример кода' : 'Показать пример кода' }}
         </span>
 
@@ -23,18 +28,24 @@
 <ng-container *ngIf="exampleData; else lostExample">
     <kbq-code-block
         *ngIf="isSourceShown"
-        [lineNumbers]="true"
-        [filled]="true"
         [codeFiles]="this.files"
-        [maxHeight]="318">
-    </kbq-code-block>
+        [codeFiles]="files"
+        [filled]="true"
+        [filled]="true"
+        [lineNumbers]="true"
+    ></kbq-code-block>
 </ng-container>
 
 <ng-template #lostExample>
     <div class="kbq-alert kbq-alert_error kbq-alert_dismissible kbq-markdown">
-        <span>Oops, this code example is lost... But you can help us find it!
-            Just send a Pull Request to this repository:
-            <a class="kbq-markdown__a" href="#"> Koobiq</a>
+        <span>
+            Oops, this code example is lost... But you can help us find it! Just send a Pull Request to this repository:
+            <a
+                href="#"
+                class="kbq-markdown__a"
+            >
+                Koobiq
+            </a>
         </span>
     </div>
 </ng-template>

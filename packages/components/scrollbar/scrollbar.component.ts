@@ -3,19 +3,21 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter, Input, NgZone, OnDestroy,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnDestroy,
     Output,
-    ViewChild, ViewEncapsulation
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-
+import { KbqScrollbarDirective } from './scrollbar.directive';
 import {
+    KbqScrollbarEventListenerArgs,
     KbqScrollbarEvents,
     KbqScrollbarOptions,
-    KbqScrollbarTarget,
-    KbqScrollbarEventListenerArgs,
+    KbqScrollbarTarget
 } from './scrollbar.types';
-import { KbqScrollbarDirective } from './scrollbar.directive';
-
 
 const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     (Object.keys(emits) as (keyof KbqScrollbarEvents)[]).reduce<KbqScrollbarEvents>(
@@ -25,8 +27,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             // merge & check listeners
             obj[name] = [
                 emitListener,
-                ...(Array.isArray(eventListener) ? eventListener : [eventListener]).filter(Boolean),
-            ];
+                ...(Array.isArray(eventListener) ? eventListener : [eventListener]).filter(Boolean)];
             return obj;
         },
         {}
@@ -37,16 +38,17 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     exportAs: 'kbqScrollbar',
     host: {
         'data-overlayscrollbars-initialize': '',
-        'class': 'kbq-scrollbar-component'
+        class: 'kbq-scrollbar-component'
     },
     template: `
         <div
-            data-overlayscrollbars-contents=""
-            kbqScrollbar
+            #content
             [options]="options"
             [events]="mergeEvents()"
             [defer]="defer"
-            #content>
+            data-overlayscrollbars-contents=""
+            kbqScrollbar
+        >
             <ng-content></ng-content>
         </div>
     `,
@@ -92,7 +94,8 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
                         viewport: this.contentElement.nativeElement,
                         content: this.contentElement.nativeElement
                     }
-                });
+                }
+            );
         }
     }
 
@@ -108,9 +111,9 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     mergeEvents(): KbqScrollbarEvents {
         const defaultListeners: KbqScrollbarEvents = {
             initialized: (...args) => this.dispatchEventIfHasObservers(this.onInitialize, args),
-            updated: (...args) =>  this.dispatchEventIfHasObservers(this.onUpdate, args),
+            updated: (...args) => this.dispatchEventIfHasObservers(this.onUpdate, args),
             destroyed: (...args) => this.dispatchEventIfHasObservers(this.onDestroy, args),
-            scroll: (...args) => this.dispatchEventIfHasObservers(this.onScroll, args),
+            scroll: (...args) => this.dispatchEventIfHasObservers(this.onScroll, args)
         };
 
         if (!this.events) {
@@ -120,7 +123,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
         // merge default listeners with custom listeners in case of Input binding
         return {
             ...defaultListeners,
-            ...filterEvents(this.events, defaultListeners),
+            ...filterEvents(this.events, defaultListeners)
         };
     }
 

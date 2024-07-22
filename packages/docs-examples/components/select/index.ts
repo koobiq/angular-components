@@ -8,7 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
 import { SelectMultipleOverviewExample } from './select-multiple-overview/select-multiple-overview-example';
@@ -17,14 +16,13 @@ import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/
 import { SelectSearchOverviewExample } from './select-search-overview/select-search-overview-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
 
-
 export {
-    SelectOverviewExample,
-    SelectMultipleOverviewExample,
-    SelectSearchOverviewExample,
-    SelectPrioritizedSelectedExample,
-    SelectGroupsExample,
     SelectFooterExample,
+    SelectGroupsExample,
+    SelectMultipleOverviewExample,
+    SelectOverviewExample,
+    SelectPrioritizedSelectedExample,
+    SelectSearchOverviewExample,
     SelectVirtualScrollExample
 };
 

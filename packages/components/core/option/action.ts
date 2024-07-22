@@ -14,9 +14,7 @@ import {
 import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { CanDisableCtor, HasTabIndexCtor, mixinDisabled, mixinTabIndex } from '../common-behaviors';
-
 
 // tslint:disable-next-line:naming-convention
 export interface KbqOptionActionParent {
@@ -40,17 +38,23 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
 export class KbqOptionActionBase {}
 
 /** @docs-private */
-export const KbqOptionActionMixinBase:
-    HasTabIndexCtor & CanDisableCtor & typeof KbqOptionActionBase = mixinTabIndex(mixinDisabled(KbqOptionActionBase));
-
+export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqOptionActionBase = mixinTabIndex(
+    mixinDisabled(KbqOptionActionBase)
+);
 
 @Component({
     selector: 'kbq-option-action',
     exportAs: 'kbqOptionAction',
     template: `
         <ng-container [ngSwitch]="!!customIcon">
-            <i class="mc kbq-icon mc-ellipsis_16" *ngSwitchCase="false"></i>
-            <ng-content select="[kbq-icon]" *ngSwitchCase="true"></ng-content>
+            <i
+                class="mc kbq-icon mc-ellipsis_16"
+                *ngSwitchCase="false"
+            ></i>
+            <ng-content
+                *ngSwitchCase="true"
+                select="[kbq-icon]"
+            ></ng-content>
         </ng-container>
     `,
     styleUrls: ['./action.scss'],
@@ -93,21 +97,20 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
     }
 
     ngAfterViewInit(): void {
-        if (!this.option.dropdownTrigger) { return; }
+        if (!this.option.dropdownTrigger) {
+            return;
+        }
 
         this.option.dropdownTrigger.restoreFocus = false;
 
-        this.option.dropdownTrigger.dropdownClosed
-            .pipe(takeUntil(this.destroy))
-            .subscribe(() => {
-                this.preventShowingTooltip();
+        this.option.dropdownTrigger.dropdownClosed.pipe(takeUntil(this.destroy)).subscribe(() => {
+            this.preventShowingTooltip();
 
-                const destroyReason: FocusOrigin = this.option.dropdownTrigger.lastDestroyReason === 'keydown' ?
-                    'keyboard' :
-                    'program';
+            const destroyReason: FocusOrigin =
+                this.option.dropdownTrigger.lastDestroyReason === 'keydown' ? 'keyboard' : 'program';
 
-                this.focus(destroyReason);
-            });
+            this.focus(destroyReason);
+        });
     }
 
     ngOnDestroy(): void {
@@ -157,10 +160,12 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
     }
 
     private preventShowingTooltip() {
-        if (!this.option.tooltipTrigger) { return; }
+        if (!this.option.tooltipTrigger) {
+            return;
+        }
 
         this.option.tooltipTrigger.disabled = true;
 
-        setTimeout(() => this.option.tooltipTrigger.disabled = false);
+        setTimeout(() => (this.option.tooltipTrigger.disabled = false));
     }
 }

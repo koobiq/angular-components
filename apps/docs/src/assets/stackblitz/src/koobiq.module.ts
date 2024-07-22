@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';

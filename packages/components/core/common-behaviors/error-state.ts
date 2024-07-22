@@ -1,10 +1,7 @@
-import { UntypedFormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
-
 import { ErrorStateMatcher } from '../error/error-options';
-
 import { AbstractConstructor, Constructor } from './constructor';
-
 
 /** @docs-private */
 // tslint:disable-next-line:naming-convention
@@ -51,7 +48,7 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T): 
             const oldState = this.errorState;
             const parent = this.parentFormGroup || this.parentForm;
             const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
-            const control = this.ngControl ? this.ngControl.control as UntypedFormControl : null;
+            const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
             const newState = matcher.isErrorState(control, parent);
 
             if (newState !== oldState) {

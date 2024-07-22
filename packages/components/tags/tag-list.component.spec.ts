@@ -1,50 +1,28 @@
 /* tslint:disable:no-magic-numbers no-empty */
 // tslint:disable:max-func-body-length
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Directionality, Direction } from '@angular/cdk/bidi';
-import {
-    Component,
-    DebugElement,
-    NgZone,
-    Provider,
-    QueryList,
-    Type,
-    ViewChild,
-    ViewChildren
-} from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { UntypedFormControl, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Direction, Directionality } from '@angular/cdk/bidi';
+import { Component, DebugElement, NgZone, Provider, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { BACKSPACE, DELETE, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import {
-    BACKSPACE,
-    DELETE,
-    ENTER,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    HOME,
-    END
-} from '@koobiq/cdk/keycodes';
-import {
+    MockNgZone,
     createKeyboardEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    typeInElement,
-    MockNgZone
+    typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-
 import { KbqInputModule } from '../input/index';
-
 import { KbqTagEvent, KbqTagList, KbqTagRemove, KbqTagsModule } from './index';
 import { KbqTagInputEvent } from './tag-input';
 import { KbqTag } from './tag.component';
-
 
 describe('KbqTagList', () => {
     let fixture: ComponentFixture<any>;
@@ -75,8 +53,9 @@ describe('KbqTagList', () => {
                 testComponent.selectable = false;
                 fixture.detectChanges();
 
-                const tagsValid = tags.toArray().every((tag) =>
-                    !tag.selectable && !tag.elementRef.nativeElement.hasAttribute('aria-selected'));
+                const tagsValid = tags
+                    .toArray()
+                    .every((tag) => !tag.selectable && !tag.elementRef.nativeElement.hasAttribute('aria-selected'));
 
                 expect(tagsValid).toBe(true);
             });
@@ -110,7 +89,6 @@ describe('KbqTagList', () => {
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
             }));
-
         });
 
         describe('with selected tags', () => {
@@ -124,26 +102,18 @@ describe('KbqTagList', () => {
             it('should not override tags selected', () => {
                 const instanceTags = fixture.componentInstance.tags.toArray();
 
-                expect(instanceTags[0].selected)
-                    .withContext('Expected first option to be selected.')
-                    .toBe(true);
+                expect(instanceTags[0].selected).withContext('Expected first option to be selected.').toBe(true);
 
-                expect(instanceTags[1].selected)
-                    .withContext('Expected second option to be not selected.')
-                    .toBe(false);
+                expect(instanceTags[1].selected).withContext('Expected second option to be not selected.').toBe(false);
 
-                expect(instanceTags[2].selected)
-                    .withContext('Expected third option to be selected.')
-                    .toBe(true);
+                expect(instanceTags[2].selected).withContext('Expected third option to be selected.').toBe(true);
             });
 
             it('should not have role when empty', () => {
                 fixture.componentInstance.foods = [];
                 fixture.detectChanges();
 
-                expect(tagListNativeElement.getAttribute('role'))
-                    .withContext('Expect no role attribute')
-                    .toBeNull();
+                expect(tagListNativeElement.getAttribute('role')).withContext('Expect no role attribute').toBeNull();
             });
         });
 
@@ -182,9 +152,7 @@ describe('KbqTagList', () => {
             });
 
             it('should be able to become focused when disabled', () => {
-                expect(tagListInstance.focused)
-                    .withContext('Expected list to not be focused.')
-                    .toBe(false);
+                expect(tagListInstance.focused).withContext('Expected list to not be focused.').toBe(false);
 
                 tagListInstance.disabled = true;
                 fixture.detectChanges();
@@ -192,9 +160,7 @@ describe('KbqTagList', () => {
                 tagListInstance.focus();
                 fixture.detectChanges();
 
-                expect(tagListInstance.focused)
-                    .withContext('Expected list to continue not to be focused')
-                    .toBe(false);
+                expect(tagListInstance.focused).withContext('Expected list to continue not to be focused').toBe(false);
             });
 
             it('should remove the tabindex from the list if it is disabled', () => {
@@ -218,7 +184,6 @@ describe('KbqTagList', () => {
             });
 
             describe('on tag destroy', () => {
-
                 it('should focus the next item', () => {
                     const array = tags.toArray();
                     const midItem = array[2];
@@ -268,34 +233,30 @@ describe('KbqTagList', () => {
                     expect(tagListInstance.keyManager.activeItemIndex).toEqual(-1);
                 });
 
-                it(
-                    'should move focus to the last tag when the focused tag was deleted inside a component with animations',
-                    fakeAsync(() => {
-                        fixture.destroy();
-                        TestBed.resetTestingModule();
-                        fixture = createComponent(StandardTagListWithAnimations, [], BrowserAnimationsModule);
-                        fixture.detectChanges();
+                it('should move focus to the last tag when the focused tag was deleted inside a component with animations', fakeAsync(() => {
+                    fixture.destroy();
+                    TestBed.resetTestingModule();
+                    fixture = createComponent(StandardTagListWithAnimations, [], BrowserAnimationsModule);
+                    fixture.detectChanges();
 
-                        tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
-                        tagListNativeElement = tagListDebugElement.nativeElement;
-                        tagListInstance = tagListDebugElement.componentInstance;
-                        testComponent = fixture.debugElement.componentInstance;
-                        tags = tagListInstance.tags;
+                    tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
+                    tagListNativeElement = tagListDebugElement.nativeElement;
+                    tagListInstance = tagListDebugElement.componentInstance;
+                    testComponent = fixture.debugElement.componentInstance;
+                    tags = tagListInstance.tags;
 
-                        tags.last.focus();
-                        flush();
-                        fixture.detectChanges();
+                    tags.last.focus();
+                    flush();
+                    fixture.detectChanges();
 
-                        expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
+                    expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
 
-                        dispatchKeyboardEvent(tags.last.elementRef.nativeElement, 'keydown', BACKSPACE);
-                        fixture.detectChanges();
-                        tick(500);
+                    dispatchKeyboardEvent(tags.last.elementRef.nativeElement, 'keydown', BACKSPACE);
+                    fixture.detectChanges();
+                    tick(500);
 
-                        expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
-                    })
-                );
-
+                    expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
+                }));
             });
         });
 
@@ -392,7 +353,6 @@ describe('KbqTagList', () => {
                     expect(manager.activeItemIndex).toBe(tags.length - 1);
                     expect(END_EVENT.defaultPrevented).toBe(true);
                 });
-
             });
 
             describe('RTL', () => {
@@ -405,8 +365,7 @@ describe('KbqTagList', () => {
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const lastNativeChip = nativeTags[nativeTags.length - 1] as HTMLElement;
 
-                    const RIGHT_EVENT: KeyboardEvent =
-                        createKeyboardEvent('keydown', RIGHT_ARROW, lastNativeChip);
+                    const RIGHT_EVENT: KeyboardEvent = createKeyboardEvent('keydown', RIGHT_ARROW, lastNativeChip);
                     const array = tags.toArray();
                     const lastIndex = array.length - 1;
                     const lastItem = array[lastIndex];
@@ -429,8 +388,7 @@ describe('KbqTagList', () => {
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const firstNativeChip = nativeTags[0] as HTMLElement;
 
-                    const LEFT_EVENT: KeyboardEvent =
-                        createKeyboardEvent('keydown', LEFT_ARROW, firstNativeChip);
+                    const LEFT_EVENT: KeyboardEvent = createKeyboardEvent('keydown', LEFT_ARROW, firstNativeChip);
                     const array = tags.toArray();
                     const firstItem = array[0];
 
@@ -457,9 +415,7 @@ describe('KbqTagList', () => {
 
                     tick();
 
-                    expect(tagListInstance.tabIndex)
-                        .withContext('Expected tabIndex to be reset back to 0')
-                        .toBe(0);
+                    expect(tagListInstance.tabIndex).withContext('Expected tabIndex to be reset back to 0').toBe(0);
                 }));
 
                 it(`should use user defined tabIndex`, fakeAsync(() => {
@@ -479,9 +435,7 @@ describe('KbqTagList', () => {
 
                     tick();
 
-                    expect(tagListInstance.tabIndex)
-                        .withContext('Expected tabIndex to be reset back to 4')
-                        .toBe(4);
+                    expect(tagListInstance.tabIndex).withContext('Expected tabIndex to be reset back to 4').toBe(4);
                 }));
             });
 
@@ -492,8 +446,7 @@ describe('KbqTagList', () => {
                 const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                 const firstNativeChip = nativeTags[0] as HTMLElement;
 
-                const RIGHT_EVENT: KeyboardEvent =
-                    createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
+                const RIGHT_EVENT: KeyboardEvent = createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
                 const array = tags.toArray();
                 const firstItem = array[0];
 
@@ -520,7 +473,6 @@ describe('KbqTagList', () => {
     });
 
     describe('FormFieldTagList', () => {
-
         beforeEach(setupInputList);
 
         describe('keyboard behavior', () => {
@@ -545,7 +497,6 @@ describe('KbqTagList', () => {
             }));
 
             describe('when the input has focus', () => {
-
                 it('should not focus the last tag when press DELETE', () => {
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const DELETE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DELETE, nativeInput);
@@ -562,8 +513,7 @@ describe('KbqTagList', () => {
 
                 it('should focus the last tag when press BACKSPACE', () => {
                     const nativeInput = fixture.nativeElement.querySelector('input');
-                    const BACKSPACE_EVENT: KeyboardEvent =
-                        createKeyboardEvent('keydown', BACKSPACE, nativeInput);
+                    const BACKSPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
                     // Focus the input
                     nativeInput.focus();
@@ -576,7 +526,6 @@ describe('KbqTagList', () => {
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
                 });
-
             });
         });
 
@@ -588,7 +537,7 @@ describe('KbqTagList', () => {
 
         it('should complete the stateChanges stream on destroy', () => {
             const spy = jasmine.createSpy('stateChanges complete');
-            const subscription = tagListInstance.stateChanges.subscribe({complete: spy});
+            const subscription = tagListInstance.stateChanges.subscribe({ complete: spy });
 
             fixture.destroy();
             expect(spy).toHaveBeenCalled();
@@ -605,7 +554,6 @@ describe('KbqTagList', () => {
             expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
             expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
         });
-
     });
 
     describe('with tag remove', () => {
@@ -629,9 +577,7 @@ describe('KbqTagList', () => {
             dispatchMouseEvent(chipRemoveDebugElements[2].nativeElement, 'click');
             fixture.detectChanges();
 
-            expect(tags.toArray()[2].value)
-                .withContext('Expected the third tag to be removed.')
-                .not.toBe(2);
+            expect(tags.toArray()[2].value).withContext('Expected the third tag to be removed.').not.toBe(2);
 
             expect(tagList.keyManager.activeItemIndex).toBe(2);
         });
@@ -645,8 +591,7 @@ describe('KbqTagList', () => {
             fixture = createComponent(BasicTagList);
             fixture.detectChanges();
 
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag'))
-                .map((tag) => tag.nativeElement);
+            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
 
             tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
             tagListInstance = tagListDebugElement.componentInstance;
@@ -660,12 +605,8 @@ describe('KbqTagList', () => {
             dispatchKeyboardEvent(firstTag, 'keydown', SPACE);
             fixture.detectChanges();
 
-            expect(instanceTags.first.selected)
-                .withContext('Expected first option to be selected.')
-                .toBe(true);
-            expect(tagList.selected)
-                .withContext('Expected first option to be selected.')
-                .toBe(tags.first);
+            expect(instanceTags.first.selected).withContext('Expected first option to be selected.').toBe(true);
+            expect(tagList.selected).withContext('Expected first option to be selected.').toBe(tags.first);
 
             fixture.componentInstance.foods = [];
             fixture.detectChanges();
@@ -676,13 +617,11 @@ describe('KbqTagList', () => {
                 .toBe(undefined);
         }));
 
-
         it('should select an option that was added after initialization', () => {
             fixture.componentInstance.foods.push({ viewValue: 'Potatoes', value: 'potatoes-8' });
             fixture.detectChanges();
 
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag'))
-                .map((tag) => tag.nativeElement);
+            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
             const lastChip = nativeTags[8];
             dispatchKeyboardEvent(lastChip, 'keydown', SPACE);
             fixture.detectChanges();
@@ -702,17 +641,10 @@ describe('KbqTagList', () => {
             dispatchKeyboardEvent(disabledTag, 'keydown', SPACE);
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tagList.value)
-                .withContext('Expect value to be undefined')
-                .toBeUndefined();
-            expect(array[2].selected)
-                .withContext('Expect disabled tag not selected')
-                .toBeFalsy();
-            expect(fixture.componentInstance.tagList.selected)
-                .withContext('Expect no selected tags')
-                .toBeUndefined();
+            expect(fixture.componentInstance.tagList.value).withContext('Expect value to be undefined').toBeUndefined();
+            expect(array[2].selected).withContext('Expect disabled tag not selected').toBeFalsy();
+            expect(fixture.componentInstance.tagList.selected).withContext('Expect no selected tags').toBeUndefined();
         });
-
     });
 
     describe('forms integration', () => {
@@ -723,8 +655,7 @@ describe('KbqTagList', () => {
                 fixture = createComponent(BasicTagList);
                 fixture.detectChanges();
 
-                nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag'))
-                    .map((tag) => tag.nativeElement);
+                nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
                 tags = fixture.componentInstance.tags;
             });
 
@@ -734,9 +665,7 @@ describe('KbqTagList', () => {
 
                 const array = tags.toArray();
 
-                expect(array[1].selected)
-                    .withContext('Expect pizza-1 tag to be selected')
-                    .toBeTruthy();
+                expect(array[1].selected).withContext('Expect pizza-1 tag to be selected').toBeTruthy();
 
                 dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
                 fixture.detectChanges();
@@ -751,21 +680,16 @@ describe('KbqTagList', () => {
                 const tagList = fixture.componentInstance.tagList;
                 const array = tags.toArray();
 
-                expect(tagList.value)
-                    .withContext('Expect tag list to have no initial value')
-                    .toBeFalsy();
+                expect(tagList.value).withContext('Expect tag list to have no initial value').toBeFalsy();
 
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
-                expect(array[1].selected)
-                    .withContext('Expect tag to be selected')
-                    .toBeTruthy();
+                expect(array[1].selected).withContext('Expect tag to be selected').toBeTruthy();
             });
 
             // todo need rethink this selection logic
             xit('should update the form value when the view changes', () => {
-
                 expect(fixture.componentInstance.control.value)
                     .withContext(`Expected the control's value to be empty initially.`)
                     .toEqual(null);
@@ -784,9 +708,7 @@ describe('KbqTagList', () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
-                expect(array[1].selected)
-                    .withContext(`Expected tag with the value to be selected.`)
-                    .toBeTruthy();
+                expect(array[1].selected).withContext(`Expected tag with the value to be selected.`).toBeTruthy();
 
                 fixture.componentInstance.control.setValue('gibberish');
 
@@ -796,7 +718,6 @@ describe('KbqTagList', () => {
                     .withContext(`Expected tag with the old value not to be selected.`)
                     .toBeFalsy();
             });
-
 
             it('should clear the selection when the control is reset', () => {
                 const array = tags.toArray();
@@ -840,7 +761,7 @@ describe('KbqTagList', () => {
             });
 
             // todo need rethink this selection logic
-            xit('should set the control to dirty when the tag list\'s value changes in the DOM', () => {
+            xit("should set the control to dirty when the tag list's value changes in the DOM", () => {
                 expect(fixture.componentInstance.control.dirty)
                     .withContext(`Expected control to start out pristine.`)
                     .toEqual(false);
@@ -865,7 +786,6 @@ describe('KbqTagList', () => {
                     .withContext(`Expected control to stay pristine after programmatic change.`)
                     .toEqual(false);
             });
-
 
             xit('should set an asterisk after the placeholder if the control is required', () => {
                 let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
@@ -932,8 +852,7 @@ describe('KbqTagList', () => {
                 fixture = createComponent(MultiSelectionTagList);
                 fixture.detectChanges();
 
-                nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag'))
-                    .map((tag) => tag.nativeElement);
+                nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
                 tags = fixture.componentInstance.tags;
             });
 
@@ -943,9 +862,7 @@ describe('KbqTagList', () => {
 
                 const array = tags.toArray();
 
-                expect(array[1].selected)
-                    .withContext('Expect pizza-1 tag to be selected')
-                    .toBeTruthy();
+                expect(array[1].selected).withContext('Expect pizza-1 tag to be selected').toBeTruthy();
 
                 dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
                 fixture.detectChanges();
@@ -959,20 +876,15 @@ describe('KbqTagList', () => {
                 const tagList = fixture.componentInstance.tagList;
                 const array = tags.toArray();
 
-                expect(tagList.value)
-                    .withContext('Expect tag list to have no initial value')
-                    .toBeFalsy();
+                expect(tagList.value).withContext('Expect tag list to have no initial value').toBeFalsy();
 
                 fixture.componentInstance.control.setValue(['pizza-1']);
                 fixture.detectChanges();
 
-                expect(array[1].selected)
-                    .withContext('Expect tag to be selected')
-                    .toBeTruthy();
+                expect(array[1].selected).withContext('Expect tag to be selected').toBeTruthy();
             });
 
             it('should update the form value when the view changes', () => {
-
                 expect(fixture.componentInstance.control.value)
                     .withContext(`Expected the control's value to be empty initially.`)
                     .toEqual(null);
@@ -991,9 +903,7 @@ describe('KbqTagList', () => {
                 fixture.componentInstance.control.setValue(['pizza-1']);
                 fixture.detectChanges();
 
-                expect(array[1].selected)
-                    .withContext(`Expected tag with the value to be selected.`)
-                    .toBeTruthy();
+                expect(array[1].selected).withContext(`Expected tag with the value to be selected.`).toBeTruthy();
 
                 fixture.componentInstance.control.setValue(['gibberish']);
 
@@ -1003,7 +913,6 @@ describe('KbqTagList', () => {
                     .withContext(`Expected tag with the old value not to be selected.`)
                     .toBeFalsy();
             });
-
 
             it('should clear the selection when the control is reset', () => {
                 const array = tags.toArray();
@@ -1028,8 +937,7 @@ describe('KbqTagList', () => {
             fixture = createComponent(InputTagList);
             fixture.detectChanges();
 
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag'))
-                .map((tag) => tag.nativeElement);
+            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
         });
 
         it('should take an initial view value with reactive forms', () => {
@@ -1038,31 +946,23 @@ describe('KbqTagList', () => {
 
             const array = fixture.componentInstance.tags.toArray();
 
-            expect(array[1].selected)
-                .withContext('Expect pizza-1 tag to be selected')
-                .toBeTruthy();
+            expect(array[1].selected).withContext('Expect pizza-1 tag to be selected').toBeTruthy();
 
             dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
             fixture.detectChanges();
 
-            expect(array[1].selected)
-                .withContext('Expect tag to be not selected after toggle selected')
-                .toBeFalsy();
+            expect(array[1].selected).withContext('Expect tag to be not selected after toggle selected').toBeFalsy();
         });
 
         it('should set the view value from the form', () => {
             const array = fixture.componentInstance.tags.toArray();
 
-            expect(array[1].selected)
-                .withContext('Expect tag to not be selected')
-                .toBeFalsy();
+            expect(array[1].selected).withContext('Expect tag to not be selected').toBeFalsy();
 
             fixture.componentInstance.control.setValue(['pizza-1']);
             fixture.detectChanges();
 
-            expect(array[1].selected)
-                .withContext('Expect tag to be selected')
-                .toBeTruthy();
+            expect(array[1].selected).withContext('Expect tag to be selected').toBeTruthy();
         });
 
         xit('should update the form value when the view changes', () => {
@@ -1084,19 +984,14 @@ describe('KbqTagList', () => {
             fixture.componentInstance.control.setValue(['pizza-1']);
             fixture.detectChanges();
 
-            expect(array[1].selected)
-                .withContext(`Expected tag with the value to be selected.`)
-                .toBeTruthy();
+            expect(array[1].selected).withContext(`Expected tag with the value to be selected.`).toBeTruthy();
 
             fixture.componentInstance.control.setValue(['gibberish']);
 
             fixture.detectChanges();
 
-            expect(array[1].selected)
-                .withContext(`Expected tag with the old value not to be selected.`)
-                .toBeFalsy();
+            expect(array[1].selected).withContext(`Expected tag with the old value not to be selected.`).toBeFalsy();
         });
-
 
         it('should clear the selection when the control is reset', () => {
             const array = fixture.componentInstance.tags.toArray();
@@ -1107,9 +1002,7 @@ describe('KbqTagList', () => {
             fixture.componentInstance.control.reset();
             fixture.detectChanges();
 
-            expect(array[1].selected)
-                .withContext(`Expected tag with the old value not to be selected.`)
-                .toBeFalsy();
+            expect(array[1].selected).withContext(`Expected tag with the old value not to be selected.`).toBeFalsy();
         });
 
         it('should set the control to touched when the tag list is touched', fakeAsync(() => {
@@ -1141,7 +1034,7 @@ describe('KbqTagList', () => {
                 .toBe(false);
         });
 
-        xit('should set the control to dirty when the tag list\'s value changes in the DOM', () => {
+        xit("should set the control to dirty when the tag list's value changes in the DOM", () => {
             expect(fixture.componentInstance.control.dirty)
                 .withContext(`Expected control to start out pristine.`)
                 .toEqual(false);
@@ -1167,7 +1060,6 @@ describe('KbqTagList', () => {
                 .toEqual(false);
         });
 
-
         xit('should set an asterisk after the placeholder if the control is required', () => {
             let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
             expect(requiredMarker)
@@ -1185,8 +1077,7 @@ describe('KbqTagList', () => {
 
         it('should keep focus on the input after adding the first chip', fakeAsync(() => {
             const nativeInput = fixture.nativeElement.querySelector('input');
-            const chipEls = Array.from<HTMLElement>(
-                fixture.nativeElement.querySelectorAll('.kbq-tag')).reverse();
+            const chipEls = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.kbq-tag')).reverse();
 
             // Remove the tags via backspace to simulate the user removing them.
             chipEls.forEach((tag) => {
@@ -1198,12 +1089,8 @@ describe('KbqTagList', () => {
             });
 
             nativeInput.focus();
-            expect(fixture.componentInstance.foods)
-                .withContext('Expected all tags to be removed.')
-                .toEqual([]);
-            expect(document.activeElement)
-                .withContext('Expected input to be focused.')
-                .toBe(nativeInput);
+            expect(fixture.componentInstance.foods).withContext('Expected all tags to be removed.').toEqual([]);
+            expect(document.activeElement).withContext('Expected input to be focused.').toBe(nativeInput);
 
             typeInElement('123', nativeInput);
             fixture.detectChanges();
@@ -1211,9 +1098,7 @@ describe('KbqTagList', () => {
             fixture.detectChanges();
             flush();
 
-            expect(document.activeElement)
-                .withContext('Expected input to remain focused.')
-                .toBe(nativeInput);
+            expect(document.activeElement).withContext('Expected input to remain focused.').toBe(nativeInput);
         }));
 
         describe('keyboard behavior', () => {
@@ -1225,7 +1110,6 @@ describe('KbqTagList', () => {
             });
 
             describe('when the input has focus', () => {
-
                 it('should not focus the last tag when press DELETE', () => {
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const DELETE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DELETE, nativeInput);
@@ -1257,7 +1141,6 @@ describe('KbqTagList', () => {
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
                 });
-
             });
         });
     });
@@ -1276,12 +1159,8 @@ describe('KbqTagList', () => {
         });
 
         it('should not show any errors if the user has not interacted', () => {
-            expect(errorTestComponent.formControl.untouched)
-                .withContext('Expected untouched form control')
-                .toBe(true);
-            expect(containerEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected no error message')
-                .toBe(0);
+            expect(errorTestComponent.formControl.untouched).withContext('Expected untouched form control').toBe(true);
+            expect(containerEl.querySelectorAll('kbq-error').length).withContext('Expected no error message').toBe(0);
             expect(tagListEl.getAttribute('aria-invalid'))
                 .withContext('Expected aria-invalid to be set to "false".')
                 .toBe('false');
@@ -1291,9 +1170,7 @@ describe('KbqTagList', () => {
             expect(errorTestComponent.formControl.invalid)
                 .withContext('Expected form control to be invalid')
                 .toBe(true);
-            expect(containerEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected no error message')
-                .toBe(0);
+            expect(containerEl.querySelectorAll('kbq-error').length).withContext('Expected no error message').toBe(0);
 
             errorTestComponent.formControl.markAsTouched();
             fixture.detectChanges();
@@ -1317,9 +1194,7 @@ describe('KbqTagList', () => {
             expect(errorTestComponent.formControl.invalid)
                 .withContext('Expected form control to be invalid')
                 .toBe(true);
-            expect(containerEl.querySelectorAll('kbq-error').length)
-                .withContext('Expected no error message')
-                .toBe(0);
+            expect(containerEl.querySelectorAll('kbq-error').length).withContext('Expected no error message').toBe(0);
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
@@ -1340,46 +1215,41 @@ describe('KbqTagList', () => {
             });
         }));
 
-        it(
-            'should hide the errors and show the hints once the tag list becomes valid',
-            fakeAsync(() => {
-                errorTestComponent.formControl.markAsTouched();
+        it('should hide the errors and show the hints once the tag list becomes valid', fakeAsync(() => {
+            errorTestComponent.formControl.markAsTouched();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                expect(containerEl.classList)
+                    .withContext('Expected container to have the invalid CSS class.')
+                    .toContain('kbq-form-field-invalid');
+
+                expect(containerEl.querySelectorAll('kbq-error').length)
+                    .withContext('Expected one error message to have been rendered.')
+                    .toBe(1);
+
+                expect(containerEl.querySelectorAll('kbq-hint').length)
+                    .withContext('Expected no hints to be shown.')
+                    .toBe(0);
+
+                errorTestComponent.formControl.setValue('something');
                 fixture.detectChanges();
 
                 fixture.whenStable().then(() => {
                     expect(containerEl.classList)
-                        .withContext('Expected container to have the invalid CSS class.')
-                        .toContain('kbq-form-field-invalid');
+                        .withContext('Expected container not to have the invalid class when valid.')
+                        .not.toContain('kbq-form-field-invalid');
 
                     expect(containerEl.querySelectorAll('kbq-error').length)
-                        .withContext('Expected one error message to have been rendered.')
-                        .toBe(1);
-
-                    expect(containerEl.querySelectorAll('kbq-hint').length)
-                        .withContext('Expected no hints to be shown.')
+                        .withContext('Expected no error messages when the input is valid.')
                         .toBe(0);
 
-                    errorTestComponent.formControl.setValue('something');
-                    fixture.detectChanges();
-
-                    fixture.whenStable().then(() => {
-                        expect(containerEl.classList)
-                            .withContext('Expected container not to have the invalid class when valid.')
-                            .not
-                            .toContain('kbq-form-field-invalid'
-                        );
-
-                        expect(containerEl.querySelectorAll('kbq-error').length)
-                            .withContext('Expected no error messages when the input is valid.')
-                            .toBe(0);
-
-                        expect(containerEl.querySelectorAll('kbq-hint').length)
-                            .withContext('Expected one hint to be shown once the input is valid.')
-                            .toBe(1);
-                    });
+                    expect(containerEl.querySelectorAll('kbq-hint').length)
+                        .withContext('Expected one hint to be shown once the input is valid.')
+                        .toBe(1);
                 });
-            })
-        );
+            });
+        }));
 
         it('should set the proper role on the error messages', () => {
             errorTestComponent.formControl.markAsTouched();
@@ -1389,33 +1259,31 @@ describe('KbqTagList', () => {
         });
 
         it('sets the aria-describedby to reference errors when in error state', () => {
-            const hintId = fixture.debugElement
-                .query(By.css('.kbq-hint'))
-                .nativeElement.getAttribute('id');
+            const hintId = fixture.debugElement.query(By.css('.kbq-hint')).nativeElement.getAttribute('id');
             let describedBy = tagListEl.getAttribute('aria-describedby');
 
-            expect(hintId)
-                .withContext('hint should be shown')
-                .toBeTruthy();
+            expect(hintId).withContext('hint should be shown').toBeTruthy();
             expect(describedBy).toBe(hintId);
 
             fixture.componentInstance.formControl.markAsTouched();
             fixture.detectChanges();
 
-            const errorIds = fixture.debugElement.queryAll(By.css('.kbq-error'))
-                .map((el) => el.nativeElement.getAttribute('id')).join(' ');
+            const errorIds = fixture.debugElement
+                .queryAll(By.css('.kbq-error'))
+                .map((el) => el.nativeElement.getAttribute('id'))
+                .join(' ');
             describedBy = tagListEl.getAttribute('aria-describedby');
 
-            expect(errorIds)
-                .withContext('errors should be shown')
-                .toBeTruthy();
+            expect(errorIds).withContext('errors should be shown').toBeTruthy();
             expect(describedBy).toBe(errorIds);
         });
     });
 
-    function createComponent<T>(component: Type<T>, providers: Provider[] = [], animationsModule:
-        Type<NoopAnimationsModule> | Type<BrowserAnimationsModule> = NoopAnimationsModule):
-        ComponentFixture<T> {
+    function createComponent<T>(
+        component: Type<T>,
+        providers: Provider[] = [],
+        animationsModule: Type<NoopAnimationsModule> | Type<BrowserAnimationsModule> = NoopAnimationsModule
+    ): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -1427,7 +1295,7 @@ describe('KbqTagList', () => {
             ],
             declarations: [component],
             providers: [
-                { provide: NgZone, useFactory: () => zone = new MockNgZone() },
+                { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 ...providers
             ]
         }).compileComponents();
@@ -1437,12 +1305,15 @@ describe('KbqTagList', () => {
 
     function setupStandardList(direction: Direction = 'ltr') {
         dirChange = new Subject();
-        fixture = createComponent(StandardTagList, [{
-            provide: Directionality, useFactory: () => ({
-                value: direction.toLowerCase(),
-                change: dirChange
-            })
-        }]);
+        fixture = createComponent(StandardTagList, [
+            {
+                provide: Directionality,
+                useFactory: () => ({
+                    value: direction.toLowerCase(),
+                    change: dirChange
+                })
+            }
+        ]);
         fixture.detectChanges();
 
         tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
@@ -1462,16 +1333,23 @@ describe('KbqTagList', () => {
         testComponent = fixture.debugElement.componentInstance;
         tags = tagListInstance.tags;
     }
-
 });
 
 @Component({
     template: `
-        <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
-            <kbq-tag *ngFor="let i of tags" (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
-                {{name}} {{i + 1}}
+        <kbq-tag-list
+            [tabIndex]="tabIndex"
+            [selectable]="selectable"
+        >
+            <kbq-tag
+                *ngFor="let i of tags"
+                (select)="chipSelect(i)"
+                (deselect)="chipDeselect(i)"
+            >
+                {{ name }} {{ i + 1 }}
             </kbq-tag>
-        </kbq-tag-list>`
+        </kbq-tag-list>
+    `
 })
 class StandardTagList {
     name: string = 'Test';
@@ -1487,8 +1365,16 @@ class StandardTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
-                <kbq-tag *ngFor="let tag of tags" (removed)="remove(tag)">{{ tag }}</kbq-tag>
-                <input name="test" [kbqTagInputFor]="tagList"/>
+                <kbq-tag
+                    *ngFor="let tag of tags"
+                    (removed)="remove(tag)"
+                >
+                    {{ tag }}
+                </kbq-tag>
+                <input
+                    [kbqTagInputFor]="tagList"
+                    name="test"
+                />
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1505,14 +1391,22 @@ class FormFieldTagList {
     }
 }
 
-
 @Component({
     selector: 'basic-tag-list',
     template: `
         <kbq-form-field>
-            <kbq-tag-list placeholder="Food" [formControl]="control" [required]="isRequired"
-                           [tabIndex]="tabIndexOverride" [selectable]="selectable">
-                <kbq-tag *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
+            <kbq-tag-list
+                [formControl]="control"
+                [required]="isRequired"
+                [tabIndex]="tabIndexOverride"
+                [selectable]="selectable"
+                placeholder="Food"
+            >
+                <kbq-tag
+                    *ngFor="let food of foods"
+                    [value]="food.value"
+                    [disabled]="food.disabled"
+                >
                     {{ food.viewValue }}
                 </kbq-tag>
             </kbq-tag-list>
@@ -1535,19 +1429,27 @@ class BasicTagList {
     tabIndexOverride: number;
     selectable: boolean = true;
 
-    @ViewChild(KbqTagList, {static: false}) tagList: KbqTagList;
+    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
-
 
 @Component({
     selector: 'multi-selection-tag-list',
     template: `
         <kbq-form-field>
-            <kbq-tag-list [multiple]="true" placeholder="Food" [formControl]="control"
-                           [required]="isRequired"
-                           [tabIndex]="tabIndexOverride" [selectable]="selectable">
-                <kbq-tag *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
+            <kbq-tag-list
+                [multiple]="true"
+                [formControl]="control"
+                [required]="isRequired"
+                [tabIndex]="tabIndexOverride"
+                [selectable]="selectable"
+                placeholder="Food"
+            >
+                <kbq-tag
+                    *ngFor="let food of foods"
+                    [value]="food.value"
+                    [disabled]="food.disabled"
+                >
                     {{ food.viewValue }}
                 </kbq-tag>
             </kbq-tag-list>
@@ -1570,7 +1472,7 @@ class MultiSelectionTagList {
     tabIndexOverride: number;
     selectable: boolean;
 
-    @ViewChild(KbqTagList, {static: false}) tagList: KbqTagList;
+    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
 
@@ -1578,17 +1480,28 @@ class MultiSelectionTagList {
     selector: 'input-tag-list',
     template: `
         <kbq-form-field>
-            <kbq-tag-list [multiple]="true"
-                           placeholder="Food" [formControl]="control" [required]="isRequired" #tagList1>
-                <kbq-tag *ngFor="let food of foods" [value]="food.value" (removed)="remove(food)">
+            <kbq-tag-list
+                #tagList1
+                [multiple]="true"
+                [formControl]="control"
+                [required]="isRequired"
+                placeholder="Food"
+            >
+                <kbq-tag
+                    *ngFor="let food of foods"
+                    [value]="food.value"
+                    (removed)="remove(food)"
+                >
                     {{ food.viewValue }}
                 </kbq-tag>
             </kbq-tag-list>
-            <input placeholder="New food..."
-                   [kbqTagInputFor]="tagList1"
-                   [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
-                   [kbqTagInputAddOnBlur]="addOnBlur"
-                   (kbqTagInputTokenEnd)="add($event)"/>
+            <input
+                [kbqTagInputFor]="tagList1"
+                [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
+                [kbqTagInputAddOnBlur]="addOnBlur"
+                (kbqTagInputTokenEnd)="add($event)"
+                placeholder="New food..."
+            />
         </kbq-form-field>
     `
 })
@@ -1609,7 +1522,7 @@ class InputTagList {
     addOnBlur: boolean = true;
     isRequired: boolean;
 
-    @ViewChild(KbqTagList, {static: false}) tagList: KbqTagList;
+    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
     add(event: KbqTagInputEvent): void {
@@ -1643,7 +1556,12 @@ class InputTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list [formControl]="control">
-                <kbq-tag *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }}</kbq-tag>
+                <kbq-tag
+                    *ngFor="let food of foods"
+                    [value]="food.value"
+                >
+                    {{ food.viewValue }}
+                </kbq-tag>
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1660,7 +1578,11 @@ class FalsyValueTagList {
 @Component({
     template: `
         <kbq-tag-list>
-            <kbq-tag *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
+            <kbq-tag
+                *ngFor="let food of foods"
+                [value]="food.value"
+                [selected]="food.selected"
+            >
                 {{ food.viewValue }}
             </kbq-tag>
         </kbq-tag-list>
@@ -1677,15 +1599,22 @@ class SelectedTagList {
 
 @Component({
     template: `
-        <form #form="ngForm" novalidate>
+        <form
+            #form="ngForm"
+            novalidate
+        >
             <kbq-form-field>
                 <kbq-tag-list [formControl]="formControl">
-                    <kbq-tag *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
-                        {{food.viewValue}}
+                    <kbq-tag
+                        *ngFor="let food of foods"
+                        [value]="food.value"
+                        [selected]="food.selected"
+                    >
+                        {{ food.viewValue }}
                     </kbq-tag>
                 </kbq-tag-list>
                 <kbq-hint>Please select a chip, or type to add a new chip</kbq-hint>
-<!--                <kbq-error>Should have value</kbq-error>-->
+                <!--                <kbq-error>Should have value</kbq-error>-->
             </kbq-form-field>
         </form>
     `
@@ -1701,23 +1630,28 @@ class TagListWithFormErrorMessages {
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
-    @ViewChild('form', {static: false}) form: NgForm;
+    @ViewChild('form', { static: false }) form: NgForm;
 }
-
 
 @Component({
     template: `
         <kbq-tag-list>
-            <kbq-tag *ngFor="let i of numbers" (removed)="remove(i)">{{i}}</kbq-tag>
-        </kbq-tag-list>`,
+            <kbq-tag
+                *ngFor="let i of numbers"
+                (removed)="remove(i)"
+            >
+                {{ i }}
+            </kbq-tag>
+        </kbq-tag-list>
+    `,
     animations: [
         // For the case we're testing this animation doesn't
         // have to be used anywhere, it just has to be defined.
         trigger('dummyAnimation', [
             transition(':leave', [
                 style({ opacity: 0 }),
-                animate('500ms', style({ opacity: 1 }))
-            ])
+                animate('500ms', style({ opacity: 1 }))])
+
         ])
     ]
 })
@@ -1737,8 +1671,12 @@ class StandardTagListWithAnimations {
     template: `
         <kbq-form-field>
             <kbq-tag-list>
-                <kbq-tag [value]="i" (removed)="removeChip($event)" *ngFor="let i of tags">
-                    Chip {{i + 1}}
+                <kbq-tag
+                    *ngFor="let i of tags"
+                    [value]="i"
+                    (removed)="removeChip($event)"
+                >
+                    Chip {{ i + 1 }}
                     <span kbqTagRemove>Remove</span>
                 </kbq-tag>
             </kbq-tag-list>

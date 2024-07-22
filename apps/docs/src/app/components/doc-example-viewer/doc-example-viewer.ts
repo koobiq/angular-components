@@ -19,9 +19,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
-
 import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
-
 
 @Injectable({ providedIn: 'root' })
 export class DocExampleFetcher {
@@ -31,20 +29,25 @@ export class DocExampleFetcher {
     constructor(private http: HttpClient) {}
 
     fetchDocument(url: string): Observable<string> {
-        if (this.cache[url]) { return this.cache[url]; }
+        if (this.cache[url]) {
+            return this.cache[url];
+        }
 
-        const stream = this.http
-            .get(url, { responseType: 'text' })
-            .pipe(shareReplay(1));
+        const stream = this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1));
 
-        return stream.pipe(tap(() => this.cache[url] = stream));
+        return stream.pipe(tap(() => (this.cache[url] = stream)));
     }
 }
 
 @Component({
     selector: 'doc-example-viewer',
-    template: `Loading document...
-        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
+    template: `
+        Loading document...
+        <ng-template
+            cdkPortal
+            let-htmlContent
+            let-contentToCopy="textContent"
+        >
             <copy-button [contentToCopy]="contentToCopy"></copy-button>
             <div [outerHTML]="htmlContent"></div>
         </ng-template>
@@ -58,7 +61,9 @@ export class DocExampleViewer implements OnDestroy {
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
-        if (!url) { return; }
+        if (!url) {
+            return;
+        }
 
         this.fetchDocument(url);
     }
@@ -95,12 +100,10 @@ export class DocExampleViewer implements OnDestroy {
     private fetchDocument(url: string) {
         this.documentFetchSubscription?.unsubscribe();
 
-        this.documentFetchSubscription = this.docFetcher
-            .fetchDocument(url)
-            .subscribe(
-                (document) => this.updateDocument(document),
-                (error) => this.showError(url, error)
-            );
+        this.documentFetchSubscription = this.docFetcher.fetchDocument(url).subscribe(
+            (document) => this.updateDocument(document),
+            (error) => this.showError(url, error)
+        );
     }
 
     /**
@@ -127,9 +130,7 @@ export class DocExampleViewer implements OnDestroy {
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
         // until the Angular zone becomes stable.
-        this.ngZone.onStable
-            .pipe(take(1))
-            .subscribe(() => this.contentRendered.next());
+        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
     }
 
     /** Show an error that occurred when fetching a document. */
@@ -138,26 +139,20 @@ export class DocExampleViewer implements OnDestroy {
         console.error(error);
         this.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
 
-        this.ngZone.onStable
-            .pipe(take(1))
-            .subscribe(() => this.contentRenderFailed.next());
+        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.next());
     }
 
     /** Instantiate a ExampleViewer for each example. */
     private loadComponents(componentName: string, componentClass: any) {
-        this.nativeElement
-            .querySelectorAll(`[${componentName}]`)
-            .forEach((element: Element) => {
-                const portalHost = new DomPortalOutlet(
-                    element, this.componentFactoryResolver, this.appRef, this.injector
-                );
-                const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
-                const exampleViewer = portalHost.attach(examplePortal);
-                // todo проверить, что достается из атрибута ?
-                (exampleViewer.instance as DocsLiveExampleViewer).example = element.getAttribute(componentName);
+        this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
+            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
+            const exampleViewer = portalHost.attach(examplePortal);
+            // todo проверить, что достается из атрибута ?
+            (exampleViewer.instance as DocsLiveExampleViewer).example = element.getAttribute(componentName);
 
-                this.portalHosts.push(portalHost);
-            });
+            this.portalHosts.push(portalHost);
+        });
     }
 
     private clearLiveExamples() {

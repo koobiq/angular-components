@@ -5,7 +5,6 @@
 
 @use '../core/styles/common/tokens' as *;
 
-
 $tokens: meta.module-variables(tokens) !default;
 
 @keyframes kbq-progress-bar-indeterminate {

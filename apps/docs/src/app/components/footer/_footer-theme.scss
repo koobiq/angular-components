@@ -1,12 +1,13 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-footer-theme($theme) {
-    $foreground: map-get($theme, foreground);
+    $foreground: map.get($theme, foreground);
 
     .docs-footer__label,
     .kbq-dropdown__group-header .kbq-caps-compact-strong {
-        color: map-get($foreground, contrast-secondary);
+        color: map.get($foreground, contrast-secondary);
     }
 }
 

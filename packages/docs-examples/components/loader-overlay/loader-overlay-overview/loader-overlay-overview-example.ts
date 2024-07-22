@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
-
 /**
  * @title Loader overlay
  */

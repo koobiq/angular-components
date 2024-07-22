@@ -1,89 +1,147 @@
-<div cdk-overlay-origin
-     class="kbq-select__trigger"
-     [class.kbq-select__trigger_multiple]="multiple"
-     [class.kbq-select__trigger_single]="!multiple"
-     [class.kbq-select__trigger_empty]="empty"
-     #origin="cdkOverlayOrigin"
-     #trigger
-     [ngSwitch]="!!customMatcher">
+<div
+    #origin="cdkOverlayOrigin"
+    #trigger
+    cdk-overlay-origin
+    class="kbq-select__trigger"
+    [class.kbq-select__trigger_empty]="empty"
+    [class.kbq-select__trigger_multiple]="multiple"
+    [class.kbq-select__trigger_single]="!multiple"
+    [ngSwitch]="!!customMatcher"
+>
+    <select
+        class="cdk-visually-hidden"
+        [id]="id"
+    ></select>
 
-    <select class="cdk-visually-hidden" [id]="id"></select>
-
-    <div class="kbq-select__matcher" *ngSwitchCase="false">
-        <span class="kbq-select__placeholder" *ngIf="empty">{{ placeholder || '\u00A0' }}</span>
-        <span *ngIf="!empty" [ngSwitch]="!!customTrigger">
-            <div *ngSwitchDefault [ngSwitch]="multiple" class="kbq-select__match-container">
-                <span *ngSwitchCase="false" class="kbq-select__matcher-text">{{ triggerValue }}</span>
-                <div *ngSwitchCase="true" class="kbq-select__match-list">
+    <div
+        *ngSwitchCase="false"
+        class="kbq-select__matcher"
+    >
+        <span
+            *ngIf="empty"
+            class="kbq-select__placeholder"
+        >
+            {{ placeholder || '\u00A0' }}
+        </span>
+        <span
+            *ngIf="!empty"
+            [ngSwitch]="!!customTrigger"
+        >
+            <div
+                *ngSwitchDefault
+                class="kbq-select__match-container"
+                [ngSwitch]="multiple"
+            >
+                <span
+                    *ngSwitchCase="false"
+                    class="kbq-select__matcher-text"
+                >
+                    {{ triggerValue }}
+                </span>
+                <div
+                    *ngSwitchCase="true"
+                    class="kbq-select__match-list"
+                >
                     <ng-container *ngIf="!customTagTemplateRef">
-                        <kbq-tag *ngFor="let option of triggerValues"
-                                 [disabled]="option.disabled || disabled"
-                                 [selectable]="false"
-                                 [class.kbq-error]="errorState">
-                                {{ option.viewValue }}
-                            <i kbq-icon="mc-close-S_16" kbqTagRemove
-                               *ngIf="!option.disabled && !disabled"
-                               (click)="onRemoveSelectedOption(option, $event)">
-                            </i>
+                        <kbq-tag
+                            *ngFor="let option of triggerValues"
+                            [class.kbq-error]="errorState"
+                            [disabled]="option.disabled || disabled"
+                            [selectable]="false"
+                        >
+                            {{ option.viewValue }}
+                            <i
+                                *ngIf="!option.disabled && !disabled"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                                (click)="onRemoveSelectedOption(option, $event)"
+                            ></i>
                         </kbq-tag>
                     </ng-container>
                     <ng-container *ngIf="customTagTemplateRef">
-                        <ng-container *ngFor="let option of triggerValues"
-                                      [ngTemplateOutlet]="customTagTemplateRef"
-                                      [ngTemplateOutletContext]="{$implicit: option, select: this}">
-                        </ng-container>
+                        <ng-container
+                            *ngFor="let option of triggerValues"
+                            [ngTemplateOutlet]="customTagTemplateRef"
+                            [ngTemplateOutletContext]="{ $implicit: option, select: this }"
+                        ></ng-container>
                     </ng-container>
                 </div>
-                <div class="kbq-select__match-hidden-text" [style.display]="hiddenItems > 0 ? 'block' : 'none'">
+                <div
+                    class="kbq-select__match-hidden-text"
+                    [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                >
                     {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
                 </div>
             </div>
-            <ng-content select="kbq-select-trigger" *ngSwitchCase="true"></ng-content>
+            <ng-content
+                *ngSwitchCase="true"
+                select="kbq-select-trigger"
+            ></ng-content>
         </span>
 
-        <div class="kbq-select__cleaner" *ngIf="canShowCleaner" (click)="clearValue($event)">
+        <div
+            *ngIf="canShowCleaner"
+            class="kbq-select__cleaner"
+            (click)="clearValue($event)"
+        >
             <ng-content select="kbq-cleaner"></ng-content>
         </div>
 
         <div class="kbq-select__arrow-wrapper">
-            <i class="kbq-select__arrow" kbq-icon="mc-angle-down-S_16" [color]="'contrast-fade'"></i>
+            <i
+                kbq-icon="mc-angle-down-S_16"
+                class="kbq-select__arrow"
+                [color]="'contrast-fade'"
+            ></i>
         </div>
     </div>
 
-    <ng-content select="kbq-select-matcher, [kbq-select-matcher]" *ngSwitchCase="true"></ng-content>
+    <ng-content
+        *ngSwitchCase="true"
+        select="kbq-select-matcher, [kbq-select-matcher]"
+    ></ng-content>
 </div>
 
 <ng-template
     cdk-connected-overlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayBackdropClass]="backdropClass"
-    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-    [cdkConnectedOverlayOrigin]="origin"
-    [cdkConnectedOverlayOpen]="panelOpen"
-    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="triggerRect?.width!"
     [cdkConnectedOverlayOffsetY]="offsetY"
+    [cdkConnectedOverlayOpen]="panelOpen"
+    [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayPanelClass]="'kbq-select-overlay'"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    (attach)="onAttached()"
     (backdropClick)="close()"
-    (attach)="onAttached()">
-
-    <div #panel
-         class="kbq-tree-select__panel {{ getPanelTheme() }}"
-         [ngClass]="panelClass"
-         [style.transformOrigin]="transformOrigin"
-         [style.font-size.px]="triggerFontSize"
-         (keydown)="handleKeydown($event)">
-
-        <div *ngIf="search" class="kbq-select__search-container">
+>
+    <div
+        #panel
+        class="kbq-tree-select__panel {{ getPanelTheme() }}"
+        [ngClass]="panelClass"
+        [style.font-size.px]="triggerFontSize"
+        [style.transformOrigin]="transformOrigin"
+        (keydown)="handleKeydown($event)"
+    >
+        <div
+            *ngIf="search"
+            class="kbq-select__search-container"
+        >
             <ng-content select="[kbqSelectSearch]"></ng-content>
         </div>
 
-        <div #optionsContainer
+        <div
+            #optionsContainer
             class="kbq-tree-select__content kbq-scrollbar"
+            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
             [@fadeInContent]="'showing'"
-            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)">
-            <div *ngIf="isEmptySearchResult" class="kbq-select__no-options-message">
+        >
+            <div
+                *ngIf="isEmptySearchResult"
+                class="kbq-select__no-options-message"
+            >
                 <ng-content select="[kbq-select-search-empty-result]"></ng-content>
             </div>
 

@@ -1,38 +1,36 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
-    Input,
-    Output,
+    ContentChild,
     ElementRef,
+    EventEmitter,
     Inject,
     InjectionToken,
-    ViewEncapsulation,
-    AfterContentInit,
+    Input,
     NgZone,
-    ContentChild,
-    ChangeDetectionStrategy,
-    ViewChild
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
+import { TAB, hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
+    KBQ_TITLE_TEXT_REF,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
-    KBQ_TITLE_TEXT_REF,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
 import { KbqTreeNode } from './tree-base';
-
 
 // tslint:disable-next-line:naming-convention
 export interface KbqTreeOptionEvent {
@@ -45,7 +43,10 @@ export interface KbqTreeOptionEvent {
 export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<any>('KBQ_TREE_OPTION_PARENT_COMPONENT');
 
 export class KbqTreeOptionChange {
-    constructor(public source: KbqTreeOption, public isUserInput = false) {}
+    constructor(
+        public source: KbqTreeOption,
+        public isUserInput = false
+    ) {}
 }
 
 let uniqueIdCounter: number = 0;
@@ -190,8 +191,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     ngAfterContentInit(): void {
-        Promise.resolve()
-            .then(this.updateCheckboxState);
+        Promise.resolve().then(this.updateCheckboxState);
 
         this.value = this.tree.treeControl.getValue(this.data);
     }
@@ -209,14 +209,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     updateParentsCheckboxState(node) {
-        this.tree.treeControl
-            .getParents(node, [])
-            .forEach((parent) => {
-                const parentOption = this.tree.unorderedOptions
-                    .find((option) => option.data === parent);
+        this.tree.treeControl.getParents(node, []).forEach((parent) => {
+            const parentOption = this.tree.unorderedOptions.find((option) => option.data === parent);
 
-                parentOption?.updateCheckboxState();
-            });
+            parentOption?.updateCheckboxState();
+        });
     }
 
     updateCheckboxState = () => {
@@ -233,14 +230,16 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         }
 
         this.updateParentsCheckboxState(this.data);
-    }
+    };
 
     toggle(): void {
         this.selected = !this.selected;
     }
 
     setSelected(selected: boolean): void {
-        if (this._selected === selected || !this.tree.selectionModel) { return; }
+        if (this._selected === selected || !this.tree.selectionModel) {
+            return;
+        }
 
         this._selected = selected;
 
@@ -258,9 +257,13 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     focus(focusOrigin?: FocusOrigin) {
-        if (focusOrigin === 'program') { return; }
+        if (focusOrigin === 'program') {
+            return;
+        }
 
-        if (this.disabled || this.actionButton?.hasFocus) { return; }
+        if (this.disabled || this.actionButton?.hasFocus) {
+            return;
+        }
 
         this.elementRef.nativeElement.focus();
 
@@ -276,7 +279,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     blur(): void {
-        if (this.preventBlur) { return; }
+        if (this.preventBlur) {
+            return;
+        }
 
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tree
@@ -287,7 +292,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
             .pipe(take(1))
             .subscribe(() => {
                 this.ngZone.run(() => {
-                    if (this.actionButton?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) { return; }
+                    if (this.actionButton?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
+                        return;
+                    }
 
                     this.hasFocus = false;
 
@@ -307,7 +314,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this._selected) { return; }
+        if (this._selected) {
+            return;
+        }
 
         this._selected = true;
 
@@ -321,7 +330,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     deselect(): void {
-        if (!this._selected) { return; }
+        if (!this._selected) {
+            return;
+        }
 
         this._selected = false;
 
@@ -332,7 +343,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     onKeydown($event) {
-        if (!this.actionButton) { return; }
+        if (!this.actionButton) {
+            return;
+        }
 
         if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
             this.actionButton.focus();
@@ -342,7 +355,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     selectViaInteraction($event?: KeyboardEvent): void {
-        if (this.disabled) { return; }
+        if (this.disabled) {
+            return;
+        }
 
         this.markForCheck();
         this.emitSelectionChangeEvent(true);

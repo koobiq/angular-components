@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagInputEvent, KbqTagsDefaultOptions } from '@koobiq/components/tags';
 
-
 /**
  * @title Tags Input Onpaste Off
  */
@@ -12,11 +11,13 @@ import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagInputEvent, KbqTagsDefaultOptions } fro
     templateUrl: 'tags-input-onpaste-off-example.html',
     styleUrls: ['tags-input-onpaste-off-example.css'],
     // turn off tag add on paste with InjectionToken
-    providers: [{
-        provide: KBQ_TAGS_DEFAULT_OPTIONS,
-        // tslint:disable-next-line: no-object-literal-type-assertion
-        useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
-    }]
+    providers: [
+        {
+            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+            // tslint:disable-next-line: no-object-literal-type-assertion
+            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
+        }
+    ]
 })
 export class TagsInputOnpasteOffExample {
     control = new FormControl();

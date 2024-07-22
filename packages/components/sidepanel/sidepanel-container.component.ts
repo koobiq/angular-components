@@ -14,14 +14,12 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-
 import {
-    kbqSidepanelAnimations,
     KbqSidepanelAnimationState,
+    kbqSidepanelAnimations,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
 import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
-
 
 export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepanel-with-indent');
 
@@ -105,7 +103,9 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Begin animation of the sidepanel entrance into view. */
     enter(): void {
-        if (this.destroyed) { return; }
+        if (this.destroyed) {
+            return;
+        }
 
         this.animationState = KbqSidepanelAnimationState.Visible;
         this.changeDetectorRef.detectChanges();
@@ -113,7 +113,9 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Begin animation of the sidepanel exiting from view. */
     exit(): void {
-        if (this.destroyed) { return; }
+        if (this.destroyed) {
+            return;
+        }
 
         this.animationState = KbqSidepanelAnimationState.Hidden;
         this.changeDetectorRef.markForCheck();

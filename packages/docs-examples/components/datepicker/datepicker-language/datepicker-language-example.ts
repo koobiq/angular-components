@@ -3,7 +3,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-
 /**
  * @title multilingual datepicker
  */

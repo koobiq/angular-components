@@ -1,7 +1,5 @@
-import { Component, ViewEncapsulation, Input, ChangeDetectionStrategy } from '@angular/core';
-
-import { mixinDisabled, CanDisable, CanDisableCtor } from '../common-behaviors';
-
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { CanDisable, CanDisableCtor, mixinDisabled } from '../common-behaviors';
 
 /** @docs-private */
 export class KbqOptgroupBase {}

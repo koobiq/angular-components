@@ -1,13 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation,
-    ElementRef,
-    Input,
-    Directive
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
-
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
@@ -40,8 +32,10 @@ export class KbqProgressSpinnerBase {
 }
 
 /** @docs-private */
-export const KbqProgressSpinnerMixinBase:
-    CanColorCtor & typeof KbqProgressSpinnerBase = mixinColor(KbqProgressSpinnerBase, KbqComponentColors.Theme);
+export const KbqProgressSpinnerMixinBase: CanColorCtor & typeof KbqProgressSpinnerBase = mixinColor(
+    KbqProgressSpinnerBase,
+    KbqComponentColors.Theme
+);
 
 const MAX_DASH_ARRAY = 295;
 

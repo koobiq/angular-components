@@ -3,9 +3,7 @@ import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from 
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { Direction, KbqSplitterModule } from '../../components/splitter';
-
 
 @Component({
     selector: 'app',
@@ -23,7 +21,6 @@ export class DemoComponent {
         this.guttersVisibility = !this.guttersVisibility;
     }
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

@@ -1,16 +1,12 @@
 // tslint:disable:no-magic-numbers
 import { mixinTabIndex } from './tabindex';
 
-
 describe('mixinTabIndex', () => {
-
     it('should augment an existing class with a tabIndex property', () => {
         const classWithMixin = mixinTabIndex(TestClass);
         const instance = new classWithMixin();
 
-        expect(instance.tabIndex)
-            .withContext('Expected the mixed-into class to have a tabIndex property')
-            .toBe(0);
+        expect(instance.tabIndex).withContext('Expected the mixed-into class to have a tabIndex property').toBe(0);
 
         instance.tabIndex = 4;
 
@@ -23,9 +19,7 @@ describe('mixinTabIndex', () => {
         const classWithMixin = mixinTabIndex(TestClass);
         const instance = new classWithMixin();
 
-        expect(instance.tabIndex)
-            .withContext('Expected tabIndex to be set to 0 initially')
-            .toBe(0);
+        expect(instance.tabIndex).withContext('Expected tabIndex to be set to 0 initially').toBe(0);
 
         instance.disabled = true;
 
@@ -38,17 +32,12 @@ describe('mixinTabIndex', () => {
         const classWithMixin = mixinTabIndex(TestClass, 20);
         const instance = new classWithMixin();
 
-        expect(instance.tabIndex)
-            .withContext('Expected tabIndex to be set to 20 initially')
-            .toBe(20);
+        expect(instance.tabIndex).withContext('Expected tabIndex to be set to 20 initially').toBe(20);
 
         instance.tabIndex = 0;
 
-        expect(instance.tabIndex)
-            .withContext('Expected tabIndex to still support 0 as value')
-            .toBe(0);
+        expect(instance.tabIndex).withContext('Expected tabIndex to still support 0 as value').toBe(0);
     });
-
 });
 
 class TestClass {

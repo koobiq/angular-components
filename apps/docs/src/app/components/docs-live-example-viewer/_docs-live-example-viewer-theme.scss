@@ -1,15 +1,16 @@
+@use 'sass:map';
+
 @use '../dist/components/core/styles/typography';
 
-
 @mixin kbq-docs-live-example-viewer-theme($theme) {
-    $background: map-get($theme, background);
+    $background: map.get($theme, background);
 
     .docs-live-example__container {
-        border: 1px solid map-get($background, contrast-fade);
+        border: 1px solid map.get($background, contrast-fade);
     }
 
     .docs-live-example__footer {
-        border-top: 1px solid map-get($background, contrast-fade);
+        border-top: 1px solid map.get($background, contrast-fade);
     }
 }
 

@@ -1,84 +1,123 @@
-<div class="kbq-toast__icon-container layout-row layout-align-start-start" *ngIf="data.icon">
+<div
+    *ngIf="data.icon"
+    class="kbq-toast__icon-container layout-row layout-align-start-start"
+>
     <ng-container *ngIf="data.icon === true">
         <ng-container [ngSwitch]="data.style">
             <ng-container *ngSwitchCase="'contrast'">
-                <i kbq-icon="mc-info_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i
+                    kbq-icon="mc-info_16"
+                    class="kbq-toast__icon"
+                    [color]="$any(data.style)"
+                    [ngClass]="data.iconClass"
+                ></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'success'">
-                <i kbq-icon="mc-success_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i
+                    kbq-icon="mc-success_16"
+                    class="kbq-toast__icon"
+                    [color]="$any(data.style)"
+                    [ngClass]="data.iconClass"
+                ></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'warning'">
-                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i
+                    kbq-icon="mc-error_16"
+                    class="kbq-toast__icon"
+                    [color]="$any(data.style)"
+                    [ngClass]="data.iconClass"
+                ></i>
             </ng-container>
 
             <ng-container *ngSwitchCase="'error'">
-                <i kbq-icon="mc-error_16" [ngClass]="data.iconClass" class="kbq-toast__icon" [color]="$any(data.style)"></i>
+                <i
+                    kbq-icon="mc-error_16"
+                    class="kbq-toast__icon"
+                    [color]="$any(data.style)"
+                    [ngClass]="data.iconClass"
+                ></i>
             </ng-container>
         </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="isTemplateRef(data.icon)"
-                  [ngTemplateOutlet]="$any(data.icon)"
-                  [ngTemplateOutletContext]="{ $implicit }">
-    </ng-container>
+    <ng-container
+        *ngIf="isTemplateRef(data.icon)"
+        [ngTemplateOutlet]="$any(data.icon)"
+        [ngTemplateOutletContext]="{ $implicit }"
+    ></ng-container>
 </div>
 
 <div class="kbq-toast__container">
-    <div *ngIf="data.title"
-         class="kbq-toast__title"
-         [class.kbq-toast__title_with-content]="data.caption || data.content"
+    <div
+        *ngIf="data.title"
+        class="kbq-toast__title"
+        [class.kbq-toast__title_with-content]="data.caption || data.content"
     >
-        <ng-container *ngIf="isTemplateRef(data.title)"
-                      [ngTemplateOutlet]="$any(data.title)"
-                      [ngTemplateOutletContext]="{ $implicit }">
-        </ng-container>
+        <ng-container
+            *ngIf="isTemplateRef(data.title)"
+            [ngTemplateOutlet]="$any(data.title)"
+            [ngTemplateOutletContext]="{ $implicit }"
+        ></ng-container>
 
         <ng-container *ngIf="!isTemplateRef(data.title)">
             <p>{{ data.title }}</p>
         </ng-container>
     </div>
 
-    <div *ngIf="data.caption"
-         [class.kbq-toast__text]="data.title"
-         [class.kbq-toast__title]="!data.title">
-        <ng-container *ngIf="isTemplateRef(data.caption)"
-                      [ngTemplateOutlet]="$any(data.caption)"
-                      [ngTemplateOutletContext]="{ $implicit }">
-        </ng-container>
+    <div
+        *ngIf="data.caption"
+        [class.kbq-toast__text]="data.title"
+        [class.kbq-toast__title]="!data.title"
+    >
+        <ng-container
+            *ngIf="isTemplateRef(data.caption)"
+            [ngTemplateOutlet]="$any(data.caption)"
+            [ngTemplateOutletContext]="{ $implicit }"
+        ></ng-container>
 
         <ng-container *ngIf="!isTemplateRef(data.caption)">{{ data.caption }}</ng-container>
     </div>
 
-    <div *ngIf="data.content" class="kbq-toast__content">
-        <ng-container *ngIf="isTemplateRef(data.content)"
-                      [ngTemplateOutlet]="$any(data.content)"
-                      [ngTemplateOutletContext]="{ $implicit }">
-        </ng-container>
+    <div
+        *ngIf="data.content"
+        class="kbq-toast__content"
+    >
+        <ng-container
+            *ngIf="isTemplateRef(data.content)"
+            [ngTemplateOutlet]="$any(data.content)"
+            [ngTemplateOutletContext]="{ $implicit }"
+        ></ng-container>
 
         <ng-container *ngIf="!isTemplateRef(data.content)">{{ data.content }}</ng-container>
     </div>
 
-    <div *ngIf="data.actions" class="kbq-toast__actions">
-        <ng-container *ngIf="isTemplateRef(data.actions)"
-                      [ngTemplateOutlet]="$any(data.actions)"
-                      [ngTemplateOutletContext]="{ $implicit }">
-        </ng-container>
+    <div
+        *ngIf="data.actions"
+        class="kbq-toast__actions"
+    >
+        <ng-container
+            *ngIf="isTemplateRef(data.actions)"
+            [ngTemplateOutlet]="$any(data.actions)"
+            [ngTemplateOutletContext]="{ $implicit }"
+        ></ng-container>
 
         <ng-container *ngIf="!isTemplateRef(data.actions)">{{ data.actions }}</ng-container>
     </div>
 </div>
 
 <div *ngIf="data.closeButton">
-    <i kbq-icon-button="mc-close-M_16"
-       kbq-toast-close-button
-       *ngIf="data.closeButton === true"
-       (click)="close()">
-    </i>
+    <i
+        *ngIf="data.closeButton === true"
+        kbq-icon-button="mc-close-M_16"
+        kbq-toast-close-button
+        (click)="close()"
+    ></i>
 
-    <ng-container *ngIf="isTemplateRef(data.closeButton)"
-                  [ngTemplateOutlet]="$any(data.closeButton)"
-                  [ngTemplateOutletContext]="{ $implicit }">
-    </ng-container>
+    <ng-container
+        *ngIf="isTemplateRef(data.closeButton)"
+        [ngTemplateOutlet]="$any(data.closeButton)"
+        [ngTemplateOutletContext]="{ $implicit }"
+    ></ng-container>
 </div>

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 
-
 /**
  * @title Scrollbar Scroll To Top
  */
@@ -11,7 +10,5 @@ import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
     encapsulation: ViewEncapsulation.None
 })
 export class ScrollbarScrollToTopExample {
-
     constructor(public cdr: ChangeDetectorRef) {}
-
 }

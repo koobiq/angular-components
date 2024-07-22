@@ -1,9 +1,14 @@
-<kbq-alert [compact]="true" class="flex-100" [@hideShowAnimator]="state">
+<kbq-alert
+    class="flex-100"
+    [compact]="true"
+    [@hideShowAnimator]="state"
+>
     <i kbq-icon="mc-info_16"></i>
     Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения.
-    <i kbq-icon-button="mc-close-M_16"
-       [color]="colors.ContrastFade"
-       kbq-alert-close-button
-       (click)="state = !state">
-    </i>
+    <i
+        kbq-alert-close-button
+        kbq-icon-button="mc-close-M_16"
+        [color]="colors.ContrastFade"
+        (click)="state = !state"
+    ></i>
 </kbq-alert>

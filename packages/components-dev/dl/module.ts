@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -15,7 +14,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
 export class DemoComponent {
     themePalette = ThemePalette;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

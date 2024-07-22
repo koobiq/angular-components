@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-
 import { KbqCleaner } from './cleaner';
 import { KbqFormField, KbqFormFieldWithoutBorders, KbqTrim } from './form-field';
 import { KbqHint } from './hint';
@@ -11,7 +10,6 @@ import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 import { KbqValidateDirective } from './validate.directive';
-
 
 @NgModule({
     declarations: [

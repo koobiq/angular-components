@@ -2,7 +2,6 @@
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqToastService } from '@koobiq/components/toast';
 
-
 /**
  * @title Basic Toast
  */

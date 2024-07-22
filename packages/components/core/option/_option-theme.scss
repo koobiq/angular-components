@@ -4,7 +4,6 @@
 @use '../styles/typography/typography-utils' as *;
 @use '../styles/common/tokens' as *;
 
-
 @mixin kbq-option($component, $style-name) {
     $state: map.get($component, $style-name);
 

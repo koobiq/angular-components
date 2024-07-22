@@ -13,7 +13,7 @@
     width: 90px;
     position: relative;
 
-    border: 1px solid #B3B3B2;
+    border: 1px solid #b3b3b2;
     border-radius: 8px;
 }
 
@@ -25,14 +25,14 @@
 .popover-trigger:after {
     content: '';
     display: block;
-    background: #338FCB;
+    background: #338fcb;
     height: 16px;
     width: 16px;
     position: relative;
 }
 
 .popover-trigger.active:after {
-    background: #CB3C33;
+    background: #cb3c33;
 }
 
 .popover-trigger-topLeft {

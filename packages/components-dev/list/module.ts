@@ -1,7 +1,7 @@
 // tslint:disable:no-console
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, FormsModule } from '@angular/forms';
+import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -13,7 +13,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
-
 
 @Component({
     selector: 'app',
@@ -56,7 +55,6 @@ export class DemoComponent {
         this.clipboard.copy($event.option.value);
     }
 }
-
 
 @NgModule({
     declarations: [

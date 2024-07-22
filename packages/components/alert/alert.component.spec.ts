@@ -1,9 +1,7 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { KbqAlert, KbqAlertModule } from './index';
-
 
 describe('MсAlert', () => {
     let fixture: ComponentFixture<TestApp>;
@@ -31,7 +29,6 @@ describe('MсAlert', () => {
         expect(alertNativeElement.classList.contains('kbq-alert')).toBe(true);
     });
 });
-
 
 @Component({
     selector: 'test-app',

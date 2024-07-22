@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component, Inject,
-    NgModule,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, NgModule, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,13 +11,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
     KBQ_SIDEPANEL_DATA,
+    KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelService,
-    KbqSidepanelModule,
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-
 
 // tslint:disable:no-console
 @Component({
@@ -51,7 +44,9 @@ export class SidepanelDemoComponent {
             position: this.position,
             size: this.size,
             data: {
-                openComponentSidepanel: () => { this.openComponentSidepanel(); }
+                openComponentSidepanel: () => {
+                    this.openComponentSidepanel();
+                }
             }
         });
     }
@@ -80,15 +75,23 @@ export class SidepanelDemoComponent {
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button [color]="'contrast'" (click)="openComponentSidepanel()">
+                <button
+                    [color]="'contrast'"
+                    (click)="openComponentSidepanel()"
+                    kbq-button
+                >
                     <span>Open another sidepanel</span>
                 </button>
 
-                <button kbq-button kbq-sidepanel-close>
+                <button
+                    kbq-button
+                    kbq-sidepanel-close
+                >
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>
-        </kbq-sidepanel-footer>`,
+        </kbq-sidepanel-footer>
+    `,
     host: {
         class: 'layout-column flex'
     }

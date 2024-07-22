@@ -3,7 +3,6 @@
 
 @use '../core/styles/common/list';
 
-
 .kbq-list,
 .kbq-list-selection {
     display: block;
@@ -29,7 +28,6 @@
     &:not(.kbq-disabled):hover,
     &:not(.kbq-disabled).kbq-focused,
     &:not(.kbq-disabled).kbq-action-button-focused {
-
         & .kbq-option-action {
             display: flex;
         }

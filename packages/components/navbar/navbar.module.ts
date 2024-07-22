@@ -4,21 +4,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-
 import {
-    KbqNavbarFocusableItem,
+    KbqNavbarBento,
     KbqNavbarBrand,
     KbqNavbarDivider,
+    KbqNavbarFocusableItem,
     KbqNavbarItem,
     KbqNavbarLogo,
-    KbqNavbarTitle,
     KbqNavbarRectangleElement,
-    KbqNavbarToggle,
-    KbqNavbarBento
+    KbqNavbarTitle,
+    KbqNavbarToggle
 } from './navbar-item.component';
 import { KbqNavbar, KbqNavbarContainer } from './navbar.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
-
 
 @NgModule({
     imports: [

@@ -5,7 +5,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
-
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -15,7 +14,6 @@ import { KbqTableModule } from '@koobiq/components/table';
 export class DemoComponent {
     protected readonly colors = KbqComponentColors;
 }
-
 
 @NgModule({
     declarations: [DemoComponent],

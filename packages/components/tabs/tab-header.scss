@@ -4,7 +4,6 @@
 @use '../core/styles/common/vendor-prefixes';
 @use 'tabs-common' as *;
 
-
 .kbq-tab-header {
     display: flex;
     overflow: hidden;
@@ -43,15 +42,10 @@
     padding-left: 12px;
     padding-right: 12px;
 
-    &.kbq-tab-header__pagination_before {}
-
-    &.kbq-tab-header__pagination_after {}
-
     .kbq-tab-header__pagination-controls_enabled & {
         display: flex;
     }
 }
-
 
 .kbq-tab-header__content {
     display: flex;

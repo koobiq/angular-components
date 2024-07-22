@@ -2,11 +2,9 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KbqSidepanelConfig } from './sidepanel-config';
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
-
 
 // Counter for unique sidepanel ids.
 let uniqueId = 0;
@@ -29,33 +27,33 @@ export class KbqSidepanelRef<T = any, R = any> {
     constructor(
         public containerInstance: KbqSidepanelContainerComponent,
         private overlayRef: OverlayRef,
-        public config: KbqSidepanelConfig) {
-
+        public config: KbqSidepanelConfig
+    ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
 
         // Emit when opening animation completes
-        containerInstance.animationStateChanged.pipe(
-            filter(
-                (event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Visible
-            ),
-            take(1)
-        ).subscribe(() => {
-            this.afterOpened$.next();
-            this.afterOpened$.complete();
-        });
+        containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Visible),
+                take(1)
+            )
+            .subscribe(() => {
+                this.afterOpened$.next();
+                this.afterOpened$.complete();
+            });
 
         // Dispose overlay when closing animation is complete
-        containerInstance.animationStateChanged.pipe(
-            filter(
-                (event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Hidden
-            ),
-            take(1)
-        ).subscribe(() => {
-            overlayRef.dispose();
-            this.afterClosed$.next(this.result);
-            this.afterClosed$.complete();
-        });
+        containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'done' && event.toState === KbqSidepanelAnimationState.Hidden),
+                take(1)
+            )
+            .subscribe(() => {
+                overlayRef.dispose();
+                this.afterClosed$.next(this.result);
+                this.afterClosed$.complete();
+            });
 
         if (!containerInstance.sidepanelConfig.disableClose) {
             merge(
@@ -72,10 +70,12 @@ export class KbqSidepanelRef<T = any, R = any> {
     close(result?: R): void {
         if (!this.afterClosed$.closed) {
             // Transition the backdrop in parallel to the sidepanel.
-            this.containerInstance.animationStateChanged.pipe(
-                filter((event) => event.phaseName === 'done'),
-                take(1)
-            ).subscribe(() => this.overlayRef.detachBackdrop());
+            this.containerInstance.animationStateChanged
+                .pipe(
+                    filter((event) => event.phaseName === 'done'),
+                    take(1)
+                )
+                .subscribe(() => this.overlayRef.detachBackdrop());
 
             this.result = result;
             this.containerInstance.exit();

@@ -2,17 +2,30 @@
     <h2>With kbq-timezone-option</h2>
     <kbq-form-field>
         <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" [placeholder]="'Город или часовой пояс'" type="text"/>
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                    [placeholder]="'Город или часовой пояс'"
+                />
             </kbq-form-field>
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <kbq-optgroup *ngFor="let group of (filteredOptions$ | async)" [label]="group.countryName">
+            <kbq-optgroup
+                *ngFor="let group of filteredOptions$ | async"
+                [label]="group.countryName"
+            >
                 <kbq-timezone-option
                     *ngFor="let timezone of group.zones"
-
                     [highlightText]="searchPattern"
                     [timezone]="timezone"
                 ></kbq-timezone-option>
@@ -20,55 +33,81 @@
         </kbq-timezone-select>
     </kbq-form-field>
 
-    <pre>Selected: {{ selected  }}</pre>
+    <pre>Selected: {{ selected }}</pre>
 
     <br />
 
     <h2>With kbq-option</h2>
     <kbq-form-field>
         <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" [placeholder]="'Город или часовой пояс'" type="text"/>
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                    [placeholder]="'Город или часовой пояс'"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <ng-container *ngFor="let group of (filteredOptions$ | async)">
-                <kbq-option  *ngFor="let timezone of group.zones" [value]="timezone.id">
+            <ng-container *ngFor="let group of filteredOptions$ | async">
+                <kbq-option
+                    *ngFor="let timezone of group.zones"
+                    [value]="timezone.id"
+                >
                     {{ timezone.id }}
                 </kbq-option>
             </ng-container>
         </kbq-timezone-select>
     </kbq-form-field>
 
-    <pre>Selected: {{ selected  }}</pre>
+    <pre>Selected: {{ selected }}</pre>
 
     <br />
 
     <h2>With custom trigger</h2>
     <kbq-form-field>
         <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbqPrefix kbq-icon="mc-search_16"></i>
-                <input kbqInput [formControl]="searchControl" [placeholder]="'Город или часовой пояс'" type="text"/>
+            <kbq-form-field
+                kbqFormFieldWithoutBorders
+                kbqSelectSearch
+            >
+                <i
+                    kbq-icon="mc-search_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqInput
+                    type="text"
+                    [formControl]="searchControl"
+                    [placeholder]="'Город или часовой пояс'"
+                />
                 <kbq-cleaner></kbq-cleaner>
             </kbq-form-field>
 
-            <kbq-timezone-select-trigger>
-                custom trigger: {{ selected }}
-            </kbq-timezone-select-trigger>
+            <kbq-timezone-select-trigger>custom trigger: {{ selected }}</kbq-timezone-select-trigger>
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <ng-container *ngFor="let group of (filteredOptions$ | async)">
-                <kbq-option  *ngFor="let timezone of group.zones" [value]="timezone.id">
+            <ng-container *ngFor="let group of filteredOptions$ | async">
+                <kbq-option
+                    *ngFor="let timezone of group.zones"
+                    [value]="timezone.id"
+                >
                     {{ timezone.id }}
                 </kbq-option>
             </ng-container>
         </kbq-timezone-select>
     </kbq-form-field>
 
-    <pre>Selected: {{ selected  }}</pre>
+    <pre>Selected: {{ selected }}</pre>
 </div>

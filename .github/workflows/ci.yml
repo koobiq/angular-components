@@ -23,8 +23,11 @@ jobs:
       - name: API Golden Checks
         run: yarn run check-api
 
-      - name: Spell Checking
-        run: yarn run cspell:md --no-progress
+      - name: Linters
+        run: |
+          yarn run cspell --no-progress
+          yarn run prettier
+          yarn run stylelint
 
       - name: Unit
         run: |

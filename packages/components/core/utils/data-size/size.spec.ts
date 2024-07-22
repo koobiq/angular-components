@@ -1,6 +1,5 @@
 import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, MeasurementSystem } from './config';
-import { getHumanizedBytes, formatDataSize } from './size';
-
+import { formatDataSize, getHumanizedBytes } from './size';
 
 describe('Format utils', () => {
     it('getHumanizedBytes: SI unit system', () => {

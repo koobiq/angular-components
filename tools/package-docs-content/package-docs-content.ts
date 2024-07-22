@@ -1,6 +1,5 @@
-import { ensureDirSync, copySync } from 'fs-extra';
+import { copySync, ensureDirSync } from 'fs-extra';
 import { dirname } from 'path';
-
 
 // tslint:disable-next-line:blank-lines
 if (require.main === module) {

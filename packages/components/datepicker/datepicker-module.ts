@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-
 import { KbqCalendarBody } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
@@ -14,12 +13,11 @@ import { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerToggle, KbqDatepickerToggleIcon } from './datepicker-toggle.component';
 import {
+    KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqDatepicker,
-    KbqDatepickerContent,
-    KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
+    KbqDatepickerContent
 } from './datepicker.component';
 import { KbqMonthView } from './month-view.component';
-
 
 @NgModule({
     imports: [

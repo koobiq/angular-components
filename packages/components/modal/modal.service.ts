@@ -4,12 +4,10 @@ import { ComponentRef, Injectable } from '@angular/core';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
-import { ConfirmType, ModalOptions, IModalOptionsForService } from './modal.type';
-
+import { ConfirmType, IModalOptionsForService, ModalOptions } from './modal.type';
 
 // A builder used for managing service creating modals
 export class ModalBuilderForService {
@@ -17,7 +15,10 @@ export class ModalBuilderForService {
     private modalRef: ComponentRef<KbqModalComponent> | null;
     private overlayRef: OverlayRef;
 
-    constructor(private overlay: Overlay, options: IModalOptionsForService = {}) {
+    constructor(
+        private overlay: Overlay,
+        options: IModalOptionsForService = {}
+    ) {
         this.createModal();
 
         if (!('kbqGetContainer' in options)) {
@@ -28,14 +29,15 @@ export class ModalBuilderForService {
         this.modalRef!.instance.open();
         this.modalRef!.instance.kbqAfterClose.subscribe(() => this.destroyModal());
 
-        this.overlayRef.keydownEvents()
-            .pipe(filter((event: KeyboardEvent) => {
-                // tslint:disable-next-line:deprecation replacement .key isn't supported in Edge
-                return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
-            }))
-            .subscribe(
-                () => this.getInstance()?.handleCloseResult('cancel', () => true)
-            );
+        this.overlayRef
+            .keydownEvents()
+            .pipe(
+                filter((event: KeyboardEvent) => {
+                    // tslint:disable-next-line:deprecation replacement .key isn't supported in Edge
+                    return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
+                })
+            )
+            .subscribe(() => this.getInstance()?.handleCloseResult('cancel', () => true));
     }
 
     getInstance(): KbqModalComponent | null {
@@ -86,7 +88,6 @@ export class KbqModalService {
     }
 
     create<T>(options: IModalOptionsForService<T> = {}): KbqModalRef<T> {
-
         if (typeof options.kbqOnCancel !== 'function') {
             // Leave a empty function to close this modal by default
             // tslint:disable-next-line
@@ -131,7 +132,6 @@ export class KbqModalService {
     }
 
     open<T>(options: IModalOptionsForService<T> = {}): KbqModalRef<T> {
-
         options.kbqModalType = 'custom';
 
         return this.create(options);

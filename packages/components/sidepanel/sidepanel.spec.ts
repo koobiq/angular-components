@@ -1,15 +1,19 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, Inject, NgModule, TemplateRef, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-
-import { KBQ_SIDEPANEL_DATA, KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelRef, KbqSidepanelService } from './index';
-
+import {
+    KBQ_SIDEPANEL_DATA,
+    KbqSidepanelModule,
+    KbqSidepanelPosition,
+    KbqSidepanelRef,
+    KbqSidepanelService
+} from './index';
 
 // tslint:disable:no-magic-numbers
 describe('KbqSidepanelService', () => {
@@ -27,14 +31,11 @@ describe('KbqSidepanelService', () => {
         TestBed.compileComponents();
     }));
 
-    beforeEach(inject(
-        [KbqSidepanelService, OverlayContainer],
-        (ss: KbqSidepanelService, oc: OverlayContainer) => {
-                sidepanelService = ss;
-                overlayContainer = oc;
-                overlayContainerElement = oc.getContainerElement();
-            }
-    ));
+    beforeEach(inject([KbqSidepanelService, OverlayContainer], (ss: KbqSidepanelService, oc: OverlayContainer) => {
+        sidepanelService = ss;
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+    }));
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
@@ -286,7 +287,8 @@ describe('KbqSidepanelService', () => {
         fixtureComponent.detectChanges();
         flush();
 
-        const dropdownItems = fixtureComponent.debugElement.queryAll(By.directive(KbqDropdownItem))
+        const dropdownItems = fixtureComponent.debugElement
+            .queryAll(By.directive(KbqDropdownItem))
             .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
 
         dropdownItems[0].click();
@@ -301,18 +303,18 @@ describe('KbqSidepanelService', () => {
     }));
 });
 
-
 @Component({
     template: `
-        <kbq-sidepanel-header [closeable]="true">
-            Sidepanel Component Content
-        </kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">Sidepanel Component Content</kbq-sidepanel-header>
 
         <kbq-sidepanel-body><div class="kbq-subheading">Sidepanel Component Body</div></kbq-sidepanel-body>
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions align="right">
-                <button kbq-button kbq-sidepanel-close>
+                <button
+                    kbq-button
+                    kbq-sidepanel-close
+                >
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>
@@ -321,15 +323,25 @@ describe('KbqSidepanelService', () => {
 })
 class ComponentForSidepanel {}
 
-
 @Component({
     selector: 'kbq-sidepanel-from-dropdown',
     template: `
-        <button kbq-button class="template-button" [kbqDropdownTriggerFor]="dropdown" #trigger="kbqDropdownTrigger">Open sidepanel from dropdown
+        <button
+            class="template-button"
+            #trigger="kbqDropdownTrigger"
+            [kbqDropdownTriggerFor]="dropdown"
+            kbq-button
+        >
+            Open sidepanel from dropdown
         </button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button kbq-dropdown-item (click)="showSidepanel()">open Component Sidepanel</button>
+                <button
+                    (click)="showSidepanel()"
+                    kbq-dropdown-item
+                >
+                    open Component Sidepanel
+                </button>
             </ng-template>
         </kbq-dropdown>
     `,
@@ -346,7 +358,6 @@ class SidepanelFromDropdownComponent {
     }
 }
 
-
 @Component({
     template: '<div>Simple Sidepanel</div>'
 })
@@ -358,14 +369,20 @@ class SimpleSidepanelExample {
 }
 
 @Component({
-    template: `<ng-template let-data let-sidepanelRef="sidepanelRef">
-        {{localValue}} {{data?.value}}{{setSidepanelRef(sidepanelRef)}}</ng-template>`
+    template: `
+        <ng-template
+            let-data
+            let-sidepanelRef="sidepanelRef"
+        >
+            {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}
+        </ng-template>
+    `
 })
 class ComponentWithTemplateForSidepanel {
     localValue: string;
     sidepanelRef: KbqSidepanelRef;
 
-    @ViewChild(TemplateRef, {static: true}) templateRef: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: true }) templateRef: TemplateRef<any>;
 
     setSidepanelRef(sidepanelRef: KbqSidepanelRef): string {
         this.sidepanelRef = sidepanelRef;
@@ -376,7 +393,9 @@ class ComponentWithTemplateForSidepanel {
 
 @Component({
     selector: 'root-component',
-    template: `<div></div>`
+    template: `
+        <div></div>
+    `
 })
 class RootComponent {}
 
