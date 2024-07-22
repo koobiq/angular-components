@@ -58,6 +58,7 @@
 
         & .kbq-radio-label {
             cursor: default;
+            color: map.get($component, $type-name, states-disabled, caption);
         }
 
         & .kbq-hint .kbq-hint__text {
