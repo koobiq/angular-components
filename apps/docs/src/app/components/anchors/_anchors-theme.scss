@@ -46,9 +46,3 @@
     -o-box-shadow: $shadow;
     box-shadow: $shadow;
 }
-
-@mixin kbq-docs-anchors-typography($config) {
-    .docs-anchors__element {
-        @include typography.kbq-typography-level-to-styles($config, body);
-    }
-}

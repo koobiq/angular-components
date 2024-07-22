@@ -35,7 +35,6 @@
 
     @include component-viewer-theme.kbq-docs-component-viewer-typography($config);
     @include footer-theme.kbq-docs-footer-typography($config);
-    @include anchors-theme.kbq-docs-anchors-typography($config);
     @include sidenav-theme.kbq-docs-sidenav-typography($config);
     @include navbar-theme.kbq-docs-navbar-typography($config);
     @include docs-example-source-theme.kbq-docs-example-source-typography($config);
