@@ -7,6 +7,7 @@
     $line-height: $font-size,
     $letter-spacing: normal,
     $font-weight: normal,
+    $font-style: normal,
     $font-family: null,
     $text-transform: null,
     $font-feature-settings: null
@@ -15,6 +16,7 @@
         font-size: $font-size,
         line-height: $line-height,
         font-weight: $font-weight,
+        font-style: $font-style,
         font-family: $font-family,
         letter-spacing: $letter-spacing,
         text-transform: $text-transform,
@@ -36,6 +38,10 @@
 
 @function kbq-font-weight($config, $level) {
     @return _kbq-get-type-value($config, $level, font-weight);
+}
+
+@function kbq-font-style($config, $level) {
+    @return _kbq-get-type-value($config, $level, font-style);
 }
 
 @function kbq-letter-spacing($config, $level) {
@@ -65,12 +71,13 @@
 @mixin kbq-typography-level-to-styles($config, $level) {
     $font-size: kbq-font-size($config, $level);
     $font-weight: kbq-font-weight($config, $level);
+    $font-style: kbq-font-style($config, $level);
     $line-height: kbq-line-height($config, $level);
     $font-family: kbq-font-family($config, $level);
     $text-transform: kbq-text-transform($config, $level);
     $font-feature-settings: kbq-font-feature-settings($config, $level);
 
-    font: $font-weight #{$font-size}/#{$line-height} $font-family;
+    font: $font-weight $font-style #{$font-size}/#{$line-height} $font-family;
     letter-spacing: kbq-letter-spacing($config, $level);
     text-transform: kbq-text-transform($config, $level);
     font-feature-settings: kbq-font-feature-settings($config, $level);
