@@ -22,6 +22,7 @@
             [routerLink]="[category.id, item.id]"
         >
             <img
+                alt="{{ item.id }}"
                 src="./assets/images/welcome/{{ item.svgPreview ? item.svgPreview : 'generic' }}-{{
                     currentTheme$ | async
                 }}.png"
