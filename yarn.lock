@@ -233,6 +233,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-builders/common@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@angular-builders/common@npm:1.0.2"
+  dependencies:
+    "@angular-devkit/core": "npm:^17.1.0"
+    ts-node: "npm:^10.0.0"
+    tsconfig-paths: "npm:^4.1.0"
+  checksum: 10c0/be6aab4f84c5c0dfddecfbd6bac1099c713263c25f9ec6fca35da8ffd3e83fd781d6c4cad0b19f4ba68bb4f324ff2710e20277da4215fcfe95c18a429c36d65c
+  languageName: node
+  linkType: hard
+
+"@angular-builders/jest@npm:17.0.3":
+  version: 17.0.3
+  resolution: "@angular-builders/jest@npm:17.0.3"
+  dependencies:
+    "@angular-builders/common": "npm:1.0.2"
+    "@angular-devkit/architect": "npm:>=0.1700.0 < 0.1800.0"
+    "@angular-devkit/core": "npm:^17.0.0"
+    jest-preset-angular: "npm:14.0.3"
+    lodash: "npm:^4.17.15"
+  peerDependencies:
+    "@angular-devkit/build-angular": ^17.0.0
+    "@angular/compiler-cli": ^17.0.0
+    "@angular/core": ^17.0.0
+    "@angular/platform-browser-dynamic": ^17.0.0
+    jest: ">=29"
+  checksum: 10c0/922c1472f938eeabc560fdaf46e3aa9a263b83a7d2e221fcf020d8c17ac825dac63160b43206f761617b00fcf034b3cc6f40f9cf440f66cd6e0d88d05b17d43e
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/architect-cli@npm:0.1702.0":
   version: 0.1702.0
   resolution: "@angular-devkit/architect-cli@npm:0.1702.0"
@@ -256,6 +286,16 @@ __metadata:
     "@angular-devkit/core": "npm:17.2.0"
     rxjs: "npm:7.8.1"
   checksum: 10c0/5ebc74682333ad9de1f9b841a0d69e4bf3249a998da1376a0b227f034917e4021339e77386682c4f48914eae5b8c197f240e5ae5696cddf0553fc0f1f3bfdd40
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/architect@npm:>=0.1700.0 < 0.1800.0":
+  version: 0.1703.8
+  resolution: "@angular-devkit/architect@npm:0.1703.8"
+  dependencies:
+    "@angular-devkit/core": "npm:17.3.8"
+    rxjs: "npm:7.8.1"
+  checksum: 10c0/0eacbbf7fd3f627739820e787bddff5c9d8e0c00da07a9f8732cdf17540d4a43a570e87fea50d61a49aec6fc9076831b106a701b70ea5b841a2243e8d52be933
   languageName: node
   linkType: hard
 
@@ -400,6 +440,25 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10c0/717610771b05103a3c11ff6a85dd0f7aca86232978c5cc6e3d0ae19fcd47a37b0ed0c1109efef4085ab12d5642c43f219d2c4e9b8300913d93880f91910c665b
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/core@npm:17.3.8, @angular-devkit/core@npm:^17.0.0, @angular-devkit/core@npm:^17.1.0":
+  version: 17.3.8
+  resolution: "@angular-devkit/core@npm:17.3.8"
+  dependencies:
+    ajv: "npm:8.12.0"
+    ajv-formats: "npm:2.1.1"
+    jsonc-parser: "npm:3.2.1"
+    picomatch: "npm:4.0.1"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^3.5.2
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10c0/9a5efd90247820cc469ab9773c28405873b4716528ea0873e8ab3e442280e6a631972247b74dc61ec88b3a1f689af0aa1318115bf50496045c1f5ac9476820d9
   languageName: node
   linkType: hard
 
@@ -14546,6 +14605,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-preset-angular@npm:14.0.3":
+  version: 14.0.3
+  resolution: "jest-preset-angular@npm:14.0.3"
+  dependencies:
+    bs-logger: "npm:^0.2.6"
+    esbuild: "npm:>=0.15.13"
+    esbuild-wasm: "npm:>=0.15.13"
+    jest-environment-jsdom: "npm:^29.0.0"
+    jest-util: "npm:^29.0.0"
+    pretty-format: "npm:^29.0.0"
+    ts-jest: "npm:^29.0.0"
+  peerDependencies:
+    "@angular-devkit/build-angular": ">=15.0.0 <18.0.0"
+    "@angular/compiler-cli": ">=15.0.0 <18.0.0"
+    "@angular/core": ">=15.0.0 <18.0.0"
+    "@angular/platform-browser-dynamic": ">=15.0.0 <18.0.0"
+    jest: ^29.0.0
+    typescript: ">=4.8"
+  dependenciesMeta:
+    esbuild:
+      optional: true
+  checksum: 10c0/3fca2770d6d3622023686b7531a15b19e35cc05bf825f3550ff4f7154473790cad0f7d6d90b1d5f244a0df23f8851df3ff7dc8a720167a6fd6c1aa328d228c24
+  languageName: node
+  linkType: hard
+
 "jest-preset-angular@npm:^14.1.1":
   version: 14.1.1
   resolution: "jest-preset-angular@npm:14.1.1"
@@ -15324,6 +15408,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "koobiq@workspace:."
   dependencies:
+    "@angular-builders/jest": "npm:17.0.3"
     "@angular-devkit/architect-cli": "npm:0.1702.0"
     "@angular-devkit/build-angular": "npm:17.2.0"
     "@angular-devkit/core": "npm:17.2.0"
@@ -21595,7 +21680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.9.1":
+"ts-node@npm:^10.0.0, ts-node@npm:^10.9.1":
   version: 10.9.2
   resolution: "ts-node@npm:10.9.2"
   dependencies:
@@ -21656,7 +21741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-paths@npm:^4.0.0, tsconfig-paths@npm:^4.1.2":
+"tsconfig-paths@npm:^4.0.0, tsconfig-paths@npm:^4.1.0, tsconfig-paths@npm:^4.1.2":
   version: 4.2.0
   resolution: "tsconfig-paths@npm:4.2.0"
   dependencies:

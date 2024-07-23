@@ -198,6 +198,14 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
+                },
+                "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "roots": ["packages/cdk"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
+                    }
                 }
             }
         },
@@ -251,6 +259,14 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
+                },
+                "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "roots": ["packages/angular-moment-adapter"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
+                    }
                 }
             }
         },
@@ -272,6 +288,14 @@
                         "buildTarget": "packagr",
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "roots": ["packages/angular-luxon-adapter"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
                     }
                 }
             }
