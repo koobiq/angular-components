@@ -74,8 +74,11 @@ $tokens: meta.module-variables(tokens) !default;
 
         left: 0;
         top: calc(
-            (var(--radio-font-normal-label-line-height, map.get($tokens, radio-font-normal-label-line-height))
-            - (var(--radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) + 2px)) / 2);
+            (
+                    var(--radio-font-normal-label-line-height, map.get($tokens, radio-font-normal-label-line-height)) -
+                        (var(--radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) + 2px)
+                ) / 2
+        );
 
         width: kbq-css-variable(radio-size-normal-outer-size);
         height: kbq-css-variable(radio-size-normal-outer-size);
@@ -122,8 +125,11 @@ $tokens: meta.module-variables(tokens) !default;
 
         .kbq-radio-button__outer-circle {
             top: calc(
-                (var(--radio-font-big-label-line-height, map.get($tokens, radio-font-big-label-line-height))
-                - (var(--radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) + 2px)) / 2);
+                (
+                        var(--radio-font-big-label-line-height, map.get($tokens, radio-font-big-label-line-height)) -
+                            (var(--radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) + 2px)
+                    ) / 2
+            );
 
             width: kbq-css-variable(radio-size-big-outer-size);
             height: kbq-css-variable(radio-size-big-outer-size);
