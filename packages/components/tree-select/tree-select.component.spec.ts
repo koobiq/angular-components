@@ -51,12 +51,15 @@ import {
 } from '@koobiq/cdk/testing';
 import {
     ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqLocaleServiceModule,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError, KbqLocaleServiceModule, KbqLocaleService, KBQ_LOCALE_SERVICE
+    getKbqSelectNonFunctionValueError
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -1893,23 +1896,32 @@ class ChildSelection {
     template: `
         <kbq-form-field style="width: 300px;">
             <kbq-tree-select
-                placeholder="Food"
                 [multiple]="true"
                 [formControl]="control"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
+                placeholder="Food"
             >
-                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                    >
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
                         [disabled]="node.name === 'Downloads'"
+                        kbqTreeNodePadding
                     >
-                        <i kbq-icon="mc-angle-down-S_16" kbqTreeNodeToggle></i>
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            kbqTreeNodeToggle
+                        ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -5540,7 +5552,7 @@ describe('KbqTreeSelect', () => {
                 tick(1);
                 flush();
             });
-        }
+        };
 
         beforeEach(() => {
             fixture = TestBed.createComponent(LocalizedTreeSelect);
@@ -5550,8 +5562,9 @@ describe('KbqTreeSelect', () => {
         it('should calculate hidden items and output in show more button', fakeAsync(() => {
             hideItems(fixture);
 
-            expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent)
-                .toContain(fixture.componentInstance.select.hiddenItems);
+            expect(
+                fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent
+            ).toContain(fixture.componentInstance.select.hiddenItems);
         }));
 
         it('should change show more text according to locale', fakeAsync(() => {
@@ -5561,8 +5574,9 @@ describe('KbqTreeSelect', () => {
             tick(1);
             flush();
 
-            expect(fixture.componentInstance.select.hiddenItemsText)
-                .toEqual(localeService.getParams('select').hiddenItemsText);
+            expect(fixture.componentInstance.select.hiddenItemsText).toEqual(
+                localeService.getParams('select').hiddenItemsText
+            );
         }));
     });
 });

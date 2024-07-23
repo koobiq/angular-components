@@ -56,7 +56,9 @@ import {
     ErrorStateMatcher,
     HasTabIndex,
     HasTabIndexCtor,
+    KBQ_LOCALE_SERVICE,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqLocaleService,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
@@ -69,7 +71,7 @@ import {
     kbqSelectAnimations,
     mixinDisabled,
     mixinErrorState,
-    mixinTabIndex, KBQ_LOCALE_SERVICE, KbqLocaleService
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
