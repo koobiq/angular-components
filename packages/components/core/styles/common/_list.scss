@@ -48,17 +48,14 @@
 }
 
 @mixin kbq-list-text() {
-
     @include kbq-line-wrapper-base();
     display: inline-block;
 
     @include kbq-truncate-line();
-
 }
 
 // This mixin provides all list-item styles, changing font size and height based on whether the list is in dense mode.
 @mixin kbq-list-item-base() {
-
     position: relative;
     display: flex;
     flex-direction: row;
@@ -86,7 +83,6 @@
 }
 
 @mixin kbq-list-header-base() {
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -107,7 +103,6 @@
 }
 
 @mixin kbq-list-subheading-base() {
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -115,7 +110,7 @@
     min-height: 32px;
 
     border-left: kbq-css-variable(size-3xs) solid transparent;
-    border-right: kbq-css-variable(size-3xs)  solid transparent;
+    border-right: kbq-css-variable(size-3xs) solid transparent;
 
     padding-top: kbq-css-variable(size-m);
     padding-left: kbq-css-variable(size-m);
