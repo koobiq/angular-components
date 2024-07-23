@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    box-sizing: border-box;
+    box-sizing: content-box;
     overflow: hidden;
 
     // Must remove wrapper when lines are empty or it takes up horizontal
@@ -48,93 +48,54 @@
 }
 
 @mixin kbq-list-text() {
-    $tokens: meta.module-variables(tokens) !default;
-
     @include kbq-line-wrapper-base();
     display: inline-block;
 
     @include kbq-truncate-line();
-
-    padding-top: kbq-css-variable(list-size-text-padding-vertical);
-    padding-bottom: kbq-css-variable(list-size-text-padding-vertical);
 }
 
 // This mixin provides all list-item styles, changing font size and height based on whether the list is in dense mode.
 @mixin kbq-list-item-base() {
-    $tokens: meta.module-variables(tokens) !default;
-
-    $outline-width: map.get($tokens, list-size-container-focus-outline-width);
-
-    $padding-vertical: map.get($tokens, list-size-container-padding-vertical);
-    $padding-left: map.get($tokens, list-size-container-padding-left);
-    $padding-right: map.get($tokens, list-size-container-padding-right);
-
     position: relative;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-
     box-sizing: border-box;
-
     outline: none;
     -webkit-tap-highlight-color: transparent;
-
     min-height: 32px;
+    gap: kbq-css-variable(size-s);
 
-    gap: kbq-css-variable(list-size-container-content-gap-horizontal);
+    border: kbq-css-variable(size-3xs) solid transparent;
 
-    border-width: kbq-css-variable(list-size-container-focus-outline-width);
-    border-style: solid;
-    border-color: transparent;
-
-    padding: calc(
-            var(--kbq-list-size-container-padding-vertical, $padding-vertical) - var(
-                    --kbq-list-size-container-focus-outline-width,
-                    $outline-width
-                )
-        )
-        calc(
-            var(--kbq-list-size-container-padding-right, $padding-right) - var(
-                    --kbq-list-size-container-focus-outline-width,
-                    $outline-width
-                )
-        )
-        calc(
-            var(--kbq-list-size-container-padding-vertical, $padding-vertical) - var(
-                    --kbq-list-size-container-focus-outline-width,
-                    $outline-width
-                )
-        )
-        calc(
-            var(--kbq-list-size-container-padding-left, $padding-left) - var(
-                    --kbq-list-size-container-focus-outline-width,
-                    $outline-width
-                )
-        );
+    padding-top: kbq-css-variable(size-xxs);
+    padding-left: kbq-css-variable(size-m);
+    padding-right: kbq-css-variable(size-m);
+    padding-bottom: kbq-css-variable(size-xxs);
 
     .kbq-list-text {
         @include kbq-list-text();
     }
 
     .kbq-list-option-caption {
-        padding-top: kbq-css-variable(list-size-container-content-gap-vertical);
+        padding-top: kbq-css-variable(size-3xs);
     }
 }
 
 @mixin kbq-list-header-base() {
-    $tokens: meta.module-variables(tokens) !default;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-
     box-sizing: border-box;
-
     min-height: 32px;
 
-    padding: kbq-css-variable(list-size-header-padding-top) kbq-css-variable(list-size-header-padding-horizontal)
-        kbq-css-variable(list-size-header-padding-bottom) kbq-css-variable(list-size-header-padding-horizontal);
+    border-left: kbq-css-variable(size-3xs) solid transparent;
+    border-right: kbq-css-variable(size-3xs) solid transparent;
+
+    padding-top: kbq-css-variable(size-xs);
+    padding-left: kbq-css-variable(size-m);
+    padding-right: kbq-css-variable(size-m);
+    padding-bottom: kbq-css-variable(size-3xs);
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -142,19 +103,19 @@
 }
 
 @mixin kbq-list-subheading-base() {
-    $tokens: meta.module-variables(tokens) !default;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-
     box-sizing: border-box;
-
     min-height: 32px;
 
-    padding: kbq-css-variable(list-size-subheading-padding-top)
-        kbq-css-variable(list-size-subheading-padding-horizontal) kbq-css-variable(list-size-subheading-padding-bottom)
-        kbq-css-variable(list-size-subheading-padding-horizontal);
+    border-left: kbq-css-variable(size-3xs) solid transparent;
+    border-right: kbq-css-variable(size-3xs) solid transparent;
+
+    padding-top: kbq-css-variable(size-m);
+    padding-left: kbq-css-variable(size-m);
+    padding-right: kbq-css-variable(size-m);
+    padding-bottom: kbq-css-variable(size-xxs);
 
     .kbq-list-text {
         @include kbq-list-text();
