@@ -22,8 +22,8 @@
             [routerLink]="[category.id, item.id]"
         >
             <img
-                alt="{{ item.id }}"
-                src="./assets/images/welcome/{{ item.svgPreview ? item.svgPreview : 'generic' }}-{{
+                [alt]="item.id"
+                src="./assets/images/welcome/{{ item.svgPreview || 'generic' }}-{{
                     currentTheme$ | async
                 }}.png"
                 class="docs-welcome__category-item-preview"
