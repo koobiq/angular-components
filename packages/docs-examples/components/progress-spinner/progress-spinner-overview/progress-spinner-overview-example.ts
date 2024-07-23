@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
 const INTERVAL: number = 300;
@@ -14,7 +14,7 @@ const MAX_PERCENT: number = 100;
     styleUrls: ['progress-spinner-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProgressSpinnerOverviewExample {
+export class ProgressSpinnerOverviewExample implements OnDestroy {
     themePalette = ThemePalette;
 
     percent: number = 0;

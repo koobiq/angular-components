@@ -3,9 +3,10 @@
     class="kbq-button-wrapper"
     (cdkObserveContent)="projectContentChanged()"
 >
-    <ng-content></ng-content>
+    <ng-content />
 </div>
 <div
+    role="none"
     class="kbq-button-overlay"
     (click)="haltDisabledEvents($event)"
 ></div>

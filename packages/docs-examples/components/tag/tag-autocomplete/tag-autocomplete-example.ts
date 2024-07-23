@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList } from '@koobiq/components/tags';
@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
     styleUrls: ['tag-autocomplete-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class TagAutocompleteExample {
+export class TagAutocompleteExample implements AfterViewInit {
     allTags: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
     selectedTags: string[] = [];
 
@@ -47,7 +47,7 @@ export class TagAutocompleteExample {
                     return this.allTags.filter((tag) => !values.includes(tag));
                 })
             ),
-            this.control.valueChanges.pipe(map(this.onControlValueChanges))
+            this.control.valueChanges.pipe(map((e) => this.onControlValueChanges(e)))
         );
     }
 

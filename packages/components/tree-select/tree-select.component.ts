@@ -1,5 +1,3 @@
-/* tslint:disable:no-empty */
-
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -365,7 +363,6 @@ export class KbqTreeSelect
     }
 
     set compareWith(fn: (o1: any, o2: any) => boolean) {
-        /* tslint:disable-next-line:strict-type-predicates */
         if (typeof fn !== 'function') {
             throw getKbqSelectNonFunctionValueError();
         }
@@ -479,7 +476,7 @@ export class KbqTreeSelect
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes.pipe(takeUntil(this.destroy)).subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntil(this.destroy)).subscribe(() => this.updateLocaleParams());
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -573,8 +570,8 @@ export class KbqTreeSelect
         if (!this.multiple) {
             this.selectionModel.changed
                 .pipe(
-                    takeUntil(this.destroy),
-                    filter(({ added }) => !!added.length)
+                    filter(({ added }) => !!added.length),
+                    takeUntil(this.destroy)
                 )
                 .subscribe(({ added }) => {
                     this.tree.keyManager.setFocusOrigin('program');
@@ -721,6 +718,7 @@ export class KbqTreeSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }
@@ -964,7 +962,6 @@ export class KbqTreeSelect
     }
 
     private handleClosedKeydown(event: KeyboardEvent) {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
         const isArrowKey =
             keyCode === DOWN_ARROW || keyCode === UP_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
@@ -982,7 +979,6 @@ export class KbqTreeSelect
     }
 
     private handleOpenKeydown(event: KeyboardEvent) {
-        /* tslint:disable-next-line */
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
@@ -1166,7 +1162,6 @@ export class KbqTreeSelect
         const overlayRect = this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
         const viewportSize = this.viewportRuler.getViewportSize();
         const isRtl = this.isRtl();
-        /* tslint:disable-next-line:no-magic-numbers */
         const paddingWidth = SELECT_PANEL_PADDING_X * 2;
         let offsetX: number = SELECT_PANEL_PADDING_X;
 

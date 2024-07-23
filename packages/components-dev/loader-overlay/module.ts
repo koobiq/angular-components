@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';

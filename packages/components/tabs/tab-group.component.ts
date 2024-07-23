@@ -271,6 +271,7 @@ export class KbqTabGroup
 
             // If there is already a selected tab, then set up an origin for the next selected tab
             // if it doesn't have one already.
+
             if (this._selectedIndex != null && tab.position === 0 && !tab.origin) {
                 tab.origin = indexToSelect - this._selectedIndex;
             }
@@ -434,7 +435,7 @@ export class KbqTabGroup
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(this.checkOverflow);
+            .subscribe(() => this.checkOverflow());
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

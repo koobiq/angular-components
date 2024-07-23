@@ -1,11 +1,4 @@
-/* tslint:disable:no-magic-numbers */
-/* tslint:disable:no-non-null-assertion */
-/* tslint:disable:no-empty */
-/* tslint:disable:no-unbound-method */
-/* tslint:disable:prefer-for-of */
-
 // TODO: fix linter
-// tslint:disable
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
@@ -276,6 +269,7 @@ const OPTIONS = [
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -337,6 +331,7 @@ class BasicSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -471,6 +466,7 @@ class NgIfSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -530,6 +526,7 @@ class SelectWithChangeEvent {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -539,7 +536,7 @@ class SelectWithChangeEvent {
         </kbq-form-field>
     `
 })
-class SelectWithSearch {
+class SelectWithSearch implements OnInit {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 
     singleSelectedWithSearch = 'Moscow';
@@ -569,7 +566,7 @@ class SelectWithSearch {
     selector: 'custom-select-accessor',
     template: `
         <kbq-form-field>
-            <kbq-select></kbq-select>
+            <kbq-select />
         </kbq-form-field>
     `,
     providers: [
@@ -591,7 +588,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
 @Component({
     selector: 'comp-with-custom-select',
     template: `
-        <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>
+        <custom-select-accessor [formControl]="ctrl" />
     `,
     providers: [
         {
@@ -610,9 +607,9 @@ class CompWithCustomSelect {
     selector: 'select-infinite-loop',
     template: `
         <kbq-form-field>
-            <kbq-select [(ngModel)]="value"></kbq-select>
+            <kbq-select [(ngModel)]="value" />
         </kbq-form-field>
-        <throws-error-on-init></throws-error-on-init>
+        <throws-error-on-init />
     `
 })
 class SelectWithErrorSibling {
@@ -714,6 +711,7 @@ class BasicSelectOnPushPreselected {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -771,6 +769,7 @@ class MultiSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -802,7 +801,7 @@ class MultiSelectNarrow {
     selector: 'select-with-plain-tabindex',
     template: `
         <kbq-form-field>
-            <kbq-select [tabIndex]="5"></kbq-select>
+            <kbq-select [tabIndex]="5" />
         </kbq-form-field>
     `
 })
@@ -812,7 +811,7 @@ class SelectWithPlainTabindex {}
     selector: 'select-early-sibling-access',
     template: `
         <kbq-form-field>
-            <kbq-select #select="kbqSelect"></kbq-select>
+            <kbq-select #select="kbqSelect" />
         </kbq-form-field>
         <div *ngIf="select.selected"></div>
     `
@@ -889,6 +888,7 @@ class BasicSelectWithTheming {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -935,6 +935,7 @@ class ResetValuesSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1054,7 +1055,7 @@ class SelectWithGroupsAndNgContainer {
     template: `
         <form>
             <kbq-form-field>
-                <kbq-select [(ngModel)]="value"></kbq-select>
+                <kbq-select [(ngModel)]="value" />
             </kbq-form-field>
         </form>
     `
@@ -1092,7 +1093,6 @@ class SelectInsideFormGroup {
     });
     submitResult: string;
 
-    // tslint:disable-next-line:no-empty
     submitReactive() {
         this.submitResult = this.formGroup.invalid ? 'invalid' : 'valid';
     }
@@ -1242,6 +1242,7 @@ class SelectWithCustomTrigger {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1426,6 +1427,7 @@ class SelectWithFormFieldLabel {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1474,6 +1476,7 @@ class SelectWithLongOptionText {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1512,7 +1515,7 @@ class MultiSelectWithCustomizedTagContent {
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
 
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
     `
@@ -1567,13 +1570,14 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
+                            role="none"
                             kbq-icon="mc-close-S_16"
                             mcTagRemove
                         ></i>
                     </kbq-tag>
                 </ng-template>
 
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
     `
@@ -2398,7 +2402,6 @@ describe('KbqSelect', () => {
                     dispatchFakeEvent(selectElement, 'focus');
                     fixture.detectChanges();
 
-                    /* tslint:disable-next-line:deprecation */
                     expect(selectInstance.focused).withContext('Expected select to be focused.').toBe(true);
 
                     selectInstance.open();
@@ -2407,7 +2410,6 @@ describe('KbqSelect', () => {
                     dispatchFakeEvent(selectElement, 'blur');
                     fixture.detectChanges();
 
-                    /* tslint:disable-next-line:deprecation */
                     expect(selectInstance.focused).withContext('Expected select element to remain focused.').toBe(true);
                 })
             );
@@ -2678,7 +2680,6 @@ describe('KbqSelect', () => {
 
                 expect(spy).toHaveBeenCalledWith(jasmine.any(KbqOptionSelectionChange));
 
-                /* tslint:disable-next-line:no-unnecessary-type-assertion */
                 subscription!.unsubscribe();
             }));
 
@@ -2691,8 +2692,7 @@ describe('KbqSelect', () => {
                     trigger.click();
                     fixture.detectChanges();
 
-                    // @ts-ignore
-                    const option: HTMLElement = overlayContainerElement.querySelector('.kbq-option.kbq-active');
+                    const option: HTMLElement = overlayContainerElement.querySelector('.kbq-option.kbq-active')!;
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
                         altKey: { get: () => true }
@@ -5340,8 +5340,7 @@ describe('KbqSelect', () => {
         });
 
         it('should allow providing custom tag content', fakeAsync(() => {
-            let fixtureCustomizedContent: ComponentFixture<MultiSelectWithCustomizedTagContent>;
-            fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
+            const fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
             const componentInstance = fixtureCustomizedContent.componentInstance;
             fixtureCustomizedContent.detectChanges();
 
@@ -5362,13 +5361,11 @@ describe('KbqSelect', () => {
         }));
 
         it('should hide tags if tags container is overflown', fakeAsync(() => {
-            let fixtureTest = TestBed.createComponent(MultiSelectNarrow);
-            let componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
-            let triggerEl: HTMLElement;
+            const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
+            const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
+            const triggerEl: HTMLElement = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixtureTest.detectChanges();
-
-            triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             triggerEl.click();
             fixtureTest.detectChanges();
@@ -5389,13 +5386,11 @@ describe('KbqSelect', () => {
 
         // todo need fix later
         xit('should compute hidden items correctly', fakeAsync(() => {
-            let fixtureTest = TestBed.createComponent(MultiSelectNarrow);
-            let componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
-            let triggerEl: HTMLElement;
+            const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
+            const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
+            const triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixtureTest.detectChanges();
-
-            triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             triggerEl.click();
             fixtureTest.detectChanges();
@@ -5629,8 +5624,7 @@ describe('KbqSelect', () => {
         }));
 
         it('should calculate hidden items with virtual options', fakeAsync(() => {
-            let triggerEl: HTMLElement;
-            triggerEl = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const triggerEl: HTMLElement = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixture.componentInstance.style = { width: '100px' };
 
@@ -5658,11 +5652,9 @@ describe('KbqSelect', () => {
         }));
 
         it('should recalculate hidden items when previous rendered options range disappeared', fakeAsync(() => {
-            let fixture: ComponentFixture<CdkVirtualScrollViewportSelectOptionAsObject>;
-            let testInstance: CdkVirtualScrollViewportSelectOptionAsObject;
+            const fixture = TestBed.createComponent(CdkVirtualScrollViewportSelectOptionAsObject);
+            const testInstance = fixture.componentInstance;
 
-            fixture = TestBed.createComponent(CdkVirtualScrollViewportSelectOptionAsObject);
-            testInstance = fixture.componentInstance;
             finishInit(fixture);
 
             const triggerEl: HTMLElement = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;

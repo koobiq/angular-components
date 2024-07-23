@@ -21,9 +21,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     return TestBed.createComponent<T>(component);
 }
 
-// tslint:disable no-unnecessary-class
 @Component({
-    template: '<kbq-markdown [markdownText]="markdownText"></kbq-markdown>'
+    template: '<kbq-markdown [markdownText]="markdownText" />'
 })
 class KbqMarkdownWithAttribute {
     markdownText: string = '';

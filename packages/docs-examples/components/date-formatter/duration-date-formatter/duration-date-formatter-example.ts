@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, Inject } from '@angular/core';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -105,7 +104,7 @@ export class DurationDateFormatterExample {
         private formatter: DateFormatter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
-        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe((e) => this.onLocaleChange(e));
     }
 
     private onLocaleChange = (locale: string) => {

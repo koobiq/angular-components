@@ -51,7 +51,6 @@ export const esLAFormattersData = {
     input: {
         number: {
             // nbsp is generated automatically and used by default in spec
-            // tslint:disable-next-line:no-irregular-whitespace
             groupSeparator: [' ', ' '],
             fractionSeparator: ','
         }
@@ -165,7 +164,6 @@ export const ruRUFormattersData = {
     input: {
         number: {
             // nbsp is generated automatically and used by default in spec
-            // tslint:disable-next-line:no-irregular-whitespace
             groupSeparator: [' ', ' '],
             fractionSeparator: ',',
             startFormattingFrom: 4

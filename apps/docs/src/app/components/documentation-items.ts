@@ -1,4 +1,3 @@
-/* tslint:disable:naming-convention */
 import { Injectable } from '@angular/core';
 
 export interface DocItem {

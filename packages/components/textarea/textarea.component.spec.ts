@@ -29,7 +29,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     return TestBed.createComponent<T>(component);
 }
 
-// tslint:disable no-unnecessary-class
 @Component({
     template: `
         <kbq-form-field>
@@ -125,8 +124,6 @@ class KbqTextareaGrowOff {
     `
 })
 class KbqFormFieldWithoutBorders {}
-
-// tslint:enable no-unnecessary-class
 
 describe('KbqTextarea', () => {
     describe('basic behaviors', () => {

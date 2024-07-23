@@ -16,7 +16,6 @@ export const KBQ_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<IKbqMomentDate
 );
 
 /** @docs-private */
-// tslint:disable:naming-convention
 export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapterOptions {
     return {
         useUtc: false,
@@ -35,7 +34,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe(this.setLocale);
+        this.localeService?.changes.subscribe((e) => this.setLocale(e));
     }
 
     /** A stream that emits when the locale changes. */

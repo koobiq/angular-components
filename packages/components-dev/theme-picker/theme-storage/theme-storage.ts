@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { EventEmitter, Injectable } from '@angular/core';
 
 export interface IDocsSiteTheme {
@@ -19,7 +18,7 @@ export class ThemeStorage {
         try {
             window.localStorage[ThemeStorage.storageKey] = JSON.stringify(theme);
         } catch (e) {
-            console.log(e);
+            console.info(e);
         }
 
         this.onThemeUpdate.emit(theme);

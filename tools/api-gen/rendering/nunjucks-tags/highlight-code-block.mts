@@ -1,5 +1,4 @@
 // These type lacks type definitions.
-// tslint:disable-next-line:no-var-requires
 import hljs from 'highlight.js';
 
 /**

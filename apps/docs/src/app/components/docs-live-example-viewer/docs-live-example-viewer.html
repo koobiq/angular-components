@@ -7,13 +7,14 @@
             *ngIf="exampleComponentType && exampleModuleFactory"
             [ngComponentOutlet]="exampleComponentType"
             [ngComponentOutletNgModuleFactory]="exampleModuleFactory"
-        ></ng-template>
+        />
     </div>
 
     <div class="docs-live-example__footer">
         <span
             kbq-link
             pseudo
+            role="none"
             [ngSwitch]="isSourceShown"
             (click)="toggleSourceView()"
             (keydown.enter)="toggleSourceView()"
@@ -21,7 +22,7 @@
             {{ isSourceShown ? 'Скрыть пример кода' : 'Показать пример кода' }}
         </span>
 
-        <docs-stackblitz-button [exampleId]="exampleId"></docs-stackblitz-button>
+        <docs-stackblitz-button [exampleId]="exampleId" />
     </div>
 </div>
 
@@ -33,7 +34,7 @@
         [filled]="true"
         [filled]="true"
         [lineNumbers]="true"
-    ></kbq-code-block>
+    />
 </ng-container>
 
 <ng-template #lostExample>

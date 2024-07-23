@@ -88,6 +88,7 @@ export class KbqDropdownItem
             // Start monitoring the element so it gets the appropriate focused classes. We want
             // to show the focus style for menu items only when the focus was not caused by a
             // mouse or touch interaction.
+
             this.focusMonitor.monitor(this.elementRef, false);
         }
     }
@@ -131,7 +132,6 @@ export class KbqDropdownItem
     // In Ivy the `host` bindings will be merged when this class is extended, whereas in
     // ViewEngine they're overwritten.
     // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-    // tslint:disable-next-line:no-host-decorator-in-concrete
     @HostListener('click', ['$event']) checkDisabled(event: Event): void {
         if (this.disabled) {
             event.preventDefault();
@@ -144,7 +144,6 @@ export class KbqDropdownItem
     // In Ivy the `host` bindings will be merged when this class is extended, whereas in
     // ViewEngine they're overwritten.
     // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-    // tslint:disable-next-line:no-host-decorator-in-concrete
     @HostListener('mouseenter') handleMouseEnter() {
         this.hovered.next(this);
     }
@@ -155,7 +154,6 @@ export class KbqDropdownItem
         const icons = clone.querySelectorAll('[kbq-icon], .kbq-icon');
 
         // Strip away icons so they don't show up in the text.
-        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < icons.length; i++) {
             const icon = icons[i];
             icon.parentNode?.removeChild(icon);

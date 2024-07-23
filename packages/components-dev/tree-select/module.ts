@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -156,7 +155,7 @@ export class DemoComponent implements OnInit {
 
     onSelectionChange($event: KbqTreeSelectChange) {
         const option: KbqTreeOption = $event.value;
-        console.log(`onSelectionChange: ${$event.value}`);
+        console.info(`onSelectionChange: ${$event.value}`);
 
         if (option.isExpandable) {
             this.tree.setStateChildren(option, !option.selected);
@@ -170,15 +169,15 @@ export class DemoComponent implements OnInit {
     }
 
     openedChange($event) {
-        console.log('openedChange: ', $event);
+        console.info('openedChange: ', $event);
     }
 
     opened($event) {
-        console.log('opened: ', $event);
+        console.info('opened: ', $event);
     }
 
     closed($event) {
-        console.log('closed: ', $event);
+        console.info('closed: ', $event);
     }
 
     private toggleParents(parent) {

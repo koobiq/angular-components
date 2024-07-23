@@ -13,7 +13,6 @@ export class TabsWithScrollExample {
     tabs: number[];
 
     constructor() {
-        // tslint:disable-next-line:no-magic-numbers
         this.tabs = Array(20)
             .fill(null)
             .map((_, i) => i);

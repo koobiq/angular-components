@@ -105,11 +105,11 @@ export class KbqMultipleFileUploadComponent
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+
     cvaOnChange = (_: KbqFileItem[]) => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+
     onTouched = () => {};
 
     get acceptedFiles(): string {
@@ -127,7 +127,7 @@ export class KbqMultipleFileUploadComponent
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
         @Optional() @Self() public ngControl?: NgControl
     ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(() => this.updateLocaleParams());
 
         if (!localeService) {
             this.initDefaultParams();

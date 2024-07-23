@@ -19,7 +19,7 @@
 
     <div
         class="kbq-radio-label-content"
-        [class.kbq-radio-label-before]="labelPosition == 'before'"
+        [class.kbq-radio-label-before]="labelPosition === 'before'"
     >
         <div class="kbq-radio-button__outer-circle">
             <div class="kbq-radio-button__inner-circle"></div>
@@ -27,10 +27,10 @@
 
         <div class="kbq-radio__text-container">
             <span class="kbq-radio__text">
-                <ng-content></ng-content>
+                <ng-content />
             </span>
 
-            <ng-content select="kbq-hint"></ng-content>
+            <ng-content select="kbq-hint" />
         </div>
     </div>
 </label>

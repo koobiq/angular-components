@@ -4,7 +4,7 @@
             [placeholder]="placeholder"
             [value]="''"
         >
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-option
                 *ngFor="let option of options"
@@ -20,7 +20,7 @@
 
     <kbq-form-field>
         <kbq-select [value]="value">
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-option
                 *ngFor="let option of options"
@@ -40,7 +40,7 @@
             [placeholder]="placeholder"
             [(value)]="emptyMultipleValue"
         >
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <kbq-option
                 *ngFor="let option of options"
@@ -59,7 +59,7 @@
             [multiple]="true"
             [(value)]="multipleSelected"
         >
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <kbq-option
                 *ngFor="let option of options"
@@ -79,7 +79,7 @@
             [ngModel]="value"
             [placeholder]="placeholder"
         >
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
@@ -126,7 +126,7 @@
             [ngModel]="treeModel"
             [placeholder]="placeholder"
         >
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
@@ -174,7 +174,7 @@
             [multiple]="true"
             [ngModel]="multipleTreeModel"
         >
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
@@ -222,7 +222,7 @@
             [ngModel]="emptyMultipleValue"
             [placeholder]="placeholder"
         >
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
 
             <kbq-tree-selection
                 [dataSource]="dataSource"
@@ -284,7 +284,7 @@
                 [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                 [ngModel]="''"
             />
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-tag-list>
     </kbq-form-field>
 
@@ -311,7 +311,7 @@
                 [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                 [ngModel]="'value'"
             />
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-tag-list>
     </kbq-form-field>
 
@@ -405,7 +405,7 @@
             [ngModel]="password"
             [required]="true"
         />
-        <kbq-password-toggle></kbq-password-toggle>
+        <kbq-password-toggle />
     </kbq-form-field>
 
     <br />
@@ -418,7 +418,7 @@
             [ngModel]="'value'"
         />
 
-        <kbq-cleaner></kbq-cleaner>
+        <kbq-cleaner />
     </kbq-form-field>
 
     <br />
@@ -479,6 +479,6 @@
             [step]="0.5"
             [(ngModel)]="numberValue"
         />
-        <kbq-stepper></kbq-stepper>
+        <kbq-stepper />
     </kbq-form-field>
 </div>

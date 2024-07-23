@@ -320,7 +320,7 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
 // Warning: (ae-forgotten-export) The symbol "KbqTabLinkMixinBase" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex {
+export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, renderer: Renderer2);
     get active(): boolean;
     set active(value: boolean);

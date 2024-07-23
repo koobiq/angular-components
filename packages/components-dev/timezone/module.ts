@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers */
-
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -33,6 +31,7 @@ export class DemoComponent implements OnInit {
 
     get searchPattern(): string {
         const searchString: string = (this.searchControl.value || '').trim();
+        // eslint-disable-next-line no-useless-escape
         const reRegExpChar: RegExp = /[\/\\^$.*+?()[\]{}|\s]/g;
         const reHasRegExpChar: RegExp = RegExp(reRegExpChar.source);
 
@@ -41,6 +40,7 @@ export class DemoComponent implements OnInit {
                 ? searchString.replace(reRegExpChar, '\\$&')
                 : searchString;
 
+        // eslint-disable-next-line no-useless-escape
         return escapedString.replace(/[\-—−]/g, '(-|—|−)');
     }
 

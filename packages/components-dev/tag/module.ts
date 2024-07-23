@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { AfterViewInit, Component, ElementRef, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -228,7 +227,6 @@ export class DemoComponent implements AfterViewInit {
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            // tslint:disable-next-line: no-object-literal-type-assertion
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
     ]

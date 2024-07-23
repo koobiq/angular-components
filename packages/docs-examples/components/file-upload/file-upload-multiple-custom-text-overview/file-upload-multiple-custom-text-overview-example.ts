@@ -27,8 +27,9 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
     title?: string | undefined;
 
     constructor(localeService: KbqLocaleService) {
-        localeService.changes.subscribe(this.update);
+        localeService.changes.subscribe((e) => this.update(e));
     }
+
     update = (locale: string) => {
         this.captionTextWhenSelected = localeData[locale].captionTextWhenSelected;
         this.captionTextForCompactSize = localeData[locale].captionTextForCompactSize;

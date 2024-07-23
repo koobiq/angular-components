@@ -3,14 +3,14 @@
     [class.docs-sidenav_closed]="!opened"
     [class.docs-sidenav_opened]="opened"
     [@openCloseSidenav]="opened ? 'open' : 'closed'"
-></docs-sidenav>
+/>
 
 <div class="docs-app-container layout-column flex">
-    <docs-navbar [class.docs-top-overflown]="docStates.viewerTopOverflown.value"></docs-navbar>
+    <docs-navbar [class.docs-top-overflown]="docStates.viewerTopOverflown.value" />
 
-    <kbq-divider></kbq-divider>
+    <kbq-divider />
 
-    <router-outlet></router-outlet>
+    <router-outlet />
 
     <div
         class="docs-overlay"

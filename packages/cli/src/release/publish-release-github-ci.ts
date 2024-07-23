@@ -40,16 +40,16 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
     }
 
     async run() {
-        console.log();
-        console.log(cyan('-----------------------------------------'));
+        console.info();
+        console.info(cyan('-----------------------------------------'));
 
         if (process.env['DEBUG']) {
-            console.log(red(' [DEBUG MODE] koobiq CI release script'));
+            console.info(red(' [DEBUG MODE] koobiq CI release script'));
         } else {
-            console.log(cyan('  koobiq CI release script'));
+            console.info(cyan('  koobiq CI release script'));
         }
-        console.log(cyan('-----------------------------------------'));
-        console.log();
+        console.info(cyan('-----------------------------------------'));
+        console.info();
 
         this.checkReleaseOutput();
 
@@ -59,9 +59,9 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
             this.publishPackageToNpm(packageName, npmDistTag);
         }
 
-        console.log();
+        console.info();
         console.info(green(bold(`  ✓   Published all packages successfully`)));
-        console.log();
+        console.info();
 
         const newVersionName = this.currentVersion.format();
 

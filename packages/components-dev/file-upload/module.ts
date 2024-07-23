@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -216,7 +215,7 @@ export class DemoComponent {
     }
 
     onSubmit() {
-        console.log(this.form.get('first')?.errors?.maxFileExceeded);
+        console.info(this.form.get('first')?.errors?.maxFileExceeded);
     }
 
     toggleDisabled() {

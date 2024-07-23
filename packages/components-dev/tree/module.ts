@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -112,7 +111,6 @@ export const DATA_OBJECT = {
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
-    // tslint:disable-next-line:naming-convention
     PopUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -172,10 +170,7 @@ export class DemoComponent {
 
         this.dataSource.data = this.dataSources.small;
 
-        this.filterValueChanged
-            // tslint:disable-next-line:no-magic-numbers
-            .pipe(debounceTime(300))
-            .subscribe((value) => this.treeControl.filterNodes(value));
+        this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.filterNodes(value));
     }
 
     onModelValueChange(values) {
@@ -191,15 +186,15 @@ export class DemoComponent {
     }
 
     onSelectAll($event) {
-        console.log('onSelectAll', $event);
+        console.info('onSelectAll', $event);
     }
 
     onNavigationChange($event) {
-        console.log('onNavigationChange', $event);
+        console.info('onNavigationChange', $event);
     }
 
     onSelectionChange($event) {
-        console.log('onSelectionChange', $event);
+        console.info('onSelectionChange', $event);
     }
 
     switchToDataSource(dataSourceType: 'small' | 'big') {

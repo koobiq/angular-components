@@ -33,7 +33,6 @@ import { EMPTY, Subject, merge } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
 
-// tslint:disable-next-line:naming-convention
 export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarFocusableItem;
 }
@@ -91,7 +90,6 @@ export class KbqNavbarTitle implements AfterViewInit {
     }
 
     checkTextOverflown() {
-        // tslint:disable-next-line:no-magic-numbers
         this.isTextOverflown = this.text.length > 18;
     }
 
@@ -104,7 +102,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
     exportAs: 'kbqNavbarBrand',
     template: `
-        <ng-content></ng-content>
+        <ng-content />
     `,
     host: {
         class: 'kbq-navbar-brand',
@@ -372,7 +370,7 @@ export class KbqNavbarRectangleElement {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqNavbarItem extends KbqTooltipTrigger {
+export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
@@ -544,13 +542,13 @@ export class KbqNavbarItem extends KbqTooltipTrigger {
             kbq-icon
         ></i>
 
-        <ng-content select="[kbq-icon]"></ng-content>
+        <ng-content select="[kbq-icon]" />
 
         <div
             class="kbq-navbar-item__title"
             *ngIf="navbar.expanded"
         >
-            <ng-content select="kbq-navbar-title"></ng-content>
+            <ng-content select="kbq-navbar-title" />
         </div>
     `,
     styleUrls: ['./navbar.scss'],

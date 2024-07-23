@@ -54,6 +54,7 @@
                                 *ngIf="!option.disabled && !disabled"
                                 kbq-icon="mc-close-S_16"
                                 kbqTagRemove
+                                role="none"
                                 (click)="onRemoveSelectedOption(option, $event)"
                             ></i>
                         </kbq-tag>
@@ -63,7 +64,7 @@
                             *ngFor="let option of triggerValues"
                             [ngTemplateOutlet]="customTagTemplateRef"
                             [ngTemplateOutletContext]="{ $implicit: option, select: this }"
-                        ></ng-container>
+                        />
                     </ng-container>
                 </div>
                 <div
@@ -76,15 +77,16 @@
             <ng-content
                 *ngSwitchCase="true"
                 select="kbq-select-trigger"
-            ></ng-content>
+            />
         </span>
 
         <div
             *ngIf="canShowCleaner"
+            role="none"
             class="kbq-select__cleaner"
             (click)="clearValue($event)"
         >
-            <ng-content select="kbq-cleaner"></ng-content>
+            <ng-content select="kbq-cleaner" />
         </div>
 
         <div class="kbq-select__arrow-wrapper">
@@ -99,7 +101,7 @@
     <ng-content
         *ngSwitchCase="true"
         select="kbq-select-matcher, [kbq-select-matcher]"
-    ></ng-content>
+    />
 </div>
 
 <ng-template
@@ -119,6 +121,7 @@
 >
     <div
         #panel
+        role="none"
         class="kbq-tree-select__panel {{ getPanelTheme() }}"
         [ngClass]="panelClass"
         [style.font-size.px]="triggerFontSize"
@@ -129,7 +132,7 @@
             *ngIf="search"
             class="kbq-select__search-container"
         >
-            <ng-content select="[kbqSelectSearch]"></ng-content>
+            <ng-content select="[kbqSelectSearch]" />
         </div>
 
         <div
@@ -142,12 +145,12 @@
                 *ngIf="isEmptySearchResult"
                 class="kbq-select__no-options-message"
             >
-                <ng-content select="[kbq-select-search-empty-result]"></ng-content>
+                <ng-content select="[kbq-select-search-empty-result]" />
             </div>
 
-            <ng-content select="kbq-tree-selection"></ng-content>
+            <ng-content select="kbq-tree-selection" />
         </div>
 
-        <ng-content select="kbq-select-footer,[kbq-tree-select-footer]"></ng-content>
+        <ng-content select="kbq-select-footer,[kbq-tree-select-footer]" />
     </div>
 </ng-template>

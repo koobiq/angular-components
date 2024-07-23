@@ -30,15 +30,16 @@
             <ng-content
                 *ngSwitchCase="true"
                 select="kbq-timezone-select-trigger"
-            ></ng-content>
+            />
         </span>
 
         <div
             *ngIf="canShowCleaner"
+            role="none"
             class="kbq-select__cleaner"
             (click)="clearValue($event)"
         >
-            <ng-content select="kbq-cleaner"></ng-content>
+            <ng-content select="kbq-cleaner" />
         </div>
 
         <div class="kbq-select__arrow-wrapper">
@@ -68,6 +69,7 @@
 >
     <div
         #panel
+        role="none"
         class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
         [ngClass]="panelClass"
         [style.font-size.px]="triggerFontSize"
@@ -78,7 +80,7 @@
             *ngIf="search"
             class="kbq-select__search-container"
         >
-            <ng-content select="[kbqSelectSearch]"></ng-content>
+            <ng-content select="[kbqSelectSearch]" />
         </div>
 
         <div
@@ -91,9 +93,9 @@
                 *ngIf="isEmptySearchResult"
                 class="kbq-select__no-options-message"
             >
-                <ng-content select="[kbq-select-search-empty-result]"></ng-content>
+                <ng-content select="[kbq-select-search-empty-result]" />
             </div>
-            <ng-content></ng-content>
+            <ng-content />
         </div>
     </div>
 </ng-template>

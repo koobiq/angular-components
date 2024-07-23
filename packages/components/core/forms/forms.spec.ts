@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -15,7 +14,12 @@ const classWithMargin = 'kbq-form-row_margin';
             novalidate
         >
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"
@@ -27,7 +31,12 @@ const classWithMargin = 'kbq-form-row_margin';
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"
@@ -39,7 +48,12 @@ const classWithMargin = 'kbq-form-row_margin';
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"
@@ -61,7 +75,12 @@ class HorizontalForm {}
             novalidate
         >
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"
@@ -73,7 +92,12 @@ class HorizontalForm {}
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"
@@ -85,7 +109,12 @@ class HorizontalForm {}
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Подпись поля</label>
+                <label
+                    class="kbq-form__label"
+                    for=""
+                >
+                    Подпись поля
+                </label>
                 <kbq-form-field class="kbq-form__control">
                     <input
                         name="input"

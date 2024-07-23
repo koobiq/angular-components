@@ -32,8 +32,9 @@ export class SelectPrioritizedSelectedExample implements OnInit {
     options: string[] = [];
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
+        this.localeService.changes.subscribe((e) => this.update(e));
     }
+
     update = (locale: string) => {
         this.defaultOptions = localeDataSet[locale].items;
         this.selected = [this.defaultOptions[10], this.defaultOptions[15], this.defaultOptions[20]];

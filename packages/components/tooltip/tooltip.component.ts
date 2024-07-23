@@ -72,7 +72,6 @@ export class KbqTooltipComponent extends KbqPopUp {
             return;
         }
 
-        // tslint:disable-next-line:no-magic-numbers
         super.show(Date.now() - this.openTime.value < MIN_TIME_FOR_DELAY ? 0 : delay);
 
         this.openTime.value = Date.now();
@@ -177,7 +176,6 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this.initListeners();
     }
 
-    // tslint:disable-next-line:naming-convention
     protected _trigger = `${PopUpTriggers.Hover}, ${PopUpTriggers.Focus}`;
 
     @Input('kbqTooltipClass')

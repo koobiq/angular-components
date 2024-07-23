@@ -15,11 +15,6 @@ import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
 import { ModalSize } from './modal.type';
 
-// tslint:disable:no-magic-numbers
-// tslint:disable:max-line-length
-// tslint:disable:no-console
-// tslint:disable:no-empty
-// tslint:disable:no-unnecessary-class
 describe('KbqModal', () => {
     let modalService: KbqModalService;
     let overlayContainer: OverlayContainer;
@@ -533,7 +528,7 @@ describe('KbqModal', () => {
         <kbq-modal
             [(kbqVisible)]="nonServiceModalVisible"
             kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
-        ></kbq-modal>
+        />
         <button
             class="template-button"
             [kbqDropdownTriggerFor]="dropdown"
@@ -559,7 +554,6 @@ class ModalByServiceFromDropdownComponent {
     nonServiceModalVisible = false;
     kbqOkText = 'Save';
 
-    // @ts-ignore
     constructor(
         public modalControlService: KbqModalControlService,
         public modalService: KbqModalService
@@ -573,7 +567,7 @@ class ModalByServiceFromDropdownComponent {
             kbqContent: 'Save all?',
             kbqOkText: this.kbqOkText,
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.info('OK')
         });
     }
 }
@@ -591,7 +585,7 @@ class TestModalContentComponent {}
         <kbq-modal
             [(kbqVisible)]="nonServiceModalVisible"
             kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
-        ></kbq-modal>
+        />
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service
@@ -600,8 +594,9 @@ class TestModalContentComponent {}
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    constructor(modalControlService: KbqModalControlService) {}
+    constructor(_modalControlService: KbqModalControlService) {}
 }
 
 const TEST_DIRECTIVES = [

@@ -46,7 +46,6 @@ export function parseVersionName(version: string): Version | null {
         return null;
     }
 
-    // tslint:disable:no-magic-numbers
     return new Version(
         Number(matches[1]),
         Number(matches[2]),

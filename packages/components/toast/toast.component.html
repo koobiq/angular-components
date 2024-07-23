@@ -46,7 +46,7 @@
         *ngIf="isTemplateRef(data.icon)"
         [ngTemplateOutlet]="$any(data.icon)"
         [ngTemplateOutletContext]="{ $implicit }"
-    ></ng-container>
+    />
 </div>
 
 <div class="kbq-toast__container">
@@ -59,7 +59,7 @@
             *ngIf="isTemplateRef(data.title)"
             [ngTemplateOutlet]="$any(data.title)"
             [ngTemplateOutletContext]="{ $implicit }"
-        ></ng-container>
+        />
 
         <ng-container *ngIf="!isTemplateRef(data.title)">
             <p>{{ data.title }}</p>
@@ -75,7 +75,7 @@
             *ngIf="isTemplateRef(data.caption)"
             [ngTemplateOutlet]="$any(data.caption)"
             [ngTemplateOutletContext]="{ $implicit }"
-        ></ng-container>
+        />
 
         <ng-container *ngIf="!isTemplateRef(data.caption)">{{ data.caption }}</ng-container>
     </div>
@@ -88,7 +88,7 @@
             *ngIf="isTemplateRef(data.content)"
             [ngTemplateOutlet]="$any(data.content)"
             [ngTemplateOutletContext]="{ $implicit }"
-        ></ng-container>
+        />
 
         <ng-container *ngIf="!isTemplateRef(data.content)">{{ data.content }}</ng-container>
     </div>
@@ -101,7 +101,7 @@
             *ngIf="isTemplateRef(data.actions)"
             [ngTemplateOutlet]="$any(data.actions)"
             [ngTemplateOutletContext]="{ $implicit }"
-        ></ng-container>
+        />
 
         <ng-container *ngIf="!isTemplateRef(data.actions)">{{ data.actions }}</ng-container>
     </div>
@@ -112,6 +112,7 @@
         *ngIf="data.closeButton === true"
         kbq-icon-button="mc-close-M_16"
         kbq-toast-close-button
+        role="none"
         (click)="close()"
     ></i>
 
@@ -119,5 +120,5 @@
         *ngIf="isTemplateRef(data.closeButton)"
         [ngTemplateOutlet]="$any(data.closeButton)"
         [ngTemplateOutletContext]="{ $implicit }"
-    ></ng-container>
+    />
 </div>

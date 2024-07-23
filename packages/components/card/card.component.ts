@@ -83,7 +83,6 @@ export class KbqCard extends KbqCardBaseMixin implements OnDestroy {
     }
 
     onKeyDown($event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
         switch ($event.keyCode) {
             case SPACE:
                 if (!this.readonly) {

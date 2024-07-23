@@ -1,4 +1,3 @@
-/* tslint:disable:no-empty */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -64,7 +63,6 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith, take, takeUntil } from 'rxjs/operators';
 
-// tslint:disable-next-line:naming-convention
 export interface KbqOptionEvent {
     option: KbqListOption;
 }
@@ -114,7 +112,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
             (focus)="focus()"
             (blur)="blur()"
         >
-            <ng-content></ng-content>
+            <ng-content />
         </div>
     `,
     styleUrls: ['./list.scss'],
@@ -135,7 +133,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
 })
 export class KbqListSelection
     extends KbqListSelectionMixinBase
-    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor
+    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor, OnDestroy
 {
     keyManager: FocusKeyManager<KbqListOption>;
 
@@ -207,7 +205,6 @@ export class KbqListSelection
         return merge(...this.options.map((option) => option.onBlur));
     }
 
-    // tslint:disable-next-line:orthodox-getter-and-setter naming-convention
     _value: string[] | null;
 
     /** Emits whenever the component is destroyed. */
@@ -452,7 +449,6 @@ export class KbqListSelection
     }
 
     // View to model callback that should be called if the list or its options lost focus.
-    // tslint:disable-next-line:no-empty
     onTouched: () => void = () => {};
 
     // Removes an option from the selection list and updates the active item.
@@ -472,7 +468,6 @@ export class KbqListSelection
     }
 
     onKeyDown(event: KeyboardEvent) {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         if ([SPACE, ENTER, LEFT_ARROW, RIGHT_ARROW].includes(keyCode) || isVerticalMovement(event)) {

@@ -18,7 +18,6 @@ import {
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
-// tslint:disable:no-console
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -34,8 +33,7 @@ export class SidepanelDemoComponent {
 
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
-    array = new Array(40); // tslint:disable-line
-
+    array = new Array(40);
     constructor(private sidepanelService: KbqSidepanelService) {}
 
     openComponentSidepanel() {
@@ -101,8 +99,7 @@ export class ExampleSidepanelComponent {
 
     openComponentSidepanel: () => void;
 
-    array = new Array(60); // tslint:disable-line
-
+    array = new Array(60);
     constructor(@Inject(KBQ_SIDEPANEL_DATA) public data: any) {
         this.openComponentSidepanel = data.openComponentSidepanel;
     }

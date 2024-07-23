@@ -61,7 +61,7 @@
         [(ngModel)]="filterValue"
         (ngModelChange)="onFilterChange($event)"
     />
-    <kbq-cleaner></kbq-cleaner>
+    <kbq-cleaner />
 </kbq-form-field>
 
 <br />
@@ -116,7 +116,7 @@
     >
         <i kbq-icon="mc-info-o_16"></i>
 
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
 
         <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
 
@@ -124,7 +124,7 @@
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="PopUpPlacements.Right"
             [kbqTooltip]="'Tooltip text'"
-        ></kbq-option-action>
+        />
     </kbq-tree-option>
 </kbq-tree-selection>
 
@@ -157,7 +157,7 @@
         >
             <i kbq-icon="mc-info-o_16"></i>
 
-            <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+            <kbq-tree-node-toggle [node]="node" />
 
             <span
                 class="highlight-content"
@@ -168,7 +168,7 @@
                 [kbqDropdownTriggerFor]="dropdown"
                 [kbqPlacement]="PopUpPlacements.Right"
                 [kbqTooltip]="'Tooltip text'"
-            ></kbq-option-action>
+            />
         </kbq-tree-option>
     </kbq-tree-selection>
 </div>
@@ -195,7 +195,7 @@
     >
         <i kbq-icon="mc-info-o_16"></i>
 
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>

@@ -234,7 +234,6 @@ export class KbqCheckbox
      * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
      * @docs-private
      */
-    // tslint:disable-next-line:no-empty
     onTouched: () => any = () => {};
 
     ngAfterViewInit() {
@@ -337,7 +336,6 @@ export class KbqCheckbox
         // emit its event object to the `change` output.
         event.stopPropagation();
     }
-    // tslint:disable-next-line:no-empty
     private controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     private transitionCheckState(newState: TransitionCheckState) {

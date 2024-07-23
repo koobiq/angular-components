@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
@@ -47,7 +46,7 @@ export class MyToastComponent extends KbqToastComponent {
     ) {
         super(data, service, elementRef, focusMonitor);
 
-        console.log('MyToastComponent: ');
+        console.info('MyToastComponent: ');
     }
 }
 
@@ -66,8 +65,7 @@ export class ToastDemoComponent {
 
     modalState: boolean = false;
 
-    array = new Array(40); // tslint:disable-line
-
+    array = new Array(40);
     @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
 
     constructor(
@@ -76,10 +74,10 @@ export class ToastDemoComponent {
         private sidepanelService: KbqSidepanelService,
         private overlayRef: OverlayContainer
     ) {
-        console.log('overlayRef: ', overlayRef);
-        console.log('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
-        console.log('qwe: ', overlayRef.getContainerElement().childNodes.length);
-        // console.log('overlayRef.hasAttached(): ', overlayRef.hasAttached());
+        console.info('overlayRef: ', overlayRef);
+        console.info('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
+        console.info('qwe: ', overlayRef.getContainerElement().childNodes.length);
+        // console.info('overlayRef.hasAttached(): ', overlayRef.hasAttached());
     }
 
     openTemplateSidepanel() {
@@ -88,7 +86,7 @@ export class ToastDemoComponent {
             hasBackdrop: this.modalState
         });
 
-        console.log('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
+        console.info('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
     }
 
     showManyActonToast(controls: TemplateRef<any>) {

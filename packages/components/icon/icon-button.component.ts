@@ -16,7 +16,7 @@ import { KbqIcon } from './icon.component';
 
 @Component({
     selector: `[kbq-icon-button]`,
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     styleUrls: ['icon-button.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

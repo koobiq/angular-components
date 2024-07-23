@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,7 +21,7 @@ export class DemoComponent {
     rightSidebarSidebarState: boolean = false;
 
     onStateChanged($event): void {
-        console.log('onStateChanged: ', $event);
+        console.info('onStateChanged: ', $event);
     }
 
     toggleLeftSidebar() {

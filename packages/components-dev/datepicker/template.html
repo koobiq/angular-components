@@ -24,7 +24,7 @@
 <br />
 
 <div class="container">
-    <label>Default datepicker toggle</label>
+    <label for="">Default datepicker toggle</label>
     <kbq-form-field
         #tooltip="kbqWarningTooltip"
         [kbqWarningTooltip]="'Только цифры'"
@@ -49,13 +49,13 @@
             [maxDate]="maxDate"
             [minDate]="minDate"
             [startAt]="startAt"
-        ></kbq-datepicker>
+        />
     </kbq-form-field>
 
     <br />
     <br />
 
-    <label>Datepicker toggle with custom icon</label>
+    <label for="">Datepicker toggle with custom icon</label>
     <kbq-form-field (click)="myDatepicker2.toggle()">
         <input
             [kbqDatepicker]="myDatepicker2"
@@ -65,7 +65,7 @@
             kbq-icon="mc-calendar_16"
             kbqSuffix
         ></i>
-        <kbq-datepicker #myDatepicker2></kbq-datepicker>
+        <kbq-datepicker #myDatepicker2 />
     </kbq-form-field>
 
     <kbq-form-field>

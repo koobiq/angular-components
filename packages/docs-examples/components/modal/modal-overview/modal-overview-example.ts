@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
@@ -21,7 +20,7 @@ export class ModalOverviewExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.info('OK')
         });
     }
 
@@ -32,7 +31,7 @@ export class ModalOverviewExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.info('OK')
         });
     }
 
@@ -44,8 +43,8 @@ export class ModalOverviewExample {
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
             kbqMaskClosable: true,
-            kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOnOk: () => console.info('Delete'),
+            kbqOnCancel: () => console.info('Cancel')
         });
     }
 }

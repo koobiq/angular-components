@@ -296,7 +296,7 @@ export class KbqTagList
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Orientation of the tag list. */
-    @Input('orientation') orientation: 'horizontal' | 'vertical' = 'horizontal';
+    @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
 
     /** Event emitted when the selected tag list value has been changed by the user. */
     @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
@@ -442,10 +442,8 @@ export class KbqTagList
         this.dropSubscriptions();
     }
 
-    // tslint:disable-next-line:no-empty
     onTouched = () => {};
 
-    // tslint:disable-next-line:no-empty
     onChange: (value: any) => void = () => {};
 
     /** Associates an HTML input element with this tag list. */
@@ -529,16 +527,13 @@ export class KbqTagList
         const target = event.target as HTMLElement;
 
         // If they are on an empty input and hit backspace, focus the last tag
-        // tslint:disable-next-line: deprecation
         if (event.keyCode === BACKSPACE && this.isInputEmpty(target)) {
             this.keyManager.setLastItemActive();
             event.preventDefault();
         } else if (target && target.classList.contains('kbq-tag')) {
-            // tslint:disable-next-line: deprecation
             if (event.keyCode === HOME) {
                 this.keyManager.setFirstItemActive();
                 event.preventDefault();
-                // tslint:disable-next-line: deprecation
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();

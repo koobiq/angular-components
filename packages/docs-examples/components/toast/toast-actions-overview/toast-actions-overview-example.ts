@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqDropdown } from '@koobiq/components/dropdown';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';

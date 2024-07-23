@@ -5,7 +5,7 @@ import { KbqOption, KbqOptionModule } from './index';
 
 @Component({
     template: `
-        <kbq-option [disabled]="disabled"></kbq-option>
+        <kbq-option [disabled]="disabled" />
     `
 })
 class OptionWithDisable {

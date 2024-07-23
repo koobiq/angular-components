@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';

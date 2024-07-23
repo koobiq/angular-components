@@ -10,7 +10,17 @@ import {
     ScrollDispatcher
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Directive, ElementRef, EventEmitter, NgZone, TemplateRef, Type, ViewContainerRef } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    EventEmitter,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    Type,
+    ViewContainerRef
+} from '@angular/core';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, delay as rxDelay, takeUntil } from 'rxjs/operators';
@@ -23,8 +33,7 @@ import {
 import { PopUpPlacements, PopUpTriggers } from './constants';
 
 @Directive()
-// tslint:disable-next-line:naming-convention
-export abstract class KbqPopUpTrigger<T> {
+export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     isOpen: boolean = false;
 
     enterDelay: number = 0;
@@ -46,11 +55,8 @@ export abstract class KbqPopUpTrigger<T> {
 
     protected visible = false;
 
-    // tslint:disable-next-line:naming-convention orthodox-getter-and-setter
     protected _content: string | TemplateRef<any>;
-    // tslint:disable-next-line:naming-convention orthodox-getter-and-setter
     protected _disabled: boolean;
-    // tslint:disable-next-line:naming-convention orthodox-getter-and-setter
     protected _customClass: string;
 
     protected overlayRef: OverlayRef | null;
@@ -139,7 +145,6 @@ export abstract class KbqPopUpTrigger<T> {
 
     handleKeydown(event: KeyboardEvent) {
         if (this.isOpen && event.keyCode === ESCAPE) {
-            // tslint:disable-line
             this.hide();
         }
     }
@@ -208,7 +213,7 @@ export abstract class KbqPopUpTrigger<T> {
             .withLockedPosition()
             .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
 
-        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
+        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe((e) => this.onPositionChange(e));
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
@@ -219,7 +224,10 @@ export abstract class KbqPopUpTrigger<T> {
 
         this.subscribeOnClosingActions();
 
-        this.overlayRef.detachments().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
+        this.overlayRef
+            .detachments()
+            .pipe(takeUntil(this.destroyed))
+            .subscribe(() => this.detach());
 
         return this.overlayRef;
     }

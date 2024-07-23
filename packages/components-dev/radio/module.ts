@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,7 +31,7 @@ export class DemoComponent {
     ];
 
     onChange($event: KbqRadioChange) {
-        console.log('KbqRadioChange: ', $event);
+        console.info('KbqRadioChange: ', $event);
     }
 }
 

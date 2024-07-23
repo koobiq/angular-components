@@ -15,7 +15,7 @@ export class KbqDataSizePipe implements PipeTransform {
         @Optional() @Inject(KBQ_SIZE_UNITS_CONFIG) public readonly externalConfig: SizeUnitsConfig,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(() => this.updateLocaleParams());
 
         if (!localeService) {
             this.config = KBQ_SIZE_UNITS_DEFAULT_CONFIG;

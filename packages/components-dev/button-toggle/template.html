@@ -1,5 +1,5 @@
 <div>
-    <label>Horizontal Group</label>
+    <label for="">Horizontal Group</label>
     <kbq-button-toggle-group #group1="kbqButtonToggleGroup">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
         <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
@@ -27,7 +27,7 @@
 
     <br />
 
-    <label>DisableGroup</label>
+    <label for="">DisableGroup</label>
 
     <br />
 
@@ -61,7 +61,7 @@
 
     <br />
 
-    <label>Multiple Group</label>
+    <label for="">Multiple Group</label>
     <kbq-button-toggle-group
         #multipleGroup="kbqButtonToggleGroup"
         [multiple]="true"
@@ -80,7 +80,7 @@
     </kbq-button-toggle-group>
     <div class="example-selected-value">Selected value: {{ multipleGroup.value }}</div>
 
-    <label>Group With Overflown text</label>
+    <label for="">Group With Overflown text</label>
 
     <kbq-button-toggle-group>
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
@@ -118,7 +118,7 @@
 
     <!--    <br>-->
 
-    <label>Group With Model</label>
+    <label for="">Group With Model</label>
 
     <kbq-button-toggle-group [(ngModel)]="modelResult">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>

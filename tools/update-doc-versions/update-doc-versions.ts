@@ -59,5 +59,5 @@ if (require.main === module) {
     const outputPath = './apps/docs/src/assets/versions.json';
 
     outputFileSync(outputPath, JSON.stringify(versions, null, 4));
-    console.log(`Version information written to ${outputPath}`);
+    console.info(`Version information written to ${outputPath}`);
 }

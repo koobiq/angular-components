@@ -242,7 +242,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** Handle a keyboard event from the dropdown, delegating to the appropriate action. */
     handleKeydown(event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
         const keyCode = event.keyCode;
 
         switch (keyCode) {

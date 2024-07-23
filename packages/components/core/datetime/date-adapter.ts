@@ -9,7 +9,6 @@ export const KBQ_DATE_LOCALE = new InjectionToken<string>('KBQ_DATE_LOCALE', {
 });
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export function KBQ_DATE_LOCALE_FACTORY(): string {
     return inject(LOCALE_ID);
 }

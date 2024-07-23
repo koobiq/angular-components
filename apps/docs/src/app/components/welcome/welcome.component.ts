@@ -26,12 +26,8 @@ export class WelcomeComponent implements OnInit, OnDestroy {
         private themeService: ThemeService
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
-            .pipe(
-                takeUntil(this.destroyed),
-                // tslint:disable-next-line:no-magic-numbers
-                debounceTime(10)
-            )
-            .subscribe(this.checkOverflow);
+            .pipe(debounceTime(10), takeUntil(this.destroyed))
+            .subscribe(() => this.checkOverflow());
     }
 
     ngOnInit(): void {

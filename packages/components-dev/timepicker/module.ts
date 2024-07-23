@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
@@ -69,7 +68,7 @@ export class TimepickerDemoComponent {
         });
 
         this.reactiveFormControlValue.valueChanges.subscribe((value) => {
-            console.log('this.reactiveFormControlValue:', value); // tslint:disable-line:no-console
+            console.info('this.reactiveFormControlValue:', value);
         });
     }
 
@@ -78,7 +77,7 @@ export class TimepickerDemoComponent {
     }
 
     ngModelChange(value: any) {
-        console.log('ngModelChange: ', value); // tslint:disable-line:no-console
+        console.info('ngModelChange: ', value);
     }
 
     setLocale($event: KbqRadioChange) {
@@ -87,7 +86,7 @@ export class TimepickerDemoComponent {
     }
 
     onTimepickerChange() {
-        console.log('onTimepickerChange: ');
+        console.info('onTimepickerChange: ');
     }
 }
 

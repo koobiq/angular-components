@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
@@ -210,11 +209,11 @@ export class DemoComponent {
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
-            console.log('reactiveForm valueChanges: ', value); // tslint:disable-line:no-console
+            console.info('reactiveForm valueChanges: ', value);
         });
         //
         this.inputControl.valueChanges.subscribe((value) => {
-            console.log('inputControl valueChanges: ', value); // tslint:disable-line:no-console
+            console.info('inputControl valueChanges: ', value);
         });
 
         this.reactiveFormControl = this.formBuilder.group({});
@@ -229,19 +228,19 @@ export class DemoComponent {
     }
 
     onSubmitReactiveForm(form: UntypedFormGroup) {
-        console.log('onSubmitReactiveForm: ', form);
+        console.info('onSubmitReactiveForm: ', form);
     }
 
     onSubmitReactiveFormControl(form: UntypedFormGroup) {
-        console.log('onSubmitReactiveFormControl: ', form);
+        console.info('onSubmitReactiveFormControl: ', form);
     }
 
     onSubmitTemplateForm(form: NgForm) {
-        console.log('onSubmitTemplateForm: ', form);
+        console.info('onSubmitTemplateForm: ', form);
     }
 
     onSubmitFormWithCustomValidator(form: UntypedFormGroup) {
-        console.log('onSubmitFormWithCustomValidator: ', form);
+        console.info('onSubmitFormWithCustomValidator: ', form);
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {

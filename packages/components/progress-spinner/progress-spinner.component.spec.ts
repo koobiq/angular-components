@@ -4,14 +4,12 @@ import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from './index';
 
-// tslint:disable no-magic-numbers
 const percentPairs = [
     [40, 0.4],
     [-50, 0],
     [140, 1]
 
 ];
-// tslint:enable no-magic-numbers
 
 describe('KbqProgressSpinner', () => {
     beforeEach(fakeAsync(() => {
@@ -127,8 +125,8 @@ describe('KbqProgressSpinner', () => {
             [color]="color"
             [value]="value"
             [mode]="mode"
-        ></kbq-progress-spinner>
-        <kbq-progress-spinner class="default"></kbq-progress-spinner>
+        />
+        <kbq-progress-spinner class="default" />
     `
 })
 class TestApp {

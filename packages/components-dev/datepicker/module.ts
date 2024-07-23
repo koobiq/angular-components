@@ -1,6 +1,4 @@
-/* tslint:disable:match-default-export-name */
-// tslint:disable:no-console no-magic-numbers
-import { AfterViewInit, Component, Inject, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Inject, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,7 +19,7 @@ import { DateTime } from 'luxon';
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DemoComponent implements AfterViewInit {
+export class DemoComponent implements AfterViewInit, OnInit {
     // date = this.adapter.createDate(2015, 1, 1);
     date = this.adapter.createDate(2015, 1, 1);
     formControlValue: UntypedFormControl;
@@ -46,7 +44,7 @@ export class DemoComponent implements AfterViewInit {
     ) {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
         this.formControlValue.valueChanges.subscribe((value) => {
-            console.log('this.formControlValue.valueChanges: ', value?.toString());
+            console.info('this.formControlValue.valueChanges: ', value?.toString());
         });
 
         this.startAt = this.adapter.createDate(2000, 1, 1);
@@ -68,22 +66,21 @@ export class DemoComponent implements AfterViewInit {
     }
 
     myFilter(date: DateTime): boolean {
-        // @ts-ignore
         return date.day !== 0 && date.day !== 6;
     }
 
     ngAfterViewInit(): void {
         this.datepicker.selectedChanged.subscribe(() => {
-            console.log('this.datepicker.selectedChanged');
+            console.info('this.datepicker.selectedChanged');
         });
     }
 
     onDateChange() {
-        console.log('onDateChange: '); // tslint:disable-line:no-console
+        console.info('onDateChange: ');
     }
 
     onDateInput() {
-        console.log('onDateInput: '); // tslint:disable-line:no-console
+        console.info('onDateInput: ');
     }
 }
 

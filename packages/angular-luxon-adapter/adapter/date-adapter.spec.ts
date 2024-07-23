@@ -1,5 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:no-import-side-effect
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';

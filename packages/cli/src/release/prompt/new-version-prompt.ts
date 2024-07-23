@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-duplicate-imports
 import inquirer, { type ListChoiceOptions, type SeparatorOptions } from 'inquirer';
 import { ReleaseType, createNewVersion } from '../version-name/create-version';
 import { Version, parseVersionName } from '../version-name/parse-version';
@@ -11,7 +10,6 @@ interface IVersionPromptAnswers {
     prereleaseLabel: string;
 }
 
-// tslint:disable-next-line:naming-convention
 const { prompt, Separator } = inquirer;
 
 /**

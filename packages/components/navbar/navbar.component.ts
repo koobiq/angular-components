@@ -169,7 +169,7 @@ export class KbqNavbarContainer {}
 @Component({
     selector: 'kbq-navbar',
     template: `
-        <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
+        <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
     `,
     styleUrls: [
         './navbar.scss',
@@ -228,13 +228,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(this.updateExpandedStateForItems);
+            .subscribe(() => this.updateExpandedStateForItems());
     }
 
     ngAfterContentInit(): void {
         this.setItemsState();
 
-        this.rectangleElements.changes.subscribe(this.setItemsState);
+        this.rectangleElements.changes.subscribe(() => this.setItemsState());
 
         super.ngAfterContentInit();
 
@@ -254,7 +254,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     onKeyDown(event: KeyboardEvent) {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {

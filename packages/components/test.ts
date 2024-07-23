@@ -1,4 +1,3 @@
-/* tslint:disable */
 // organize-imports-ignore
 import 'zone.js';
 import 'zone.js/testing';

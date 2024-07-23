@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -57,7 +56,7 @@ export class DemoComponent implements OnInit {
     formControl = new UntypedFormControl('', Validators.required);
 
     onSelectionChange($event: KbqAutocompleteSelectedEvent) {
-        console.log(`onSelectionChange: ${$event}`);
+        console.info(`onSelectionChange: ${$event}`);
     }
 
     ngOnInit(): void {

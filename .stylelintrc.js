@@ -8,6 +8,7 @@ const config = {
     allowEmptyInput: true,
     extends: [
         'stylelint-config-recommended-scss',
+        // should be last
         'stylelint-prettier/recommended'
     ],
     ignoreFiles: [

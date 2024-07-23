@@ -63,10 +63,7 @@ export function isDigit(value: string): boolean {
 export function getPrecision(value: number): number {
     const arr = value.toString().split('.');
 
-    return arr.length === 1
-        ? 1
-        : // tslint:disable-next-line:no-magic-numbers
-          Math.pow(10, arr[1].length);
+    return arr.length === 1 ? 1 : Math.pow(10, arr[1].length);
 }
 
 export function add(value1: number, value2: number): number {
@@ -224,7 +221,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         if ('valueAsNumber' in this.nativeElement) {
             Object.defineProperty(Object.getPrototypeOf(this.nativeElement), 'valueAsNumber', {
-                // tslint:disable-next-line:no-reserved-keywords
                 get() {
                     const res = parseFloat(normalizeSplitter(this.value));
 
@@ -239,7 +235,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             }
         );
 
-        this.localeSubscription = this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeSubscription = this.localeService?.changes.subscribe((e) => this.updateLocaleParams(e));
     }
 
     ngAfterContentInit(): void {
@@ -287,11 +283,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         }
     }
 
-    // tslint:disable-next-line:no-empty
     onTouched = () => {};
 
     onKeyDown(event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
         const keyCode = event.keyCode;
 
         const isCtrlA = (e) => e.keyCode === A && (e.ctrlKey || e.metaKey);
@@ -418,7 +412,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         this.valueChange.emit(res);
     }
 
-    // tslint:disable-next-line:no-empty
     private cvaOnChange: (value: any) => void = () => {};
 
     private setViewValue(value: string | null, savePosition: boolean = false) {
@@ -478,13 +471,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         };
 
         if (this.withThousandSeparator && this.numberLocaleConfig.startFormattingFrom) {
-            formatOptions.useGrouping =
-                intPart >=
-                Math.pow(
-                    // tslint:disable-next-line:no-magic-numbers
-                    10,
-                    this.numberLocaleConfig.startFormattingFrom
-                );
+            formatOptions.useGrouping = intPart >= Math.pow(10, this.numberLocaleConfig.startFormattingFrom);
         }
 
         const localeId = this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;

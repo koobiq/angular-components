@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-/* tslint:disable:no-string-literal */
 import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';
@@ -45,11 +43,11 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     }
 
     async run() {
-        console.log();
-        console.log(cyan('-----------------------------------------'));
-        console.log(cyan('  koobiq stage release script'));
-        console.log(cyan('-----------------------------------------'));
-        console.log();
+        console.info();
+        console.info(cyan('-----------------------------------------'));
+        console.info(cyan('  koobiq stage release script'));
+        console.info(cyan('-----------------------------------------'));
+        console.info();
 
         const newVersion = await promptForNewVersion(this.currentVersion);
         const newVersionName = newVersion.format();
@@ -57,7 +55,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
         // After the prompt for the new version, we print a new line because we want the
         // new log messages to be more in the foreground.
-        console.log();
+        console.info();
 
         // Ensure there are no uncommitted changes. Checking this before switching to a
         // publish branch is sufficient as unstaged changes are not specific to Git branches.
@@ -71,30 +69,30 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         if (needsVersionBump) {
             this.updatePackageJsonVersion(newVersionName);
 
-            console.log(
+            console.info(
                 green(
                     `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
                         `${italic('package.json')}`
                 )
             );
-            console.log();
+            console.info();
         }
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
-        console.log();
-        console.log(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
-        console.log(
+        console.info();
+        console.info(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
+        console.info(
             yellow(
                 `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
                     `changes that apply to the public library release. When done, proceed to the prompt below.`
             )
         );
-        console.log();
+        console.info();
 
         if (!(await this.promptConfirm('Do you want to proceed and commit the changes?'))) {
-            console.log();
-            console.log(yellow('Aborting release staging...'));
+            console.info();
+            console.info(yellow('Aborting release staging...'));
             process.exit(0);
         }
 

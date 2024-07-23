@@ -1,7 +1,6 @@
 import { of as observableOf } from 'rxjs';
 import { NestedTreeControl } from './nested-tree-control';
 
-/* tslint:disable:no-magic-numbers */
 describe('CdkNestedTreeControl', () => {
     let treeControl: NestedTreeControl<TestData>;
     const getChildren = (node: TestData) => observableOf(node.children);
@@ -59,7 +58,6 @@ describe('CdkNestedTreeControl', () => {
 
             treeControl.expandDescendants(nodes[1]);
 
-            // tslint:disable-next-line
             const expandedNodesNum = 1 + numChildren + numChildren * numGrandChildren;
             expect(treeControl.expansionModel.selected.length)
                 .withContext(`Expect expanded ${expandedNodesNum} nodes`)

@@ -32,7 +32,6 @@ import { take } from 'rxjs/operators';
 import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
 import { KbqTreeNode } from './tree-base';
 
-// tslint:disable-next-line:naming-convention
 export interface KbqTreeOptionEvent {
     option: KbqTreeOption;
 }

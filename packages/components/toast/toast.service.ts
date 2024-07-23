@@ -48,6 +48,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     timer = timer(CHECK_INTERVAL, CHECK_INTERVAL).pipe(
         filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
+        // eslint-disable-next-line rxjs/no-ignored-replay-buffer
         shareReplay()
     );
 
@@ -69,7 +70,9 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     ) {
         this.toastConfig = toastConfig || defaultToastConfig;
 
-        this.ngZone.runOutsideAngular(() => (this.timerSubscription = this.timer.subscribe(this.processToasts)));
+        this.ngZone.runOutsideAngular(() => {
+            this.timerSubscription = this.timer.subscribe(() => this.processToasts());
+        });
     }
 
     ngOnDestroy(): void {

@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import { toBoolean } from '../utils';
 
 describe('[Core]::utils', () => {

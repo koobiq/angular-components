@@ -1,4 +1,3 @@
-// tslint:disable:no-empty, deprecation
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Directive,
@@ -56,7 +55,6 @@ import { Subject, Subscription } from 'rxjs';
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepicker } from './datepicker.component';
 
-// tslint:disable:naming-convention
 enum DateParts {
     year = 'y',
     month = 'm',
@@ -502,7 +500,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         this.setFormat(this.dateInputFormat);
 
-        this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
+        this.localeSubscription = adapter.localeChanges.subscribe(() => this.updateLocaleParams());
     }
 
     onContainerClick() {
@@ -521,7 +519,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         }
     }
 
-    // tslint:disable-next-line:no-empty
     onTouched = () => {};
 
     ngOnDestroy() {
@@ -653,7 +650,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         const [firsViewDigit, secondViewDigit, thirdViewDigit] = viewDigits;
 
-        // tslint:disable-next-line:no-magic-numbers
         if (viewDigits.length !== 3) {
             this.lastValueValid = false;
             this._value = null;
@@ -670,9 +666,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             []
         );
 
-        // tslint:disable-next-line:no-magic-numbers
         if (viewDigitWithYear.length < 3) {
-            // tslint:disable-next-line:no-magic-numbers
             date.year += date.year < 30 ? 2000 : 1900;
         } else if (viewDigitWithYear.length < digitWithYear.length) {
             this.lastValueValid = false;
@@ -788,6 +782,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     };
 
     private setFormat(format: string): void {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.separator = format.match(/[aA-zZ]+(?<separator>\W|\D)[aA-zZ]+/).groups.separator;
 
@@ -889,7 +884,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             if (this.firstDigit!.isDay) {
                 date.month = 1;
             }
-            // tslint:disable-next-line:no-magic-numbers
         } else if (viewDigits.length === 2) {
             if (firsViewDigit.length < this.firstDigit!.length || secondViewDigit.length < this.secondDigit!.length) {
                 return null;
@@ -897,7 +891,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
             date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
             date[this.secondDigit!.fullName] = this.secondDigit!.parse(secondViewDigit);
-            // tslint:disable-next-line:no-magic-numbers
         } else if (viewDigits.length === 3) {
             if (
                 firsViewDigit.length < this.firstDigit!.length ||
@@ -981,10 +974,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                 }
 
                 break;
-            case DateParts.month:
+            case DateParts.month: {
                 month++;
 
-                // tslint:disable-next-line:no-magic-numbers
                 if (month > 11) {
                     month = 0;
                 }
@@ -996,6 +988,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                 }
 
                 break;
+            }
             case DateParts.year:
                 year++;
 
@@ -1028,11 +1021,10 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                 }
 
                 break;
-            case DateParts.month:
+            case DateParts.month: {
                 month--;
 
                 if (month < 0) {
-                    // tslint:disable-next-line:no-magic-numbers
                     month = 11;
                 }
 
@@ -1043,6 +1035,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                 }
 
                 break;
+            }
             case DateParts.year:
                 year--;
 
@@ -1166,10 +1159,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         return validity && validity.badInput;
     }
 
-    // tslint:disable-next-line:no-empty
     private cvaOnChange: (value: any) => void = () => {};
 
-    // tslint:disable-next-line:no-empty
     private validatorOnChange = () => {};
 
     /** The form control validator for whether the input parses. */
@@ -1247,7 +1238,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
                         this.thirdDigit = new DateDigit(prev, start, arr.length - start);
                     }
 
-                    // tslint:disable:no-parameter-reassignment
                     length = 0;
                     start = index + 1;
                 } else {

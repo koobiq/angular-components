@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import {
     ChangeDetectionStrategy,
     Component,
@@ -88,7 +87,6 @@ export class KbqCalendarBody implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         const columnChanges = changes.numCols;
-        // tslint:disable-next-line:no-this-assignment
         const { rows, numCols } = this;
 
         if (changes.rows || columnChanges) {

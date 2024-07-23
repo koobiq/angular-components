@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
@@ -33,7 +32,6 @@ export class DemoComponent {
 
     asyncUpdate$ = this.asyncUpdate.valueChanges.pipe(
         startWith(null),
-        // tslint:disable-next-line:no-magic-numbers
         debounceTime(3000),
         switchMap(() => {
             return of(this.typesOfShoes);
@@ -43,15 +41,15 @@ export class DemoComponent {
     constructor(private clipboard: Clipboard) {}
 
     onSelectionChange($event: KbqListSelectionChange) {
-        console.log(`onSelectionChange: ${$event.option.value}`);
+        console.info(`onSelectionChange: ${$event.option.value}`);
     }
 
     onSelectAll($event) {
-        console.log('onSelectAll', $event);
+        console.info('onSelectAll', $event);
     }
 
     onCopy($event) {
-        console.log('onCopy', $event);
+        console.info('onCopy', $event);
         this.clipboard.copy($event.option.value);
     }
 }

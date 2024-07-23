@@ -6,6 +6,7 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -249,7 +250,7 @@ export const kbqDatepickerAnimations: {
 };
 
 // @public
-export class KbqDatepickerContent<D> implements OnDestroy {
+export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
     readonly animationDone: Subject<void>;
     animationState: 'enter' | 'void';

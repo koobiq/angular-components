@@ -29,7 +29,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
             let-htmlContent
             let-contentToCopy="textContent"
         >
-            <copy-button [contentToCopy]="contentToCopy"></copy-button>
+            <copy-button [contentToCopy]="contentToCopy" />
             <div [outerHTML]="htmlContent"></div>
         </ng-template>
     `,
@@ -108,14 +108,12 @@ export class DocsLiveExample implements OnDestroy {
         // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
         // "/components/button/api#my-section". This is necessary because otherwise these fragment
         // links would redirect to "/#my-section".
-        // tslint:disable-next-line:no-parameter-reassignment
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
             const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
 
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });
 
-        // tslint:disable-next-line:no-inner-html
         this.nativeElement.innerHTML = rawDocument;
         this.textContent = this.nativeElement.textContent;
 
@@ -130,7 +128,6 @@ export class DocsLiveExample implements OnDestroy {
 
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
-        // tslint:disable-next-line:no-console
         console.error(error);
         this.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
 
@@ -156,7 +153,6 @@ export class DocsLiveExample implements OnDestroy {
         this.nativeElement.querySelectorAll(`.${markDownClass}`).forEach((element: Element) => {
             const outerHTML = element.outerHTML;
             const textContent = element.textContent;
-            // tslint:disable-next-line:no-inner-html
             element.innerHTML = '';
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);

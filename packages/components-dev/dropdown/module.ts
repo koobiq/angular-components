@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -61,7 +60,7 @@ export class DemoComponent {
     }
 
     selectDomain(id: string): void {
-        console.log('selected domain id', id);
+        console.info('selected domain id', id);
     }
 }
 

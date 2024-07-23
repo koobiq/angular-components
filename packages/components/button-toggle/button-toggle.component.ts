@@ -150,11 +150,9 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      * The method to be called in order to update ngModel.
      * Now `ngModel` binding is not supported in multiple selection mode.
      */
-    // tslint:disable-next-line:no-empty
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-    // tslint:disable-next-line:no-empty
     onTouched: () => any = () => {};
 
     ngOnInit() {
@@ -305,7 +303,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
                 class="kbq-button-toggle-wrapper"
                 #kbqTitleText
             >
-                <ng-content></ng-content>
+                <ng-content />
             </div>
         </button>
     `,
@@ -340,7 +338,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
         }
     }
 
-    // tslint:disable-next-line:no-reserved-keywords
     type: ToggleType;
     iconType: string = '';
 

@@ -1,14 +1,7 @@
-/* tslint:disable:no-magic-numbers */
-/* tslint:disable:no-non-null-assertion */
-/* tslint:disable:no-empty */
-/* tslint:disable:no-unbound-method */
-/* tslint:disable:prefer-for-of */
-/* tslint:disable:no-unnecessary-type-assertion */
-
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {
     ComponentFixture,
     TestBed,
@@ -115,7 +108,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                         [value]="zone.id"
                         [timezone]="zone"
                         [disabled]="zone.id === disabledFor"
-                    ></kbq-timezone-option>
+                    />
                 </kbq-optgroup>
             </kbq-timezone-select>
         </kbq-form-field>
@@ -155,10 +148,10 @@ class BasicTimezoneSelect {
                         kbqInput
                         type="text"
                     />
-                    <kbq-cleaner></kbq-cleaner>
+                    <kbq-cleaner />
                 </kbq-form-field>
 
-                <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+                <kbq-cleaner #kbqSelectCleaner />
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
@@ -166,13 +159,13 @@ class BasicTimezoneSelect {
                     <kbq-timezone-option
                         *ngFor="let timezone of group.zones"
                         [timezone]="timezone"
-                    ></kbq-timezone-option>
+                    />
                 </ng-container>
             </kbq-timezone-select>
         </kbq-form-field>
     `
 })
-class TimezoneSelectWithSearch {
+class TimezoneSelectWithSearch implements OnInit {
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqTimezoneSelect;
 
     selected = 'Europe/city17';
@@ -213,9 +206,13 @@ class TimezoneSelectWithSearch {
 describe('KbqTimezoneSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let dir: { value: 'ltr' | 'rtl' };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let platform: Platform;
     const scrolledSubject: Subject<any> = new Subject();
 

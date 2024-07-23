@@ -42,7 +42,6 @@ export class DocsExampleSource {
 
     private setLineNumbers() {
         const text = this.code.nativeElement.textContent!.match(/\n/g);
-        // tslint:disable-next-line:restrict-plus-operands
         const length = text ? text.length + 1 : 0;
 
         this.lineNumbers = '';
@@ -55,7 +54,10 @@ export class DocsExampleSource {
     }
 
     private fetchDocument(url: string) {
-        this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1)).subscribe(this.updateDocument);
+        this.http
+            .get(url, { responseType: 'text' })
+            .pipe(shareReplay(1))
+            .subscribe((e) => this.updateDocument(e));
     }
 
     /**
@@ -63,7 +65,6 @@ export class DocsExampleSource {
      * @param rawDocument The raw document content to show.
      */
     private updateDocument = (rawDocument: string): void => {
-        // tslint:disable-next-line:no-inner-html
         this.code.nativeElement.innerHTML = rawDocument;
 
         this.setLineNumbers();

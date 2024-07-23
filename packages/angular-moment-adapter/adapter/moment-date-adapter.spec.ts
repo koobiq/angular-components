@@ -1,14 +1,11 @@
-// tslint:disable:no-magic-numbers
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import moment from 'moment';
-// tslint:disable-next-line:no-duplicate-imports
 
 import { KBQ_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateModule } from './index';
 import { MomentDateAdapter } from './moment-date-adapter';
 
-// tslint:disable:one-variable-per-declaration
 const JAN = 0;
 
 describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {

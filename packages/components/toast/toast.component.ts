@@ -97,8 +97,8 @@ export class KbqToastComponent implements OnDestroy {
 
         merge(this.hovered, this.focused)
             .pipe(
-                takeUntil(this.destroyed),
-                filter((value) => value)
+                filter((value) => value),
+                takeUntil(this.destroyed)
             )
             .subscribe(() => {
                 if (this.ttl === 0) {

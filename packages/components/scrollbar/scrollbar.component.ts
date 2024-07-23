@@ -49,7 +49,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             data-overlayscrollbars-contents=""
             kbqScrollbar
         >
-            <ng-content></ng-content>
+            <ng-content />
         </div>
     `,
     styleUrls: ['./scrollbar.component.scss'],
@@ -69,12 +69,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
     @Input() defer?: boolean | IdleRequestOptions;
 
-    @Output('onInitialize') onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
+    @Output() onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
     /** Event triggered when options or event listeners updated */
-    @Output('onUpdate') onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
+    @Output() onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
     /** Event triggered when scrollbar instance destroyed */
-    @Output('onDestroy') onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
-    @Output('onScroll') onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
+    @Output() onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
+    @Output() onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
 
     get element(): HTMLElement {
         return this.targetElement.nativeElement;

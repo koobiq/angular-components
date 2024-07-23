@@ -1,4 +1,3 @@
-/* tslint:disable */
 import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import {
@@ -48,7 +47,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
                 kbqInput
                 type="number"
             />
-            <kbq-stepper></kbq-stepper>
+            <kbq-stepper />
         </kbq-form-field>
     `
 })
@@ -64,7 +63,7 @@ class KbqNumberInputTestComponent {
                 kbqInput
                 type="number"
             />
-            <kbq-stepper></kbq-stepper>
+            <kbq-stepper />
         </kbq-form-field>
     `
 })
@@ -84,7 +83,7 @@ class KbqNumberInputWithFormControl {
                     formControlName="reactiveInputValue"
                     type="number"
                 />
-                <kbq-stepper></kbq-stepper>
+                <kbq-stepper />
             </kbq-form-field>
         </form>
     `
@@ -111,7 +110,7 @@ class KbqNumberInputWithFormControlName {
                 step="0.5"
                 big-step="2"
             />
-            <kbq-stepper></kbq-stepper>
+            <kbq-stepper />
         </kbq-form-field>
     `
 })
@@ -131,7 +130,7 @@ class KbqNumberInputMaxMinStep {
                 kbqInput
                 type="number"
             />
-            <kbq-stepper></kbq-stepper>
+            <kbq-stepper />
         </kbq-form-field>
     `
 })
@@ -151,7 +150,7 @@ class KbqNumberInputMaxMinStepInput {
                 kbqInput
                 type="number"
             />
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-form-field>
     `
 })
@@ -172,7 +171,7 @@ class KbqNumberInputWithCleaner {
                 kbqInput
                 type="number"
             />
-            <kbq-stepper></kbq-stepper>
+            <kbq-stepper />
         </kbq-form-field>
     `
 })

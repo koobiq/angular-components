@@ -8,7 +8,6 @@ import {
     KbqRoundDecimalPipe
 } from '@koobiq/components/core';
 
-// tslint:disable:no-magic-numbers
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
     let localeService: KbqLocaleService;

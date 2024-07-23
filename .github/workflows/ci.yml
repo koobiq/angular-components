@@ -28,6 +28,7 @@ jobs:
           yarn run cspell --no-progress
           yarn run prettier
           yarn run stylelint
+          yarn run eslint --max-warnings=0
 
       - name: Unit
         run: |

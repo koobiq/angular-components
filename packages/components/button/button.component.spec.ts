@@ -367,7 +367,6 @@ class KbqButtonHtmlIconRightCaseTestApp {}
     `
 })
 class KbqButtonHtmlIconLeftCaseTestApp {
-    // tslint:disable-next-line:no-empty
     avoidCollisionMockTarget() {}
 }
 
@@ -404,7 +403,6 @@ class KbqButtonTextIconCaseTestApp {}
 class KbqButtonTextIconLeftNgIfCaseTestApp {
     visible = true;
 
-    // tslint:disable-next-line:no-empty
     avoidCollisionMockTarget() {}
 }
 

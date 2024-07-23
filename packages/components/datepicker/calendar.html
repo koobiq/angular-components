@@ -4,7 +4,7 @@
     [(activeDate)]="activeDate"
     (monthSelected)="monthSelected.emit(activeDate)"
     (yearSelected)="yearSelected.emit(activeDate)"
-></kbq-calendar-header>
+/>
 
 <div class="kbq-calendar__content">
     <kbq-month-view
@@ -16,5 +16,5 @@
         [(activeDate)]="activeDate"
         (selectedChange)="dateSelected($event!)"
         (userSelection)="userSelected()"
-    ></kbq-month-view>
+    />
 </div>

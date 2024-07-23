@@ -59,7 +59,6 @@ export class KbqSidepanelRef<T = any, R = any> {
             merge(
                 overlayRef.backdropClick(),
                 overlayRef.keydownEvents().pipe(
-                    // tslint:disable:deprecation
                     // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
                     filter((event) => event.keyCode === ESCAPE)
                 )

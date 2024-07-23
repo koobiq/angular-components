@@ -7,6 +7,7 @@ import {
     ElementRef,
     EventEmitter,
     Input,
+    OnDestroy,
     Output,
     ViewChild,
     ViewEncapsulation,
@@ -78,7 +79,7 @@ export class KbqToggleChange {
 })
 export class KbqToggleComponent
     extends KbqToggleMixinBase
-    implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex
+    implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy
 {
     @Input() big: boolean = false;
 
@@ -186,10 +187,8 @@ export class KbqToggleComponent
         this.disabled = isDisabled;
     }
 
-    // tslint:disable-next-line:no-empty
     private onTouchedCallback = () => {};
 
-    // tslint:disable-next-line:no-empty
     private onChangeCallback = (_: any) => {};
 
     private updateModelValue() {

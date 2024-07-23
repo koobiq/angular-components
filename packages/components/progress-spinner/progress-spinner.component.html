@@ -11,11 +11,11 @@
             class="kbq-progress-spinner__circle"
             [attr.r]="svgCircleRadius"
             [ngStyle]="{ 'stroke-dashoffset': mode === 'determinate' ? dashOffsetPercent : null }"
-        ></circle>
+        />
     </svg>
 </div>
 
 <div class="kbq-progress-spinner__content">
-    <ng-content select="[kbq-progress-spinner-text]"></ng-content>
-    <ng-content select="[kbq-progress-spinner-caption]"></ng-content>
+    <ng-content select="[kbq-progress-spinner-text]" />
+    <ng-content select="[kbq-progress-spinner-caption]" />
 </div>

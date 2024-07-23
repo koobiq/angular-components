@@ -1,4 +1,3 @@
-// tslint:disable no-magic-numbers
 import { FlatTreeControl } from './flat-tree-control';
 
 describe('FlatTreeControl', () => {

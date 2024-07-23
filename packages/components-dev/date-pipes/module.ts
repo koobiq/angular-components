@@ -1,6 +1,3 @@
-/* tslint:disable:no-reserved-keywords */
-// tslint:disable:no-console
-// tslint:disable:no-magic-numbers
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
@@ -202,7 +199,7 @@ export class DemoComponent {
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
             this.dateAdapter.toIso8601(now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))];
 
-        console.log('populateRangeShort: ');
+        console.info('populateRangeShort: ');
     }
 
     private populateRangeMiddle() {

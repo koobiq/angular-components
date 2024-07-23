@@ -7,7 +7,7 @@ import * as sass from 'sass';
 
 function writeScss({ src, dist }: { src: string; dist: string }) {
     return async (file: string) => {
-        console.log(`SCSS transforming: ${file}...`);
+        console.info(`SCSS transforming: ${file}...`);
 
         const { css } = await sass.compileAsync(file, {
             sourceMap: false,
@@ -42,7 +42,7 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
 
 (async function () {
     const start = performance.now();
-    console.log(`Compiling...`);
+    console.info(`Compiling...`);
 
     const src = 'packages/components';
     const dist = 'dist/scss-compiled';
@@ -63,7 +63,7 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
     copyPrebuiltThemes(distPrebuiltThemes, 'dist/components/prebuilt-themes', 'light-theme.css');
 
     const end = performance.now();
-    console.log(`End time: ${(end - start) / 1000} seconds.`);
+    console.info(`End time: ${(end - start) / 1000} seconds.`);
 })();
 
 function copyPrebuiltThemes(src: string, dist: string, file: string) {

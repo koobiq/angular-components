@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
@@ -26,11 +25,11 @@ export class ModalComponentExample {
         });
 
         this.componentModal.afterOpen.subscribe(() => {
-            console.log('[afterOpen] emitted!');
+            console.info('[afterOpen] emitted!');
         });
 
         this.componentModal.afterClose.subscribe((action: 'save' | 'close') => {
-            console.log(`[afterClose] emitted, chosen action: ${action}`);
+            console.info(`[afterClose] emitted, chosen action: ${action}`);
         });
     }
 }

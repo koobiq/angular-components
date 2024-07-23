@@ -21,10 +21,13 @@ export class KbqModalControlService {
         return this.parentService ? this.parentService.openModals : this.rootOpenModals;
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     private rootOpenModals: KbqModalRef[] = this.parentService ? null : [];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     private rootAfterAllClose: Subject<void> = this.parentService ? null : new Subject<void>();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     private rootRegisteredMetaMap: Map<KbqModalRef, IRegisteredMeta> = this.parentService ? null : new Map();
 

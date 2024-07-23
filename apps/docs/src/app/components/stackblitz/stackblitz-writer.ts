@@ -1,4 +1,3 @@
-/* tslint:disable:no-parameter-reassignment import-name */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
@@ -197,6 +196,7 @@ export class StackblitzWriter {
         }
 
         // The `take(1)` is necessary, because the Promise from `toPromise` resolves on complete.
+        // eslint-disable-next-line rxjs/no-topromise
         return stream.pipe(take(1)).toPromise();
     }
 }

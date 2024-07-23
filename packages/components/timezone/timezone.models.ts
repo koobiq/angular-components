@@ -1,5 +1,3 @@
-/* tslint:disable:naming-convention */
-
 export interface KbqTimezoneZone {
     id: string;
     offset: string;

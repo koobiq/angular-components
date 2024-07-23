@@ -21,7 +21,7 @@ import { KbqToastData } from './toast.type';
 
 @Component({
     selector: 'kbq-toast-container',
-    template: '<ng-container #container></ng-container>',
+    template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
     host: {
         class: 'kbq-toast-container'
@@ -43,7 +43,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     ) {
         super(elementRef, scrollDispatcher, ngZone);
 
-        this.service.animation.subscribe(this.dispatchScrollEvent);
+        this.service.animation.subscribe(() => this.dispatchScrollEvent());
     }
 
     createToast<C>(data: KbqToastData, componentType, onTop: boolean): ComponentRef<C> {

@@ -48,7 +48,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         ></i>
 
         <span class="kbq-hint__text">
-            <ng-content></ng-content>
+            <ng-content />
         </span>
     `,
     styleUrls: ['hint.scss'],

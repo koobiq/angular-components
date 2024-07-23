@@ -1,10 +1,8 @@
-/* tslint:disable:no-magic-numbers max-func-body-length no-reserved-keywords */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-// tslint:disable-next-line:rxjs-no-internal
 import { C } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { SizeS } from '@koobiq/design-tokens';
@@ -712,7 +710,6 @@ export function buildFileTree(value: any, level: number): FileNode[] {
 }
 
 function getNodes(treeElement: Element): Element[] {
-    // tslint:disable-next-line: no-unnecessary-type-assertion
     return [].slice.call(treeElement.querySelectorAll('.kbq-tree-option'))!;
 }
 
@@ -883,7 +880,7 @@ abstract class TreeParams {
                 *kbqTreeNodeDef="let node; when: hasChild"
                 kbqTreeNodePadding
             >
-                <kbq-tree-node-toggle></kbq-tree-node-toggle>
+                <kbq-tree-node-toggle />
 
                 {{ node.name }}
             </kbq-tree-option>
@@ -919,7 +916,7 @@ class KbqTreeAppMultiple extends TreeParams {
                 *kbqTreeNodeDef="let node; when: hasChild"
                 kbqTreeNodePadding
             >
-                <kbq-tree-node-toggle></kbq-tree-node-toggle>
+                <kbq-tree-node-toggle />
 
                 {{ node.name }}
             </kbq-tree-option>
@@ -967,7 +964,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
                 *kbqTreeNodeDef="let node; when: hasChild"
                 kbqTreeNodePadding
             >
-                <kbq-tree-node-toggle></kbq-tree-node-toggle>
+                <kbq-tree-node-toggle />
 
                 {{ node.name }}
             </kbq-tree-option>

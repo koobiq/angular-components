@@ -227,11 +227,9 @@ export class KbqFormField
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        // tslint:disable-next-line:deprecation
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
             (this.control as unknown as { toggleType(): void }).toggleType();
         }
-        // tslint:disable-next-line:deprecation
         if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && this.control.focused && this.hasCleaner) {
             this.control?.ngControl?.reset();
 

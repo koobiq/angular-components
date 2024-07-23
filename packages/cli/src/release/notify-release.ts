@@ -51,7 +51,7 @@ function logNotificationResult(success: boolean, error?: Error): void {
  * @param {} releaseData - The data of the release to be included in the notification.
  */
 export async function notify(releaseData: any): Promise<void> {
-    console.log(green('Start MM notification'));
+    console.info(green('Start MM notification'));
 
     const config = getMattermostConfig();
     if (!config) {

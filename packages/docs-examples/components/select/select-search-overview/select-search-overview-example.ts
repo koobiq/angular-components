@@ -36,7 +36,7 @@ export class SelectSearchOverviewExample {
     filteredOptions: Observable<string[]>;
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
+        this.localeService.changes.subscribe((e) => this.update(e));
     }
 
     update = (locale: string) => {

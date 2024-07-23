@@ -9,7 +9,6 @@ export enum KbqSidepanelAnimationState {
 }
 
 // TODO Find a way to use dynamic keys and avoid error "Expression form not supported."
-// tslint:disable-next-line
 export const kbqSidepanelTransformAnimation: Record<KbqSidepanelPosition, { in: string; out: string }> = {
     right: { in: 'translateX(100%)', out: 'translateX(0%)' },
     left: { in: 'translateX(-100%)', out: 'translateX(0%)' },

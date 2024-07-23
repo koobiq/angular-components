@@ -14,7 +14,6 @@ export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
  * Interface for a custom dropdown panel that can be used with `kbqDropdownTriggerFor`.
  * @docs-private
  */
-// tslint:disable-next-line:naming-convention
 export interface KbqDropdownPanel {
     xPosition: DropdownPositionX;
     yPosition: DropdownPositionY;
@@ -34,7 +33,6 @@ export interface KbqDropdownPanel {
 }
 
 /** Default `kbq-dropdown` options that can be overridden. */
-// tslint:disable-next-line:naming-convention
 export interface KbqDropdownDefaultOptions {
     /** The x-axis position of the dropdown. */
     xPosition: DropdownPositionX;
@@ -71,7 +69,6 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS = new InjectionToken<KbqDropdownDefaul
 );
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions {
     return {
         overlapTriggerX: true,

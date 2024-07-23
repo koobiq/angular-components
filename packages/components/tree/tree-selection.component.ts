@@ -1,4 +1,3 @@
-/* tslint:disable:no-empty */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -15,6 +14,7 @@ import {
     Input,
     IterableDiffer,
     IterableDiffers,
+    OnDestroy,
     Optional,
     Output,
     QueryList,
@@ -23,8 +23,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-// tslint:disable-next-line:rxjs-no-internal
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import {
     DOWN_ARROW,
@@ -44,6 +42,7 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import { CanDisable, getKbqSelectNonArrayValueError, HasTabIndex, MultipleMode } from '@koobiq/components/core';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay, takeUntil } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -85,7 +84,6 @@ export class KbqTreeSelectionChange<T> {
     ) {}
 }
 
-// tslint:disable-next-line:naming-convention
 interface SelectionModelOption {
     id: number | string;
     value: string;
@@ -94,7 +92,7 @@ interface SelectionModelOption {
 @Component({
     selector: 'kbq-tree-selection',
     exportAs: 'kbqTreeSelection',
-    template: '<ng-container kbqTreeNodeOutlet></ng-container>',
+    template: '<ng-container kbqTreeNodeOutlet />',
     styleUrls: ['./tree-selection.scss'],
     host: {
         class: 'kbq-tree-selection',
@@ -117,7 +115,7 @@ interface SelectionModelOption {
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
-    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex
+    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex, OnDestroy
 {
     renderedOptions = new QueryList<KbqTreeOption>();
 
@@ -251,7 +249,7 @@ export class KbqTreeSelection
     }
 
     ngAfterContentInit(): void {
-        this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+        this.unorderedOptions.changes.subscribe(() => this.updateRenderedOptions());
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)
@@ -276,7 +274,7 @@ export class KbqTreeSelection
             this.renderedOptions.notifyOnChanges();
         });
 
-        this.renderedOptions.changes.pipe(takeUntil(this.destroy), delay(0, this.scheduler)).subscribe((options) => {
+        this.renderedOptions.changes.pipe(delay(0, this.scheduler), takeUntil(this.destroy)).subscribe((options) => {
             this.resetOptions();
 
             // Check to see if we need to update our tab index
@@ -328,7 +326,6 @@ export class KbqTreeSelection
 
     onKeyDown(event: KeyboardEvent): void {
         this.keyManager.setFocusOrigin('keyboard');
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         if ([SPACE, LEFT_ARROW, RIGHT_ARROW].includes(keyCode) || isVerticalMovement(event)) {
@@ -545,6 +542,7 @@ export class KbqTreeSelection
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }

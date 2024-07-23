@@ -59,7 +59,7 @@ const ignoredPackages: PackageID[] = [
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
 function normalizeLicense(license: string | undefined): License[] {
     if (typeof license === 'string') {
-        let normalized = licenseReplacements[license] || license.replace(/\*$/, '');
+        const normalized = licenseReplacements[license] || license.replace(/\*$/, '');
         return [normalized];
     }
     return [];
@@ -92,7 +92,7 @@ async function validateLicense(): Promise<ReturnCode> {
         });
 
         const packages = Object.keys(json);
-        console.log(`Testing ${packages.length} packages.\n`);
+        console.info(`Testing ${packages.length} packages.\n`);
 
         // Filters out packages with invalid or unaccepted licenses.
         const badLicensePackages = packages
@@ -115,7 +115,7 @@ async function validateLicense(): Promise<ReturnCode> {
             return ReturnCode.InvalidLicense;
         }
 
-        console.log('All package licenses are valid.');
+        console.info('All package licenses are valid.');
         return ReturnCode.Success;
     } catch (error) {
         console.error(`Something happened:\n${error.message}`);

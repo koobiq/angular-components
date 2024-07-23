@@ -15,7 +15,6 @@ export interface ListKeyManagerOption {
 /** Modifier keys handled by the ListKeyManager. */
 export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
 
-/* tslint:disable:member-ordering */
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
  * of items, it will set the active item correctly when arrow events occur.
@@ -226,9 +225,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * Sets the active item depending on the key event passed in.
      * @param event Keyboard event to be used for determining which element should be active.
      */
-    // tslint:disable-next-line:cyclomatic-complexity
     onKeydown(event: KeyboardEvent): void {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         const modifiers: ListKeyManagerModifierKey[] = ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'];
@@ -364,7 +361,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * Allows setting the active item without any other effects.
      * @param item Item to be set as active or index Index of the item to be set as active..
      */
-    // tslint:disable-next-line:unified-signatures
     updateActiveItem(item: number | T): void;
 
     updateActiveItem(item: any): void {
@@ -448,5 +444,3 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return this._items instanceof QueryList ? this._items.toArray() : this._items;
     }
 }
-
-/* tslint:enable:member-ordering */

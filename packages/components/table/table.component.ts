@@ -5,7 +5,7 @@ import { KbqButton } from '@koobiq/components/button';
     selector: 'table[kbq-table]',
     exportAs: 'kbqTable',
     styleUrls: ['table.scss'],
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     host: {
         class: 'kbq-table',
         '[class.kbq-table_bordered]': 'border'

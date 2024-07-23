@@ -19,6 +19,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@koobiq/components/core';
+import { OnDestroy } from '@angular/core';
 
 // @public
 export class KbqToggleBase {
@@ -36,7 +37,7 @@ export class KbqToggleChange {
 }
 
 // @public (undocumented)
-export class KbqToggleComponent extends KbqToggleMixinBase implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex {
+export class KbqToggleComponent extends KbqToggleMixinBase implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy {
     constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     ariaLabel: string;

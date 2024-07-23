@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers no-empty */
-// tslint:disable:max-func-body-length
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, NgZone, Provider, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
@@ -1235,6 +1233,7 @@ describe('KbqTagList', () => {
                 errorTestComponent.formControl.setValue('something');
                 fixture.detectChanges();
 
+                // eslint-disable-next-line promise/no-nesting
                 fixture.whenStable().then(() => {
                     expect(containerEl.classList)
                         .withContext('Expected container not to have the invalid class when valid.')

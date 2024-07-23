@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers */
-/* tslint:disable:no-empty */
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -100,13 +98,11 @@ describe('Sidebar', () => {
             testComponent.showContainer = false;
             fixture.detectChanges();
 
-            // tslint:disable-next-line: no-unbound-method
             expect(document.removeEventListener).toHaveBeenCalledWith('keypress', jasmine.any(Function), true);
 
             testComponent.showContainer = true;
             fixture.detectChanges();
 
-            // tslint:disable-next-line: no-unbound-method
             expect(document.addEventListener).toHaveBeenCalledWith('keypress', jasmine.any(Function), true);
         });
     });

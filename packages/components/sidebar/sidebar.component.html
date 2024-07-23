@@ -1,9 +1,9 @@
 <ng-container [ngSwitch]="internalState">
     <ng-container *ngSwitchCase="true">
-        <ng-content select="[kbq-sidebar-opened]"></ng-content>
+        <ng-content select="[kbq-sidebar-opened]" />
     </ng-container>
 
     <ng-container *ngSwitchCase="false">
-        <ng-content select="[kbq-sidebar-closed]"></ng-content>
+        <ng-content select="[kbq-sidebar-closed]" />
     </ng-container>
 </ng-container>

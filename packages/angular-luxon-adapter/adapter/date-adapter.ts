@@ -18,7 +18,6 @@ export const KBQ_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<KbqLuxonDateAda
 );
 
 /** @docs-private */
-// tslint:disable:naming-convention
 export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOptions {
     return { useUtc: false };
 }
@@ -41,7 +40,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe(this.setLocale);
+        this.localeService?.changes.subscribe((e) => this.setLocale(e));
     }
 
     setLocale = (locale: string): void => {

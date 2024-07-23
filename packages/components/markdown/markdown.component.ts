@@ -20,7 +20,7 @@ import { KbqMarkdownService } from './markdown.service';
             class="markdown-input"
             #contentWrapper
             ngPreserveWhitespaces
-        ><ng-content></ng-content></pre>
+        ><ng-content /></pre>
         <div
             class="markdown-output"
             [innerHtml]="resultHtml"

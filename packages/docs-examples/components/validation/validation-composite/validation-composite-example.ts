@@ -65,16 +65,17 @@ export class ValidationCompositeExample {
     }
 
     onInput(event, tooltip: KbqTooltipTrigger, controlName: string) {
+        // eslint-disable-next-line no-useless-escape
         const regex = /^[\d\.]+$/g;
 
         if (!regex.test(event.target.value)) {
+            // eslint-disable-next-line no-useless-escape
             const newValue = event.target.value.replace(/[^\d\.]+/g, '');
             this.compositeFormGroup.controls[controlName].setValue(newValue);
 
             if (!tooltip.isOpen) {
                 tooltip.show();
 
-                // tslint:disable-next-line:no-magic-numbers
                 setTimeout(() => tooltip.hide(), 3000);
             }
         }

@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 

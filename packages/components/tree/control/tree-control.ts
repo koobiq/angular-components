@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
  * The Tree will use this TreeControl to expand/collapse a node.
  * User can also use it outside the `<kbq-tree>` to control the expansion status of the tree.
  */
-// tslint:disable-next-line:naming-convention
 export interface TreeControl<T> {
     /** The saved tree nodes data for `expandAll` action. */
     dataNodes: T[];

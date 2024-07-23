@@ -15,7 +15,7 @@ import { KbqSidepanelService } from './sidepanel.service';
 export class KbqSidepanelClose implements OnInit, OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
 
-    @Input('kbqSidepanelClose') kbqSidepanelClose: any;
+    @Input() kbqSidepanelClose: any;
 
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
@@ -56,7 +56,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
             class="kbq-sidepanel-title"
             kbq-title
         >
-            <ng-content></ng-content>
+            <ng-content />
         </div>
 
         <button

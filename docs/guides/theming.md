@@ -257,7 +257,6 @@ try {
         // Safari
         this.colorAutomaticTheme.addListener(this.setAutoTheme);
     } catch (errSafari) {
-        // tslint:disable-next-line:no-console
         console.error(errSafari);
     }
 }

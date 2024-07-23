@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -53,7 +52,7 @@ export class TabsDemoComponent {
     }
 
     onSelectionChanged(e) {
-        console.log(e);
+        console.info(e);
     }
 
     addTab(selectAfterAdding: boolean) {
@@ -69,7 +68,7 @@ export class TabsDemoComponent {
     }
 
     selectedTabChange($event: any) {
-        console.log('selectedTabChange Event:', $event);
+        console.info('selectedTabChange Event:', $event);
     }
 
     updatedTabs() {

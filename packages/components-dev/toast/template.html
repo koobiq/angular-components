@@ -34,7 +34,7 @@
             <kbq-progress-bar
                 class="layout-margin-top-m layout-margin-bottom-m"
                 [value]="50"
-            ></kbq-progress-bar>
+            />
         </ng-template>
 
         <ng-template
@@ -44,6 +44,7 @@
             <a
                 kbq-link
                 pseudo
+                role="none"
                 (click)="toast.close()"
             >
                 Кнопка 1
@@ -93,7 +94,7 @@
             <kbq-progress-bar
                 class="layout-margin-top-m layout-margin-bottom-m"
                 [value]="50"
-            ></kbq-progress-bar>
+            />
         </ng-template>
 
         <ng-template
@@ -103,6 +104,7 @@
             <a
                 kbq-link
                 pseudo
+                role="none"
                 (click)="toast.close()"
             >
                 Отмена
@@ -116,6 +118,7 @@
             <i
                 kbq-icon-button="mc-close-L_16"
                 kbq-toast-close-button
+                role="none"
                 (click)="toast.close()"
             ></i>
         </ng-template>
@@ -155,6 +158,7 @@
             <a
                 kbq-link
                 pseudo
+                role="none"
                 (click)="toast.close()"
             >
                 Отклонить

@@ -116,7 +116,6 @@ export class KbqSidepanelService implements OnDestroy {
             providers: [
                 { provide: KbqSidepanelConfig, useValue: config },
                 { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 },
-                // tslint:disable-next-line:no-magic-numbers
                 { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 }
             ]
         });

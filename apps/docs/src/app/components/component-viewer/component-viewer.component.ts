@@ -138,7 +138,7 @@ export class BaseOverviewComponent implements OnDestroy {
                 }
             });
 
-        this.animationDone.subscribe(this.resetAnimation);
+        this.animationDone.subscribe(() => this.resetAnimation());
     }
 
     getRoute(route: string): string {

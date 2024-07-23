@@ -1,4 +1,3 @@
-/* tslint:disable:import-name */
 import ts from 'typescript';
 
 interface ParsedMetadata {
@@ -20,7 +19,6 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, false);
     const metas: ParsedMetadata[] = [];
 
-    // tslint:disable-next-line:cyclomatic-complexity
     const visitNode = (node: any): void => {
         if (node.kind === ts.SyntaxKind.ClassDeclaration) {
             const decorators = ts.getDecorators(node);

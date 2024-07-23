@@ -1,4 +1,3 @@
-/* tslint:disable:no-string-literal */
 import { program } from 'commander';
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
@@ -33,7 +32,6 @@ export const runCliCommands = () => {
         .option('-o, --repo-owner <string>', 'github owner name', process.env['REPO_OWNER'] ?? 'koobiq')
         .option('-n, --repo-name <string>', 'github repo name', process.env['REPO_NAME'] ?? 'koobiq')
         .action((subcommand, options) => {
-            // tslint:disable-next-line:switch-default
             switch (subcommand) {
                 case CommandTypes.Stage:
                     new StageReleaseTask(options).run();

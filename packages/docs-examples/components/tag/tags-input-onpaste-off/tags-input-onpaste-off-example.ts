@@ -14,7 +14,6 @@ import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagInputEvent, KbqTagsDefaultOptions } fro
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            // tslint:disable-next-line: no-object-literal-type-assertion
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
     ]

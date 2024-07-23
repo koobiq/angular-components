@@ -40,7 +40,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -56,7 +56,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100); // tslint:disable-line
+            tick(100);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -69,14 +69,14 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the trigger element to hide it
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick(100); // tslint:disable-line
+            tick(100);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -90,7 +90,7 @@ describe('KbqTooltip', () => {
             flush();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             dispatchMouseEvent(triggerElement, 'blur');
-            tick(100); // tslint:disable-line
+            tick(100);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -103,7 +103,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -119,7 +119,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100); // tslint:disable-line
+            tick(100);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -144,15 +144,15 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.disabled = false;
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             fixture.detectChanges();
-            tick(410); // tslint:disable-line
+            tick(410);
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);

@@ -62,11 +62,12 @@ export class KbqModalComponent<T = any, R = any>
     // The instance of component opened into the dialog.
     @Input() kbqComponent: Type<T>;
     // If not specified, will use <ng-content>
+    // eslint-disable-next-line @typescript-eslint/ban-types
     @Input() kbqContent: string | TemplateRef<{}> | Type<T>;
     // available when kbqContent is a component
-    // @ts-ignore
     @Input() kbqComponentParams: any;
     // Default Modal ONLY
+    // eslint-disable-next-line @typescript-eslint/ban-types
     @Input() kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
 
     @Input()
@@ -86,6 +87,7 @@ export class KbqModalComponent<T = any, R = any>
     @Input() kbqWrapClassName: string;
     @Input() kbqClassName: string;
     @Input() kbqStyle: object;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     @Input() kbqTitle: string | TemplateRef<{}>;
     @Input() kbqCloseByESC: boolean = true;
 
@@ -364,18 +366,15 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 
-    // tslint:disable-next-line: no-reserved-keywords
     isModalType(type: ModalType): boolean {
         return this.kbqModalType === type;
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        // tslint:disable-next-line:deprecation .key isn't supported in Edge
         if (event.keyCode === ESCAPE && this.container && this.container instanceof OverlayRef) {
             this.close();
             event.preventDefault();
         }
-        // tslint:disable-next-line:deprecation .key isn't supported in Edge
         if (event.ctrlKey && event.keyCode === ENTER) {
             if (this.kbqModalType === 'confirm') {
                 this.triggerOk();
@@ -395,11 +394,11 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // AoT
-    // tslint:disable-next-line: no-reserved-keywords
     onClickOkCancel(type: 'ok' | 'cancel') {
         this.handleCloseResult(type, (doClose) => doClose !== false);
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
         const trigger = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
         const loadingKey = { ok: 'kbqOkLoading', cancel: 'kbqCancelLoading' }[triggerType];
@@ -409,6 +408,7 @@ export class KbqModalComponent<T = any, R = any>
         } else if (typeof trigger === 'function') {
             const result = trigger(this.getContentComponent());
             // Users can return "false" to prevent closing by default
+            // eslint-disable-next-line @typescript-eslint/ban-types
             const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
 
             if (isPromise(result)) {
@@ -425,27 +425,32 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // AoT
+    // eslint-disable-next-line @typescript-eslint/ban-types
     isNonEmptyString(value: {}): boolean {
         return typeof value === 'string' && value !== '';
     }
 
     // AoT
+    // eslint-disable-next-line @typescript-eslint/ban-types
     isTemplateRef(value: {}): boolean {
         return value instanceof TemplateRef;
     }
 
     // AoT
+    // eslint-disable-next-line @typescript-eslint/ban-types
     isComponent(value: {}): boolean {
         return value instanceof Type;
     }
 
     // AoT
+    // eslint-disable-next-line @typescript-eslint/ban-types
     isModalButtons(value: {}): boolean {
         return Array.isArray(value) && value.length > 0;
     }
 
     // Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
     // AoT
+    // eslint-disable-next-line @typescript-eslint/ban-types
     getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
         const value = options[prop];
         const args: any[] = [];
@@ -460,10 +465,10 @@ export class KbqModalComponent<T = any, R = any>
     // AoT
     onButtonClick(button: IModalButtonOptions<T>) {
         // Call onClick directly
-        // tslint:disable-next-line:no-inferred-empty-object-type  rule seems to be broken
         const result = this.getButtonCallableProp(button, 'onClick');
         if (isPromise(result)) {
             button.loading = true;
+            // eslint-disable-next-line @typescript-eslint/ban-types
             (result as Promise<{}>).then(() => (button.loading = false)).catch(() => (button.loading = false));
         }
     }
@@ -516,6 +521,7 @@ export class KbqModalComponent<T = any, R = any>
                 [`zoom-${state}-active`]: true
             };
         } else {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             this.maskAnimationClassMap = this.modalAnimationClassMap = null;
         }
@@ -577,6 +583,7 @@ export class KbqModalComponent<T = any, R = any>
         this.contentComponentRef = factory.create(childInjector);
 
         if (this.kbqComponentParams) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             Object.assign(this.contentComponentRef.instance, this.kbqComponentParams);
         }
@@ -613,12 +620,11 @@ export class KbqModalComponent<T = any, R = any>
 
 ////////////
 
-function isPromise(obj: {} | void): boolean {
-    // tslint:disable-next-line: no-unbound-method
+function isPromise(obj: unknown | void): boolean {
     return (
         !!obj &&
         (typeof obj === 'object' || typeof obj === 'function') &&
-        typeof (obj as Promise<{}>).then === 'function' &&
-        typeof (obj as Promise<{}>).catch === 'function'
+        typeof (obj as Promise<unknown>).then === 'function' &&
+        typeof (obj as Promise<unknown>).catch === 'function'
     );
 }

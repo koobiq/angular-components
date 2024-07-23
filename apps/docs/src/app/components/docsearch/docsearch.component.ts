@@ -26,6 +26,7 @@ export class DocsearchComponent implements OnInit {
         placeholder: 'Поиск'
     };
 
+    // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
     async ngOnInit() {
         if (isPlatformBrowser(this.platform)) {
             const uaParser = new UAParser();

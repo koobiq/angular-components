@@ -1,7 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { AbstractConstructor, Constructor } from './constructor';
 
-// tslint:disable-next-line:naming-convention
 export interface CanColor {
     color: KbqComponentColors | ThemePalette | string;
 }
@@ -9,7 +8,6 @@ export interface CanColor {
 /** @docs-private */
 export type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
 
-// tslint:disable-next-line:naming-convention
 export interface HasElementRef {
     elementRef: ElementRef;
 }

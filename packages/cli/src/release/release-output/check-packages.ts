@@ -1,9 +1,7 @@
-// tslint:disable:no-console
 import chalk from 'chalk';
 import { existsSync } from 'fs';
-import { join } from 'path';
-// tslint:disable-next-line:match-default-export-name
 import glob from 'glob';
+import { join } from 'path';
 import { checkKoobiqPackage, checkReleaseBundle, checkTypeDefinitionFile } from './output-validations';
 
 /** Glob that matches all JavaScript bundle files within a release package. */

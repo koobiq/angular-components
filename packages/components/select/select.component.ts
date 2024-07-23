@@ -1,5 +1,3 @@
-/* tslint:disable:no-empty */
-
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -382,7 +380,6 @@ export class KbqSelect
     }
 
     set compareWith(fn: (o1: any, o2: any) => boolean) {
-        /* tslint:disable-next-line:strict-type-predicates */
         if (typeof fn !== 'function') {
             throw getKbqSelectNonFunctionValueError();
         }
@@ -526,7 +523,7 @@ export class KbqSelect
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.subscribe(() => this.updateLocaleParams());
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -561,7 +558,7 @@ export class KbqSelect
         });
 
         merge(this.optionSelectionChanges, this.visibleChanges)
-            .pipe(takeUntil(this.destroy), distinctUntilChanged())
+            .pipe(distinctUntilChanged(), takeUntil(this.destroy))
             .subscribe(() => setTimeout(() => this.calculateHiddenItems(), 0));
     }
 
@@ -735,6 +732,7 @@ export class KbqSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }
@@ -967,7 +965,6 @@ export class KbqSelect
 
     /** Handles keyboard events while the select is closed. */
     private handleClosedKeydown(event: KeyboardEvent): void {
-        /* tslint:disable-next-line */
         const keyCode = event.keyCode;
         const isArrowKey = [DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(keyCode);
         const isOpenKey = [ENTER, SPACE].includes(keyCode);
@@ -983,7 +980,6 @@ export class KbqSelect
 
     /** Handles keyboard events when the selected is open. */
     private handleOpenKeydown(event: KeyboardEvent): void {
-        /* tslint:disable-next-line */
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
 
@@ -1090,6 +1086,7 @@ export class KbqSelect
         ].find((option: KbqOptionBase) => {
             try {
                 // Treat null as a special reset value.
+
                 return option.value != null && this.compareWith(option.value, value);
             } catch (error) {
                 if (isDevMode()) {
@@ -1279,7 +1276,6 @@ export class KbqSelect
         // Window width without scrollbar
         const windowWidth = this.getOverlayWidth();
         const isRtl = this.isRtl();
-        /* tslint:disable-next-line:no-magic-numbers */
         const paddingWidth = SELECT_PANEL_PADDING_X * 2;
         let offsetX: number = SELECT_PANEL_PADDING_X;
         let overlayMaxWidth: number;

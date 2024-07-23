@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, Inject } from '@angular/core';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
@@ -54,7 +53,7 @@ export class AbsoluteDateFormatterExample {
         private dateFormatter: DateFormatter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
-        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe((e) => this.onLocaleChange(e));
     }
 
     private onLocaleChange = (locale: string) => {

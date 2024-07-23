@@ -1,8 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:no-unbound-method
-// tslint:disable:no-typeof-undefined
-// tslint:disable:no-empty
-
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, FactoryProvider, Type, ValueProvider, ViewChild } from '@angular/core';
@@ -1229,7 +1224,7 @@ describe('KbqDatepicker', () => {
             #d
             [disabled]="disabled"
             [opened]="opened"
-        ></kbq-datepicker>
+        />
     `
 })
 class StandardDatepicker {
@@ -1244,14 +1239,14 @@ class StandardDatepicker {
     template: `
         <input [kbqDatepicker]="d" />
         <input [kbqDatepicker]="d" />
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class MultiInputDatepicker {}
 
 @Component({
     template: `
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class NoInputDatepicker {
@@ -1267,7 +1262,7 @@ class NoInputDatepicker {
         <kbq-datepicker
             #d
             [startAt]="startDate"
-        ></kbq-datepicker>
+        />
     `
 })
 class DatepickerWithStartAt {
@@ -1282,7 +1277,7 @@ class DatepickerWithStartAt {
             [(ngModel)]="selected"
             [kbqDatepicker]="d"
         />
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithNgModel {
@@ -1299,8 +1294,8 @@ class DatepickerWithNgModel {
             [formControl]="formControl"
             [kbqDatepicker]="d"
         />
-        <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithFormControl {
@@ -1313,8 +1308,8 @@ class DatepickerWithFormControl {
 @Component({
     template: `
         <input [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithToggle {
@@ -1331,7 +1326,7 @@ class DatepickerWithToggle {
                 kbqDatepickerToggleIcon
             ></div>
         </kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithCustomIcon {}
@@ -1344,8 +1339,8 @@ class DatepickerWithCustomIcon {}
             [min]="minDate"
             [max]="maxDate"
         />
-        <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithMinAndMaxValidation {
@@ -1362,8 +1357,8 @@ class DatepickerWithMinAndMaxValidation {
             [kbqDatepicker]="d"
             [kbqDatepickerFilter]="filter"
         />
-        <kbq-datepicker-toggle [for]="d"></kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithFilterAndValidation {
@@ -1381,7 +1376,7 @@ class DatepickerWithFilterAndValidation {
             (dateChange)="onDateChange($event)"
             (dateInput)="onDateInput()"
         />
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithChangeAndInputEvents {
@@ -1390,8 +1385,7 @@ class DatepickerWithChangeAndInputEvents {
 
     onChange() {}
 
-    // @ts-ignore
-    onDateChange(event: KbqDatepickerInputEvent<any>) {}
+    onDateChange(_event: KbqDatepickerInputEvent<any>) {}
 
     onDateInput() {}
 }
@@ -1402,7 +1396,7 @@ class DatepickerWithChangeAndInputEvents {
             [(ngModel)]="date"
             [kbqDatepicker]="d"
         />
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithi18n {
@@ -1422,10 +1416,9 @@ class DatepickerWithi18n {
         <kbq-datepicker
             #d
             [startAt]="startAt"
-        ></kbq-datepicker>
+        />
     `
 })
-// tslint:disable-next-line:naming-convention
 class DatepickerWithISOStrings {
     value = new Date(2017, 5, 1).toISOString();
     min = new Date(2017, 1, 1).toISOString();
@@ -1445,7 +1438,7 @@ class DatepickerWithISOStrings {
             #d
             (opened)="openedSpy()"
             (closed)="closedSpy()"
-        ></kbq-datepicker>
+        />
     `
 })
 class DatepickerWithEvents {
@@ -1461,7 +1454,7 @@ class DatepickerWithEvents {
             [kbqDatepicker]="d"
             (focus)="d.open()"
         />
-        <kbq-datepicker #d="kbqDatepicker"></kbq-datepicker>
+        <kbq-datepicker #d="kbqDatepicker" />
     `
 })
 class DatepickerOpeningOnFocus {
@@ -1474,7 +1467,7 @@ class DatepickerOpeningOnFocus {
             [kbqDatepicker]="assignedDatepicker"
             [value]="date"
         />
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DelayedDatepicker {
@@ -1496,7 +1489,7 @@ class DelayedDatepicker {
                 kbqDatepickerToggleIcon
             ></div>
         </kbq-datepicker-toggle>
-        <kbq-datepicker #d></kbq-datepicker>
+        <kbq-datepicker #d />
     `
 })
 class DatepickerWithTabindexOnToggle {}

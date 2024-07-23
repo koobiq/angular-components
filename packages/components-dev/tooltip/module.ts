@@ -12,7 +12,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
-/* tslint:disable:no-trailing-whitespace */
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
@@ -62,7 +61,6 @@ export class DemoComponent {
     changeStep(direction: number) {
         const newStage = this.tooltipActiveStage + direction;
 
-        // tslint:disable-next-line:no-magic-numbers
         if (newStage < 1 || newStage > 3) {
             return;
         }

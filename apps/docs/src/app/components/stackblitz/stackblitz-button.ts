@@ -50,8 +50,7 @@ export class StackblitzButton extends KbqLink {
         if (this.openStackBlitzFn) {
             this.openStackBlitzFn();
         } else {
-            // tslint:disable-next-line:no-console
-            console.log('StackBlitz is not ready yet. Please try again in a few seconds.');
+            console.info('StackBlitz is not ready yet. Please try again in a few seconds.');
         }
     }
 

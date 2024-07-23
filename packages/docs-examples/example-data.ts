@@ -34,7 +34,7 @@ export class ExampleData {
         this.exampleFiles = files;
         this.selectorName = selector;
         this.indexFilename = primaryFile;
-        // tslint:disable-next-line:prefer-template
+        // eslint-disable-next-line no-useless-escape
         this.description = title || exampleName.replace(/[\-]+/g, ' ') + ' Example';
         this.componentNames = [componentName, ...additionalComponents];
     }

@@ -8,7 +8,6 @@ import { BrowserModule } from '@angular/platform-browser';
 })
 export class DemoComponent {}
 
-/* tslint:disable:max-classes-per-file */
 @NgModule({
     declarations: [
         DemoComponent

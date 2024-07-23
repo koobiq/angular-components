@@ -41,7 +41,7 @@
             <i kbq-icon="mc-folder-closed_16"></i>
         </button>
 
-        <kbq-navbar-divider></kbq-navbar-divider>
+        <kbq-navbar-divider />
 
         <kbq-navbar-item>
             <kbq-form-field>
@@ -55,7 +55,7 @@
                     placeholder="Placeholder"
                 />
 
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
         </kbq-navbar-item>
 
@@ -104,7 +104,7 @@
             </button>
         </kbq-navbar-item>
 
-        <kbq-navbar-divider></kbq-navbar-divider>
+        <kbq-navbar-divider />
 
         <kbq-navbar-item>
             <kbq-form-field>
@@ -119,11 +119,11 @@
                     tabindex="-1"
                 />
 
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
         </kbq-navbar-item>
 
-        <kbq-navbar-divider></kbq-navbar-divider>
+        <kbq-navbar-divider />
     </kbq-navbar-container>
 
     <kbq-navbar-container>
@@ -303,7 +303,7 @@
 </ng-template>
 
 <div style="height: 200vh; margin-top: 64px">
-    <ng-container *ngTemplateOutlet="controls"></ng-container>
+    <ng-container *ngTemplateOutlet="controls" />
 </div>
 
 <ng-template #modalTitle>
@@ -319,7 +319,7 @@
     >
         <div class="kbq-subheading">Sidepanel Template Body</div>
 
-        <ng-container *ngTemplateOutlet="controls"></ng-container>
+        <ng-container *ngTemplateOutlet="controls" />
 
         <div *ngFor="let item of array; index as i">{{ i + 1 }}</div>
     </kbq-sidepanel-body>

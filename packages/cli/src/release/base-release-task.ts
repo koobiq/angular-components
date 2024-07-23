@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import chalk from 'chalk';
 import { execSync, ExecSyncOptions } from 'child_process';
 import { readFileSync } from 'fs';
@@ -50,7 +49,7 @@ export class BaseReleaseTask {
         // If current branch already matches one of the allowed to publish branches, just continue
         // by exiting this function and returning the currently used publish branch.
         if (allowedBranches.includes(currentBranchName)) {
-            console.log(green(`  ✓   Using the "${italic(currentBranchName)}" branch.`));
+            console.info(green(`  ✓   Using the "${italic(currentBranchName)}" branch.`));
 
             return currentBranchName;
         }
@@ -75,7 +74,7 @@ export class BaseReleaseTask {
             process.exit(1);
         }
 
-        console.log(green(`  ✓   Switched to the "${italic(defaultPublishBranch)}" branch.`));
+        console.info(green(`  ✓   Switched to the "${italic(defaultPublishBranch)}" branch.`));
 
         return;
     }

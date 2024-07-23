@@ -20,12 +20,12 @@ export class DemoComponent {
     constructor(public cdr: ChangeDetectorRef) {}
 
     onScroll([instance, args]) {
-        console.log(instance, args);
+        console.info(instance, args);
         this.scrollCounter++;
     }
 
     onInitialize($event) {
-        console.log($event);
+        console.info($event);
     }
 
     longText: string = `Vivamus suscipit tortor eget felis porttitor volutpat. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
@@ -46,7 +46,6 @@ export class DemoComponent {
                     `;
 }
 
-/* tslint:disable:max-classes-per-file */
 @NgModule({
     declarations: [DemoComponent],
     imports: [BrowserModule, KbqScrollbarModule, KbqButtonModule],

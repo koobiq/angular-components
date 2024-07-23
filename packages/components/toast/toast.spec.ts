@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
@@ -165,7 +164,7 @@ describe('Standalone ToastService', () => {
         const destroy$ = new Subject<void>();
         service = TestBed.inject(KbqToastService);
         service.timer = service.timer.pipe(
-            tap(() => console.log(NgZone.isInAngularZone())),
+            tap(() => console.info(NgZone.isInAngularZone())),
             takeUntil(destroy$)
         );
 

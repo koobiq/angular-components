@@ -33,7 +33,7 @@ describe('kbq-risk-level', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-risk-level></kbq-risk-level>
+        <kbq-risk-level />
     `
 })
 class TestApp {}

@@ -1,6 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:max-func-body-length
-/* tslint:disable:match-default-export-name */
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -22,11 +19,9 @@ describe('Date formatter', () => {
     let currentDate: DateTime;
 
     const mockAdapterAndFormatterForRelativeTests = () => {
-        // @ts-ignore
         adapter.today = (): DateTime => currentDate;
 
-        // @ts-ignore
-        formatter.hasSame = (startDate: DateTime, endDate: DateTime, unit: DateTimeUnit): string => {
+        formatter['hasSame'] = (startDate: DateTime, _: DateTime, unit: DateTimeUnit): string => {
             return adapter.hasSame(startDate, currentDate, unit) ? 'yes' : 'no';
         };
     };
@@ -2251,7 +2246,6 @@ describe('Date formatter (imports and providing)', () => {
         it('Should set default locale to ru-RU and create localeService', () => {
             expect(adapter.config.name).toBe('ru-RU');
             expect(formatter.adapter.config.name).toBe('ru-RU');
-            // tslint:disable-next-line:no-string-literal
             expect(adapter['localeService']).toBeDefined();
         });
     });
@@ -2276,7 +2270,6 @@ describe('Date formatter (imports and providing)', () => {
         it('Should set locale from KBQ_LOCALE_ID', () => {
             expect(adapter.config.name).toBe('en-US');
             expect(formatter.adapter.config.name).toBe('en-US');
-            // tslint:disable-next-line:no-string-literal
             expect(adapter['localeService']).toBeDefined();
         });
     });
@@ -2305,7 +2298,6 @@ describe('Date formatter (imports and providing)', () => {
         it('Should set locale from factory of KbqLocaleService', () => {
             expect(adapter.config.name).toBe('pt-BR');
             expect(formatter.adapter.config.name).toBe('pt-BR');
-            // tslint:disable-next-line:no-string-literal
             expect(adapter['localeService']).toBeDefined();
         });
     });
@@ -2336,7 +2328,6 @@ describe('Date formatter (imports and providing)', () => {
         it('Should set locale from KBQ_LOCALE_ID', () => {
             expect(adapter.config.name).toBe('zh-CN');
             expect(formatter.adapter.config.name).toBe('zh-CN');
-            // tslint:disable-next-line:no-string-literal
             expect(adapter['localeService']).toBeDefined();
         });
     });

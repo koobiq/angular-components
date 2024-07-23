@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -108,7 +109,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
 }
 
 // @public (undocumented)
-export class KbqSplitterComponent implements OnInit {
+export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2);
     // (undocumented)
     addArea(area: KbqSplitterAreaDirective): void;

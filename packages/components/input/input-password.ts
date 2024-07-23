@@ -166,10 +166,8 @@ export class KbqInputPassword
         return !this.elementRef.nativeElement.value && !this.isBadInput();
     }
 
-    // tslint:disable-next-line: orthodox-getter-and-setter
     private _inputValueAccessor: { value: any };
 
-    // tslint:disable-next-line: naming-convention
     constructor(
         protected elementRef: ElementRef,
         @Optional() @Self() ngControl: NgControl,

@@ -17,7 +17,6 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
         this._data.next(value);
     }
 
-    /* tslint:disable-next-line:naming-convention */
     private _data = new BehaviorSubject<T[]>([]);
 
     connect(collectionViewer: CollectionViewer): Observable<T[]> {

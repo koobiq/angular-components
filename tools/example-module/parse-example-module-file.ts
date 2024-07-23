@@ -1,4 +1,3 @@
-/* tslint:disable:import-name */
 import * as fs from 'fs';
 import ts from 'typescript';
 

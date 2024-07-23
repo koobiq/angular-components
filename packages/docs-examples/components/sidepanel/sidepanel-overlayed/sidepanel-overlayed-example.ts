@@ -18,8 +18,7 @@ export class SidepanelOverlayedExample {
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
-    array = new Array(this.arrayLength); // tslint:disable-line
-
+    array = new Array(this.arrayLength);
     constructor(private sidepanelService: KbqSidepanelService) {}
 
     openSidepanel() {

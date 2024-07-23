@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-/* tslint:disable:no-string-literal */
 import chalk from 'chalk';
 import { join } from 'path';
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
@@ -13,7 +11,6 @@ import { Version, parseVersionName } from './version-name/parse-version';
 
 const { bold, cyan, green, italic, red } = chalk;
 
-// tslint:disable-next-line:naming-convention
 export class PublishReleaseFromDistTask extends BaseReleaseTask {
     /** Parsed current version of the project. */
     currentVersion: Version;
@@ -37,16 +34,16 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
     }
 
     async run() {
-        console.log();
-        console.log(cyan('-----------------------------------------'));
+        console.info();
+        console.info(cyan('-----------------------------------------'));
 
         if (process.env['DEBUG']) {
-            console.log(red(' [DEBUG MODE] Koobiq CI release script'));
+            console.info(red(' [DEBUG MODE] Koobiq CI release script'));
         } else {
-            console.log(cyan('  Koobiq CI release script'));
+            console.info(cyan('  Koobiq CI release script'));
         }
-        console.log(cyan('-----------------------------------------'));
-        console.log();
+        console.info(cyan('-----------------------------------------'));
+        console.info();
 
         this.checkReleaseConfiguration();
         this.checkReleaseOutput();
@@ -56,9 +53,9 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
             this.publishPackageToNpm(packageName, npmDistTag);
         }
 
-        console.log();
+        console.info();
         console.info(green(bold(`  ✓   Published all packages successfully`)));
-        console.log();
+        console.info();
 
         const newVersionName = this.currentVersion.format();
 

@@ -15,7 +15,6 @@ import {
     KbqSidepanelService
 } from './index';
 
-// tslint:disable:no-magic-numbers
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
     let overlayContainer: OverlayContainer;

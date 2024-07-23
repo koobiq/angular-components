@@ -10,8 +10,7 @@ export function createNewVersion(currentVersion: Version, releaseType: ReleaseTy
     const newVersion = currentVersion.clone();
 
     if (releaseType === 'bump-prerelease') {
-        // @ts-ignore
-        newVersion.prereleaseNumber++;
+        newVersion.prereleaseNumber!++;
     } else {
         // For all other release types, the pre-release label and number should be removed
         // because the new version is not another pre-release.

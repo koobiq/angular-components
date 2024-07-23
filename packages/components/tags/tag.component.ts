@@ -1,5 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -35,7 +36,6 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-// tslint:disable-next-line:naming-convention
 export interface KbqTagEvent {
     tag: KbqTag;
 }
@@ -112,7 +112,7 @@ export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase 
 })
 export class KbqTag
     extends KbqTagMixinBase
-    implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef
+    implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef, AfterContentInit
 {
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
@@ -361,7 +361,6 @@ export class KbqTag
             return;
         }
 
-        // tslint:disable-next-line: deprecation
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:

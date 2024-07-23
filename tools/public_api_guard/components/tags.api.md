@@ -47,7 +47,7 @@ import { Subject } from 'rxjs';
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
-export class KbqTag extends KbqTagMixinBase implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef {
+export class KbqTag extends KbqTagMixinBase implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef, AfterContentInit {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
     // (undocumented)
     addClassModificatorForIcons(): void;

@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-magic-numbers */
 import { Extractor, ExtractorConfig, ExtractorResult, IConfigFile } from '@microsoft/api-extractor';
 import { JsonFile, PackageJsonLookup } from '@rushstack/node-core-library';
 import chalk from 'chalk';

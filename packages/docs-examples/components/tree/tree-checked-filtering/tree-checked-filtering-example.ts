@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes */
 import { Component } from '@angular/core';
 import { KbqButtonToggleChange } from '@koobiq/components/button-toggle';
 import {
