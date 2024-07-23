@@ -56,7 +56,9 @@ import {
     ErrorStateMatcher,
     HasTabIndex,
     HasTabIndexCtor,
+    KBQ_LOCALE_SERVICE,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqLocaleService,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
@@ -240,7 +242,7 @@ export class KbqTreeSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
-    @Input() hiddenItemsText: string = 'еще';
+    @Input() hiddenItemsText: string = 'еще {{ number }}';
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -472,9 +474,12 @@ export class KbqTreeSelect
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         @Optional() private readonly parentFormField: KbqFormField,
-        @Optional() @Self() ngControl: NgControl
+        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
+
+        this.localeService?.changes.pipe(takeUntil(this.destroy)).subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -887,6 +892,12 @@ export class KbqTreeSelect
 
         this.changeDetectorRef.markForCheck();
     }
+
+    private updateLocaleParams = () => {
+        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
+
+        this.changeDetectorRef.markForCheck();
+    };
 
     private closingActions() {
         const backdrop = this.overlayDir.overlayRef!.backdropClick();

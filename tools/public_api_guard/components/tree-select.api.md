@@ -32,6 +32,7 @@ import * as i7 from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
@@ -67,7 +68,7 @@ export interface ITriggerValue {
 //
 // @public (undocumented)
 export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -206,7 +207,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-trigger", "kbq-cleaner", "kbq-select-matcher, [kbq-select-matcher]", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
 
 // @public
