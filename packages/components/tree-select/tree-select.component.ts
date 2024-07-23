@@ -477,7 +477,7 @@ export class KbqTreeSelect
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntil(this.destroy)).subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
