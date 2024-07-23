@@ -73,7 +73,7 @@ $tokens: meta.module-variables(tokens) !default;
         }
 
         left: 0;
-        top: var(--kbq-radio-size-normal-top, map.get($tokens, radio-size-normal-top));
+        top: 1px;
 
         width: kbq-css-variable(radio-size-normal-outer-size);
         height: kbq-css-variable(radio-size-normal-outer-size);
@@ -119,7 +119,7 @@ $tokens: meta.module-variables(tokens) !default;
         );
 
         .kbq-radio-button__outer-circle {
-            top: var(--kbq-radio-size-big-top, map.get($tokens, radio-size-big-top));
+            top: 3px;
 
             width: kbq-css-variable(radio-size-big-outer-size);
             height: kbq-css-variable(radio-size-big-outer-size);
