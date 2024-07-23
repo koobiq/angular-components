@@ -245,7 +245,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     name: 'Icon Item',
                     svgPreview: 'icon-item',
                     hasApi: true,
-                    apiId: 'icon-item',
+                    apiId: 'icon',
                     hasExamples: false,
                     examples: ['icon-types']
                 },
