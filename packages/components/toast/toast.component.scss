@@ -28,17 +28,11 @@ $tokens: meta.module-variables(tokens) !default;
     border-radius: kbq-css-variable(toast-size-border-radius);
 
     margin-right: kbq-css-variable(toast-size-icon-margin-right);
-    padding-top: calc(
-        var(--toast-size-content-padding-top, map.get($tokens, toast-size-content-padding-top)) +
-            (
-                (
-                        var(--toast-font-title-line-height, map.get($tokens, toast-font-title-line-height)) - var(
-                                --toast-size-icon-width,
-                                map.get($tokens, toast-size-icon-width)
-                            )
-                    ) / 2
-            )
-    );
+
+    $padding-top: kbq-css-variable(toast-size-content-padding-top);
+    $toast-font-title-line-height: kbq-css-variable(toast-font-title-line-height);
+    $toast-size-icon-height: kbq-css-variable(toast-size-icon-height);
+    padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 }
 
 .kbq-toast__container {
