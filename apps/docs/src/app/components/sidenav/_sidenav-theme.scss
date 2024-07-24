@@ -34,10 +34,6 @@
 
 @mixin kbq-docs-sidenav-typography($config) {
     .docs-sidenav {
-        .docs-sidenav__item > .kbq-option-text {
-            @include typography.kbq-typography-level-to-styles($config, text-big);
-        }
-
         .docs-sidenav__category-text {
             @include typography.kbq-typography-level-to-styles($config, subheading);
         }

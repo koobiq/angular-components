@@ -1729,15 +1729,15 @@
   --kbq-empty-state-size-big-actions-margin-top: 20px;
   --kbq-empty-state-size-big-image-margin-bottom: 32px;
   --kbq-empty-state-size-big-image-addon-height: 56px;
-  --kbq-empty-state-size-big-title-margin-bottom: 20px;
+  --kbq-empty-state-size-big-title-margin-bottom: 16px;
   --kbq-empty-state-size-normal-max-width: 320px;
   --kbq-empty-state-size-normal-padding-horizontal: 32px;
   --kbq-empty-state-size-normal-padding-top: 32px;
   --kbq-empty-state-size-normal-padding-bottom: 32px;
   --kbq-empty-state-size-normal-actions-margin-top: 8px;
-  --kbq-empty-state-size-normal-image-margin-bottom: 32px;
+  --kbq-empty-state-size-normal-image-margin-bottom: 20px;
   --kbq-empty-state-size-normal-image-addon-height: 24px;
-  --kbq-empty-state-size-normal-title-margin-bottom: 8px;
+  --kbq-empty-state-size-normal-title-margin-bottom: 4px;
   --kbq-file-upload-size-single-container-border-radius: 8px;
   --kbq-file-upload-size-single-container-border-width: 1px;
   --kbq-file-upload-size-single-container-content-gap-horizontal: 8px;

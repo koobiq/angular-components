@@ -126,7 +126,7 @@ $dark: theming.kbq-dark-theme($tokens);
 
 ```scss
 @mixin app-typography($tokens, $config, $md-config) {
-    @include typography.kbq-typography-level-to-styles($config, body);
+    @include typography.kbq-typography-level-to-styles($config, text-normal);
 
     @include koobiq-typography($tokens, $config, $md-config);
 }
