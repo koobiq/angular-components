@@ -3,18 +3,13 @@
     "compilerOptions": {
         // Needed for Moment.js since it doesn't have a default export.
         "allowSyntheticDefaultImports": true,
-        "types": [
-            "node",
-            "jasmine"
-        ],
+        "types": ["node", "jest"],
         "paths": {
             "@koobiq/cdk/*": ["./dist/cdk/*"],
             "@koobiq/components/*": ["./dist/components/*"]
         }
     },
-    "include": [
-        "./**/*.ts"
-    ],
+    "include": ["./**/*.ts"],
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
         "allowSyntheticDefaultImports": true,

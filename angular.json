@@ -200,21 +200,11 @@
                     }
                 },
                 "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
+                    "builder": "@angular-builders/jest:run",
                     "options": {
-                        "karmaConfig": "packages/cdk/karma.conf.js",
-                        "main": "packages/cdk/test.ts",
-                        "tsConfig": "packages/cdk/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/cdk/**/*.ts",
-                            "packages/cdk/**/*.html"
-                        ]
+                        "roots": ["packages/cdk"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
                     }
                 }
             }
@@ -247,15 +237,6 @@
                         "tsConfig": "packages/components/tsconfig.spec.json",
                         "codeCoverage": true
                     }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/components/**/*.ts",
-                            "packages/components/**/*.html"
-                        ]
-                    }
                 }
             }
         },
@@ -280,21 +261,11 @@
                     }
                 },
                 "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
+                    "builder": "@angular-builders/jest:run",
                     "options": {
-                        "karmaConfig": "packages/angular-moment-adapter/karma.conf.js",
-                        "main": "packages/angular-moment-adapter/test.ts",
-                        "tsConfig": "packages/angular-moment-adapter/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/angular-moment-adapter/**/*.ts",
-                            "packages/angular-moment-adapter/**/*.html"
-                        ]
+                        "roots": ["packages/angular-moment-adapter"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
                     }
                 }
             }
@@ -320,21 +291,11 @@
                     }
                 },
                 "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
+                    "builder": "@angular-builders/jest:run",
                     "options": {
-                        "karmaConfig": "packages/angular-luxon-adapter/karma.conf.js",
-                        "main": "packages/angular-luxon-adapter/test.ts",
-                        "tsConfig": "packages/angular-luxon-adapter/tsconfig.spec.json",
-                        "codeCoverage": true
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "packages/angular-luxon-adapter/**/*.ts",
-                            "packages/angular-luxon-adapter/**/*.html"
-                        ]
+                        "roots": ["packages/angular-luxon-adapter"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
                     }
                 }
             }

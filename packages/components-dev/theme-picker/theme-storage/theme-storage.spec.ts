@@ -48,9 +48,9 @@ describe('ThemeStorage Service', () => {
     });
 
     it('should emit an event when setTheme is called', () => {
-        spyOn(service.onThemeUpdate, 'emit');
+        const spy = jest.spyOn(service.onThemeUpdate, 'emit');
         service.storeTheme(secondTestTheme);
-        expect(service.onThemeUpdate.emit).toHaveBeenCalled();
-        expect(service.onThemeUpdate.emit).toHaveBeenCalledWith(secondTestTheme);
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(secondTestTheme);
     });
 });

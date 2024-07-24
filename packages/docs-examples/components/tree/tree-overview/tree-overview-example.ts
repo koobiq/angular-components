@@ -80,8 +80,7 @@ export const DATA_OBJECT = {
         'docs-examples': '',
         'angular-moment-adapter': '',
         README: 'md',
-        'tsconfig.build': 'json',
-        wallabyTest: 'ts'
+        'tsconfig.build': 'json'
     },
     scripts: {
         deploy: {

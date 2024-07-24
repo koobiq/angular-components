@@ -62,27 +62,23 @@ describe('Key managers', () => {
         let keyManager: Omit<ListKeyManager<FakeFocusable>, 'setActiveItem'> & {
             setActiveItem(index: number): void;
         };
+        let setActiveItemSpyFn: jest.SpyInstance;
 
         beforeEach(() => {
-            itemList.reset([
-                new FakeFocusable('one'),
-                new FakeFocusable('two'),
-                new FakeFocusable('three')]);
+            itemList.reset([new FakeFocusable('one'), new FakeFocusable('two'), new FakeFocusable('three')]);
             keyManager = new ListKeyManager<FakeFocusable>(itemList);
 
             // first item is already focused
             keyManager.setFirstItemActive();
 
-            spyOn(keyManager, 'setActiveItem').and.callThrough();
+            setActiveItemSpyFn = jest.spyOn(keyManager, 'setActiveItem');
+            // spyOn(keyManager, 'setActiveItem').and.callThrough();
         });
 
         it('should maintain the active item if the amount of items changes', () => {
             expect(keyManager.activeItemIndex).toBe(0);
             expect(keyManager.activeItem!.getLabel()).toBe('one');
-            itemList.reset([
-                new FakeFocusable('zero'),
-                ...itemList.toArray()
-            ]);
+            itemList.reset([new FakeFocusable('zero'), ...itemList.toArray()]);
             itemList.notifyOnChanges();
 
             expect(keyManager.activeItemIndex).toBe(1);
@@ -100,59 +96,56 @@ describe('Key managers', () => {
 
         describe('Key events', () => {
             it('should emit tabOut when the tab key is pressed', () => {
-                const spy = jasmine.createSpy('tabOut spy');
-                keyManager.tabOut.pipe(take(1)).subscribe(spy);
+                const fn = jest.fn();
+                keyManager.tabOut.pipe(take(1)).subscribe(fn);
                 keyManager.onKeydown(fakeKeyEvents.tab);
 
-                expect(spy).toHaveBeenCalled();
+                expect(fn).toHaveBeenCalled();
             });
 
             it('should emit tabOut when the tab key is pressed with a modifier', () => {
-                const spy = jasmine.createSpy('tabOut spy');
-                keyManager.tabOut.pipe(take(1)).subscribe(spy);
+                const fn = jest.fn();
+                keyManager.tabOut.pipe(take(1)).subscribe(fn);
 
                 Object.defineProperty(fakeKeyEvents.tab, 'shiftKey', { get: () => true });
                 keyManager.onKeydown(fakeKeyEvents.tab);
 
-                expect(spy).toHaveBeenCalled();
+                expect(fn).toHaveBeenCalled();
             });
 
             it('should emit an event whenever the active item changes', () => {
-                const spy = jasmine.createSpy('change spy');
-                const subscription = keyManager.change.subscribe(spy);
+                const fn = jest.fn();
+                const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(spy).toHaveBeenCalledTimes(1);
+                expect(fn).toHaveBeenCalledTimes(1);
 
                 keyManager.onKeydown(fakeKeyEvents.upArrow);
-                expect(spy).toHaveBeenCalledTimes(2);
+                expect(fn).toHaveBeenCalledTimes(2);
 
                 subscription.unsubscribe();
             });
 
             xit('should emit if the active item changed, but not the active index', () => {
-                const spy = jasmine.createSpy('change spy');
-                const subscription = keyManager.change.subscribe(spy);
+                const fn = jest.fn();
+                const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.setActiveItem(0);
-                itemList.reset([
-                    new FakeFocusable('zero'),
-                    ...itemList.toArray()
-                ]);
+                itemList.reset([new FakeFocusable('zero'), ...itemList.toArray()]);
                 keyManager.setActiveItem(0);
 
-                expect(spy).toHaveBeenCalledTimes(1);
+                expect(fn).toHaveBeenCalledTimes(1);
                 subscription.unsubscribe();
             });
 
             it('should activate the first item when pressing down on a clean key manager', () => {
                 keyManager = new ListKeyManager<FakeFocusable>(itemList);
 
-                expect(keyManager.activeItemIndex).withContext('Expected active index to default to -1.').toBe(-1);
+                expect(keyManager.activeItemIndex).toBe(-1);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-                expect(keyManager.activeItemIndex).withContext('Expected first item to become active.').toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should not prevent the default keyboard action when pressing tab', () => {
@@ -221,98 +214,51 @@ describe('Key managers', () => {
                 });
             });
 
-            describe('with `vertical` direction', function (this: KeyEventTestContext) {
-                beforeEach(() => {
-                    keyManager.withVerticalOrientation();
-                    this.nextKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-                    this.prevKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
-                });
-
-                runDirectionalKeyTests.call(this);
-            });
-
-            describe('with `ltr` direction', function (this: KeyEventTestContext) {
-                beforeEach(() => {
-                    keyManager.withHorizontalOrientation('ltr');
-                    this.nextKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
-                    this.prevKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
-                });
-
-                runDirectionalKeyTests.call(this);
-            });
-
-            describe('with `rtl` direction', function (this: KeyEventTestContext) {
-                beforeEach(() => {
-                    keyManager.withHorizontalOrientation('rtl');
-                    this.nextKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
-                    this.prevKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
-                });
-
-                runDirectionalKeyTests.call(this);
-            });
-
-            /**
-             * Defines the directional key tests that should be run in a particular context. Note that
-             * parameters have to be passed in via Jasmine's context object (`this` inside a `beforeEach`)
-             * because this function has to run before any `beforeEach`, `beforeAll` etc. hooks.
-             */
-            function runDirectionalKeyTests(this: KeyEventTestContext) {
+            const runDirectionalKeyTests = (context: KeyEventTestContext) => {
                 it('should set subsequent items as active when the next key is pressed', () => {
-                    keyManager.onKeydown(this.nextKeyEvent);
+                    keyManager.onKeydown(context.nextKeyEvent);
 
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 1 after one next key event.')
-                        .toBe(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
+                    expect(keyManager.activeItemIndex).toBe(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(2);
 
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 2 after two next key events.')
-                        .toBe(2);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(2);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(2);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
                 });
 
                 it('should set first item active when the next key is pressed if no active item', () => {
                     keyManager.setActiveItem(-1);
-                    keyManager.onKeydown(this.nextKeyEvent);
+                    keyManager.onKeydown(context.nextKeyEvent);
 
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 0 after next key if active item was null.')
-                        .toBe(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
+                    expect(keyManager.activeItemIndex).toBe(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(2);
                 });
 
                 it('should set previous items as active when the previous key is pressed', () => {
-                    keyManager.onKeydown(this.nextKeyEvent);
+                    keyManager.onKeydown(context.nextKeyEvent);
 
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 1 after one next key event.')
-                        .toBe(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
+                    expect(keyManager.activeItemIndex).toBe(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(1);
 
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 0 after one next and one previous key event.')
-                        .toBe(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
                 });
 
                 it('should do nothing when the prev key is pressed if no active item and not wrap', () => {
                     keyManager.setActiveItem(-1);
-                    keyManager.onKeydown(this.prevKeyEvent);
+                    keyManager.onKeydown(context.prevKeyEvent);
 
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected nothing to happen if prev event occurs and no active item.')
-                        .toBe(-1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
+                    expect(keyManager.activeItemIndex).toBe(-1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(2);
                 });
 
                 it('should skip disabled items', () => {
@@ -321,21 +267,17 @@ describe('Key managers', () => {
                     itemList.reset(items);
 
                     // Next event should skip past disabled item from 0 to 2
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to skip past disabled item on next event.')
-                        .toBe(2);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(1);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(2);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(1);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(2);
 
                     // Previous event should skip past disabled item from 2 to 0
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to skip past disabled item on up arrow.')
-                        .toBe(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(1);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(1);
                 });
 
                 it('should work normally when disabled property does not exist', () => {
@@ -345,46 +287,34 @@ describe('Key managers', () => {
                     items[2].disabled = undefined;
                     itemList.reset(items);
 
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 1 after one next event when disabled not set.')
-                        .toBe(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(2);
 
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext('Expected active item to be 2 after two next events when ' + 'disabled not set.')
-                        .toBe(2);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                    expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(2);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                    expect(setActiveItemSpyFn).toHaveBeenCalledWith(2);
                 });
 
                 it('should not move active item past either end of the list', () => {
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected last item of the list to be active.`)
-                        .toBe(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(2);
 
                     // This next event would move active item past the end of the list
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected active item to remain at the end of the list.`)
-                        .toBe(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(2);
 
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected first item of the list to be active.`)
-                        .toBe(0);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(0);
 
                     // This prev event would move active item past the beginning of the list
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected active item to remain at the beginning of the list.`)
-                        .toBe(0);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(0);
                 });
 
                 it('should not move active item to end when the last item is disabled', () => {
@@ -392,102 +322,129 @@ describe('Key managers', () => {
                     items[2].disabled = true;
                     itemList.reset(items);
 
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected second item of the list to be active.`)
-                        .toBe(1);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(1);
 
                     // This next key event would set active item to the last item, which is disabled
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(keyManager.activeItemIndex)
-                        .withContext(`Expected the second item to remain active.`)
-                        .toBe(1);
-                    expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(keyManager.activeItemIndex).toBe(1);
+                    expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(2);
                 });
 
                 it('should prevent the default keyboard action of handled events', () => {
-                    expect(this.nextKeyEvent.defaultPrevented).toBe(false);
-                    keyManager.onKeydown(this.nextKeyEvent);
-                    expect(this.nextKeyEvent.defaultPrevented).toBe(true);
+                    expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(context.nextKeyEvent.defaultPrevented).toBe(true);
 
-                    expect(this.prevKeyEvent.defaultPrevented).toBe(false);
-                    keyManager.onKeydown(this.prevKeyEvent);
-                    expect(this.prevKeyEvent.defaultPrevented).toBe(true);
+                    expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(context.prevKeyEvent.defaultPrevented).toBe(true);
                 });
 
+                /** Runs the test that asserts that we handle modifier keys correctly. */
+                const runModifierKeyTest = (modifier: ListKeyManagerModifierKey) => {
+                    const initialActiveIndex = keyManager.activeItemIndex;
+                    const fn = jest.fn();
+                    const subscription = keyManager.change.subscribe(fn);
+
+                    expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+                    expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+
+                    Object.defineProperty(context.nextKeyEvent, modifier, { get: () => true });
+                    Object.defineProperty(context.prevKeyEvent, modifier, { get: () => true });
+
+                    keyManager.onKeydown(context.nextKeyEvent);
+                    expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+                    expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+                    expect(fn).not.toHaveBeenCalled();
+
+                    keyManager.onKeydown(context.prevKeyEvent);
+                    expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+                    expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+                    expect(fn).not.toHaveBeenCalled();
+
+                    subscription.unsubscribe();
+                };
+
                 xit('should not do anything for arrow keys if the alt key is held down', () => {
-                    runModifierKeyTest(this, 'altKey');
+                    runModifierKeyTest('altKey');
                 });
 
                 xit('should not do anything for arrow keys if the control key is held down', () => {
-                    runModifierKeyTest(this, 'ctrlKey');
+                    runModifierKeyTest('ctrlKey');
                 });
 
                 xit('should not do anything for arrow keys if the meta key is held down', () => {
-                    runModifierKeyTest(this, 'metaKey');
+                    runModifierKeyTest('metaKey');
                 });
 
                 xit('should not do anything for arrow keys if the shift key is held down', () => {
-                    runModifierKeyTest(this, 'shiftKey');
+                    runModifierKeyTest('shiftKey');
                 });
-            }
+            };
 
-            /** Runs the test that asserts that we handle modifier keys correctly. */
-            function runModifierKeyTest(
-                context: { nextKeyEvent: KeyboardEvent; prevKeyEvent: KeyboardEvent },
-                modifier: ListKeyManagerModifierKey
-            ) {
-                const initialActiveIndex = keyManager.activeItemIndex;
-                const spy = jasmine.createSpy('change spy');
-                const subscription = keyManager.change.subscribe(spy);
+            describe('with `vertical` direction', () => {
+                const context: KeyEventTestContext = {} as KeyEventTestContext;
 
-                expect(context.nextKeyEvent.defaultPrevented).toBe(false);
-                expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+                beforeEach(() => {
+                    keyManager.withVerticalOrientation();
+                    context.nextKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+                    context.prevKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
+                });
 
-                Object.defineProperty(context.nextKeyEvent, modifier, { get: () => true });
-                Object.defineProperty(context.prevKeyEvent, modifier, { get: () => true });
+                runDirectionalKeyTests(context);
+            });
 
-                keyManager.onKeydown(context.nextKeyEvent);
-                expect(context.nextKeyEvent.defaultPrevented).toBe(false);
-                expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
-                expect(spy).not.toHaveBeenCalled();
+            describe('with `ltr` direction', () => {
+                const context: KeyEventTestContext = {} as KeyEventTestContext;
 
-                keyManager.onKeydown(context.prevKeyEvent);
-                expect(context.prevKeyEvent.defaultPrevented).toBe(false);
-                expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
-                expect(spy).not.toHaveBeenCalled();
+                beforeEach(() => {
+                    keyManager.withHorizontalOrientation('ltr');
+                    context.nextKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
+                    context.prevKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
+                });
 
-                subscription.unsubscribe();
-            }
+                runDirectionalKeyTests(context);
+            });
+
+            describe('with `rtl` direction', () => {
+                const context: KeyEventTestContext = {} as KeyEventTestContext;
+
+                beforeEach(() => {
+                    keyManager.withHorizontalOrientation('rtl');
+                    context.nextKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
+                    context.prevKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
+                });
+
+                runDirectionalKeyTests(context);
+            });
         });
 
         describe('programmatic focus', () => {
             it('should setActiveItem()', () => {
-                expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.setActiveItem(1);
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected activeItemIndex to be updated when setActiveItem() was called.`)
-                    .toBe(1);
+                expect(keyManager.activeItemIndex).toBe(1);
             });
 
             it('should be able to set the active item by reference', () => {
-                expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.setActiveItem(itemList.toArray()[2]);
-                expect(keyManager.activeItemIndex).withContext(`Expected activeItemIndex to be updated.`).toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
             });
 
             it('should be able to set the active item without emitting an event', () => {
-                const spy = jasmine.createSpy('change spy');
-                const subscription = keyManager.change.subscribe(spy);
+                const fn = jest.fn();
+                const subscription = keyManager.change.subscribe(fn);
 
                 expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.updateActiveItem(2);
 
                 expect(keyManager.activeItemIndex).toBe(2);
-                expect(spy).not.toHaveBeenCalled();
+                expect(fn).not.toHaveBeenCalled();
 
                 subscription.unsubscribe();
             });
@@ -495,27 +452,21 @@ describe('Key managers', () => {
             it('should expose the active item correctly', () => {
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-                expect(keyManager.activeItemIndex).withContext('Expected active item to be the second option.').toBe(1);
-                expect(keyManager.activeItem)
-                    .withContext('Expected the active item to match the second option.')
-                    .toBe(itemList.toArray()[1]);
+                expect(keyManager.activeItemIndex).toBe(1);
+                expect(keyManager.activeItem).toBe(itemList.toArray()[1]);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex).withContext('Expected active item to be the third option.').toBe(2);
-                expect(keyManager.activeItem)
-                    .withContext('Expected the active item ID to match the third option.')
-                    .toBe(itemList.toArray()[2]);
+                expect(keyManager.activeItemIndex).toBe(2);
+                expect(keyManager.activeItem).toBe(itemList.toArray()[2]);
             });
 
             it('should setFirstItemActive()', () => {
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex).withContext(`Expected last item of the list to be active.`).toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
 
                 keyManager.setFirstItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setFirstItemActive() to set the active item to the first item.`)
-                    .toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should set the active item to the second item if the first one is disabled', () => {
@@ -524,18 +475,14 @@ describe('Key managers', () => {
                 itemList.reset(items);
 
                 keyManager.setFirstItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected the second item to be active if the first was disabled.`)
-                    .toBe(1);
+                expect(keyManager.activeItemIndex).toBe(1);
             });
 
             it('should setLastItemActive()', () => {
-                expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.setLastItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setLastItemActive() to set the active item to the last item.`)
-                    .toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
             });
 
             it('should set the active item to the second to last item if the last is disabled', () => {
@@ -544,18 +491,14 @@ describe('Key managers', () => {
                 itemList.reset(items);
 
                 keyManager.setLastItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected the second to last item to be active if the last was disabled.`)
-                    .toBe(1);
+                expect(keyManager.activeItemIndex).toBe(1);
             });
 
             it('should setNextItemActive()', () => {
-                expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.setNextItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setNextItemActive() to set the active item to the next item.`)
-                    .toBe(1);
+                expect(keyManager.activeItemIndex).toBe(1);
             });
 
             it('should set the active item to the next enabled item if next is disabled', () => {
@@ -563,24 +506,18 @@ describe('Key managers', () => {
                 items[1].disabled = true;
                 itemList.reset(items);
 
-                expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 keyManager.setNextItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setNextItemActive() to only set enabled items as active.`)
-                    .toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
             });
 
             it('should setPreviousItemActive()', () => {
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected second item of the list to be active.`)
-                    .toBe(1);
+                expect(keyManager.activeItemIndex).toBe(1);
 
                 keyManager.setPreviousItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setPreviousItemActive() to set the active item to the previous.`)
-                    .toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should skip disabled items when setPreviousItemActive() is called', () => {
@@ -590,22 +527,20 @@ describe('Key managers', () => {
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex).withContext(`Expected third item of the list to be active.`).toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
 
                 keyManager.setPreviousItemActive();
-                expect(keyManager.activeItemIndex)
-                    .withContext(`Expected setPreviousItemActive() to skip the disabled item.`)
-                    .toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should not emit an event if the item did not change', () => {
-                const spy = jasmine.createSpy('change spy');
-                const subscription = keyManager.change.subscribe(spy);
+                const fn = jest.fn();
+                const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.setActiveItem(2);
                 keyManager.setActiveItem(2);
 
-                expect(spy).toHaveBeenCalledTimes(1);
+                expect(fn).toHaveBeenCalledTimes(1);
 
                 subscription.unsubscribe();
             });
@@ -613,9 +548,7 @@ describe('Key managers', () => {
 
         describe('wrap mode', () => {
             it('should return itself to allow chaining', () => {
-                expect(keyManager.withWrap())
-                    .withContext(`Expected withWrap() to return an instance of ListKeyManager.`)
-                    .toEqual(keyManager);
+                expect(keyManager.withWrap()).toEqual(keyManager);
             });
 
             it('should wrap focus when arrow keying past items while in wrap mode', () => {
@@ -623,15 +556,15 @@ describe('Key managers', () => {
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-                expect(keyManager.activeItemIndex).withContext('Expected last item to be active.').toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
 
                 // this down arrow moves down past the end of the list
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex).withContext('Expected active item to wrap to beginning.').toBe(0);
+                expect(keyManager.activeItemIndex).toBe(0);
 
                 // this up arrow moves up past the beginning of the list
                 keyManager.onKeydown(fakeKeyEvents.upArrow);
-                expect(keyManager.activeItemIndex).withContext('Expected active item to wrap to end.').toBe(2);
+                expect(keyManager.activeItemIndex).toBe(2);
             });
 
             it('should set last item active when up arrow is pressed if no active item', () => {
@@ -639,17 +572,13 @@ describe('Key managers', () => {
                 keyManager.setActiveItem(-1);
                 keyManager.onKeydown(fakeKeyEvents.upArrow);
 
-                expect(keyManager.activeItemIndex)
-                    .withContext('Expected last item to be active on up arrow if no active item.')
-                    .toBe(2);
-                expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
-                expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
+                expect(keyManager.activeItemIndex).toBe(2);
+                expect(setActiveItemSpyFn).not.toHaveBeenCalledWith(0);
+                expect(setActiveItemSpyFn).toHaveBeenCalledWith(2);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
-                expect(keyManager.activeItemIndex)
-                    .withContext('Expected active item to be 0 after wrapping back to beginning.')
-                    .toBe(0);
-                expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
+                expect(keyManager.activeItemIndex).toBe(0);
+                expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
             });
 
             // This test should pass if all items are disabled and the down arrow key got pressed.
@@ -710,6 +639,7 @@ describe('Key managers', () => {
 
     describe('FocusKeyManager', () => {
         let keyManager: FocusKeyManager<FakeFocusable>;
+        const focusSpyFn: Record<number, jest.SpyInstance> = {};
 
         beforeEach(() => {
             itemList.reset([new FakeFocusable(), new FakeFocusable(), new FakeFocusable()]);
@@ -718,59 +648,57 @@ describe('Key managers', () => {
             // first item is already focused
             keyManager.setFirstItemActive();
 
-            spyOn(itemList.toArray()[0], 'focus');
-            spyOn(itemList.toArray()[1], 'focus');
-            spyOn(itemList.toArray()[2], 'focus');
+            itemList.toArray().forEach((item, index) => {
+                focusSpyFn[index] = jest.spyOn(item, 'focus');
+            });
         });
 
         it('should focus subsequent items when down arrow is pressed', () => {
             keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-            expect(itemList.toArray()[0].focus).not.toHaveBeenCalled();
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledTimes(1);
-            expect(itemList.toArray()[2].focus).not.toHaveBeenCalled();
+            expect(focusSpyFn[0]).not.toHaveBeenCalled();
+            expect(focusSpyFn[1]).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[2]).not.toHaveBeenCalled();
 
             keyManager.onKeydown(fakeKeyEvents.downArrow);
-            expect(itemList.toArray()[0].focus).not.toHaveBeenCalled();
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledTimes(1);
-            expect(itemList.toArray()[2].focus).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[0]).not.toHaveBeenCalled();
+            expect(focusSpyFn[1]).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[2]).toHaveBeenCalledTimes(1);
         });
 
         it('should focus previous items when up arrow is pressed', () => {
             keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-            expect(itemList.toArray()[0].focus).not.toHaveBeenCalled();
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[0]).not.toHaveBeenCalled();
+            expect(focusSpyFn[1]).toHaveBeenCalledTimes(1);
 
             keyManager.onKeydown(fakeKeyEvents.upArrow);
 
-            expect(itemList.toArray()[0].focus).toHaveBeenCalledTimes(1);
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[0]).toHaveBeenCalledTimes(1);
+            expect(focusSpyFn[1]).toHaveBeenCalledTimes(1);
         });
 
         it('should allow setting the focused item without calling focus', () => {
-            expect(keyManager.activeItemIndex).withContext(`Expected first item of the list to be active.`).toBe(0);
+            expect(keyManager.activeItemIndex).toBe(0);
 
             keyManager.updateActiveItem(1);
-            expect(keyManager.activeItemIndex)
-                .withContext(`Expected activeItemIndex to update after calling updateActiveItem().`)
-                .toBe(1);
-            expect(itemList.toArray()[1].focus).not.toHaveBeenCalledTimes(1);
+            expect(keyManager.activeItemIndex).toBe(1);
+            expect(focusSpyFn[1]).not.toHaveBeenCalledTimes(1);
         });
 
         it('should be able to set the focus origin', () => {
             keyManager.setFocusOrigin('mouse');
 
             keyManager.onKeydown(fakeKeyEvents.downArrow);
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledWith('mouse');
+            expect(focusSpyFn[1]).toHaveBeenCalledWith('mouse');
 
             keyManager.onKeydown(fakeKeyEvents.downArrow);
-            expect(itemList.toArray()[2].focus).toHaveBeenCalledWith('mouse');
+            expect(focusSpyFn[2]).toHaveBeenCalledWith('mouse');
 
             keyManager.setFocusOrigin('keyboard');
 
             keyManager.onKeydown(fakeKeyEvents.upArrow);
-            expect(itemList.toArray()[1].focus).toHaveBeenCalledWith('keyboard');
+            expect(focusSpyFn[1]).toHaveBeenCalledWith('keyboard');
         });
     });
 });
