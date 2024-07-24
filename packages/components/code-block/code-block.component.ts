@@ -74,7 +74,11 @@ const hasScroll = (element: HTMLElement) => {
         '[class.kbq-code-block_single-file]': 'singleFile',
         '[class.kbq-code-block_no-header]': 'noHeader',
         '[class.kbq-code-block_header-with-shadow]': 'isTopOverflow',
-        '(window:resize)': 'resizeStream.next($event)'
+        '(window:resize)': 'resizeStream.next($event)',
+        '(mouseenter)': 'showActionBarIfNecessary()',
+        '(focusin)': 'showActionBarIfNecessary()',
+        '(focusout)': 'hideActionBarIfNoHeader()',
+        '(mouseleave)': 'hideActionBarIfNoHeader()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -83,11 +87,20 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
 
     @Input() lineNumbers = true;
-    @Input() codeFiles: KbqCodeFile[];
     @Input() filled: boolean;
     @Input() maxHeight: number;
     @Input() softWrap: boolean = false;
     @Input() canLoad: boolean = true;
+    @Input() get codeFiles(): KbqCodeFile[] {
+        return this._codeFiles;
+    }
+
+    set codeFiles(files: KbqCodeFile[]) {
+        this._codeFiles = files;
+        this.hideActionBarIfNoHeader();
+    }
+
+    _codeFiles: KbqCodeFile[];
 
     get noHeader(): any {
         return this.codeFiles.length === 1 && !this.codeFiles[0].filename;
@@ -103,6 +116,11 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     multiLine: boolean = false;
     isTopOverflow: boolean = false;
     hasFocus: boolean = false;
+    /**
+     * Opacity param used to provide focus even when element not visible
+     * @docs-private
+     */
+    actionbarOpacity: number | null = null;
 
     readonly resizeStream = new Subject<Event>();
     readonly currentCodeBlock = new Subject<HTMLElement>();
@@ -137,15 +155,16 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                         this.focusMonitor.stopMonitoring(prev);
                     }
 
-                    return this.focusMonitor
-                        .monitor(current!)
-                        .pipe(filter((origin: FocusOrigin) => origin === 'keyboard'));
-                })
+                    return this.focusMonitor.monitor(current!);
+                }),
+                filter((origin: FocusOrigin) => origin === 'keyboard')
             )
             .subscribe(() => {
                 this.hasFocus = true;
                 this.changeDetectorRef.markForCheck();
             });
+
+        this.hideActionBarIfNoHeader();
         this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code'));
     }
 
@@ -222,9 +241,12 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     onShowMoreClick(currentCodeContentElement: HTMLPreElement) {
         this.toggleViewAll();
 
-        // Should explicitly scroll to top so content will be cropped from the bottom
-        if (!this.viewAll) {
+        if (this.viewAll) {
+            this.showActionBarIfNecessary();
+        } else {
+            // Should explicitly scroll to top so content will be cropped from the bottom
             currentCodeContentElement?.scroll({ top: 0, behavior: 'instant' });
+            this.hideActionBarIfNoHeader();
         }
     }
 
@@ -236,6 +258,27 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
             (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock)) &&
             ((!!this.maxHeight && this.viewAll) || !this.maxHeight)
         );
+    }
+
+    onEnter(currentCodeBlock: HTMLPreElement) {
+        // defer execution after toggle view mode
+        setTimeout(() => {
+            if (this.canShowFocus(currentCodeBlock)) {
+                this.focusMonitor.focusVia(currentCodeBlock.querySelector('code')!, 'keyboard');
+            }
+        }, 0);
+    }
+
+    /** @docs-private */
+    showActionBarIfNecessary(): void {
+        const isOpenedOrHidden = this.actionbarOpacity === null || (!!this.maxHeight && !this.viewAll);
+        if (isOpenedOrHidden) return;
+        this.actionbarOpacity = null;
+    }
+
+    /** @docs-private */
+    hideActionBarIfNoHeader(): void {
+        this.actionbarOpacity = this.noHeader ? 0 : null;
     }
 
     private updateMultiline = () => {
@@ -251,14 +294,5 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         const extension = LANGUAGES_EXTENSIONS[codeFile.language] || DEFAULT_EXTENSION;
 
         return `${fileName}.${extension}`;
-    }
-
-    onEnter(currentCodeBlock: HTMLPreElement) {
-        // defer execution after toggle view mode
-        setTimeout(() => {
-            if (this.canShowFocus(currentCodeBlock)) {
-                this.focusMonitor.focusVia(currentCodeBlock.querySelector('code')!, 'keyboard');
-            }
-        }, 0);
     }
 }

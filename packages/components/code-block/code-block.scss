@@ -27,7 +27,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         // 4 buttons + margin
         $buttons-margin: calc(32 * 4) + 24px;
 
-        padding: kbq-css-variable(code-block-size-header-padding-vertical)
+        padding: calc(kbq-css-variable(code-block-size-header-padding-vertical) - $border-width)
             calc(
                 var(--kbq-code-block-size-header-padding-right, map.get($tokens, code-block-size-header-padding-right)) +
                     $buttons-margin

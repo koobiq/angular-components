@@ -49,6 +49,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 // @public (undocumented)
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
+    actionbarOpacity: number | null;
     // (undocumented)
     canLoad: boolean;
     // (undocumented)
@@ -56,7 +57,10 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     checkOverflow(currentCodeContentElement: HTMLElement): void;
     // (undocumented)
-    codeFiles: KbqCodeFile[];
+    get codeFiles(): KbqCodeFile[];
+    set codeFiles(files: KbqCodeFile[]);
+    // (undocumented)
+    _codeFiles: KbqCodeFile[];
     // (undocumented)
     config: KbqCodeBlockConfiguration;
     // (undocumented)
@@ -73,6 +77,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     getMaxHeight(): string;
     // (undocumented)
     hasFocus: boolean;
+    hideActionBarIfNoHeader(): void;
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
@@ -101,6 +106,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     readonly resizeStream: Subject<Event>;
     // (undocumented)
     selectedTabIndex: number;
+    showActionBarIfNecessary(): void;
     // (undocumented)
     get singleFile(): boolean;
     // (undocumented)
