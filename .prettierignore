@@ -1,14 +1,7 @@
-# Add files here to ignore them from prettier formatting
 .angular/
 .nx/
 node_modules/
-
 .yarn/
-yarn.lock
-
-*.api.md
-api-report.md
-
 /dist
 /tmp
 /temp
@@ -19,8 +12,11 @@ CHANGELOG.md
 /apps/docs/src/styles/koobiq/default-theme/
 /apps/docs/src/assets/versions.json
 
+# ignore public-api-guard
+/tools/public_api_guard/**/*.md
+
 # ignore auto-generated module
 /packages/docs-examples/example-module.ts
 
 # ignore nunjuck templates
-tools/api-gen/rendering/templates
+/tools/api-gen/rendering/templates

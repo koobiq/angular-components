@@ -8,7 +8,6 @@ The top-level directory structure:
 ├─ tools ···················· infrastructure/build scripts
 ├─ commitlint.config.js ····· scope-enum declaration
 ├─ gulpfile.js ·············· Gulp tasks config
-├─ wallaby.js ··············· Wallaby/Webpack config
 └─ package.json ············· Project config
 ```
 

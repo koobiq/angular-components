@@ -1,14 +1,9 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "types": [
-            "node",
-            "jasmine"
-        ]
+        "types": ["node", "jest"]
     },
-    "include": [
-        "**/*.ts"
-    ],
+    "include": ["./**/*.ts"],
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
         "strictTemplates": true,
