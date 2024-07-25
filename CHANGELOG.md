@@ -1,3 +1,15 @@
+# 17.0.0-rc.12 (2024-07-25)
+
+### Koobiq
+
+ * bug fix  **button:** fixed progress animation (speed, line, colors) ([#165](https://github.com/koobiq/angular-components/issues/165)) ([0b92651](https://github.com/koobiq/angular-components/commit/0b92651ed1f98ea5fdd6feae170002fd747b869d))
+ * bug fix  **docs:** default font ([#DS-2648](https://github.com/koobiq/angular-components/issues/issue/DS-2648)) ([#151](https://github.com/koobiq/angular-components/issues/151)) ([33eb788](https://github.com/koobiq/angular-components/commit/33eb7881ef9adb90ffaf980efb460f60a49dcc81))
+ * bug fix  **link:** icons vertical position fixed in links ([#DS-2697](https://github.com/koobiq/angular-components/issues/issue/DS-2697)) ([#167](https://github.com/koobiq/angular-components/issues/167)) ([f178916](https://github.com/koobiq/angular-components/commit/f178916ddd009387d79af8f0767d26cdb08b19e3))
+ * bug fix  **toast:** new toast icon padding ([#DS-2657](https://github.com/koobiq/angular-components/issues/issue/DS-2657)) ([#161](https://github.com/koobiq/angular-components/issues/161)) ([64e17fa](https://github.com/koobiq/angular-components/commit/64e17fa62f3263296e705a9d8a74c4fd3f088e69))
+ * bug fix  **typography:** font-style italic fix ([#DS-2671](https://github.com/koobiq/angular-components/issues/issue/DS-2671)) ([#153](https://github.com/koobiq/angular-components/issues/153)) ([bfa0189](https://github.com/koobiq/angular-components/commit/bfa0189695d5587ef12b1ac4a1fae2bbe094f334))
+ * feature  **docs:** added icon-items ([#DS-2636](https://github.com/koobiq/angular-components/issues/issue/DS-2636)) ([#155](https://github.com/koobiq/angular-components/issues/155)) ([31faf22](https://github.com/koobiq/angular-components/commit/31faf22fe7ebe88797e69d0a017a42010d9bd435))
+ * feature  migrated from jasmine/karma to jest ([#DS-2192](https://github.com/koobiq/angular-components/issues/issue/DS-2192)) ([#154](https://github.com/koobiq/angular-components/issues/154)) ([2834488](https://github.com/koobiq/angular-components/commit/2834488c37baea6a2d7caa1dbe9bf584237f5e1c))
+
 # 17.0.0-rc.11 (2024-07-23)
 
 ### Koobiq
