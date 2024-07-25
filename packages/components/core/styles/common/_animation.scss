@@ -4,7 +4,7 @@
     }
 
     to {
-        background-position: 29px 0;
+        background-position: 64px 0;
     }
 }
 
@@ -21,17 +21,17 @@
         bottom: 0;
         left: 0;
 
-        $lighter: rgba(255, 255, 255, 0.04);
+        $lighter: rgba(255, 255, 255, 0.1);
         $darker: rgba(0, 0, 0, 0.04);
 
         background: linear-gradient(
                 135deg,
-                $darker 10px,
-                $lighter 10px,
-                $lighter 20px,
-                $darker 20px,
-                $darker 30px,
-                $lighter 31px
+                $darker 12px,
+                $lighter 12px,
+                $lighter 22px,
+                $darker 22px,
+                $darker 34px,
+                $lighter 34px
             )
             repeat;
         background-size: 32px 32px;
