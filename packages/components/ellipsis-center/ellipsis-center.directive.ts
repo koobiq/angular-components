@@ -76,7 +76,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private refresh() {
         let start = '';
         let end = '';
-        const lastCharsLength = 10;
         this.content = this._kbqEllipsisCenter;
 
         const [dataTextStart, dataTextEnd] = ['data-text-start', 'data-text-end'].map((querySelector) => {
@@ -98,6 +97,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 start = '';
                 end = this._kbqEllipsisCenter;
             } else {
+                const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / 7);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
