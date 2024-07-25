@@ -29,7 +29,10 @@ $tokens: meta.module-variables(tokens) !default;
 
     margin-right: kbq-css-variable(toast-size-icon-margin-right);
 
-    padding-top: kbq-css-variable(toast-size-content-padding-top);
+    $padding-top: kbq-css-variable(toast-size-content-padding-top);
+    $toast-font-title-line-height: kbq-css-variable(toast-font-title-line-height);
+    $toast-size-icon-height: kbq-css-variable(toast-size-icon-height);
+    padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 }
 
 .kbq-toast__container {
