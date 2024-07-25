@@ -50,10 +50,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 }
 
-.kbq-hint {
-    display: block;
-}
-
 .kbq-file-upload__hint {
     margin-top: kbq-css-variable(form-field-hint-size-margin-top);
 }
