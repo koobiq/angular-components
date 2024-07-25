@@ -97,7 +97,8 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 start = '';
                 end = this._kbqEllipsisCenter;
             } else {
-                const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / 7);
+                const averageCharWidth = 7;
+                const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
