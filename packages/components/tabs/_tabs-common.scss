@@ -60,6 +60,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     & .kbq-tab-label__content {
         display: flex;
+        align-items: center;
 
         gap: kbq-css-variable(tabs-size-tab-item-content-gap-horizontal);
     }
