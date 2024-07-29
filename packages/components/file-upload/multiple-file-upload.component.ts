@@ -105,7 +105,6 @@ export class KbqMultipleFileUploadComponent
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-
     cvaOnChange = (_: KbqFileItem[]) => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */

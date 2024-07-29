@@ -20,7 +20,6 @@ export class KbqMarkdownService {
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             transformed = transformed.replace(
-                // eslint-disable-next-line no-useless-escape
                 new RegExp(`<${tag}\s*>`, 'g'),
                 (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}">`
             );

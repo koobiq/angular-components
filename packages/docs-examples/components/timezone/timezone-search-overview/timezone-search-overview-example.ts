@@ -27,7 +27,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
 
     get searchPattern(): string {
         const searchString: string = (this.searchControl.value || '').trim();
-        // eslint-disable-next-line no-useless-escape
+
         const reRegExpChar: RegExp = /[\/\\^$.*+?()[\]{}|\s]/g;
         const reHasRegExpChar: RegExp = RegExp(reRegExpChar.source);
 
@@ -36,7 +36,6 @@ export class TimezoneSearchOverviewExample implements OnInit {
                 ? searchString.replace(reRegExpChar, '\\$&')
                 : searchString;
 
-        // eslint-disable-next-line no-useless-escape
         return escapedString.replace(/[\-—−]/g, '(-|—|−)');
     }
 

@@ -107,7 +107,6 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
         const arr: number[] = [];
 
-        // eslint-disable-next-line no-useless-escape
         color.match(/[\d+\.]+/g).forEach((substring: string) => arr.push(parseFloat(substring)));
 
         return `${arr.slice(0, 3).map(toHex).join('')}`;

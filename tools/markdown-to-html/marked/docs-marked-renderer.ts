@@ -19,7 +19,6 @@ function createTagNameStringAliaser(classPrefix: string) {
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             str = str.replace(
-                // eslint-disable-next-line no-useless-escape
                 new RegExp(`<${tag}\s*>`, 'g'),
                 (_match: string) => `<${tag} class="${classPrefix}__${tag}">`
             );

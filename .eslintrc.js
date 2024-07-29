@@ -31,6 +31,7 @@ const config = {
             ],
             rules: {
                 // plugin:eslint
+                'no-useless-escape': 0,
                 'no-self-assign': 0,
                 'no-prototype-builtins': 0,
                 // plugin:promise
