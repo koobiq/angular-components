@@ -87,7 +87,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
-import { SizeXxs } from '@koobiq/design-tokens';
+import { SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
@@ -952,8 +952,7 @@ export class KbqSelect
 
         triggerClone.remove();
 
-        // item width + flex gap between each item
-        return totalItemsWidth + parseInt(SizeXxs) * (selectedItemsViewValueContainers.length - 1);
+        return totalItemsWidth;
     }
 
     private getItemWidth(element: HTMLElement): number {
@@ -962,8 +961,8 @@ export class KbqSelect
         const width: number = parseInt(computedStyle.width as string);
         const marginLeft: number = parseInt(computedStyle.marginLeft as string);
         const marginRight: number = parseInt(computedStyle.marginRight as string);
-
-        return width + marginLeft + marginRight;
+        // item width + margins + flex gap between each item
+        return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }
 
     /** Handles keyboard events while the select is closed. */
