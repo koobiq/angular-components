@@ -36,7 +36,7 @@ export const createDirIfNotExists = (dir: string) =>
 
 export const docTask = (taskId: string, { source, dest }: { source: string | string[]; dest: string }) => {
     return async () => {
-        console.info(`Starting ${chalk.blue(taskId)}...`);
+        console.log(`Starting ${chalk.blue(taskId)}...`);
         await createDirIfNotExists(dest);
 
         const promises = src(source).map(async (inputPath: string) => {
@@ -48,8 +48,8 @@ export const docTask = (taskId: string, { source, dest }: { source: string | str
         });
 
         const res = await Promise.all(promises);
-        console.info(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
-        console.info(chalk.green('------------------------------------------------------------------------------'));
+        console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
+        console.log(chalk.green('------------------------------------------------------------------------------'));
         return res;
     };
 };

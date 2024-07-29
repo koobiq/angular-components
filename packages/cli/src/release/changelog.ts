@@ -132,7 +132,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     // Filter out duplicate commits. Note that we cannot compare the SHA because the commits
                     // will have a different SHA if they are being cherry-picked into a different branch.
                     if (existingChangelogContent.includes(commit.subject)) {
-                        console.info(yellow(`  ↺   Skipping duplicate: "${bold(commit.header)}"`));
+                        console.log(yellow(`  ↺   Skipping duplicate: "${bold(commit.header)}"`));
 
                         return false;
                     }

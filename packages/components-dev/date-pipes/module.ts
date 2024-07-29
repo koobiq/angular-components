@@ -199,7 +199,7 @@ export class DemoComponent {
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
             this.dateAdapter.toIso8601(now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))];
 
-        console.info('populateRangeShort: ');
+        console.log('populateRangeShort: ');
     }
 
     private populateRangeMiddle() {

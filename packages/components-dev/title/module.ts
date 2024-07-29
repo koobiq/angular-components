@@ -73,7 +73,7 @@ export class DemoComponent implements OnInit {
     }
 
     onSelectionChange($event: KbqAutocompleteSelectedEvent) {
-        console.info(`onSelectionChange: ${$event}`);
+        console.log(`onSelectionChange: ${$event}`);
     }
 
     onAddText() {

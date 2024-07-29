@@ -72,7 +72,7 @@ export class DemoComponent implements OnInit {
     compareWithById = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
 
     openedChange(opened) {
-        console.info('openedChange: ', opened);
+        console.log('openedChange: ', opened);
         if (!opened) {
             this.cdkVirtualScrollViewport.setRenderedContentOffset(0);
             this.cdkVirtualScrollViewport.setRenderedRange(this.initialRange);
@@ -80,7 +80,7 @@ export class DemoComponent implements OnInit {
     }
 
     onSelectionChange($event: KbqSelectChange) {
-        console.info(`onSelectionChange: ${$event.value}`);
+        console.log(`onSelectionChange: ${$event.value}`);
     }
 
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
@@ -88,11 +88,11 @@ export class DemoComponent implements OnInit {
     }
 
     opened($event) {
-        console.info('opened: ', $event);
+        console.log('opened: ', $event);
     }
 
     closed($event) {
-        console.info('closed: ', $event);
+        console.log('closed: ', $event);
     }
 
     private getFilteredOptions(value): string[] {

@@ -25,11 +25,11 @@ export class ModalComponentExample {
         });
 
         this.componentModal.afterOpen.subscribe(() => {
-            console.info('[afterOpen] emitted!');
+            console.log('[afterOpen] emitted!');
         });
 
         this.componentModal.afterClose.subscribe((action: 'save' | 'close') => {
-            console.info(`[afterClose] emitted, chosen action: ${action}`);
+            console.log(`[afterClose] emitted, chosen action: ${action}`);
         });
     }
 }

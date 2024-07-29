@@ -21,7 +21,7 @@ export class DemoComponent {
     rightSidebarSidebarState: boolean = false;
 
     onStateChanged($event): void {
-        console.info('onStateChanged: ', $event);
+        console.log('onStateChanged: ', $event);
     }
 
     toggleLeftSidebar() {

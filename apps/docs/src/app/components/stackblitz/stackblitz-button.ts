@@ -50,7 +50,7 @@ export class StackblitzButton extends KbqLink {
         if (this.openStackBlitzFn) {
             this.openStackBlitzFn();
         } else {
-            console.info('StackBlitz is not ready yet. Please try again in a few seconds.');
+            console.log('StackBlitz is not ready yet. Please try again in a few seconds.');
         }
     }
 

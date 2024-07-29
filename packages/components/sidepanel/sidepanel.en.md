@@ -17,7 +17,7 @@ to receive notification when the sidepanel has been opened (after animation) or 
 
 ```ts
 sidepanelRef.afterClosed().subscribe((result) => {
-    console.info(`Sidepanel result: ${result}`); // I was closed
+    console.log(`Sidepanel result: ${result}`); // I was closed
 });
 
 sidepanelRef.close('I was closed');

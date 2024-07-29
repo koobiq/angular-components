@@ -287,14 +287,14 @@ describe('KbqPasswordInput', () => {
         // const passwordInput: any = fixture.debugElement.query(By.directive(KbqInputPassword));
         // const input = passwordInput.nativeElement;
         // const passwordToggle = fixture.debugElement.query(By.directive(KbqPasswordToggle)).nativeElement;
-        // console.info('mcPasswordInput: ', passwordInput);
+        // console.log('mcPasswordInput: ', passwordInput);
         //
         // expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
         //
         // expect(passwordLengthHint.nativeElement.classList.contains('kbq-password-hint__icon_error')).toBe(false);
         //
-        // console.info('input.value: ', input.value);
-        // console.info('passwordInput.value: ', passwordInput.value);
+        // console.log('input.value: ', input.value);
+        // console.log('passwordInput.value: ', passwordInput.value);
         // passwordInput.value = '5';
         // dispatchFakeEvent(input, 'input');
         // dispatchFakeEvent(input, 'focus');
@@ -304,9 +304,9 @@ describe('KbqPasswordInput', () => {
         // flush();
         // fixture.detectChanges();
         //
-        // console.info('formFieldElement.classList', formFieldElement.classList);
-        // console.info('mcPasswordInput.classList: ', input.classList);
-        // console.info('mcPasswordLengthHint.classList: ', passwordLengthHint.nativeElement.classList);
+        // console.log('formFieldElement.classList', formFieldElement.classList);
+        // console.log('mcPasswordInput.classList: ', input.classList);
+        // console.log('mcPasswordLengthHint.classList: ', passwordLengthHint.nativeElement.classList);
         //
         // expect(passwordLengthHint.nativeElement.classList.contains('kbq-password-hint__icon_error')).toBe(true);
     }));

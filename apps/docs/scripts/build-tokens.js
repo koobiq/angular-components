@@ -33,8 +33,8 @@ function buildTokens(themeConfig) {
     });
 
     // ==== Run build ====
-    console.info('Build started...');
-    console.info('==============================================');
+    console.log('Build started...');
+    console.log('==============================================');
 
     themeConfig.map((platform) => {
         // APPLY THE CONFIGURATION
@@ -52,8 +52,8 @@ function buildTokens(themeConfig) {
         StyleDictionaryExtended.buildAllPlatforms();
     });
 
-    console.info('\n==============================================');
-    console.info('\nBuild completed!');
+    console.log('\n==============================================');
+    console.log('\nBuild completed!');
 }
 
 const kbq = 'koobiq';

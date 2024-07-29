@@ -20,7 +20,7 @@ export class ModalTemplateExample {
             kbqTitle: tplTitle,
             kbqContent: tplContent,
             kbqFooter: tplFooter,
-            kbqOnOk: () => console.info('Click ok')
+            kbqOnOk: () => console.log('Click ok')
         });
     }
 

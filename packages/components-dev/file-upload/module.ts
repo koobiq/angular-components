@@ -215,7 +215,7 @@ export class DemoComponent {
     }
 
     onSubmit() {
-        console.info(this.form.get('first')?.errors?.maxFileExceeded);
+        console.log(this.form.get('first')?.errors?.maxFileExceeded);
     }
 
     toggleDisabled() {

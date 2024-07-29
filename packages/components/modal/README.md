@@ -8,7 +8,7 @@ showConfirm() {
         kbqContent   : 'Save changes made to the request "All assets with Windows"?',
         kbqOkText    : 'Save',
         kbqCancelText: 'Cancel',
-        kbqOnOk      : () => console.info('OK')
+        kbqOnOk      : () => console.log('OK')
     });
 }
 ```

@@ -33,12 +33,6 @@ const config = {
                 // plugin:eslint
                 'no-self-assign': 0,
                 'no-prototype-builtins': 0,
-                'no-console': [
-                    1,
-                    {
-                        allow: ['info', 'warn', 'error']
-                    }
-                ],
                 // plugin:promise
                 'promise/catch-or-return': 0,
                 'promise/always-return': 0

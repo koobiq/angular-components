@@ -31,7 +31,7 @@ export class DemoComponent {
     ];
 
     onChange($event: KbqRadioChange) {
-        console.info('KbqRadioChange: ', $event);
+        console.log('KbqRadioChange: ', $event);
     }
 }
 

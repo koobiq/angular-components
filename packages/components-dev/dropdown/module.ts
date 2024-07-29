@@ -60,7 +60,7 @@ export class DemoComponent {
     }
 
     selectDomain(id: string): void {
-        console.info('selected domain id', id);
+        console.log('selected domain id', id);
     }
 }
 

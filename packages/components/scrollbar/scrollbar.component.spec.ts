@@ -215,7 +215,7 @@ class ScrollEventListener {
     @ViewChild(KbqScrollbar) scrollbar: KbqScrollbar;
 
     scroll(event) {
-        console.info(event);
+        console.log(event);
     }
 
     initialize() {}

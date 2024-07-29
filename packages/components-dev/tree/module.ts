@@ -186,15 +186,15 @@ export class DemoComponent {
     }
 
     onSelectAll($event) {
-        console.info('onSelectAll', $event);
+        console.log('onSelectAll', $event);
     }
 
     onNavigationChange($event) {
-        console.info('onNavigationChange', $event);
+        console.log('onNavigationChange', $event);
     }
 
     onSelectionChange($event) {
-        console.info('onSelectionChange', $event);
+        console.log('onSelectionChange', $event);
     }
 
     switchToDataSource(dataSourceType: 'small' | 'big') {

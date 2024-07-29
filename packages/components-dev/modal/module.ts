@@ -33,7 +33,7 @@ export class ModalDemoComponent {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.info('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -48,8 +48,8 @@ export class ModalDemoComponent {
             kbqOkText: 'Delete',
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
-            kbqOnOk: () => console.info('Delete'),
-            kbqOnCancel: () => console.info('Cancel')
+            kbqOnOk: () => console.log('Delete'),
+            kbqOnCancel: () => console.log('Cancel')
         });
 
         this.showConfirm();
@@ -62,7 +62,7 @@ export class ModalDemoComponent {
             kbqContent: tplContent,
             kbqFooter: tplFooter,
             kbqClosable: true,
-            kbqOnOk: () => console.info('Click ok')
+            kbqOnOk: () => console.log('Click ok')
         });
     }
 
@@ -137,7 +137,7 @@ export class ModalDemoComponent {
         });
 
         modal.afterOpen.subscribe(() => {
-            console.info('[afterOpen] emitted!');
+            console.log('[afterOpen] emitted!');
 
             isLoading = true;
             setTimeout(() => (isLoading = false), 3000);
@@ -150,7 +150,7 @@ export class ModalDemoComponent {
         });
 
         // Return a result when closed
-        modal.afterClose.subscribe((result) => console.info('[afterClose] The result is:', result));
+        modal.afterClose.subscribe((result) => console.log('[afterClose] The result is:', result));
 
         // delay until modal instance created
         setTimeout(() => {
@@ -175,7 +175,7 @@ export class ModalDemoComponent {
 
         this.htmlModalVisible = true;
 
-        this.modalService.afterAllClose.subscribe(() => console.info('afterAllClose emitted!'));
+        this.modalService.afterAllClose.subscribe(() => console.log('afterAllClose emitted!'));
 
         window.setTimeout(() => this.modalService.closeAll(), 5000);
     }

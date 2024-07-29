@@ -56,7 +56,7 @@ export class DemoComponent implements OnInit {
     formControl = new UntypedFormControl('', Validators.required);
 
     onSelectionChange($event: KbqAutocompleteSelectedEvent) {
-        console.info(`onSelectionChange: ${$event}`);
+        console.log(`onSelectionChange: ${$event}`);
     }
 
     ngOnInit(): void {

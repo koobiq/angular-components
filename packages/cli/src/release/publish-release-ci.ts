@@ -43,16 +43,16 @@ export class PublishReleaseCITask extends BaseReleaseTask {
     }
 
     async run() {
-        console.info();
-        console.info(cyan('-----------------------------------------'));
+        console.log();
+        console.log(cyan('-----------------------------------------'));
 
         if (process.env['DEBUG']) {
-            console.info(red(' [DEBUG MODE] koobiq CI release script'));
+            console.log(red(' [DEBUG MODE] koobiq CI release script'));
         } else {
-            console.info(cyan('  koobiq CI release script'));
+            console.log(cyan('  koobiq CI release script'));
         }
-        console.info(cyan('-----------------------------------------'));
-        console.info();
+        console.log(cyan('-----------------------------------------'));
+        console.log();
 
         this.checkReleaseConfiguration();
         this.checkReleaseOutput();
@@ -63,9 +63,9 @@ export class PublishReleaseCITask extends BaseReleaseTask {
             this.publishPackageToNpm(packageName, npmDistTag);
         }
 
-        console.info();
-        console.info(green(bold(`  ✓   Published all packages successfully`)));
-        console.info();
+        console.log();
+        console.log(green(bold(`  ✓   Published all packages successfully`)));
+        console.log();
 
         const newVersionName = this.currentVersion.format();
 
@@ -82,7 +82,7 @@ export class PublishReleaseCITask extends BaseReleaseTask {
         // const { releaseNotes, releaseTitle } = extractedReleaseNotes;
 
         if (!process.env['DEBUG'] && !this.config.withoutNotification) {
-            console.info(green(bold(`  ✓   Notification to Mattermost, version: ${newVersionName}`)));
+            console.log(green(bold(`  ✓   Notification to Mattermost, version: ${newVersionName}`)));
             await notify(extractedReleaseNotes);
         }
 
@@ -94,12 +94,12 @@ export class PublishReleaseCITask extends BaseReleaseTask {
         //     name: releaseTitle
         // });
 
-        // console.info(green(`  ✓   GitHub release is posted.`));
+        // console.log(green(`  ✓   GitHub release is posted.`));
     }
 
     /** Publishes the specified package within the given NPM dist tag. */
     private publishPackageToNpm(packageName: string, npmDistTag: string) {
-        console.info(green(`  ⭮   Publishing "${packageName}"..`));
+        console.log(green(`  ⭮   Publishing "${packageName}"..`));
 
         const errorOutput = npmPublish(join(this.config.distDir, packageName), npmDistTag);
 
@@ -110,7 +110,7 @@ export class PublishReleaseCITask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.info(green(`  ✓   Successfully published "${packageName}"`));
+        console.log(green(`  ✓   Successfully published "${packageName}"`));
     }
 
     /** Checks the release output by running the release-output validations. */
@@ -136,6 +136,6 @@ export class PublishReleaseCITask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.info(green(`  ✓   Release output passed validation checks.`));
+        console.log(green(`  ✓   Release output passed validation checks.`));
     }
 }

@@ -18,7 +18,7 @@ export class ThemeStorage {
         try {
             window.localStorage[ThemeStorage.storageKey] = JSON.stringify(theme);
         } catch (e) {
-            console.info(e);
+            console.log(e);
         }
 
         this.onThemeUpdate.emit(theme);

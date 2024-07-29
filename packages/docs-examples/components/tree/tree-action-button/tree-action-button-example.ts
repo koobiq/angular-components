@@ -132,7 +132,7 @@ export class TreeActionButtonExample {
     }
 
     onSelectAll($event) {
-        console.info('All items selected', $event);
+        console.log('All items selected', $event);
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

@@ -27,7 +27,7 @@ export class DemoComponent {
     toggleControl = new UntypedFormControl(true);
 
     constructor() {
-        this.toggleControl.valueChanges.subscribe(console.info);
+        this.toggleControl.valueChanges.subscribe(console.log);
     }
 }
 

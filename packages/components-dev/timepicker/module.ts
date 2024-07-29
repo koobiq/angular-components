@@ -68,7 +68,7 @@ export class TimepickerDemoComponent {
         });
 
         this.reactiveFormControlValue.valueChanges.subscribe((value) => {
-            console.info('this.reactiveFormControlValue:', value);
+            console.log('this.reactiveFormControlValue:', value);
         });
     }
 
@@ -77,7 +77,7 @@ export class TimepickerDemoComponent {
     }
 
     ngModelChange(value: any) {
-        console.info('ngModelChange: ', value);
+        console.log('ngModelChange: ', value);
     }
 
     setLocale($event: KbqRadioChange) {
@@ -86,7 +86,7 @@ export class TimepickerDemoComponent {
     }
 
     onTimepickerChange() {
-        console.info('onTimepickerChange: ');
+        console.log('onTimepickerChange: ');
     }
 }
 

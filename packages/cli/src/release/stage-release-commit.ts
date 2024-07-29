@@ -43,11 +43,11 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     }
 
     async run() {
-        console.info();
-        console.info(cyan('-----------------------------------------'));
-        console.info(cyan('  koobiq stage release script'));
-        console.info(cyan('-----------------------------------------'));
-        console.info();
+        console.log();
+        console.log(cyan('-----------------------------------------'));
+        console.log(cyan('  koobiq stage release script'));
+        console.log(cyan('-----------------------------------------'));
+        console.log();
 
         const newVersion = await promptForNewVersion(this.currentVersion);
         const newVersionName = newVersion.format();
@@ -55,7 +55,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
         // After the prompt for the new version, we print a new line because we want the
         // new log messages to be more in the foreground.
-        console.info();
+        console.log();
 
         // Ensure there are no uncommitted changes. Checking this before switching to a
         // publish branch is sufficient as unstaged changes are not specific to Git branches.
@@ -69,39 +69,39 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         if (needsVersionBump) {
             this.updatePackageJsonVersion(newVersionName);
 
-            console.info(
+            console.log(
                 green(
                     `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
                         `${italic('package.json')}`
                 )
             );
-            console.info();
+            console.log();
         }
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
-        console.info();
-        console.info(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
-        console.info(
+        console.log();
+        console.log(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
+        console.log(
             yellow(
                 `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
                     `changes that apply to the public library release. When done, proceed to the prompt below.`
             )
         );
-        console.info();
+        console.log();
 
         if (!(await this.promptConfirm('Do you want to proceed and commit the changes?'))) {
-            console.info();
-            console.info(yellow('Aborting release staging...'));
+            console.log();
+            console.log(yellow('Aborting release staging...'));
             process.exit(0);
         }
 
         this.git.stageAllChanges();
         this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
 
-        console.info();
-        console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
-        console.info();
+        console.log();
+        console.log(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
+        console.log();
 
         const upstreamRemote = await this.getProjectUpstreamRemote();
 
@@ -124,9 +124,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         this.git.pushBranchToRemote(upstreamRemote, branchName);
         this.pushReleaseTag(newVersionName, upstreamRemote);
 
-        console.info();
-        console.info(green(`  ✓   The Release Tag was pushed.`));
-        console.info();
+        console.log();
+        console.log(green(`  ✓   The Release Tag was pushed.`));
+        console.log();
     }
 
     /** Creates the specified release tag locally. */
@@ -144,9 +144,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 process.exit(1);
             }
 
-            console.info(green(`  ✓   Release tag already exists: "${italic(tagName)}"`));
+            console.log(green(`  ✓   Release tag already exists: "${italic(tagName)}"`));
         } else if (this.git.createTag(tagName, releaseNotes)) {
-            console.info(green(`  ✓   Created release tag: "${italic(tagName)}"`));
+            console.log(green(`  ✓   Created release tag: "${italic(tagName)}"`));
         } else {
             console.error(red(`  ✘   Could not create the "${tagName}" tag.`));
             console.error(red(`      Please make sure there is no existing tag with the same name.`));
@@ -172,7 +172,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 process.exit(1);
             }
 
-            console.info(green(`  ✓   Release tag already exists remotely: "${italic(tagName)}"`));
+            console.log(green(`  ✓   Release tag already exists remotely: "${italic(tagName)}"`));
 
             return;
         }
@@ -185,7 +185,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.info(green(`  ✓   Pushed release tag upstream.`));
+        console.log(green(`  ✓   Pushed release tag upstream.`));
     }
 
     private async getProjectUpstreamRemote() {
@@ -193,7 +193,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             ? 'upstream'
             : await promptForUpstreamRemote(this.git.getAvailableRemotes());
 
-        console.info(green(`  ✓   Using the "${remoteName}" remote for pushing changes upstream.`));
+        console.log(green(`  ✓   Using the "${remoteName}" remote for pushing changes upstream.`));
 
         return remoteName;
     }
@@ -222,7 +222,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
     //
     //         if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-    //             console.info(green(
+    //             console.log(green(
     //                 `  ⚠   Upstream commit is failing CI checks, but status has been ` +
     //                 `forcibly ignored.`));
     //
@@ -236,7 +236,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
     //
     //         if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-    //             console.info(green(
+    //             console.log(green(
     //                 `  ⚠   Upstream commit is pending CI, but status has been ` +
     //                 `forcibly ignored.`));
     //
@@ -245,6 +245,6 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         process.exit(0);
     //     }
     //
-    //     console.info(green(`  ✓   Upstream commit is passing all github status checks.`));
+    //     console.log(green(`  ✓   Upstream commit is passing all github status checks.`));
     // }
 }

@@ -47,7 +47,7 @@ export class MyToastComponent extends KbqToastComponent {
     ) {
         super(data, service, elementRef, focusMonitor);
 
-        console.info('MyToastComponent: ');
+        console.log('MyToastComponent: ');
     }
 }
 

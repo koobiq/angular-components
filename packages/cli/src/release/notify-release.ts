@@ -26,7 +26,7 @@ async function sendNotification(url: string, body: object): Promise<void> {
         body: JSON.stringify(body)
     };
 
-    console.info(cyan('POST notification:', { url, headers, body: JSON.stringify(body) }));
+    console.log(cyan('POST notification:', { url, headers, body: JSON.stringify(body) }));
 
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
@@ -36,7 +36,7 @@ async function sendNotification(url: string, body: object): Promise<void> {
 
 function logNotificationResult(success: boolean, error?: Error): void {
     if (success) {
-        console.info(green(`  ✓   Notification is posted in Mattermost.`));
+        console.log(green(`  ✓   Notification is posted in Mattermost.`));
     } else {
         console.error(red(`  ✘   Could not post notification in Mattermost.`));
         if (error) {
@@ -51,7 +51,7 @@ function logNotificationResult(success: boolean, error?: Error): void {
  * @param {} releaseData - The data of the release to be included in the notification.
  */
 export async function notify(releaseData: any): Promise<void> {
-    console.info(green('Start MM notification'));
+    console.log(green('Start MM notification'));
 
     const config = getMattermostConfig();
     if (!config) {

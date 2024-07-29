@@ -10,4 +10,4 @@ const { releaseTitle, releaseNotes } = extractReleaseNotes(changelogFilePath, pa
 const resultNotes = `# ${releaseTitle}\n\n${releaseNotes}`;
 
 writeFileSync('./CHANGELOG_CURRENT.md', resultNotes, 'utf-8');
-console.info('Result Notes: \n', resultNotes);
+console.log('Result Notes: \n', resultNotes);

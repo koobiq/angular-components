@@ -64,11 +64,11 @@ export class StageReleaseTask extends BaseReleaseTask {
     }
 
     async run() {
-        console.info();
-        console.info(cyan('-----------------------------------------'));
-        console.info(cyan('  koobiq stage release script'));
-        console.info(cyan('-----------------------------------------'));
-        console.info();
+        console.log();
+        console.log(cyan('-----------------------------------------'));
+        console.log(cyan('  koobiq stage release script'));
+        console.log(cyan('-----------------------------------------'));
+        console.log();
 
         const newVersion = await promptForNewVersion(this.currentVersion);
         const newVersionName = newVersion.format();
@@ -77,7 +77,7 @@ export class StageReleaseTask extends BaseReleaseTask {
 
         // After the prompt for the new version, we print a new line because we want the
         // new log messages to be more in the foreground.
-        console.info();
+        console.log();
 
         // Ensure there are no uncommitted changes. Checking this before switching to a
         // publish branch is sufficient as unstaged changes are not specific to Git branches.
@@ -97,40 +97,40 @@ export class StageReleaseTask extends BaseReleaseTask {
         if (needsVersionBump) {
             this.updatePackageJsonVersion(newVersionName);
 
-            console.info(
+            console.log(
                 green(
                     `  ✓   Updated the version to "${bold(newVersionName)}" inside of the ` +
                         `${italic('package.json')}`
                 )
             );
-            console.info();
+            console.log();
         }
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
-        console.info();
-        console.info(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
-        console.info(
+        console.log();
+        console.log(green(`  ✓   Updated the changelog in ` + `"${bold(CHANGELOG_FILE_NAME)}"`));
+        console.log(
             yellow(
                 `  ⚠   Please review CHANGELOG.md and ensure that the log contains only ` +
                     `changes that apply to the public library release. When done, proceed to the prompt below.`
             )
         );
-        console.info();
+        console.log();
 
         if (!(await this.promptConfirm('Do you want to proceed and commit the changes?'))) {
-            console.info();
-            console.info(yellow('Aborting release staging...'));
+            console.log();
+            console.log(yellow('Aborting release staging...'));
             process.exit(0);
         }
 
         this.git.stageAllChanges();
         this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
 
-        console.info();
-        console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
-        console.info(green(`  ✓   Please push the changes and submit a PR on GitHub.`));
-        console.info();
+        console.log();
+        console.log(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
+        console.log(green(`  ✓   Please push the changes and submit a PR on GitHub.`));
+        console.log();
     }
 
     /** Updates the version of the project package.json and writes the changes to disk. */
@@ -162,7 +162,7 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.info(
+                console.log(
                     green(`  ⚠   Upstream commit is failing CI checks, but status has been ` + `forcibly ignored.`)
                 );
 
@@ -179,13 +179,13 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.info(green(`  ⚠   Upstream commit is pending CI, but status has been ` + `forcibly ignored.`));
+                console.log(green(`  ⚠   Upstream commit is pending CI, but status has been ` + `forcibly ignored.`));
 
                 return;
             }
             process.exit(0);
         }
 
-        console.info(green(`  ✓   Upstream commit is passing all github status checks.`));
+        console.log(green(`  ✓   Upstream commit is passing all github status checks.`));
     }
 }

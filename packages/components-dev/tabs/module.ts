@@ -52,7 +52,7 @@ export class TabsDemoComponent {
     }
 
     onSelectionChanged(e) {
-        console.info(e);
+        console.log(e);
     }
 
     addTab(selectAfterAdding: boolean) {
@@ -68,7 +68,7 @@ export class TabsDemoComponent {
     }
 
     selectedTabChange($event: any) {
-        console.info('selectedTabChange Event:', $event);
+        console.log('selectedTabChange Event:', $event);
     }
 
     updatedTabs() {

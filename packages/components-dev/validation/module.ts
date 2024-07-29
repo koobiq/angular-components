@@ -209,11 +209,11 @@ export class DemoComponent {
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
-            console.info('reactiveForm valueChanges: ', value);
+            console.log('reactiveForm valueChanges: ', value);
         });
         //
         this.inputControl.valueChanges.subscribe((value) => {
-            console.info('inputControl valueChanges: ', value);
+            console.log('inputControl valueChanges: ', value);
         });
 
         this.reactiveFormControl = this.formBuilder.group({});
@@ -228,19 +228,19 @@ export class DemoComponent {
     }
 
     onSubmitReactiveForm(form: UntypedFormGroup) {
-        console.info('onSubmitReactiveForm: ', form);
+        console.log('onSubmitReactiveForm: ', form);
     }
 
     onSubmitReactiveFormControl(form: UntypedFormGroup) {
-        console.info('onSubmitReactiveFormControl: ', form);
+        console.log('onSubmitReactiveFormControl: ', form);
     }
 
     onSubmitTemplateForm(form: NgForm) {
-        console.info('onSubmitTemplateForm: ', form);
+        console.log('onSubmitTemplateForm: ', form);
     }
 
     onSubmitFormWithCustomValidator(form: UntypedFormGroup) {
-        console.info('onSubmitFormWithCustomValidator: ', form);
+        console.log('onSubmitFormWithCustomValidator: ', form);
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {

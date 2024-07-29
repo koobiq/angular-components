@@ -157,7 +157,7 @@ export class DemoComponent implements OnDestroy {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.info('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 

@@ -54,7 +54,6 @@ export class FooterComponent {
     };
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        // eslint-disable-next-line no-console
         console.debug(koobiqVersionFull);
         this.examplesLanguageProperty.data.push(
             ...localeService.locales.items

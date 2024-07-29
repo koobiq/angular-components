@@ -41,15 +41,15 @@ export class DemoComponent {
     constructor(private clipboard: Clipboard) {}
 
     onSelectionChange($event: KbqListSelectionChange) {
-        console.info(`onSelectionChange: ${$event.option.value}`);
+        console.log(`onSelectionChange: ${$event.option.value}`);
     }
 
     onSelectAll($event) {
-        console.info('onSelectAll', $event);
+        console.log('onSelectAll', $event);
     }
 
     onCopy($event) {
-        console.info('onCopy', $event);
+        console.log('onCopy', $event);
         this.clipboard.copy($event.option.value);
     }
 }

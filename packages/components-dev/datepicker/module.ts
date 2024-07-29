@@ -44,7 +44,7 @@ export class DemoComponent implements AfterViewInit, OnInit {
     ) {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
         this.formControlValue.valueChanges.subscribe((value) => {
-            console.info('this.formControlValue.valueChanges: ', value?.toString());
+            console.log('this.formControlValue.valueChanges: ', value?.toString());
         });
 
         this.startAt = this.adapter.createDate(2000, 1, 1);
@@ -71,16 +71,16 @@ export class DemoComponent implements AfterViewInit, OnInit {
 
     ngAfterViewInit(): void {
         this.datepicker.selectedChanged.subscribe(() => {
-            console.info('this.datepicker.selectedChanged');
+            console.log('this.datepicker.selectedChanged');
         });
     }
 
     onDateChange() {
-        console.info('onDateChange: ');
+        console.log('onDateChange: ');
     }
 
     onDateInput() {
-        console.info('onDateInput: ');
+        console.log('onDateInput: ');
     }
 }
 

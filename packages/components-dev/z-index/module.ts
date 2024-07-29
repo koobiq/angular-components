@@ -46,7 +46,7 @@ export class MyToastComponent extends KbqToastComponent {
     ) {
         super(data, service, elementRef, focusMonitor);
 
-        console.info('MyToastComponent: ');
+        console.log('MyToastComponent: ');
     }
 }
 
@@ -74,10 +74,10 @@ export class ToastDemoComponent {
         private sidepanelService: KbqSidepanelService,
         private overlayRef: OverlayContainer
     ) {
-        console.info('overlayRef: ', overlayRef);
-        console.info('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
-        console.info('qwe: ', overlayRef.getContainerElement().childNodes.length);
-        // console.info('overlayRef.hasAttached(): ', overlayRef.hasAttached());
+        console.log('overlayRef: ', overlayRef);
+        console.log('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
+        console.log('qwe: ', overlayRef.getContainerElement().childNodes.length);
+        // console.log('overlayRef.hasAttached(): ', overlayRef.hasAttached());
     }
 
     openTemplateSidepanel() {
@@ -86,7 +86,7 @@ export class ToastDemoComponent {
             hasBackdrop: this.modalState
         });
 
-        console.info('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
+        console.log('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
     }
 
     showManyActonToast(controls: TemplateRef<any>) {

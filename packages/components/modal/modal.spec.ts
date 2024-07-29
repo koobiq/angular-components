@@ -567,7 +567,7 @@ class ModalByServiceFromDropdownComponent {
             kbqContent: 'Save all?',
             kbqOkText: this.kbqOkText,
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.info('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 }

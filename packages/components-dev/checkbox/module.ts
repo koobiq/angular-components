@@ -20,7 +20,7 @@ export class DemoComponent {
     labelPosition = 'after';
 
     onCheckboxChange(val) {
-        console.info('onCheckboxChange', val);
+        console.log('onCheckboxChange', val);
     }
 }
 

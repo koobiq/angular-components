@@ -20,7 +20,7 @@ export class ModalOverviewExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.info('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -31,7 +31,7 @@ export class ModalOverviewExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.info('OK')
+            kbqOnOk: () => console.log('OK')
         });
     }
 
@@ -43,8 +43,8 @@ export class ModalOverviewExample {
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
             kbqMaskClosable: true,
-            kbqOnOk: () => console.info('Delete'),
-            kbqOnCancel: () => console.info('Cancel')
+            kbqOnOk: () => console.log('Delete'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 }

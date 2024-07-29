@@ -155,7 +155,7 @@ export class DemoComponent implements OnInit {
 
     onSelectionChange($event: KbqTreeSelectChange) {
         const option: KbqTreeOption = $event.value;
-        console.info(`onSelectionChange: ${$event.value}`);
+        console.log(`onSelectionChange: ${$event.value}`);
 
         if (option.isExpandable) {
             this.tree.setStateChildren(option, !option.selected);
@@ -169,15 +169,15 @@ export class DemoComponent implements OnInit {
     }
 
     openedChange($event) {
-        console.info('openedChange: ', $event);
+        console.log('openedChange: ', $event);
     }
 
     opened($event) {
-        console.info('opened: ', $event);
+        console.log('opened: ', $event);
     }
 
     closed($event) {
-        console.info('closed: ', $event);
+        console.log('closed: ', $event);
     }
 
     private toggleParents(parent) {

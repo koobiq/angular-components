@@ -92,7 +92,7 @@ async function validateLicense(): Promise<ReturnCode> {
         });
 
         const packages = Object.keys(json);
-        console.info(`Testing ${packages.length} packages.\n`);
+        console.log(`Testing ${packages.length} packages.\n`);
 
         // Filters out packages with invalid or unaccepted licenses.
         const badLicensePackages = packages
@@ -115,7 +115,7 @@ async function validateLicense(): Promise<ReturnCode> {
             return ReturnCode.InvalidLicense;
         }
 
-        console.info('All package licenses are valid.');
+        console.log('All package licenses are valid.');
         return ReturnCode.Success;
     } catch (error) {
         console.error(`Something happened:\n${error.message}`);
