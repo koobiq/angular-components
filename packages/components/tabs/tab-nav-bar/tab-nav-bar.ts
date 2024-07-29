@@ -53,7 +53,7 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
 })
 export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
     get vertical(): boolean {
-        return this.tabNav.vertical
+        return this.tabNav.vertical;
     }
 
     /** Whether the link is active. */
