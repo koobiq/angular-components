@@ -7,6 +7,7 @@ import {
     Component,
     ContentChildren,
     ElementRef,
+    forwardRef,
     Input,
     OnDestroy,
     QueryList,
@@ -30,6 +31,37 @@ export class KbqTabLinkBase {}
 export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqTabLinkBase = mixinTabIndex(
     mixinDisabled(KbqTabLinkBase)
 );
+
+/**
+ * Navigation component matching the styles of the tab group header.
+ */
+@Component({
+    selector: '[kbq-tab-nav-bar]',
+    exportAs: 'kbqTabNavBar, kbqTabNav',
+    template: '<ng-content />',
+    styleUrls: ['tab-nav-bar.scss'],
+    host: {
+        class: 'kbq-tab-nav-bar',
+        '[class.kbq-tab-nav-bar_filled]': '!transparent',
+        '[class.kbq-tab-nav-bar_transparent]': 'transparent',
+        '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
+        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface'
+    },
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KbqTabNav {
+    vertical = false;
+
+    @Input() transparent: boolean = false;
+    @Input() onSurface: boolean = false;
+
+    @ContentChildren(forwardRef(() => KbqTabLink)) links: QueryList<KbqTabLink>;
+
+    constructor(@Attribute('vertical') vertical: string) {
+        this.vertical = coerceBooleanProperty(vertical);
+    }
+}
 
 /**
  * Link inside of a `kbq-tab-nav-bar`.
@@ -108,36 +140,5 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
             this.renderer.addClass(firstIconElement, 'kbq-icon_left');
             this.renderer.addClass(secondIconElement, 'kbq-icon_right');
         }
-    }
-}
-
-/**
- * Navigation component matching the styles of the tab group header.
- */
-@Component({
-    selector: '[kbq-tab-nav-bar]',
-    exportAs: 'kbqTabNavBar, kbqTabNav',
-    template: '<ng-content />',
-    styleUrls: ['tab-nav-bar.scss'],
-    host: {
-        class: 'kbq-tab-nav-bar',
-        '[class.kbq-tab-nav-bar_filled]': '!transparent',
-        '[class.kbq-tab-nav-bar_transparent]': 'transparent',
-        '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
-        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqTabNav {
-    vertical = false;
-
-    @Input() transparent: boolean = false;
-    @Input() onSurface: boolean = false;
-
-    @ContentChildren(KbqTabLink) links: QueryList<KbqTabLink>;
-
-    constructor(@Attribute('vertical') vertical: string) {
-        this.vertical = coerceBooleanProperty(vertical);
     }
 }
