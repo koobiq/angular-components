@@ -961,7 +961,7 @@ export class KbqSelect
         const width: number = parseInt(computedStyle.width as string);
         const marginLeft: number = parseInt(computedStyle.marginLeft as string);
         const marginRight: number = parseInt(computedStyle.marginRight as string);
-        // item width + margins + flex gap between each item
+
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }
 
