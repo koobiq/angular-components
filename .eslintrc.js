@@ -1,8 +1,6 @@
 // @ts-check
 
-/**
- * @type {import('eslint').Linter.Config}
- */
+/** @type {import('eslint').Linter.Config} */
 const config = {
     root: true,
     env: {
@@ -95,6 +93,7 @@ const config = {
                 '@angular-eslint/template/elements-content': 0,
                 '@angular-eslint/template/click-events-have-key-events': 0,
                 '@angular-eslint/template/interactive-supports-focus': 0,
+                '@angular-eslint/template/label-has-associated-control': 0,
                 '@angular-eslint/template/prefer-self-closing-tags': 2
             }
         },

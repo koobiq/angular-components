@@ -1,8 +1,6 @@
 // @ts-check
 
-/**
- * @type {import('prettier-plugin-organize-attributes').PrettierPluginOrganizeAttributesParserOptions}
- */
+/** @type {import('prettier-plugin-organize-attributes').PrettierPluginOrganizeAttributesParserOptions} */
 const organizeAttributesPluginAngularConfig = {
     attributeGroups: [
         '$ANGULAR_STRUCTURAL_DIRECTIVE',
@@ -20,9 +18,7 @@ const organizeAttributesPluginAngularConfig = {
     attributeIgnoreCase: true
 };
 
-/**
- * @type {import('prettier').Options}
- */
+/** @type {import('prettier').Options} */
 const config = {
     printWidth: 120,
     tabWidth: 4,
