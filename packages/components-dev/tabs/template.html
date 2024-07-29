@@ -90,7 +90,6 @@
         <a
             *ngFor="let link of links"
             kbq-tab-link
-            role="none"
             [active]="activeLink === link"
             (click)="activeLink = link"
         >
@@ -99,7 +98,6 @@
 
         <a
             kbq-tab-link
-            role="none"
             [active]="activeLink === 1"
             [disabled]="true"
             (click)="activeLink = 1"
@@ -120,7 +118,6 @@
         <a
             *ngFor="let link of links"
             kbq-tab-link
-            role="none"
             [active]="activeLink === link"
             (click)="activeLink = link"
         >
@@ -129,7 +126,6 @@
 
         <a
             kbq-tab-link
-            role="none"
             [active]="activeLink === 1"
             [disabled]="true"
             (click)="activeLink = 1"
@@ -197,7 +193,6 @@
             <ng-template kbq-tab-label>
                 <i
                     kbq-icon="kbq-close-S_16"
-                    role="none"
                     (click)="tabsWithScroll.splice(i, 1)"
                 ></i>
                 label {{ tab }}

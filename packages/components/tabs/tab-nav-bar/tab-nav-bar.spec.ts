@@ -140,7 +140,6 @@ describe('KbqTabNavBar', () => {
                 [active]="activeIndex === index"
                 [disabled]="disabled"
                 (click)="activeIndex = index"
-                role="none"
                 kbq-tab-link
             >
                 Tab link {{ label }}

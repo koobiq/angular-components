@@ -1,6 +1,5 @@
 <div
     #connectionContainer
-    role="none"
     class="kbq-form-field__container"
     (click)="onContainerClick($event)"
 >
@@ -24,7 +23,6 @@
 
     <div
         *ngIf="canShowCleaner && !hasSuffix"
-        role="none"
         class="kbq-form-field__cleaner"
         (click)="clearValue($event)"
     >

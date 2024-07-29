@@ -98,6 +98,8 @@ const config = {
                 // plugin:@angular-eslint/template
                 '@angular-eslint/template/no-autofocus': 0,
                 '@angular-eslint/template/elements-content': 0,
+                '@angular-eslint/template/click-events-have-key-events': 0,
+                '@angular-eslint/template/interactive-supports-focus': 0,
                 '@angular-eslint/template/prefer-self-closing-tags': 2
             }
         },

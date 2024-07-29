@@ -493,7 +493,6 @@ describe('KbqToggle', () => {
         <div
             (click)="parentElementClicked = true"
             (keyup)="parentElementKeyedUp = true"
-            role="none"
         >
             <kbq-toggle
                 [id]="toggleId"

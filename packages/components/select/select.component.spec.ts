@@ -269,7 +269,6 @@ const OPTIONS = [
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -331,7 +330,6 @@ class BasicSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -466,7 +464,6 @@ class NgIfSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -526,7 +523,6 @@ class SelectWithChangeEvent {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -711,7 +707,6 @@ class BasicSelectOnPushPreselected {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -769,7 +764,6 @@ class MultiSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -888,7 +882,6 @@ class BasicSelectWithTheming {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -935,7 +928,6 @@ class ResetValuesSelect {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1242,7 +1234,6 @@ class SelectWithCustomTrigger {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1427,7 +1418,6 @@ class SelectWithFormFieldLabel {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1476,7 +1466,6 @@ class SelectWithLongOptionText {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             kbqTagRemove
                         ></i>
@@ -1570,7 +1559,6 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            role="none"
                             kbq-icon="mc-close-S_16"
                             mcTagRemove
                         ></i>

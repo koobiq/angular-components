@@ -54,7 +54,6 @@
                                 *ngIf="!option.disabled && !disabled"
                                 kbq-icon="mc-close-S_16"
                                 kbqTagRemove
-                                role="none"
                                 (click)="onRemoveSelectedOption(option, $event)"
                             ></i>
                         </kbq-tag>
@@ -82,7 +81,6 @@
 
         <div
             *ngIf="canShowCleaner"
-            role="none"
             class="kbq-select__cleaner"
             (click)="clearValue($event)"
         >
@@ -121,7 +119,6 @@
 >
     <div
         #panel
-        role="none"
         class="kbq-tree-select__panel {{ getPanelTheme() }}"
         [ngClass]="panelClass"
         [style.font-size.px]="triggerFontSize"

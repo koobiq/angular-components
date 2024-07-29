@@ -1,6 +1,5 @@
 <div
     #previousPaginator
-    role="none"
     class="kbq-tab-header__pagination kbq-tab-header__pagination_before"
     [class.kbq-disabled]="disableScrollBefore"
     (click)="handlePaginatorClick('before')"
@@ -12,7 +11,6 @@
 
 <div
     #tabListContainer
-    role="none"
     class="kbq-tab-header__content"
     (keydown)="handleKeydown($event)"
 >
@@ -29,7 +27,6 @@
 
 <div
     #nextPaginator
-    role="none"
     class="kbq-tab-header__pagination kbq-tab-header__pagination_after"
     [class.kbq-disabled]="disableScrollAfter"
     (click)="handlePaginatorClick('after')"

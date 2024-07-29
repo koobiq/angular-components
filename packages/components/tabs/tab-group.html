@@ -9,7 +9,6 @@
         *ngFor="let tab of tabs; let i = index"
         cdkMonitorElementFocus
         kbqTabLabelWrapper
-        role="none"
         class="kbq-tab-label"
         [attr.tabindex]="getTabIndex(tab, i)"
         [class.kbq-selected]="selectedIndex === i"

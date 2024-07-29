@@ -35,7 +35,6 @@
 
         <div
             *ngIf="canShowCleaner"
-            role="none"
             class="kbq-select__cleaner"
             (click)="clearValue($event)"
         >
@@ -69,7 +68,6 @@
 >
     <div
         #panel
-        role="none"
         class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
         [ngClass]="panelClass"
         [style.font-size.px]="triggerFontSize"

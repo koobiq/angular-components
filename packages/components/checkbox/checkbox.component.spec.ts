@@ -826,7 +826,6 @@ describe('KbqCheckbox', () => {
         <div
             (click)="parentElementClicked = true"
             (keyup)="parentElementKeyedUp = true"
-            role="none"
         >
             <kbq-checkbox
                 [(indeterminate)]="isIndeterminate"
