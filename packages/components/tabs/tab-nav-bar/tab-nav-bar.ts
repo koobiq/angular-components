@@ -1,7 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
     AfterViewInit,
     Attribute,
     ChangeDetectionStrategy,
@@ -22,7 +21,6 @@ import {
     mixinDisabled,
     mixinTabIndex
 } from '@koobiq/components/core';
-import { delay } from 'rxjs/operators';
 
 // Boilerplate for applying mixins to KbqTabLink.
 /** @docs-private */
@@ -50,10 +48,13 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
 
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null'
-    }
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
-    vertical = false;
+    get vertical(): boolean {
+        return this.tabNav.vertical
+    }
 
     /** Whether the link is active. */
     @Input()
@@ -73,7 +74,8 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     constructor(
         public elementRef: ElementRef,
         private readonly focusMonitor: FocusMonitor,
-        private readonly renderer: Renderer2
+        private readonly renderer: Renderer2,
+        private tabNav: KbqTabNav
     ) {
         super();
 
@@ -127,7 +129,7 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqTabNav implements AfterContentInit {
+export class KbqTabNav {
     vertical = false;
 
     @Input() transparent: boolean = false;
@@ -137,13 +139,5 @@ export class KbqTabNav implements AfterContentInit {
 
     constructor(@Attribute('vertical') vertical: string) {
         this.vertical = coerceBooleanProperty(vertical);
-    }
-
-    ngAfterContentInit(): void {
-        this.links.changes
-            .pipe(delay(0))
-            .subscribe((links) => links.forEach((link) => (link.vertical = this.vertical)));
-
-        this.links.notifyOnChanges();
     }
 }
