@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import { Component } from '@angular/core';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -77,7 +76,7 @@ describe('KbqCalendarHeader', () => {
             [startAt]="startDate"
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
-        ></kbq-calendar>
+        />
     `
 })
 class StandardCalendar {

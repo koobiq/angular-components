@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers */
-
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqTimezoneGroup, KbqTimezoneZone, getZonesGroupedByCountry } from '@koobiq/components/timezone';
 import { timezones } from '../mock';

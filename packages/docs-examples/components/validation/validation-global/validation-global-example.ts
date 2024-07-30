@@ -29,14 +29,10 @@ export class ValidationGlobalExample {
         this.showServerErrors = false;
         this.inProgress = true;
 
-        setTimeout(
-            () => {
-                this.showServerErrors = true;
-                this.inProgress = false;
-                this.submitButton.nativeElement.focus();
-            },
-            // tslint:disable-next-line:no-magic-numbers
-            1000
-        );
+        setTimeout(() => {
+            this.showServerErrors = true;
+            this.inProgress = false;
+            this.submitButton.nativeElement.focus();
+        }, 1000);
     }
 }

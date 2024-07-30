@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 

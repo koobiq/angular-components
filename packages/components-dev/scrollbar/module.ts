@@ -46,7 +46,6 @@ export class DemoComponent {
                     `;
 }
 
-/* tslint:disable:max-classes-per-file */
 @NgModule({
     declarations: [DemoComponent],
     imports: [BrowserModule, KbqScrollbarModule, KbqButtonModule],

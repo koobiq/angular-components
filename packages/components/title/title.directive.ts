@@ -9,6 +9,7 @@ import {
     Host,
     Inject,
     NgZone,
+    OnDestroy,
     Optional,
     ViewContainerRef
 } from '@angular/core';
@@ -26,7 +27,7 @@ import { debounceTime } from 'rxjs/operators';
         '(window:resize)': 'resizeStream.next($event)'
     }
 })
-export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
+export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     get isOverflown(): boolean {
         return this.parent.offsetWidth < this.child.scrollWidth || this.parent.offsetHeight < this.child.scrollHeight;
     }

@@ -1,8 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
-import { dirname, isAbsolute, join } from 'path';
-// tslint:disable-next-line:match-default-export-name
 import glob from 'glob';
-// tslint:disable-next-line:import-name
+import { dirname, isAbsolute, join } from 'path';
 import ts from 'typescript';
 
 /** RegExp that matches Angular component inline styles that contain a sourcemap reference. */

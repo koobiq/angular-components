@@ -15,7 +15,7 @@
                     <div>
                         <!-- prettier-ignore -->
                         <span class="multiple__caption">
-                            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate"></ng-container></label>{{ separatedCaptionText[1] }}
+                            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}
                         </span>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
 
 <div class="kbq-file-upload__info-section">
     <kbq-hint class="kbq-file-upload__hint">
-        <ng-content select="[hint]"></ng-content>
+        <ng-content select="[hint]" />
     </kbq-hint>
 
     <ng-container *ngIf="hasErrors">
@@ -76,14 +76,14 @@
                                     *ngIf="!asyncData.loading"
                                     [ngTemplateOutlet]="$any(customFileIcon)"
                                     [ngTemplateOutletContext]="{ $implicit: file }"
-                                ></ng-container>
+                                />
 
                                 <kbq-progress-spinner
                                     *ngIf="asyncData.loading"
                                     class="kbq-file-upload-name-cell__icon"
                                     [mode]="progressMode"
                                     [value]="asyncData.progress || 0"
-                                ></kbq-progress-spinner>
+                                />
                             </ng-container>
 
                             <span
@@ -117,7 +117,7 @@
                         [tabIndex]="-1"
                     >
                         {{ config.browseLink }}
-                        <ng-container *ngTemplateOutlet="inputTemplate"></ng-container>
+                        <ng-container *ngTemplateOutlet="inputTemplate" />
                     </label>
                     {{ separatedCaptionTextWhenSelected[1] }}
                 </span>
@@ -138,7 +138,7 @@
             [tabIndex]="-1"
         >
             {{ config.browseLink }}
-            <ng-container *ngTemplateOutlet="inputTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="inputTemplate" />
         </label>
         {{ separatedCaptionTextForCompactSize[1] }}
     </span>

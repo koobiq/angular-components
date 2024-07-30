@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers */
-/* tslint:disable-next-line:match-default-export-name */
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 

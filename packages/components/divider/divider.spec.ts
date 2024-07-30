@@ -53,7 +53,7 @@ describe('KbqDivider', () => {
         <kbq-divider
             [vertical]="vertical"
             [inset]="inset"
-        ></kbq-divider>
+        />
     `
 })
 class KbqDividerTestComponent {

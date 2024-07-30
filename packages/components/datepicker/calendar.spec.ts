@@ -1,5 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:no-unbound-method
 import { Component, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -351,7 +349,7 @@ describe('KbqCalendar', () => {
             [startAt]="startDate"
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
-        ></kbq-calendar>
+        />
     `
 })
 class StandardCalendar {
@@ -369,7 +367,7 @@ class StandardCalendar {
             [startAt]="startAt"
             [minDate]="minDate"
             [maxDate]="maxDate"
-        ></kbq-calendar>
+        />
     `
 })
 class CalendarWithMinMax {
@@ -386,7 +384,7 @@ class CalendarWithMinMax {
             [(selected)]="selected"
             [startAt]="startDate"
             [dateFilter]="dateFilter"
-        ></kbq-calendar>
+        />
     `
 })
 class CalendarWithDateFilter {
@@ -407,7 +405,7 @@ class CalendarWithDateFilter {
             [selected]="selected"
             [minDate]="selected"
             (selectedChange)="select($event)"
-        ></kbq-calendar>
+        />
     `
 })
 class CalendarWithSelectableMinDate {

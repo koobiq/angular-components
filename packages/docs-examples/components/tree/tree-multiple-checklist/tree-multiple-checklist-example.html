@@ -16,7 +16,7 @@
             class="tree-example-checkbox"
             [checked]="checklistSelection.isSelected(node)"
             [disabled]="node.name === 'tests'"
-        ></kbq-checkbox>
+        />
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 
@@ -28,12 +28,12 @@
         (keydown.enter)="fileSelectionToggle(node)"
         (keydown.space)="fileSelectionToggle(node)"
     >
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
         <kbq-checkbox
             class="tree-example-checkbox"
             [checked]="descendantsAllSelected(node)"
             [indeterminate]="descendantsPartiallySelected(node)"
-        ></kbq-checkbox>
+        />
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 </kbq-tree-selection>

@@ -33,7 +33,6 @@ export class ModalBuilderForService {
             .keydownEvents()
             .pipe(
                 filter((event: KeyboardEvent) => {
-                    // tslint:disable-next-line:deprecation replacement .key isn't supported in Edge
                     return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
                 })
             )
@@ -90,7 +89,6 @@ export class KbqModalService {
     create<T>(options: IModalOptionsForService<T> = {}): KbqModalRef<T> {
         if (typeof options.kbqOnCancel !== 'function') {
             // Leave a empty function to close this modal by default
-            // tslint:disable-next-line
             options.kbqOnCancel = () => {};
         }
 
@@ -121,7 +119,6 @@ export class KbqModalService {
         // NOTE: only support function currently by calling confirm()
         if (typeof options.kbqOnOk !== 'function') {
             // Leave a empty function to close this modal by default
-            // tslint:disable-next-line
             options.kbqOnOk = () => {};
         }
 
@@ -141,7 +138,6 @@ export class KbqModalService {
         return this.simpleConfirm(options, 'success');
     }
 
-    // tslint:disable-next-line: no-reserved-keywords
     delete<T>(options: IModalOptionsForService<T> = {}): KbqModalRef<T> {
         return this.simpleConfirm(options, 'warn');
     }

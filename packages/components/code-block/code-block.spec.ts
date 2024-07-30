@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -83,7 +82,7 @@ describe('CodeBlockComponent', () => {
             [filled]="lessContrast"
             [codeFiles]="codeFiles"
             [maxHeight]="200"
-        ></kbq-code-block>
+        />
     `
 })
 class KbqCodeBlockDefault {

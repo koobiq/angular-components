@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
@@ -16,7 +15,7 @@ export class ModalTemplateExample {
 
     constructor(private modalService: KbqModalService) {}
 
-    createTplModal(tplTitle: TemplateRef<{}>, tplContent: TemplateRef<{}>, tplFooter: TemplateRef<{}>) {
+    createTplModal(tplTitle: TemplateRef<object>, tplContent: TemplateRef<object>, tplFooter: TemplateRef<object>) {
         this.modalService.create({
             kbqTitle: tplTitle,
             kbqContent: tplContent,

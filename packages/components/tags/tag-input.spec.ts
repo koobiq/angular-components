@@ -1,6 +1,3 @@
-// tslint:disable:no-unbound-method
-// tslint:disable:no-empty
-
 import { Directionality } from '@angular/cdk/bidi';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -34,7 +31,6 @@ describe('KbqTagInput', () => {
                     useFactory: () => {
                         return {
                             value: dir.toLowerCase(),
-                            // tslint:disable-next-line: no-inferred-empty-object-type
                             change: new Subject()
                         };
                     }
@@ -142,7 +138,6 @@ describe('KbqTagInput', () => {
             testTagInput.addOnPaste = true;
             fixture.detectChanges();
 
-            // tslint:disable-next-line:no-object-literal-type-assertion
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
             expect(testTagInput.add).toHaveBeenCalled();
         });
@@ -153,7 +148,6 @@ describe('KbqTagInput', () => {
             testTagInput.addOnPaste = false;
             fixture.detectChanges();
 
-            // tslint:disable-next-line:no-object-literal-type-assertion
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
             expect(testTagInput.add).not.toHaveBeenCalled();
         });
@@ -212,7 +206,6 @@ describe('KbqTagInput', () => {
                     providers: [
                         {
                             provide: KBQ_TAGS_DEFAULT_OPTIONS,
-                            // tslint:disable-next-line: no-object-literal-type-assertion
                             useValue: {
                                 separatorKeyCodes: [COMMA],
                                 separators: { [COMMA]: { symbol: /,/, key: ',' } }
@@ -254,7 +247,7 @@ describe('KbqTagInput', () => {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList></kbq-tag-list>
+            <kbq-tag-list #tagList />
             <input
                 [kbqTagInputFor]="tagList"
                 [kbqTagInputAddOnBlur]="addOnBlur"

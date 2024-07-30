@@ -59,7 +59,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.updateYearsArray();
     }
 
-    // tslint:disable-next-line:no-magic-numbers
     private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
 
     @Input()

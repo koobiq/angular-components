@@ -39,7 +39,7 @@ export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled
     // Create a template for the content of the <kbq-tab> so that we can grab a reference to this
     // TemplateRef and use it in a Portal to render the tab content in the appropriate place in the
     // tab-group.
-    template: '<ng-template><ng-content></ng-content></ng-template>',
+    template: '<ng-template><ng-content /></ng-template>',
     inputs: ['disabled'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -92,7 +92,7 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
 
     @Input() empty = false;
 
-    @Input('tabId') tabId: string;
+    @Input() tabId: string;
 
     /** Emits whenever the internal state of the tab changes. */
     readonly stateChanges = new Subject<void>();

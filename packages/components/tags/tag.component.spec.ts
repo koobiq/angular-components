@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers no-empty */
 import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
@@ -25,7 +24,6 @@ describe('Tags', () => {
                     provide: Directionality,
                     useFactory: () => ({
                         value: dir,
-                        // tslint:disable-next-line: no-inferred-empty-object-type
                         change: new Subject()
                     })
                 }

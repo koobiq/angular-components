@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import chalk from 'chalk';
 import { execSync, ExecSyncOptions } from 'child_process';
 import { readFileSync } from 'fs';

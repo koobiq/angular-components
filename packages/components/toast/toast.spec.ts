@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';

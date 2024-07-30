@@ -103,7 +103,6 @@ export function getKbqAutocompleteMissingPanelError(): Error {
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
 {
-    // @ts-ignore
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
         if (this.autocomplete && this.autocomplete.options) {
             return merge(...this.autocomplete.options.map((option) => option.onSelectionChange));
@@ -212,7 +211,6 @@ export class KbqAutocompleteTrigger
         // @breaking-change 8.0.0 Make `_viewportRuler` required.
         private viewportRuler?: ViewportRuler
     ) {
-        // tslint:disable-next-line no-typeof-undefined
         if (typeof window !== 'undefined') {
             zone.runOutsideAngular(() => {
                 window.addEventListener('blur', this.windowBlurHandler);
@@ -236,7 +234,6 @@ export class KbqAutocompleteTrigger
     }
 
     ngOnDestroy() {
-        // tslint:disable-next-line no-typeof-undefined
         if (typeof window !== 'undefined') {
             window.removeEventListener('blur', this.windowBlurHandler);
         }
@@ -248,11 +245,9 @@ export class KbqAutocompleteTrigger
     }
 
     /** `View -> model callback called when value changes` */
-    // tslint:disable-next-line no-empty
     onChange: (value: any) => void = () => {};
 
     /** `View -> model callback called when autocomplete has been touched` */
-    // tslint:disable-next-line no-empty
     onTouched: () => void = () => {};
 
     /** Opens the autocomplete suggestion panel. */
@@ -320,11 +315,13 @@ export class KbqAutocompleteTrigger
     }
 
     // Implemented as part of ControlValueAccessor.
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnChange(fn: (value: any) => {}): void {
         this.onChange = fn;
     }
 
     // Implemented as part of ControlValueAccessor.
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }
@@ -335,7 +332,6 @@ export class KbqAutocompleteTrigger
     }
 
     handleKeydown(event: KeyboardEvent): void {
-        // tslint:disable-next-line deprecation
         const keyCode = event.keyCode;
 
         // Prevent the default action on all escape key presses. This is here primarily to bring IE
@@ -413,9 +409,7 @@ export class KbqAutocompleteTrigger
     /** Stream of clicks outside of the autocomplete panel. */
     private getOutsideClickStream(): Observable<any> {
         return merge(
-            // tslint:disable-next-line: no-unnecessary-type-assertion
             fromEvent(this.document, 'click') as Observable<MouseEvent>,
-            // tslint:disable-next-line: no-unnecessary-type-assertion
             fromEvent(this.document, 'touchend') as Observable<TouchEvent>
         ).pipe(
             filter((event) => {
@@ -507,6 +501,7 @@ export class KbqAutocompleteTrigger
 
         // Simply falling back to an empty string if the display value is falsy does not work properly.
         // The display value can also be the number zero and shouldn't fall back to an empty string.
+
         const inputValue = toDisplay != null ? toDisplay : '';
 
         // If it's used within a `MatFormField`, we should set it through the property so it can go
@@ -563,7 +558,6 @@ export class KbqAutocompleteTrigger
             overlayRef.keydownEvents().subscribe((event) => {
                 // Close when pressing ESCAPE or ALT + UP_ARROW, based on the a11y guidelines.
                 // See: https://www.w3.org/TR/wai-aria-practices-1.1/#textbox-keyboard-interaction
-                // tslint:disable-next-line deprecation
                 if (event.keyCode === ESCAPE || (event.keyCode === UP_ARROW && event.altKey)) {
                     this.resetActiveItem();
                     this.closeKeyEventStream.next();

@@ -43,6 +43,7 @@ export class KbqFileDropDirective {
 
         if (event.dataTransfer && event.dataTransfer.items.length > 0) {
             // event.dataTransfer.items requires dom.iterable lib
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const fileEntries: FileSystemEntry[] = [...event.dataTransfer.items]
                 .filter((item: DataTransferItem) => item.kind === 'file')

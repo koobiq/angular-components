@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
@@ -161,7 +160,6 @@ export class DocsLiveExampleViewer {
             // source maps (which would never be loaded), we instruct Webpack to exclude source map
             // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
             // module.importSpecifier
-            // @ts-ignore
             const moduleExports: any = await import(
                 /* webpackExclude: /\.map$/ */
                 `@koobiq/docs-examples/fesm2022/${module.importPath}`
@@ -176,7 +174,6 @@ export class DocsLiveExampleViewer {
             // Since the data is loaded asynchronously, we can't count on the native behavior
             // that scrolls the element into view automatically. We do it ourselves while giving
             // the page some time to render.
-            // tslint:disable-next-line:no-typeof-undefined
             if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), this.scrollIntoViewDelay);
             }

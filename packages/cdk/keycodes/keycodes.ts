@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers no-bitwise */
-
 export const MAC_ENTER = 3;
 export const BACKSPACE = 8;
 export const TAB = 9;

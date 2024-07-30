@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes no-magic-numbers */
 import { SelectionChange } from '@angular/cdk/collections';
 import { Component, Injectable, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';

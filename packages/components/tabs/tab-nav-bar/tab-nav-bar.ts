@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
+    AfterViewInit,
     Attribute,
     ChangeDetectionStrategy,
     Component,
@@ -38,7 +39,7 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
 @Component({
     selector: 'a[kbq-tab-link], a[kbqTabLink]',
     exportAs: 'kbqTabLink',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     inputs: ['disabled', 'tabIndex'],
     host: {
         class: 'kbq-tab-link',
@@ -51,7 +52,7 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
         '[attr.disabled]': 'disabled || null'
     }
 })
-export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex {
+export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
     vertical = false;
 
     /** Whether the link is active. */
@@ -114,7 +115,7 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
 @Component({
     selector: '[kbq-tab-nav-bar]',
     exportAs: 'kbqTabNavBar, kbqTabNav',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     styleUrls: ['tab-nav-bar.scss'],
     host: {
         class: 'kbq-tab-nav-bar',

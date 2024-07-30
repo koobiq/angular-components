@@ -27,8 +27,8 @@ import { KbqFocusableComponent } from './navbar.component';
             [class.kbq-collapsed]="!expanded"
             [class.kbq-expanded]="expanded"
         >
-            <ng-content select="[kbq-navbar-container], kbq-navbar-container"></ng-content>
-            <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle"></ng-content>
+            <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
+            <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
         </div>
     `,
     styleUrls: [
@@ -101,7 +101,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     }
 
     onKeyDown(event: KeyboardEvent) {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         if (

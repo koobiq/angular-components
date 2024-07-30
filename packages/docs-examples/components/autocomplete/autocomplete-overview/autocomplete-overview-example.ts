@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { map, startWith } from 'rxjs/operators';
     styleUrls: ['autocomplete-overview-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class AutocompleteOverviewExample {
+export class AutocompleteOverviewExample implements OnInit {
     options = [
         'Abkhazia',
         'Australia',

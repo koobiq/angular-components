@@ -1,4 +1,3 @@
-// tslint:disable:no-empty
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -47,13 +46,11 @@ describe('FileDropDirective', () => {
 
         expect(dndZone.classList.contains('dragover')).toBeFalse();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
         expect(dndZone.classList.contains('dragover')).toBeTrue();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         dispatchFakeEvent(dndZone, 'dragleave');
         fixture.detectChanges();
 
@@ -69,7 +66,7 @@ describe('FileDropDirective', () => {
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
         flush();
@@ -82,9 +79,8 @@ describe('FileDropDirective', () => {
         const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeDropEvent = new DragEvent('drop', { dataTransfer: new DataTransfer() });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         spyOn(component, 'onDrop');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
         dispatchEvent(dndZone, fakeDropEvent);
         fixture.detectChanges();
 
@@ -114,7 +110,7 @@ describe('FileDropDirective', () => {
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
         flush();

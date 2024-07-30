@@ -9,13 +9,6 @@ import {
 /** Regular expression that matches example comments. */
 const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 
-function setTargetBlank(content: string): string {
-    return content.replace(
-        new RegExp(`href=".[^"]*"`, 'g'), // .[^"]* - any symbol except "
-        (match: string) => `${match} target="_blank"`
-    );
-}
-
 function createTagNameStringAliaser(classPrefix: string) {
     return (content: string) => {
         let str = setImageCaption(content);
@@ -72,7 +65,6 @@ export class DocsMarkdownRenderer extends Renderer {
      * specific parts of the docs.
      */
     heading(text: string, level: number) {
-        // tslint:disable-next-line:no-magic-numbers
         if ([3, 4, 5].includes(level)) {
             const escapedText = text.toLowerCase().replace(/\s/g, '-');
 

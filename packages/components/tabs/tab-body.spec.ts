@@ -187,7 +187,7 @@ describe('KbqTabBody', () => {
             [content]="content"
             [position]="position"
             [origin]="origin"
-        ></kbq-tab-body>
+        />
     `
 })
 class SimpleTabBodyApp implements AfterContentInit {

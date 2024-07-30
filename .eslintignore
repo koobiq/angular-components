@@ -1,2 +1,11 @@
 dist
 node_modules
+
+# eslint ignores root level "dot" files by default
+!/.*.js
+
+# ignore build tokens
+/apps/docs/src/styles/koobiq/default-theme/
+
+# ignore nunjuck templates
+/tools/api-gen/rendering/templates

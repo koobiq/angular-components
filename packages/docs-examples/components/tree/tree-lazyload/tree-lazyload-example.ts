@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes no-magic-numbers */
 import { SelectionChange } from '@angular/cdk/collections';
 import { Component, Injectable, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
@@ -148,6 +147,7 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
 
     expansionHandler(change: SelectionChange<F>): F[] {
         if (change && (change as SelectionChange<F>).added && (change as SelectionChange<F>).added.length) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             this.dataService.loadChildren((change.added[0] as F).id);
         }

@@ -550,7 +550,7 @@ export class KbqTreeSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex {
+export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex, OnDestroy {
     constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;

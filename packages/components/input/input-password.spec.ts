@@ -1,4 +1,3 @@
-/* tslint:disable */
 import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
@@ -48,7 +47,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
                 [kbqTooltipHidden]="'Показать пароль'"
-            ></kbq-password-toggle>
+            />
 
             <kbq-password-hint
                 [rule]="passwordRules.Length"
@@ -87,7 +86,7 @@ class KbqPasswordInputDefault {
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipHidden]="'Показать пароль'"
-            ></kbq-password-toggle>
+            />
 
             <kbq-password-hint
                 [rule]="passwordRules.Custom"
@@ -117,7 +116,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipHidden]="'Показать пароль'"
-            ></kbq-password-toggle>
+            />
 
             <kbq-password-hint
                 [rule]="passwordRules.Custom"

@@ -136,7 +136,6 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                         this.focusMonitor.stopMonitoring(prev);
                     }
 
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     return this.focusMonitor
                         .monitor(current!)
                         .pipe(filter((origin: FocusOrigin) => origin === 'keyboard'));
@@ -230,7 +229,6 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     // TODO: replace with property to reduce calculations
     canShowFocus(currentCodeContent: HTMLPreElement): boolean {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const currentCodeBlock = currentCodeContent.querySelector('code')!;
 
         return (
@@ -258,12 +256,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         // defer execution after toggle view mode
         setTimeout(() => {
             if (this.canShowFocus(currentCodeBlock)) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.focusMonitor.focusVia(
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    currentCodeBlock.querySelector('code')!,
-                    'keyboard'
-                );
+                this.focusMonitor.focusVia(currentCodeBlock.querySelector('code')!, 'keyboard');
             }
         }, 0);
     }

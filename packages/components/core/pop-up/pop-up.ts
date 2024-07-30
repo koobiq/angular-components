@@ -4,7 +4,6 @@ import { Observable, Subject } from 'rxjs';
 import { PopUpVisibility } from './constants';
 
 @Directive()
-// tslint:disable-next-line:naming-convention
 export abstract class KbqPopUp implements OnDestroy {
     header: string | TemplateRef<any>;
     content: string | TemplateRef<any>;

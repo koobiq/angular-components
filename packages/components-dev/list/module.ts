@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
@@ -33,7 +32,6 @@ export class DemoComponent {
 
     asyncUpdate$ = this.asyncUpdate.valueChanges.pipe(
         startWith(null),
-        // tslint:disable-next-line:no-magic-numbers
         debounceTime(3000),
         switchMap(() => {
             return of(this.typesOfShoes);

@@ -1,4 +1,4 @@
-<ng-content></ng-content>
+<ng-content />
 
 <ng-template
     let-area
@@ -15,7 +15,7 @@
         [size]="gutterSize"
         [style.display]="hideGutters ? 'none' : 'flex'"
         (mousedown)="onMouseDown($event, index, index + 1)"
-    ></kbq-gutter>
+    />
 </ng-template>
 
-<kbq-gutter-ghost *ngIf="useGhost"></kbq-gutter-ghost>
+<kbq-gutter-ghost *ngIf="useGhost" />

@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
@@ -66,8 +65,7 @@ export class ToastDemoComponent {
 
     modalState: boolean = false;
 
-    array = new Array(40); // tslint:disable-line
-
+    array = new Array(40);
     @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
 
     constructor(

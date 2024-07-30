@@ -15,10 +15,10 @@ export const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase = mixinColor(Kb
     selector: 'kbq-hint',
     exportAs: 'kbqHint',
     template: `
-        <ng-content select="[kbq-icon]"></ng-content>
+        <ng-content select="[kbq-icon]" />
 
         <span class="kbq-hint__text">
-            <ng-content></ng-content>
+            <ng-content />
         </span>
     `,
     styleUrls: ['hint.scss'],

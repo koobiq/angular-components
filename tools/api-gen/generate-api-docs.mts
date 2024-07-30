@@ -13,9 +13,9 @@ const modules: ModuleInfo[] = [
     },
     {
         /** List of koobiq packages that need to be documented. */
-        moduleName: 'components',
+        moduleName: 'components'
     }
-]
+];
 
 export const generateApiDocs = () => {
     const taskId = 'api-docs-koobiq';
@@ -25,7 +25,7 @@ export const generateApiDocs = () => {
     const filteredData = generateManifest(data);
     generateApiToHtml(filteredData);
     console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
-}
+};
 
 try {
     generateApiDocs();

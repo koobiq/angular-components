@@ -29,7 +29,6 @@ const KbqTagInputDefaultSeparators: { [key: number]: KbqTagSeparator } = {
 };
 
 /** Represents an input event on a `kbqTagInput`. */
-// tslint:disable-next-line: naming-convention
 export interface KbqTagInputEvent {
     /** The native `<input>` element that the event is being fired for. */
     input: HTMLInputElement;
@@ -39,7 +38,6 @@ export interface KbqTagInputEvent {
 }
 
 export interface KbqTagSeparator {
-    // tslint:disable-next-line:no-reserved-keywords
     symbol: RegExp;
     key: string;
 }
@@ -114,7 +112,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
     }
 
-    // tslint:disable-next-line: naming-convention
     private _tagList: KbqTagList;
 
     /**
@@ -177,7 +174,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         @Optional() @Self() public ngControl: NgControl,
         @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
     ) {
-        // tslint:disable-next-line: no-unnecessary-type-assertion
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
 
         this.setDefaultInputWidth();
@@ -212,7 +208,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             this._tagList.blur();
         }
 
-        // tslint:disable-next-line: no-unnecessary-type-assertion
         if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur(event) || true)) {
             this.emitTagEnd();
         }

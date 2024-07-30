@@ -1,5 +1,3 @@
-/* tslint:disable:no-empty */
-
 import { AfterContentInit, Directive, Inject, OnDestroy, Optional } from '@angular/core';
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
@@ -78,7 +76,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     handleKeydown(event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
         if (event.keyCode === ESCAPE) {
             if (this.value()) {
                 this.reset();
@@ -86,7 +83,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
             }
         }
 
-        // tslint:disable-next-line:deprecation
         if ([SPACE, HOME, END].includes(event.keyCode)) {
             event.stopPropagation();
         }

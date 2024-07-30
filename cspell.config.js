@@ -1,8 +1,6 @@
 // @ts-check
 
-/**
- * @type {import('cspell').CSpellSettings}
- */
+/** @type {import('cspell').CSpellSettings} */
 const config = {
     version: '0.2',
     useGitignore: true,

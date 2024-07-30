@@ -13,7 +13,7 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
 @Component({
     selector: 'kbq-list',
     host: { class: 'kbq-list' },
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     styleUrls: ['./list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -38,7 +38,6 @@ export class KbqListItem implements AfterContentInit {
     constructor(private elementRef: ElementRef) {}
 
     ngAfterContentInit() {
-        // tslint:disable-next-line:no-unused-expression
         new KbqLineSetter(this.lines, this.elementRef);
     }
 

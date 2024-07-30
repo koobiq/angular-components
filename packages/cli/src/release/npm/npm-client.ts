@@ -1,4 +1,3 @@
-/* tslint:disable:no-string-literal */
 import { spawnSync } from 'child_process';
 
 /**

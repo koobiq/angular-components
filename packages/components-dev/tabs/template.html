@@ -90,7 +90,7 @@
         <a
             *ngFor="let link of links"
             kbq-tab-link
-            [active]="activeLink == link"
+            [active]="activeLink === link"
             (click)="activeLink = link"
         >
             {{ link }}
@@ -98,7 +98,7 @@
 
         <a
             kbq-tab-link
-            [active]="activeLink == 1"
+            [active]="activeLink === 1"
             [disabled]="true"
             (click)="activeLink = 1"
         >
@@ -118,7 +118,7 @@
         <a
             *ngFor="let link of links"
             kbq-tab-link
-            [active]="activeLink == link"
+            [active]="activeLink === link"
             (click)="activeLink = link"
         >
             {{ link }}
@@ -126,7 +126,7 @@
 
         <a
             kbq-tab-link
-            [active]="activeLink == 1"
+            [active]="activeLink === 1"
             [disabled]="true"
             (click)="activeLink = 1"
         >

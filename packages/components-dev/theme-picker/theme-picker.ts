@@ -36,7 +36,6 @@ export class ThemePicker {
     installTheme(theme: IDocsSiteTheme) {
         this.currentTheme = this.getCurrentThemeFromHref(theme.href);
 
-        // tslint:disable-next-line:non-literal-require
         require(`style-loader!./../../components/core/theming/prebuilt/${theme.href}`);
 
         if (this.currentTheme) {

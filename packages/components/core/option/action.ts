@@ -16,7 +16,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CanDisableCtor, HasTabIndexCtor, mixinDisabled, mixinTabIndex } from '../common-behaviors';
 
-// tslint:disable-next-line:naming-convention
 export interface KbqOptionActionParent {
     dropdownTrigger: {
         opened: boolean;
@@ -54,7 +53,7 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
             <ng-content
                 *ngSwitchCase="true"
                 select="[kbq-icon]"
-            ></ng-content>
+            />
         </ng-container>
     `,
     styleUrls: ['./action.scss'],

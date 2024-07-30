@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
@@ -24,12 +24,11 @@ import { map } from 'rxjs/operators';
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            // tslint:disable-next-line: no-object-literal-type-assertion
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
     ]
 })
-export class TagsAutocompleteOnpasteOffExample {
+export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
     @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
     @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;

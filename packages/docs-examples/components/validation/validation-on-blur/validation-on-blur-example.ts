@@ -22,7 +22,6 @@ export class ValidationOnBlurExample {
 
     constructor() {
         this.ipAddress = new FormControl('', [Validators.pattern(IP_PATTERN)]);
-        // tslint:disable-next-line:no-magic-numbers
         this.frequency = new FormControl('', [Validators.min(1), Validators.max(24)]);
     }
 }

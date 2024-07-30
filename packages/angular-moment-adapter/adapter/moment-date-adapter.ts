@@ -16,7 +16,6 @@ export const KBQ_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<IKbqMomentDate
 );
 
 /** @docs-private */
-// tslint:disable:naming-convention
 export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapterOptions {
     return {
         useUtc: false,

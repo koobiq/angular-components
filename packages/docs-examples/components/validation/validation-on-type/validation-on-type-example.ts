@@ -34,7 +34,6 @@ export class ValidationOnTypeExample {
             if (!this.tooltip.isTooltipOpen) {
                 this.tooltip.show();
 
-                // tslint:disable-next-line:no-magic-numbers
                 setTimeout(() => this.tooltip.hide(), 3000);
             }
         }

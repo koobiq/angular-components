@@ -18,7 +18,7 @@
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
             [kbqTooltip]="'Tooltip text'"
-        ></kbq-option-action>
+        />
     </kbq-tree-option>
 
     <kbq-tree-option
@@ -27,7 +27,7 @@
     >
         <i kbq-icon="mc-info-o_16"></i>
 
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
 
@@ -35,7 +35,7 @@
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
             [kbqTooltip]="'Tooltip text'"
-        ></kbq-option-action>
+        />
     </kbq-tree-option>
 </kbq-tree-selection>
 

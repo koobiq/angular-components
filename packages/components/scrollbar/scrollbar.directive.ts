@@ -85,7 +85,7 @@ export class KbqScrollbarDirective implements OnDestroy {
     }
 
     /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
-    @Input('defer')
+    @Input()
     defer?: boolean | IdleRequestOptions;
 
     scrollbarInstance?: OverlayScrollbars;

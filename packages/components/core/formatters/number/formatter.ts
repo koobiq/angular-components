@@ -1,4 +1,3 @@
-/* tslint:disable:naming-convention */
 import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
 import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
 
@@ -62,7 +61,6 @@ interface RoundDecimalOptions {
     rtl?: boolean;
 }
 
-// tslint:disable:no-magic-numbers
 const ROUNDING_UNITS = {
     thousand: 1e3,
     tenThousand: 10 * 1e3,
@@ -82,7 +80,6 @@ const intervalsConfig = {
         { startRange: ROUNDING_UNITS.million * 10, endRange: ROUNDING_UNITS.billion }
     ]
 };
-// tslint:enable:no-magic-numbers
 
 class ParsedDigitsInfo {
     useGrouping: boolean;
@@ -335,7 +332,6 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     }
 
     private calculateDecimal(num: number, divider: number) {
-        /* tslint:disable-next-line:no-magic-numbers */
         return Math.round(((num / divider) % 1) * 10);
     }
 

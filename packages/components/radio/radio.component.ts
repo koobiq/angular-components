@@ -200,14 +200,12 @@ export class KbqRadioGroup
     }
 
     /** The method to be called in order to update ngModel */
-    // tslint:disable-next-line
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**
      * onTouch function registered via registerOnTouch (ControlValueAccessor).
      * @docs-private
      */
-    // tslint:disable-next-line
     onTouched: () => any = () => {};
 
     checkSelectedRadioButton() {
@@ -438,6 +436,7 @@ export class KbqRadioButton
      * Change events are only emitted when the value changes due to user interaction with
      * the radio button (the same behavior as `<input type-"radio">`).
      */
+
     @Output() readonly change: EventEmitter<KbqRadioChange> = new EventEmitter<KbqRadioChange>();
 
     /** The parent radio group. May or may not be present. */
@@ -456,7 +455,6 @@ export class KbqRadioButton
 
     private _labelPosition: 'before' | 'after';
 
-    /* tslint:disable:member-ordering */
     private readonly uniqueId: string = `kbq-radio-${++nextUniqueId}`;
 
     /** Whether this radio is checked. */
@@ -562,7 +560,6 @@ export class KbqRadioButton
     }
 
     /** Unregister function for _radioDispatcher */
-    // tslint:disable-next-line
     private readonly removeUniqueSelectionListener: () => void = () => {};
 
     /** Dispatch change event with current value. */

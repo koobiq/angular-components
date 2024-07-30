@@ -1,4 +1,3 @@
-/* tslint:disable:naming-convention */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -49,7 +48,6 @@ export class DocStates {
         this.currentHeaderScrollContainer = element;
 
         fromEvent(this.currentHeaderScrollContainer, 'scroll')
-            // tslint:disable-next-line:no-magic-numbers
             .pipe(debounceTime(10))
             .subscribe(this.checkHeaderOverflow);
 
@@ -64,10 +62,7 @@ export class DocStates {
     registerNavbarScrollContainer(element: HTMLElement) {
         this.navbarScrollContainer = element;
 
-        fromEvent(this.navbarScrollContainer, 'scroll')
-            // tslint:disable-next-line:no-magic-numbers
-            .pipe(debounceTime(10))
-            .subscribe(this.checkNavbarOverflow);
+        fromEvent(this.navbarScrollContainer, 'scroll').pipe(debounceTime(10)).subscribe(this.checkNavbarOverflow);
     }
 
     checkNavbarOverflow = () => {

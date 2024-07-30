@@ -1,5 +1,3 @@
-/* tslint:disable:no-magic-numbers */
-
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -29,6 +27,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
 
     get searchPattern(): string {
         const searchString: string = (this.searchControl.value || '').trim();
+
         const reRegExpChar: RegExp = /[\/\\^$.*+?()[\]{}|\s]/g;
         const reHasRegExpChar: RegExp = RegExp(reRegExpChar.source);
 

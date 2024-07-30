@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -112,7 +111,6 @@ export const DATA_OBJECT = {
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
-    // tslint:disable-next-line:naming-convention
     PopUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -172,10 +170,7 @@ export class DemoComponent {
 
         this.dataSource.data = this.dataSources.small;
 
-        this.filterValueChanged
-            // tslint:disable-next-line:no-magic-numbers
-            .pipe(debounceTime(300))
-            .subscribe((value) => this.treeControl.filterNodes(value));
+        this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.filterNodes(value));
     }
 
     onModelValueChange(values) {

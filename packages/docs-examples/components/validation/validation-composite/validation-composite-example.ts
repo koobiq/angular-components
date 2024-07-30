@@ -74,7 +74,6 @@ export class ValidationCompositeExample {
             if (!tooltip.isOpen) {
                 tooltip.show();
 
-                // tslint:disable-next-line:no-magic-numbers
                 setTimeout(() => tooltip.hide(), 3000);
             }
         }

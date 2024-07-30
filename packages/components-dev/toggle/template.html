@@ -1,6 +1,6 @@
 <div class="container">
     <h1>Toggles</h1>
-    <kbq-toggle [formControl]="toggleControl"></kbq-toggle>
+    <kbq-toggle [formControl]="toggleControl" />
     <pre>value = {{ toggleControl.value | json }}</pre>
 
     <div class="control-buttons-container">
@@ -30,14 +30,14 @@
                     <kbq-toggle
                         [big]="true"
                         [(ngModel)]="valueSmallOn"
-                    ></kbq-toggle>
+                    />
                 </div>
                 <div class="flex-33">
                     <kbq-toggle
                         [color]="themePalette.Error"
                         [disabled]="disabled"
                         [(ngModel)]="valueSmallOn"
-                    ></kbq-toggle>
+                    />
                 </div>
             </div>
             <div class="toggle-demo-container">
@@ -111,7 +111,7 @@
                         [big]="true"
                         [disabled]="disabled"
                         [(ngModel)]="valueBigOn"
-                    ></kbq-toggle>
+                    />
                 </div>
                 <div class="flex-33">
                     <kbq-toggle
@@ -119,7 +119,7 @@
                         [color]="themePalette.Error"
                         [disabled]="disabled"
                         [(ngModel)]="valueBigOn"
-                    ></kbq-toggle>
+                    />
                 </div>
             </div>
             <div class="toggle-demo-container">

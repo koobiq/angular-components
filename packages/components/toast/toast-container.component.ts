@@ -21,7 +21,7 @@ import { KbqToastData } from './toast.type';
 
 @Component({
     selector: 'kbq-toast-container',
-    template: '<ng-container #container></ng-container>',
+    template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
     host: {
         class: 'kbq-toast-container'

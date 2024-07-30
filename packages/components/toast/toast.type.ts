@@ -31,7 +31,6 @@ export class KbqToastData {
     closeButton?: TemplateRef<any> | boolean;
 }
 
-// tslint:disable-next-line:naming-convention
 export interface KbqToastConfig {
     position: KbqToastPosition;
     duration: number;

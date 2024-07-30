@@ -1,7 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:prefer-array-literal
-// tslint:disable:no-empty
-
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
@@ -251,6 +247,7 @@ describe('KbqDropdown', () => {
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
         patchElementFocus(triggerEl);
+
         focusMonitor.monitor(triggerEl, false);
         triggerEl.click(); // A click without a mousedown before it is considered a keyboard open.
         fixture.detectChanges();
@@ -272,6 +269,7 @@ describe('KbqDropdown', () => {
         triggerEl.click();
         fixture.detectChanges();
         patchElementFocus(triggerEl);
+
         focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger.close();
         fixture.detectChanges();
@@ -288,6 +286,7 @@ describe('KbqDropdown', () => {
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
         patchElementFocus(triggerEl);
+
         focusMonitor.monitor(triggerEl, false);
 
         // Trigger a fake right click.
@@ -315,6 +314,7 @@ describe('KbqDropdown', () => {
         triggerEl.click();
         fixture.detectChanges();
         patchElementFocus(triggerEl);
+
         focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger.close();
         fixture.detectChanges();
@@ -447,7 +447,6 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         tick(500);
 
-        // tslint:disable-next-line:no-unbound-method
         expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledWith('mouse');
     }));
 
@@ -463,12 +462,10 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         flush();
 
-        // tslint:disable-next-line:no-unbound-method
         expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledWith('touch');
     }));
 
     it('should close the dropdown when using the CloseScrollStrategy', fakeAsync(() => {
-        // tslint:disable-next-line
         const scrolledSubject = new Subject();
         const fixture = createComponent(
             SimpleDropdown,
@@ -662,7 +659,6 @@ describe('KbqDropdown', () => {
             fixture.componentInstance.triggerEl.nativeElement.click();
             fixture.detectChanges();
             tick(500);
-            // tslint:disable-next-line
             zone!.simulateZoneExit();
 
             // Flush due to the additional tick that is necessary for the FocusMonitor.
@@ -1533,7 +1529,6 @@ describe('KbqDropdown', () => {
             event.preventDefault = jasmine.createSpy('preventDefault spy');
 
             dispatchMouseEvent(overlay.querySelector('[kbq-dropdown-item]')!, 'mousedown', 0, 0, event);
-            // tslint:disable-next-line: no-unbound-method
             expect(event.preventDefault).toHaveBeenCalled();
         });
 
@@ -1827,7 +1822,6 @@ class PositionedDropdown {
     yPosition: DropdownPositionY = 'above';
 }
 
-// tslint:disable-next-line: naming-convention
 interface TestableDropdown {
     trigger: KbqDropdownTrigger;
     triggerEl: ElementRef<HTMLElement>;
@@ -1860,7 +1854,7 @@ class OverlapDropdown implements TestableDropdown {
     template: `
         <ng-template>
             Custom Dropdown header
-            <ng-content></ng-content>
+            <ng-content />
         </ng-template>
     `,
     exportAs: 'appCustomDropdown'

@@ -91,7 +91,6 @@ export class KbqValidateDirective implements AfterContentInit {
         }
 
         if (this.parent?.onSubmit) {
-            // tslint:disable-next-line: no-unbound-method
             const originalSubmit = this.parent.onSubmit;
             this.parent.onSubmit = ($event: Event) => {
                 this.validationControl!.updateValueAndValidity({ emitEvent: false });
@@ -113,7 +112,6 @@ export class KbqValidateDirective implements AfterContentInit {
         }
 
         this.rawValidators.forEach((validator: Validator) => {
-            // tslint:disable-next-line: no-unbound-method
             const originalValidate = validator.validate;
 
             if (validator instanceof RequiredValidator) {

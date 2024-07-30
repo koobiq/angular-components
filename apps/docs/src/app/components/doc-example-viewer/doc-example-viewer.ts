@@ -23,7 +23,6 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
 
 @Injectable({ providedIn: 'root' })
 export class DocExampleFetcher {
-    // tslint:disable-next-line:orthodox-getter-and-setter
     private cache: Record<string, Observable<string>> = {};
 
     constructor(private http: HttpClient) {}
@@ -48,7 +47,7 @@ export class DocExampleFetcher {
             let-htmlContent
             let-contentToCopy="textContent"
         >
-            <copy-button [contentToCopy]="contentToCopy"></copy-button>
+            <copy-button [contentToCopy]="contentToCopy" />
             <div [outerHTML]="htmlContent"></div>
         </ng-template>
     `,
@@ -114,14 +113,12 @@ export class DocExampleViewer implements OnDestroy {
         // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
         // "/components/button/api#my-section". This is necessary because otherwise these fragment
         // links would redirect to "/#my-section".
-        // tslint:disable-next-line:no-parameter-reassignment
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
             const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
 
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });
 
-        // tslint:disable-next-line:no-inner-html
         this.nativeElement.innerHTML = rawDocument;
         this.textContent = this.nativeElement.textContent;
 
@@ -135,7 +132,6 @@ export class DocExampleViewer implements OnDestroy {
 
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
-        // tslint:disable-next-line:no-console
         console.error(error);
         this.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
 

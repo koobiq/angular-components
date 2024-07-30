@@ -63,7 +63,7 @@ describe('MсCard', () => {
             [selected]="selected"
             [readonly]="readonly"
             (selectedChange)="increment()"
-        ></kbq-card>
+        />
     `
 })
 class TestApp {

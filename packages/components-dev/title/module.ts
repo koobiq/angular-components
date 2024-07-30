@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';

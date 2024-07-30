@@ -7,7 +7,6 @@ export const KBQ_LABEL_GLOBAL_OPTIONS = new InjectionToken<LabelOptions>('kbq-la
 export type FloatLabelType = 'always' | 'never' | 'auto';
 
 /** Configurable options for floating labels. */
-// tslint:disable-next-line:naming-convention
 export interface LabelOptions {
     /**
      * Whether the label should float `always`, `never`, or `auto` (only when necessary).

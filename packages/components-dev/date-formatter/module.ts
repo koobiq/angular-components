@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-// tslint:disable:no-magic-numbers
 import { ChangeDetectorRef, Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {

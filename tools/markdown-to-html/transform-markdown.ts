@@ -2,7 +2,6 @@
  * Script that will be used to transform
  * multiple markdown files into the equivalent HTML output.
  */
-// @ts-ignore
 import { docTask } from './utils';
 
 const examplesDirComponents = ['packages/components/**/!(README|examples*).md', 'docs/guides/*.md'];
@@ -14,7 +13,7 @@ const markdownDocsKoobiq = docTask('markdown-docs-koobiq', {
     dest: 'dist/docs-content/overviews'
 });
 const markdownDocsCdk = docTask('markdown-docs-cdk', { source: examplesDirCdk, dest: 'dist/docs-content/cdk' });
-const markdownDocsExamples: () => {} = docTask('markdown-docs-koobiq', {
+const markdownDocsExamples: () => object = docTask('markdown-docs-koobiq', {
     source: examplesDirExamples,
     dest: 'dist/docs-content/examples'
 });

@@ -5,7 +5,7 @@ import { KbqTreeBase } from './tree-base';
     selector: 'kbq-tree',
     exportAs: 'kbqTree',
     template: `
-        <ng-container kbqTreeNodeOutlet></ng-container>
+        <ng-container kbqTreeNodeOutlet />
     `,
     styleUrls: ['./tree.scss'],
     host: {

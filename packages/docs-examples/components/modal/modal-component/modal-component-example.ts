@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 

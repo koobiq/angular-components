@@ -23,11 +23,11 @@
                 <kbq-progress-spinner
                     *ngIf="node.loading"
                     mode="indeterminate"
-                ></kbq-progress-spinner>
+                />
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
         </kbq-tree-selection>
 
-        <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+        <kbq-cleaner #kbqSelectCleaner />
     </kbq-tree-select>
 </kbq-form-field>

@@ -8,9 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
-// tslint:disable:no-console
-// tslint:disable:no-magic-numbers
-// tslint:disable:no-unnecessary-class
 @Component({
     selector: 'app',
     templateUrl: './template.html',
@@ -58,6 +55,7 @@ export class ModalDemoComponent {
         this.showConfirm();
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     createTplModal(tplContent?: TemplateRef<{}>, tplTitle?: TemplateRef<{}>, tplFooter?: TemplateRef<{}>) {
         this.tplModal = this.modalService.create({
             kbqTitle: tplTitle,

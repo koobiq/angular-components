@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, Subscription, filter, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -26,7 +26,7 @@ const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class AnchorsComponent implements OnDestroy {
+export class AnchorsComponent implements OnDestroy, OnInit {
     @Input() anchors: KbqDocsAnchor[] = [];
     @Input() headerSelectors: string;
 
@@ -82,10 +82,10 @@ export class AnchorsComponent implements OnDestroy {
 
         this.router.events
             .pipe(
-                takeUntil(this.destroyed),
-                filter((event) => event instanceof NavigationEnd)
+                filter((event) => event instanceof NavigationEnd),
+                takeUntil(this.destroyed)
             )
-            .subscribe((event) => {
+            .subscribe(() => {
                 const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
@@ -130,7 +130,7 @@ export class AnchorsComponent implements OnDestroy {
         this.scrollSubscription?.unsubscribe();
 
         this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
-            .pipe(takeUntil(this.destroyed), debounceTime(this.debounceTime))
+            .pipe(debounceTime(this.debounceTime), takeUntil(this.destroyed))
             .subscribe(this.onScroll);
 
         this.ref.detectChanges();
@@ -161,7 +161,6 @@ export class AnchorsComponent implements OnDestroy {
         }
 
         if (this.isScrolledToEnd()) {
-            // tslint:disable-next-line:no-parameter-reassignment
             anchor = this.lastAnchor;
         }
 

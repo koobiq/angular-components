@@ -59,7 +59,7 @@ const ignoredPackages: PackageID[] = [
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
 function normalizeLicense(license: string | undefined): License[] {
     if (typeof license === 'string') {
-        let normalized = licenseReplacements[license] || license.replace(/\*$/, '');
+        const normalized = licenseReplacements[license] || license.replace(/\*$/, '');
         return [normalized];
     }
     return [];

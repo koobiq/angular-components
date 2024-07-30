@@ -18,7 +18,6 @@ export const KBQ_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<KbqLuxonDateAda
 );
 
 /** @docs-private */
-// tslint:disable:naming-convention
 export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOptions {
     return { useUtc: false };
 }

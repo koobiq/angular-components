@@ -20,7 +20,7 @@
     <ng-container
         [ngTemplateOutlet]="action"
         [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }"
-    ></ng-container>
+    />
 </ng-template>
 <ng-template
     #toastActionWarning
@@ -29,7 +29,7 @@
     <ng-container
         [ngTemplateOutlet]="action"
         [ngTemplateOutletContext]="{ $implicit: toast, text: 'Сменить пароль' }"
-    ></ng-container>
+    />
 </ng-template>
 
 <ng-template #toastPermanentContentTemplate>
@@ -37,7 +37,7 @@
         *ngIf="progress"
         class="layout-margin-top-m layout-margin-bottom-m"
         [mode]="'indeterminate'"
-    ></kbq-progress-bar>
+    />
     <div *ngIf="!progress">
         <span>Импорт файлов завершен</span>
         <i

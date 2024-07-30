@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords no-parameter-reassignment no-magic-numbers */
 import * as fs from 'fs';
 import * as path from 'path';
 import { parseExampleFile } from './parse-example-file';
@@ -81,7 +80,6 @@ function convertToDashCase(name: string): string {
  * Analyzes the examples by parsing the given TypeScript files in order to find
  * individual example modules and example metadata.
  */
-// tslint:disable-next-line:max-func-body-length
 function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExamples {
     const exampleMetadata: ExampleMetadata[] = [];
     const exampleModules: ExampleModule[] = [];

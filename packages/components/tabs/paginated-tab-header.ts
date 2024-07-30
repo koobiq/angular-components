@@ -1,4 +1,3 @@
-/* tslint:disable:naming-convention */
 import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
@@ -209,7 +208,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
-        typeof requestAnimationFrame !== undefined ? requestAnimationFrame(realign) : realign();
+        typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
 
         // On dir change or window resize, realign the ink bar and update the orientation of
         // the key manager if the direction has changed.
@@ -276,7 +275,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             return;
         }
 
-        // tslint:disable-next-line: deprecation
         const key = event.keyCode;
 
         if (key === HOME) {
@@ -545,6 +543,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     handlePaginatorPress(direction: ScrollDirection, mouseEvent?: MouseEvent) {
         // Don't start auto scrolling for right mouse button clicks. Note that we shouldn't have to
         // null check the `button`, but we do it so we don't break tests that use fake events.
+
         if (mouseEvent && mouseEvent.button != null && mouseEvent.button !== 0) {
             return;
         }

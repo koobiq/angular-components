@@ -464,7 +464,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        // tslint:disable-next-line: deprecation
         const keyCode = event.keyCode;
 
         if (isLetterKey(event) && !event.ctrlKey && !event.metaKey) {
@@ -551,7 +550,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
 
         return this.replaceNumbers(
             Object.values(match.groups)
-                // tslint:disable-next-line:no-magic-numbers
                 .map((group) => (group || '').padStart(2, '0'))
                 .join(':')
         );
@@ -847,7 +845,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         let minutes: number = 0;
         let seconds: number = 0;
 
-        // tslint:disable:no-magic-numbers
         if (amPm) {
             hours = Number(amPm[1]);
             minutes = Number(amPm[2]);
@@ -871,7 +868,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         } else {
             return null;
         }
-        // tslint:enable
 
         const resultDate = this.dateAdapter.createDateTime(
             this.dateAdapter.getYear(date),
@@ -932,7 +928,6 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.control.valueChanges.subscribe((value) => (this._value = value));
     }
 
-    // tslint:disable-next-line:no-empty
     private validatorOnChange = () => {};
 
     private updateLocaleParams = () => {

@@ -178,7 +178,6 @@ export class KbqInput
 
     private _required = false;
 
-    // tslint:disable no-reserved-keywords
     /** Input type of the element. */
     @Input()
     get type(): string {
@@ -196,7 +195,6 @@ export class KbqInput
             this.elementRef.nativeElement.type = this._type;
         }
     }
-    // tslint:enable no-reserved-keywords
 
     private _type = 'text';
 
@@ -216,10 +214,8 @@ export class KbqInput
         }
     }
 
-    // tslint:disable-next-line: orthodox-getter-and-setter
     private inputValueAccessor: { value: any };
 
-    // tslint:disable-next-line: naming-convention
     constructor(
         protected elementRef: ElementRef,
         @Optional() @Self() ngControl: NgControl,

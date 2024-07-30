@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, Inject } from '@angular/core';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {

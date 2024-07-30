@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
@@ -210,11 +209,11 @@ export class DemoComponent {
         });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
-            console.log('reactiveForm valueChanges: ', value); // tslint:disable-line:no-console
+            console.log('reactiveForm valueChanges: ', value);
         });
         //
         this.inputControl.valueChanges.subscribe((value) => {
-            console.log('inputControl valueChanges: ', value); // tslint:disable-line:no-console
+            console.log('inputControl valueChanges: ', value);
         });
 
         this.reactiveFormControl = this.formBuilder.group({});

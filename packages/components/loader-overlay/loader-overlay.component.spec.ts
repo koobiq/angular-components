@@ -85,7 +85,7 @@ describe('KbqLoaderOverlay', () => {
             <kbq-loader-overlay
                 [text]="'Создание отчета'"
                 [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-            ></kbq-loader-overlay>
+            />
         </div>
     `
 })
@@ -99,7 +99,7 @@ class OverlayWithParams {
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay></kbq-loader-overlay>
+            <kbq-loader-overlay />
         </div>
     `
 })
@@ -116,7 +116,7 @@ class OverlayNoParams {}
                     [mode]="'indeterminate'"
                     [color]="themePalette.Error"
                     kbq-loader-overlay-indicator
-                ></kbq-progress-spinner>
+                />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>

@@ -1,4 +1,3 @@
-// tslint:disable no-magic-numbers
 import { Component, DebugElement, Inject, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';

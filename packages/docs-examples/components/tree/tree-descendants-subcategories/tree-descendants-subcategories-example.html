@@ -19,7 +19,7 @@
         kbqTreeNodePadding
         [checkboxThirdState]="true"
     >
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
 
         <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
     </kbq-tree-option>

@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';

@@ -1,9 +1,3 @@
-/* tslint:disable:no-magic-numbers no-reserved-keywords */
-/* tslint:disable:no-non-null-assertion */
-/* tslint:disable:no-empty */
-/* tslint:disable:prefer-for-of */
-// tslint:disable:max-func-body-length
-
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
@@ -561,7 +555,7 @@ class NgIfSelect {
                         kbqInput
                         type="text"
                     />
-                    <kbq-cleaner></kbq-cleaner>
+                    <kbq-cleaner />
                 </kbq-form-field>
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
@@ -721,7 +715,7 @@ class SelectInitWithoutOptions {
     selector: 'custom-select-accessor',
     template: `
         <kbq-form-field>
-            <kbq-tree-select></kbq-tree-select>
+            <kbq-tree-select />
         </kbq-form-field>
     `,
     providers: [
@@ -743,7 +737,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
 @Component({
     selector: 'comp-with-custom-select',
     template: `
-        <custom-select-accessor [formControl]="ctrl"></custom-select-accessor>
+        <custom-select-accessor [formControl]="ctrl" />
     `,
     providers: [
         {
@@ -762,9 +756,9 @@ class CompWithCustomSelect {
     selector: 'select-infinite-loop',
     template: `
         <kbq-form-field>
-            <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
+            <kbq-tree-select [(ngModel)]="value" />
         </kbq-form-field>
-        <throws-error-on-init></throws-error-on-init>
+        <throws-error-on-init />
     `
 })
 class SelectWithErrorSibling {
@@ -956,7 +950,7 @@ class MultiSelect {
     selector: 'select-with-plain-tabindex',
     template: `
         <kbq-form-field>
-            <kbq-tree-select></kbq-tree-select>
+            <kbq-tree-select />
         </kbq-form-field>
     `
 })
@@ -966,7 +960,7 @@ class EmptySelect {}
     selector: 'select-early-sibling-access',
     template: `
         <kbq-form-field>
-            <kbq-tree-select #select="kbqTreeSelect"></kbq-tree-select>
+            <kbq-tree-select #select="kbqTreeSelect" />
         </kbq-form-field>
     `
 })
@@ -1238,7 +1232,7 @@ class FalsyValueSelect {
     template: `
         <form>
             <kbq-form-field>
-                <kbq-tree-select [(ngModel)]="value"></kbq-tree-select>
+                <kbq-tree-select [(ngModel)]="value" />
             </kbq-form-field>
         </form>
     `
@@ -1313,7 +1307,6 @@ class SelectInsideFormGroup {
         return nodeData.expandable;
     }
 
-    // tslint:disable-next-line:no-empty
     submitReactive() {
         this.submitResult = this.formGroup.invalid ? 'invalid' : 'valid';
     }
@@ -1790,7 +1783,7 @@ class SelectWithFormFieldLabel {
                         *kbqTreeNodeDef="let node"
                         kbqTreeNodePadding
                     >
-                        <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)"></kbq-pseudo-checkbox>
+                        <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)" />
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
@@ -1799,7 +1792,7 @@ class SelectWithFormFieldLabel {
                         *kbqTreeNodeDef="let node; when: hasChild"
                         kbqTreeNodePadding
                     >
-                        <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)"></kbq-pseudo-checkbox>
+                        <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)" />
                         <i
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                             kbq-icon="mc-angle-down-S_16"
@@ -2747,7 +2740,6 @@ describe('KbqTreeSelect', () => {
                 dispatchFakeEvent(selectElement, 'focus');
                 fixture.detectChanges();
 
-                /* tslint:disable-next-line:deprecation */
                 expect(selectInstance.focused).withContext('Expected select to be focused.').toBe(true);
 
                 selectInstance.open();
@@ -2757,7 +2749,6 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
                 tick(10);
 
-                /* tslint:disable-next-line:deprecation */
                 expect(selectInstance.focused).withContext('Expected select element to remain focused.').toBe(true);
             }));
         });
@@ -3036,7 +3027,6 @@ describe('KbqTreeSelect', () => {
 
                 expect(spy).toHaveBeenCalledWith(jasmine.any(KbqTreeSelectionChange));
 
-                /* tslint:disable-next-line:no-unnecessary-type-assertion */
                 subscription!.unsubscribe();
             }));
 
@@ -3086,8 +3076,7 @@ describe('KbqTreeSelect', () => {
                     fixture.detectChanges();
                     flush();
 
-                    // @ts-ignore
-                    const option: HTMLElement = overlayContainerElement.querySelectorAll('kbq-tree-option')[0];
+                    const option = overlayContainerElement.querySelectorAll('kbq-tree-option')[0];
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
                     Object.defineProperties(keyBoardEvent, {
                         altKey: { get: () => true }

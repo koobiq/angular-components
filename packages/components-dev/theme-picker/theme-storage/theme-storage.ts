@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { EventEmitter, Injectable } from '@angular/core';
 
 export interface IDocsSiteTheme {

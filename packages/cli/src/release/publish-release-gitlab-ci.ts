@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-/* tslint:disable:no-string-literal */
 import chalk from 'chalk';
 import { join } from 'path';
 import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
@@ -13,7 +11,6 @@ import { Version, parseVersionName } from './version-name/parse-version';
 
 const { bold, cyan, green, italic, red } = chalk;
 
-// tslint:disable-next-line:naming-convention
 export class PublishReleaseCIGitlabTask extends BaseReleaseTask {
     /** Parsed current version of the project. */
     currentVersion: Version;

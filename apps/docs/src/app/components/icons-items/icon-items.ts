@@ -1,4 +1,3 @@
-/* tslint:disable:naming-convention */
 import { Injectable } from '@angular/core';
 
 export interface IconItem {
@@ -29,7 +28,6 @@ export class IconItems {
 
             name = name.charAt(0).toUpperCase() + name.slice(1);
 
-            // tslint:disable-next-line:no-object-literal-type-assertion
             return { id, name, cssClass, code, size, tags, description } as IconItem;
         });
     }

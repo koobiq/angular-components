@@ -1,6 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { EventEmitter, TemplateRef, Type } from '@angular/core';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
 
 // Different modal styles we have supported
@@ -24,7 +25,9 @@ export interface ModalOptions<T = any, R = any> {
     kbqWrapClassName?: string;
     kbqClassName?: string;
     kbqStyle?: object;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     kbqTitle?: string | TemplateRef<{}>;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     kbqContent?: string | TemplateRef<{}> | Type<T>;
     kbqComponent?: Type<T>; // The instance of component opened into the dialog.
     kbqComponentParams?: any;
@@ -33,6 +36,7 @@ export interface ModalOptions<T = any, R = any> {
     kbqMaskClosable?: boolean;
     kbqMaskStyle?: object;
     kbqBodyStyle?: object;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<T>[]; // Default Modal ONLY
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null; // STATIC
     kbqAfterOpen?: EventEmitter<void>;
@@ -50,7 +54,6 @@ export interface ModalOptions<T = any, R = any> {
     kbqOnCancel?: EventEmitter<T> | OnClickCallback<T>;
 }
 
-// tslint:disable-next-line:no-any
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     kbqOnOk?: OnClickCallback<T>;
     kbqOnCancel?: OnClickCallback<T>;
@@ -58,7 +61,6 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
 
 export interface IModalButtonOptions<T = any> {
     label: string;
-    // tslint:disable-next-line
     type?: string;
     shape?: string;
     ghost?: boolean;
@@ -74,5 +76,6 @@ export interface IModalButtonOptions<T = any> {
     autoFocus?: boolean;
     kbqModalMainAction?: boolean;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<void | {}>;
 }

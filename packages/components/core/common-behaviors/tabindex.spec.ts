@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import { mixinTabIndex } from './tabindex';
 
 describe('mixinTabIndex', () => {

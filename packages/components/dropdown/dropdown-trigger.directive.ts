@@ -38,7 +38,6 @@ import { DropdownCloseReason, DropdownPositionX, DropdownPositionY, KbqDropdownP
 export const KBQ_DROPDOWN_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-dropdown-scroll-strategy');
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
     return () => overlay.scrollStrategies.reposition();
 }
@@ -190,7 +189,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     /** Toggles the dropdown between the open and closed states. */
     toggle(): void {
-        // tslint:disable-next-line:no-void-expression
         return this._opened ? this.close() : this.open();
     }
 
@@ -258,7 +256,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     /** Handles key presses on the trigger. */
     handleKeydown(event: KeyboardEvent) {
-        // tslint:disable-next-line:deprecation
         const keyCode = event.keyCode;
 
         if (keyCode === ENTER || keyCode === SPACE) {
@@ -383,7 +380,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         }
 
         this._opened = isOpen;
-        // tslint:disable-next-line:no-void-expression
         this._opened ? this.dropdownOpened.emit() : this.dropdownClosed.emit();
 
         if (this.isNested()) {
@@ -462,7 +458,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         let [originX, originFallbackX, overlayX, overlayFallbackX]: HorizontalConnectionPos[] =
             this.dropdown.xPosition === 'before' ? ['end', 'start', 'end', 'start'] : ['start', 'end', 'start', 'end'];
 
-        // tslint:disable-next-line:prefer-const
+        // eslint-disable-next-line prefer-const
         let [overlayY, overlayFallbackY, originY, originFallbackY]: VerticalConnectionPos[] =
             this.dropdown.yPosition === 'above'
                 ? ['bottom', 'top', 'bottom', 'top']
@@ -567,6 +563,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                     // 'changed after checked' errors in some cases. See #12194.
                     this.dropdown.animationDone
                         .pipe(take(1), delay(0, asapScheduler), takeUntil(this.parent.hovered()))
+                        // eslint-disable-next-line rxjs/no-nested-subscribe
                         .subscribe(() => this.open());
                 } else {
                     this.open();

@@ -34,7 +34,6 @@ export class NestedTreeControl<T> extends BaseTreeControl<T> {
 
     /** A helper function to get descendants recursively. */
     // todo нужно придумать другое название и понять в чем отличие между getDescendants и _getDescendants
-    /* tslint:disable-next-line:naming-convention */
     private _getDescendants(descendants: T[], dataNode: T): void {
         descendants.push(dataNode);
 

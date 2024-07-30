@@ -1,11 +1,10 @@
-// tslint:disable:no-unbound-method
-// tslint:disable:no-magic-numbers
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -41,7 +40,6 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
 );
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export function KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
     return () => overlay.scrollStrategies.reposition();
 }
@@ -78,7 +76,7 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqDatepickerContent<D> implements OnDestroy {
+export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     /** Emits when an animation has finished. */
     readonly animationDone = new Subject<void>();
 

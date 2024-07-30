@@ -4,7 +4,6 @@ import { ErrorStateMatcher } from '../error/error-options';
 import { AbstractConstructor, Constructor } from './constructor';
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export interface CanUpdateErrorState {
     /** Whether the component is in an error state. */
     errorState: boolean;
@@ -18,7 +17,6 @@ export interface CanUpdateErrorState {
 export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 /** @docs-private */
-// tslint:disable-next-line:naming-convention
 export interface HasErrorState {
     parentFormGroup: FormGroupDirective;
     parentForm: NgForm;

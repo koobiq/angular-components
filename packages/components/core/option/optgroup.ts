@@ -4,7 +4,6 @@ import { CanDisable, CanDisableCtor, mixinDisabled } from '../common-behaviors';
 /** @docs-private */
 export class KbqOptgroupBase {}
 
-// tslint:disable-next-line: naming-convention
 export const KbqOptgroupMixinBase: CanDisableCtor & typeof KbqOptgroupBase = mixinDisabled(KbqOptgroupBase);
 
 let uniqueOptgroupIdCounter = 0;

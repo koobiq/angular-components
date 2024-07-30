@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords */
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {

@@ -15,7 +15,7 @@
                 [formControl]="searchControl"
                 [placeholder]="'Город или часовой пояс'"
             />
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-form-field>
 
         <div kbq-select-search-empty-result>Ничего не найдено</div>
@@ -28,7 +28,7 @@
                 *ngFor="let timezone of group.zones"
                 [highlightText]="searchPattern"
                 [timezone]="timezone"
-            ></kbq-timezone-option>
+            />
         </kbq-optgroup>
     </kbq-timezone-select>
 </kbq-form-field>

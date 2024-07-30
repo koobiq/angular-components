@@ -30,27 +30,19 @@ export class ValidationGlobalOneRequiredExample {
         this.showServerErrors = false;
         this.inProgress = true;
 
-        setTimeout(
-            () => {
-                this.showServerErrors = true;
-                this.inProgress = false;
-            },
-            // tslint:disable-next-line:no-magic-numbers
-            1000
-        );
+        setTimeout(() => {
+            this.showServerErrors = true;
+            this.inProgress = false;
+        }, 1000);
     }
 
     checkForm() {
         this.inProgress = true;
 
-        setTimeout(
-            () => {
-                this.inProgress = false;
-                this.showError = true;
-                this.disabled = true;
-            },
-            // tslint:disable-next-line:no-magic-numbers
-            2000
-        );
+        setTimeout(() => {
+            this.inProgress = false;
+            this.showError = true;
+            this.disabled = true;
+        }, 2000);
     }
 }

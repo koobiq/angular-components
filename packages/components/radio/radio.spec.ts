@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
-/* tslint:disable:no-magic-numbers */
 describe('MсRadio', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

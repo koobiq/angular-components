@@ -1,10 +1,4 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:max-func-body-length
-// tslint:disable:no-inferred-empty-object-type
-// tslint:disable:chai-vague-errors
-
 // TODO: fixed linters
-// tslint:disable
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
@@ -1742,6 +1736,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             expect(spy).toHaveBeenCalledWith(jasmine.any(KbqOptionSelectionChange));
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             subscription.unsubscribe();
         }));
@@ -2841,7 +2836,7 @@ class AutocompleteWithSelectEvent {
             [formControl]="formControl"
             [kbqAutocomplete]="auto"
         />
-        <kbq-autocomplete #auto="kbqAutocomplete"></kbq-autocomplete>
+        <kbq-autocomplete #auto="kbqAutocomplete" />
     `
 })
 class PlainAutocompleteInputWithFormControl {
@@ -2922,7 +2917,7 @@ class AutocompleteWithDifferentOrigin {
             [kbqAutocomplete]="auto"
             autocomplete="changed"
         />
-        <kbq-autocomplete #auto="kbqAutocomplete"></kbq-autocomplete>
+        <kbq-autocomplete #auto="kbqAutocomplete" />
     `
 })
 class AutocompleteWithNativeAutocompleteAttribute {

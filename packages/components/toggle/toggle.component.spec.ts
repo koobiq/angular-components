@@ -1,5 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:no-empty
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -552,7 +550,7 @@ class MultipleToggles {}
         <kbq-toggle
             [tabIndex]="customTabIndex"
             [disabled]="isDisabled"
-        ></kbq-toggle>
+        />
     `
 })
 class ToggleWithTabIndex {
@@ -562,7 +560,7 @@ class ToggleWithTabIndex {
 
 @Component({
     template: `
-        <kbq-toggle></kbq-toggle>
+        <kbq-toggle />
     `
 })
 class ToggleUsingViewChild {
@@ -575,28 +573,28 @@ class ToggleUsingViewChild {
 
 @Component({
     template: `
-        <kbq-toggle aria-label="Super effective"></kbq-toggle>
+        <kbq-toggle aria-label="Super effective" />
     `
 })
 class ToggleWithAriaLabel {}
 
 @Component({
     template: `
-        <kbq-toggle aria-labelledby="some-id"></kbq-toggle>
+        <kbq-toggle aria-labelledby="some-id" />
     `
 })
 class ToggleWithAriaLabelledby {}
 
 @Component({
     template: `
-        <kbq-toggle name="test-name"></kbq-toggle>
+        <kbq-toggle name="test-name" />
     `
 })
 class ToggleWithNameAttribute {}
 
 @Component({
     template: `
-        <kbq-toggle [formControl]="formControl"></kbq-toggle>
+        <kbq-toggle [formControl]="formControl" />
     `
 })
 class ToggleWithFormControl {

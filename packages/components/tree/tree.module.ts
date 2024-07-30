@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { asyncScheduler } from 'rxjs';
-// tslint:disable-next-line:rxjs-no-internal
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { asyncScheduler } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { KbqTreeNodeDef } from './node';
 import { KbqTreeNodeOutlet } from './outlet';

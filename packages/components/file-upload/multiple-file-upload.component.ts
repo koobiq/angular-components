@@ -105,11 +105,10 @@ export class KbqMultipleFileUploadComponent
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     cvaOnChange = (_: KbqFileItem[]) => {};
 
     /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+
     onTouched = () => {};
 
     get acceptedFiles(): string {

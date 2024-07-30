@@ -8,10 +8,6 @@ import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@k
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverModule } from './popover.module';
 
-// tslint:disable:no-magic-numbers
-// tslint:disable:max-line-length
-// tslint:disable:no-console
-
 describe('KbqPopover', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -65,7 +61,7 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.textContent).toContain(expectedValue);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayContainerElement, 'mouseleave');
-            tick(100); // tslint:disable-line
+            tick(100);
             componentFixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
@@ -99,7 +95,7 @@ describe('KbqPopover', () => {
             componentFixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             dispatchFakeEvent(triggerElement, 'blur');
-            tick(100); // tslint:disable-line
+            tick(100);
             componentFixture.detectChanges();
             tick(); // wait for next tick to hide
             componentFixture.detectChanges();

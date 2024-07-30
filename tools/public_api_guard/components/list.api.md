@@ -174,7 +174,7 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor {
+export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;

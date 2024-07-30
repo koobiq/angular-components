@@ -1,5 +1,6 @@
 import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -226,7 +227,7 @@ export class KbqGutterGhostDirective {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqSplitterComponent implements OnInit {
+export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
     @Output() gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
 
     areas: IArea[] = [];
@@ -360,7 +361,6 @@ export class KbqSplitterComponent implements OnInit {
         let currentGutter: KbqGutterDirective | undefined;
 
         if (this.useGhost) {
-            // tslint:disable-next-line:no-magic-numbers
             const gutterOrder = leftAreaIndex * 2 + 1;
             currentGutter = this.gutters.find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
 

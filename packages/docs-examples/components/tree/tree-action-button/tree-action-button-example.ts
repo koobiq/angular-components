@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes */
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
@@ -133,7 +132,6 @@ export class TreeActionButtonExample {
     }
 
     onSelectAll($event) {
-        // tslint:disable-next-line:no-console
         console.log('All items selected', $event);
     }
 

@@ -210,7 +210,6 @@ export class KbqTextarea
             const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
             const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
 
-            // tslint:disable-next-line:no-magic-numbers
             this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
             this.freeRowsHeight = this.lineHeight;
         });

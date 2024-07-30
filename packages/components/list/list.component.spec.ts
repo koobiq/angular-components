@@ -102,7 +102,10 @@ class ListWithOneItem extends BaseTestList {}
     template: `
         <kbq-list>
             <kbq-list-item *ngFor="let item of items">
-                <img src="" />
+                <img
+                    src=""
+                    alt=""
+                />
                 <h3 kbq-line>{{ item.name }}</h3>
                 <p kbq-line>{{ item.description }}</p>
             </kbq-list-item>
@@ -123,7 +126,6 @@ class ListWithTwoLineItem extends BaseTestList {}
     `
 })
 class ListWithThreeLineItem extends BaseTestList {
-    // tslint:disable-next-line:no-empty
     avoidCollisionMockTarget() {}
 }
 
@@ -146,6 +148,7 @@ class ListWithManyLines extends BaseTestList {}
         <kbq-list>
             <kbq-list-item>
                 <img
+                    alt=""
                     src=""
                     kbq-list-avatar
                 />

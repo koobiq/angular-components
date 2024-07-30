@@ -11,7 +11,7 @@
         kbqTabLabelWrapper
         class="kbq-tab-label"
         [attr.tabindex]="getTabIndex(tab, i)"
-        [class.kbq-selected]="selectedIndex == i"
+        [class.kbq-selected]="selectedIndex === i"
         [class.kbq-tab-label_empty]="tab.empty"
         [class.kbq-tab-label_horizontal]="!vertical"
         [class.kbq-tab-label_vertical]="vertical"
@@ -31,7 +31,7 @@
         >
             <!-- If there is a label template, use it. -->
             <ng-template [ngIf]="tab.templateLabel">
-                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+                <ng-template [cdkPortalOutlet]="tab.templateLabel" />
             </ng-template>
 
             <!-- If there is not a label template, fall back to the text label. -->
@@ -47,12 +47,12 @@
     <kbq-tab-body
         *ngFor="let tab of tabs; let i = index"
         [animationDuration]="animationDuration"
-        [class.kbq-tab-body__active]="selectedIndex == i"
+        [class.kbq-tab-body__active]="selectedIndex === i"
         [content]="tab.content!"
         [id]="getTabContentId(i)"
         [origin]="tab.origin!"
         [position]="tab.position!"
         (onCentered)="removeTabBodyWrapperHeight()"
         (onCentering)="setTabBodyWrapperHeight($event)"
-    ></kbq-tab-body>
+    />
 </div>

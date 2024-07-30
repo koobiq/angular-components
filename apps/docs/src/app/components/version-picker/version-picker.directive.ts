@@ -27,12 +27,10 @@ export class VersionPickerDirective {
                 .reverse()
                 .forEach(([name, value], index) => {
                     if (index === 1) {
-                        // tslint:disable-next-line:no-parameter-reassignment
                         name += ' (последняя)';
                         value.url = 'https://koobiq.io/';
                     }
 
-                    // tslint:disable-next-line:no-magic-numbers
                     if (name === 'next' || parseInt(name) >= 8) {
                         this.versions.push({ name, selected: false, ...value });
                     }

@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';

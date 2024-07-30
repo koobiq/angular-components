@@ -18,7 +18,7 @@
 </div>
 
 <kbq-hint class="kbq-file-upload__hint">
-    <ng-content select="[hint]"></ng-content>
+    <ng-content select="[hint]" />
 </kbq-hint>
 <ng-container *ngIf="errors?.length">
     <kbq-hint
@@ -37,14 +37,14 @@
         <div class="file-item__text-wrapper">
             <ng-container *ngIf="{ loading: file.loading | async, progress: file.progress | async } as asyncData">
                 <ng-container *ngIf="!asyncData.loading">
-                    <ng-content select="[kbq-icon]"></ng-content>
+                    <ng-content select="[kbq-icon]" />
                 </ng-container>
 
                 <kbq-progress-spinner
                     *ngIf="asyncData.loading"
                     [mode]="progressMode"
                     [value]="asyncData.progress || 0"
-                ></kbq-progress-spinner>
+                />
             </ng-container>
 
             <div

@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';

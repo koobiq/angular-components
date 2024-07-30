@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords */
 import { ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';

@@ -113,7 +113,7 @@ export class KbqBadgeCssStyler implements AfterContentInit {
 
 @Component({
     selector: 'kbq-badge',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     styleUrls: ['badge.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

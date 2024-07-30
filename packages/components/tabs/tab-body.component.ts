@@ -86,7 +86,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
 
     /** The tab body content to display. */
-    @Input('content') content: TemplatePortal;
+    @Input() content: TemplatePortal;
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
     @Input() origin: number;

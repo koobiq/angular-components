@@ -1,19 +1,14 @@
-/* tslint:disable:no-console */
-/* tslint:disable:no-string-literal */
-/* tslint:disable:import-name*/
 import chalk from 'chalk';
 import conventionalChangelog from 'conventional-changelog';
 import { createReadStream, createWriteStream, readFileSync } from 'fs';
+import inquirer from 'inquirer';
+import merge2 from 'merge2';
 import { join } from 'path';
 import { Readable } from 'stream';
-// @ts-ignore
-import writerOpts from 'conventional-changelog-angular/writer-opts.js';
-// @ts-ignore
-import * as changelogCompare from 'conventional-changelog-writer/lib/util.js';
-import inquirer from 'inquirer';
-// tslint:disable-next-line:match-default-export-name
-import merge2 from 'merge2';
 import { IReleaseTaskConfig } from './base-release-task';
+
+const changelogCompare = require('conventional-changelog-writer/lib/util.js');
+const writerOpts = require('conventional-changelog-angular/writer-opts.js');
 
 const { yellow, bold } = chalk;
 const { prompt } = inquirer;
@@ -76,11 +71,11 @@ export async function prependChangelogFromLatestTag(
     // actually prepend the new changelog to the existing one.
     const previousChangelogStream = createReadStream(changelogPath);
 
-    // tslint:disable:no-inferred-empty-object-type
     return new Promise((resolve, reject) => {
         // Sequentially merge the changelog output and the previous changelog stream, so that
         // the new changelog section comes before the existing versions. Afterwards, pipe into the
         // changelog file, so that the changes are reflected on file system.
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const mergedCompleteChangelog = merge2(outputStream, previousChangelogStream);
 
@@ -106,7 +101,6 @@ export async function promptChangelogReleaseName(): Promise<string> {
     ).releaseName;
 }
 
-// tslint:disable-next-line:max-func-body-length
 function createChangelogWriterOptions(changelogPath: string, presetWriterOptions: any, config: IReleaseTaskConfig) {
     const existingChangelogContent = readFileSync(changelogPath, 'utf8');
     const commitSortFunction = changelogCompare.functionify(['type', 'scope', 'subject']);
@@ -154,7 +148,6 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
 
                     const packageName = commit.package || config.changelogScope;
 
-                    // tslint:disable-next-line:no-reserved-keywords
                     const type = getTypeOfCommitGroupDescription(group.title);
 
                     if (!packageGroups[packageName]) {
@@ -170,7 +163,6 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                         } else if (n.type === CommitNote.BreakingChange) {
                             packageGroup.breakingChanges.push(n);
                         } else {
-                            // tslint:disable-next-line:no-magic-numbers
                             throw Error(`Found commit note that is not known: ${JSON.stringify(n, null, 4)}`);
                         }
                     });
@@ -197,7 +189,6 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                 const packageGroup = packageGroups[pkgName];
 
                 return {
-                    // @ts-ignore
                     title: preparePackageName(pkgName),
                     commits: packageGroup.commits.sort(commitSortFunction),
                     breakingChanges: packageGroup.breakingChanges,

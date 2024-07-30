@@ -11,7 +11,6 @@ export class KbqLongComponent {
     longText: any = [];
 
     constructor() {
-        // tslint:disable-next-line:no-magic-numbers
         for (let i = 0; i < 50; i++) {
             this.longText.push(`text lint - ${i}`);
         }

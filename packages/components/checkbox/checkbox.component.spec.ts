@@ -5,8 +5,6 @@ import { By } from '@angular/platform-browser';
 import { KBQ_CHECKBOX_CLICK_ACTION } from './checkbox-config';
 import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
 
-// tslint:disable no-empty
-// tslint:disable no-magic-numbers
 describe('KbqCheckbox', () => {
     let fixture: ComponentFixture<any>;
 
@@ -910,7 +908,7 @@ class MultipleCheckboxes {}
         <kbq-checkbox
             [tabIndex]="customTabIndex"
             [disabled]="isDisabled"
-        ></kbq-checkbox>
+        />
     `
 })
 class CheckboxWithTabIndex {
@@ -921,7 +919,7 @@ class CheckboxWithTabIndex {
 /** Simple test component that accesses KbqCheckbox using ViewChild. */
 @Component({
     template: `
-        <kbq-checkbox></kbq-checkbox>
+        <kbq-checkbox />
     `
 })
 class CheckboxUsingViewChild {
@@ -935,7 +933,7 @@ class CheckboxUsingViewChild {
 /** Simple test component with an aria-label set. */
 @Component({
     template: `
-        <kbq-checkbox aria-label="Super effective"></kbq-checkbox>
+        <kbq-checkbox aria-label="Super effective" />
     `
 })
 class CheckboxWithAriaLabel {}
@@ -943,7 +941,7 @@ class CheckboxWithAriaLabel {}
 /** Simple test component with an aria-label set. */
 @Component({
     template: `
-        <kbq-checkbox aria-labelledby="some-id"></kbq-checkbox>
+        <kbq-checkbox aria-labelledby="some-id" />
     `
 })
 class CheckboxWithAriaLabelledby {}
@@ -951,7 +949,7 @@ class CheckboxWithAriaLabelledby {}
 /** Simple test component with name attribute */
 @Component({
     template: `
-        <kbq-checkbox name="test-name"></kbq-checkbox>
+        <kbq-checkbox name="test-name" />
     `
 })
 class CheckboxWithNameAttribute {}
@@ -959,7 +957,7 @@ class CheckboxWithNameAttribute {}
 /** Simple test component with change event */
 @Component({
     template: `
-        <kbq-checkbox (change)="lastEvent = $event"></kbq-checkbox>
+        <kbq-checkbox (change)="lastEvent = $event" />
     `
 })
 class CheckboxWithChangeEvent {
@@ -969,7 +967,7 @@ class CheckboxWithChangeEvent {
 /** Test component with reactive forms */
 @Component({
     template: `
-        <kbq-checkbox [formControl]="formControl"></kbq-checkbox>
+        <kbq-checkbox [formControl]="formControl" />
     `
 })
 class CheckboxWithFormControl {

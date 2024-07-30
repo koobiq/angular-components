@@ -33,6 +33,7 @@ import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
@@ -1388,7 +1389,7 @@ export abstract class KbqPopUp implements OnDestroy {
 }
 
 // @public (undocumented)
-export abstract class KbqPopUpTrigger<T> {
+export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction?: Directionality | undefined);
     // (undocumented)
     protected readonly availablePositions: {

@@ -3,19 +3,19 @@
         <ng-content
             *ngSwitchCase="true"
             select="[kbq-loader-overlay-indicator]"
-        ></ng-content>
+        />
         <kbq-progress-spinner
             *ngSwitchDefault
             [mode]="'indeterminate'"
             [size]="spinnerSize"
-        ></kbq-progress-spinner>
+        />
     </ng-container>
 
     <ng-container [ngSwitch]="isExternalText">
         <ng-content
             *ngSwitchCase="true"
             select="[kbq-loader-overlay-text]"
-        ></ng-content>
+        />
         <ng-container *ngSwitchDefault>
             <div
                 *ngIf="text"
@@ -30,7 +30,7 @@
         <ng-content
             *ngSwitchCase="true"
             select="[kbq-loader-overlay-caption]"
-        ></ng-content>
+        />
         <ng-container *ngSwitchDefault>
             <div
                 *ngIf="caption"

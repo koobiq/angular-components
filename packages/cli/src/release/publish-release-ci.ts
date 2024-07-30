@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-/* tslint:disable:no-string-literal */
 import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { join } from 'path';
@@ -14,7 +12,6 @@ import { Version, parseVersionName } from './version-name/parse-version';
 
 const { bold, cyan, green, italic, red } = chalk;
 
-// tslint:disable-next-line:naming-convention
 export class PublishReleaseCITask extends BaseReleaseTask {
     /** Parsed current version of the project. */
     currentVersion: Version;

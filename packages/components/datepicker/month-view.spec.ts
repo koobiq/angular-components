@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -117,7 +116,7 @@ describe('KbqMonthView', () => {
         <kbq-month-view
             [(activeDate)]="date"
             [(selected)]="selected"
-        ></kbq-month-view>
+        />
     `
 })
 class StandardMonthView {
@@ -130,7 +129,7 @@ class StandardMonthView {
         <kbq-month-view
             [activeDate]="activeDate"
             [dateFilter]="dateFilter"
-        ></kbq-month-view>
+        />
     `
 })
 class MonthViewWithDateFilter {
@@ -146,7 +145,7 @@ class MonthViewWithDateFilter {
         <kbq-month-view
             [activeDate]="activeDate"
             [dateClass]="dateClass"
-        ></kbq-month-view>
+        />
     `
 })
 class MonthViewWithDateClass {

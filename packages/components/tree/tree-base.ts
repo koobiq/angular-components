@@ -109,7 +109,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         this.onDestroy.next();
         this.onDestroy.complete();
 
-        // tslint:disable-next-line:no-unbound-method
         if (this._dataSource && typeof (this.dataSource as DataSource<T>).disconnect === 'function') {
             (this.dataSource as DataSource<T>).disconnect(this);
         }
@@ -197,7 +196,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         // Otherwise, use the level of parent node.
         if (this.treeControl.getLevel) {
             context.level = this.treeControl.getLevel(nodeData);
-            /* tslint:disable-next-line:no-typeof-undefined */
         } else if (typeof parentData !== 'undefined' && this.levels.has(parentData)) {
             context.level = this.levels.get(parentData)! + 1;
         } else {
@@ -224,7 +222,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         // Cannot use `instanceof DataSource` since the data source could be a literal with
         // `connect` function and may not extends DataSource.
-        // tslint:disable-next-line:no-unbound-method
         if (typeof (this._dataSource as DataSource<T>).connect === 'function') {
             dataStream = (this._dataSource as DataSource<T>).connect(this);
         } else if (this._dataSource instanceof Observable) {
@@ -248,7 +245,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * clearing the node outlet. Otherwise start listening for new data.
      */
     private switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-        // tslint:disable-next-line:no-unbound-method
         if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
             (this.dataSource as DataSource<T>).disconnect(this);
         }

@@ -7,7 +7,7 @@ import { Component, Directive } from '@angular/core';
             class="kbq-modal-title"
             kbq-title
         >
-            <ng-content></ng-content>
+            <ng-content />
         </div>
     `,
     host: {

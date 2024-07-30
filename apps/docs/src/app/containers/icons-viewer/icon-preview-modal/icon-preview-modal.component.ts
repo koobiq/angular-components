@@ -30,7 +30,6 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
     SVGLink: string;
 
-    // tslint:disable-next-line:no-magic-numbers
     themePalettes = [
         KbqComponentColors.Theme,
         KbqComponentColors.Contrast,
@@ -110,7 +109,6 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
         color.match(/[\d+\.]+/g).forEach((substring: string) => arr.push(parseFloat(substring)));
 
-        // tslint:disable-next-line: no-magic-numbers
         return `${arr.slice(0, 3).map(toHex).join('')}`;
     }
 }

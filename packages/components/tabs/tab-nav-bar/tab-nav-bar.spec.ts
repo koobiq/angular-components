@@ -1,4 +1,3 @@
-// tslint:disable:no-magic-numbers
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';

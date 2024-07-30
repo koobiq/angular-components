@@ -15,7 +15,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { KbqIconModule } from '../../components/icon/';
 
-/* tslint:disable:no-trailing-whitespace */
 @Component({
     selector: 'app',
     styleUrls: ['../main.scss', './styles.scss'],
@@ -84,7 +83,6 @@ export class DemoComponent {
     changeStep(direction: number) {
         const newStage = this.popoverActiveStage + direction;
 
-        // tslint:disable-next-line:no-magic-numbers
         if (newStage < 1 || newStage > 3) {
             return;
         }

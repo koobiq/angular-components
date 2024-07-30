@@ -1,6 +1,3 @@
-/* tslint:disable:no-reserved-keywords */
-// tslint:disable:no-console
-// tslint:disable:no-magic-numbers
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';

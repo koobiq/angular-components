@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMosaicModule } from '../koobiq.module';
-// tslint:disable-next-line:no-import-side-effect
 import '../polyfills';
 import { KoobiqDocsExample } from './koobiq-docs-example';
 

@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';

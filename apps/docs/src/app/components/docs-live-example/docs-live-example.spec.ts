@@ -60,7 +60,7 @@ describe('docs-live-example', () => {
 @Component({
     selector: 'test',
     template: `
-        <docs-live-example [documentUrl]="documentUrl"></docs-live-example>
+        <docs-live-example [documentUrl]="documentUrl" />
     `
 })
 class DocViewerTestComponent {

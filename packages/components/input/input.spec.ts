@@ -22,7 +22,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     return TestBed.createComponent<T>(component);
 }
 
-// tslint:disable no-unnecessary-class
 @Component({
     template: `
         <kbq-form-field>
@@ -115,7 +114,7 @@ class KbqFormFieldWithSuffix {}
                 [(ngModel)]="value"
                 kbqInput
             />
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-form-field>
     `
 })
@@ -207,12 +206,10 @@ class KbqFormWithRequiredValidation {
     ThemePalette = ThemePalette;
     submitResult: string;
 
-    // tslint:disable-next-line:no-empty
     submitReactive() {
         this.submitResult = this.reactiveForm.invalid ? 'invalid' : 'valid';
     }
 }
-// tslint:enable no-unnecessary-class
 
 describe('KbqInput', () => {
     describe('basic behaviors', () => {

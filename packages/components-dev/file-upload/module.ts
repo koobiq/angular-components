@@ -1,4 +1,3 @@
-/* tslint:disable:no-console no-reserved-keywords */
 import { NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,

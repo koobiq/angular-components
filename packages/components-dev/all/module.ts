@@ -1,6 +1,4 @@
-// tslint:disable:no-console
-
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, NgModule, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,10 +34,7 @@ import { Observable, of as observableOf } from 'rxjs';
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
 // the `default as` syntax.
-// tslint:disable-next-line:ordered-imports
 import * as _moment from 'moment';
-// @ts-ignore
-// tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
 import { buildFileTree, DATA_OBJECT, FileFlatNode, FileNode } from '../tree/module';
 
@@ -55,7 +50,7 @@ const MAX_PERCENT: number = 100;
     styleUrls: ['../main.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DemoComponent {
+export class DemoComponent implements OnDestroy {
     themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
 

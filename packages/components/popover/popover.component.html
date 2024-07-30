@@ -19,7 +19,7 @@
             <ng-container
                 *ngIf="isTemplateRef(header)"
                 [ngTemplateOutlet]="$any(header)"
-            ></ng-container>
+            />
             <ng-container *ngIf="!isTemplateRef(header)">
                 <div class="kbq-popover__header-text">{{ header }}</div>
             </ng-container>
@@ -32,7 +32,7 @@
             <ng-container
                 *ngIf="isTemplateRef(content)"
                 [ngTemplateOutlet]="$any(content)"
-            ></ng-container>
+            />
             <ng-container *ngIf="!isTemplateRef(content)">
                 <div>{{ content }}</div>
             </ng-container>
@@ -45,7 +45,7 @@
             <ng-container
                 *ngIf="isTemplateRef(footer)"
                 [ngTemplateOutlet]="$any(footer)"
-            ></ng-container>
+            />
             <ng-container *ngIf="!isTemplateRef(footer)">
                 <div>{{ footer }}</div>
             </ng-container>

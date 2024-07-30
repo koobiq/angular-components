@@ -4,7 +4,7 @@ import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'kbq-dl',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     styleUrls: ['dl.scss'],
     host: {
         class: 'kbq-dl',
@@ -49,7 +49,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
 
 @Component({
     selector: 'kbq-dt',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     host: {
         class: 'kbq-dt'
     },
@@ -59,7 +59,7 @@ export class KbqDtComponent {}
 
 @Component({
     selector: 'kbq-dd',
-    template: '<ng-content></ng-content>',
+    template: '<ng-content />',
     host: {
         class: 'kbq-dd'
     },

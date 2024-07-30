@@ -28,7 +28,6 @@ import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.co
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            // tslint:disable-next-line: no-object-literal-type-assertion
             useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
         }
     ]

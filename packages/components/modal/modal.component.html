@@ -1,6 +1,6 @@
 <!-- Compatible: the <ng-content> can appear only once -->
 <ng-template #tplOriginContent>
-    <ng-content></ng-content>
+    <ng-content />
 </ng-template>
 
 <div>
@@ -35,15 +35,15 @@
                     <ng-container
                         *ngSwitchCase="isModalType('default')"
                         [ngTemplateOutlet]="tplContentDefault"
-                    ></ng-container>
+                    />
                     <ng-container
                         *ngSwitchCase="isModalType('confirm')"
                         [ngTemplateOutlet]="tplContentConfirm"
-                    ></ng-container>
+                    />
                     <ng-container
                         *ngSwitchCase="isModalType('custom')"
                         [ngTemplateOutlet]="tplContentCustom"
-                    ></ng-container>
+                    />
                 </ng-container>
             </div>
         </div>
@@ -51,7 +51,7 @@
 </div>
 
 <ng-template #tplContentCustom>
-    <ng-container #bodyContainer></ng-container>
+    <ng-container #bodyContainer />
 </ng-template>
 
 <!-- [Predefined] Default Modal Content -->
@@ -67,7 +67,7 @@
                 <ng-container
                     *ngSwitchCase="isTemplateRef(kbqTitle)"
                     [ngTemplateOutlet]="$any(kbqTitle)"
-                ></ng-container>
+                />
                 <ng-container *ngSwitchCase="isNonEmptyString(kbqTitle)">
                     <div [innerHTML]="kbqTitle"></div>
                 </ng-container>
@@ -101,14 +101,14 @@
                 <ng-container
                     *ngSwitchCase="isTemplateRef(kbqContent)"
                     [ngTemplateOutlet]="$any(kbqContent)"
-                ></ng-container>
+                />
                 <ng-container *ngSwitchCase="isNonEmptyString(kbqContent)">
                     <div [innerHTML]="kbqContent"></div>
                 </ng-container>
                 <ng-container
                     *ngSwitchDefault
                     [ngTemplateOutlet]="tplOriginContent"
-                ></ng-container>
+                />
             </ng-container>
         </ng-container>
     </div>
@@ -121,7 +121,7 @@
             <ng-container
                 *ngSwitchCase="isTemplateRef(kbqFooter)"
                 [ngTemplateOutlet]="$any(kbqFooter)"
-            ></ng-container>
+            />
             <ng-container *ngSwitchCase="isNonEmptyString(kbqFooter)">
                 <div [innerHTML]="kbqFooter"></div>
             </ng-container>
@@ -178,14 +178,14 @@
                 <ng-container
                     *ngSwitchCase="isTemplateRef(kbqContent)"
                     [ngTemplateOutlet]="$any(kbqContent)"
-                ></ng-container>
+                />
                 <ng-container *ngSwitchCase="isNonEmptyString(kbqContent)">
                     <div [innerHTML]="kbqContent"></div>
                 </ng-container>
                 <ng-container
                     *ngSwitchDefault
                     [ngTemplateOutlet]="tplOriginContent"
-                ></ng-container>
+                />
             </ng-container>
         </ng-container>
     </div>

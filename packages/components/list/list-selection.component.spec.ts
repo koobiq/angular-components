@@ -1,7 +1,3 @@
-// tslint:disable:no-magic-numbers
-// tslint:disable:max-func-body-length
-// tslint:disable:no-empty
-
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, DebugElement, QueryList, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
@@ -1135,14 +1131,14 @@ class SelectionListWithOnlyOneOption {}
 
 @Component({
     template: `
-        <kbq-list-selection [tabIndex]="5"></kbq-list-selection>
+        <kbq-list-selection [tabIndex]="5" />
     `
 })
 class SelectionListWithTabindexAttr {}
 
 @Component({
     template: `
-        <kbq-list-selection [disabled]="disabled"></kbq-list-selection>
+        <kbq-list-selection [disabled]="disabled" />
     `
 })
 class SelectionListWithTabindexInDisabledState {

@@ -2,7 +2,6 @@ import { InjectionToken } from '@angular/core';
 import { KbqTagSeparator } from './tag-input';
 
 /** Default options, for the chips module, that can be overridden. */
-// tslint:disable-next-line: naming-convention
 export interface KbqTagsDefaultOptions {
     /** The list of key codes that will trigger a chipEnd event. */
     separatorKeyCodes: number[];

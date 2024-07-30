@@ -40,7 +40,7 @@
 
     <kbq-form-field>
         <kbq-select (openedChange)="openedChange($event)">
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <cdk-virtual-scroll-viewport
                 [itemSize]="32"
@@ -84,10 +84,10 @@
                     type="text"
                     [formControl]="searchCtrl"
                 />
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
 
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
@@ -132,10 +132,10 @@
                     type="text"
                     [formControl]="searchCtrl"
                 />
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
 
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
         </kbq-select>
@@ -181,7 +181,7 @@
                 </kbq-tag>
             </ng-template>
 
-            <kbq-cleaner></kbq-cleaner>
+            <kbq-cleaner />
         </kbq-select>
         <kbq-hint>multiple select with cdk-virtual-scroll, option as object</kbq-hint>
     </kbq-form-field>
@@ -212,10 +212,10 @@
                     type="text"
                     [formControl]="searchCtrl"
                 />
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
 
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
@@ -262,10 +262,10 @@
                     type="text"
                     [formControl]="multipleSearchCtrl"
                 />
-                <kbq-cleaner></kbq-cleaner>
+                <kbq-cleaner />
             </kbq-form-field>
 
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
@@ -618,7 +618,7 @@
             [multiple]="true"
             [(value)]="selected"
         >
-            <kbq-cleaner #kbqSelectCleaner></kbq-cleaner>
+            <kbq-cleaner #kbqSelectCleaner />
 
             <cdk-virtual-scroll-viewport
                 [itemSize]="32"

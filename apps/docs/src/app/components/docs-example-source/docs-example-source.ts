@@ -42,7 +42,6 @@ export class DocsExampleSource {
 
     private setLineNumbers() {
         const text = this.code.nativeElement.textContent!.match(/\n/g);
-        // tslint:disable-next-line:restrict-plus-operands
         const length = text ? text.length + 1 : 0;
 
         this.lineNumbers = '';
@@ -63,7 +62,6 @@ export class DocsExampleSource {
      * @param rawDocument The raw document content to show.
      */
     private updateDocument = (rawDocument: string): void => {
-        // tslint:disable-next-line:no-inner-html
         this.code.nativeElement.innerHTML = rawDocument;
 
         this.setLineNumbers();

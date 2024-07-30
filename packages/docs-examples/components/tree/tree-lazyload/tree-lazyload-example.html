@@ -14,11 +14,11 @@
         *kbqTreeNodeDef="let node; when: hasChild"
         kbqTreeNodePadding
     >
-        <kbq-tree-node-toggle [node]="node"></kbq-tree-node-toggle>
+        <kbq-tree-node-toggle [node]="node" />
         <kbq-progress-spinner
             *ngIf="node.loading"
             mode="indeterminate"
-        ></kbq-progress-spinner>
+        />
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>

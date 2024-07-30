@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes */
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
 

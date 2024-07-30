@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { Component, Inject } from '@angular/core';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { DateTime } from 'luxon';

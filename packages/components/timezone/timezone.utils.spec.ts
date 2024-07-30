@@ -1,4 +1,3 @@
-/* tslint:disable:no-magic-numbers */
 import { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
 import { getZonesGroupedByCountry, offsetFormatter, parseOffset, timezonesSortComparator } from './timezone.utils';
 

@@ -197,7 +197,7 @@ export interface KbqNavbarFocusableItemEvent {
 }
 
 // @public (undocumented)
-export class KbqNavbarItem extends KbqTooltipTrigger {
+export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
     constructor(rectangleElement: KbqNavbarRectangleElement, navbarFocusableItem: KbqNavbarFocusableItem, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, focusMonitor: FocusMonitor, direction: Directionality, dropdownTrigger: KbqDropdownTrigger, bento: KbqNavbarBento);
     // (undocumented)
     get collapsable(): boolean;

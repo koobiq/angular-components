@@ -1,4 +1,3 @@
-/* tslint:disable:no-reserved-keywords object-literal-key-quotes */
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { Subscription } from 'rxjs';

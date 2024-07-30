@@ -40,7 +40,6 @@ export class KbqOptionSelectionChange<T = KbqOption> {
  * Contains properties that the options can inherit.
  * @docs-private
  */
-// tslint:disable-next-line: naming-convention
 export interface KbqOptionParentComponent {
     multiple?: boolean;
 }
@@ -167,7 +166,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private _showCheckbox: boolean;
 
     /** Event emitted when the option is selected or deselected. */
-    // tslint:disable-next-line:no-output-on-prefix
     @Output() readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange>();
 
     /** Emits when the state of the option changes and any parents have to be notified. */
@@ -254,7 +252,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     getHeight(): number {
-        // tslint:disable-next-line:naming-convention
         const DOMRect: DOMRect = this.element.nativeElement.getClientRects()[0];
 
         return DOMRect ? DOMRect.height : 0;
@@ -317,7 +314,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** Ensures the option is selected when activated from the keyboard. */
     handleKeydown(event: KeyboardEvent): void {
-        // tslint:disable-next-line
         if (event.keyCode === ENTER || event.keyCode === SPACE) {
             this.selectViaInteraction();
 
