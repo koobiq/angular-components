@@ -235,7 +235,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             }
         );
 
-        this.localeSubscription = this.localeService?.changes.subscribe((e) => this.updateLocaleParams(e));
+        this.localeSubscription = this.localeService?.changes.subscribe(this.updateLocaleParams);
     }
 
     ngAfterContentInit(): void {

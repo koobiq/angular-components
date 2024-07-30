@@ -122,7 +122,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(() => this.updateHeader());
+            .subscribe(this.updateHeader);
     }
 
     ngAfterViewInit() {

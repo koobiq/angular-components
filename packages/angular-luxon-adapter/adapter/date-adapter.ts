@@ -40,7 +40,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe((e) => this.setLocale(e));
+        this.localeService?.changes.subscribe(this.setLocale);
     }
 
     setLocale = (locale: string): void => {

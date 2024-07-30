@@ -131,7 +131,7 @@ export class AnchorsComponent implements OnDestroy, OnInit {
 
         this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
             .pipe(debounceTime(this.debounceTime), takeUntil(this.destroyed))
-            .subscribe(() => this.onScroll());
+            .subscribe(this.onScroll);
 
         this.ref.detectChanges();
     }

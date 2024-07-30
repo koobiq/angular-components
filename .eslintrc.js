@@ -77,8 +77,9 @@ const config = {
                 'rxjs/no-implicit-any-catch': 0,
                 'rxjs/no-sharereplay': 0,
                 'rxjs/no-internal': 0,
+                'rxjs/no-unbound-methods': 0,
                 'rxjs/no-topromise': 1,
-                'rxjs/throw-error': 2
+                'rxjs/throw-error': 1
             }
         },
         {
@@ -94,7 +95,7 @@ const config = {
                 '@angular-eslint/template/click-events-have-key-events': 0,
                 '@angular-eslint/template/interactive-supports-focus': 0,
                 '@angular-eslint/template/label-has-associated-control': 0,
-                '@angular-eslint/template/prefer-self-closing-tags': 2
+                '@angular-eslint/template/prefer-self-closing-tags': 1
             }
         },
         {

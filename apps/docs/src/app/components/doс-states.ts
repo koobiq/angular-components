@@ -49,7 +49,7 @@ export class DocStates {
 
         fromEvent(this.currentHeaderScrollContainer, 'scroll')
             .pipe(debounceTime(10))
-            .subscribe(() => this.checkHeaderOverflow());
+            .subscribe(this.checkHeaderOverflow);
 
         Promise.resolve().then(() => this.checkHeaderOverflow());
     }
@@ -62,9 +62,7 @@ export class DocStates {
     registerNavbarScrollContainer(element: HTMLElement) {
         this.navbarScrollContainer = element;
 
-        fromEvent(this.navbarScrollContainer, 'scroll')
-            .pipe(debounceTime(10))
-            .subscribe(() => this.checkNavbarOverflow());
+        fromEvent(this.navbarScrollContainer, 'scroll').pipe(debounceTime(10)).subscribe(this.checkNavbarOverflow);
     }
 
     checkNavbarOverflow = () => {

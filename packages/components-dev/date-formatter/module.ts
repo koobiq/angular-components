@@ -343,7 +343,7 @@ export class DemoComponent {
         this.selectedLanguage =
             this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
 
-        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe((e) => this.onLocaleChange(e));
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 
     setLocale($event: KbqRadioChange) {

@@ -43,7 +43,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     ) {
         super(elementRef, scrollDispatcher, ngZone);
 
-        this.service.animation.subscribe(() => this.dispatchScrollEvent());
+        this.service.animation.subscribe(this.dispatchScrollEvent);
     }
 
     createToast<C>(data: KbqToastData, componentType, onTop: boolean): ComponentRef<C> {

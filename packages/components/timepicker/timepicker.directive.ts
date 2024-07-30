@@ -370,7 +370,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
-        this.localeSubscription = dateAdapter.localeChanges.subscribe(() => this.updateLocaleParams());
+        this.localeSubscription = dateAdapter.localeChanges.subscribe(this.updateLocaleParams);
     }
 
     ngOnDestroy(): void {

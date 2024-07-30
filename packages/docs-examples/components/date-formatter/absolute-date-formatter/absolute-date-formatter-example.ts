@@ -53,7 +53,7 @@ export class AbsoluteDateFormatterExample {
         private dateFormatter: DateFormatter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
-        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe((e) => this.onLocaleChange(e));
+        this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 
     private onLocaleChange = (locale: string) => {

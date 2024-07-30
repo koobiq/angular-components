@@ -34,7 +34,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe((e) => this.setLocale(e));
+        this.localeService?.changes.subscribe(this.setLocale);
     }
 
     /** A stream that emits when the locale changes. */

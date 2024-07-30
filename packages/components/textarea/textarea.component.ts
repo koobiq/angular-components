@@ -200,7 +200,7 @@ export class KbqTextarea
 
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges.subscribe(() => this.grow());
+        this.growSubscription = this.stateChanges.subscribe(this.grow);
     }
 
     ngOnInit() {

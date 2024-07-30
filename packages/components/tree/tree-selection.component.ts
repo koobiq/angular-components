@@ -249,7 +249,7 @@ export class KbqTreeSelection
     }
 
     ngAfterContentInit(): void {
-        this.unorderedOptions.changes.subscribe(() => this.updateRenderedOptions());
+        this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)

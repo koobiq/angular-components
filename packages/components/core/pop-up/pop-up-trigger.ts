@@ -213,7 +213,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
             .withLockedPosition()
             .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
 
-        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe((e) => this.onPositionChange(e));
+        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
@@ -224,10 +224,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.subscribeOnClosingActions();
 
-        this.overlayRef
-            .detachments()
-            .pipe(takeUntil(this.destroyed))
-            .subscribe(() => this.detach());
+        this.overlayRef.detachments().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
 
         return this.overlayRef;
     }

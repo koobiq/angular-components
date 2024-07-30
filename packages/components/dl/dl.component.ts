@@ -33,7 +33,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(() => this.updateState());
+            .subscribe(this.updateState);
     }
 
     ngOnDestroy() {

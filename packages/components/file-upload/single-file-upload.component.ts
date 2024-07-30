@@ -103,7 +103,7 @@ export class KbqSingleFileUploadComponent
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
         @Optional() @Self() public ngControl?: NgControl
     ) {
-        this.localeService?.changes.subscribe(() => this.updateLocaleParams());
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();

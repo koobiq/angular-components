@@ -71,7 +71,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.toastConfig = toastConfig || defaultToastConfig;
 
         this.ngZone.runOutsideAngular(() => {
-            this.timerSubscription = this.timer.subscribe(() => this.processToasts());
+            this.timerSubscription = this.timer.subscribe(this.processToasts);
         });
     }
 

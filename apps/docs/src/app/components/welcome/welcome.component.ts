@@ -27,7 +27,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
             .pipe(debounceTime(10), takeUntil(this.destroyed))
-            .subscribe(() => this.checkOverflow());
+            .subscribe(this.checkOverflow);
     }
 
     ngOnInit(): void {

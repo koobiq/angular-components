@@ -228,13 +228,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(() => this.updateExpandedStateForItems());
+            .subscribe(this.updateExpandedStateForItems);
     }
 
     ngAfterContentInit(): void {
         this.setItemsState();
 
-        this.rectangleElements.changes.subscribe(() => this.setItemsState());
+        this.rectangleElements.changes.subscribe(this.setItemsState);
 
         super.ngAfterContentInit();
 

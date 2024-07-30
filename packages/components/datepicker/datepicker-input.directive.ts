@@ -500,7 +500,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         this.setFormat(this.dateInputFormat);
 
-        this.localeSubscription = adapter.localeChanges.subscribe(() => this.updateLocaleParams());
+        this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
     }
 
     onContainerClick() {

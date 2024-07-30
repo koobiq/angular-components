@@ -435,7 +435,7 @@ export class KbqTabGroup
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(() => this.checkOverflow());
+            .subscribe(this.checkOverflow);
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

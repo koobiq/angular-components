@@ -54,10 +54,7 @@ export class DocsExampleSource {
     }
 
     private fetchDocument(url: string) {
-        this.http
-            .get(url, { responseType: 'text' })
-            .pipe(shareReplay(1))
-            .subscribe((e) => this.updateDocument(e));
+        this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1)).subscribe(this.updateDocument);
     }
 
     /**

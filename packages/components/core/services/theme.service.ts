@@ -32,7 +32,7 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     constructor(private rendererFactory: RendererFactory2) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
 
-        this.subscription = this.current.pipe(pairwise()).subscribe((e) => this.update(e));
+        this.subscription = this.current.pipe(pairwise()).subscribe(this.update);
     }
 
     ngOnDestroy() {

@@ -79,7 +79,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 
-        this.animationDone.subscribe(() => this.updateTooltipForItems());
+        this.animationDone.subscribe(this.updateTooltipForItems);
     }
 
     ngAfterContentInit(): void {
@@ -87,7 +87,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         this.updateExpandedStateForItems();
         this.updateTooltipForItems();
 
-        this.rectangleElements.changes.subscribe(() => this.setItemsState());
+        this.rectangleElements.changes.subscribe(this.setItemsState);
 
         super.ngAfterContentInit();
 

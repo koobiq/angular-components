@@ -576,7 +576,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
             this.removeStyle(StyleProperty.Width);
         }
 
-        this.splitter.gutterPositionChange.subscribe(() => this.emitSizeChange());
+        this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
     }
 
     ngOnDestroy(): void {

@@ -523,7 +523,7 @@ export class KbqSelect
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes.subscribe(() => this.updateLocaleParams());
+        this.localeService?.changes.subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
