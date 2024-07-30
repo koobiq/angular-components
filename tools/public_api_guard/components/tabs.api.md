@@ -321,7 +321,7 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
 //
 // @public
 export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
-    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, renderer: Renderer2);
+    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, renderer: Renderer2, tabNav: KbqTabNav);
     get active(): boolean;
     set active(value: boolean);
     // (undocumented)
@@ -332,7 +332,7 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    vertical: boolean;
+    get vertical(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabLink, "a[kbq-tab-link], a[kbqTabLink]", ["kbqTabLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "active": { "alias": "active"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
@@ -340,12 +340,10 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
 }
 
 // @public
-export class KbqTabNav implements AfterContentInit {
+export class KbqTabNav {
     constructor(vertical: string);
     // (undocumented)
     links: QueryList<KbqTabLink>;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     onSurface: boolean;
     // (undocumented)

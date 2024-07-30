@@ -1,13 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
     AfterViewInit,
     Attribute,
     ChangeDetectionStrategy,
     Component,
     ContentChildren,
     ElementRef,
+    forwardRef,
     Input,
     OnDestroy,
     QueryList,
@@ -22,7 +22,6 @@ import {
     mixinDisabled,
     mixinTabIndex
 } from '@koobiq/components/core';
-import { delay } from 'rxjs/operators';
 
 // Boilerplate for applying mixins to KbqTabLink.
 /** @docs-private */
@@ -32,6 +31,37 @@ export class KbqTabLinkBase {}
 export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqTabLinkBase = mixinTabIndex(
     mixinDisabled(KbqTabLinkBase)
 );
+
+/**
+ * Navigation component matching the styles of the tab group header.
+ */
+@Component({
+    selector: '[kbq-tab-nav-bar]',
+    exportAs: 'kbqTabNavBar, kbqTabNav',
+    template: '<ng-content />',
+    styleUrls: ['tab-nav-bar.scss'],
+    host: {
+        class: 'kbq-tab-nav-bar',
+        '[class.kbq-tab-nav-bar_filled]': '!transparent',
+        '[class.kbq-tab-nav-bar_transparent]': 'transparent',
+        '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
+        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface'
+    },
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KbqTabNav {
+    vertical = false;
+
+    @Input() transparent: boolean = false;
+    @Input() onSurface: boolean = false;
+
+    @ContentChildren(forwardRef(() => KbqTabLink)) links: QueryList<KbqTabLink>;
+
+    constructor(@Attribute('vertical') vertical: string) {
+        this.vertical = coerceBooleanProperty(vertical);
+    }
+}
 
 /**
  * Link inside of a `kbq-tab-nav-bar`.
@@ -50,10 +80,13 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
 
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null'
-    }
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDisable, HasTabIndex, AfterViewInit {
-    vertical = false;
+    get vertical(): boolean {
+        return this.tabNav.vertical;
+    }
 
     /** Whether the link is active. */
     @Input()
@@ -73,7 +106,8 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
     constructor(
         public elementRef: ElementRef,
         private readonly focusMonitor: FocusMonitor,
-        private readonly renderer: Renderer2
+        private readonly renderer: Renderer2,
+        private tabNav: KbqTabNav
     ) {
         super();
 
@@ -106,44 +140,5 @@ export class KbqTabLink extends KbqTabLinkMixinBase implements OnDestroy, CanDis
             this.renderer.addClass(firstIconElement, 'kbq-icon_left');
             this.renderer.addClass(secondIconElement, 'kbq-icon_right');
         }
-    }
-}
-
-/**
- * Navigation component matching the styles of the tab group header.
- */
-@Component({
-    selector: '[kbq-tab-nav-bar]',
-    exportAs: 'kbqTabNavBar, kbqTabNav',
-    template: '<ng-content />',
-    styleUrls: ['tab-nav-bar.scss'],
-    host: {
-        class: 'kbq-tab-nav-bar',
-        '[class.kbq-tab-nav-bar_filled]': '!transparent',
-        '[class.kbq-tab-nav-bar_transparent]': 'transparent',
-        '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
-        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqTabNav implements AfterContentInit {
-    vertical = false;
-
-    @Input() transparent: boolean = false;
-    @Input() onSurface: boolean = false;
-
-    @ContentChildren(KbqTabLink) links: QueryList<KbqTabLink>;
-
-    constructor(@Attribute('vertical') vertical: string) {
-        this.vertical = coerceBooleanProperty(vertical);
-    }
-
-    ngAfterContentInit(): void {
-        this.links.changes
-            .pipe(delay(0))
-            .subscribe((links) => links.forEach((link) => (link.vertical = this.vertical)));
-
-        this.links.notifyOnChanges();
     }
 }
