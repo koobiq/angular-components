@@ -54,7 +54,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         }
 
         console.log();
-        console.log(green(bold(`  ✓   Published all packages successfully`)));
+        console.info(green(bold(`  ✓   Published all packages successfully`)));
         console.log();
 
         const newVersionName = this.currentVersion.format();
@@ -70,16 +70,16 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         }
 
         if (!process.env['DEBUG'] && !this.config.withoutNotification) {
-            console.log(green(bold(`  ✓   Notification to Mattermost, version: ${newVersionName}`)));
+            console.info(green(bold(`  ✓   Notification to Mattermost, version: ${newVersionName}`)));
             await notify(extractedReleaseNotes);
         }
 
-        console.log(green(`  ✓  Release is posted.`));
+        console.info(green(`  ✓  Release is posted.`));
     }
 
     /** Publishes the specified package within the given NPM dist tag. */
     private publishPackageToNpm(packageName: string, npmDistTag: string) {
-        console.log(green(`  ⭮   Publishing "${packageName}"..`));
+        console.info(green(`  ⭮   Publishing "${packageName}"..`));
 
         const errorOutput = npmPublish(join(this.config.distDir, packageName), npmDistTag);
 
@@ -90,7 +90,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.log(green(`  ✓   Successfully published "${packageName}"`));
+        console.info(green(`  ✓   Successfully published "${packageName}"`));
     }
 
     /** Checks the release output by running the release-output validations. */
@@ -116,6 +116,6 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.log(green(`  ✓   Release output passed validation checks.`));
+        console.info(green(`  ✓   Release output passed validation checks.`));
     }
 }

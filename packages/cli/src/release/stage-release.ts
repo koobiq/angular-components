@@ -127,10 +127,10 @@ export class StageReleaseTask extends BaseReleaseTask {
         this.git.stageAllChanges();
         this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
 
-        console.log();
-        console.log(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
-        console.log(green(`  ✓   Please push the changes and submit a PR on GitHub.`));
-        console.log();
+        console.info();
+        console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
+        console.info(green(`  ✓   Please push the changes and submit a PR on GitHub.`));
+        console.info();
     }
 
     /** Updates the version of the project package.json and writes the changes to disk. */
@@ -162,7 +162,7 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.log(
+                console.info(
                     green(`  ⚠   Upstream commit is failing CI checks, but status has been ` + `forcibly ignored.`)
                 );
 
@@ -179,13 +179,13 @@ export class StageReleaseTask extends BaseReleaseTask {
             console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
 
             if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-                console.log(green(`  ⚠   Upstream commit is pending CI, but status has been ` + `forcibly ignored.`));
+                console.info(green(`  ⚠   Upstream commit is pending CI, but status has been ` + `forcibly ignored.`));
 
                 return;
             }
             process.exit(0);
         }
 
-        console.log(green(`  ✓   Upstream commit is passing all github status checks.`));
+        console.info(green(`  ✓   Upstream commit is passing all github status checks.`));
     }
 }

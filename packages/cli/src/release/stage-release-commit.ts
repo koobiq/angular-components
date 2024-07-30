@@ -99,9 +99,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         this.git.stageAllChanges();
         this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
 
-        console.log();
-        console.log(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
-        console.log();
+        console.info();
+        console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
+        console.info();
 
         const upstreamRemote = await this.getProjectUpstreamRemote();
 
@@ -124,9 +124,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
         this.git.pushBranchToRemote(upstreamRemote, branchName);
         this.pushReleaseTag(newVersionName, upstreamRemote);
 
-        console.log();
-        console.log(green(`  ✓   The Release Tag was pushed.`));
-        console.log();
+        console.info();
+        console.info(green(`  ✓   The Release Tag was pushed.`));
+        console.info();
     }
 
     /** Creates the specified release tag locally. */
@@ -144,9 +144,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 process.exit(1);
             }
 
-            console.log(green(`  ✓   Release tag already exists: "${italic(tagName)}"`));
+            console.info(green(`  ✓   Release tag already exists: "${italic(tagName)}"`));
         } else if (this.git.createTag(tagName, releaseNotes)) {
-            console.log(green(`  ✓   Created release tag: "${italic(tagName)}"`));
+            console.info(green(`  ✓   Created release tag: "${italic(tagName)}"`));
         } else {
             console.error(red(`  ✘   Could not create the "${tagName}" tag.`));
             console.error(red(`      Please make sure there is no existing tag with the same name.`));
@@ -172,7 +172,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
                 process.exit(1);
             }
 
-            console.log(green(`  ✓   Release tag already exists remotely: "${italic(tagName)}"`));
+            console.info(green(`  ✓   Release tag already exists remotely: "${italic(tagName)}"`));
 
             return;
         }
@@ -185,7 +185,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             process.exit(1);
         }
 
-        console.log(green(`  ✓   Pushed release tag upstream.`));
+        console.info(green(`  ✓   Pushed release tag upstream.`));
     }
 
     private async getProjectUpstreamRemote() {
@@ -193,7 +193,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             ? 'upstream'
             : await promptForUpstreamRemote(this.git.getAvailableRemotes());
 
-        console.log(green(`  ✓   Using the "${remoteName}" remote for pushing changes upstream.`));
+        console.info(green(`  ✓   Using the "${remoteName}" remote for pushing changes upstream.`));
 
         return remoteName;
     }
@@ -222,7 +222,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
     //
     //         if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-    //             console.log(green(
+    //             console.info(green(
     //                 `  ⚠   Upstream commit is failing CI checks, but status has been ` +
     //                 `forcibly ignored.`));
     //
@@ -236,7 +236,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
     //
     //         if (await this.promptConfirm('Do you want to ignore the Github status and proceed?')) {
-    //             console.log(green(
+    //             console.info(green(
     //                 `  ⚠   Upstream commit is pending CI, but status has been ` +
     //                 `forcibly ignored.`));
     //
@@ -245,6 +245,6 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     //         process.exit(0);
     //     }
     //
-    //     console.log(green(`  ✓   Upstream commit is passing all github status checks.`));
+    //     console.info(green(`  ✓   Upstream commit is passing all github status checks.`));
     // }
 }

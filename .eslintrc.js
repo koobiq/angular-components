@@ -61,6 +61,7 @@ const config = {
                     }
                 ],
                 '@typescript-eslint/no-duplicate-enum-values': 0,
+                '@typescript-eslint/ban-tslint-comment': 1,
                 // plugin:@angular-eslint
                 '@angular-eslint/component-class-suffix': 0,
                 '@angular-eslint/no-host-metadata-property': 0,
