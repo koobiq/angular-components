@@ -109,6 +109,10 @@
         kbq-css-variable(modal-size-content-padding-horizontal);
 
     word-wrap: break-word;
+
+    & > * {
+        position: relative;
+    }
 }
 
 .kbq-modal-footer,
