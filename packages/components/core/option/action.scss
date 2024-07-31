@@ -1,3 +1,5 @@
+@use '../styles/common/tokens' as *;
+
 .kbq-option-action {
     box-sizing: border-box;
 
@@ -10,8 +12,8 @@
 
     margin-right: -2px;
 
-    width: 24px;
-    height: 24px;
+    width: kbq-css-variable(list-font-text-line-height);
+    height: kbq-css-variable(list-font-text-line-height);
 
     cursor: pointer;
 
