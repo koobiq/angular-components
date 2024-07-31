@@ -58,6 +58,10 @@
     & .kbq-alert__button-stack {
         padding-top: kbq-css-variable(alert-size-normal-button-stack-padding-top);
         padding-bottom: kbq-css-variable(alert-size-normal-button-stack-padding-bottom);
+
+        &_has-button {
+            padding-top: 12px;
+        }
     }
 
     & .kbq-alert__close-button {
@@ -104,6 +108,10 @@
     & .kbq-alert__button-stack {
         padding-top: kbq-css-variable(alert-size-compact-button-stack-padding-top);
         padding-bottom: kbq-css-variable(alert-size-compact-button-stack-padding-bottom);
+
+        &_has-button {
+            padding-top: 12px;
+        }
     }
 
     & .kbq-alert__close-button {

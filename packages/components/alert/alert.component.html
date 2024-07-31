@@ -19,6 +19,7 @@
     <div
         *ngIf="control"
         class="kbq-alert__button-stack"
+        [class.kbq-alert__button-stack_has-button]="button"
     >
         <ng-content select="[kbq-alert-control]" />
     </div>

@@ -7,6 +7,7 @@ import {
     Input,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 export enum KbqAlertStyles {
@@ -65,6 +66,7 @@ export class KbqAlertControl {}
 export class KbqAlert implements AfterContentInit {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;
     @ContentChild(KbqIcon) icon: KbqIcon;
+    @ContentChild(KbqButton) button: KbqButton;
     @ContentChild(KbqAlertTitle) title: KbqAlertTitle;
     @ContentChild(KbqAlertControl) control: KbqAlertControl;
     @ContentChild(KbqAlertCloseButton) closeButton: KbqAlertCloseButton;
