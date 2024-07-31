@@ -3,8 +3,32 @@ alert-size-example .layout-column {
     gap: 16px;
 }
 
-@media (width <= 768px) {
+alert-size-example .layout-column {
+    width: 50%;
+}
+
+alert-size-example .kbq-alert__button-stack {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 12px;
+}
+
+@media (1200px < width <= 1440px) {
     alert-size-example .layout-row {
         flex-wrap: wrap;
+    }
+
+    alert-size-example .layout-column {
+        width: 100%;
+    }
+}
+
+@media (width <= 1024px) {
+    alert-size-example .layout-row {
+        flex-wrap: wrap;
+    }
+
+    alert-size-example .layout-column {
+        width: 100%;
     }
 }

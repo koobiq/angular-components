@@ -1,74 +1,118 @@
 <div class="layout-row flex-100">
     <div class="layout-column">
-        <kbq-alert [alertColor]="alertColors.Error">
-            <i kbq-icon-item="mc-error_16"></i>
-            <div kbq-alert-title>Не удалось загрузить файл</div>
-            Файл
-            <span class="kbq-caption_strong">key-december.zip</span>
-            с лицензией уже загружен на сервер.
-            <a
-                kbq-alert-control
-                kbq-link
-                class="layout-margin-right-l"
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-            <a
-                kbq-alert-control
-                kbq-link
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-        </kbq-alert>
-
-        <kbq-alert
-            [alertColor]="alertColors.Error"
-            [alertStyle]="alertStyles.Colored"
-        >
-            <i kbq-icon-item="mc-error_16"></i>
-            Не удалось обновить агент
-            <a
-                kbq-alert-control
-                kbq-link
-                class="layout-margin-right-l"
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-            <a
-                kbq-alert-control
-                kbq-link
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-        </kbq-alert>
-
-        <kbq-alert [alertColor]="alertColors.Warning">
-            <i kbq-icon-item="mc-error_16"></i>
-            После восстановления нужно проверить связи групп агентов с политиками
-        </kbq-alert>
-
-        <kbq-alert
-            [alertColor]="alertColors.Error"
-            [alertStyle]="alertStyles.Colored"
-        >
-            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст
-            и заголовок — ставьте точку в конце основного текста.
-        </kbq-alert>
-
-        <kbq-alert
-            [alertColor]="alertColors.Warning"
-            [alertStyle]="alertStyles.Colored"
-        >
-            Количество авторизованных агентов достигло максимума. Новые агенты не будут авторизованы
-        </kbq-alert>
-
-        <kbq-alert [@hideShowAnimator]="state">
+        <kbq-alert>
             <i kbq-icon-item="mc-info_16"></i>
-            Модуль настраивается в политике
+            <div kbq-alert-title>Не удалось загрузить файл</div>
+            Когда гиперссылка расположена в конце предложения, то точка окрашена в цвет ссылки,
+            <a
+                href="/components/link/overview"
+                kbq-link
+                class="kbq-text-with-dot"
+            >
+                <span class="kbq-link__text">но не подчеркивается</span>
+                <span>.</span>
+            </a>
+            <button
+                kbq-alert-control
+                kbq-button
+                class="overview__example-button"
+                [color]="colors.Contrast"
+            >
+                Выбрать другой файл
+            </button>
+            <button
+                kbq-alert-control
+                kbq-button
+                [color]="colors.Theme"
+                [kbqStyle]="style.Transparent"
+            >
+                Заменить
+            </button>
+        </kbq-alert>
+    </div>
+    <div class="layout-column">
+        <kbq-alert [compact]="true">
+            <i kbq-icon="mc-info_16"></i>
+            <div kbq-alert-title>Не удалось загрузить файл</div>
+            Когда гиперссылка расположена в конце предложения, то точка окрашена в цвет ссылки,
+            <a
+                href="/components/link/overview"
+                kbq-link
+                class="kbq-text-with-dot"
+            >
+                <span class="kbq-link__text">но не подчеркивается</span>
+                <span>.</span>
+            </a>
+            <button
+                kbq-alert-control
+                kbq-button
+                class="overview__example-button"
+                [color]="colors.Contrast"
+            >
+                Выбрать другой файл
+            </button>
+            <button
+                kbq-alert-control
+                kbq-button
+                [color]="colors.Theme"
+                [kbqStyle]="style.Transparent"
+            >
+                Заменить
+            </button>
+        </kbq-alert>
+    </div>
+</div>
+
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert>
+            <i kbq-icon-item="mc-info_16"></i>
+            Не удалось обновить агент
+            <span class="kbq-caption_strong">ekb-mail-server</span>
+            <a
+                kbq-alert-control
+                kbq-link
+                [pseudo]="true"
+            >
+                Повторить
+            </a>
+            <a
+                kbq-alert-control
+                kbq-link
+                [pseudo]="true"
+            >
+                Установить другую версию
+            </a>
+        </kbq-alert>
+    </div>
+    <div class="layout-column">
+        <kbq-alert [compact]="true">
+            <i kbq-icon="mc-info_16"></i>
+            Не удалось обновить агент
+            <span class="kbq-caption_strong">ekb-mail-server</span>
+            <a
+                kbq-alert-control
+                kbq-link
+                [pseudo]="true"
+            >
+                Повторить
+            </a>
+            <a
+                kbq-alert-control
+                kbq-link
+                [pseudo]="true"
+            >
+                Установить другую версию
+            </a>
+        </kbq-alert>
+    </div>
+</div>
+
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert>
+            <i kbq-icon-item="mc-info_16"></i>
+            Модуль настраивается в политике
             <a
                 kbq-link
                 [pseudo]="true"
@@ -83,81 +127,85 @@
             ></i>
         </kbq-alert>
     </div>
-
     <div class="layout-column">
-        <kbq-alert
-            class="kbq-alert_theme"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i kbq-icon="mc-info_16"></i>
-            Недостаточно прав. Обратитесь к администратору.
-            <a
-                kbq-alert-control
-                kbq-link
-                class="layout-margin-right-l"
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-            <a
-                kbq-alert-control
-                kbq-link
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-        </kbq-alert>
-
         <kbq-alert [compact]="true">
             <i kbq-icon="mc-info_16"></i>
-            Доступно обновление до версии 1.4.0.210
+            Модуль настраивается в политике
             <a
-                kbq-alert-control
-                kbq-link
-                class="layout-margin-right-l"
-                [pseudo]="true"
-            >
-                Псевдоссылка
-            </a>
-            <a
-                kbq-alert-control
                 kbq-link
                 [pseudo]="true"
             >
-                Псевдоссылка
+                Гипервизоры
             </a>
+            <i
+                kbq-alert-close-button
+                kbq-icon-button="mc-close-M_16"
+                [color]="colors.ContrastFade"
+                (click)="state = !state"
+            ></i>
         </kbq-alert>
+    </div>
+</div>
 
-        <kbq-alert
-            [alertColor]="alertColors.Success"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i kbq-icon="mc-success_16"></i>
-            Агент успешно обновлен до версии 1.4.0.210
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert>
+            <i kbq-icon-item="mc-info_16"></i>
+            После восстановления нужно проверить связи групп агентов с политиками
         </kbq-alert>
-
+    </div>
+    <div class="layout-column">
         <kbq-alert [compact]="true">
-            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст
-            и заголовок — ставьте точку в конце основного текста.
+            <i kbq-icon="mc-info_16"></i>
+            После восстановления нужно проверить связи групп агентов с политиками
         </kbq-alert>
+    </div>
+</div>
 
-        <kbq-alert
-            [alertColor]="alertColors.Error"
-            [compact]="true"
-        >
-            <i kbq-icon="mc-error_16"></i>
-            Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст
-            и заголовок — ставьте точку в конце основного текста.
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert>
+            <i kbq-icon-item="mc-info_16"></i>
+            Короткий текст в алерте
         </kbq-alert>
+    </div>
+    <div class="layout-column">
+        <kbq-alert [compact]="true">
+            <i kbq-icon="mc-info_16"></i>
+            Короткий текст в алерте
+        </kbq-alert>
+    </div>
+</div>
 
-        <kbq-alert
-            [alertColor]="alertColors.Error"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            Сервер поведенческих аномалий недоступен
+<div class="layout-row flex-100">
+    <div class="layout-column">
+        <kbq-alert>
+            <p>
+                Абзац должен сообщать и развивать только одну мысль. Например, если смешать в одном абзаце и причины,
+                и суть проблемы, и варианты решения ситуации, которую описываете, читатель быстро устанет и, скорее
+                всего, не поймет, о чем он вообще только что прочитал.
+            </p>
+            <p>
+                Постарайтесь сформулировать ключевую мысль в первом предложении абзаца, а затем раскрыть ее подробнее
+                и подкрепить примерами. Так читатель сможет сканировать текст по диагонали и сразу видеть,
+                о чем говорится в каждой части. Иногда первые предложения в абзаце выделяются жирным шрифтом —
+                это называется заголовками в подбор.
+            </p>
+        </kbq-alert>
+    </div>
+    <div class="layout-column">
+        <kbq-alert [compact]="true">
+            <p>
+                Абзац должен сообщать и развивать только одну мысль. Например, если смешать в одном абзаце и причины,
+                и суть проблемы, и варианты решения ситуации, которую описываете, читатель быстро устанет и, скорее
+                всего, не поймет, о чем он вообще только что прочитал.
+            </p>
+            <p>
+                Постарайтесь сформулировать ключевую мысль в первом предложении абзаца, а затем раскрыть ее подробнее
+                и подкрепить примерами. Так читатель сможет сканировать текст по диагонали и сразу видеть,
+                о чем говорится в каждой части. Иногда первые предложения в абзаце выделяются жирным шрифтом —
+                это называется заголовками в подбор.
+            </p>
         </kbq-alert>
     </div>
 </div>
