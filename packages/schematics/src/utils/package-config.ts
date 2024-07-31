@@ -1,4 +1,6 @@
-import { Tree } from '@angular-devkit/schematics';
+import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import { ProjectDefinition, readWorkspace } from '@schematics/angular/utility';
+import * as messages from './messages';
 
 /**
  * Sorts the keys of the given object.
@@ -55,4 +57,20 @@ export function getPackageVersionFromPackageJson(
     }
 
     return null;
+}
+
+export async function setupOptions(
+    project: string | undefined,
+    tree: Tree
+): Promise<ProjectDefinition | undefined | never> {
+    if (project) {
+        const workspace = await readWorkspace(tree);
+        const projectWorkspace = workspace.projects.get(project);
+
+        if (!projectWorkspace) {
+            throw new SchematicsException(messages.noProject(project));
+        }
+
+        return projectWorkspace;
+    }
 }

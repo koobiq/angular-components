@@ -28,15 +28,27 @@ const init = async () => {
     const distCLIPath = resolvePath('../../../dist/components');
     const schematicsPath = path.join(distCLIPath, 'schematics');
     const ngAddPath = path.join(schematicsPath, 'ng-add');
+    const newIconsPackPath = path.join(schematicsPath, 'new-icons-pack');
+    const utilsPath = path.join(schematicsPath, 'utils');
 
     // Ensure directories exist
     await ensureDirectoryExistence(distCLIPath);
     await ensureDirectoryExistence(schematicsPath);
+
     await ensureDirectoryExistence(ngAddPath);
+    await ensureDirectoryExistence(newIconsPackPath);
+    await ensureDirectoryExistence(utilsPath);
 
     // Copy files
     await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), path.join(ngAddPath, 'index.js'));
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), path.join(ngAddPath, 'schema.json'));
+
+    await copyFileWrapper(resolvePath('../dist/new-icons-pack/index.js'), path.join(newIconsPackPath, 'index.js'));
+    await copyFileWrapper(resolvePath('../dist/new-icons-pack/data.js'), path.join(newIconsPackPath, 'data.js'));
+    await copyFileWrapper(resolvePath('../src/new-icons-pack/schema.json'), path.join(newIconsPackPath, 'schema.json'));
+
+    await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), path.join(utilsPath, 'package-config.js'));
+
     await copyFileWrapper(resolvePath('../src/collection.json'), path.join(schematicsPath, 'collection.json'));
 };
 

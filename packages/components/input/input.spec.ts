@@ -86,7 +86,7 @@ class KbqFormFieldWithHint {}
         <kbq-form-field>
             <i
                 kbqPrefix
-                kbq-icon="mc-search_16"
+                kbq-icon="kbq-magnifying-glass_16"
             ></i>
             <input kbqInput />
         </kbq-form-field>
@@ -100,7 +100,7 @@ class KbqFormFieldWithPrefix {}
             <input kbqInput />
             <i
                 kbqSuffix
-                kbq-icon="mc-search_16"
+                kbq-icon="kbq-magnifying-glass_16"
             ></i>
         </kbq-form-field>
     `

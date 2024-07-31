@@ -25,7 +25,7 @@
 -   Кнопки в футере (нежелательны, потому что создают модальность)
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     <span>Поповер должен оставаться относительно небольшим. Если вам нужно показать много контента, возьмите&nbsp;<a href="/components/modal" kbq-link pseudo>модальный&nbsp;диалог</a> или <a href="/components/sidepanel" kbq-link pseudo>сайдпанель</a>.</span>
 </div>
 
@@ -55,7 +55,7 @@
 Скролл не блокируется. По умолчанию при скролле поповер не закрывается и скроллится вместе со страницей, оставаясь в том месте, откуда был открыт.
 
 <div class="kbq-alert kbq-alert_warning" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-error_16 kbq-alert__icon"></i>
     Поповер может закрываться при скролле страницы; какое поведение выбрать — решает проектировщик.
 </div>
 
@@ -64,7 +64,7 @@
 ### Выравнивание
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
     Учитывайте контекст, в котором появляется поповер. Настройте выравнивание так, чтобы поповер не закрывал важный контент.
 </div>
 
