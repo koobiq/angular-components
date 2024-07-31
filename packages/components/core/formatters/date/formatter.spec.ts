@@ -1,5 +1,5 @@
 import { LOCALE_ID } from '@angular/core';
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -26,7 +26,7 @@ describe('Date formatter', () => {
         };
     };
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LuxonDateModule, KbqFormattersModule],
             providers: [
@@ -35,7 +35,7 @@ describe('Date formatter', () => {
                 { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
         adapter = d;
@@ -2232,11 +2232,11 @@ describe('Date formatter (imports and providing)', () => {
         let adapter: LuxonDateAdapter;
         let formatter: DateFormatter<DateTime>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
             adapter = d;
@@ -2254,13 +2254,13 @@ describe('Date formatter (imports and providing)', () => {
         let adapter: LuxonDateAdapter;
         let formatter: DateFormatter<DateTime>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
                     { provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
             adapter = d;
@@ -2278,7 +2278,7 @@ describe('Date formatter (imports and providing)', () => {
         let adapter: LuxonDateAdapter;
         let formatter: DateFormatter<DateTime>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
@@ -2288,7 +2288,7 @@ describe('Date formatter (imports and providing)', () => {
                     }
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
             adapter = d;
@@ -2306,7 +2306,7 @@ describe('Date formatter (imports and providing)', () => {
         let adapter: LuxonDateAdapter;
         let formatter: DateFormatter<DateTime>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
@@ -2318,7 +2318,7 @@ describe('Date formatter (imports and providing)', () => {
                     }
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(inject([DateAdapter, DateFormatter], (d: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
             adapter = d;

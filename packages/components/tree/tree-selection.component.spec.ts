@@ -74,7 +74,7 @@ describe('KbqTreeSelection', () => {
             it('with rendered dataNodes', () => {
                 const nodes = getNodes(treeElement);
 
-                expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
+                expect(nodes).toBeDefined();
                 expect(nodes[0].classList).toContain('customNodeClass');
             });
 
@@ -126,7 +126,7 @@ describe('KbqTreeSelection', () => {
                 testScheduler.run(() => {
                     const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeFalse();
+                    expect(treeOptions[2].componentInstance.hasFocus).toBeFalsy();
 
                     testScheduler.flush();
 
@@ -135,7 +135,7 @@ describe('KbqTreeSelection', () => {
                     tick(10);
                     fixture.detectChanges();
 
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeTrue();
+                    expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
 
                     const copyKeyEvent = createKeyboardEvent('keydown', C);
                     Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
@@ -143,7 +143,7 @@ describe('KbqTreeSelection', () => {
                     fixture.detectChanges();
 
                     expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeTrue();
+                    expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
                 });
             }));
         });
@@ -166,9 +166,7 @@ describe('KbqTreeSelection', () => {
             xit('should expand/collapse the node', () => {
                 expect(component.treeData.length).toBe(5);
 
-                expect(component.treeControl.expansionModel.selected.length)
-                    .withContext('Expect no expanded node')
-                    .toBe(0);
+                expect(component.treeControl.expansionModel.selected.length).toBe(0);
 
                 component.toggleRecursively = false;
 
@@ -185,9 +183,7 @@ describe('KbqTreeSelection', () => {
                 (getNodes(treeElement)[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
 
-                expect(component.treeControl.expansionModel.selected.length)
-                    .withContext('Expect node expanded one level')
-                    .toBe(1);
+                expect(component.treeControl.expansionModel.selected.length).toBe(1);
                 expectFlatTreeToMatch(
                     treeElement,
                     40,
@@ -204,9 +200,7 @@ describe('KbqTreeSelection', () => {
                 (getNodes(treeElement)[5].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
 
-                expect(component.treeControl.expansionModel.selected.length)
-                    .withContext('Expect node expanded')
-                    .toBe(2);
+                expect(component.treeControl.expansionModel.selected.length).toBe(2);
 
                 expectFlatTreeToMatch(
                     treeElement,
@@ -602,9 +596,7 @@ describe('KbqTreeSelection', () => {
                 tick();
                 nodes = getNodes(treeElement);
 
-                expect(nodes.length)
-                    .withContext('dataNodes - selected + 1 (since selected is parent for unselected)')
-                    .toEqual(component.tree.treeControl.dataNodes.length - selectedNodes.length + 1);
+                expect(nodes.length).toEqual(component.tree.treeControl.dataNodes.length - selectedNodes.length + 1);
             }));
 
             it('should output selected nodes including parents when filtered by modelValue', fakeAsync(() => {
@@ -637,9 +629,7 @@ describe('KbqTreeSelection', () => {
                 component.treeControl.filterNodes(null);
                 tick();
 
-                expect(getNodes(treeElement).length)
-                    .withContext('should filter only from selection')
-                    .not.toEqual(filteredNodesLengthOnlyByText);
+                expect(getNodes(treeElement).length).not.toEqual(filteredNodesLengthOnlyByText);
             }));
         });
     });
@@ -1043,7 +1033,7 @@ class KbqTreeAppWithToggle {
                 *kbqTreeNodeDef="let node; when: isSpecial"
                 kbqTreeNodePadding
             >
-                >>>{{ node.name }}
+                {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
     `

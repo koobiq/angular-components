@@ -2,7 +2,7 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
@@ -15,7 +15,7 @@ describe('KbqTabBody', () => {
         dirChange = new Subject<Direction>();
     });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         dir = 'ltr';
         TestBed.configureTestingModule({
             imports: [CommonModule, PortalModule, NoopAnimationsModule],
@@ -26,10 +26,8 @@ describe('KbqTabBody', () => {
             ],
             providers: [
                 { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('when initialized as center', () => {
         let fixture: ComponentFixture<SimpleTabBodyApp>;

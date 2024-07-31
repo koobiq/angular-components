@@ -1,10 +1,10 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqListItem, KbqListModule } from './index';
 
 describe('KbqList', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqListModule],
             declarations: [
@@ -18,10 +18,8 @@ describe('KbqList', () => {
                 ListWithMultipleItems,
                 ListWithManyLines
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should add and remove focus class on focus/blur', () => {
         const fixture = TestBed.createComponent(ListWithOneAnchorItem);
@@ -61,9 +59,9 @@ describe('KbqList', () => {
 
         const list = fixture.debugElement.children[0];
         const listItem = fixture.debugElement.children[0].query(By.css('kbq-list-item'));
-        expect(list.nativeElement.getAttribute('role')).withContext('Expect kbq-list no role').toBeNull();
+        expect(list.nativeElement.getAttribute('role')).toBeNull();
 
-        expect(listItem.nativeElement.getAttribute('role')).withContext('Expect kbq-list-item no role').toBeNull();
+        expect(listItem.nativeElement.getAttribute('role')).toBeNull();
     });
 });
 

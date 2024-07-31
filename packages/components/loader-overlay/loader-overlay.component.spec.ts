@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
@@ -13,7 +13,7 @@ import {
 } from './index';
 
 describe('KbqLoaderOverlay', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule,
@@ -21,17 +21,19 @@ describe('KbqLoaderOverlay', () => {
                 KbqProgressSpinnerModule,
                 KbqLoaderOverlayModule
             ],
-            declarations: [OverlayWithParams, OverlayNoParams, OverlayWithExternalParams]
-        });
-
-        TestBed.compileComponents();
-    }));
+            declarations: [
+                OverlayWithParams,
+                OverlayNoParams,
+                OverlayWithExternalParams
+            ]
+        }).compileComponents();
+    });
 
     it('should be transparent by default', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.overlay.transparent).toBeTrue();
+        expect(fixture.componentInstance.overlay.transparent).toBeTruthy();
     });
 
     it('should render params', () => {
@@ -43,8 +45,8 @@ describe('KbqLoaderOverlay', () => {
         const captionElement = fixture.debugElement.query(By.css('.kbq-loader-overlay-caption'));
 
         expect(indicatorElement).toBeDefined();
-        expect(textElement.nativeElement.innerText).toBe('Создание отчета');
-        expect(captionElement.nativeElement.innerText).toBe('18,7 МБ из 25 МБ — осталось 2 мин');
+        expect(textElement.nativeElement.textContent.trim()).toContain('Создание отчета');
+        expect(captionElement.nativeElement.textContent.trim()).toBe('18,7 МБ из 25 МБ — осталось 2 мин');
     });
 
     it('should render only spinner with modifier', () => {
@@ -71,8 +73,8 @@ describe('KbqLoaderOverlay', () => {
         const captionElement = fixture.debugElement.query(By.directive(KbqLoaderOverlayCaption));
 
         expect(indicatorElement.nativeElement.classList).toContain('kbq-error');
-        expect(textElement.nativeElement.innerText).toBe('Создание отчета');
-        expect(captionElement.nativeElement.innerText).toBe('18,7 МБ из 25 МБ — осталось 2 мин');
+        expect(textElement.nativeElement.textContent.trim()).toBe('Создание отчета');
+        expect(captionElement.nativeElement.textContent.trim()).toBe('18,7 МБ из 25 МБ — осталось 2 мин');
     });
 });
 

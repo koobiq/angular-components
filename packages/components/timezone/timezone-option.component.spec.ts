@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneModule } from './timezone.module';
@@ -21,12 +21,12 @@ class TimezoneOptionComponent {
 }
 
 describe('KbqTimezoneOption component', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqTimezoneModule],
             declarations: [TimezoneOptionComponent]
         }).compileComponents();
-    }));
+    });
 
     it('TimezoneOptionComponent: viewValue', () => {
         const fixture = TestBed.createComponent(TimezoneOptionComponent);

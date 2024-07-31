@@ -1,5 +1,5 @@
 import { LOCALE_ID } from '@angular/core';
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter } from './date-adapter';
 import { LuxonDateModule } from './index';
@@ -7,7 +7,7 @@ import { LuxonDateModule } from './index';
 describe('LuxonDateAdapter with KBQ_DATE_LOCALE override', () => {
     let adapter: LuxonDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LuxonDateModule],
             providers: [
@@ -15,7 +15,7 @@ describe('LuxonDateAdapter with KBQ_DATE_LOCALE override', () => {
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;
@@ -29,7 +29,7 @@ describe('LuxonDateAdapter with KBQ_DATE_LOCALE override', () => {
 describe('LuxonDateAdapter with LOCALE_ID override', () => {
     let adapter: LuxonDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LuxonDateModule],
             providers: [
@@ -37,7 +37,7 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;
@@ -51,7 +51,7 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
 describe('LuxonDateAdapter with KBQ_LUXON_DATE_ADAPTER_OPTIONS override', () => {
     let adapter: LuxonDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LuxonDateModule],
             providers: [
@@ -62,7 +62,7 @@ describe('LuxonDateAdapter with KBQ_LUXON_DATE_ADAPTER_OPTIONS override', () => 
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;

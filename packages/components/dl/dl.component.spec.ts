@@ -1,17 +1,15 @@
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './index';
 
 describe('KbqDl', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqDlModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('default rendering', () => {
         const fixture = TestBed.createComponent(TestApp);

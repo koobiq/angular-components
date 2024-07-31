@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
@@ -15,9 +15,8 @@ const defaultOffsetForTooltipWithoutArrow = 4;
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
-    let fixture;
-    let component;
-    beforeEach(fakeAsync(() => {
+
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqToolTipModule, NoopAnimationsModule],
             declarations: [
@@ -33,6 +32,7 @@ describe('KbqTooltip', () => {
         overlayContainer = oc;
         overlayContainerElement = oc.getContainerElement();
     }));
+
     afterEach(() => {
         overlayContainer.ngOnDestroy();
     });
@@ -55,11 +55,15 @@ describe('KbqTooltip', () => {
     };
 
     describe('should bring no break change', () => {
+        let fixture: ComponentFixture<KbqTooltipTestWrapperComponent>;
+        let component: KbqTooltipTestWrapperComponent;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(KbqTooltipTestWrapperComponent);
             component = fixture.componentInstance;
             fixture.detectChanges();
         });
+
         it('should show/hide most simple tooltip with moving through all around', fakeAsync(() => {
             const featureKey = 'MOST-SIMPLE';
             const triggerElement = component.mostSimpleTrigger.nativeElement;
@@ -74,7 +78,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // NOTE: the overlayElement is only available after tooltip shown up
-            const overlayElement = component.mostSimpleDirective.overlayRef.overlayElement;
+            const overlayElement = component.mostSimpleDirective['overlayRef']!.overlayElement;
             tooltipDirective.updatePosition(); // This line is temporarily for coverage
             // Move out from the trigger element, then move into the tooltip element
             dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -89,6 +93,7 @@ describe('KbqTooltip', () => {
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
+
         it('should show/hide normal tooltip', fakeAsync(() => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
@@ -109,6 +114,7 @@ describe('KbqTooltip', () => {
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
+
         it('should show/hide tooltip by focus', fakeAsync(() => {
             const featureKey = 'FOCUS';
             const triggerElement = component.focusTrigger.nativeElement;
@@ -123,6 +129,7 @@ describe('KbqTooltip', () => {
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
+
         it('should kbqTitle support string', fakeAsync(() => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
@@ -137,7 +144,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // NOTE: the overlayElement is only available after tooltip shown up
-            const overlayElement = component.normalDirective.overlayRef.overlayElement;
+            const overlayElement = component.normalDirective['overlayRef']!.overlayElement;
             tooltipDirective.updatePosition(); // This line is temporarily for coverage
             // Move out from the trigger element, then move into the tooltip element
             dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -192,19 +199,17 @@ describe('KbqTooltip', () => {
             expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
         }));
     });
-    xdescribe('should support directive usage', () => {
-        beforeEach(() => {
-            fixture = TestBed.createComponent(KbqTooltipTestNewComponent);
-            component = fixture.componentInstance;
-            fixture.detectChanges();
-        });
-    });
+
     describe('should support kbqTooltipDisabled attribute', () => {
+        let fixture: ComponentFixture<KbqTooltipDisabledComponent>;
+        let component: KbqTooltipDisabledComponent;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(KbqTooltipDisabledComponent);
             component = fixture.componentInstance;
             fixture.detectChanges();
         });
+
         it('should not show tooltip', fakeAsync(() => {
             const featureKey = 'DISABLED';
             const tooltipDirective = component.disabledDirective;
@@ -247,6 +252,7 @@ describe('KbqTooltip', () => {
         }));
     });
 });
+
 @Component({
     selector: 'kbq-tooltip-test-new',
     template: `

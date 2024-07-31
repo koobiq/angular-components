@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from './index';
 
 describe('KbqLink', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqLinkModule, KbqIconModule],
             declarations: [
@@ -14,10 +14,8 @@ describe('KbqLink', () => {
                 KbqLinkPseudoTestApp,
                 KbqLinkNoUnderlineTestApp
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should has .kbq-text-only', () => {
         const fixture = TestBed.createComponent(KbqLinkBaseTestApp);
@@ -27,7 +25,7 @@ describe('KbqLink', () => {
 
         expect(link.classList).toContain('kbq-text-only');
         expect(link.classList).not.toContain('kbq-text-with-icon');
-        expect(link.attributes.tabIndex.nodeValue).toContain(0);
+        expect(link.attributes.tabIndex.nodeValue).toBe('0');
     });
 
     it('should has .kbq-text-with-icon', () => {

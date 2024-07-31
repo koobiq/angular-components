@@ -7,14 +7,12 @@ import { KbqNavbarItem, KbqNavbarModule } from './index';
 const FONT_RENDER_TIMEOUT_MS = 10;
 
 describe('KbqNavbar', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqNavbarModule, KbqIconModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     xit('should be collapsed on init stage', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestApp);

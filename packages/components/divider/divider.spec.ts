@@ -1,22 +1,20 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqDividerModule } from './divider.module';
 
 describe('KbqDivider', () => {
     let fixture: ComponentFixture<KbqDividerTestComponent>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqDividerModule],
             declarations: [
                 KbqDividerTestComponent
             ]
-        });
-
-        TestBed.compileComponents();
+        }).compileComponents();
         fixture = TestBed.createComponent(KbqDividerTestComponent);
-    }));
+    });
 
     it('should apply vertical class to vertical divider', () => {
         fixture.componentInstance.vertical = true;

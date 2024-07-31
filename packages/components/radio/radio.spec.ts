@@ -1,22 +1,20 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
 describe('MсRadio', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
             declarations: [
                 DisableableRadioButton,
                 RadiosInsideRadioGroup
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('inside of a group', () => {
         let fixture: ComponentFixture<RadiosInsideRadioGroup>;
@@ -28,7 +26,7 @@ describe('MсRadio', () => {
         let radioInstances: KbqRadioButton[];
         let testComponent: RadiosInsideRadioGroup;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(RadiosInsideRadioGroup);
             fixture.detectChanges();
 
@@ -42,7 +40,7 @@ describe('MсRadio', () => {
 
             radioLabelElements = radioDebugElements.map((debugEl) => debugEl.query(By.css('label')).nativeElement);
             radioInputElements = radioDebugElements.map((debugEl) => debugEl.query(By.css('input')).nativeElement);
-        }));
+        });
 
         it('should set individual radio names based on the group name', () => {
             expect(groupInstance.name).toBeTruthy();
@@ -149,9 +147,7 @@ describe('MсRadio', () => {
         it('should emit a change event from radio buttons', () => {
             expect(radioInstances[0].checked).toBe(false);
 
-            const spies = radioInstances.map((radio, index) =>
-                jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`)
-            );
+            const spies = radioInstances.map(() => jest.fn());
 
             spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -172,7 +168,7 @@ describe('MсRadio', () => {
         it(`should not emit a change event from the radio group when change group value programmatically`, () => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jasmine.createSpy('radio-group change listener');
+            const changeSpy = jest.fn();
             groupInstance.change.subscribe(changeSpy);
 
             radioLabelElements[0].click();
@@ -217,7 +213,7 @@ describe('MсRadio', () => {
         });
 
         it(`should update the group's selected radio to null when unchecking that radio programmatically`, () => {
-            const changeSpy = jasmine.createSpy('radio-group change listener');
+            const changeSpy = jest.fn();
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
 
@@ -237,7 +233,7 @@ describe('MсRadio', () => {
         });
 
         it('should not fire a change event from the group when a radio checked state changes', () => {
-            const changeSpy = jasmine.createSpy('radio-group change listener');
+            const changeSpy = jest.fn();
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
 
@@ -256,27 +252,25 @@ describe('MсRadio', () => {
         });
 
         it(`should update checked status if changed value to radio group's value`, () => {
-            const changeSpy = jasmine.createSpy('radio-group change listener');
+            const changeSpy = jest.fn();
             groupInstance.change.subscribe(changeSpy);
             groupInstance.value = 'apple';
 
             expect(changeSpy).not.toHaveBeenCalled();
             expect(groupInstance.value).toBe('apple');
-            expect(groupInstance.selected).withContext('expect group selected to be null').toBeFalsy();
-            expect(radioInstances[0].checked).withContext('should not select the first button').toBeFalsy();
-            expect(radioInstances[1].checked).withContext('should not select the second button').toBeFalsy();
-            expect(radioInstances[2].checked).withContext('should not select the third button').toBeFalsy();
+            expect(groupInstance.selected).toBeFalsy();
+            expect(radioInstances[0].checked).toBeFalsy();
+            expect(radioInstances[1].checked).toBeFalsy();
+            expect(radioInstances[2].checked).toBeFalsy();
 
             radioInstances[0].value = 'apple';
 
             fixture.detectChanges();
 
-            expect(groupInstance.selected)
-                .withContext('expect group selected to be first button')
-                .toBe(radioInstances[0]);
-            expect(radioInstances[0].checked).withContext('expect group select the first button').toBeTruthy();
-            expect(radioInstances[1].checked).withContext('should not select the second button').toBeFalsy();
-            expect(radioInstances[2].checked).withContext('should not select the third button').toBeFalsy();
+            expect(groupInstance.selected).toBe(radioInstances[0]);
+            expect(radioInstances[0].checked).toBeTruthy();
+            expect(radioInstances[1].checked).toBeFalsy();
+            expect(radioInstances[2].checked).toBeFalsy();
         });
     });
 

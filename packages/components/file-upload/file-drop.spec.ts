@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFileDropDirective } from './file-drop';
@@ -28,58 +28,60 @@ const createFSFile = (name: string, type = '') => {
 describe('FileDropDirective', () => {
     let component: SimpleDNDComponent;
     let fixture: ComponentFixture<SimpleDNDComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [SimpleDNDComponent, KbqFileDropDirective]
-        }).compileComponents();
-    });
+    let dndZone: HTMLDivElement;
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                SimpleDNDComponent,
+                KbqFileDropDirective
+            ]
+        }).compileComponents();
+
         fixture = TestBed.createComponent(SimpleDNDComponent);
         component = fixture.componentInstance;
+        dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
+
         fixture.detectChanges();
     });
 
     it('FileDropDirective: dragover/dragleave', () => {
-        const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
-
-        expect(dndZone.classList.contains('dragover')).toBeFalse();
+        expect(dndZone.classList.contains('dragover')).toBeFalsy();
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
-        expect(dndZone.classList.contains('dragover')).toBeTrue();
+        expect(dndZone.classList.contains('dragover')).toBeTruthy();
 
         dispatchFakeEvent(dndZone, 'dragleave');
         fixture.detectChanges();
 
-        expect(dndZone.classList.contains('dragover')).toBeFalse();
+        expect(dndZone.classList.contains('dragover')).toBeFalsy();
     });
 
-    it('FileDropDirective: drop with files', fakeAsync(() => {
+    it('FileDropDirective: drop with files', (done) => {
         const event = new CustomEvent('CustomEvent');
         event.initCustomEvent('drop');
-        const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
-        (event as any).dataTransfer = { items: [createFile('test.file')] };
-        spyOn(component, 'onDrop');
+        const fakeFiles = [createFile('test.file')];
+        (event as any).dataTransfer = { items: fakeFiles };
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
+        expect(dndZone.classList.contains('dragover')).toBeTruthy();
+
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
-        flush();
 
-        expect(dndZone.classList.contains('dragover')).toBeFalse();
-        expect(component.onDrop).toHaveBeenCalled();
-    }));
+        setTimeout(() => {
+            expect(component.onDrop).toHaveBeenCalledWith(expect.objectContaining({ length: fakeFiles.length }));
+            expect(dndZone.classList.contains('dragover')).toBeFalsy();
+            done();
+        });
+    });
 
     it('FileDropDirective: drop without files', () => {
-        const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeDropEvent = new DragEvent('drop', { dataTransfer: new DataTransfer() });
-
-        spyOn(component, 'onDrop');
 
         dispatchEvent(dndZone, fakeDropEvent);
         fixture.detectChanges();
@@ -87,10 +89,9 @@ describe('FileDropDirective', () => {
         expect(component.onDrop).not.toHaveBeenCalled();
     });
 
-    it('FileDropDirective: drop folder', fakeAsync(() => {
+    it('FileDropDirective: drop folder', (done) => {
         const event = new CustomEvent('CustomEvent');
         event.initCustomEvent('drop');
-        const dndZone = fixture.debugElement.query(By.css('div')).nativeElement;
         const fakeFiles = [
             createFSFile('test1'),
             createFSFile('test2')];
@@ -106,30 +107,28 @@ describe('FileDropDirective', () => {
             })
         };
         (event as any).dataTransfer = { items: [fakeDirectoryItem] };
-        spyOn(component, 'onDrop').and.callThrough();
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
-        flush();
 
-        expect(dndZone.classList.contains('dragover')).toBeFalse();
-        expect(component.onDrop).toHaveBeenCalled();
-        expect(component.files.length).toEqual(fakeFiles.length);
-    }));
+        setTimeout(() => {
+            expect(component.onDrop).toHaveBeenCalledWith(expect.objectContaining({ length: fakeFiles.length }));
+            expect(component.files.length).toEqual(fakeFiles.length);
+            done();
+        });
+    });
 });
 
 @Component({
     template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {
-    files: KbqFile[];
+    files: FileList | KbqFile[];
 
-    onDrop(event: FileList | KbqFile[]): void {
-        if (event instanceof Array) {
-            this.files = event;
-        }
-    }
+    onDrop = jest.fn().mockImplementation((event: FileList | KbqFile[]) => {
+        this.files = event;
+    });
 }

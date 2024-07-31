@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFormElement, KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -100,7 +100,7 @@ class HorizontalForm {}
 class VerticalForm {}
 
 xdescribe('Forms', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 KbqFormsModule,
@@ -109,7 +109,7 @@ xdescribe('Forms', () => {
             ],
             declarations: [HorizontalForm, VerticalForm]
         }).compileComponents();
-    }));
+    });
 
     describe('Horizontal', () => {
         it('kbq-form__row should contain classes', () => {
