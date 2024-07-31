@@ -375,15 +375,6 @@
             }
         }
     }
-
-    .kbq-code-block-actionbar {
-        .kbq-code-block-actionbar_less-contrast {
-            background-color: kbq-css-variable(
-                code-block-actionbar-bg-less-contrast,
-                map.get($code-block, actionbar, bg-less-contrast)
-            );
-        }
-    }
 }
 
 @mixin kbq-code-block-typography($config) {
