@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HighlightModule } from 'ngx-highlightjs';
 import { codeHTML, codeXML } from '../../components-dev/code-block/code-files-example';
 import { KbqCodeBlockComponent } from './code-block.component';
@@ -9,22 +9,18 @@ import { KbqCodeBlockModule } from './code-block.module';
 
 describe('CodeBlockComponent', () => {
     let component: KbqCodeBlockDefault;
-    let fixture: ComponentFixture<any>;
+    let fixture: ComponentFixture<KbqCodeBlockDefault>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserAnimationsModule,
+                NoopAnimationsModule,
                 HighlightModule,
                 KbqCodeBlockModule
             ],
             declarations: [KbqCodeBlockDefault]
-        });
+        }).compileComponents();
 
-        TestBed.compileComponents();
-    }));
-
-    beforeEach(() => {
         fixture = TestBed.createComponent(KbqCodeBlockDefault);
         component = fixture.componentInstance;
 
@@ -56,10 +52,9 @@ describe('CodeBlockComponent', () => {
 
     it('should invoke handler methods after click on buttons in action bar', fakeAsync(() => {
         const codeButtons = fixture.debugElement.queryAll(By.css('.kbq-code-block-actionbar .kbq-button-icon'));
-        // const spySoftWrap = spyOn(component.codeBlock, 'toggleSoftWrap');
-        const spyDownloadCode = spyOn(component.codeBlock, 'downloadCode');
-        const spyCopyCode = spyOn(component.codeBlock, 'copyCode');
-        const spyOpenExternalSystem = spyOn(component.codeBlock, 'openExternalSystem');
+        const downloadCodeSpyFn = jest.spyOn(component.codeBlock, 'downloadCode');
+        const copyCodeSpyFn = jest.spyOn(component.codeBlock, 'copyCode');
+        const openExternalSystemSpyFn = jest.spyOn(component.codeBlock, 'openExternalSystem');
 
         expect(codeButtons.length).toBe(3);
 
@@ -67,12 +62,10 @@ describe('CodeBlockComponent', () => {
         codeButtons[1].triggerEventHandler('click');
         tick(100);
         codeButtons[2].triggerEventHandler('click');
-        // codeButtons[3].triggerEventHandler('click');
 
-        // expect(spySoftWrap).toHaveBeenCalledTimes(1);
-        expect(spyDownloadCode).toHaveBeenCalledTimes(1);
-        expect(spyCopyCode).toHaveBeenCalledTimes(1);
-        expect(spyOpenExternalSystem).toHaveBeenCalledTimes(1);
+        expect(downloadCodeSpyFn).toHaveBeenCalledTimes(1);
+        expect(copyCodeSpyFn).toHaveBeenCalledTimes(1);
+        expect(openExternalSystemSpyFn).toHaveBeenCalledTimes(1);
     }));
 });
 

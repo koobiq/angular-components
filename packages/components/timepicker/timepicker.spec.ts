@@ -1,5 +1,5 @@
 import { Component, DebugElement, Inject, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -9,14 +9,13 @@ import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/compo
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-
 import {
     DEFAULT_TIME_FORMAT,
     KbqTimepicker,
     KbqTimepickerModule,
     TIMEFORMAT_PLACEHOLDERS,
-    TimeFormats,
-    TimeFormatToLocaleKeys
+    TimeFormatToLocaleKeys,
+    TimeFormats
 } from './index';
 
 @Component({
@@ -59,7 +58,7 @@ describe('KbqTimepicker', () => {
     let inputElementDebug;
     let adapter;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -69,8 +68,7 @@ describe('KbqTimepicker', () => {
                 KbqLuxonDateModule
             ],
             declarations: [TestApp]
-        });
-        TestBed.compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
         testComponent = fixture.debugElement.componentInstance;
@@ -78,19 +76,19 @@ describe('KbqTimepicker', () => {
         adapter = testComponent.adapter;
 
         fixture.detectChanges();
-    }));
+    });
 
     describe('Core attributes support', () => {
         it('Timepicker disabled state switching on/off', () => {
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.disabled).withContext('input not disabled').toBe(true);
+            expect(inputElementDebug.nativeElement.disabled).toBe(true);
 
             testComponent.isDisabled = false;
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.disabled).withContext('input not disabled').toBe(false);
+            expect(inputElementDebug.nativeElement.disabled).toBe(false);
         });
 
         it('Placeholder set on default timeFormat', () => {
@@ -105,7 +103,7 @@ describe('KbqTimepicker', () => {
             expect(inputElementDebug.nativeElement.placeholder).toBe('чч:мм:сс');
         });
 
-        it('should save date part of model when time is changed', fakeAsync(() => {
+        it('should save date part of model when time is changed', () => {
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
 
@@ -137,18 +135,18 @@ describe('KbqTimepicker', () => {
             expect(testComponent.adapter.getMinutes(testComponent.timeValue as DateTime)).toEqual(10);
 
             expect(testComponent.adapter.getSeconds(testComponent.timeValue as DateTime)).toEqual(10);
-        }));
+        });
     });
 
     describe('Timerange validation', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(TestApp);
             testComponent = fixture.debugElement.componentInstance;
             inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
             testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 12, 18, 28);
             fixture.detectChanges();
-        }));
+        });
 
         it('Should accept simple time set', () => {
             expect(inputElementDebug.nativeElement.classList.contains('ng-valid')).toBe(true);
@@ -173,29 +171,27 @@ describe('KbqTimepicker', () => {
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('12:18:28');
+            expect(inputElementDebug.nativeElement.value).toBe('12:18:28');
         });
 
         it('Using HH:mm', () => {
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('12:18');
+            expect(inputElementDebug.nativeElement.value).toBe('12:18');
         });
 
         it('Using default format', () => {
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value).withContext('mismatch default time format').toBe('12:18');
+            expect(inputElementDebug.nativeElement.value).toBe('12:18');
         });
 
         it('Using unknown/error/unsupported format', () => {
             testComponent.timeFormat = 'Hourglass';
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('broken fallback to default time format')
-                .toBe('12:18');
+            expect(inputElementDebug.nativeElement.value).toBe('12:18');
         });
 
         it('When the format updates', fakeAsync(() => {
@@ -205,11 +201,11 @@ describe('KbqTimepicker', () => {
 
             testComponent.timeFormat = 'HH:mm:ss';
             fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('00:00:00');
+            expect(inputElementDebug.nativeElement.value).toBe('00:00:00');
 
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.value).withContext('mismatch time format').toBe('00:00');
+            expect(inputElementDebug.nativeElement.value).toBe('00:00');
         }));
     });
 
@@ -241,7 +237,7 @@ describe('KbqTimepicker', () => {
         }));
 
         it('Should run validation on blur', () => {
-            expect(testComponent.ngModel.valid).toBeTrue();
+            expect(testComponent.ngModel.valid).toBeTruthy();
             expect(inputElementDebug.nativeElement.value).toBe('12:18');
 
             inputElementDebug.triggerEventHandler('paste', {
@@ -257,7 +253,7 @@ describe('KbqTimepicker', () => {
 
             inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
 
-            expect(testComponent.ngModel.valid).toBeFalse();
+            expect(testComponent.ngModel.valid).toBeFalsy();
         });
 
         it('Should not change model on blur', () => {
@@ -273,7 +269,7 @@ describe('KbqTimepicker', () => {
         });
 
         it('Add lead zeros on blur', () => {
-            expect(testComponent.ngModel.valid).toBeTrue();
+            expect(testComponent.ngModel.valid).toBeTruthy();
             inputElementDebug.nativeElement.value = '1';
 
             inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
@@ -541,9 +537,7 @@ describe('KbqTimepicker', () => {
             tick(1);
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value)
-                .withContext('Arrow-Down key decrement not working')
-                .toBe('23:59:00');
+            expect(inputElementDebug.nativeElement.value).toBe('23:59:00');
         }));
 
         it('Manual keyboard input digit-by-digit', () => {
@@ -559,7 +553,7 @@ describe('KbqTimepicker', () => {
             dispatchFakeEvent(inputNativeElement, 'input');
             fixture.detectChanges();
 
-            expect(inputNativeElement.value).withContext('Failed key-by-key input on 1st key').toBe('1:00:00');
+            expect(inputNativeElement.value).toBe('1:00:00');
 
             const key2PressEvent: KeyboardEvent = createKeyboardEvent('keydown', TWO);
             dispatchEvent(inputNativeElement, key2PressEvent);
@@ -571,7 +565,7 @@ describe('KbqTimepicker', () => {
             dispatchFakeEvent(inputNativeElement, 'input');
             fixture.detectChanges();
 
-            expect(inputNativeElement.value).withContext('Failed key-by-key input on 2nd key').toBe('12:00:00');
+            expect(inputNativeElement.value).toBe('12:00:00');
         });
     });
 });
@@ -602,7 +596,7 @@ describe('KbqTimepicker with null formControl value', () => {
     let testComponent: TimePickerWithNullFormControlValue;
     let inputElementDebug;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -613,18 +607,19 @@ describe('KbqTimepicker with null formControl value', () => {
                 KbqLuxonDateModule
             ],
             declarations: [TimePickerWithNullFormControlValue]
-        });
-        TestBed.compileComponents();
+        }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
-        spyOn(mockedAdapter, 'today').and.returnValue(mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5));
+        jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
+        );
 
         fixture = TestBed.createComponent(TimePickerWithNullFormControlValue);
         testComponent = fixture.debugElement.componentInstance;
         inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
         fixture.detectChanges();
-    }));
+    });
 
     it('Paste value from clipboard when formControl value is null', () => {
         testComponent.timeFormat = 'HH:mm:ss';
@@ -685,7 +680,7 @@ describe('KbqTimepicker with null model value', () => {
     let testComponent: TimePickerWithNullModelValue;
     let inputElementDebug;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -695,18 +690,19 @@ describe('KbqTimepicker with null model value', () => {
                 KbqLuxonDateModule
             ],
             declarations: [TimePickerWithNullModelValue]
-        });
-        TestBed.compileComponents();
+        }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
-        spyOn(mockedAdapter, 'today').and.returnValue(mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5));
+        jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
+        );
 
         fixture = TestBed.createComponent(TimePickerWithNullModelValue);
         testComponent = fixture.debugElement.componentInstance;
         inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
         fixture.detectChanges();
-    }));
+    });
 
     it('Paste value from clipboard when model value is null', () => {
         testComponent.timeFormat = 'HH:mm:ss';
@@ -774,7 +770,7 @@ describe('with Locale change', () => {
             TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]
         ];
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -784,15 +780,14 @@ describe('with Locale change', () => {
                 KbqLuxonDateModule
             ],
             declarations: [TimepickerWithLocaleChange]
-        });
-        TestBed.compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TimepickerWithLocaleChange);
         testComponent = fixture.debugElement.componentInstance;
         inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
         fixture.detectChanges();
-    }));
+    });
 
     it('should get placeholder from localeService', () => {
         expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(

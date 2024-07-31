@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-
 import {
     KbqEmptyState,
     KbqEmptyStateActions,
@@ -15,7 +14,7 @@ import {
 } from './index';
 
 describe('KbqEmptyState', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule,
@@ -23,10 +22,8 @@ describe('KbqEmptyState', () => {
                 KbqEmptyStateModule
             ],
             declarations: [EmptyStateWithParams]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should init and set classes', () => {
         const fixture = TestBed.createComponent(EmptyStateWithParams);

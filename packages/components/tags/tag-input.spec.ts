@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
@@ -21,9 +21,14 @@ describe('KbqTagInput', () => {
     let tagInputDirective: KbqTagInput;
     const dir = 'ltr';
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule, NoopAnimationsModule],
+            imports: [
+                PlatformModule,
+                KbqTagsModule,
+                KbqFormFieldModule,
+                NoopAnimationsModule
+            ],
             declarations: [TestTagInput],
             providers: [
                 {
@@ -36,12 +41,8 @@ describe('KbqTagInput', () => {
                     }
                 }
             ]
-        });
+        }).compileComponents();
 
-        TestBed.compileComponents();
-    }));
-
-    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(TestTagInput);
         testTagInput = fixture.debugElement.componentInstance;
         fixture.detectChanges();
@@ -49,16 +50,16 @@ describe('KbqTagInput', () => {
         inputDebugElement = fixture.debugElement.query(By.directive(KbqTagInput));
         tagInputDirective = inputDebugElement.injector.get<KbqTagInput>(KbqTagInput);
         inputNativeElement = inputDebugElement.nativeElement;
-    }));
+    });
 
     describe('basic behavior', () => {
         it('emits the (tagEnd) on enter keyup', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             tagInputDirective.onKeydown(ENTER_EVENT);
-            expect(testTagInput.add).toHaveBeenCalled();
+            expect(addSpyFn).toHaveBeenCalled();
         });
 
         it('should have a default id', () => {
@@ -73,53 +74,27 @@ describe('KbqTagInput', () => {
 
             expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
         });
-
-        // it('should propagate the dynamic `placeholder` value to the form field', () => {
-        //     fixture.componentInstance.placeholder = 'add a tag';
-        //     fixture.detectChanges();
-        //
-        //     const label: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field-label');
-        //
-        //     expect(label).toBeTruthy();
-        //     expect(label.textContent).toContain('add a tag');
-        //
-        //     fixture.componentInstance.placeholder = 'or don\'t';
-        //     fixture.detectChanges();
-        //
-        //     expect(label.textContent).toContain('or don\'t');
-        // });
-
-        // it('should become disabled if the tag list is disabled', () => {
-        //     expect(inputNativeElement.hasAttribute('disabled')).toBe(false);
-        //     expect(tagInputDirective.disabled).toBe(false);
-        //
-        //     fixture.componentInstance.tagListInstance.disabled = true;
-        //     fixture.detectChanges();
-        //
-        //     expect(inputNativeElement.getAttribute('disabled')).toBe('true');
-        //     expect(tagInputDirective.disabled).toBe(true);
-        // });
     });
 
     describe('[addOnBlur]', () => {
         it('allows (tagEnd) when true', () => {
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = true;
             fixture.detectChanges();
 
             tagInputDirective.blur({} as FocusEvent);
-            expect(testTagInput.add).toHaveBeenCalled();
+            expect(addSpyFn).toHaveBeenCalled();
         });
 
         it('disallows (tagEnd) when false', () => {
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = false;
             fixture.detectChanges();
 
             tagInputDirective.blur({} as FocusEvent);
-            expect(testTagInput.add).not.toHaveBeenCalled();
+            expect(addSpyFn).not.toHaveBeenCalled();
         });
     });
 
@@ -133,47 +108,47 @@ describe('KbqTagInput', () => {
         };
 
         it('allows (tagEnd) when true', () => {
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
             fixture.detectChanges();
 
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
-            expect(testTagInput.add).toHaveBeenCalled();
+            expect(addSpyFn).toHaveBeenCalled();
         });
 
         it('disallows (tagEnd) when false', () => {
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = false;
             fixture.detectChanges();
 
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
-            expect(testTagInput.add).not.toHaveBeenCalled();
+            expect(addSpyFn).not.toHaveBeenCalled();
         });
     });
 
     describe('[separatorKeyCodes]', () => {
         it('does not emit (tagEnd) when a non-separator key is pressed', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             tagInputDirective.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(ENTER_EVENT);
-            expect(testTagInput.add).not.toHaveBeenCalled();
+            expect(addSpyFn).not.toHaveBeenCalled();
         });
 
         it('emits (tagEnd) when a custom separator key was pressed', () => {
             const COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement, ',');
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             tagInputDirective.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(COMMA_EVENT);
-            expect(testTagInput.add).toHaveBeenCalled();
+            expect(addSpyFn).toHaveBeenCalled();
         });
 
         it('emits accepts the custom separator keys in a Set', () => {
@@ -187,13 +162,13 @@ describe('KbqTagInput', () => {
                 createKeyboardEvent('keydown', keyCode, inputNativeElement, key)
             );
 
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
             tagInputDirective.separatorKeyCodes = separators.map((separator) => separator.keyCode);
 
             fixture.detectChanges();
 
             SEPARATOR_EVENTS.forEach((event) => tagInputDirective.onKeydown(event));
-            expect(testTagInput.add).toHaveBeenCalledTimes(SEPARATOR_EVENTS.length);
+            expect(addSpyFn).toHaveBeenCalledTimes(SEPARATOR_EVENTS.length);
         });
 
         it('emits (tagEnd) when the separator keys are configured globally', () => {
@@ -223,23 +198,23 @@ describe('KbqTagInput', () => {
             tagInputDirective = inputDebugElement.injector.get<KbqTagInput>(KbqTagInput);
             inputNativeElement = inputDebugElement.nativeElement;
 
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(createKeyboardEvent('keydown', COMMA, inputNativeElement, ','));
-            expect(testTagInput.add).toHaveBeenCalled();
+            expect(addSpyFn).toHaveBeenCalled();
         });
 
         it('should not emit the tagEnd event if a separator is pressed with a modifier key', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
             Object.defineProperty(ENTER_EVENT, 'shiftKey', { get: () => true });
-            spyOn(testTagInput, 'add');
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
 
             tagInputDirective.separatorKeyCodes = [ENTER];
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(ENTER_EVENT);
-            expect(testTagInput.add).not.toHaveBeenCalled();
+            expect(addSpyFn).not.toHaveBeenCalled();
         });
     });
 });

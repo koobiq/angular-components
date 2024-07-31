@@ -1,4 +1,4 @@
-import { toBoolean } from '../utils';
+import { toBoolean } from './utils';
 
 describe('[Core]::utils', () => {
     it('should work for null values', () => {

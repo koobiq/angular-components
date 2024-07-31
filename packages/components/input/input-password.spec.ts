@@ -1,12 +1,6 @@
 import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import {
-    FormsModule,
-    ReactiveFormsModule,
-    UntypedFormBuilder,
-    UntypedFormControl,
-    UntypedFormGroup
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
@@ -146,45 +140,6 @@ class KbqPasswordInputCustomPasswordRule {
     };
 }
 
-@Component({
-    template: `
-        <kbq-form-field>
-            <input
-                [formControl]="formControl"
-                kbqInputPassword
-            />
-        </kbq-form-field>
-    `
-})
-class KbqPasswordInputWithFormControl {
-    formControl = new UntypedFormControl('');
-}
-
-@Component({
-    template: `
-        <form
-            [formGroup]="reactiveForm"
-            novalidate
-        >
-            <kbq-form-field>
-                <input
-                    kbqInputPassword
-                    formControlName="reactiveInputValue"
-                />
-            </kbq-form-field>
-        </form>
-    `
-})
-class KbqPasswordInputWithFormControlName {
-    reactiveForm: UntypedFormGroup;
-
-    constructor(private formBuilder: UntypedFormBuilder) {
-        this.reactiveForm = this.formBuilder.group({
-            reactiveInputValue: new UntypedFormControl('')
-        });
-    }
-}
-
 describe('KbqPasswordInput', () => {
     it('should have toggle', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
@@ -219,7 +174,7 @@ describe('KbqPasswordInput', () => {
         flush();
     }));
 
-    it('toggle should change input type', fakeAsync(() => {
+    it('toggle should change input type', () => {
         const fixture = createComponent(KbqPasswordInputDefault);
         fixture.detectChanges();
 
@@ -237,16 +192,16 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
 
         expect(passwordInput.getAttribute('type')).toBe('password');
-    }));
+    });
 
-    it('should have password hints', fakeAsync(() => {
+    it('should have password hints', () => {
         const fixture = createComponent(KbqPasswordInputDefault);
         fixture.detectChanges();
 
         const kbqPasswordHints = fixture.debugElement.queryAll(By.css('.kbq-password-hint'));
 
         expect(kbqPasswordHints.length).toBe(5);
-    }));
+    });
 
     it('should throw Error if custom password rule selected and verification method not provided', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
@@ -276,52 +231,4 @@ describe('KbqPasswordInput', () => {
             fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
         );
     }));
-
-    it('password length rule', fakeAsync(() => {
-        const fixture = createComponent(KbqPasswordInputDefault);
-        fixture.detectChanges();
-        flush();
-        //
-        // const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
-        // const passwordLengthHint: DebugElement = fixture.debugElement.queryAll(By.directive(KbqPasswordHint))[0];
-        // const passwordInput: any = fixture.debugElement.query(By.directive(KbqInputPassword));
-        // const input = passwordInput.nativeElement;
-        // const passwordToggle = fixture.debugElement.query(By.directive(KbqPasswordToggle)).nativeElement;
-        // console.log('mcPasswordInput: ', passwordInput);
-        //
-        // expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
-        //
-        // expect(passwordLengthHint.nativeElement.classList.contains('kbq-password-hint__icon_error')).toBe(false);
-        //
-        // console.log('input.value: ', input.value);
-        // console.log('passwordInput.value: ', passwordInput.value);
-        // passwordInput.value = '5';
-        // dispatchFakeEvent(input, 'input');
-        // dispatchFakeEvent(input, 'focus');
-        // dispatchFakeEvent(passwordToggle, 'click');
-        // fixture.detectChanges();
-        //
-        // flush();
-        // fixture.detectChanges();
-        //
-        // console.log('formFieldElement.classList', formFieldElement.classList);
-        // console.log('mcPasswordInput.classList: ', input.classList);
-        // console.log('mcPasswordLengthHint.classList: ', passwordLengthHint.nativeElement.classList);
-        //
-        // expect(passwordLengthHint.nativeElement.classList.contains('kbq-password-hint__icon_error')).toBe(true);
-    }));
-
-    describe('formControl', () => {
-        it('should step up', fakeAsync(() => {
-            const fixture = createComponent(KbqPasswordInputWithFormControl);
-            fixture.detectChanges();
-        }));
-    });
-
-    describe('formControlName', () => {
-        it('should step up', fakeAsync(() => {
-            const fixture = createComponent(KbqPasswordInputWithFormControlName);
-            fixture.detectChanges();
-        }));
-    });
 });

@@ -22,13 +22,15 @@ describe('KbqSidepanelService', () => {
 
     let rootComponentFixture: ComponentFixture<RootComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqSidepanelModule, SidepanelTestModule]
-        });
+        }).compileComponents();
 
-        TestBed.compileComponents();
-    }));
+        rootComponentFixture = TestBed.createComponent(RootComponent);
+
+        rootComponentFixture.detectChanges();
+    });
 
     beforeEach(inject([KbqSidepanelService, OverlayContainer], (ss: KbqSidepanelService, oc: OverlayContainer) => {
         sidepanelService = ss;
@@ -38,12 +40,6 @@ describe('KbqSidepanelService', () => {
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
-    });
-
-    beforeEach(() => {
-        rootComponentFixture = TestBed.createComponent(RootComponent);
-
-        rootComponentFixture.detectChanges();
     });
 
     it('should open a sidepanel with a component', () => {
@@ -67,7 +63,7 @@ describe('KbqSidepanelService', () => {
 
     it('should emit when sidepanel opening animation is complete', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterOpenedCallback = jasmine.createSpy('afterOpened spy');
+        const afterOpenedCallback = jest.fn();
 
         sidepanelRef.afterOpened().subscribe(afterOpenedCallback);
 
@@ -82,7 +78,7 @@ describe('KbqSidepanelService', () => {
 
     it('should close a sidepanel and return result', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterCloseCallback = jasmine.createSpy('afterClosed spy');
+        const afterCloseCallback = jest.fn();
 
         sidepanelRef.afterClosed().subscribe(afterCloseCallback);
         sidepanelRef.close('Result');

@@ -1,5 +1,5 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqTag, KbqTagsModule } from './index';
 
@@ -9,23 +9,19 @@ describe('Tag Remove', () => {
     let chipDebugElement: DebugElement;
     let chipNativeElement: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqTagsModule],
             declarations: [TestTag]
-        });
+        }).compileComponents();
 
-        TestBed.compileComponents();
-    }));
-
-    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(TestTag);
         testTag = fixture.debugElement.componentInstance;
         fixture.detectChanges();
 
         chipDebugElement = fixture.debugElement.query(By.directive(KbqTag));
         chipNativeElement = chipDebugElement.nativeElement;
-    }));
+    });
 
     describe('basic behavior', () => {
         it('should applies the `kbq-tag-remove` CSS class', () => {
@@ -40,11 +36,11 @@ describe('Tag Remove', () => {
             testTag.removable = true;
             fixture.detectChanges();
 
-            spyOn(testTag, 'didRemove');
+            const didRemoveSpyFn = jest.spyOn(testTag, 'didRemove');
 
             hrefElement.click();
 
-            expect(testTag.didRemove).toHaveBeenCalled();
+            expect(didRemoveSpyFn).toHaveBeenCalled();
         });
     });
 });

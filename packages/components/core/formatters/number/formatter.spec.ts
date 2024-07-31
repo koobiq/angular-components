@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import {
     KBQ_LOCALE_DATA,
     KBQ_LOCALE_ID,
@@ -11,7 +11,7 @@ import {
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
     let localeService: KbqLocaleService;
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqFormattersModule],
             providers: [
@@ -22,7 +22,7 @@ describe('KbqRoundDecimalPipe', () => {
 
         pipe = TestBed.inject(KbqRoundDecimalPipe);
         localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
-    }));
+    });
 
     it('should round number', () => {
         const tenThousand = 10000;
@@ -87,26 +87,18 @@ describe('KbqRoundDecimalPipe', () => {
                 localeService.current.formatters.number.rounding.trillion
             ];
 
-            expect(pipe.transform(betweenOneAndThousand))
-                .withContext(locale)
-                .toEqual(betweenOneAndThousand.toLocaleString(locale));
+            expect(pipe.transform(betweenOneAndThousand)).toEqual(betweenOneAndThousand.toLocaleString(locale));
 
             const isNumberWithFraction =
                 !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
                 Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)[1]);
-            expect(isNumberWithFraction).withContext(locale).toBeTruthy();
+            expect(isNumberWithFraction).toBeTruthy();
 
-            expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3]))
-                .withContext(locale)
-                .toBeTruthy();
+            expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3])).toBeTruthy();
 
-            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1]))
-                .withContext(locale)
-                .toBeTruthy();
+            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1])).toBeTruthy();
 
-            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2]))
-                .withContext(locale)
-                .toBeTruthy();
+            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2])).toBeTruthy();
         });
     }));
 

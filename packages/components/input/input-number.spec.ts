@@ -774,7 +774,7 @@ describe('KbqNumberInput', () => {
                 fixture.componentInstance.min = 0;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
                 fixture.detectChanges();
 
                 minuses.forEach((minus) => {
@@ -783,7 +783,7 @@ describe('KbqNumberInput', () => {
                     fixture.detectChanges();
                     flush();
                 });
-                expect(mockEvent.preventDefault).toHaveBeenCalledTimes(minuses.length);
+                expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
             }));
 
             /* TODO: not the full coverage since input validity change can't be emitted */
@@ -791,7 +791,8 @@ describe('KbqNumberInput', () => {
                 fixture.componentInstance.min = -5;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+
                 fixture.detectChanges();
 
                 inputElement.value = '-1';
@@ -807,7 +808,7 @@ describe('KbqNumberInput', () => {
                     fixture.detectChanges();
                     flush();
                 });
-                expect(mockEvent.preventDefault).toHaveBeenCalledTimes(minuses.length);
+                expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
             }));
         });
     });
@@ -873,14 +874,13 @@ describe('KbqNumberInput', () => {
         let inputElementDebug: DebugElement;
         let inputElement: HTMLInputElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = createComponent(KbqNumberInputWithMask);
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
             inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             inputElement = inputElementDebug.nativeElement;
-            flush();
-        }));
+        });
 
         it('should mask number satisfying rules', fakeAsync(() => {
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
@@ -891,7 +891,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('12 345');
-            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345);
         }));
 
@@ -918,7 +918,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('11 145');
-            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
         }));
 
         it('should NOT mask fractional part of number', fakeAsync(() => {
@@ -945,7 +945,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('10 234,1234');
-            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(10234.1234);
         }));
 
@@ -973,7 +973,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('99 999,999');
-            expect(previousGroupSep.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(previousGroupSep.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
 
             const previousValue = fixture.componentInstance.value;
 
@@ -998,14 +998,14 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('12 345,12345');
-            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345.12345);
             expect(typeof fixture.componentInstance.value).toBe('number');
         }));
 
         it('shoud NOT allow duplicated fractional part sign', fakeAsync(() => {
             const mockEvent: any = { preventDefault: () => true, keyCode: COMMA, key: ',' };
-            spyOn(mockEvent, 'preventDefault');
+            const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
             const previousValue = '0,12345';
 
             inputElement.value = previousValue;
@@ -1017,7 +1017,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(mockEvent.preventDefault).toHaveBeenCalled();
+            expect(preventDefaultSpyFn).toHaveBeenCalled();
             expect(inputElement.value).toBe(previousValue);
         }));
 
@@ -1047,7 +1047,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('10 000');
-            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTrue();
+            expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
         }));
 
         it('should check and normalize localized number when pasted number in different locale', fakeAsync(() => {

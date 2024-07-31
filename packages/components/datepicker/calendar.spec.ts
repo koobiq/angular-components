@@ -1,5 +1,5 @@
 import { Component, LOCALE_ID } from '@angular/core';
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
@@ -13,7 +13,7 @@ import { KbqDatepickerModule } from './datepicker-module';
 describe('KbqCalendar', () => {
     let adapter: LuxonDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
@@ -29,10 +29,8 @@ describe('KbqCalendar', () => {
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
                 { provide: LOCALE_ID, useValue: 'ru-RU' }]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;
@@ -57,7 +55,7 @@ describe('KbqCalendar', () => {
 
         it(`should update today's date`, () => {
             let fakeToday = adapter.createDate(2018, 0, 1);
-            spyOn(adapter, 'today').and.callFake(() => fakeToday);
+            jest.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
 
             calendarInstance.activeDate = fakeToday;
             calendarInstance.updateTodaysDate();
@@ -91,7 +89,7 @@ describe('KbqCalendar', () => {
         });
 
         it('should complete the stateChanges stream', () => {
-            const spy = jasmine.createSpy('complete spy');
+            const spy = jest.fn();
             const subscription = calendarInstance.stateChanges.subscribe({ complete: spy });
 
             fixture.destroy();
@@ -182,14 +180,14 @@ describe('KbqCalendar', () => {
                 '.kbq-calendar-header__previous-button'
             ) as HTMLButtonElement;
 
-            expect(prevButton.disabled).withContext('previous button should not be disabled').toBe(false);
+            expect(prevButton.disabled).toBe(false);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20160201');
 
             prevButton.click();
             fixture.detectChanges();
 
-            expect(prevButton.disabled).withContext('previous button should be disabled').toBe(true);
+            expect(prevButton.disabled).toBe(true);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20160101');
 
@@ -205,14 +203,14 @@ describe('KbqCalendar', () => {
 
             const nextButton = calendarElement.querySelector('.kbq-calendar-header__next-button') as HTMLButtonElement;
 
-            expect(nextButton.disabled).withContext('next button should not be disabled').toBe(false);
+            expect(nextButton.disabled).toBe(false);
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20171201');
 
             nextButton.click();
             fixture.detectChanges();
 
-            expect(nextButton.disabled).withContext('next button should be disabled').toBe(true);
+            expect(nextButton.disabled).toBe(true);
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20180101');
 
             nextButton.click();
@@ -223,22 +221,22 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the minDate changes', () => {
             fixture.detectChanges();
-            spyOn(calendarInstance.monthView, 'init').and.callThrough();
+            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
 
             testComponent.minDate = adapter.createDate(2017, 10, 1);
             fixture.detectChanges();
 
-            expect(calendarInstance.monthView.init).toHaveBeenCalled();
+            expect(initSpyFn).toHaveBeenCalled();
         });
 
         it('should re-render the month view when the maxDate changes', () => {
             fixture.detectChanges();
-            spyOn(calendarInstance.monthView, 'init').and.callThrough();
+            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
 
             testComponent.maxDate = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();
 
-            expect(calendarInstance.monthView.init).toHaveBeenCalled();
+            expect(initSpyFn).toHaveBeenCalled();
         });
 
         it('should update the minDate in the child view if it changed after an interaction', () => {
@@ -254,25 +252,17 @@ describe('KbqCalendar', () => {
 
             let cells = Array.from(calendarElement.querySelectorAll('.kbq-calendar__body-cell-content'));
 
-            expect(cells.slice(0, 9).every((c) => c.classList.contains(disabledClass)))
-                .withContext('Expected dates up to the 10th to be disabled.')
-                .toBe(true);
+            expect(cells.slice(0, 9).every((c) => c.classList.contains(disabledClass))).toBe(true);
 
-            expect(cells.slice(9).every((c) => c.classList.contains(disabledClass)))
-                .withContext('Expected dates after the 10th to be enabled.')
-                .toBe(false);
+            expect(cells.slice(9).every((c) => c.classList.contains(disabledClass))).toBe(false);
 
             (cells[14] as HTMLElement).click();
             dynamicFixture.detectChanges();
             cells = Array.from(calendarElement.querySelectorAll('.kbq-calendar__body-cell-content'));
 
-            expect(cells.slice(0, 14).every((c) => c.classList.contains(disabledClass)))
-                .withContext('Expected dates up to the 14th to be disabled.')
-                .toBe(true);
+            expect(cells.slice(0, 14).every((c) => c.classList.contains(disabledClass))).toBe(true);
 
-            expect(cells.slice(14).every((c) => c.classList.contains(disabledClass)))
-                .withContext('Expected dates after the 14th to be enabled.')
-                .toBe(false);
+            expect(cells.slice(14).every((c) => c.classList.contains(disabledClass))).toBe(false);
         });
     });
 

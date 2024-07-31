@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from './index';
@@ -12,14 +12,12 @@ const percentPairs = [
 ];
 
 describe('KbqProgressSpinner', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqProgressSpinnerModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should apply class based on color attribute', () => {
         const fixture = TestBed.createComponent(TestApp);

@@ -928,7 +928,7 @@ export class KbqSelect
     }
 
     private getHeightOfOptionsContainer(): number {
-        return this.optionsContainer.nativeElement.getClientRects()[0].height;
+        return this.optionsContainer.nativeElement.getClientRects()[0]?.height;
     }
 
     private updateScrollSize(): void {
