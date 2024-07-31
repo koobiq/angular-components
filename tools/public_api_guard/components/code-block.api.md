@@ -50,6 +50,8 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
     // (undocumented)
+    canLoad: boolean;
+    // (undocumented)
     canShowFocus(currentCodeContent: HTMLPreElement): boolean;
     // (undocumented)
     checkOverflow(currentCodeContentElement: HTMLElement): void;
@@ -114,7 +116,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     viewAll: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }]>;
 }

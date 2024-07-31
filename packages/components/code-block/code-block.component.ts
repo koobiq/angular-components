@@ -87,6 +87,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @Input() filled: boolean;
     @Input() maxHeight: number;
     @Input() softWrap: boolean = false;
+    @Input() canLoad: boolean = true;
 
     get noHeader(): any {
         return this.codeFiles.length === 1 && !this.codeFiles[0].filename;

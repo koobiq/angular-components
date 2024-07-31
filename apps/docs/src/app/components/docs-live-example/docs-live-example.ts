@@ -33,6 +33,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
                 [codeFiles]="[{ content: contentToCopy }]"
                 [filled]="true"
                 [lineNumbers]="true"
+                [canLoad]="false"
             />
         </ng-template>
     `,
