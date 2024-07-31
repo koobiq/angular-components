@@ -1,3 +1,20 @@
+# 17.0.0 (2024-07-31)
+
+### Koobiq
+
+ * bug fix  **button:** added focus outline ([#DS-2708](https://github.com/koobiq/angular-components/issues/issue/DS-2708)) ([#183](https://github.com/koobiq/angular-components/issues/183)) ([a50ea70](https://github.com/koobiq/angular-components/commit/a50ea702cee5a86d88119a08ceca6489ca2783c8))
+ * bug fix  **docs:** alert - article and examples ([#DS-2584](https://github.com/koobiq/angular-components/issues/issue/DS-2584)) ([#103](https://github.com/koobiq/angular-components/issues/103)) ([6004396](https://github.com/koobiq/angular-components/commit/60043969aa61713f83d60dad79c09c91b4639a28))
+ * bug fix  **file-upload:** fixed long files names ([#DS-2641](https://github.com/koobiq/angular-components/issues/issue/DS-2641)) ([#147](https://github.com/koobiq/angular-components/issues/147)) ([658e7e9](https://github.com/koobiq/angular-components/commit/658e7e9234bf9b320ca867ef6c9cfd0f5367e8b3))
+ * bug fix  **list:** fixed option icon size by list line-height variables ([#DS-2710](https://github.com/koobiq/angular-components/issues/issue/DS-2710)) ([#185](https://github.com/koobiq/angular-components/issues/185)) ([e74bf3f](https://github.com/koobiq/angular-components/commit/e74bf3f120a7fd1bc77dd9b6836e191f303e3e18))
+ * bug fix  **modal:** fixed scroll if childs contains radio or toggle ([#DS-2701](https://github.com/koobiq/angular-components/issues/issue/DS-2701)) ([#182](https://github.com/koobiq/angular-components/issues/182)) ([0f964fd](https://github.com/koobiq/angular-components/commit/0f964fd24ba2f81eebadcb488e89f6621164896a))
+ * bug fix  **select,tree-select:** item width calculation ([#DS-2649](https://github.com/koobiq/angular-components/issues/issue/DS-2649)) ([#175](https://github.com/koobiq/angular-components/issues/175)) ([a3cf1cc](https://github.com/koobiq/angular-components/commit/a3cf1cca2b0fc403698af3da6eb9e5622ad9fce6))
+ * bug fix  **tabs:** Incorrect text placement in kbq-tab-link ([#DS-2675](https://github.com/koobiq/angular-components/issues/issue/DS-2675)) ([#176](https://github.com/koobiq/angular-components/issues/176)) ([8a154b5](https://github.com/koobiq/angular-components/commit/8a154b56a18cac9b038426b6fc1c4d96bffab52c))
+ * bug fix  **tabs:** labels icons fix ([#DS-2698](https://github.com/koobiq/angular-components/issues/issue/DS-2698)) ([#169](https://github.com/koobiq/angular-components/issues/169)) ([0b98162](https://github.com/koobiq/angular-components/commit/0b98162aa1d42f6351ee7333237f0b54fb5003c5))
+ * feature  added eslint support, removed tslint ([#DS-2654](https://github.com/koobiq/angular-components/issues/issue/DS-2654)) ([#168](https://github.com/koobiq/angular-components/issues/168)) ([f357e5c](https://github.com/koobiq/angular-components/commit/f357e5c7a58efdc820dadfc7d87f55f47e8336f1))
+ * feature  **buttons:** new tokens borders and focused outlines ([#DS-2662](https://github.com/koobiq/angular-components/issues/issue/DS-2662)) ([#174](https://github.com/koobiq/angular-components/issues/174)) ([25582e2](https://github.com/koobiq/angular-components/commit/25582e2b197363102665345130116d62587e9eb7))
+ * feature  updated design-tokens to rc15 ([#172](https://github.com/koobiq/angular-components/issues/172)) ([3a3ddf8](https://github.com/koobiq/angular-components/commit/3a3ddf823e66d9d8ff97ba2a73b68d47a69e8d1e))
+ * feature  updated husky and lint-staged ([#180](https://github.com/koobiq/angular-components/issues/180)) ([fe356c6](https://github.com/koobiq/angular-components/commit/fe356c6c455d2aa7ca44f09e2c1efd708dea13ce))
+
 # 17.0.0-rc.12 (2024-07-25)
 
 ### Koobiq
