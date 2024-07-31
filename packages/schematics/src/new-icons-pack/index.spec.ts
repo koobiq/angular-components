@@ -1,10 +1,10 @@
+import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../utils/testing';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { newIconsPackData } from './data';
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 
 const collectionPath = path.join(__dirname, '../collection.json');
 
@@ -32,17 +32,14 @@ describe('new-icons-pack', () => {
         const workspace = await getWorkspace(appTree);
         projects = workspace.projects;
         projects.forEach((project) => {
-            const templatePath = `/${ project.root }/src/app/app.component.html`;
-            const stylesPath = `/${ project.root }/src/styles.scss`;
+            const templatePath = `/${project.root}/src/app/app.component.html`;
+            const stylesPath = `/${project.root}/src/styles.scss`;
 
             appTree.overwrite(
                 templatePath,
-                `${ appTree.read(templatePath)!.toString() }\n${ elementsWithDeprecatedIconPrefixes.join('\n') }`
+                `${appTree.read(templatePath)!.toString()}\n${elementsWithDeprecatedIconPrefixes.join('\n')}`
             );
-            appTree.overwrite(
-                stylesPath,
-                `@use "@koobiq/icons"\n${ appTree.read(stylesPath)!.toString() }`
-            );
+            appTree.overwrite(stylesPath, `@use "@koobiq/icons"\n${appTree.read(stylesPath)!.toString()}`);
         });
     });
 
@@ -52,8 +49,8 @@ describe('new-icons-pack', () => {
         delete pkg.dependencies['@koobiq/kbq-icons'];
         appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
-        runner.logger.subscribe(({ message}) => expect(message)
-            .toContain('Breaking version of icons is not used. Everything is OK.')
+        runner.logger.subscribe(({ message }) =>
+            expect(message).toContain('Breaking version of icons is not used. Everything is OK.')
         );
         await runner.runSchematic('new-icons-pack', { fix: false }, appTree);
     });
@@ -63,21 +60,24 @@ describe('new-icons-pack', () => {
         const readProjectContent = (projectKey: string) => {
             const project = projects.get(projectKey)!;
             return [
-                tree.read(`/${ project.root }/src/app/app.component.html`)?.toString() || '',
-                tree.read(`/${ project.root }/src/styles.scss`)?.toString() || ''
+                tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
+                tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
             ];
         };
 
         const tree = await runner.runSchematic('new-icons-pack', { fix: false, project: firstProjectKey }, appTree);
 
-
         const [firstProjectTemplateContent, firstProjectStylesContent] = readProjectContent(firstProjectKey);
-        expect(elementsWithDeprecatedIconPrefixes.filter((item) => firstProjectTemplateContent.indexOf(item) !== -1).length).toBeFalsy();
+        expect(
+            elementsWithDeprecatedIconPrefixes.filter((item) => firstProjectTemplateContent.indexOf(item) !== -1).length
+        ).toBeFalsy();
         expect(firstProjectStylesContent).toContain(updatedPkgName);
 
         const [secondProjectTemplateContent, secondProjectStylesContent] = readProjectContent(secondProjectKey);
-        expect(elementsWithDeprecatedIconPrefixes.filter((item) => secondProjectTemplateContent.indexOf(item) !== -1).length)
-            .toEqual(elementsWithDeprecatedIconPrefixes.length);
+        expect(
+            elementsWithDeprecatedIconPrefixes.filter((item) => secondProjectTemplateContent.indexOf(item) !== -1)
+                .length
+        ).toEqual(elementsWithDeprecatedIconPrefixes.length);
         expect(secondProjectStylesContent).not.toContain(updatedPkgName);
     });
 
@@ -85,66 +85,59 @@ describe('new-icons-pack', () => {
         const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
 
         projects.forEach((project) => {
-            const templateContent = tree.read(
-                `/${ project.root }/src/app/app.component.html`
-            )!.toString();
-            const stylesContent = tree.read(
-                `/${ project.root }/src/styles.scss`
-            )!.toString();
+            const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
+            const stylesContent = tree.read(`/${project.root}/src/styles.scss`)!.toString();
 
-            expect(elementsWithDeprecatedIconPrefixes.filter((item) => templateContent.indexOf(item) !== -1).length).toBeFalsy();
+            expect(
+                elementsWithDeprecatedIconPrefixes.filter((item) => templateContent.indexOf(item) !== -1).length
+            ).toBeFalsy();
             expect(stylesContent).toContain(updatedPkgName);
         });
     });
 
     it('should replace deprecated icons for fix = true', async () => {
         const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
-        const iconsToBeReplaced = newIconsPackDataSlice
-            .map(({ replace }) => `<i kbq-icon="mc-${ replace }"></i>`);
-        const iconsToBeReplacedWith = newIconsPackDataSlice
-            .map(({ replaceWith }) => `<i kbq-icon="kbq-${ replaceWith }"></i>`);
+        const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
+        const iconsToBeReplacedWith = newIconsPackDataSlice.map(
+            ({ replaceWith }) => `<i kbq-icon="kbq-${replaceWith}"></i>`
+        );
 
         projects.forEach((project) => {
-            const templatePath = `/${ project.root }/src/app/app.component.html`;
+            const templatePath = `/${project.root}/src/app/app.component.html`;
 
             appTree.overwrite(
                 templatePath,
-                `${ appTree.read(templatePath)!.toString() }\n${ iconsToBeReplaced.join('\n') }`
+                `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`
             );
         });
 
         const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
 
         projects.forEach((project) => {
-            const templateContent = tree.read(
-                `/${ project.root }/src/app/app.component.html`
-            )!.toString();
+            const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
 
             expect(iconsToBeReplaced.filter((item) => templateContent.indexOf(item) !== -1).length).toBeFalsy();
-            expect(iconsToBeReplacedWith.filter((item) => templateContent.indexOf(item) !== -1).length)
-                .toEqual(iconsToBeReplacedWith.length);
+            expect(iconsToBeReplacedWith.filter((item) => templateContent.indexOf(item) !== -1).length).toEqual(
+                iconsToBeReplacedWith.length
+            );
         });
     });
 
     it('should inform about deprecated icons for fix = false (default, without params)', async () => {
         const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
-        const iconsToBeReplaced = newIconsPackDataSlice
-            .map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
+        const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
 
         projects.forEach((project) => {
-            const templatePath = `/${ project.root }/src/app/app.component.html`;
+            const templatePath = `/${project.root}/src/app/app.component.html`;
             appTree.overwrite(
                 templatePath,
-                `${ appTree.read(templatePath)!.toString() }\n${ iconsToBeReplaced.join('\n') }`
+                `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`
             );
         });
 
         // simply check for messages to be sent
-        runner.logger.subscribe(({ message}) => expect(message)
-            .withContext(message)
-            .toBeTruthy()
-        );
+        runner.logger.subscribe(({ message }) => expect(message).toBeTruthy());
 
         await runner.runSchematic('new-icons-pack', {}, appTree);
-    })
+    });
 });

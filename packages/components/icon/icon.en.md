@@ -4,15 +4,15 @@ Note that koobiq Icons is optional package and it should be installed manually.
 
 ##### NPM
 
-`npm install @koobiq/icons --save`
+`npm install @koobiq/kbq-icons --save`
 
 ##### Yarn
 
-`yarn add @koobiq/icons`
+`yarn add @koobiq/kbq-icons`
 
 Then you should add icons styles:
 
-`@use '@koobiq/icons/dist/fonts/kbq-icons.css';`
+`@use '@koobiq/kbq-icons/fonts/kbq-icons.css';`
 
 And finally import KbqIconModule to your component module.
 

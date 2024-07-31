@@ -59,7 +59,10 @@ export function getPackageVersionFromPackageJson(
     return null;
 }
 
-export async function setupOptions(project: string | undefined, tree: Tree): Promise<ProjectDefinition | undefined | never> {
+export async function setupOptions(
+    project: string | undefined,
+    tree: Tree
+): Promise<ProjectDefinition | undefined | never> {
     if (project) {
         const workspace = await readWorkspace(tree);
         const projectWorkspace = workspace.projects.get(project);
