@@ -47,7 +47,7 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
     template: `
         <ng-container [ngSwitch]="!!customIcon">
             <i
-                class="mc kbq-icon mc-ellipsis_16"
+                class="kbq kbq-icon kbq-ellipsis-vertical_16"
                 *ngSwitchCase="false"
             ></i>
             <ng-content

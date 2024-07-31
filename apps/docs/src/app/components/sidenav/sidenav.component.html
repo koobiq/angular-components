@@ -31,10 +31,10 @@
             >
                 <span>{{ node.name }}</span>
                 <i
-                    kbq-icon-button="mc-angle-down-S_16"
+                    kbq-icon-button="kbq-chevron-down-s_16"
                     kbq-tree-node-toggle
                     class="docs-sidenav__category-icon"
-                    [class.mc_collapsed]="!treeControl.isExpanded(node)"
+                    [class.kbq_collapsed]="!treeControl.isExpanded(node)"
                     [style.visibility]="node.id === 'icons' ? 'hidden' : 'initial'"
                 ></i>
             </div>

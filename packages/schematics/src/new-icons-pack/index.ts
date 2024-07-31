@@ -1,10 +1,10 @@
-import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Path } from '@angular-devkit/core';
+import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
-import { newIconsPackData, ReplaceData } from './data';
-import { Schema } from './schema';
 import { LoggerApi } from '@angular-devkit/core/src/logger';
 import { setupOptions } from '../utils/package-config';
+import { newIconsPackData, ReplaceData } from './data';
+import { Schema } from './schema';
 
 const data = newIconsPackData;
 
@@ -17,8 +17,9 @@ export default function newIconsPack(options: Schema): Rule {
         { replace: 'kbq-icon-item="mc-', replaceWith: 'kbq-icon-item="kbq-' },
         { replace: 'kbq-icon-button="mc-', replaceWith: 'kbq-icon-button="kbq-' },
         { replace: 'class="mc kbq-icon mc-', replaceWith: 'class="kbq kbq-icon kbq-' },
-        { replace: '\\[class\\.mc', replaceWith: '\[class\.kbq' },
-        { replace: '\'mc-', replaceWith: '\'kbq-' }
+        { replace: 'class="mc kbq-', replaceWith: 'class="kbq kbq-' },
+        { replace: '\\[class\\.mc', replaceWith: '[class.kbq' },
+        { replace: "'mc-", replaceWith: "'kbq-" }
     ];
 
     return async (tree: Tree, context: SchematicContext) => {
@@ -31,26 +32,26 @@ export default function newIconsPack(options: Schema): Rule {
         }
 
         const { logger } = context;
-        const handleDeprecatedIcons = (newContent: string | undefined, path: Path) =>  {
+        const handleDeprecatedIcons = (newContent: string | undefined, path: Path) => {
             if (options.fix) {
                 data.forEach(({ replace, replaceWith }) => {
                     newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
                 });
             } else {
-                const foundIcons = data
-                    .filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+                const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
                 showWarning(path, foundIcons, logger);
             }
             return newContent;
-        }
+        };
 
         // Check if breaking version is used indeed
         if (tree.exists('package.json')) {
             const sourceText = tree.read('package.json')!.toString('utf-8');
             const json: Partial<{ devDependencies: any; dependencies: any }> = JSON.parse(sourceText);
 
-            const isIconsBreakingVersionUsed = ['devDependencies', 'dependencies', 'peerDependencies']
-                .some((type) => json[type] && json[type][pkg] && breakingIconsVersionRegExp.test(json[type][pkg]));
+            const isIconsBreakingVersionUsed = ['devDependencies', 'dependencies', 'peerDependencies'].some(
+                (type) => json[type] && json[type][pkg] && breakingIconsVersionRegExp.test(json[type][pkg])
+            );
 
             if (!isIconsBreakingVersionUsed) {
                 logger.warn('Breaking version of icons is not used. Everything is OK.');
@@ -61,7 +62,9 @@ export default function newIconsPack(options: Schema): Rule {
         // Update templates & components
         targetDir.visit((path: Path, entry) => {
             // if project property not provided, provide node_modules to be changed
-            if (path.includes('node_modules')) { return; }
+            if (path.includes('node_modules')) {
+                return;
+            }
 
             if (path.endsWith('.html') || path.endsWith('.ts')) {
                 const initialContent = entry?.content.toString();
@@ -84,7 +87,9 @@ export default function newIconsPack(options: Schema): Rule {
         // update styles
         targetDir.visit((path: Path, entry) => {
             // if project property not provided, provide node_modules to be changed
-            if (path.includes('node_modules')) { return; }
+            if (path.includes('node_modules')) {
+                return;
+            }
 
             if (path.endsWith(options.stylesExt)) {
                 const initialContent = entry?.content.toString();
@@ -110,10 +115,8 @@ export default function newIconsPack(options: Schema): Rule {
 function showWarning(path: Path, foundIcons: ReplaceData[], logger: LoggerApi) {
     if (foundIcons.length) {
         logger.warn('-------------------------');
-        logger.warn(`Please pay attention! Found deprecated icons in file ${ path }: `);
-        logger.warn(
-            foundIcons.map(({ replace, replaceWith }) =>`\t${replace} -> \t${replaceWith}`).join('\n')
-        );
+        logger.warn(`Please pay attention! Found deprecated icons in file ${path}: `);
+        logger.warn(foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n'));
         logger.warn('-------------------------');
     }
 }

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
             [tabindex]="-1"
             [autoColor]="true"
             (mousedown)="onStepUp($event)"
-            kbq-icon-button="mc-angle-down-L_16"
+            kbq-icon-button="kbq-chevron-down_16"
         ></i>
         <i
             class="kbq-stepper-step-down"
@@ -17,7 +17,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
             [tabindex]="-1"
             [autoColor]="true"
             (mousedown)="onStepDown($event)"
-            kbq-icon-button="mc-angle-down-L_16"
+            kbq-icon-button="kbq-chevron-down_16"
         ></i>
     `,
     styleUrls: ['stepper.scss'],

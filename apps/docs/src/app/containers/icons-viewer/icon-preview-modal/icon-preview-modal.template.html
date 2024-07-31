@@ -7,7 +7,7 @@
         (click)="modal.close()"
     >
         <i
-            kbq-icon="mc-close-L_16"
+            kbq-icon="kbq-xmark_16"
             [color]="componentColors.Contrast"
         ></i>
     </button>
@@ -30,7 +30,7 @@
             >
                 <kbq-select-trigger>
                     <i
-                        kbq-icon="mc-circle-8_16"
+                        kbq-icon="kbq-circle-6_16"
                         class="icon-preview-modal__palette-icon"
                         [color]="selectedColorTheme"
                     ></i>
@@ -43,7 +43,7 @@
                     [value]="paletteName"
                 >
                     <i
-                        kbq-icon="mc-circle-8_16"
+                        kbq-icon="kbq-circle-6_16"
                         class="icon-preview-modal__palette-icon"
                         [color]="paletteName"
                     ></i>
@@ -58,7 +58,7 @@
                 href="{{ SVGLink }}"
                 kbq-button
             >
-                <i kbq-icon="mc-download_16"></i>
+                <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 Скачать SVG
             </a>
 
@@ -66,7 +66,7 @@
                 kbq-button
                 (click)="copySVG()"
             >
-                <i kbq-icon="mc-copy-o_16"></i>
+                <i kbq-icon="kbq-file-multiple-o_16"></i>
                 Скопировать SVG
             </button>
         </div>

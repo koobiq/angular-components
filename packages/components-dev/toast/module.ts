@@ -99,7 +99,7 @@ export class ToastDemoComponent {
             title: 'Не удалось авторизовать 15 агентов',
             actions,
             icon: true,
-            iconClass: 'mc-error_16'
+            iconClass: 'kbq-exclamation-triangle_16'
         });
     }
 

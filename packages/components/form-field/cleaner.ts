@@ -6,7 +6,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     template: `
         <i
             [autoColor]="true"
-            kbq-icon-button="mc-close-circle_16"
+            kbq-icon-button="kbq-xmark-circle_16"
         ></i>
     `,
     styleUrls: ['cleaner.scss'],

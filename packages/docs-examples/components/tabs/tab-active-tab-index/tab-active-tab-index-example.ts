@@ -11,9 +11,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 export class TabActiveTabIndexExample {
     tabs = [
-        { tabId: 'files', icon: 'mc-folder-opened_16' },
-        { tabId: 'settings', icon: 'mc-gear_16' },
-        { tabId: 'tasks', icon: 'mc-hamburger_16' }
+        { tabId: 'files', icon: 'kbq-folder-open_16' },
+        { tabId: 'settings', icon: 'kbq-gear_16' },
+        { tabId: 'tasks', icon: 'kbq-hamburger-menu_16' }
     ];
 
     selectedTabIndex = this.tabs.findIndex(({ tabId }) => tabId === 'settings');

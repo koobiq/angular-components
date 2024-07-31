@@ -22,7 +22,7 @@ export class IconItems {
             const size = parseInt(id.split('_')[1]);
             this.sizes.add(size);
 
-            const cssClass = 'mc-'.concat(id);
+            const cssClass = 'kbq-'.concat(id);
 
             let name = id.replace(/_\d+/, '').replace(/-/g, ' ');
 

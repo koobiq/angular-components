@@ -32,8 +32,8 @@
 }
 
 .DocSearch-Button-Container::before {
-    @extend .mc;
-    @extend .mc-search_16;
+    @extend .kbq;
+    @extend .kbq-magnifying-glass_16;
 
     @media (width <= 768px) {
         font-size: 20px;
@@ -67,8 +67,8 @@
 }
 
 .DocSearch-MagnifierLabel::before {
-    @extend .mc;
-    @extend .mc-search_16;
+    @extend .kbq;
+    @extend .kbq-magnifying-glass_16;
 
     color: $light-icon-contrast-fade;
 }
@@ -87,8 +87,8 @@
 }
 
 .DocSearch-Reset::before {
-    @extend .mc;
-    @extend .mc-close-circle_16;
+    @extend .kbq;
+    @extend .kbq-xmark-circle_16;
 }
 
 .DocSearch-Reset:hover {
