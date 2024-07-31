@@ -101,7 +101,7 @@
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
                 $focused-color: map.get($theme, states, focused-color);
-                outline: $focused-color;
+                outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }
         }
