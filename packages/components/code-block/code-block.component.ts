@@ -100,7 +100,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.hideActionBarIfNoHeader();
     }
 
-    _codeFiles: KbqCodeFile[];
+    private _codeFiles: KbqCodeFile[];
 
     get noHeader(): any {
         return this.codeFiles.length === 1 && !this.codeFiles[0].filename;

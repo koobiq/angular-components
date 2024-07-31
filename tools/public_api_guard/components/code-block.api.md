@@ -60,8 +60,6 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     get codeFiles(): KbqCodeFile[];
     set codeFiles(files: KbqCodeFile[]);
     // (undocumented)
-    _codeFiles: KbqCodeFile[];
-    // (undocumented)
     config: KbqCodeBlockConfiguration;
     // (undocumented)
     copied: boolean;
