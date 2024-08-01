@@ -12,7 +12,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     position: absolute;
 
-    top: -1px;
+    top: 0;
     right: 0;
 
     margin: kbq-css-variable(code-block-size-actionbar-padding-vertical)
@@ -32,10 +32,5 @@ $tokens: meta.module-variables(tokens) !default;
                     map.get($tokens, code-block-size-actionbar-padding-vertical)
                 ) * -1
         );
-    }
-
-    &.kbq-actionbar-block_floating {
-        top: kbq-css-variable(code-block-size-actionbar-margin-top);
-        right: kbq-css-variable(code-block-size-actionbar-margin-right);
     }
 }

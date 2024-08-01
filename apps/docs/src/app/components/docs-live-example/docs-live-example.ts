@@ -29,8 +29,12 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
             let-htmlContent
             let-contentToCopy="textContent"
         >
-            <copy-button [contentToCopy]="contentToCopy" />
-            <div [outerHTML]="htmlContent"></div>
+            <kbq-code-block
+                [codeFiles]="[{ content: contentToCopy }]"
+                [filled]="true"
+                [lineNumbers]="true"
+                [canLoad]="false"
+            />
         </ng-template>
     `,
     host: {
@@ -38,7 +42,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
     }
 })
 export class DocsLiveExample implements OnDestroy {
-    @ViewChild(CdkPortal) copyableCodeTemplate: CdkPortal;
+    @ViewChild(CdkPortal) codeTemplate: CdkPortal;
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
@@ -118,7 +122,7 @@ export class DocsLiveExample implements OnDestroy {
         this.textContent = this.nativeElement.textContent;
 
         this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
-        // this.initCodeBlocks();
+        this.initCodeBlocks();
 
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
@@ -151,13 +155,12 @@ export class DocsLiveExample implements OnDestroy {
         const markDownClass = 'kbq-markdown__pre';
 
         this.nativeElement.querySelectorAll(`.${markDownClass}`).forEach((element: Element) => {
-            const outerHTML = element.outerHTML;
-            const textContent = element.textContent;
+            const { outerHTML, textContent } = element;
             element.innerHTML = '';
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
 
-            this.copyableCodeTemplate.attach(portalHost, { $implicit: outerHTML, textContent });
+            this.codeTemplate.attach(portalHost, { $implicit: outerHTML, textContent });
 
             this.portalHosts.push(portalHost);
 

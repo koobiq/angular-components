@@ -32,6 +32,7 @@ export class KbqActionBarComponent implements AfterViewInit {
     @Input() selectedTabIndex = 0;
     @Input() multiLine: boolean;
     @Input() softWrap: boolean;
+    @Input() canLoad: boolean;
 
     @Output() toggleSoftWrap = new EventEmitter<void>();
     @Output() downloadCode = new EventEmitter<void>();
