@@ -14,7 +14,8 @@ $actionbar-indents: kbq-css-variable(code-block-size-actionbar-padding-vertical)
 
     position: absolute;
 
-    top: 0;
+    // position to top to the height of tab-header
+    top: -48px;
     right: 0;
 
     margin: $actionbar-indents;
@@ -30,6 +31,7 @@ $actionbar-indents: kbq-css-variable(code-block-size-actionbar-padding-vertical)
     }
 
     &.kbq-actionbar-block_floating {
+        top: 0;
         margin: unset;
         background: transparent !important;
 

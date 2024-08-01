@@ -87,6 +87,8 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     &:not(.kbq-code-block_no-header) {
         .kbq-tab-body__wrapper {
             border-top-width: 0;
+            // actionbar can be visible when positioned in the header
+            overflow: visible;
         }
     }
 
@@ -126,8 +128,6 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 
     .kbq-tab-body__wrapper {
         flex-direction: column;
-        position: unset;
-
         border-width: $border-width;
         border-style: solid;
         border-radius: 0 0 $border-radius $border-radius;
@@ -173,10 +173,10 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     justify-content: center;
     overflow: hidden;
 
-    width: calc(100% - $border-width * 2);
+    width: 100%;
 
     position: absolute;
-    bottom: $border-width;
+    bottom: 0;
     border-radius: $border-radius;
 
     &.kbq-code-block__show-more_collapsed {
