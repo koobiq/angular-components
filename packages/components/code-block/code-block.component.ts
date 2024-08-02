@@ -16,8 +16,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
-import { Subject, Subscription, pairwise } from 'rxjs';
-import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
+import { Subject, Subscription, fromEvent, merge, pairwise } from 'rxjs';
+import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
@@ -74,11 +74,7 @@ const hasScroll = (element: HTMLElement) => {
         '[class.kbq-code-block_single-file]': 'singleFile',
         '[class.kbq-code-block_no-header]': 'noHeader',
         '[class.kbq-code-block_header-with-shadow]': 'isTopOverflow',
-        '(window:resize)': 'resizeStream.next($event)',
-        '(mouseenter)': 'showActionBarIfNecessary()',
-        '(focusin)': 'showActionBarIfNecessary()',
-        '(focusout)': 'hideActionBarIfNoHeader()',
-        '(mouseleave)': 'hideActionBarIfNoHeader()'
+        '(window:resize)': 'resizeStream.next($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -98,6 +94,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     set codeFiles(files: KbqCodeFile[]) {
         this._codeFiles = files;
         this.hideActionBarIfNoHeader();
+        this.subscribeToHover();
     }
 
     private _codeFiles: KbqCodeFile[];
@@ -117,10 +114,9 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     isTopOverflow: boolean = false;
     hasFocus: boolean = false;
     /**
-     * Opacity param used to provide focus even when element not visible
      * @docs-private
      */
-    actionbarOpacity: number | null = null;
+    actionbarHidden?: boolean;
 
     readonly resizeStream = new Subject<Event>();
     readonly currentCodeBlock = new Subject<HTMLElement>();
@@ -128,6 +124,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     private readonly resizeDebounceInterval: number = 100;
     private resizeSubscription = Subscription.EMPTY;
     private codeBlockSubscription = Subscription.EMPTY;
+    private hoverSubscription = Subscription.EMPTY;
 
     constructor(
         private elementRef: ElementRef,
@@ -165,6 +162,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
             });
 
         this.hideActionBarIfNoHeader();
+        this.subscribeToHover();
         this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code'));
     }
 
@@ -242,11 +240,13 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.toggleViewAll();
 
         if (this.viewAll) {
+            this.subscribeToHover();
             this.showActionBarIfNecessary();
         } else {
             // Should explicitly scroll to top so content will be cropped from the bottom
             currentCodeContentElement?.scroll({ top: 0, behavior: 'instant' });
             this.hideActionBarIfNoHeader();
+            this.hoverSubscription.unsubscribe();
         }
     }
 
@@ -271,14 +271,18 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     /** @docs-private */
     showActionBarIfNecessary(): void {
-        const isOpenedOrHidden = this.actionbarOpacity === null || (!!this.maxHeight && !this.viewAll);
-        if (isOpenedOrHidden) return;
-        this.actionbarOpacity = null;
+        if (!this.actionbarHidden) return;
+        this.actionbarHidden = false;
     }
 
     /** @docs-private */
-    hideActionBarIfNoHeader(): void {
-        this.actionbarOpacity = this.noHeader ? 0 : null;
+    hideActionBarIfNoHeader(event?: FocusEvent | null): void {
+        if (event) {
+            this.actionbarHidden = !this.elementRef.nativeElement.contains(event.relatedTarget);
+            return;
+        }
+
+        this.actionbarHidden = this.noHeader;
     }
 
     private updateMultiline = () => {
@@ -294,5 +298,29 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         const extension = LANGUAGES_EXTENSIONS[codeFile.language] || DEFAULT_EXTENSION;
 
         return `${fileName}.${extension}`;
+    }
+
+    private subscribeToHover() {
+        if (!this.noHeader) return;
+        this.hoverSubscription.unsubscribe();
+
+        this.hoverSubscription = merge(
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusin'),
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'mouseenter')
+        ).subscribe(() => {
+            this.showActionBarIfNecessary();
+            this.changeDetectorRef.markForCheck();
+        });
+
+        const blur = merge(
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusout'),
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => null))
+        ).subscribe((event: FocusEvent | null) => {
+            if (!this.hasFocus) {
+                this.hideActionBarIfNoHeader(event);
+            }
+            this.changeDetectorRef.markForCheck();
+        });
+        this.hoverSubscription.add(blur);
     }
 }

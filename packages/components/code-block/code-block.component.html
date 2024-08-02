@@ -16,6 +16,7 @@
             [style.max-height]="getMaxHeight()"
             (scroll)="checkOverflow(codeContent)"
         ><kbq-actionbar-block
+            *ngIf="!actionbarHidden"
             [class.kbq-actionbar-block_floating]="noHeader"
             [config]="config"
             [codeFiles]="codeFiles"
@@ -23,7 +24,6 @@
             [multiLine]="multiLine"
             [softWrap]="softWrap"
             [canLoad]="canLoad"
-            [style.opacity]="this.actionbarOpacity"
             (toggleSoftWrap)="toggleSoftWrap()"
             (downloadCode)="downloadCode()"
             (copyCode)="copyCode()"

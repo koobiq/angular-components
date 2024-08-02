@@ -5,7 +5,7 @@ node_modules
 !/.*.js
 
 # ignore build tokens
-/apps/docs/src/styles/koobiq/default-theme
+/apps/docs/src/styles/koobiq/default-theme/
 
 # ignore nunjuck templates
 /tools/api-gen/rendering/templates

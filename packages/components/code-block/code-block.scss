@@ -47,6 +47,14 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
                 overflow-x: scroll;
             }
         }
+
+        &:has(.kbq-code-block__show-more_collapsed) {
+            .kbq-code-block__code {
+                & > code {
+                    overflow-x: hidden;
+                }
+            }
+        }
     }
 
     .kbq-code-block__code {
@@ -171,7 +179,6 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 .kbq-code-block__show-more {
     display: flex;
     justify-content: center;
-    overflow: hidden;
 
     width: 100%;
 
