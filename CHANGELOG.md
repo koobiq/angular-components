@@ -1,3 +1,9 @@
+## 17.0.1 (2024-08-02)
+
+### Koobiq
+
+ * feature  **docs:** output code from md as code-block ([#DS-2553](https://github.com/koobiq/angular-components/issues/issue/DS-2553)) ([#177](https://github.com/koobiq/angular-components/issues/177)) ([6277fbf](https://github.com/koobiq/angular-components/commit/6277fbf8b8dbb66441626655fe4071ddfde7b339))
+
 # 17.0.0 (2024-07-31)
 
 ### Koobiq
