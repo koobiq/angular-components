@@ -49,7 +49,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 // @public (undocumented)
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
-    actionbarOpacity: number | null;
+    actionbarHidden?: boolean;
     // (undocumented)
     canLoad: boolean;
     // (undocumented)
@@ -75,7 +75,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     getMaxHeight(): string;
     // (undocumented)
     hasFocus: boolean;
-    hideActionBarIfNoHeader(): void;
+    hideActionBarIfNoHeader(event?: FocusEvent | null): void;
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
