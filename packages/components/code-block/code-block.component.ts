@@ -99,6 +99,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     private _codeFiles: KbqCodeFile[];
 
+    // TODO: replace with property
     get noHeader(): any {
         return this.codeFiles.length === 1 && !this.codeFiles[0].filename;
     }
@@ -124,7 +125,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     private readonly resizeDebounceInterval: number = 100;
     private resizeSubscription = Subscription.EMPTY;
     private codeBlockSubscription = Subscription.EMPTY;
-    private hoverSubscription = Subscription.EMPTY;
+    private hoverSubscription: Subscription | null = null;
 
     constructor(
         private elementRef: ElementRef,
@@ -240,13 +241,10 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.toggleViewAll();
 
         if (this.viewAll) {
-            this.subscribeToHover();
             this.showActionBarIfNecessary();
         } else {
             // Should explicitly scroll to top so content will be cropped from the bottom
             currentCodeContentElement?.scroll({ top: 0, behavior: 'instant' });
-            this.hideActionBarIfNoHeader();
-            this.hoverSubscription.unsubscribe();
         }
     }
 
@@ -277,6 +275,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     /** @docs-private */
     hideActionBarIfNoHeader(event?: FocusEvent | null): void {
+        if (!this.noHeader) return;
         if (event) {
             this.actionbarHidden = !this.elementRef.nativeElement.contains(event.relatedTarget);
             return;
@@ -301,8 +300,12 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     }
 
     private subscribeToHover() {
-        if (!this.noHeader) return;
-        this.hoverSubscription.unsubscribe();
+        if (!this.noHeader) {
+            this.hoverSubscription?.unsubscribe();
+            this.hoverSubscription = null;
+            return;
+        }
+        if (this.hoverSubscription) return;
 
         this.hoverSubscription = merge(
             fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusin'),
