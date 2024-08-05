@@ -156,6 +156,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     monthNames: {
         name: string;
+        nameShort: string;
         value: number;
     }[];
     // (undocumented)
