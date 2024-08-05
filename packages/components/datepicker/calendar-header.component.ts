@@ -27,6 +27,7 @@ const defaultMaxYear = 2099;
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: { name: string; value: number }[];
     selectedMonth: number;
+    selectedShortMonthName: string;
 
     years: { name: number; value: string }[] = [];
     selectedYear: { name: number; value: string };
@@ -161,6 +162,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private updateSelectedValues() {
         this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
+        this.selectedShortMonthName = this.adapter.getMonthNames('short')[this.selectedMonth];
 
         const year = this.adapter.getYear(this.activeDate);
         this.selectedYear = this.years.find(({ name }) => name === year) || {
