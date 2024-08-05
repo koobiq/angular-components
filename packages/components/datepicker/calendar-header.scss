@@ -22,12 +22,6 @@ $tokens: meta.module-variables(tokens) !default;
     width: auto !important;
 }
 
-.kbq-calendar-header__select-value {
-    &:first-letter {
-        text-transform: uppercase;
-    }
-}
-
 .kbq-calendar-header__button-group,
 .kbq-calendar-header__select-group {
     display: flex;

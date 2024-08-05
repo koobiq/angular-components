@@ -15,7 +15,7 @@
             [kbqStyle]="'transparent'"
             [tabindex]="-1"
         >
-            <div class="kbq-calendar-header__select-value">{{ monthNames[selectedMonth].nameShort }}</div>
+            {{ monthNames[selectedMonth].nameShort | titlecase }}
 
             <i
                 kbq-icon="mc-angle-down-S_16"
