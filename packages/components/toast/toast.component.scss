@@ -20,6 +20,7 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-toast__icon-container {
+    flex-shrink: 0;
     width: kbq-css-variable(toast-size-icon-width);
     max-width: kbq-css-variable(toast-size-icon-width);
     height: kbq-css-variable(toast-size-icon-height);
@@ -44,11 +45,15 @@ $tokens: meta.module-variables(tokens) !default;
     padding-top: kbq-css-variable(toast-size-content-padding-top);
     padding-right: kbq-css-variable(size-s);
     padding-bottom: kbq-css-variable(toast-size-content-padding-bottom);
+
+    overflow: hidden;
 }
 
 .kbq-toast__title {
     & > p {
         margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
