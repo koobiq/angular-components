@@ -25,9 +25,8 @@ const defaultMaxYear = 2099;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    monthNames: { name: string; value: number }[];
+    monthNames: { name: string; nameShort: string; value: number }[];
     selectedMonth: number;
-    selectedShortMonthName: string;
 
     years: { name: number; value: string }[] = [];
     selectedYear: { name: number; value: string };
@@ -93,7 +92,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     @Output() readonly yearSelected = new EventEmitter<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
-        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => ({ name, value: i }));
+        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
+            return { name: name, nameShort: this.adapter.getMonthNames('short')[i], value: i };
+        });
     }
 
     ngAfterContentInit(): void {
@@ -162,7 +163,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private updateSelectedValues() {
         this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
-        this.selectedShortMonthName = this.adapter.getMonthNames('short')[this.selectedMonth];
 
         const year = this.adapter.getYear(this.activeDate);
         this.selectedYear = this.years.find(({ name }) => name === year) || {
