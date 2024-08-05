@@ -33,9 +33,11 @@ $tokens: meta.module-variables(tokens) !default;
         .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
             padding-top: calc(
                 (
-                var(--toggle-font-normal-label-line-height, map.get($tokens, toggle-font-normal-label-line-height)) -
-                var(--toggle-size-normal-height, map.get($tokens, toggle-size-normal-height))
-                ) / 2
+                        var(
+                                --toggle-font-normal-label-line-height,
+                                map.get($tokens, toggle-font-normal-label-line-height)
+                            ) - var(--toggle-size-normal-height, map.get($tokens, toggle-size-normal-height))
+                    ) / 2
             );
         }
     }
@@ -96,9 +98,11 @@ $tokens: meta.module-variables(tokens) !default;
         .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
             padding-top: calc(
                 (
-                var(--toggle-font-big-label-line-height, map.get($tokens, toggle-font-big-label-line-height)) -
-                var(--toggle-size-big-height, map.get($tokens, toggle-size-big-height))
-                ) / 2
+                        var(--toggle-font-big-label-line-height, map.get($tokens, toggle-font-big-label-line-height)) - var(
+                                --toggle-size-big-height,
+                                map.get($tokens, toggle-size-big-height)
+                            )
+                    ) / 2
             );
         }
     }
