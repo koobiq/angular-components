@@ -112,7 +112,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     viewAll: boolean = false;
     multiLine: boolean = false;
     isTopOverflow: boolean = false;
-    hasFocus: boolean = false;
+    hasKeyboardFocus: boolean = false;
     /**
      * @docs-private
      */
@@ -157,7 +157,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                 filter((origin: FocusOrigin) => origin === 'keyboard')
             )
             .subscribe(() => {
-                this.hasFocus = true;
+                this.hasKeyboardFocus = true;
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -316,7 +316,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
             fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusout'),
             fromEvent<FocusEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => null))
         ).subscribe((event: FocusEvent | null) => {
-            if (!this.hasFocus) {
+            if (!this.hasKeyboardFocus) {
                 this.hideActionBarIfNoHeader(event);
             }
             this.changeDetectorRef.markForCheck();

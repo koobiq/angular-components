@@ -74,7 +74,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     getMaxHeight(): string;
     // (undocumented)
-    hasFocus: boolean;
+    hasKeyboardFocus: boolean;
     hideActionBarIfNoHeader(event?: FocusEvent | null): void;
     // (undocumented)
     isTopOverflow: boolean;
