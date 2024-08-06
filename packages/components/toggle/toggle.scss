@@ -29,6 +29,17 @@ $tokens: meta.module-variables(tokens) !default;
         &.left {
             flex-direction: row-reverse;
         }
+
+        .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
+            padding-top: calc(
+                (
+                        var(
+                                --toggle-font-normal-label-line-height,
+                                map.get($tokens, toggle-font-normal-label-line-height)
+                            ) - var(--toggle-size-normal-height, map.get($tokens, toggle-size-normal-height))
+                    ) / 2
+            );
+        }
     }
 
     .kbq-toggle-bar-container {
@@ -81,6 +92,19 @@ $tokens: meta.module-variables(tokens) !default;
 
     & .kbq-hint {
         margin-top: kbq-css-variable(toggle-size-big-vertical-content-padding);
+    }
+
+    .kbq-toggle-layout {
+        .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
+            padding-top: calc(
+                (
+                        var(--toggle-font-big-label-line-height, map.get($tokens, toggle-font-big-label-line-height)) - var(
+                                --toggle-size-big-height,
+                                map.get($tokens, toggle-size-big-height)
+                            )
+                    ) / 2
+            );
+        }
     }
 }
 
