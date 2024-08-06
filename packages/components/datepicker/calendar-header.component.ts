@@ -25,7 +25,7 @@ const defaultMaxYear = 2099;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    monthNames: { name: string; value: number }[];
+    monthNames: { name: string; nameShort: string; value: number }[];
     selectedMonth: number;
 
     years: { name: number; value: string }[] = [];
@@ -92,7 +92,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     @Output() readonly yearSelected = new EventEmitter<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
-        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => ({ name, value: i }));
+        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
+            return { name: name, nameShort: this.adapter.getMonthNames('short')[i], value: i };
+        });
     }
 
     ngAfterContentInit(): void {
