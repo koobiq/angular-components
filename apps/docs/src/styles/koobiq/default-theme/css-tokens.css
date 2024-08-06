@@ -1695,7 +1695,7 @@
   --kbq-code-block-size-actionbar-content-gap-horizontal: 2px;
   --kbq-code-block-size-actionbar-padding-vertical: 8px;
   --kbq-code-block-size-actionbar-padding-horizontal: 12px;
-  --kbq-code-block-size-actionbar-fade-gradient-width: 36px;
+  --kbq-code-block-size-actionbar-fade-gradient-width: 32px;
   --kbq-code-block-size-collapse-expanded-padding-top: 0;
   --kbq-code-block-size-collapse-expanded-padding-bottom: 16px;
   --kbq-code-block-size-collapse-collapsed-padding-top: 32px;
@@ -1899,7 +1899,7 @@
   --kbq-popover-size-close-button-margin-top: -10px;
   --kbq-popover-size-header-padding-horizontal: 24px;
   --kbq-popover-size-header-padding-top: 16px;
-  --kbq-popover-size-header-padding-bottom: 24px;
+  --kbq-popover-size-header-padding-bottom: 6px;
   --kbq-popover-size-content-padding-top: 24px;
   --kbq-popover-size-content-padding-bottom: 32px;
   --kbq-popover-size-content-padding-horizontal: 24px;

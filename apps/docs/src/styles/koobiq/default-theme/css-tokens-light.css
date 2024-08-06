@@ -330,7 +330,7 @@
   --kbq-code-block-filled-container-border-color: transparent;
   --kbq-code-block-filled-header-background: hsla(229, 15%, 95%, 100%);
   --kbq-code-block-filled-header-shadow: 0px 9px 8px -12px rgba(108, 115, 148, 0.5);
-  --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(90deg, hsla(229, 15%, 95%, 100%) 0%, hsla(229, 15%, 95%, 100%) 100%);;
+  --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 95%, 100%));
   --kbq-code-block-filled-actionbar-background: hsla(229, 15%, 95%, 100%);
   --kbq-code-block-filled-collapse-expanded-background: transparent;
   --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(180deg, hsla(225, 15%, 95%, 0%) 0%, hsla(225, 15%, 95%, 100%) 100%);
@@ -339,7 +339,7 @@
   --kbq-code-block-outline-container-border-color: hsla(229, 15%, 85%, 100%);
   --kbq-code-block-outline-header-background: hsla(229, 15%, 100%, 100%);
   --kbq-code-block-outline-header-shadow: 0px 9px 8px -12px rgba(108, 115, 148, 0.5);
-  --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, hsla(229, 15%, 100%, 100%) 0%, hsla(229, 15%, 100%, 100%) 100%);;
+  --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 100%, 100%));
   --kbq-code-block-outline-actionbar-background: hsla(229, 15%, 100%, 100%);
   --kbq-code-block-outline-collapse-expanded-background: transparent;
   --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(180deg, hsla(0, 0%, 100%, 0%) 0%, hsla(0, 0%, 100%, 100%) 100%);
