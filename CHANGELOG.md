@@ -1,3 +1,14 @@
+## 17.0.2 (2024-08-06)
+
+### Koobiq
+
+ * bug fix  **datepicker:** short month name select ([#DS-2684](https://github.com/koobiq/angular-components/issues/issue/DS-2684)) ([#190](https://github.com/koobiq/angular-components/issues/190)) ([a55922c](https://github.com/koobiq/angular-components/commit/a55922c6e316f82e1807290ff79518715218192b))
+ * bug fix  **docs:** fixed last example in list ([#DS-2711](https://github.com/koobiq/angular-components/issues/issue/DS-2711)) ([#186](https://github.com/koobiq/angular-components/issues/186)) ([7288755](https://github.com/koobiq/angular-components/commit/72887557de60f0e4aa00e6b37e1f4e9c1772bc39))
+ * bug fix  **docs:** fixed stackblitz button name ([#DS-2720](https://github.com/koobiq/angular-components/issues/issue/DS-2720)) ([#191](https://github.com/koobiq/angular-components/issues/191)) ([84025b2](https://github.com/koobiq/angular-components/commit/84025b2e59d94c6440ec309052c31984be93376a))
+ * bug fix  **toast:** fixed long names in toasts ([#DS-2707](https://github.com/koobiq/angular-components/issues/issue/DS-2707)) ([#188](https://github.com/koobiq/angular-components/issues/188)) ([a83a0fb](https://github.com/koobiq/angular-components/commit/a83a0fb42716a42df36c0460b06b9eb5873b6179))
+ * bug fix  **toggle:** toggles vertical fix ([#DS-2713](https://github.com/koobiq/angular-components/issues/issue/DS-2713)) ([#189](https://github.com/koobiq/angular-components/issues/189)) ([5811b8d](https://github.com/koobiq/angular-components/commit/5811b8d90ac6317673da5688d0551b3becc344db))
+ * feature  update design tokens to 3.0.0 ([#193](https://github.com/koobiq/angular-components/issues/193)) ([29b59a9](https://github.com/koobiq/angular-components/commit/29b59a9f7c28d220acd5928c4fc7f5583384a08f))
+
 ## 17.0.1 (2024-08-02)
 
 ### Koobiq
