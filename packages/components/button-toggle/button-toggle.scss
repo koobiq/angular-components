@@ -29,18 +29,15 @@ $tokens: meta.module-variables(tokens) !default;
 
         height: kbq-css-variable(button-toggle-size-item-height);
 
-        $padding-vertical: map.get($tokens, button-toggle-size-item-padding-vertical);
-        $padding-horizontal: map.get($tokens, button-toggle-size-item-padding-horizontal);
-        $outline-width: map.get($tokens, button-toggle-size-item-focus-outline-width);
-
         border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
         > .kbq-button,
         > .kbq-button-icon {
             border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
-            padding: calc(var(--kbq-button-toggle-size-item-padding-vertical, $padding-vertical) - $outline-width)
-                calc(var(--kbq-button-toggle-size-item-padding-horizontal, $padding-horizontal) - $outline-width);
+            padding:
+                kbq-css-half-difference(button-toggle-size-item-padding-vertical, button-toggle-size-item-focus-outline-width)
+                kbq-css-half-difference(--kbq-button-toggle-size-item-padding-horizontal, button-toggle-size-item-focus-outline-width);
 
             & .kbq-button-wrapper {
                 width: 100%;
