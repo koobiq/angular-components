@@ -8,10 +8,11 @@ import {
     Inject,
     OnDestroy,
     TemplateRef,
+    ViewChild,
     ViewEncapsulation,
     forwardRef
 } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, ThemePalette } from '@koobiq/components/core';
 import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { kbqToastAnimations } from './toast-animations';
@@ -47,9 +48,13 @@ let id = 0;
     },
     animations: [kbqToastAnimations.toastState],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqToastComponent }]
 })
 export class KbqToastComponent implements OnDestroy {
+    @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
+
     themePalette = ThemePalette;
 
     animationState = 'void';

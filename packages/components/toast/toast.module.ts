@@ -7,6 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastCloseButton, KbqToastComponent } from './toast.component';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
     imports: [
         CommonModule,
         OverlayModule,
+        KbqTitleModule,
         A11yModule,
         KbqIconModule,
         KbqButtonModule

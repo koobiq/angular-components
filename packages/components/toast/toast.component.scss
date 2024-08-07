@@ -49,14 +49,16 @@ $tokens: meta.module-variables(tokens) !default;
     overflow: hidden;
 }
 
-.kbq-toast__title {
+.kbq-toast__title-container {
+    width: 100%;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
+}
 
+.kbq-toast__title-container {
     & > p {
         margin: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 }
 
