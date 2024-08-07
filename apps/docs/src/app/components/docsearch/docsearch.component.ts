@@ -1,19 +1,21 @@
-import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import docsearch from '@docsearch/js';
 import * as UAParser from 'ua-parser-js';
+
+type _DocSearchProps = Parameters<typeof docsearch>[0];
+
+const DOCSEARCH_COMPONENT_SELECTOR = 'docs-docsearch';
 
 @Component({
     standalone: true,
-    selector: 'docs-docsearch',
+    selector: DOCSEARCH_COMPONENT_SELECTOR,
     template: '',
     styleUrl: './docsearch.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsearchComponent implements OnInit {
-    private readonly platform = inject(PLATFORM_ID);
-
-    private readonly DOCSEARCH_CONTAINER = 'docs-docsearch';
-    private readonly DOCSEARCH_CONFIG = {
+export class DocsearchComponent {
+    private readonly DOCSEARCH_CONFIG: _DocSearchProps = {
+        container: DOCSEARCH_COMPONENT_SELECTOR,
         appId: '7N2W9AKEM6',
         apiKey: '0f0df042e7b349df5cb381e72f268b4d',
         indexName: 'koobiq',
@@ -26,33 +28,25 @@ export class DocsearchComponent implements OnInit {
         placeholder: 'Поиск'
     };
 
-    // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
-    async ngOnInit() {
-        if (isPlatformBrowser(this.platform)) {
-            const uaParser = new UAParser();
-            const { default: docsearch } = await import('@docsearch/js');
+    /** should transform item URL to work docsearch on DEV stand */
+    private readonly shouldTransformItemURL = location.host !== 'koobiq.io' || location.protocol !== 'https:';
 
-            const osName = uaParser.getOS().name;
-            // should transform item URL to work docsearch on DEV stand
-            const shouldTransformItemURL = location.host !== 'koobiq.io' || location.protocol !== 'https:';
-            let buttonText = 'Поиск';
-            if (osName.includes('Win')) {
-                buttonText += ' Ctrl+K';
-            }
-            if (osName.includes('Mac')) {
-                buttonText += ' ⌘K';
-            }
-            docsearch({
-                ...this.DOCSEARCH_CONFIG,
-                container: this.DOCSEARCH_CONTAINER,
-                transformItems: (items: any[]) => this.transformItems(items, shouldTransformItemURL),
-                translations: this.getTranslations(buttonText)
-            });
-        }
+    constructor() {
+        afterNextRender(() => {
+            this.initDocsearch();
+        });
     }
 
-    private transformItems(items: any[], shouldTransformItemURL: boolean): any[] {
-        if (shouldTransformItemURL) {
+    private initDocsearch(): void {
+        docsearch({
+            ...this.DOCSEARCH_CONFIG,
+            transformItems: this.transformItems,
+            translations: this.translations()
+        });
+    }
+
+    private readonly transformItems: _DocSearchProps['transformItems'] = (items) => {
+        if (this.shouldTransformItemURL) {
             items = items.map((item) => {
                 item.url = item.url.replace('koobiq.io', location.host);
                 item.url = item.url.replace('https:', location.protocol);
@@ -60,15 +54,26 @@ export class DocsearchComponent implements OnInit {
             });
         }
         return items.filter((item) => {
-            return !(
-                item.type === 'lvl2' &&
-                item.content === null &&
-                item._highlightResult.hierarchy.lvl2.matchLevel === 'none'
-            );
+            /** should hide hit, whose 'lvl2' header doesn't match with search query */
+            if (item.type === 'lvl2') {
+                const { matchLevel } =
+                    item._highlightResult?.hierarchy.lvl2 || item._snippetResult?.hierarchy.lvl2 || {};
+                return !(item.content === null && matchLevel === 'none');
+            }
+            return item;
         });
-    }
+    };
 
-    private getTranslations(buttonText: string) {
+    private readonly translations = (): _DocSearchProps['translations'] => {
+        const uaParser = new UAParser();
+        const osName = uaParser.getOS().name;
+        let buttonText = 'Поиск';
+        if (osName.includes('Win')) {
+            buttonText += ' Ctrl+K';
+        }
+        if (osName.includes('Mac')) {
+            buttonText += ' ⌘K';
+        }
         return {
             button: {
                 buttonText,
@@ -112,5 +117,5 @@ export class DocsearchComponent implements OnInit {
                 }
             }
         };
-    }
+    };
 }
