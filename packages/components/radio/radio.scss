@@ -74,7 +74,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         left: 0;
 
-        top: kbq-css-vertical-centered(radio-font-normal-label-line-height, radio-size-normal-outer-size, 1px);
+        top: kbq-css-half-difference(radio-font-normal-label-line-height, radio-size-normal-outer-size, 1px);
 
         width: kbq-css-variable(radio-size-normal-outer-size);
         height: kbq-css-variable(radio-size-normal-outer-size);
@@ -120,7 +120,7 @@ $tokens: meta.module-variables(tokens) !default;
         );
 
         .kbq-radio-button__outer-circle {
-            top: kbq-css-vertical-centered(radio-font-big-label-line-height, radio-size-big-outer-size, 1px);
+            top: kbq-css-half-difference(radio-font-big-label-line-height, radio-size-big-outer-size, 1px);
 
             width: kbq-css-variable(radio-size-big-outer-size);
             height: kbq-css-variable(radio-size-big-outer-size);
