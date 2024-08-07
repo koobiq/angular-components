@@ -61,22 +61,9 @@ $tokens: meta.module-variables(tokens) !default;
         padding: 0;
 
         & .kbq-list-text {
-            $padding-vertical: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-vertical);
-            $padding-horizontal: map.get($tokens, file-upload-size-multiple-big-grid-cell-padding-horizontal);
-            $outline-width: map.get($tokens, list-size-container-focus-outline-width);
-
-            padding: calc(
-                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical, $padding-vertical) - var(
-                            --kbq-list-size-container-focus-outline-width,
-                            $outline-width
-                        )
-                )
-                calc(
-                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal, $padding-horizontal) - var(
-                            --kbq-list-size-container-focus-outline-width,
-                            $outline-width
-                        )
-                );
+            padding:
+                kbq-difference-css-variables(file-upload-size-multiple-big-grid-cell-padding-vertical, list-size-container-focus-outline-width)
+                kbq-difference-css-variables(file-upload-size-multiple-big-grid-cell-padding-horizontal, list-size-container-focus-outline-width);
         }
 
         .kbq-icon {
@@ -148,13 +135,9 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .btn-upload {
-        $padding-vertical: map.get($tokens, file-upload-size-single-container-padding-vertical);
-        $padding-horizontal: map.get($tokens, file-upload-size-single-container-padding-horizontal);
-        $border-width: map.get($tokens, file-upload-size-single-container-border-width);
-
-        padding: calc(var(--kbq-file-upload-size-single-container-padding-vertical, $padding-vertical) - $border-width)
-            calc(var(--kbq-file-upload-size-single-container-padding-horizontal, $padding-horizontal) - $border-width);
-
+        padding:
+            kbq-difference-css-variables(file-upload-size-single-container-padding-vertical, file-upload-size-single-container-border-width)
+            kbq-difference-css-variables(file-upload-size-single-container-padding-horizontal, file-upload-size-single-container-border-width);
         border-top-left-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
 
         border-top-right-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
