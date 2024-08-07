@@ -58,22 +58,10 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-form-field-type-tag-list {
     & .kbq-form-field__container {
-        $padding-vertical: map.get($tokens, tag-input-size-padding-vertical);
-        $border-width: map.get($tokens, form-field-size-border-width);
-
-        padding: calc(
-                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) - var(
-                        --kbq-form-field-size-border-width,
-                        $border-width
-                    )
-            )
+        padding:
+            kbq-difference-css-variables(tag-input-size-padding-vertical, form-field-size-border-width)
             kbq-css-variable(tag-input-size-padding-right)
-            calc(
-                var(--kbq-tag-input-size-padding-vertical, #{$padding-vertical}) - var(
-                        --kbq-form-field-size-border-width,
-                        $border-width
-                    )
-            )
+            kbq-difference-css-variables(tag-input-size-padding-vertical, form-field-size-border-width)
             kbq-css-variable(tag-input-size-padding-left);
     }
 }
