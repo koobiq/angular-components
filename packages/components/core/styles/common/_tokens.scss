@@ -46,8 +46,12 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }
 
-@function kbq-css-sum-params($first, $second) {
+@function kbq-sum-css-variables($first, $second) {
     @return calc(var(--kbq-#{$first}, map.get($tokens, $first)) + var(--kbq-#{$second}, map.get($tokens, $second)));
+}
+
+@function kbq-difference-css-variables($first, $second) {
+    @return calc(var(--kbq-#{$first}, map.get($tokens, $first)) - var(--kbq-#{$second}, map.get($tokens, $second)));
 }
 
 @function kbq-css-half-difference($outer, $inner, $border: null) {
