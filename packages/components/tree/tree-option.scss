@@ -23,9 +23,18 @@ $tokens: meta.module-variables(tokens) !default;
     border-style: solid;
     border-color: transparent;
 
-    padding-top: kbq-difference-css-variables(tree-size-container-padding-vertical, tree-size-container-focus-outline-width);
-    padding-right: kbq-difference-css-variables(tree-size-container-padding-right, tree-size-container-focus-outline-width);
-    padding-bottom: kbq-difference-css-variables(tree-size-container-padding-vertical, tree-size-container-focus-outline-width);
+    padding-top: kbq-difference-css-variables(
+        tree-size-container-padding-vertical,
+        tree-size-container-focus-outline-width
+    );
+    padding-right: kbq-difference-css-variables(
+        tree-size-container-padding-right,
+        tree-size-container-focus-outline-width
+    );
+    padding-bottom: kbq-difference-css-variables(
+        tree-size-container-padding-vertical,
+        tree-size-container-focus-outline-width
+    );
 
     gap: kbq-css-variable(tree-size-container-content-gap-horizontal);
 

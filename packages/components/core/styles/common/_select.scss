@@ -51,12 +51,10 @@ $tokens: meta.module-variables(tokens) !default;
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding:
-                kbq-difference-css-variables(select-size-single-padding-vertical, form-field-size-border-width)
+            padding: kbq-difference-css-variables(select-size-single-padding-vertical, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-single-padding-right, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-single-padding-vertical, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-single-padding-left, form-field-size-border-width);
-
         }
     }
 
@@ -64,8 +62,7 @@ $tokens: meta.module-variables(tokens) !default;
         & .kbq-select__matcher {
             $padding-vertical: map.get($tokens, select-size-multiple-padding-vertical);
 
-            padding:
-                kbq-difference-css-variables(select-size-multiple-padding-vertical, form-field-size-border-width)
+            padding: kbq-difference-css-variables(select-size-multiple-padding-vertical, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-multiple-padding-right, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-multiple-padding-vertical, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-multiple-padding-left, form-field-size-border-width);

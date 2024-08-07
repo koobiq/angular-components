@@ -20,8 +20,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     cursor: pointer;
 
-    padding:
-        kbq-difference-css-variables(tabs-size-tab-item-padding-vertical, tabs-size-tab-item-focus-outline-width)
+    padding: kbq-difference-css-variables(tabs-size-tab-item-padding-vertical, tabs-size-tab-item-focus-outline-width)
         kbq-difference-css-variables(tabs-size-tab-item-padding-horizontal, tabs-size-tab-item-focus-outline-width);
 
     border: {

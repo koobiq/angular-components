@@ -35,9 +35,14 @@ $tokens: meta.module-variables(tokens) !default;
         > .kbq-button-icon {
             border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
-            padding:
-                kbq-difference-css-variables(button-toggle-size-item-padding-vertical, button-toggle-size-item-focus-outline-width)
-                kbq-difference-css-variables(--kbq-button-toggle-size-item-padding-horizontal, button-toggle-size-item-focus-outline-width);
+            padding: kbq-difference-css-variables(
+                    button-toggle-size-item-padding-vertical,
+                    button-toggle-size-item-focus-outline-width
+                )
+                kbq-difference-css-variables(
+                    --kbq-button-toggle-size-item-padding-horizontal,
+                    button-toggle-size-item-focus-outline-width
+                );
 
             & .kbq-button-wrapper {
                 width: 100%;

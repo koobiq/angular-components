@@ -22,8 +22,7 @@ $tokens: meta.module-variables(tokens) !default;
             (var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width)) * 2)
     );
 
-    padding:
-        kbq-difference-css-variables(input-size-padding-vertical, form-field-size-border-width)
+    padding: kbq-difference-css-variables(input-size-padding-vertical, form-field-size-border-width)
         kbq-css-variable(input-size-padding-horizontal);
 }
 
