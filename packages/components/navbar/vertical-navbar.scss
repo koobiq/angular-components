@@ -4,8 +4,6 @@
 @use '../core/styles/common/tokens' as *;
 
 .kbq-vertical-navbar {
-    position: relative;
-
     min-width: 48px;
     height: 100%;
 
@@ -22,8 +20,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        position: absolute;
-        z-index: 998;
         height: 100%;
 
         &.kbq-collapsed {
@@ -32,6 +28,15 @@
 
         &.kbq-expanded {
             width: 240px;
+        }
+    }
+
+    &.kbq-vertical-navbar_open-over {
+        position: relative;
+
+        & .kbq-vertical-navbar__container {
+            position: absolute;
+            z-index: 998;
         }
     }
 }

@@ -39,6 +39,7 @@ import { KbqFocusableComponent } from './navbar.component';
     ],
     host: {
         class: 'kbq-vertical-navbar',
+        '[class.kbq-vertical-navbar_open-over]': 'openOver',
         '[attr.tabindex]': 'tabIndex',
 
         '(focus)': 'focus()',
@@ -58,6 +59,8 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     @ContentChild(forwardRef(() => KbqNavbarBento)) bento: KbqNavbarBento;
 
     readonly animationDone: Subject<void> = new Subject();
+
+    @Input() openOver: boolean = true;
 
     @Input()
     get expanded() {
