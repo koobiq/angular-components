@@ -45,3 +45,25 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, font-feature-settings, '');
     @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }
+
+@function kbq-css-vertical-centered($outerHeight, $innerHeight, $borderWidth: null) {
+    @if $borderWidth {
+        @return calc(
+            (
+                    var(--kbq-#{$outerHeight}, map.get($tokens, $outerHeight)) - var(
+                            --kbq-#{$innerHeight},
+                            map.get($tokens, $innerHeight)
+                        ) - $borderWidth * 2
+                ) / 2
+        );
+    } @else {
+        @return calc(
+            (
+                    var(--kbq-#{$outerHeight}, map.get($tokens, $outerHeight)) - var(
+                            --kbq-#{$innerHeight},
+                            map.get($tokens, $innerHeight)
+                        )
+                ) / 2
+        );
+    }
+}
