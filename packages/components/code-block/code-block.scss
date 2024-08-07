@@ -27,7 +27,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         // 4 buttons + margin
         $buttons-margin: calc(32 * 4) + 24px;
 
-        padding: kbq-css-variable(code-block-size-header-padding-vertical)
+        padding: calc(kbq-css-variable(code-block-size-header-padding-vertical) - $border-width)
             calc(
                 var(--kbq-code-block-size-header-padding-right, map.get($tokens, code-block-size-header-padding-right)) +
                     $buttons-margin
@@ -45,6 +45,14 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
             & > code {
                 padding-bottom: kbq-css-variable(size-3xl) !important;
                 overflow-x: scroll;
+            }
+        }
+
+        &:has(.kbq-code-block__show-more_collapsed) {
+            .kbq-code-block__code {
+                & > code {
+                    overflow-x: hidden;
+                }
             }
         }
     }
@@ -87,6 +95,8 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     &:not(.kbq-code-block_no-header) {
         .kbq-tab-body__wrapper {
             border-top-width: 0;
+            // actionbar can be visible when positioned in the header
+            overflow: visible;
         }
     }
 
@@ -126,8 +136,6 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 
     .kbq-tab-body__wrapper {
         flex-direction: column;
-        position: unset;
-
         border-width: $border-width;
         border-style: solid;
         border-radius: 0 0 $border-radius $border-radius;
@@ -171,12 +179,11 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 .kbq-code-block__show-more {
     display: flex;
     justify-content: center;
-    overflow: hidden;
 
-    width: calc(100% - $border-width * 2);
+    width: 100%;
 
     position: absolute;
-    bottom: $border-width;
+    bottom: 0;
     border-radius: $border-radius;
 
     &.kbq-code-block__show-more_collapsed {

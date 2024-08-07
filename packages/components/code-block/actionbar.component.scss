@@ -4,6 +4,8 @@
 @use '../core/styles/common/tokens' as *;
 
 $tokens: meta.module-variables(tokens) !default;
+$actionbar-indents: kbq-css-variable(code-block-size-actionbar-padding-vertical)
+    kbq-css-variable(code-block-size-actionbar-padding-horizontal);
 
 .kbq-code-block-actionbar {
     display: flex;
@@ -12,25 +14,34 @@ $tokens: meta.module-variables(tokens) !default;
 
     position: absolute;
 
-    top: 0;
+    // position to top to the height of tab-header
+    top: -48px;
     right: 0;
 
-    margin: kbq-css-variable(code-block-size-actionbar-padding-vertical)
-        kbq-css-variable(code-block-size-actionbar-padding-horizontal);
+    margin: $actionbar-indents;
 
-    gap: kbq-css-variable(code-block-size-actionbar-content-gap-horizontal);
+    .kbq-actionbar-block__button-stack {
+        gap: kbq-css-variable(code-block-size-actionbar-content-gap-horizontal);
+    }
 
-    & .kbq-code-block__fade-gradient {
+    .kbq-code-block__fade-gradient {
         display: none;
 
         width: kbq-css-variable(code-block-size-actionbar-fade-gradient-width);
-        height: 32px;
+    }
 
-        margin-top: calc(
-            var(
-                    --kbq-code-block-size-actionbar-padding-vertical,
-                    map.get($tokens, code-block-size-actionbar-padding-vertical)
-                ) * -1
-        );
+    &.kbq-actionbar-block_floating {
+        top: 0;
+        margin: unset;
+        background: transparent !important;
+
+        .kbq-code-block__fade-gradient {
+            display: block;
+            align-self: stretch;
+        }
+
+        .kbq-actionbar-block__button-stack {
+            padding: $actionbar-indents;
+        }
     }
 }
