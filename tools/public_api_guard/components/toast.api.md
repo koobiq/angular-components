@@ -15,9 +15,10 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import * as i4 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@koobiq/components/button';
+import * as i5 from '@koobiq/components/title';
+import * as i6 from '@angular/cdk/a11y';
+import * as i7 from '@koobiq/components/icon';
+import * as i8 from '@koobiq/components/button';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
@@ -79,6 +80,8 @@ export class KbqToastComponent implements OnDestroy {
     onAnimation($event: AnimationEvent_2): void;
     // (undocumented)
     readonly service: KbqToastService;
+    // (undocumented)
+    textElement: ElementRef;
     // (undocumented)
     themePalette: typeof ThemePalette;
     // (undocumented)
@@ -158,7 +161,7 @@ export class KbqToastModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.A11yModule, typeof i6.KbqIconModule, typeof i7.KbqButtonModule], [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof i7.KbqIconModule, typeof i8.KbqButtonModule], [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton]>;
 }
 
 // @public (undocumented)
