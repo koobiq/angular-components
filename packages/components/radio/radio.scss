@@ -44,13 +44,7 @@ $tokens: meta.module-variables(tokens) !default;
     order: 0;
     line-height: inherit;
 
-    padding-left: calc(
-        var(--kbq-radio-size-normal-outer-size, map.get($tokens, radio-size-normal-outer-size)) +
-            var(
-                --kbq-radio-size-normal-horizontal-content-padding,
-                map.get($tokens, radio-size-normal-horizontal-content-padding)
-            )
-    );
+    padding-left: kbq-css-sum-params(radio-size-normal-outer-size, radio-size-normal-horizontal-content-padding);
     padding-right: 0;
 
     .kbq-radio-button__outer-circle,
@@ -111,13 +105,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-radio-button.kbq-radio-button_big {
     .kbq-radio-label-content {
-        padding-left: calc(
-            var(--kbq-radio-size-big-outer-size, map.get($tokens, radio-size-big-outer-size)) +
-                var(
-                    --kbq-radio-size-big-horizontal-content-padding,
-                    map.get($tokens, radio-size-big-horizontal-content-padding)
-                )
-        );
+        padding-left: kbq-css-sum-params(radio-size-big-outer-size, radio-size-big-horizontal-content-padding);
 
         .kbq-radio-button__outer-circle {
             top: kbq-css-half-difference(radio-font-big-label-line-height, radio-size-big-outer-size, 1px);
