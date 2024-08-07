@@ -12,7 +12,7 @@ import {
     ViewEncapsulation,
     forwardRef
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, ThemePalette } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef, ThemePalette } from '@koobiq/components/core';
 import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { kbqToastAnimations } from './toast-animations';
@@ -52,7 +52,7 @@ let id = 0;
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqToastComponent }]
 })
-export class KbqToastComponent implements OnDestroy {
+export class KbqToastComponent implements OnDestroy, KbqTitleTextRef {
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     themePalette = ThemePalette;
