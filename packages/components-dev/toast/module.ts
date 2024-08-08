@@ -148,7 +148,7 @@ export class ToastDemoComponent {
     }
 
     showToastWithLongText() {
-        this.toastService.show({ caption: 'asdfadffakjasdhfjkahdfkjhadksjfhakjdsfhkjahdfkjahdsfkj' });
+        this.toastService.show({ caption: 'Longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglongtext' });
     }
 
     showToast(style: KbqToastStyle | string) {

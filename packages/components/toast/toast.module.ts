@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastCloseButton, KbqToastComponent } from './toast.component';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
@@ -17,6 +18,7 @@ import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
     imports: [
         CommonModule,
         OverlayModule,
+        KbqTitleModule,
         A11yModule,
         KbqIconModule,
         KbqButtonModule
