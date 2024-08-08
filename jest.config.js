@@ -3,7 +3,7 @@
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.json');
 
-const isCI = !!process.env.GITHUB_ACTION;
+const isCI = !!process.env.CI;
 
 /** @type {import('jest').Config} */
 const config = {
