@@ -2,7 +2,7 @@
  * Do not edit directly
  */
 
-.koobiq {
+:root {
   --kbq-light-theme-default: hsla(216, 100%, 50%, 100%);
   --kbq-light-success-default: hsla(104, 64%, 50%, 100%);
   --kbq-light-warning-default: hsla(38, 100%, 36%, 100%);
@@ -1666,7 +1666,6 @@
   --kbq-button-icon-size-horizontal-padding: 8px;
   --kbq-button-icon-size-vertical-padding: 8px;
   --kbq-button-icon-size-content-padding: 4px;
-  --kbq-card-size-vertical-line: 4px;
   --kbq-checkbox-size-normal-width: 16px;
   --kbq-checkbox-size-normal-border-width: 1px;
   --kbq-checkbox-size-normal-border-radius: 4px;

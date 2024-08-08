@@ -8,7 +8,6 @@ const scope_types = [
     'ci',
     'cli',
     'cdk',
-    'card',
     'checkbox',
     'chore',
     'core',

@@ -39,7 +39,6 @@
 | Tag autocomplete | ✅       |            | ✅          |              |         |              |            |
 | Link             | ✅       |            | ✅          |              |         |              |            |
 | Navbar           |          |            |             |              |         |              |            |
-| Card             |          |            |             |              |         |              |            |
 | Splitter         |          |            |             |              |         |              |            |
 | Divider          | ✅       |            | ✅          |              |         |              |            |
 | Tabs             | ✅       |            | ✅          |              |         |              |            |

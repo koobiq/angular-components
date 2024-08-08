@@ -518,35 +518,6 @@
                 }
             }
         },
-        "dev-card": {
-            "projectType": "application",
-            "root": "packages/components-dev/card",
-            "sourceRoot": "packages/components-dev/card",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/components-dev/card",
-                        "tsConfig": "packages/components-dev/card/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/card/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-card:build"
-                    }
-                }
-            }
-        },
         "dev-checkbox": {
             "projectType": "application",
             "root": "packages/components-dev/checkbox",

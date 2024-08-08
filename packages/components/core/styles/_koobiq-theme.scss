@@ -11,7 +11,6 @@
 @use '../../badge/badge-theme' as *;
 @use '../../button/button-theme' as *;
 @use '../../button-toggle/button-toggle-theme' as *;
-@use '../../card/card-theme' as *;
 @use '../../checkbox/checkbox-theme' as *;
 @use '../../code-block/code-block-theme' as *;
 @use '../../datepicker/datepicker-theme' as *;
@@ -65,7 +64,6 @@
     @include kbq-badge-theme($theme);
     @include kbq-button-theme($theme);
     @include kbq-button-toggle-theme($theme);
-    @include kbq-card-theme($theme);
     @include kbq-checkbox-theme($theme);
     @include kbq-code-block-theme($theme);
     @include kbq-datepicker-theme($theme);
