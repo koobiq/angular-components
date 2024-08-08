@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
@@ -15,7 +15,7 @@ describe('Tags', () => {
 
     const dir = 'ltr';
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqTagsModule],
             declarations: [BasicTag, SingleTag],
@@ -28,10 +28,8 @@ describe('Tags', () => {
                     })
                 }
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('KbqBasicTag', () => {
         beforeEach(() => {
@@ -97,13 +95,13 @@ describe('Tags', () => {
             });
 
             it('emits destroy on destruction', () => {
-                spyOn(testComponent, 'tagDestroy').and.callThrough();
+                const tagDestroySpyFn = jest.spyOn(testComponent, 'tagDestroy');
 
                 // Force a destroy callback
                 testComponent.shouldShow = false;
                 fixture.detectChanges();
 
-                expect(testComponent.tagDestroy).toHaveBeenCalledTimes(1);
+                expect(tagDestroySpyFn).toHaveBeenCalledTimes(1);
             });
 
             it('allows color customization', () => {
@@ -117,14 +115,14 @@ describe('Tags', () => {
             });
 
             it('allows selection', () => {
-                spyOn(testComponent, 'tagSelectionChange');
+                const tagSelectionChangeSpyFn = jest.spyOn(testComponent, 'tagSelectionChange');
                 expect(tagNativeElement.classList).not.toContain('kbq-selected');
 
                 testComponent.selected = true;
                 fixture.detectChanges();
 
                 expect(tagNativeElement.classList).toContain('kbq-selected');
-                expect(testComponent.tagSelectionChange).toHaveBeenCalledWith({
+                expect(tagSelectionChangeSpyFn).toHaveBeenCalledWith({
                     source: tagInstance,
                     isUserInput: false,
                     selected: true
@@ -132,12 +130,12 @@ describe('Tags', () => {
             });
 
             it('allows removal', () => {
-                spyOn(testComponent, 'tagRemove');
+                const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
                 tagInstance.remove();
                 fixture.detectChanges();
 
-                expect(testComponent.tagRemove).toHaveBeenCalledWith({ tag: tagInstance });
+                expect(tagRemoveSpyFn).toHaveBeenCalledWith({ tag: tagInstance });
             });
 
             it('should not prevent the default click action', () => {
@@ -160,7 +158,7 @@ describe('Tags', () => {
             it('should not dispatch `selectionChange` event when deselecting a non-selected chip', () => {
                 tagInstance.deselect();
 
-                const spy = jasmine.createSpy('selectionChange spy');
+                const spy = jest.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.deselect();
@@ -172,7 +170,7 @@ describe('Tags', () => {
             it('should not dispatch `selectionChange` event when selecting a selected chip', () => {
                 tagInstance.select();
 
-                const spy = jasmine.createSpy('selectionChange spy');
+                const spy = jest.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.select();
@@ -184,7 +182,7 @@ describe('Tags', () => {
             it('should not dispatch `selectionChange` event when selecting a selected tag via user interaction', () => {
                 tagInstance.select();
 
-                const spy = jasmine.createSpy('selectionChange spy');
+                const spy = jest.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.selectViaInteraction();
@@ -196,7 +194,7 @@ describe('Tags', () => {
             it('should not dispatch `selectionChange` through setter if the value did not change', () => {
                 tagInstance.selected = false;
 
-                const spy = jasmine.createSpy('selectionChange spy');
+                const spy = jest.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.selected = false;
@@ -227,23 +225,23 @@ describe('Tags', () => {
                         selected: false
                     };
 
-                    spyOn(testComponent, 'tagSelectionChange');
+                    const tagSelectionChangeSpyFn = jest.spyOn(testComponent, 'tagSelectionChange');
 
                     // Use the spacebar to select the chip
                     tagInstance.handleKeydown(SPACE_EVENT);
                     fixture.detectChanges();
 
                     expect(tagInstance.selected).toBeTruthy();
-                    expect(testComponent.tagSelectionChange).toHaveBeenCalledTimes(1);
-                    expect(testComponent.tagSelectionChange).toHaveBeenCalledWith(CHIP_SELECTED_EVENT);
+                    expect(tagSelectionChangeSpyFn).toHaveBeenCalledTimes(1);
+                    expect(tagSelectionChangeSpyFn).toHaveBeenCalledWith(CHIP_SELECTED_EVENT);
 
                     // Use the spacebar to deselect the chip
                     tagInstance.handleKeydown(SPACE_EVENT);
                     fixture.detectChanges();
 
                     expect(tagInstance.selected).toBeFalsy();
-                    expect(testComponent.tagSelectionChange).toHaveBeenCalledTimes(2);
-                    expect(testComponent.tagSelectionChange).toHaveBeenCalledWith(CHIP_DESELECTED_EVENT);
+                    expect(tagSelectionChangeSpyFn).toHaveBeenCalledTimes(2);
+                    expect(tagSelectionChangeSpyFn).toHaveBeenCalledWith(CHIP_DESELECTED_EVENT);
                 });
             });
 
@@ -256,14 +254,14 @@ describe('Tags', () => {
                 it('SPACE ignores selection', () => {
                     const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
 
-                    spyOn(testComponent, 'tagSelectionChange');
+                    const tagSelectionChangeSpyFn = jest.spyOn(testComponent, 'tagSelectionChange');
 
                     // Use the spacebar to attempt to select the chip
                     tagInstance.handleKeydown(SPACE_EVENT);
                     fixture.detectChanges();
 
                     expect(tagInstance.selected).toBeFalsy();
-                    expect(testComponent.tagSelectionChange).not.toHaveBeenCalled();
+                    expect(tagSelectionChangeSpyFn).not.toHaveBeenCalled();
                 });
 
                 it('should not have the aria-selected attribute', () => {
@@ -280,25 +278,25 @@ describe('Tags', () => {
                 it('DELETE emits the (removed) event', () => {
                     const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
-                    spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the chip
                     tagInstance.handleKeydown(DELETE_EVENT);
                     fixture.detectChanges();
 
-                    expect(testComponent.tagRemove).toHaveBeenCalled();
+                    expect(tagRemoveSpyFn).toHaveBeenCalled();
                 });
 
                 it('BACKSPACE emits the (removed) event', () => {
                     const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
-                    spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the chip
                     tagInstance.handleKeydown(BACKSPACE_EVENT);
                     fixture.detectChanges();
 
-                    expect(testComponent.tagRemove).toHaveBeenCalled();
+                    expect(tagRemoveSpyFn).toHaveBeenCalled();
                 });
             });
 
@@ -311,25 +309,25 @@ describe('Tags', () => {
                 it('DELETE does not emit the (removed) event', () => {
                     const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
-                    spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the chip
                     tagInstance.handleKeydown(DELETE_EVENT);
                     fixture.detectChanges();
 
-                    expect(testComponent.tagRemove).not.toHaveBeenCalled();
+                    expect(tagRemoveSpyFn).not.toHaveBeenCalled();
                 });
 
                 it('BACKSPACE does not emit the (removed) event', () => {
                     const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
-                    spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the chip
                     tagInstance.handleKeydown(BACKSPACE_EVENT);
                     fixture.detectChanges();
 
-                    expect(testComponent.tagRemove).not.toHaveBeenCalled();
+                    expect(tagRemoveSpyFn).not.toHaveBeenCalled();
                 });
             });
 

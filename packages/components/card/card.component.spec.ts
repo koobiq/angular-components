@@ -1,5 +1,5 @@
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqCard, KbqCardModule } from './index';
 
@@ -9,13 +9,11 @@ describe('MсCard', () => {
     let cardNativeElement: HTMLElement;
     let testComponent: TestApp;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqCardModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
         fixture.detectChanges();
@@ -23,7 +21,7 @@ describe('MсCard', () => {
         cardDebugElement = fixture.debugElement.query(By.directive(KbqCard));
         cardNativeElement = cardDebugElement.nativeElement;
         testComponent = fixture.debugElement.componentInstance;
-    }));
+    });
 
     it('should add class on selected', () => {
         testComponent.selected = true;

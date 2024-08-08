@@ -1,26 +1,24 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    buttonLeftIconClassName,
-    buttonRightIconClassName,
     KbqButtonCssStyler,
     KbqButtonModule,
+    buttonLeftIconClassName,
+    buttonRightIconClassName,
     leftIconClassName,
     rightIconClassName
 } from './index';
 
 describe('KbqButton', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should apply class based on color attribute', () => {
         const fixture = TestBed.createComponent(TestApp);
@@ -94,11 +92,11 @@ describe('KbqButton', () => {
             const fixture = TestBed.createComponent(TestApp);
             const buttonNativeElement = fixture.nativeElement.querySelector('button');
 
-            expect(buttonNativeElement.disabled).withContext('Expected button not to be disabled').toBeFalsy();
+            expect(buttonNativeElement.disabled).toBeFalsy();
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
-            expect(buttonNativeElement.disabled).withContext('Expected button to be disabled').toBeTruthy();
+            expect(buttonNativeElement.disabled).toBeTruthy();
         });
     });
 
@@ -139,7 +137,7 @@ describe('KbqButton', () => {
 });
 
 describe('Button with icon', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule, KbqIconModule],
             declarations: [
@@ -154,10 +152,8 @@ describe('Button with icon', () => {
                 KbqButtonTwoIconsCaseTestApp,
                 KbqButtonIconNgIfCaseTestApp
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     it('should not add left and right css classes when next/previous siblings are html comments or text nodes', () => {
         let fixture: ComponentFixture<KbqButtonCommentCaseTestApp | KbqButtonTextIconCaseTestApp>;
@@ -193,13 +189,9 @@ describe('Button with icon', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`)))
-            .withContext('Expected the element has right css class')
-            .toBeTruthy();
+        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeTruthy();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`)))
-            .withContext('Expected the element has right css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).toBeFalsy();
     });
 
     it('should add left css class when the next sibling is an html element', () => {
@@ -207,13 +199,9 @@ describe('Button with icon', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`)))
-            .withContext('Expected the element has left css class')
-            .toBeTruthy();
+        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).toBeTruthy();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`)))
-            .withContext('Expected the element has right css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
 
     it('should add left css class when the right visible sibling is a text element and icon created with ngIf', () => {
@@ -221,13 +209,9 @@ describe('Button with icon', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`)))
-            .withContext('Expected the element has left css class')
-            .toBeTruthy();
+        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).toBeTruthy();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`)))
-            .withContext('Expected the element has right css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
 
     it('should NOT add left,right css class when the left,right visible sibling is a text element and icon created with ngIf', () => {
@@ -235,65 +219,70 @@ describe('Button with icon', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`)))
-            .withContext('Expected the element missing left css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).toBeFalsy();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`)))
-            .withContext('Expected the element missing right css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
     it('should NOT add left,right css class when the more than 1 siblings on the left,right and icon created with ngIf', () => {
         const fixture = TestBed.createComponent(KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp);
 
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`)))
-            .withContext('Expected the element missing left css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).toBeFalsy();
 
-        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`)))
-            .withContext('Expected the element missing right css class')
-            .toBeFalsy();
+        expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
 
-    it('should toggle host button class type on icon removal/reveal', waitForAsync(() => {
+    it('should toggle host button class type on icon removal/reveal', (done) => {
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
         fixture.detectChanges();
 
-        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTrue();
-        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalse();
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
 
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
         setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalse();
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTrue();
-        }, 0);
-    }));
-
-    it('should toggle additional classes on icon removal/reveal', waitForAsync(() => {
-        [
-            { component: KbqButtonTextIconLeftNgIfCaseTestApp, cssClass: buttonLeftIconClassName },
-            { component: KbqButtonTextIconRightNgIfCaseTestApp, cssClass: buttonRightIconClassName }
-        ].forEach(({ component, cssClass }) => {
-            const fixture = TestBed.createComponent(component);
-            const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
-            fixture.detectChanges();
-
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTrue();
-            expect(debugElement.nativeElement.classList.contains(cssClass)).toBeTrue();
-            fixture.debugElement.componentInstance.visible = false;
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(debugElement.nativeElement.classList.contains(cssClass)).toBeFalse();
-            }, 0);
+            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
+            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
+            done();
         });
-    }));
+    });
+
+    it('should toggle additional classes on icon removal/reveal', (done) => {
+        const fixture = TestBed.createComponent(KbqButtonTextIconLeftNgIfCaseTestApp);
+        const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+        fixture.detectChanges();
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        fixture.debugElement.componentInstance.visible = false;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+            expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeFalsy();
+            done();
+        });
+    });
+
+    it('should toggle additional classes on icon removal/reveal', (done) => {
+        const fixture = TestBed.createComponent(KbqButtonTextIconRightNgIfCaseTestApp);
+        const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+        fixture.detectChanges();
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeTruthy();
+        fixture.debugElement.componentInstance.visible = false;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+            expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
+            done();
+        });
+    });
 });
 
 @Component({

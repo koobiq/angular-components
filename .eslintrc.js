@@ -1,5 +1,7 @@
 // @ts-check
 
+const isCI = !!process.env.CI;
+
 /** @type {import('eslint').Linter.Config} */
 const config = {
     root: true,
@@ -16,7 +18,7 @@ const config = {
     ],
     rules: {
         // plugin:file-progress
-        'file-progress/activate': process.env.GITHUB_ACTION ? 0 : 1,
+        'file-progress/activate': isCI ? 0 : 1,
         // plugin:eslint-comments
         'eslint-comments/no-unused-disable': 1
     },
@@ -62,6 +64,7 @@ const config = {
                 ],
                 '@typescript-eslint/no-duplicate-enum-values': 0,
                 '@typescript-eslint/ban-tslint-comment': 1,
+
                 // plugin:@angular-eslint
                 '@angular-eslint/component-class-suffix': 0,
                 '@angular-eslint/no-host-metadata-property': 0,

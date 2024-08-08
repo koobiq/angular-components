@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -26,7 +26,7 @@ describe('KbqValidate', () => {
     let testComponent: TestApp;
     let input: HTMLInputElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 ReactiveFormsModule,
@@ -34,15 +34,14 @@ describe('KbqValidate', () => {
                 KbqInputModule
             ],
             declarations: [TestApp]
-        });
-        TestBed.compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
         testComponent = fixture.debugElement.componentInstance;
         input = fixture.debugElement.query(By.css('input')).nativeElement;
 
         fixture.detectChanges();
-    }));
+    });
 
     it('Should apply validators dynamically', () => {
         const testControl = testComponent.testControl;

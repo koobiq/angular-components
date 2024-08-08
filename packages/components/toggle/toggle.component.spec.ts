@@ -8,9 +8,14 @@ import { KbqToggleComponent, KbqToggleModule } from './index';
 describe('KbqToggle', () => {
     let fixture: ComponentFixture<any>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqToggleModule, FormsModule, ReactiveFormsModule],
+            imports: [
+                NoopAnimationsModule,
+                KbqToggleModule,
+                FormsModule,
+                ReactiveFormsModule
+            ],
             declarations: [
                 SingleToggle,
                 ToggleWithFormDirectives,
@@ -23,10 +28,8 @@ describe('KbqToggle', () => {
                 ToggleWithoutLabel,
                 ToggleUsingViewChild
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('basic behaviors', () => {
         let toggleDebugElement: DebugElement;
@@ -149,7 +152,7 @@ describe('KbqToggle', () => {
         });
 
         it('should not trigger the click event multiple times', () => {
-            spyOn(testComponent, 'onToggleClick');
+            const onToggleClickSpyFn = jest.spyOn(testComponent, 'onToggleClick');
 
             expect(inputElement.checked).toBe(false);
 
@@ -158,11 +161,11 @@ describe('KbqToggle', () => {
 
             expect(inputElement.checked).toBe(true);
 
-            expect(testComponent.onToggleClick).toHaveBeenCalledTimes(1);
+            expect(onToggleClickSpyFn).toHaveBeenCalledTimes(1);
         });
 
         it('should trigger a change event when the native input does', fakeAsync(() => {
-            spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 
@@ -174,11 +177,11 @@ describe('KbqToggle', () => {
             fixture.detectChanges();
             flush();
 
-            expect(testComponent.onToggleChange).toHaveBeenCalledTimes(1);
+            expect(onToggleChangeSpyFn).toHaveBeenCalledTimes(1);
         }));
 
         it('should not trigger the change event by changing the native value', fakeAsync(() => {
-            spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 
@@ -192,7 +195,7 @@ describe('KbqToggle', () => {
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
-            expect(testComponent.onToggleChange).not.toHaveBeenCalled();
+            expect(onToggleChangeSpyFn).not.toHaveBeenCalled();
         }));
 
         it('should focus on underlying input element when focus() is called', () => {

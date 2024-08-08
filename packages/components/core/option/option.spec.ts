@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqOption, KbqOptionModule } from './index';
 
@@ -13,19 +13,19 @@ class OptionWithDisable {
 }
 
 describe('KbqOption component', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqOptionModule],
             declarations: [OptionWithDisable]
         }).compileComponents();
-    }));
+    });
 
     it('should complete the `stateChanges` stream on destroy', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
-        const completeSpy = jasmine.createSpy('complete spy');
+        const completeSpy = jest.fn();
         const subscription = optionInstance.stateChanges.subscribe({ complete: completeSpy });
 
         fixture.destroy();
@@ -42,7 +42,7 @@ describe('KbqOption component', () => {
         optionInstance.select();
         expect(optionInstance.selected).toBe(true);
 
-        const spy = jasmine.createSpy('selection change spy');
+        const spy = jest.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.select();
@@ -63,7 +63,7 @@ describe('KbqOption component', () => {
         optionInstance.deselect();
         expect(optionInstance.selected).toBe(false);
 
-        const spy = jasmine.createSpy('selection change spy');
+        const spy = jest.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.deselect();

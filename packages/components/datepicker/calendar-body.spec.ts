@@ -1,21 +1,18 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
+import { KbqCalendarBody, KbqCalendarCell } from './calendar-body.component';
 
 describe('KbqCalendarBody', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
                 KbqCalendarBody,
-
                 // Test components.
                 StandardCalendarBody
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('standard calendar body', () => {
         let fixture: ComponentFixture<StandardCalendarBody>;
@@ -23,7 +20,7 @@ describe('KbqCalendarBody', () => {
         let calendarBodyNativeElement: Element;
         let rowEls: Element[];
         let labelEls: Element[];
-        let cellEls: Element[];
+        let cellEls: HTMLElement[];
 
         function refreshElementLists() {
             rowEls = Array.from(calendarBodyNativeElement.querySelectorAll('tr'));
@@ -69,28 +66,26 @@ describe('KbqCalendarBody', () => {
             expect(rowEls.length).toBe(2);
             expect(labelEls.length).toBe(1);
             expect(cellEls.length).toBe(9);
-            expect(rowEls[0].firstElementChild!.classList)
-                .withContext('first cell should be the label')
-                .toContain('kbq-calendar__body-label');
+            expect(rowEls[0].firstElementChild!.classList).toContain('kbq-calendar__body-label');
             expect(labelEls[0].getAttribute('colspan')).toBe('5');
         });
 
         it('cell should be selected on click', () => {
-            const todayElement = calendarBodyNativeElement.querySelector('.kbq-calendar__body-today') as HTMLElement;
+            const todayElement = calendarBodyNativeElement.querySelector<HTMLElement>('.kbq-calendar__body-today')!;
             todayElement.click();
             fixture.detectChanges();
 
-            expect(todayElement.classList).withContext('today should be selected').toContain('kbq-selected');
+            expect(todayElement.classList).toContain('kbq-selected');
         });
 
         it('should mark active date', () => {
-            expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
+            expect(cellEls[10].textContent!.trim()).toBe('11');
             expect(cellEls[10].classList).toContain('kbq-calendar__body_active');
         });
 
         it('should set a class on even dates', () => {
-            expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('1');
-            expect((cellEls[1] as HTMLElement).innerText.trim()).toBe('2');
+            expect(cellEls[0].textContent!.trim()).toBe('1');
+            expect(cellEls[1].textContent!.trim()).toBe('2');
             expect(cellEls[0].classList).not.toContain('even');
             expect(cellEls[1].classList).toContain('even');
         });
@@ -117,7 +112,7 @@ class StandardCalendarBody {
         [6, 7, 8, 9, 10, 11, 12]
 
     ].map((row) => {
-        return row.map((cell) => createCell(cell, cell % 2 === 0 ? 'even' : undefined));
+        return row.map((cell) => new KbqCalendarCell(cell, `${cell}`, true, cell % 2 === 0 ? 'even' : undefined));
     });
     todayValue = 3;
     selectedValue = 4;
@@ -127,8 +122,4 @@ class StandardCalendarBody {
     onSelect(value: number) {
         this.selectedValue = value;
     }
-}
-
-function createCell(value: number, cellClasses?: KbqCalendarCellCssClasses) {
-    return new KbqCalendarCell(value, `${value}`, true, cellClasses);
 }

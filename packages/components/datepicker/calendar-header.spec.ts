@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
@@ -11,7 +11,7 @@ import { KbqDatepickerModule } from './datepicker-module';
 describe('KbqCalendarHeader', () => {
     let adapter: LuxonDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
@@ -21,10 +21,8 @@ describe('KbqCalendarHeader', () => {
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter }]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;
@@ -43,8 +41,8 @@ describe('KbqCalendarHeader', () => {
 
             const calendarDebugElement = fixture.debugElement.query(By.directive(KbqCalendar));
             calendarElement = calendarDebugElement.nativeElement;
-            prevButton = calendarElement.querySelector('.kbq-calendar-header__previous-button') as HTMLElement;
-            nextButton = calendarElement.querySelector('.kbq-calendar-header__next-button') as HTMLElement;
+            prevButton = calendarElement.querySelector<HTMLElement>('.kbq-calendar-header__previous-button')!;
+            nextButton = calendarElement.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!;
 
             calendarInstance = calendarDebugElement.componentInstance;
         });
