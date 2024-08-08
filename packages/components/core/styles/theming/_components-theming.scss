@@ -340,29 +340,6 @@
         )
     );
 
-    $card: (
-        error: (
-            vertical-line: map.get($tokens, 'card-#{$scheme}-error-vertical-line'),
-            background: map.get($tokens, 'card-#{$scheme}-error-background'),
-            shadow: map.get($tokens, 'card-#{$scheme}-error-shadow')
-        ),
-        warning: (
-            vertical-line: map.get($tokens, 'card-#{$scheme}-warning-vertical-line'),
-            background: map.get($tokens, 'card-#{$scheme}-warning-background'),
-            shadow: map.get($tokens, 'card-#{$scheme}-warning-shadow')
-        ),
-        success: (
-            vertical-line: map.get($tokens, 'card-#{$scheme}-success-vertical-line'),
-            background: map.get($tokens, 'card-#{$scheme}-success-background'),
-            shadow: map.get($tokens, 'card-#{$scheme}-success-shadow')
-        ),
-        info: (
-            vertical-line: map.get($tokens, 'card-#{$scheme}-info-vertical-line'),
-            background: map.get($tokens, 'card-#{$scheme}-info-background'),
-            shadow: map.get($tokens, 'card-#{$scheme}-info-shadow')
-        )
-    );
-
     $checkbox: (
         theme: (
             default: (
@@ -1827,7 +1804,6 @@
         badge: $badge,
         button: $button,
         button-toggle: $button-toggle,
-        card: $card,
         checkbox: $checkbox,
         code-block: $code-block,
         datepicker: $datepicker,

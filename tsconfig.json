@@ -32,7 +32,6 @@
             "@koobiq/components/badge": ["packages/components/badge/index.ts"],
             "@koobiq/components/button": ["packages/components/button/index.ts"],
             "@koobiq/components/button-toggle": ["packages/components/button-toggle/index.ts"],
-            "@koobiq/components/card": ["packages/components/card/index.ts"],
             "@koobiq/components/checkbox": ["packages/components/checkbox/index.ts"],
             "@koobiq/components/code-block": ["packages/components/code-block/index.ts"],
             "@koobiq/components/core": ["packages/components/core/index.ts"],

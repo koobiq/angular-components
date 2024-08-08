@@ -201,7 +201,6 @@
         "dev:badge": "ng serve dev-badge --port 3003",
         "dev:button": "ng serve dev-button --port 3003",
         "dev:button-toggle": "ng serve dev-button-toggle --port 3003",
-        "dev:card": "ng serve dev-card --port 3003",
         "dev:checkbox": "ng serve dev-checkbox --port 3003",
         "dev:code-block": "ng serve dev-code-block --port 3003",
         "dev:datepicker": "ng serve dev-datepicker --port 3003",
