@@ -1189,7 +1189,7 @@
   --kbq-typography-body-strong-font-size: 16px;
   --kbq-typography-body-strong-line-height: 24px;
   --kbq-typography-body-strong-letter-spacing: normal;
-  --kbq-typography-body-strong-font-weight: 500;
+  --kbq-typography-body-strong-font-weight: 600;
   --kbq-typography-body-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-body-strong-text-transform: null;
   --kbq-typography-body-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1210,7 +1210,7 @@
   --kbq-typography-body-mono-strong-font-size: 16px;
   --kbq-typography-body-mono-strong-line-height: 24px;
   --kbq-typography-body-mono-strong-letter-spacing: normal;
-  --kbq-typography-body-mono-strong-font-weight: 500;
+  --kbq-typography-body-mono-strong-font-weight: 600;
   --kbq-typography-body-mono-strong-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
   --kbq-typography-body-mono-strong-text-transform: null;
   --kbq-typography-body-mono-strong-font-feature-settings: initial;
@@ -1231,7 +1231,7 @@
   --kbq-typography-caption-strong-font-size: 14px;
   --kbq-typography-caption-strong-line-height: 20px;
   --kbq-typography-caption-strong-letter-spacing: -0.006em;
-  --kbq-typography-caption-strong-font-weight: 500;
+  --kbq-typography-caption-strong-font-weight: 600;
   --kbq-typography-caption-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-caption-strong-text-transform: null;
   --kbq-typography-caption-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1252,7 +1252,7 @@
   --kbq-typography-caption-mono-strong-font-size: 14px;
   --kbq-typography-caption-mono-strong-line-height: 20px;
   --kbq-typography-caption-mono-strong-letter-spacing: normal;
-  --kbq-typography-caption-mono-strong-font-weight: 500;
+  --kbq-typography-caption-mono-strong-font-weight: 600;
   --kbq-typography-caption-mono-strong-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
   --kbq-typography-caption-mono-strong-text-transform: null;
   --kbq-typography-caption-mono-strong-font-feature-settings: initial;
@@ -1266,7 +1266,7 @@
   --kbq-typography-extra-small-text-strong-font-size: 12px;
   --kbq-typography-extra-small-text-strong-line-height: 16px;
   --kbq-typography-extra-small-text-strong-letter-spacing: normal;
-  --kbq-typography-extra-small-text-strong-font-weight: 500;
+  --kbq-typography-extra-small-text-strong-font-weight: 600;
   --kbq-typography-extra-small-text-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-extra-small-text-strong-text-transform: null;
   --kbq-typography-extra-small-text-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1336,7 +1336,7 @@
   --kbq-typography-text-big-strong-font-size: 16px;
   --kbq-typography-text-big-strong-line-height: 24px;
   --kbq-typography-text-big-strong-letter-spacing: -0.011em;
-  --kbq-typography-text-big-strong-font-weight: 500;
+  --kbq-typography-text-big-strong-font-weight: 600;
   --kbq-typography-text-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-text-big-strong-text-transform: null;
   --kbq-typography-text-big-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1350,7 +1350,7 @@
   --kbq-typography-text-normal-strong-font-size: 14px;
   --kbq-typography-text-normal-strong-line-height: 20px;
   --kbq-typography-text-normal-strong-letter-spacing: -0.006em;
-  --kbq-typography-text-normal-strong-font-weight: 500;
+  --kbq-typography-text-normal-strong-font-weight: 600;
   --kbq-typography-text-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-text-normal-strong-text-transform: null;
   --kbq-typography-text-normal-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1364,7 +1364,7 @@
   --kbq-typography-text-compact-strong-font-size: 12px;
   --kbq-typography-text-compact-strong-line-height: 16px;
   --kbq-typography-text-compact-strong-letter-spacing: normal;
-  --kbq-typography-text-compact-strong-font-weight: 500;
+  --kbq-typography-text-compact-strong-font-weight: 600;
   --kbq-typography-text-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-text-compact-strong-text-transform: null;
   --kbq-typography-text-compact-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1469,7 +1469,7 @@
   --kbq-typography-tabular-big-strong-font-size: 16px;
   --kbq-typography-tabular-big-strong-line-height: 24px;
   --kbq-typography-tabular-big-strong-letter-spacing: normal;
-  --kbq-typography-tabular-big-strong-font-weight: 500;
+  --kbq-typography-tabular-big-strong-font-weight: 600;
   --kbq-typography-tabular-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-tabular-big-strong-text-transform: null;
   --kbq-typography-tabular-big-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -1483,7 +1483,7 @@
   --kbq-typography-tabular-normal-strong-font-size: 14px;
   --kbq-typography-tabular-normal-strong-line-height: 20px;
   --kbq-typography-tabular-normal-strong-letter-spacing: -0.006em;
-  --kbq-typography-tabular-normal-strong-font-weight: 500;
+  --kbq-typography-tabular-normal-strong-font-weight: 600;
   --kbq-typography-tabular-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-tabular-normal-strong-text-transform: null;
   --kbq-typography-tabular-normal-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -1497,7 +1497,7 @@
   --kbq-typography-tabular-compact-strong-font-size: 12px;
   --kbq-typography-tabular-compact-strong-line-height: 16px;
   --kbq-typography-tabular-compact-strong-letter-spacing: normal;
-  --kbq-typography-tabular-compact-strong-font-weight: 500;
+  --kbq-typography-tabular-compact-strong-font-weight: 600;
   --kbq-typography-tabular-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-tabular-compact-strong-text-transform: null;
   --kbq-typography-tabular-compact-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -1513,7 +1513,7 @@
   --kbq-typography-italic-big-strong-font-size: 16px;
   --kbq-typography-italic-big-strong-line-height: 24px;
   --kbq-typography-italic-big-strong-letter-spacing: -0.011em;
-  --kbq-typography-italic-big-strong-font-weight: 500;
+  --kbq-typography-italic-big-strong-font-weight: 600;
   --kbq-typography-italic-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-big-strong-text-transform: null;
   --kbq-typography-italic-big-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1529,7 +1529,7 @@
   --kbq-typography-italic-normal-strong-font-size: 14px;
   --kbq-typography-italic-normal-strong-line-height: 20px;
   --kbq-typography-italic-normal-strong-letter-spacing: -0.006em;
-  --kbq-typography-italic-normal-strong-font-weight: 500;
+  --kbq-typography-italic-normal-strong-font-weight: 600;
   --kbq-typography-italic-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-normal-strong-text-transform: null;
   --kbq-typography-italic-normal-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1545,7 +1545,7 @@
   --kbq-typography-italic-compact-strong-font-size: 12px;
   --kbq-typography-italic-compact-strong-line-height: 16px;
   --kbq-typography-italic-compact-strong-letter-spacing: normal;
-  --kbq-typography-italic-compact-strong-font-weight: 500;
+  --kbq-typography-italic-compact-strong-font-weight: 600;
   --kbq-typography-italic-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-typography-italic-compact-strong-text-transform: null;
   --kbq-typography-italic-compact-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -1666,7 +1666,6 @@
   --kbq-button-icon-size-horizontal-padding: 8px;
   --kbq-button-icon-size-vertical-padding: 8px;
   --kbq-button-icon-size-content-padding: 4px;
-  --kbq-card-size-vertical-line: 4px;
   --kbq-checkbox-size-normal-width: 16px;
   --kbq-checkbox-size-normal-border-width: 1px;
   --kbq-checkbox-size-normal-border-radius: 4px;

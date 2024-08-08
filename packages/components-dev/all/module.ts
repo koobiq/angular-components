@@ -6,7 +6,6 @@ import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqCardModule } from '@koobiq/components/card';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -218,7 +217,6 @@ export class DemoComponent implements OnDestroy {
         KbqButtonModule,
         KbqButtonToggleModule,
         KbqLinkModule,
-        KbqCardModule,
         KbqCheckboxModule,
         KbqDropdownModule,
         KbqInputModule,

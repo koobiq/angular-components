@@ -158,15 +158,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['button-toggle-types']
                 },
                 {
-                    id: 'card',
-                    name: 'Card',
-                    svgPreview: 'card',
-                    hasApi: true,
-                    apiId: 'card',
-                    hasExamples: false,
-                    examples: ['card-types']
-                },
-                {
                     id: 'checkbox',
                     name: 'Checkbox',
                     svgPreview: 'checkbox',

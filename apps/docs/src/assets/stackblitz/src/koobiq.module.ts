@@ -5,7 +5,6 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqCardModule } from '@koobiq/components/card';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqFormattersModule, KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -48,7 +47,6 @@ const KBQ_COMPONENTS = [
     KbqBadgeModule,
     KbqButtonModule,
     KbqButtonToggleModule,
-    KbqCardModule,
     KbqCheckboxModule,
     KbqDatepickerModule,
     KbqDividerModule,
