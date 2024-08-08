@@ -21,7 +21,6 @@ import * as i7 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/button';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
-import { KbqTitleTextRef } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -51,7 +50,7 @@ export class KbqToastCloseButton {
 }
 
 // @public (undocumented)
-export class KbqToastComponent implements OnDestroy, KbqTitleTextRef {
+export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     $implicit: any;
     constructor(data: KbqToastData, service: KbqToastService, elementRef: ElementRef, focusMonitor: FocusMonitor);
@@ -81,8 +80,6 @@ export class KbqToastComponent implements OnDestroy, KbqTitleTextRef {
     onAnimation($event: AnimationEvent_2): void;
     // (undocumented)
     readonly service: KbqToastService;
-    // (undocumented)
-    textElement: ElementRef;
     // (undocumented)
     themePalette: typeof ThemePalette;
     // (undocumented)
