@@ -56,6 +56,12 @@
         class="kbq-toast__title"
         [class.kbq-toast__title_with-content]="data.caption || data.content"
     >
+        <ng-container
+            *ngIf="isTemplateRef(data.title)"
+            [ngTemplateOutlet]="$any(data.title)"
+            [ngTemplateOutletContext]="{ $implicit }"
+        />
+
         <ng-container *ngIf="!isTemplateRef(data.title)">
             <p>{{ data.title }}</p>
         </ng-container>
