@@ -84,6 +84,18 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-toast__close-button {
-    margin-top: kbq-css-variable(toast-size-close-button-margin-top);
+    $toast-size-content-padding-top: kbq-css-variable(toast-size-content-padding-top);
+    $icon-button-size-small-vertical-padding: kbq-css-variable(icon-button-size-small-vertical-padding);
+    $toast-font-title-line-height: kbq-css-variable(toast-font-title-line-height);
+    $icon-button-size-small-height: 16px;
+    margin-top: calc(
+        $toast-size-content-padding-top -
+            (
+                (
+                        $icon-button-size-small-vertical-padding * 2 + $icon-button-size-small-height -
+                            $toast-font-title-line-height
+                    ) / 2
+            )
+    );
     margin-right: kbq-css-variable(toast-size-close-button-margin-right);
 }
