@@ -1,6 +1,6 @@
 // @ts-check
 
-const isCI = !!process.env.GITHUB_ACTION;
+const isCI = !!process.env.CI;
 
 /** @type {import('eslint').Linter.Config} */
 const config = {
