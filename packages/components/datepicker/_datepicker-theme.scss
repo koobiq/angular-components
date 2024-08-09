@@ -66,10 +66,7 @@
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(
-                states-foreground-disabled,
-                map.get($theme, states, foreground, disabled)
-            );
+            color: kbq-css-variable(states-foreground-disabled, map.get($theme, states, foreground, disabled));
             background: kbq-css-variable(
                 datepicker-cell-disabled-background,
                 map.get($datepicker, cell, disabled, background)

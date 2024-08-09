@@ -15,9 +15,9 @@ const defaultMaxYear = 2099;
 type monthName = {
     name: string;
     nameShort: string;
-    value: number
-    disabled: boolean
-}
+    value: number;
+    disabled: boolean;
+};
 
 /** Default header for KbqCalendar */
 @Component({
@@ -100,11 +100,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     @Output() readonly yearSelected = new EventEmitter<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
-        this.monthNames = this.adapter
-            .getMonthNames('long')
-            .map((name, i) => {
-                return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
-            });
+        this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
+            return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
+        });
     }
 
     ngAfterContentInit(): void {
@@ -201,7 +199,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     private updateMonthOptions() {
-        if (!this._activeDate) { return; }
+        if (!this._activeDate) {
+            return;
+        }
 
         const minYear = this.adapter.getYear(this.minDate!);
         const minMonth = this.adapter.getMonth(this.minDate!);
@@ -212,11 +212,11 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         const currentYear = this.adapter.getYear(this._activeDate);
 
         if (currentYear === minYear) {
-            this.monthNames.forEach((month) => month.disabled = month.value < minMonth);
+            this.monthNames.forEach((month) => (month.disabled = month.value < minMonth));
         }
 
         if (currentYear === maxYear) {
-            this.monthNames.forEach((month) => month.disabled = month.value > maxMonth);
+            this.monthNames.forEach((month) => (month.disabled = month.value > maxMonth));
         }
     }
 }
