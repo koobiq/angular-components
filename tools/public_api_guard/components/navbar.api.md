@@ -368,11 +368,13 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
+    openOver: boolean;
+    // (undocumented)
     rectangleElements: QueryList<KbqNavbarRectangleElement>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["bento", "rectangleElements", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["bento", "rectangleElements", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }
