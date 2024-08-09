@@ -3,17 +3,11 @@
 @use 'sass:meta';
 @use 'sass:map';
 
+@use '../common/tokens' as *;
 @use '../functions/string' as *;
 
 @mixin kbq-scrollbar($tokens) {
-    $border-width: calc(
-        (
-                var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension)) - var(
-                        --kbq-scrollbar-size-thumb-width,
-                        map.get($tokens, scrollbar-size-thumb-width)
-                    )
-            ) / 2
-    );
+    $border-width: kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
 
     //firefox
     @supports not selector(::-webkit-scrollbar) {

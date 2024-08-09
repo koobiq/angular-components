@@ -45,3 +45,31 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, font-feature-settings, '');
     @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }
+
+@function kbq-sum-css-variables($first, $second) {
+    @return calc(kbq-css-variable($first) + kbq-css-variable($second));
+}
+
+@function kbq-new-sum-css-variables($variables) {
+    $sum: 0;
+    @each $variable in $variables {
+        @if ($sum == 0) {
+            $sum: kbq-css-variable($variable);
+        } @else {
+            $sum: calc($sum + kbq-css-variable($variable));
+        }
+    }
+    @return $sum;
+}
+
+@function kbq-difference-css-variables($first, $second) {
+    @return calc(kbq-css-variable($first) - kbq-css-variable($second));
+}
+
+@function kbq-css-half-difference($outer, $inner, $border: null) {
+    @if $border {
+        @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
+    } @else {
+        @return calc((kbq-css-variable($outer) + kbq-css-variable($inner)) / 2);
+    }
+}
