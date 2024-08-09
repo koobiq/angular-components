@@ -153,12 +153,10 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     get minDate(): D | null;
     set minDate(value: D | null);
+    // Warning: (ae-forgotten-export) The symbol "monthName" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    monthNames: {
-        name: string;
-        nameShort: string;
-        value: number;
-    }[];
+    monthNames: monthName[];
     // (undocumented)
     readonly monthSelected: EventEmitter<D>;
     // (undocumented)
