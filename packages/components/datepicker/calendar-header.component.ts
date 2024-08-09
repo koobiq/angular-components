@@ -87,7 +87,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     private _minDate = this.adapter.createDate(defaultMinYear, 1);
 
     get previousDisabled(): boolean {
-        return this.compareDate(this.activeDate, this.minDate!) < 0;
+        return this.compareDate(this.activeDate, this.minDate!) <= 0;
     }
 
     get nextDisabled(): boolean {
