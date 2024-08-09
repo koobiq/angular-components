@@ -26,6 +26,7 @@
 
         <kbq-option
             *ngFor="let month of monthNames"
+            [disabled]="month.disabled"
             [kbqTooltipDisabled]="true"
             [value]="month.value"
         >

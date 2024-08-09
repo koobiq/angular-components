@@ -154,11 +154,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     get minDate(): D | null;
     set minDate(value: D | null);
     // (undocumented)
-    monthNames: {
-        name: string;
-        nameShort: string;
-        value: number;
-    }[];
+    monthNames: MonthName[];
     // (undocumented)
     readonly monthSelected: EventEmitter<D>;
     // (undocumented)
@@ -481,6 +477,14 @@ export class KbqMonthView<D> implements AfterContentInit {
 
 // @public (undocumented)
 export const MAX_YEAR = 9999;
+
+// @public (undocumented)
+export type MonthName = {
+    name: string;
+    nameShort: string;
+    value: number;
+    disabled: boolean;
+};
 
 // (No @packageDocumentation comment for this package)
 

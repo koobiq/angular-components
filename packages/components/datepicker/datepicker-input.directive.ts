@@ -960,25 +960,101 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         return [this.thirdDigit!.value, this.thirdDigit!.start, this.thirdDigit!.end];
     }
 
-    private incrementDate(dateVal: D, whatToIncrement: DateParts): D {
-        let year = this.adapter.getYear(dateVal);
-        let month = this.adapter.getMonth(dateVal);
-        let day = this.adapter.getDate(dateVal);
+    private isMaxMonth(date: D): boolean {
+        return this.adapter.getMonth(date) === this.getMaxMonth(date);
+    }
+
+    private isMinMonth(date: D): boolean {
+        return this.adapter.getMonth(date) === this.getMinMonth(date);
+    }
+
+    private isMaxYear(date: D): boolean {
+        return this.adapter.getYear(date) === this.getMaxYear();
+    }
+
+    private isMinYear(date: D): boolean {
+        return this.adapter.getYear(date) === this.getMinYear();
+    }
+
+    private getMaxDate(date: D): number {
+        if (this.datepicker.maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
+            return this.adapter.getDate(this.datepicker.maxDate);
+        }
+
+        return this.adapter.getNumDaysInMonth(date);
+    }
+
+    private getMinDate(date: D): number {
+        if (this.datepicker.minDate && this.isMinYear(date) && this.isMinMonth(date)) {
+            return this.adapter.getDate(this.datepicker.minDate);
+        }
+
+        return 1;
+    }
+
+    private getMaxMonth(date: D): number {
+        if (this.datepicker.maxDate && this.isMaxYear(date)) {
+            return this.adapter.getMonth(this.datepicker.maxDate);
+        }
+
+        return 11;
+    }
+
+    private getMinMonth(date: D): number {
+        if (this.datepicker.minDate && this.isMinYear(date)) {
+            return this.adapter.getMonth(this.datepicker.minDate);
+        }
+
+        return 0;
+    }
+
+    private getMaxYear(): number {
+        if (this.datepicker.maxDate) {
+            return this.adapter.getYear(this.datepicker.maxDate);
+        }
+
+        return MAX_YEAR;
+    }
+
+    private getMinYear(): number {
+        if (this.datepicker.minDate) {
+            return this.adapter.getYear(this.datepicker.minDate);
+        }
+
+        return 1;
+    }
+
+    private incrementDate(date: D, whatToIncrement: DateParts): D {
+        let year = this.adapter.getYear(date);
+        let month = this.adapter.getMonth(date);
+        let day = this.adapter.getDate(date);
 
         switch (whatToIncrement) {
             case DateParts.day:
                 day++;
 
-                if (day > this.adapter.getNumDaysInMonth(dateVal)) {
-                    day = 1;
+                if (day > this.getMaxDate(date)) {
+                    if (this.isMaxYear(date) && this.isMaxMonth(date)) {
+                        day = this.getMaxDate(date);
+                    } else if (this.isMinYear(date) && this.isMinMonth(date)) {
+                        day = this.getMinDate(date);
+                    } else {
+                        day = 1;
+                    }
                 }
 
                 break;
             case DateParts.month: {
                 month++;
 
-                if (month > 11) {
-                    month = 0;
+                if (month > this.getMaxMonth(date)) {
+                    if (this.isMaxYear(date)) {
+                        month = this.getMaxMonth(date);
+                    } else if (this.isMinYear(date)) {
+                        month = this.getMinMonth(date);
+                    } else {
+                        month = 0;
+                    }
                 }
 
                 const lastDay = this.getLastDayFor(year, month);
@@ -992,8 +1068,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             case DateParts.year:
                 year++;
 
-                if (year > MAX_YEAR) {
-                    year = 1;
+                if (year > this.getMaxYear()) {
+                    year = this.getMaxYear();
                 }
 
                 break;
@@ -1007,25 +1083,37 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         return this.adapter.getNumDaysInMonth(this.createDate(year, month, 1));
     }
 
-    private decrementDate(dateVal: D, whatToDecrement: DateParts): D {
-        let year = this.adapter.getYear(dateVal);
-        let month = this.adapter.getMonth(dateVal);
-        let day = this.adapter.getDate(dateVal);
+    private decrementDate(date: D, whatToDecrement: DateParts): D {
+        let year = this.adapter.getYear(date);
+        let month = this.adapter.getMonth(date);
+        let day = this.adapter.getDate(date);
 
         switch (whatToDecrement) {
             case DateParts.day:
                 day--;
 
-                if (day < 1) {
-                    day = this.adapter.getNumDaysInMonth(dateVal);
+                if (day < this.getMinDate(date)) {
+                    if (this.isMinYear(date) && this.isMinMonth(date)) {
+                        day = this.getMinDate(date);
+                    } else if (this.isMaxYear(date) && this.isMaxMonth(date)) {
+                        day = this.getMaxDate(date);
+                    } else {
+                        day = this.adapter.getNumDaysInMonth(date);
+                    }
                 }
 
                 break;
             case DateParts.month: {
                 month--;
 
-                if (month < 0) {
-                    month = 11;
+                if (month < this.getMinMonth(date)) {
+                    if (year === this.getMinYear()) {
+                        month = this.getMinMonth(date);
+                    } else if (this.isMaxYear(date)) {
+                        month = this.getMaxMonth(date);
+                    } else {
+                        month = 11;
+                    }
                 }
 
                 const lastDay = this.getLastDayFor(year, month);
@@ -1039,8 +1127,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             case DateParts.year:
                 year--;
 
-                if (year < 1) {
-                    year = MAX_YEAR;
+                if (year < this.getMinYear()) {
+                    year = this.getMinYear();
                 }
 
                 break;

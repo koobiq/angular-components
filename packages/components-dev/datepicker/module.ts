@@ -21,7 +21,7 @@ import { DateTime } from 'luxon';
 })
 export class DemoComponent implements AfterViewInit, OnInit {
     // date = this.adapter.createDate(2015, 1, 1);
-    date = this.adapter.createDate(2015, 1, 1);
+    date = this.adapter.today();
     formControlValue: UntypedFormControl;
     minDate;
     maxDate;
@@ -47,9 +47,9 @@ export class DemoComponent implements AfterViewInit, OnInit {
             console.log('this.formControlValue.valueChanges: ', value?.toString());
         });
 
-        this.startAt = this.adapter.createDate(2000, 1, 1);
-        this.minDate = this.adapter.createDate(2015, 1, 1);
-        this.maxDate = this.adapter.createDate(2025, 0, 5);
+        this.startAt = this.adapter.today();
+        this.minDate = this.adapter.createDate(2024, 5, 5);
+        this.maxDate = this.adapter.createDate(2025, 10, 20);
     }
 
     ngOnInit() {
