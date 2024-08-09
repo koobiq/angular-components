@@ -2182,6 +2182,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-navbar"
     }
   },
+  "navbar-vertical-open-over": {
+    "packagePath": "components/navbar/navbar-vertical-open-over",
+    "title": "Vertical Navbar",
+    "componentName": "NavbarVerticalOpenOverExample",
+    "files": [
+      "navbar-vertical-open-over-example.ts",
+      "navbar-vertical-open-over-example.html",
+      "navbar-vertical-open-over-example.css"
+    ],
+    "selector": "navbar-vertical-open-over-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-vertical-open-over-example.ts",
+    "module": {
+      "name": "NavbarExamplesModule",
+      "importSpecifier": "components/navbar",
+      "importPath": "koobiq-docs-examples-components-navbar"
+    }
+  },
   "navbar-vertical": {
     "packagePath": "components/navbar/navbar-vertical",
     "title": "Vertical Navbar",

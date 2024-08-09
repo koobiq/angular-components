@@ -60,7 +60,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     readonly animationDone: Subject<void> = new Subject();
 
-    @Input() openOver: boolean = true;
+    @Input() openOver: boolean = false;
 
     @Input()
     get expanded() {
