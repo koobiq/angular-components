@@ -153,10 +153,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     get minDate(): D | null;
     set minDate(value: D | null);
-    // Warning: (ae-forgotten-export) The symbol "monthName" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    monthNames: monthName[];
+    monthNames: MonthName[];
     // (undocumented)
     readonly monthSelected: EventEmitter<D>;
     // (undocumented)
@@ -479,6 +477,14 @@ export class KbqMonthView<D> implements AfterContentInit {
 
 // @public (undocumented)
 export const MAX_YEAR = 9999;
+
+// @public (undocumented)
+export type MonthName = {
+    name: string;
+    nameShort: string;
+    value: number;
+    disabled: boolean;
+};
 
 // (No @packageDocumentation comment for this package)
 

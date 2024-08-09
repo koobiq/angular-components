@@ -12,7 +12,7 @@ import { DateAdapter } from '@koobiq/components/core';
 const defaultMinYear = 1900;
 const defaultMaxYear = 2099;
 
-type monthName = {
+export type MonthName = {
     name: string;
     nameShort: string;
     value: number;
@@ -32,7 +32,7 @@ type monthName = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    monthNames: monthName[];
+    monthNames: MonthName[];
     selectedMonth: number;
 
     years: { name: number; value: string }[] = [];
