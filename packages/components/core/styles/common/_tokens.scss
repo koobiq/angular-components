@@ -47,24 +47,17 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 @function kbq-sum-css-variables($first, $second) {
-    @return calc(var(--kbq-#{$first}, map.get($tokens, $first)) + var(--kbq-#{$second}, map.get($tokens, $second)));
+    @return calc(kbq-css-variable($first) + kbq-css-variable($second));
 }
 
 @function kbq-difference-css-variables($first, $second) {
-    @return calc(var(--kbq-#{$first}, map.get($tokens, $first)) - var(--kbq-#{$second}, map.get($tokens, $second)));
+    @return calc(kbq-css-variable($first) - kbq-css-variable($second));
 }
 
 @function kbq-css-half-difference($outer, $inner, $border: null) {
     @if $border {
-        @return calc(
-            (
-                    var(--kbq-#{$outer}, map.get($tokens, $outer)) - var(--kbq-#{$inner}, map.get($tokens, $inner)) -
-                        $border * 2
-                ) / 2
-        );
+        @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
     } @else {
-        @return calc(
-            (var(--kbq-#{$outer}, map.get($tokens, $outer)) - var(--kbq-#{$inner}, map.get($tokens, $inner))) / 2
-        );
+        @return calc((kbq-css-variable($outer) + kbq-css-variable($inner)) / 2);
     }
 }
