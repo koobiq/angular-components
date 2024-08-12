@@ -74,6 +74,26 @@ $tokens: meta.module-variables(tokens) !default;
     @return calc(kbq-css-variable($first) - kbq-css-variable($second));
 }
 
+@function kbq-difference-series-css-variables($variables) {
+    $difference: 0;
+    @each $variable in $variables {
+        @if ($difference == 0) {
+            @if type-of($variable) == number {
+                $difference: $variable;
+            } @else {
+                $difference: kbq-css-variable($variable);
+            }
+        } @else {
+            @if type-of($variable) == number {
+                $sum: calc($difference - $variable);
+            } @else {
+                $sum: calc($difference - kbq-css-variable($variable));
+            }
+        }
+    }
+    @return $difference;
+}
+
 @function kbq-css-half-difference($outer, $inner, $border: null) {
     @if $border {
         @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
