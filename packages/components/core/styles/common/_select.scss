@@ -33,9 +33,6 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 
-    $border-width: map.get($tokens, form-field-size-border-width);
-    $height: map.get($tokens, form-field-size-height);
-
     .kbq-select__trigger {
         display: flex;
         box-sizing: border-box;
@@ -43,9 +40,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         cursor: pointer;
 
-        height: calc(
-            var(--kbq-form-field-size-height, $height) - (var(--kbq-form-field-size-border-width, $border-width) * 2)
-        );
+        height: calc(#{kbq-css-variable(form-field-size-height)} - #{kbq-css-variable(form-field-size-border-width)} * 2);
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
@@ -60,8 +55,6 @@ $tokens: meta.module-variables(tokens) !default;
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            $padding-vertical: map.get($tokens, select-size-multiple-padding-vertical);
-
             padding: kbq-difference-css-variables(select-size-multiple-padding-vertical, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-multiple-padding-right, form-field-size-border-width)
                 kbq-difference-css-variables(select-size-multiple-padding-vertical, form-field-size-border-width)
@@ -77,13 +70,13 @@ $tokens: meta.module-variables(tokens) !default;
                 overflow: hidden;
 
                 height: calc(
-                    var(--kbq-form-field-size-height, $height) -
-                        (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
+                    #{kbq-css-variable(form-field-size-height)} -
+                    #{kbq-css-variable(select-size-multiple-padding-vertical)} * 2
                 );
 
                 max-height: calc(
-                    var(--kbq-form-field-size-height, $height) -
-                        (var(--kbq-select-size-multiple-padding-vertical, $padding-vertical) * 2)
+                    #{kbq-css-variable(form-field-size-height)} -
+                    #{kbq-css-variable(select-size-multiple-padding-vertical)} * 2
                 );
 
                 gap: kbq-css-variable(select-size-multiple-content-gap);
