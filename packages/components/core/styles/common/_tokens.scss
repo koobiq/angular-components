@@ -54,14 +54,17 @@ $tokens: meta.module-variables(tokens) !default;
     $sum: 0;
     @each $variable in $variables {
         @if ($sum == 0) {
-            $sum: kbq-css-variable($variable);
+            @if type-of($variable) == number {
+                $sum: $variable;
+            } @else {
+                $sum: kbq-css-variable($variable);
+            }
         } @else {
             @if type-of($variable) == number {
                 $sum: calc($sum + $variable);
             } @else {
                 $sum: calc($sum + kbq-css-variable($variable));
             }
-
         }
     }
     @return $sum;
