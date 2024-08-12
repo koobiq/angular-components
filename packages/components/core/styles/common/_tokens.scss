@@ -50,13 +50,18 @@ $tokens: meta.module-variables(tokens) !default;
     @return calc(kbq-css-variable($first) + kbq-css-variable($second));
 }
 
-@function kbq-new-sum-css-variables($variables) {
+@function kbq-sum-series-css-variables($variables) {
     $sum: 0;
     @each $variable in $variables {
         @if ($sum == 0) {
             $sum: kbq-css-variable($variable);
         } @else {
-            $sum: calc($sum + kbq-css-variable($variable));
+            @if type-of($variable) == number {
+                $sum: calc($sum + $variable);
+            } @else {
+                $sum: calc($sum + kbq-css-variable($variable));
+            }
+
         }
     }
     @return $sum;
