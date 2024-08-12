@@ -1,13 +1,18 @@
 .demo-vertical-navbar {
     display: flex;
 
-    margin-left: -20px;
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin: -20px;
 
     height: 480px;
 }
 
 .demo-vertical-navbar .kbq-vertical-navbar__container {
     border-top-left-radius: 12px;
+}
+
+.demo-vertical-navbar .demo-vertical-navbar__text-container {
+    overflow: auto;
+
+    padding-left: 20px;
+    padding-right: 20px;
 }
