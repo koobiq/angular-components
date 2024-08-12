@@ -6,8 +6,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
-
 .kbq-input {
     @include input.kbq-reset-input();
 
@@ -17,12 +15,9 @@ $tokens: meta.module-variables(tokens) !default;
     text-overflow: ellipsis;
 
     width: 100%;
-    min-height: calc(
-        var(--kbq-form-field-size-height, map.get($tokens, form-field-size-height)) -
-            (var(--kbq-form-field-size-border-width, map.get($tokens, form-field-size-border-width)) * 2)
-    );
+    min-height: kbq-difference-series-css-variables([form-field-size-height, calc(kbq-css-variable(form-field-size-border-width) * 2)]);
 
-    padding: kbq-difference-css-variables(input-size-padding-vertical, form-field-size-border-width)
+    padding: kbq-difference-series-css-variables([input-size-padding-vertical, form-field-size-border-width])
         kbq-css-variable(input-size-padding-horizontal);
 }
 
