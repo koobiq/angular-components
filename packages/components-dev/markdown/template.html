@@ -76,21 +76,14 @@
 ```css
 
 .kbq-markdown__img &#123;
-  max-width: var(--kbq-markdown-image-size-max-width, map.get($tokens, markdown-image-size-max-width));
-  margin-top: var(--kbq-markdown-image-size-margin-top, map.get($tokens, markdown-image-size-margin-top));
-  margin-bottom: var(
-      --kbq-markdown-image-size-margin-bottom, map.get($tokens, markdown-image-size-margin-bottom)
-  );
+  max-width: kbq-css-variable(markdown-image-size-max-width);
+  margin-top: kbq-css-variable(markdown-image-size-margin-top);
+  margin-bottom: kbq-css-variable(markdown-image-size-margin-bottom);
 
   + em &#123;
       display: block;
-      margin-top: var(
-          --kbq-markdown-image-size-caption-margin-top, map.get($tokens, markdown-image-size-caption-margin-top)
-      );
-      margin-bottom: var(
-          --kbq-markdown-image-size-caption-margin-bottom,
-          map.get($tokens, markdown-image-size-caption-margin-bottom)
-      );
+      margin-top: kbq-css-variable(markdown-image-size-caption-margin-top);
+      margin-bottom: kbq-css-variable(markdown-image-size-caption-margin-bottom);
     &#125;
 &#125;
 
