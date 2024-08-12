@@ -46,10 +46,6 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }
 
-@function kbq-sum-css-variables($first, $second) {
-    @return calc(kbq-css-variable($first) + kbq-css-variable($second));
-}
-
 @function kbq-sum-series-css-variables($variables) {
     $sum: 0;
     @each $variable in $variables {
