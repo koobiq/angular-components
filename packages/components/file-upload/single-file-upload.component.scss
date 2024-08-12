@@ -9,13 +9,13 @@
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-single-file-upload .kbq-file-upload {
-    padding: kbq-difference-css-variables(
-            file-upload-size-single-container-padding-vertical,
-            file-upload-size-single-container-border-width
+    padding: kbq-difference-series-css-variables(
+            [ file-upload-size-single-container-padding-vertical,
+            file-upload-size-single-container-border-width]
         )
-        kbq-difference-css-variables(
-            file-upload-size-single-container-padding-horizontal,
-            file-upload-size-single-container-border-width
+        kbq-difference-series-css-variables(
+            [ file-upload-size-single-container-padding-horizontal,
+            file-upload-size-single-container-border-width]
         );
 
     border-radius: kbq-css-variable(file-upload-size-single-container-border-radius);

@@ -44,7 +44,11 @@ $tokens: meta.module-variables(tokens) !default;
 
     &.kbq-form-field_has-prefix {
         .kbq-input {
-            padding-left: kbq-sum-series-css-variables([form-field-size-icon-size, form-field-size-icon-margin-left, form-field-size-icon-margin-right]);
+            padding-left: kbq-sum-series-css-variables(
+                [form-field-size-icon-size,
+                form-field-size-icon-margin-left,
+                form-field-size-icon-margin-right]
+            );
         }
     }
 
@@ -53,7 +57,11 @@ $tokens: meta.module-variables(tokens) !default;
     &.kbq-form-field_has-stepper,
     &.kbq-form-field_has-suffix {
         .kbq-input {
-            padding-right: kbq-sum-series-css-variables([form-field-size-icon-button-size, form-field-size-icon-button-margin-left, form-field-size-icon-button-margin-right]);
+            padding-right: kbq-sum-series-css-variables(
+                [form-field-size-icon-button-size,
+                form-field-size-icon-button-margin-left,
+                form-field-size-icon-button-margin-right]
+            );
         }
     }
 

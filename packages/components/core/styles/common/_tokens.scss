@@ -66,10 +66,6 @@ $tokens: meta.module-variables(tokens) !default;
     @return $sum;
 }
 
-@function kbq-difference-css-variables($first, $second) {
-    @return calc(kbq-css-variable($first) - kbq-css-variable($second));
-}
-
 @function kbq-difference-series-css-variables($variables) {
     $difference: 0;
     @each $variable in $variables {

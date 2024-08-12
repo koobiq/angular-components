@@ -7,8 +7,6 @@
 @use '../functions/string' as *;
 
 @mixin kbq-scrollbar($tokens) {
-    $border-width: kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
-
     //firefox
     @supports not selector(::-webkit-scrollbar) {
         scrollbar-width: thin;
@@ -32,7 +30,7 @@
     ::-webkit-scrollbar-thumb {
         width: kbq-css-variable(scrollbar-size-thumb-width);
         border-style: solid;
-        border-width: $border-width;
+        border-width: kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
 
         border-radius: kbq-css-variable(scrollbar-size-thumb-border-radius);
 
