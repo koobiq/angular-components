@@ -45,7 +45,7 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-group-item + .kbq-group-item {
-        margin-left: calc(-1 * var(--kbq-button-size-border-width, #{map.get($tokens, button-size-border-width)}));
+        margin-left: calc(-1 * #{kbq-css-variable(button-size-border-width)});
     }
 
     & > .kbq-group-item:first-child:not(:last-child) {
@@ -108,6 +108,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-group-item + .kbq-group-item {
-        margin-top: calc(-1 * var(--kbq-button-size-border-width, #{map.get($tokens, button-size-border-width)}));
+        margin-top: calc(-1 * #{kbq-css-variable(button-size-border-width)});
     }
 }
