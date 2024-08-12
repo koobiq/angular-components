@@ -40,7 +40,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         cursor: pointer;
 
-        height: calc(#{kbq-css-variable(form-field-size-height)} - #{kbq-css-variable(form-field-size-border-width)} * 2);
+        height: kbq-difference-series-css-variables([form-field-size-height, calc(kbq-css-variable(form-field-size-border-width) * 2)]);
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
@@ -69,15 +69,9 @@ $tokens: meta.module-variables(tokens) !default;
                 flex-wrap: wrap;
                 overflow: hidden;
 
-                height: calc(
-                    #{kbq-css-variable(form-field-size-height)} -
-                    #{kbq-css-variable(select-size-multiple-padding-vertical)} * 2
-                );
+                height: kbq-difference-series-css-variables([form-field-size-height, calc(kbq-css-variable(select-size-multiple-padding-vertical) * 2)]);
 
-                max-height: calc(
-                    #{kbq-css-variable(form-field-size-height)} -
-                    #{kbq-css-variable(select-size-multiple-padding-vertical)} * 2
-                );
+                max-height: kbq-difference-series-css-variables([form-field-size-height, calc(kbq-css-variable(select-size-multiple-padding-vertical) * 2)]);
 
                 gap: kbq-css-variable(select-size-multiple-content-gap);
 

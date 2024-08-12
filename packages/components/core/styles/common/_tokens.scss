@@ -54,13 +54,13 @@ $tokens: meta.module-variables(tokens) !default;
     $sum: 0;
     @each $variable in $variables {
         @if ($sum == 0) {
-            @if type-of($variable) == number {
+            @if (type-of($variable) == number or type-of($variable) == calculation) {
                 $sum: $variable;
             } @else {
                 $sum: kbq-css-variable($variable);
             }
         } @else {
-            @if type-of($variable) == number {
+            @if (type-of($variable) == number or type-of($variable) == calculation) {
                 $sum: calc($sum + $variable);
             } @else {
                 $sum: calc($sum + kbq-css-variable($variable));
@@ -78,16 +78,16 @@ $tokens: meta.module-variables(tokens) !default;
     $difference: 0;
     @each $variable in $variables {
         @if ($difference == 0) {
-            @if type-of($variable) == number {
+            @if (type-of($variable) == number or type-of($variable) == calculation) {
                 $difference: $variable;
             } @else {
                 $difference: kbq-css-variable($variable);
             }
         } @else {
-            @if type-of($variable) == number {
-                $sum: calc($difference - $variable);
+            @if (type-of($variable) == number or type-of($variable) == calculation) {
+                $difference: calc($difference - $variable);
             } @else {
-                $sum: calc($difference - kbq-css-variable($variable));
+                $difference: calc($difference - kbq-css-variable($variable));
             }
         }
     }
