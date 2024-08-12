@@ -20,32 +20,29 @@
         cursor: default;
 
         &:vertical {
-            width: var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension));
+            width: kbq-css-variable(scrollbar-size-track-dimension);
         }
 
         &:horizontal {
-            height: var(--kbq-scrollbar-size-track-dimension, map.get($tokens, scrollbar-size-track-dimension));
+            height: kbq-css-variable(scrollbar-size-track-dimension);
         }
     }
 
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
-        width: var(--kbq-scrollbar-size-thumb-width, map.get($tokens, scrollbar-size-thumb-width));
+        width: kbq-css-variable(scrollbar-size-thumb-width);
         border-style: solid;
         border-width: $border-width;
 
-        border-radius: var(
-            --kbq-scrollbar-size-thumb-inset-border-radius,
-            map.get($tokens, scrollbar-size-thumb-border-radius)
-        );
+        border-radius: kbq-css-variable(scrollbar-size-thumb-border-radius);
 
         // these props are used to set the user-friendly thumb for long content.
         &:vertical {
-            min-height: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
+            min-height: kbq-css-variable(scrollbar-size-thumb-min-size);
         }
 
         &:horizontal {
-            min-width: var(--kbq-scrollbar-size-thumb-min-size, map.get($tokens, scrollbar-size-thumb-min-size));
+            min-width: kbq-css-variable(scrollbar-size-thumb-min-size);
         }
     }
 
