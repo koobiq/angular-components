@@ -1,0 +1,24 @@
+<p>Выберите дату от 14 декабря 2023 до 25 августа 2024</p>
+
+<kbq-form-field
+    #tooltip="kbqWarningTooltip"
+    [kbqWarningTooltip]="'Только цифры'"
+    (click)="myDatepicker.toggle()"
+>
+    <input
+        [kbqDatepicker]="myDatepicker"
+        [kbqValidationTooltip]="tooltip"
+        [max]="maxDate"
+        [min]="minDate"
+    />
+    <i
+        kbq-icon="mc-calendar_16"
+        kbqSuffix
+    ></i>
+    <kbq-datepicker
+        #myDatepicker
+        [maxDate]="maxDate"
+        [minDate]="minDate"
+        [startAt]="minDate"
+    />
+</kbq-form-field>

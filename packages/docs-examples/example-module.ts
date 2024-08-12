@@ -811,6 +811,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-datepicker"
     }
   },
+  "datepicker-minimax": {
+    "packagePath": "components/datepicker/datepicker-minimax",
+    "title": "Datepicker-minimax",
+    "componentName": "DatepickerMinimaxExample",
+    "files": [
+      "datepicker-minimax-example.ts",
+      "datepicker-minimax-example.html",
+      "datepicker-minimax-example.css"
+    ],
+    "selector": "datepicker-minimax-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-minimax-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
   "datepicker-not-empty": {
     "packagePath": "components/datepicker/datepicker-not-empty",
     "title": "Datepicker",
