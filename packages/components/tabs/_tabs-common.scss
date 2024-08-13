@@ -20,21 +20,13 @@ $tokens: meta.module-variables(tokens) !default;
 
     cursor: pointer;
 
-    $padding-vertical: map.get($tokens, tabs-size-tab-item-padding-vertical);
-    $padding-horizontal: map.get($tokens, tabs-size-tab-item-padding-horizontal);
-    $border-width: map.get($tokens, tabs-size-tab-item-focus-outline-width);
-
-    padding: calc(
-            var(--kbq-tabs-size-tab-item-padding-vertical, $padding-vertical) - var(
-                    --kbq-tabs-size-tab-item-focus-outline-width,
-                    $border-width
-                )
+    padding: kbq-difference-series-css-variables(
+            [tabs-size-tab-item-padding-vertical,
+            tabs-size-tab-item-focus-outline-width]
         )
-        calc(
-            var(--kbq-tabs-size-tab-item-padding-horizontal, $padding-horizontal) - var(
-                    --kbq-tabs-size-tab-item-focus-outline-width,
-                    $border-width
-                )
+        kbq-difference-series-css-variables(
+            [tabs-size-tab-item-padding-horizontal,
+            tabs-size-tab-item-focus-outline-width]
         );
 
     border: {

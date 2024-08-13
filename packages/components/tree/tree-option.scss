@@ -10,11 +10,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-tree-option {
     @include common.kbq-no-select;
 
-    $padding-vertical: map.get($tokens, tree-size-container-padding-vertical);
-    $padding-right: map.get($tokens, tree-size-container-padding-right);
-
-    $outline-width: map.get($tokens, tree-size-container-focus-outline-width);
-
     box-sizing: border-box;
 
     display: flex;
@@ -28,23 +23,17 @@ $tokens: meta.module-variables(tokens) !default;
     border-style: solid;
     border-color: transparent;
 
-    padding-top: calc(
-        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) - var(
-                --kbq-tree-size-container-focus-outline-width,
-                $outline-width
-            )
+    padding-top: kbq-difference-series-css-variables(
+        [ tree-size-container-padding-vertical,
+        tree-size-container-focus-outline-width]
     );
-    padding-right: calc(
-        var(--kbq-tree-size-container-padding-right, $padding-right) - var(
-                --kbq-tree-size-container-focus-outline-width,
-                $outline-width
-            )
+    padding-right: kbq-difference-series-css-variables(
+        [ tree-size-container-padding-right,
+        tree-size-container-focus-outline-width]
     );
-    padding-bottom: calc(
-        var(--kbq-tree-size-container-padding-vertical, $padding-vertical) - var(
-                --kbq-tree-size-container-focus-outline-width,
-                $outline-width
-            )
+    padding-bottom: kbq-difference-series-css-variables(
+        [ tree-size-container-padding-vertical,
+        tree-size-container-focus-outline-width]
     );
 
     gap: kbq-css-variable(tree-size-container-content-gap-horizontal);

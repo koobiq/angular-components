@@ -45,3 +45,55 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, font-feature-settings, '');
     @include kbq-css-font-variable($component, $property, letter-spacing, '');
 }
+
+@function kbq-sum-series-css-variables($variables) {
+    $sum: 0;
+    @each $variable in $variables {
+        @if ($sum == 0) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
+                $sum: $variable;
+            } @else {
+                $sum: kbq-css-variable($variable);
+            }
+        } @else {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
+                $sum: calc($sum + $variable);
+            } @else {
+                $sum: calc($sum + kbq-css-variable($variable));
+            }
+        }
+    }
+    @return $sum;
+}
+
+@function kbq-difference-series-css-variables($variables) {
+    $difference: 0;
+    @each $variable in $variables {
+        @if ($difference == 0) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
+                $difference: $variable;
+            } @else {
+                $difference: kbq-css-variable($variable);
+            }
+        } @else {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
+                $difference: calc($difference - $variable);
+            } @else {
+                $difference: calc($difference - kbq-css-variable($variable));
+            }
+        }
+    }
+    @return $difference;
+}
+
+@function kbq-css-half-difference($outer, $inner, $border: null) {
+    @if $border {
+        @if (meta.type-of($border) == number or meta.type-of($border) == calculation) {
+            @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
+        } @else {
+            @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - kbq-css-variable($border * 2)) / 2);
+        }
+    } @else {
+        @return calc((kbq-css-variable($outer) - kbq-css-variable($inner)) / 2);
+    }
+}
