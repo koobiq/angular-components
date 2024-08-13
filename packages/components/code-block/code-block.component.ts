@@ -16,8 +16,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
-import { Subject, Subscription, pairwise } from 'rxjs';
-import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
+import { Subject, Subscription, fromEvent, merge, pairwise } from 'rxjs';
+import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
@@ -83,12 +83,23 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
 
     @Input() lineNumbers = true;
-    @Input() codeFiles: KbqCodeFile[];
     @Input() filled: boolean;
     @Input() maxHeight: number;
     @Input() softWrap: boolean = false;
     @Input() canLoad: boolean = true;
+    @Input() get codeFiles(): KbqCodeFile[] {
+        return this._codeFiles;
+    }
 
+    set codeFiles(files: KbqCodeFile[]) {
+        this._codeFiles = files;
+        this.hideActionBarIfNoHeader();
+        this.subscribeToHover();
+    }
+
+    private _codeFiles: KbqCodeFile[];
+
+    // TODO: replace with property
     get noHeader(): any {
         return this.codeFiles.length === 1 && !this.codeFiles[0].filename;
     }
@@ -102,7 +113,11 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     viewAll: boolean = false;
     multiLine: boolean = false;
     isTopOverflow: boolean = false;
-    hasFocus: boolean = false;
+    hasKeyboardFocus: boolean = false;
+    /**
+     * @docs-private
+     */
+    actionbarHidden?: boolean;
 
     readonly resizeStream = new Subject<Event>();
     readonly currentCodeBlock = new Subject<HTMLElement>();
@@ -110,6 +125,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     private readonly resizeDebounceInterval: number = 100;
     private resizeSubscription = Subscription.EMPTY;
     private codeBlockSubscription = Subscription.EMPTY;
+    private hoverSubscription: Subscription | null = null;
 
     constructor(
         private elementRef: ElementRef,
@@ -137,15 +153,17 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
                         this.focusMonitor.stopMonitoring(prev);
                     }
 
-                    return this.focusMonitor
-                        .monitor(current!)
-                        .pipe(filter((origin: FocusOrigin) => origin === 'keyboard'));
-                })
+                    return this.focusMonitor.monitor(current!);
+                }),
+                filter((origin: FocusOrigin) => origin === 'keyboard')
             )
             .subscribe(() => {
-                this.hasFocus = true;
+                this.hasKeyboardFocus = true;
                 this.changeDetectorRef.markForCheck();
             });
+
+        this.hideActionBarIfNoHeader();
+        this.subscribeToHover();
         this.currentCodeBlock.next(this.elementRef.nativeElement.querySelector('code'));
     }
 
@@ -222,8 +240,10 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     onShowMoreClick(currentCodeContentElement: HTMLPreElement) {
         this.toggleViewAll();
 
-        // Should explicitly scroll to top so content will be cropped from the bottom
-        if (!this.viewAll) {
+        if (this.viewAll) {
+            this.showActionBarIfNecessary();
+        } else {
+            // Should explicitly scroll to top so content will be cropped from the bottom
             currentCodeContentElement?.scroll({ top: 0, behavior: 'instant' });
         }
     }
@@ -236,6 +256,32 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
             (hasScroll(currentCodeContent) || hasScroll(currentCodeBlock)) &&
             ((!!this.maxHeight && this.viewAll) || !this.maxHeight)
         );
+    }
+
+    onEnter(currentCodeBlock: HTMLPreElement) {
+        // defer execution after toggle view mode
+        setTimeout(() => {
+            if (this.canShowFocus(currentCodeBlock)) {
+                this.focusMonitor.focusVia(currentCodeBlock.querySelector('code')!, 'keyboard');
+            }
+        }, 0);
+    }
+
+    /** @docs-private */
+    showActionBarIfNecessary(): void {
+        if (!this.actionbarHidden) return;
+        this.actionbarHidden = false;
+    }
+
+    /** @docs-private */
+    hideActionBarIfNoHeader(event?: FocusEvent | null): void {
+        if (!this.noHeader) return;
+        if (event) {
+            this.actionbarHidden = !this.elementRef.nativeElement.contains(event.relatedTarget);
+            return;
+        }
+
+        this.actionbarHidden = this.noHeader;
     }
 
     private updateMultiline = () => {
@@ -253,12 +299,31 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         return `${fileName}.${extension}`;
     }
 
-    onEnter(currentCodeBlock: HTMLPreElement) {
-        // defer execution after toggle view mode
-        setTimeout(() => {
-            if (this.canShowFocus(currentCodeBlock)) {
-                this.focusMonitor.focusVia(currentCodeBlock.querySelector('code')!, 'keyboard');
+    private subscribeToHover() {
+        if (!this.noHeader) {
+            this.hoverSubscription?.unsubscribe();
+            this.hoverSubscription = null;
+            return;
+        }
+        if (this.hoverSubscription) return;
+
+        this.hoverSubscription = merge(
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusin'),
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'mouseenter')
+        ).subscribe(() => {
+            this.showActionBarIfNecessary();
+            this.changeDetectorRef.markForCheck();
+        });
+
+        const blur = merge(
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'focusout'),
+            fromEvent<FocusEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => null))
+        ).subscribe((event: FocusEvent | null) => {
+            if (!this.hasKeyboardFocus) {
+                this.hideActionBarIfNoHeader(event);
             }
-        }, 0);
+            this.changeDetectorRef.markForCheck();
+        });
+        this.hoverSubscription.add(blur);
     }
 }

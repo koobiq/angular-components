@@ -18,7 +18,10 @@
 </kbq-dropdown>
 
 <div class="demo-vertical-navbar">
-    <kbq-vertical-navbar #verticalNavbar>
+    <kbq-vertical-navbar
+        #verticalNavbar
+        [openOver]="true"
+    >
         <kbq-navbar-container>
             <a
                 #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"

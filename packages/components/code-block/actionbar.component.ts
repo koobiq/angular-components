@@ -17,8 +17,7 @@ import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
     templateUrl: './actionbar.component.html',
     styleUrls: ['./actionbar.component.scss'],
     host: {
-        class: 'kbq-code-block-actionbar',
-        '[class.kbq-code-block-actionbar_less-contrast]': 'lessContrast'
+        class: 'kbq-code-block-actionbar'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,7 +27,6 @@ export class KbqActionBarComponent implements AfterViewInit {
 
     @Input() config: KbqCodeBlockConfiguration;
     @Input() codeFiles: KbqCodeFile[];
-    @Input() lessContrast: boolean;
     @Input() selectedTabIndex = 0;
     @Input() multiLine: boolean;
     @Input() softWrap: boolean;

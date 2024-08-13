@@ -28,6 +28,12 @@
 
     & .kbq-code-block-actionbar {
         background: kbq-css-variable(#{$base}-actionbar-background, map.get($style, actionbar, background));
+
+        &.kbq-actionbar-block_floating {
+            .kbq-actionbar-block__button-stack {
+                background: kbq-css-variable(#{$base}-actionbar-background, map.get($style, actionbar, background));
+            }
+        }
     }
 
     &.kbq-code-block_header-with-shadow {
@@ -38,8 +44,6 @@
 
     &.kbq-code-block_no-header {
         & .kbq-code-block__fade-gradient {
-            display: block;
-
             background: kbq-css-variable(#{$base}-actionbar-fade-gradient, map.get($style, actionbar, fade-gradient));
         }
     }
@@ -361,7 +365,7 @@
         .kbq-tab-group.kbq-focused {
             // paint focus border from the top since because of border constraints
             .kbq-tab-header {
-                box-shadow: 0 3px 0 -1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+                box-shadow: 0 2px 0 -1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
             }
 
             .kbq-tab-body__wrapper {
@@ -369,19 +373,6 @@
                 box-shadow: inset 0 0 0.1 1px
                     kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
             }
-        }
-    }
-
-    .kbq-code-block-actionbar {
-        .kbq-code-block-actionbar_less-contrast {
-            background-color: kbq-css-variable(
-                code-block-actionbar-bg-less-contrast,
-                map.get($code-block, actionbar, bg-less-contrast)
-            );
-        }
-
-        &.kbq-actionbar-block_floating {
-            background-color: kbq-css-variable(code-block-actionbar-bg, map.get($code-block, actionbar, bg));
         }
     }
 }

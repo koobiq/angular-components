@@ -1,3 +1,12 @@
+## 17.0.3 (2024-08-08)
+
+### Koobiq
+
+ * bug fix  **docs:** docsearch always finds nothing ([#199](https://github.com/koobiq/angular-components/issues/199)) ([7afd0ed](https://github.com/koobiq/angular-components/commit/7afd0ed7bc8b62565dd7fee35a25d961ee707250))
+ * bug fix  **docs:** fixed calendar doubleclicks ([#DS-2728](https://github.com/koobiq/angular-components/issues/issue/DS-2728)) ([#195](https://github.com/koobiq/angular-components/issues/195)) ([96afcc6](https://github.com/koobiq/angular-components/commit/96afcc6344437fee44c0528464e3c86a6e2e4ffb))
+ * feature  added restore version.ts in pre-commit hook ([#202](https://github.com/koobiq/angular-components/issues/202)) ([905f7d1](https://github.com/koobiq/angular-components/commit/905f7d10054052a5100120e4bcfec305d36a86a6))
+ * feature  **code-block:** show actionbar on hover/focus ([#DS-2335](https://github.com/koobiq/angular-components/issues/issue/DS-2335)) ([#184](https://github.com/koobiq/angular-components/issues/184)) ([529e681](https://github.com/koobiq/angular-components/commit/529e681b50f34833360e4e29de119df528a18f95))
+
 ## 17.0.2 (2024-08-06)
 
 ### Koobiq
