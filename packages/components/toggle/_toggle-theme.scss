@@ -74,14 +74,17 @@
 
 @mixin kbq-toggle-theme($theme) {
     $toggle: map.get($theme, components, toggle);
+    $foreground: map.get($theme, foreground);
 
     .kbq-toggle {
-        color: kbq-css-variable(foreground-contrast, map.get($theme, foreground, contrast));
-
         @include kbq-toggle-color($toggle, theme);
 
         &.kbq-error {
             @include kbq-toggle-color($toggle, error);
+        }
+
+        &.kbq-disabled {
+            color: map.get($foreground, text-disabled);
         }
     }
 }
