@@ -94,6 +94,6 @@ $tokens: meta.module-variables(tokens) !default;
             @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - kbq-css-variable($border * 2)) / 2);
         }
     } @else {
-        @return calc((kbq-css-variable($outer) + kbq-css-variable($inner)) / 2);
+        @return calc((kbq-css-variable($outer) - kbq-css-variable($inner)) / 2);
     }
 }
