@@ -50,13 +50,13 @@ $tokens: meta.module-variables(tokens) !default;
     $sum: 0;
     @each $variable in $variables {
         @if ($sum == 0) {
-            @if (type-of($variable) == number or type-of($variable) == calculation) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $sum: $variable;
             } @else {
                 $sum: kbq-css-variable($variable);
             }
         } @else {
-            @if (type-of($variable) == number or type-of($variable) == calculation) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $sum: calc($sum + $variable);
             } @else {
                 $sum: calc($sum + kbq-css-variable($variable));
@@ -70,13 +70,13 @@ $tokens: meta.module-variables(tokens) !default;
     $difference: 0;
     @each $variable in $variables {
         @if ($difference == 0) {
-            @if (type-of($variable) == number or type-of($variable) == calculation) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $difference: $variable;
             } @else {
                 $difference: kbq-css-variable($variable);
             }
         } @else {
-            @if (type-of($variable) == number or type-of($variable) == calculation) {
+            @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $difference: calc($difference - $variable);
             } @else {
                 $difference: calc($difference - kbq-css-variable($variable));
@@ -88,7 +88,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 @function kbq-css-half-difference($outer, $inner, $border: null) {
     @if $border {
-        @if (type-of($border) == number or type-of($border) == calculation) {
+        @if (meta.type-of($border) == number or meta.type-of($border) == calculation) {
             @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
         } @else {
             @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - kbq-css-variable($border * 2)) / 2);
