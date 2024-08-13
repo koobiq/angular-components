@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, FactoryProvider, Type, ValueProvider, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -852,11 +852,14 @@ describe('KbqDatepicker', () => {
 
             it('should change selected year in calendar if input year is less than MIN', fakeAsync(() => {
                 fixture.componentInstance.datepicker.open();
+                fixture.detectChanges();
+
                 const yearSelectValuePath = '.kbq-calendar-header__select-group kbq-select .kbq-button_transparent';
                 const invalidYearLessThanMin = 2014;
                 const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
                 inputEl.value = `01.01.${invalidYearLessThanMin}`;
                 dispatchKeyboardEvent(inputEl, 'keydown', ONE);
+                tick();
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();

@@ -12,6 +12,13 @@ import { DateAdapter } from '@koobiq/components/core';
 const defaultMinYear = 1900;
 const defaultMaxYear = 2099;
 
+export type MonthName = {
+    name: string;
+    nameShort: string;
+    value: number;
+    disabled: boolean;
+};
+
 /** Default header for KbqCalendar */
 @Component({
     selector: 'kbq-calendar-header',
@@ -25,7 +32,7 @@ const defaultMaxYear = 2099;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    monthNames: { name: string; nameShort: string; value: number }[];
+    monthNames: MonthName[];
     selectedMonth: number;
 
     years: { name: number; value: string }[] = [];
@@ -40,6 +47,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this._activeDate = value;
 
         this.updateSelectedValues();
+        this.updateSelectionOptions();
     }
 
     private _activeDate: D;
@@ -56,7 +64,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
         this._maxDate = value;
 
-        this.updateYearsArray();
+        this.updateSelectionOptions();
     }
 
     private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
@@ -73,13 +81,13 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
         this._minDate = value;
 
-        this.updateYearsArray();
+        this.updateSelectionOptions();
     }
 
     private _minDate = this.adapter.createDate(defaultMinYear, 1);
 
     get previousDisabled(): boolean {
-        return this.compareDate(this.activeDate, this.minDate!) < 0;
+        return this.compareDate(this.activeDate, this.minDate!) <= 0;
     }
 
     get nextDisabled(): boolean {
@@ -93,12 +101,13 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     constructor(private readonly adapter: DateAdapter<D>) {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
-            return { name: name, nameShort: this.adapter.getMonthNames('short')[i], value: i };
+            return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
         });
     }
 
     ngAfterContentInit(): void {
-        this.updateYearsArray();
+        this.updateYearsOptions();
+        this.updateMonthOptions();
         this.updateSelectedValues();
     }
 
@@ -131,6 +140,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
         this.yearSelected.emit(this.activeDate);
         this.activeDateChange.emit(this.activeDate);
+
+        this.updateMonthOptions();
     }
 
     selectCurrentDate(): void {
@@ -171,7 +182,12 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         };
     }
 
-    private updateYearsArray() {
+    private updateSelectionOptions() {
+        this.updateYearsOptions();
+        this.updateMonthOptions();
+    }
+
+    private updateYearsOptions() {
         const minYear = this.adapter.getYear(this.minDate!);
         const maxYear = this.adapter.getYear(this.maxDate!);
 
@@ -179,6 +195,28 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
         for (let key: number = minYear; key <= maxYear; key++) {
             this.years.push({ name: key, value: this.adapter.getYearName(this.adapter.createDate(key)) });
+        }
+    }
+
+    private updateMonthOptions() {
+        if (!this._activeDate) {
+            return;
+        }
+
+        const minYear = this.adapter.getYear(this.minDate!);
+        const minMonth = this.adapter.getMonth(this.minDate!);
+
+        const maxYear = this.adapter.getYear(this.maxDate!);
+        const maxMonth = this.adapter.getMonth(this.maxDate!);
+
+        const currentYear = this.adapter.getYear(this._activeDate);
+
+        if (currentYear === minYear) {
+            this.monthNames.forEach((month) => (month.disabled = month.value < minMonth));
+        }
+
+        if (currentYear === maxYear) {
+            this.monthNames.forEach((month) => (month.disabled = month.value > maxMonth));
         }
     }
 }

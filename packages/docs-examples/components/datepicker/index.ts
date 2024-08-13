@@ -10,15 +10,17 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DatepickerLanguageExample } from './datepicker-language/datepicker-language-example';
+import { DatepickerMinimaxExample } from './datepicker-minimax/datepicker-minimax-example';
 import { DatepickerNotEmptyExample } from './datepicker-not-empty/datepicker-not-empty-example';
 import { DatepickerOverviewExample } from './datepicker-overview/datepicker-overview-example';
 
-export { DatepickerLanguageExample, DatepickerNotEmptyExample, DatepickerOverviewExample };
+export { DatepickerLanguageExample, DatepickerMinimaxExample, DatepickerNotEmptyExample, DatepickerOverviewExample };
 
 const EXAMPLES = [
     DatepickerLanguageExample,
     DatepickerOverviewExample,
-    DatepickerNotEmptyExample
+    DatepickerNotEmptyExample,
+    DatepickerMinimaxExample
 ];
 
 @NgModule({
