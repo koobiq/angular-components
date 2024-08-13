@@ -84,6 +84,17 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 .kbq-toast__close-button {
-    margin-top: kbq-css-variable(toast-size-close-button-margin-top);
+    margin-top: kbq-difference-series-css-variables(
+        [toast-size-content-padding-top,
+        calc(
+                kbq-difference-series-css-variables(
+                        [kbq-sum-series-css-variables(
+                            [calc(kbq-css-variable(icon-button-size-small-vertical-padding) * 2),
+                            16px]
+                        ),
+                        toast-font-title-line-height]
+                    ) / 2
+            )]
+    );
     margin-right: kbq-css-variable(toast-size-close-button-margin-right);
 }
