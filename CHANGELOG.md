@@ -1,3 +1,13 @@
+# 17.1.0 (2024-08-13)
+
+### Koobiq
+
+ * bug fix  **datepicker:** use min/max in calendar in input ([#DS-2610](https://github.com/koobiq/angular-components/issues/issue/DS-2610)) ([#204](https://github.com/koobiq/angular-components/issues/204)) ([3dbf830](https://github.com/koobiq/angular-components/commit/3dbf8306b568de2c7645fc9809f19785124556b4))
+ * bug fix  **toast:** added kbq-title for toasts ([#DS-2726](https://github.com/koobiq/angular-components/issues/issue/DS-2726)) ([#197](https://github.com/koobiq/angular-components/issues/197)) ([31ffc94](https://github.com/koobiq/angular-components/commit/31ffc949c72e700f32eceed13089cdec1e08bd10))
+ * bug fix  **toggle:** disabled label fix ([#DS-2742](https://github.com/koobiq/angular-components/issues/issue/DS-2742)) ([#206](https://github.com/koobiq/angular-components/issues/206)) ([75bf533](https://github.com/koobiq/angular-components/commit/75bf5331391b569da0f23784aa4bed4a6e69a759))
+ * feature  **navbar:** added option [openOver] for kbq-vertical-navbar ([#DS-2714](https://github.com/koobiq/angular-components/issues/issue/DS-2714)) ([#198](https://github.com/koobiq/angular-components/issues/198)) ([214a9ad](https://github.com/koobiq/angular-components/commit/214a9ad6082c3bb08569ef687803cfa6e39ffbde))
+ * feature  **styles:** add new variables mixins ([#DS-2727](https://github.com/koobiq/angular-components/issues/issue/DS-2727)) ([#200](https://github.com/koobiq/angular-components/issues/200)) ([ef84ffa](https://github.com/koobiq/angular-components/commit/ef84ffaa1299b5ac703d42a394f3d46416d615ae))
+
 ## 17.0.3 (2024-08-08)
 
 ### Koobiq
