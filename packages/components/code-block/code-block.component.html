@@ -1,5 +1,5 @@
 <kbq-tab-group
-    [class.kbq-focused]="hasFocus"
+    [class.kbq-focused]="hasKeyboardFocus"
     (selectedTabChange)="onSelectTab($event)"
 >
     <kbq-tab
@@ -20,10 +20,10 @@
             [config]="config"
             [codeFiles]="codeFiles"
             [selectedTabIndex]="selectedTabIndex"
-            [lessContrast]="filled"
             [multiLine]="multiLine"
             [softWrap]="softWrap"
             [canLoad]="canLoad"
+            [style.opacity]="actionbarHidden ? 0 : null"
             (toggleSoftWrap)="toggleSoftWrap()"
             (downloadCode)="downloadCode()"
             (copyCode)="copyCode()"
@@ -34,7 +34,7 @@
                [lineNumbers]="true"
                [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
                (highlighted)="onHighlighted()"
-               (blur)="hasFocus = false">
+               (blur)="hasKeyboardFocus = false">
             </code></pre>
 
         <div

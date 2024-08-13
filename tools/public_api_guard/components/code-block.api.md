@@ -49,6 +49,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 // @public (undocumented)
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
+    actionbarHidden?: boolean;
     // (undocumented)
     canLoad: boolean;
     // (undocumented)
@@ -56,7 +57,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     checkOverflow(currentCodeContentElement: HTMLElement): void;
     // (undocumented)
-    codeFiles: KbqCodeFile[];
+    get codeFiles(): KbqCodeFile[];
+    set codeFiles(files: KbqCodeFile[]);
     // (undocumented)
     config: KbqCodeBlockConfiguration;
     // (undocumented)
@@ -72,7 +74,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     getMaxHeight(): string;
     // (undocumented)
-    hasFocus: boolean;
+    hasKeyboardFocus: boolean;
+    hideActionBarIfNoHeader(event?: FocusEvent | null): void;
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
@@ -101,6 +104,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     readonly resizeStream: Subject<Event>;
     // (undocumented)
     selectedTabIndex: number;
+    showActionBarIfNecessary(): void;
     // (undocumented)
     get singleFile(): boolean;
     // (undocumented)
@@ -116,7 +120,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     viewAll: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }]>;
 }

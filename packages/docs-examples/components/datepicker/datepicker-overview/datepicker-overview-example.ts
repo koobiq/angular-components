@@ -10,5 +10,5 @@ import { DateTime } from 'luxon';
     styleUrls: ['datepicker-overview-example.css']
 })
 export class DatepickerOverviewExample {
-    date: DateTime;
+    date: DateTime | null = null;
 }

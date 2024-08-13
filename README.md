@@ -17,3 +17,7 @@ Whether it's a feature request, bug report, or a project to showcase, please get
 
 -   [Join our Discord](https://discord.gg/43MRHjgWYg)
 -   [GitHub Discussions](https://github.com/koobiq/angular-components/discussions)
+
+## Contributor analytics
+
+![Alt](https://repobeats.axiom.co/api/embed/337d1ba905b1ad8fb2782ae045bda302c6d5645e.svg 'Repobeats analytics image')
