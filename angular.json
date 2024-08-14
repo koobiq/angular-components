@@ -1999,7 +1999,7 @@
         }
     },
     "cli": {
-        "packageManager": "yarn",
+        "packageManager": "pnpm",
         "analytics": false,
         "cache": {
             "enabled": false
