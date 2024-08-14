@@ -15,9 +15,10 @@ const config = {
     clearMocks: true,
     cacheDirectory: '<rootDir>/node_modules/.cache/jest',
     preset: 'jest-preset-angular',
-    testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/tools/jest/setup.ts'],
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' })
+    },
     testMatch: ['<rootDir>/**/*.spec.ts'],
     testTimeout: 2000
 };

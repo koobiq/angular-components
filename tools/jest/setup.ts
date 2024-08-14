@@ -9,13 +9,7 @@ global.open = jest.fn();
 
 global.URL.createObjectURL = jest.fn();
 
-const RESIZE_EVENT = document.createEvent('Event');
-RESIZE_EVENT.initEvent('resize', true, true);
-global.window.resizeTo = (width: number, height: number): void => {
-    global.window.innerWidth = width || global.window.innerWidth;
-    global.window.innerHeight = height || global.window.innerHeight;
-    global.window.dispatchEvent(RESIZE_EVENT);
-};
+global.ResizeObserverEntry = class {} as typeof ResizeObserverEntry;
 
 global.ResizeObserver = class implements ResizeObserver {
     observe(_target: Element, _options?: ResizeObserverOptions): void {}
@@ -30,8 +24,16 @@ global.DataTransferItem = class {
 } as typeof DataTransferItem;
 
 global.DataTransfer = class {
-    items = { length: 0 };
-} as typeof DataTransfer;
+    files: File[] = [];
+    items = {
+        length: () => {
+            return this.files.length;
+        },
+        add: (data: File) => {
+            this.files.push(data);
+        }
+    };
+} as unknown as typeof DataTransfer;
 
 global.DragEvent = class extends MouseEvent {
     dataTransfer: DataTransfer | null;

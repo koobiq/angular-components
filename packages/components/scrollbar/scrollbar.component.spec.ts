@@ -11,7 +11,7 @@ import {
     KbqScrollbarOptions
 } from './scrollbar.types';
 
-export const configureTestingModule = (declarations?: any[]) => {
+const configureTestingModule = (declarations?: any[]) => {
     TestBed.configureTestingModule({
         imports: [
             KbqScrollbarModule,
@@ -88,12 +88,12 @@ describe('KbqScrollbar', () => {
             expect(component.initialize).toHaveBeenCalledTimes(1);
         });
 
-        xit('should emit scroll event', () => {
+        it('should emit scroll event', () => {
             fixture.detectChanges();
 
             fixture.nativeElement.querySelectorAll('*').forEach((e) => dispatchFakeEvent(e, 'scroll'));
 
-            expect(component.scroll).toHaveBeenCalled();
+            expect(component.scroll).toHaveBeenCalledTimes(1);
         });
 
         it('should emit update on options update', () => {

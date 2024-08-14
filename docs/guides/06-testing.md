@@ -10,8 +10,14 @@ Runs tests for package
 ng test components
 ```
 
-Runs single test
+Runs specific spec file
 
 ```bash
 yarn jest packages/components/alert/alert.component.spec.ts
+```
+
+Runs specific test closure (`it`)
+
+```bash
+yarn jest packages/components/alert/alert.component.spec.ts --testNamePattern='should add class'
 ```

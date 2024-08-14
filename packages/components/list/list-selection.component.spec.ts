@@ -250,7 +250,7 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toEqual(1);
         });
 
-        xit('should focus and toggle the next item when pressing SHIFT + UP_ARROW', () => {
+        it('should focus and toggle the next item when pressing SHIFT + UP_ARROW', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
             Object.defineProperty(upKeyEvent, 'shiftKey', { get: () => true });
@@ -271,10 +271,11 @@ describe('KbqListSelection without forms', () => {
 
             selectionList.componentInstance.onKeyDown(upKeyEvent);
             fixture.detectChanges();
+            tick();
 
             expect(listOptions[1].componentInstance.selected).toBe(true);
             expect(listOptions[2].componentInstance.selected).toBe(true);
-        });
+        }));
 
         it('should focus next item when press DOWN ARROW', () => {
             const manager = selectionList.componentInstance.keyManager;
@@ -288,7 +289,7 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toEqual(3);
         });
 
-        xit('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
+        it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
             Object.defineProperty(downKeyEvent, 'shiftKey', { get: () => true });
@@ -309,10 +310,11 @@ describe('KbqListSelection without forms', () => {
 
             selectionList.componentInstance.onKeyDown(downKeyEvent);
             fixture.detectChanges();
+            tick();
 
             expect(listOptions[2].componentInstance.selected).toBe(true);
             expect(listOptions[3].componentInstance.selected).toBe(true);
-        });
+        }));
 
         it('should be able to focus the first item when pressing HOME', () => {
             const manager = selectionList.componentInstance.keyManager;

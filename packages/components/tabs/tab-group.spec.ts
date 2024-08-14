@@ -48,21 +48,25 @@ describe('KbqTabGroup', () => {
             expect(element.querySelectorAll('.kbq-tab-body')[1].querySelectorAll('span').length).toBe(3);
         });
 
-        xit('should change selected index on click', () => {
+        it('should change selected index on click', fakeAsync(() => {
             const component = fixture.debugElement.componentInstance;
             component.selectedIndex = 0;
+            fixture.detectChanges();
+            tick();
             checkSelectedIndex(0, fixture);
 
             // select the second tab
-            let tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
-            tabLabel.nativeElement.click();
+            fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1].nativeElement.click();
+            fixture.detectChanges();
+            tick();
             checkSelectedIndex(1, fixture);
 
             // select the third tab
-            tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[2];
-            tabLabel.nativeElement.click();
+            fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[2].nativeElement.click();
+            fixture.detectChanges();
+            tick();
             checkSelectedIndex(2, fixture);
-        });
+        }));
 
         it('should support two-way binding for selectedIndex', fakeAsync(() => {
             const component = fixture.componentInstance;

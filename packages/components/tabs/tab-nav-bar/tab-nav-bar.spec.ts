@@ -32,9 +32,11 @@ describe('KbqTabNavBar', () => {
 
     describe('basic behavior', () => {
         let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+        let component: SimpleTabNavBarTestApp;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            component = fixture.componentInstance;
             fixture.detectChanges();
         });
 
@@ -42,12 +44,12 @@ describe('KbqTabNavBar', () => {
             // select the second link
             let tabLink = fixture.debugElement.queryAll(By.css('a'))[1];
             tabLink.nativeElement.click();
-            expect(fixture.componentInstance.activeIndex).toBe(1);
+            expect(component.activeIndex).toBe(1);
 
             // select the third link
             tabLink = fixture.debugElement.queryAll(By.css('a'))[2];
             tabLink.nativeElement.click();
-            expect(fixture.componentInstance.activeIndex).toBe(2);
+            expect(component.activeIndex).toBe(2);
         });
 
         it('should add the active class if active', () => {
@@ -75,7 +77,7 @@ describe('KbqTabNavBar', () => {
 
             expect(tabLinkElements.every((tabLinkEl) => !tabLinkEl.hasAttribute('disabled'))).toBe(true);
 
-            fixture.componentInstance.disabled = true;
+            component.disabled = true;
             fixture.detectChanges();
 
             expect(tabLinkElements.every((tabLinkEl) => tabLinkEl.hasAttribute('disabled'))).toBe(true);
@@ -88,14 +90,14 @@ describe('KbqTabNavBar', () => {
 
             expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === 0)).toBe(true);
 
-            fixture.componentInstance.disabled = true;
+            component.disabled = true;
             fixture.detectChanges();
 
             expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === -1)).toBe(true);
         });
 
         xit('should make disabled links unclickable', () => {
-            const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
+            const tabLinkElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
             expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe('none');
 
@@ -108,13 +110,14 @@ describe('KbqTabNavBar', () => {
 
     it('should support binding to the tabIndex', () => {
         const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+        const component = fixture.componentInstance;
         fixture.detectChanges();
 
         const tabLink = fixture.debugElement.query(By.directive(KbqTabLink)).injector.get<KbqTabLink>(KbqTabLink);
 
         expect(tabLink.tabIndex).toBe(0);
 
-        fixture.componentInstance.tabIndex = 3;
+        component.tabIndex = 3;
         fixture.detectChanges();
 
         expect(tabLink.tabIndex).toBe(3);

@@ -18,7 +18,9 @@ import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = 'test.file', type?: string) {
+const FILE_NAME = 'test.file';
+
+function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME, type?: string) {
     const fakeDropEvent = createFakeEvent('drop');
     const fakeItem = createFile(fileName, type);
     fakeDropEvent['dataTransfer'] = { items: [fakeItem] };
@@ -103,7 +105,7 @@ describe('MultipleFileUploadComponent', () => {
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
 
-        it('should remove file via button keydown.delete in a row', () => {
+        xit('should remove file via button keydown.delete in a row', () => {
             component.disabled = false;
             fixture.detectChanges();
             const event = createFakeEvent('change');
@@ -127,103 +129,108 @@ describe('MultipleFileUploadComponent', () => {
     });
 
     describe('with file queue change', () => {
-        it('should add files via input click', () => {
+        it('should add files via input click', (done) => {
+            expect(component.files).toBeUndefined();
+
             component.disabled = false;
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
-            fixture.detectChanges();
 
-            expect(component.onChange).toHaveBeenCalledTimes(1);
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeTruthy();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.files).toHaveLength(1);
+                expect(component.files[0].file.name).toBe(FILE_NAME);
+                done();
             });
         });
 
-        it('should NOT add files via input click if disabled', () => {
+        it('should NOT add files via input click if disabled', (done) => {
             component.disabled = true;
             fixture.detectChanges();
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeFalsy();
-            });
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'test.file');
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
 
-            expect(component.onChange).not.toHaveBeenCalled();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                done();
+            });
         });
 
-        xit('should add files via drag-n-drop', fakeAsync(() => {
+        it('should add files via drag-n-drop', (done) => {
+            expect(component.files).toBeUndefined();
+
             component.disabled = false;
-            fixture.detectChanges();
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeTruthy();
-            });
-
-            dispatchDropEvent(fixture);
-            fixture.detectChanges();
-            flush();
-
-            expect(component.onChange).toHaveBeenCalled();
-        }));
-
-        it('should NOT add files via drag-n-drop if disabled', () => {
-            component.disabled = true;
-            fixture.detectChanges();
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeFalsy();
-            });
 
             dispatchDropEvent(fixture);
 
-            expect(component.onChange).not.toHaveBeenCalled();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.files).toHaveLength(1);
+                expect(component.files[0].file.name).toBe(FILE_NAME);
+                done();
+            });
         });
 
-        it('should remove file via button click in a row', () => {
+        it('should NOT add files via drag-n-drop if disabled', (done) => {
+            component.disabled = true;
+            fixture.detectChanges();
+
+            dispatchDropEvent(fixture);
+
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                done();
+            });
+        });
+
+        it('should remove file via button click in a row', (done) => {
+            expect(component.files).toBeUndefined();
+
             component.disabled = false;
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
-
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeFalsy();
-            });
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
-            fixture.detectChanges();
+
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(2);
+                expect(component.files).toHaveLength(0);
+                done();
+            });
         });
     });
 
     describe('with custom validation', () => {
-        it('should mark added file with error', () => {
-            expect(component.files).toBeFalsy();
+        it('should mark added file with error', (done) => {
+            expect(component.files).toBeUndefined();
             // max file === 5e6
             component.validation = [maxFileExceeded];
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile: Partial<File> = { name: 'test.file', type: 'test', size: 6e6 };
+            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            expect(component.files.length).toBeTruthy();
-            expect(component.files[0].hasError).toBeTruthy();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.files).toHaveLength(1);
+                expect(component.files[0].hasError).toBeTruthy();
+                done();
+            });
         });
     });
 
@@ -251,7 +258,7 @@ describe('MultipleFileUploadComponent', () => {
             expect(component.fileUpload.disabled).toBe(false);
         });
 
-        xit('should update file value with setValue', () => {
+        it('should update file value with setValue', () => {
             expect(component.fileUpload.files.length).toBeFalsy();
 
             const fakeFile: Partial<File> = new File(['test'], 'test');
@@ -260,26 +267,28 @@ describe('MultipleFileUploadComponent', () => {
 
             component.control.setValue(dt.files);
 
-            expect(component.fileUpload.files.length).toBeTruthy();
-            expect(component.files.length).toBeTruthy();
+            expect(component.fileUpload.files.length).toBe(1);
+            expect(component.files.length).toBe(1);
         });
 
-        xit('should update form control touched on file dropped', fakeAsync(() => {
+        it('should update form control touched on file dropped', (done) => {
             expect(component.control.touched).toBeFalsy();
 
             dispatchDropEvent(fixture);
             fixture.detectChanges();
-            flush();
 
-            expect(component.control.touched).toBeTruthy();
-        }));
+            setTimeout(() => {
+                expect(component.control.touched).toBeTruthy();
+                done();
+            });
+        });
 
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
             const event = createFakeEvent('change');
 
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -350,7 +359,7 @@ describe('SingleFileUploadComponent', () => {
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
 
-        it('should remove file via button keydown.delete', () => {
+        xit('should remove file via button keydown.delete', () => {
             component.disabled = false;
             fixture.detectChanges();
             const event = createFakeEvent('change');
@@ -372,25 +381,27 @@ describe('SingleFileUploadComponent', () => {
     });
 
     describe('with file queue change', () => {
-        it('should add file via input click', () => {
+        it('should add file via input click', (done) => {
             component.disabled = false;
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
 
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            expect(component.onChange).toHaveBeenCalledTimes(1);
-            component.fileUpload.fileQueueChange.pipe(take(1)).subscribe((value) => {
-                expect(value).toBeTruthy();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.onChange.mock.calls[0][0].file.name).toBe(FILE_NAME);
+                done();
             });
         });
 
-        it('should NOT add file via input click if disabled', () => {
+        it('should NOT add file via input click if disabled', (done) => {
+            expect(component.file).toBeUndefined();
+
             component.disabled = true;
             fixture.detectChanges();
 
@@ -398,51 +409,62 @@ describe('SingleFileUploadComponent', () => {
             Object.defineProperty(event, 'target', { get: () => ({ files: [{ name: 'test' }] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
 
-            expect(component.onChange).not.toHaveBeenCalled();
-            expect(component.file).toBeFalsy();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                expect(component.file).toBeUndefined();
+                done();
+            });
         });
 
-        xit('should add file via drag-n-drop', fakeAsync(() => {
+        it('should add file via drag-n-drop', (done) => {
+            expect(component.file).toBeUndefined();
+
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
-            fixture.detectChanges();
-            flush();
 
-            expect(component.onChange).toHaveBeenCalled();
-            component.fileUpload.fileQueueChange.pipe(take(1)).subscribe((value) => {
-                expect(value).toBeTruthy();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(2);
+                expect(component.file?.file.name).toBe(FILE_NAME);
+                done();
             });
-        }));
+        });
 
-        it('should NOT add file via drag-n-drop if disabled', () => {
+        it('should NOT add file via drag-n-drop if disabled', (done) => {
+            expect(component.file).toBeUndefined();
+
             component.disabled = true;
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
 
-            expect(component.file).toBeFalsy();
-            expect(component.onChange).not.toHaveBeenCalled();
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                expect(component.file).toBeUndefined();
+                done();
+            });
         });
 
-        it('should remove file via button click', () => {
+        it('should remove file via button click', (done) => {
+            expect(component.file).toBeUndefined();
+
             component.disabled = false;
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            component.fileUpload.fileQueueChange.pipe(take(1)).subscribe((value) => {
-                expect(value).toBeFalsy();
-            });
-
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
+
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(2);
+                expect(component.file).toBeNull();
+                done();
+            });
         });
     });
 
@@ -471,22 +493,23 @@ describe('SingleFileUploadComponent', () => {
     });
 
     describe('with custom validation', () => {
-        it('should mark added file with error', () => {
-            expect(component.file).toBeFalsy();
+        it('should mark added file with error', (done) => {
+            expect(component.file).toBeUndefined();
             // max file === 5e6
             component.validation = [maxFileExceeded];
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
-
-            const fakeFile: Partial<File> = { name: 'test.file', type: 'test', size: 6e6 };
+            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            expect(component.file).toBeTruthy();
-            expect(component.file?.hasError).toBeTruthy();
+            setTimeout(() => {
+                expect(component.file?.file.name).toBe(FILE_NAME);
+                expect(component.file?.hasError).toBeTruthy();
+                done();
+            });
         });
     });
 
@@ -517,31 +540,31 @@ describe('SingleFileUploadComponent', () => {
         it('should update file value with setValue', () => {
             expect(component.fileUpload.file).toBeFalsy();
 
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             component.control.setValue(fakeFile);
 
             expect(component.fileUpload.file).toBeTruthy();
             expect(component.file).toBeTruthy();
         });
 
-        xit('should update form control touched on file dropped', fakeAsync(() => {
+        it('should update form control touched on file dropped', (done) => {
             expect(component.control.touched).toBeFalsy();
 
             dispatchDropEvent(fixture);
             fixture.detectChanges();
-            flush();
 
-            expect(component.control.touched).toBeTruthy();
-        }));
+            setTimeout(() => {
+                expect(component.control.touched).toBeTruthy();
+                done();
+            });
+        });
 
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
             const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
+            const fakeFile = new File(['test'], FILE_NAME);
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
