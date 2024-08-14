@@ -2020,8 +2020,8 @@
   --kbq-toggle-size-big-vertical-content-padding: 8px;
   --kbq-tooltip-size-max-width: 300px;
   --kbq-tooltip-size-border-radius: 8px;
-  --kbq-tooltip-size-padding-horizontal: 16px;
-  --kbq-tooltip-size-padding-vertical: 6px;
+  --kbq-tooltip-size-padding-horizontal: 12px;
+  --kbq-tooltip-size-padding-vertical: 8px;
   --kbq-tooltip-size-arrow-size: 12px;
   --kbq-tree-size-indent-level: 24px;
   --kbq-tree-size-container-padding-right: 8px;

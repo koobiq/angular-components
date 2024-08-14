@@ -981,6 +981,12 @@
   --kbq-tooltip-theme-fade-off-background: hsla(216, 100%, 50%, 100%);
   --kbq-tooltip-theme-fade-off-text: hsla(229, 15%, 100%, 100%);
   --kbq-tooltip-theme-fade-off-shadow: 0 2px 4px 0 rgba(39, 51, 62, 0.5);
+  --kbq-tooltip-warning-fade-off-background: hsla(38, 100%, 51%, 100%);
+  --kbq-tooltip-warning-fade-off-text: hsla(0, 0%, 100%, 100%);
+  --kbq-tooltip-warning-fade-off-shadow: 0 2px 4px 0 rgba(39, 51, 62, 0.2);
+  --kbq-tooltip-error-fade-off-background: hsla(7, 97%, 60%, 100%);
+  --kbq-tooltip-error-fade-off-text: hsla(0, 0%, 100%, 100%);
+  --kbq-tooltip-error-fade-off-shadow: 0 2px 4px 0 rgba(39, 51, 62, 0.2);
   --kbq-tree-default-container-background: transparent;
   --kbq-tree-default-text-color: hsla(229, 15%, 85%, 100%);
   --kbq-tree-default-icon-color: hsla(229, 15%, 85%, 100%);
