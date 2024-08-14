@@ -1,12 +1,17 @@
 <div
+    #tooltip
     class="kbq-tooltip"
+    [class.kbq-tooltip_arrowless]="!arrow"
     [ngClass]="classMap"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"
     [@state]="visibility"
 >
     <div class="kbq-tooltip__inner">
-        <div class="kbq-tooltip__arrow"></div>
+        <div
+            *ngIf="arrow"
+            class="kbq-tooltip__arrow"
+        ></div>
 
         <div
             *ngIf="header"
@@ -15,6 +20,7 @@
             <ng-container
                 *ngIf="isTemplateRef(header)"
                 [ngTemplateOutlet]="$any(header)"
+                [ngTemplateOutletContext]="context"
             />
             <ng-container *ngIf="!isTemplateRef(header)">
                 <div>{{ header }}</div>
@@ -24,6 +30,7 @@
             <ng-container
                 *ngIf="isTemplateRef(content)"
                 [ngTemplateOutlet]="$any(content)"
+                [ngTemplateOutletContext]="context"
             />
             <ng-container *ngIf="!isTemplateRef(content)">
                 <div>{{ content }}</div>

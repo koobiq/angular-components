@@ -15,7 +15,12 @@ describe('KbqTooltip', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqToolTipModule, NoopAnimationsModule],
-            declarations: [KbqTooltipTestWrapperComponent, KbqTooltipTestNewComponent, KbqTooltipDisabledComponent]
+            declarations: [
+                KbqTooltipTestWrapperComponent,
+                KbqTooltipTestNewComponent,
+                KbqTooltipDisabledComponent,
+                KbqTooltipWithTemplateRefContent
+            ]
         });
         TestBed.compileComponents();
     }));
@@ -158,6 +163,29 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
         }));
     });
+
+    describe('with TemplateRef', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(KbqTooltipWithTemplateRefContent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should provide info with context', fakeAsync(() => {
+            const trigger = (component as KbqTooltipWithTemplateRefContent).trigger.nativeElement;
+
+            trigger.click();
+            dispatchMouseEvent(trigger, 'focus');
+            tick(410);
+            fixture.detectChanges();
+            tick(410);
+            fixture.detectChanges();
+
+            console.log(overlayContainerElement);
+
+            expect(overlayContainerElement.textContent).toEqual(component.tooltipContext.content);
+        }));
+    });
 });
 @Component({
     selector: 'kbq-tooltip-test-new',
@@ -256,4 +284,28 @@ class KbqTooltipTestWrapperComponent {
 class KbqTooltipDisabledComponent {
     @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;
     @ViewChild('disabledAttribute', { read: KbqTooltipTrigger, static: false }) disabledDirective: KbqTooltipTrigger;
+}
+
+@Component({
+    selector: 'kbq-tooltip-wih-template-ref-content',
+    template: `
+        <ng-template
+            #tooltipContent
+            let-ctx
+        >
+            <div>{{ ctx.content }}</div>
+        </ng-template>
+        <button
+            #trigger
+            [kbqTooltip]="tooltipContent"
+            [kbqTooltipContext]="tooltipContext"
+            kbqTrigger="click"
+        >
+            Button
+        </button>
+    `
+})
+class KbqTooltipWithTemplateRefContent {
+    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    tooltipContext = { content: 'TestContent' };
 }

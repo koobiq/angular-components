@@ -6,6 +6,7 @@
 @use '../core/styles/common/tokens' as *;
 
 $trigger-margin: 8px;
+$trigger-margin_without-arrow: 4px;
 
 .kbq-tooltip__inner {
     border-radius: kbq-css-variable(tooltip-size-border-radius);
@@ -25,6 +26,10 @@ $trigger-margin: 8px;
 
     .kbq-tooltip__inner {
         padding: kbq-css-variable(tooltip-size-padding-vertical) kbq-css-variable(tooltip-size-padding-horizontal);
+    }
+
+    &.kbq-tooltip_arrowless {
+        @include pop-up.popup-margins(kbq-tooltip, $trigger-margin_without-arrow);
     }
 }
 

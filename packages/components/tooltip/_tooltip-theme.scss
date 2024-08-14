@@ -36,10 +36,22 @@
     .kbq-tooltip.kbq-contrast-fade {
         @include kbq-tooltip-color($tooltip, contrast-fade-on);
     }
+
+    .kbq-tooltip.kbq-warning {
+        @include kbq-tooltip-color($tooltip, warning-fade-off);
+    }
+
+    .kbq-tooltip.kbq-error {
+        @include kbq-tooltip-color($tooltip, error-fade-off);
+    }
 }
 
 @mixin kbq-tooltip-typography($config) {
     .kbq-tooltip {
         @include kbq-typography-css-variables(tooltip, default);
+
+        .kbq-tooltip__header {
+            @include kbq-typography-css-variables(tooltip, title);
+        }
     }
 }
