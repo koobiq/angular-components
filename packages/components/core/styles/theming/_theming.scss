@@ -95,6 +95,7 @@
         bg: map.get($tokens, '#{$scheme}-background-bg'),
         bg-secondary: map.get($tokens, '#{$scheme}-background-bg-secondary'),
         bg-tertiary: map.get($tokens, '#{$scheme}-background-bg-tertiary'),
+        card: map.get($tokens, '#{$scheme}-background-card'),
         contrast: map.get($tokens, '#{$scheme}-background-contrast'),
         contrast-fade: map.get($tokens, '#{$scheme}-background-contrast-fade'),
         night: map.get($tokens, '#{$scheme}-background-night'),
