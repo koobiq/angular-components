@@ -9,6 +9,8 @@ import { KbqToolTipModule } from './tooltip.module';
 
 const tooltipDefaultEnterDelayWithDefer = 410;
 const tickTime = 100;
+const defaultOffsetForTooltip = 8;
+const defaultOffsetForTooltipWithoutArrow = 4;
 
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
@@ -34,6 +36,24 @@ describe('KbqTooltip', () => {
     afterEach(() => {
         overlayContainer.ngOnDestroy();
     });
+
+    const getTooltipAndStyles = (
+        trigger: KbqTooltipTrigger,
+        selector = '.kbq-tooltip'
+    ): [Element | null, CSSStyleDeclaration | null] => {
+        dispatchMouseEvent((trigger as any).elementRef.nativeElement, 'mouseenter');
+        fixture.detectChanges();
+        tick(tooltipDefaultEnterDelayWithDefer);
+
+        const tooltip = overlayContainer.getContainerElement().querySelector(selector);
+        const styles = tooltip && window.getComputedStyle(tooltip);
+
+        return [
+            tooltip,
+            styles
+        ];
+    };
+
     describe('should bring no break change', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(KbqTooltipTestWrapperComponent);
@@ -131,6 +151,45 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
+        }));
+
+        it('should hide arrow', fakeAsync(() => {
+            let [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeFalsy();
+
+            // hide tooltip
+            dispatchMouseEvent((component.dynamicArrowAndOffsetTrigger as any).elementRef.nativeElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(tickTime);
+
+            (component as KbqTooltipTestWrapperComponent).arrow = false;
+            fixture.detectChanges();
+
+            [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeTruthy();
+            expect(tooltip?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
+        }));
+
+        it('should change offset for arrowless tooltip', fakeAsync(() => {
+            let [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger);
+
+            expect(tooltip).toBeTruthy();
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltip}px`);
+
+            // hide tooltip
+            dispatchMouseEvent((component.dynamicArrowAndOffsetTrigger as any).elementRef.nativeElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(tickTime);
+
+            (component as KbqTooltipTestWrapperComponent).arrow = false;
+            fixture.detectChanges();
+
+            [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeTruthy();
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
         }));
     });
     xdescribe('should support directive usage', () => {
@@ -258,6 +317,14 @@ class KbqTooltipTestNewComponent {
         >
             Show
         </span>
+        <span
+            #dynamicArrowAndOffsetTrigger
+            [kbqTooltip]="'ArrowAndOffset'"
+            [arrow]="arrow"
+            [offset]="offset"
+        >
+            Show
+        </span>
     `
 })
 class KbqTooltipTestWrapperComponent {
@@ -267,8 +334,12 @@ class KbqTooltipTestWrapperComponent {
     @ViewChild('visibleTrigger', { static: false }) visibleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { static: false }) mostSimpleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { read: KbqTooltipTrigger, static: false }) mostSimpleDirective: KbqTooltipTrigger;
+    @ViewChild('dynamicArrowAndOffsetTrigger', { read: KbqTooltipTrigger, static: false })
+    dynamicArrowAndOffsetTrigger: KbqTooltipTrigger;
 
     visible: boolean;
+    arrow: boolean = true;
+    offset: number | null = null;
 }
 
 @Component({
