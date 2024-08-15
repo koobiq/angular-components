@@ -1,7 +1,6 @@
 .angular/
 .nx/
 node_modules/
-.yarn/
 /dist
 /tmp
 /temp

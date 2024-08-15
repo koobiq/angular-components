@@ -18,8 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Yarn
-        uses: ./.github/workflows/actions/setup-yarn
+      - name: Setup pnpm
+        uses: ./.github/workflows/actions/setup-pnpm
 
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
