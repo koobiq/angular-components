@@ -7,6 +7,9 @@ import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
+const tooltipDefaultEnterDelayWithDefer = 410;
+const tickTime = 100;
+
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -45,7 +48,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -61,7 +64,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -74,14 +77,14 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the trigger element to hide it
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -95,7 +98,7 @@ describe('KbqTooltip', () => {
             flush();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             dispatchMouseEvent(triggerElement, 'blur');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -108,7 +111,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -124,7 +127,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -149,15 +152,15 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.disabled = false;
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
@@ -176,9 +179,9 @@ describe('KbqTooltip', () => {
 
             trigger.click();
             dispatchMouseEvent(trigger, 'focus');
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             console.log(overlayContainerElement);
