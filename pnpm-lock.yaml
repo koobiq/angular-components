@@ -29,6 +29,9 @@ importers:
       '@angular/platform-browser':
         specifier: 17.2.0
         version: 17.2.0(@angular/animations@17.2.0(@angular/core@17.2.0(rxjs@7.8.1)(zone.js@0.14.4)))(@angular/common@17.2.0(@angular/core@17.2.0(rxjs@7.8.1)(zone.js@0.14.4))(rxjs@7.8.1))(@angular/core@17.2.0(rxjs@7.8.1)(zone.js@0.14.4))
+      '@docsearch/css':
+        specifier: ^3.6.0
+        version: 3.6.0
       '@docsearch/js':
         specifier: ^3.6.0
         version: 3.6.0(@algolia/client-search@4.24.0)(search-insights@2.16.3)
