@@ -451,24 +451,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-button"
     }
   },
-  "card-overview": {
-    "packagePath": "components/card/card-overview",
-    "title": "Basic Card",
-    "componentName": "CardOverviewExample",
-    "files": [
-      "card-overview-example.ts",
-      "card-overview-example.html",
-      "card-overview-example.css"
-    ],
-    "selector": "card-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "card-overview-example.ts",
-    "module": {
-      "name": "CardExamplesModule",
-      "importSpecifier": "components/card",
-      "importPath": "koobiq-docs-examples-components-card"
-    }
-  },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
     "title": "Indeterminate checkbox",
