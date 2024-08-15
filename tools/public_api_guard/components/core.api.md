@@ -109,6 +109,9 @@ export enum AnimationCurves {
 }
 
 // @public (undocumented)
+export const applyPopupMargins: (renderer: Renderer2, element: ElementRef, name: string, value: string) => void;
+
+// @public (undocumented)
 export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
@@ -1349,11 +1352,17 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     animationStart(): void;
     // (undocumented)
+    arrow: boolean;
+    // (undocumented)
     classMap: {};
     // (undocumented)
     protected closeOnInteraction: boolean;
     // (undocumented)
     content: string | TemplateRef<any>;
+    // (undocumented)
+    context: {
+        $implicit: any;
+    } | null;
     // (undocumented)
     detectChanges(): void;
     // (undocumented)
@@ -1369,6 +1378,8 @@ export abstract class KbqPopUp implements OnDestroy {
     markForCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)
     protected prefix: string;
