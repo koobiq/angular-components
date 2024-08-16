@@ -81,6 +81,10 @@ $trigger-margin: 9px;
     & .kbq-popover__header-text {
         @include common.kbq-truncate-line();
     }
+
+    &_with-close-button {
+        padding-right: kbq-css-variable(size-4xl);
+    }
 }
 
 .kbq-popover__footer {
@@ -106,6 +110,6 @@ $arrow-padding: calc(18px - $trigger-margin);
 
 .kbq-popover__close {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: kbq-css-variable(size-s);
+    right: kbq-css-variable(size-s);
 }

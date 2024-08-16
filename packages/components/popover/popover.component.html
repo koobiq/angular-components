@@ -15,6 +15,7 @@
         <div
             *ngIf="header"
             class="kbq-popover__header"
+            [class.kbq-popover__header_with-close-button]="isClosable"
         >
             <ng-container
                 *ngIf="isTemplateRef(header)"
