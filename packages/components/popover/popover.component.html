@@ -15,7 +15,7 @@
         <div
             *ngIf="header"
             class="kbq-popover__header"
-            [class.kbq-popover__header_with-close-button]="isClosable"
+            [class.kbq-popover__header_with-close-button]="hasCloseButton"
         >
             <ng-container
                 *ngIf="isTemplateRef(header)"
@@ -54,7 +54,7 @@
     </div>
 
     <button
-        *ngIf="isClosable"
+        *ngIf="hasCloseButton"
         kbq-button
         class="kbq-popover__close kbq-button_transparent"
         [color]="'contrast'"
