@@ -57,7 +57,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     footer: string | TemplateRef<any>;
 
     isTrapFocus: boolean = false;
-    isClosable: boolean = false;
+    hasCloseButton: boolean = false;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
@@ -238,14 +238,14 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     @Input()
-    get isClosable() {
-        return this._isClosable;
+    get hasCloseButton() {
+        return this._hasCloseButton;
     }
-    set isClosable(value) {
-        this._isClosable = value;
+    set hasCloseButton(value) {
+        this._hasCloseButton = value;
         this.updateData();
     }
-    private _isClosable = true;
+    private _hasCloseButton = false;
 
     /**
      * Controls the behavior of closing the component on scroll.
@@ -318,7 +318,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.header = this.header;
         this.instance.content = this.content;
         this.instance.footer = this.footer;
-        this.instance.isClosable = this.isClosable;
+        this.instance.hasCloseButton = this.hasCloseButton;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 
