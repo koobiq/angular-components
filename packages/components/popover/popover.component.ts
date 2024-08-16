@@ -28,12 +28,13 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
+    KbqComponentColors,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
-    PopUpTriggers, KbqComponentColors
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
