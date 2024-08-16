@@ -16,7 +16,9 @@ import * as i3 from '@angular/common';
 import * as i4 from '@angular/cdk/overlay';
 import * as i5 from '@koobiq/components/button';
 import * as i6 from '@angular/cdk/a11y';
+import * as i7 from '@koobiq/components/icon';
 import { InjectionToken } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
@@ -60,7 +62,11 @@ export const kbqPopoverAnimations: {
 export class KbqPopoverComponent extends KbqPopUp {
     constructor(changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
+    protected readonly componentColors: typeof KbqComponentColors;
+    // (undocumented)
     footer: string | TemplateRef<any>;
+    // (undocumented)
+    hasCloseButton: boolean;
     // (undocumented)
     header: string | TemplateRef<any>;
     // (undocumented)
@@ -125,7 +131,7 @@ export class KbqPopoverModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqButtonModule, typeof i6.A11yModule], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqButtonModule, typeof i6.A11yModule, typeof i7.KbqIconModule], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
 }
 
 // @public
@@ -162,6 +168,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     get hasClickTrigger(): boolean;
     // (undocumented)
+    get hasCloseButton(): boolean;
+    set hasCloseButton(value: boolean);
+    // (undocumented)
     get header(): string | TemplateRef<any>;
     set header(value: string | TemplateRef<any>);
     // (undocumented)
@@ -195,7 +204,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, [null, null, null, null, null, null, { optional: true; }]>;
 }
