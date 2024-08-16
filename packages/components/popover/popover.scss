@@ -103,3 +103,9 @@ $arrow-offset: calc(($arrow-size - 1px) / -2);
 $arrow-padding: calc(18px - $trigger-margin);
 
 @include pop-up.popup-arrow-positions(kbq-popover, $arrow-offset, $arrow-padding);
+
+.kbq-popover__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
