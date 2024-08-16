@@ -17,7 +17,9 @@ export class TooltipArrowAndOffsetExample implements AfterViewInit {
     @ViewChild(KbqButtonToggleGroup) toggleGroup: KbqButtonToggleGroup;
 
     ngAfterViewInit() {
-        this.toggleGroup.buttonToggles.get(3)!.checked = true;
+        Promise.resolve().then(() => {
+            this.toggleGroup.buttonToggles.get(3)!.checked = true;
+        });
     }
 
     onArrowChange(arrow: boolean) {

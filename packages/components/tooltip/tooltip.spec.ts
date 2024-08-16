@@ -318,8 +318,8 @@ class KbqTooltipTestNewComponent {
         <span
             #dynamicArrowAndOffsetTrigger
             [kbqTooltip]="'ArrowAndOffset'"
-            [arrow]="arrow"
-            [offset]="offset"
+            [kbqTooltipArrow]="arrow"
+            [kbqTooltipOffset]="offset"
         >
             Show
         </span>
