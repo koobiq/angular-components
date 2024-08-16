@@ -243,8 +243,6 @@ describe('KbqTooltip', () => {
             tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
-            console.log(overlayContainerElement);
-
             expect(overlayContainerElement.textContent).toEqual(component.tooltipContext.content);
         }));
     });

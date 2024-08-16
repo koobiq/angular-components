@@ -2189,9 +2189,6 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
 export function toBoolean(value: any): boolean;
 
 // @public (undocumented)
-export function toNumber(value: unknown): boolean;
-
-// @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
