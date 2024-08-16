@@ -38,10 +38,10 @@ describe('KbqTooltip', () => {
     });
 
     const getTooltipAndStyles = (
-        trigger: KbqTooltipTrigger,
+        trigger: ElementRef,
         selector = '.kbq-tooltip'
     ): [Element | null, CSSStyleDeclaration | null] => {
-        dispatchMouseEvent((trigger as any).elementRef.nativeElement, 'mouseenter');
+        dispatchMouseEvent(trigger.nativeElement, 'mouseenter');
         fixture.detectChanges();
         tick(tooltipDefaultEnterDelayWithDefer);
 
@@ -159,7 +159,7 @@ describe('KbqTooltip', () => {
             expect(tooltip).toBeFalsy();
 
             // hide tooltip
-            dispatchMouseEvent((component.dynamicArrowAndOffsetTrigger as any).elementRef.nativeElement, 'mouseleave');
+            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
             fixture.detectChanges();
             tick(tickTime);
 
@@ -179,7 +179,7 @@ describe('KbqTooltip', () => {
             expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltip}px`);
 
             // hide tooltip
-            dispatchMouseEvent((component.dynamicArrowAndOffsetTrigger as any).elementRef.nativeElement, 'mouseleave');
+            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
             fixture.detectChanges();
             tick(tickTime);
 
@@ -334,8 +334,8 @@ class KbqTooltipTestWrapperComponent {
     @ViewChild('visibleTrigger', { static: false }) visibleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { static: false }) mostSimpleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { read: KbqTooltipTrigger, static: false }) mostSimpleDirective: KbqTooltipTrigger;
-    @ViewChild('dynamicArrowAndOffsetTrigger', { read: KbqTooltipTrigger, static: false })
-    dynamicArrowAndOffsetTrigger: KbqTooltipTrigger;
+    @ViewChild('dynamicArrowAndOffsetTrigger', { static: false })
+    dynamicArrowAndOffsetTrigger: ElementRef;
 
     visible: boolean;
     arrow: boolean = true;

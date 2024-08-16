@@ -11,19 +11,20 @@ import {
     EventEmitter,
     Inject,
     InjectionToken,
+    Injector,
     Input,
     NgZone,
     OnDestroy,
     Optional,
     Output,
-    Renderer2,
     TemplateRef,
     Type,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
     booleanAttribute,
-    numberAttribute
+    numberAttribute,
+    runInInjectionContext
 } from '@angular/core';
 import {
     KbqComponentColors,
@@ -69,7 +70,7 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     constructor(
         changeDetectorRef: ChangeDetectorRef,
-        private renderer: Renderer2,
+        private injector: Injector,
         @Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime
     ) {
         super(changeDetectorRef);
@@ -83,7 +84,9 @@ export class KbqTooltipComponent extends KbqPopUp {
         super.show(Date.now() - this.openTime.value < MIN_TIME_FOR_DELAY ? 0 : delay);
 
         if (this.offset !== null) {
-            applyPopupMargins(this.renderer, this.elementRef, this.prefix, `${this.offset.toString()}px`);
+            runInInjectionContext(this.injector, () =>
+                applyPopupMargins(this.elementRef, this.prefix, `${this.offset!.toString()}px`)
+            );
         }
 
         this.openTime.value = Date.now();

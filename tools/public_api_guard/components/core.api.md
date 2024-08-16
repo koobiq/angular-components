@@ -109,7 +109,7 @@ export enum AnimationCurves {
 }
 
 // @public (undocumented)
-export const applyPopupMargins: (renderer: Renderer2, element: ElementRef, name: string, value: string) => void;
+export const applyPopupMargins: (element: ElementRef, name: string, value: string) => void;
 
 // @public (undocumented)
 export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
@@ -2187,6 +2187,9 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
 
 // @public (undocumented)
 export function toBoolean(value: any): boolean;
+
+// @public (undocumented)
+export function toNumber(value: unknown): boolean;
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];

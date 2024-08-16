@@ -13,6 +13,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import * as i3 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
@@ -22,7 +23,6 @@ import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { Renderer2 } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
@@ -71,7 +71,7 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
 
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
-    constructor(changeDetectorRef: ChangeDetectorRef, renderer: Renderer2, openTime: any);
+    constructor(changeDetectorRef: ChangeDetectorRef, injector: Injector, openTime: any);
     // (undocumented)
     elementRef: ElementRef;
     // (undocumented)

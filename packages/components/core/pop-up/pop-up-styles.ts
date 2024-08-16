@@ -1,6 +1,7 @@
-import { ElementRef, Renderer2 } from '@angular/core';
+import { ElementRef, inject, Renderer2 } from '@angular/core';
 
-export const applyPopupMargins = (renderer: Renderer2, element: ElementRef, name: string, value: string) => {
+export const applyPopupMargins = (element: ElementRef, name: string, value: string) => {
+    const renderer = inject(Renderer2);
     const classList = element.nativeElement.classList;
 
     if (

@@ -123,6 +123,14 @@
 
 <!-- example(tooltip-extended) -->
 
+#### Стиль
+
+<!-- example(tooltip-style) -->
+
+#### Указатель и смещение
+
+<!-- example(tooltip-arrow-and-offset) -->
+
 ### Связанные компоненты
 
 [Дропдаун](/components/dropdown) — кнопка-меню, открывающая список доступных действий.

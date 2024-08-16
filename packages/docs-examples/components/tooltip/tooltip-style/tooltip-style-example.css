@@ -1,0 +1,4 @@
+tooltip-style-example .layout-row {
+    gap: 16px;
+    flex-wrap: wrap;
+}
