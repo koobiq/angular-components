@@ -33,7 +33,7 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
-    PopUpTriggers
+    PopUpTriggers, KbqComponentColors
 } from '@koobiq/components/core';
 import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
@@ -57,6 +57,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     footer: string | TemplateRef<any>;
 
     isTrapFocus: boolean = false;
+    isClosable: boolean = false;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
@@ -69,6 +70,8 @@ export class KbqPopoverComponent extends KbqPopUp {
     updateTrapFocus(isTrapFocus: boolean): void {
         this.isTrapFocus = isTrapFocus;
     }
+
+    protected readonly componentColors = KbqComponentColors;
 }
 
 export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
@@ -234,6 +237,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.updateClassMap();
     }
 
+    @Input()
+    get isClosable() {
+        return this._isClosable;
+    }
+    set isClosable(value) {
+        this._isClosable = value;
+        this.updateData();
+    }
+    private _isClosable = true;
+
     /**
      * Controls the behavior of closing the component on scroll.
      * The default value is `false`.
@@ -305,6 +318,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.header = this.header;
         this.instance.content = this.content;
         this.instance.footer = this.footer;
+        this.instance.isClosable = this.isClosable;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

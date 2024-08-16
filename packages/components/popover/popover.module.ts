@@ -9,11 +9,12 @@ import {
     KbqPopoverComponent,
     KbqPopoverTrigger
 } from './popover.component';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 @NgModule({
     declarations: [KbqPopoverComponent, KbqPopoverTrigger, KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger],
     exports: [KbqPopoverComponent, KbqPopoverTrigger, KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger],
-    imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule],
+    imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule, KbqIconModule],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
