@@ -312,10 +312,10 @@
             <button
                 *ngSwitchCase="ELEMENTS.BUTTON"
                 kbq-button
-                [arrow]="false"
                 [kbqPlacement]="selectedPlacement"
                 [kbqPlacementPriority]="multipleSelected"
                 [kbqTooltip]="inputText"
+                [kbqTooltipArrow]="false"
                 [kbqTooltipColor]="selectedColor"
                 [kbqTrigger]="selectedTrigger"
                 (kbqPlacementChange)="onPlacementChange($event)"
@@ -327,16 +327,16 @@
             <button
                 *ngSwitchCase="ELEMENTS.EXTENDED"
                 kbq-button
-                [arrow]="false"
                 [kbqExtendedTooltip]="tooltipContent"
                 [kbqPlacement]="selectedPlacement"
                 [kbqPlacementPriority]="multipleSelected"
+                [kbqTooltipArrow]="false"
                 [kbqTooltipClass]="'tooltip-485'"
                 [kbqTooltipColor]="selectedColor"
                 [kbqTooltipContext]="toolTipContext"
                 [kbqTooltipHeader]="tooltipHeader"
+                [kbqTooltipOffset]="123"
                 [kbqTrigger]="selectedTrigger"
-                [offset]="123"
                 (kbqPlacementChange)="onPlacementChange($event)"
                 (kbqVisibleChange)="onTooltipVisibleChange($event)"
             >
