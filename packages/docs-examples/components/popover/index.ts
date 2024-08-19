@@ -2,9 +2,11 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -21,8 +23,6 @@ import { PopoverPlacementCenterExample } from './popover-placement-center/popove
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
-import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 
 export {
     PopoverCloseExample,
