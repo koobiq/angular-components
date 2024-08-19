@@ -33,19 +33,9 @@
         >
             <div
                 *ngIf="hasCloseButton && !header"
-                class="kbq-popover__content-close-container"
+                class="kbq-popover__close-container"
             >
-                <button
-                    kbq-button
-                    class="kbq-popover__close kbq-button_transparent"
-                    [color]="componentColors.Contrast"
-                    (click)="hide(0)"
-                >
-                    <i
-                        kbq-icon="mc-close-L_16"
-                        [color]="componentColors.Contrast"
-                    ></i>
-                </button>
+                <ng-container *ngTemplateOutlet="closeButton" />
             </div>
 
             <ng-container
@@ -73,18 +63,26 @@
         </div>
     </div>
 
-    <button
-        *ngIf="header"
-        kbq-button
-        class="kbq-popover__close kbq-button_transparent"
-        [color]="componentColors.Contrast"
-        (click)="hide(0)"
+    <div
+        *ngIf="hasCloseButton && header"
+        class="kbq-popover__close-container"
     >
-        <i
-            kbq-icon="mc-close-L_16"
+        <ng-container *ngTemplateOutlet="closeButton" />
+    </div>
+
+    <ng-template #closeButton>
+        <button
+            kbq-button
+            class="kbq-popover__close kbq-button_transparent"
             [color]="componentColors.Contrast"
-        ></i>
-    </button>
+            (click)="hide(0)"
+        >
+            <i
+                kbq-icon="mc-close-L_16"
+                [color]="componentColors.Contrast"
+            ></i>
+        </button>
+    </ng-template>
 
     <div class="kbq-popover__arrow"></div>
 </div>
