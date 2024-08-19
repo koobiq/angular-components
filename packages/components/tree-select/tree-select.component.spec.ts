@@ -66,7 +66,7 @@ import {
     KbqTreeOption,
     KbqTreeSelectionChange
 } from '@koobiq/components/tree';
-import { Observable, Subject, Subscription, of as observableOf } from 'rxjs';
+import { Observable, Subject, Subscription, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from './index';
 
@@ -208,7 +208,7 @@ const getVal = (node: FileFlatNode) => node.value;
 const isExpandable = (node: FileFlatNode) => node.expandable;
 
 const getChildren = (node: FileNode): Observable<FileNode[]> => {
-    return observableOf(node.children);
+    return of(node.children);
 };
 
 @Component({
@@ -341,65 +341,6 @@ class BasicEvents {
 }
 
 @Component({
-    selector: 'ng-model-select',
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select
-                [disabled]="isDisabled"
-                placeholder="Food"
-                ngModel
-            >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="mc-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-                </kbq-tree-selection>
-            </kbq-tree-select>
-        </kbq-form-field>
-    `
-})
-class NgModelSelect {
-    isDisabled: boolean;
-
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
-    @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
-
-    constructor() {
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-        // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
-        // file node as children.
-        this.dataSource.data = buildFileTree(TREE_DATA, 0);
-    }
-
-    hasChild(_: number, nodeData: FileFlatNode) {
-        return nodeData.expandable;
-    }
-}
-
-@Component({
     selector: 'many-selects',
     template: `
         <kbq-form-field>
@@ -462,67 +403,6 @@ class ManySelects {
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    constructor() {
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-        // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
-        // file node as children.
-        this.dataSource.data = buildFileTree(TREE_DATA, 0);
-    }
-
-    hasChild(_: number, nodeData: FileFlatNode) {
-        return nodeData.expandable;
-    }
-}
-
-@Component({
-    selector: 'ng-if-select',
-    template: `
-        <div *ngIf="isShowing">
-            <kbq-form-field>
-                <kbq-tree-select
-                    [formControl]="control"
-                    placeholder="Food I want to eat right now"
-                >
-                    <kbq-tree-selection
-                        [dataSource]="dataSource"
-                        [treeControl]="treeControl"
-                    >
-                        <kbq-tree-option
-                            *kbqTreeNodeDef="let node"
-                            kbqTreeNodePadding
-                        >
-                            {{ treeControl.getViewValue(node) }}
-                        </kbq-tree-option>
-
-                        <kbq-tree-option
-                            *kbqTreeNodeDef="let node; when: hasChild"
-                            kbqTreeNodePadding
-                        >
-                            <i
-                                kbq-icon="mc-angle-S_16"
-                                kbqTreeNodeToggle
-                            ></i>
-                            {{ treeControl.getViewValue(node) }}
-                        </kbq-tree-option>
-                    </kbq-tree-selection>
-                </kbq-tree-select>
-            </kbq-form-field>
-        </div>
-    `
-})
-class NgIfSelect {
-    isShowing = false;
-
-    control = new UntypedFormControl('rootNode_1');
-
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -965,108 +845,6 @@ class EmptySelect {}
     `
 })
 class SelectEarlyAccessSibling {}
-
-@Component({
-    selector: 'basic-select-initially-hidden',
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="mc-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-                </kbq-tree-selection>
-            </kbq-tree-select>
-        </kbq-form-field>
-    `
-})
-class BasicSelectInitiallyHidden {
-    isVisible = false;
-
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    constructor() {
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-        // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
-        // file node as children.
-        this.dataSource.data = buildFileTree(TREE_DATA, 0);
-    }
-
-    hasChild(_: number, nodeData: FileFlatNode) {
-        return nodeData.expandable;
-    }
-}
-
-@Component({
-    selector: 'basic-select-no-placeholder',
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select>
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="mc-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-                </kbq-tree-selection>
-            </kbq-tree-select>
-        </kbq-form-field>
-    `
-})
-class BasicSelectNoPlaceholder {
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    constructor() {
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-        // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
-        // file node as children.
-        this.dataSource.data = buildFileTree(TREE_DATA, 0);
-    }
-
-    hasChild(_: number, nodeData: FileFlatNode) {
-        return nodeData.expandable;
-    }
-}
 
 @Component({
     selector: 'basic-select-with-theming',
@@ -2568,17 +2346,6 @@ describe('KbqTreeSelect', () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(false);
             }));
 
-            xit('should set the width of the overlay based on the trigger', fakeAsync(() => {
-                trigger.style.width = '200px';
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-                expect(pane.style.minWidth).toBe('200px');
-            }));
-
             it('should not attempt to open a select that does not have any options', fakeAsync(() => {
                 fixture.componentInstance.dataSource.data = [];
                 fixture.detectChanges();
@@ -3241,38 +3008,6 @@ describe('KbqTreeSelect', () => {
             }));
         });
 
-        describe('disabled behavior', () => {
-            xit('should disable itself when control is disabled programmatically', fakeAsync(() => {
-                const fixture = TestBed.createComponent(BasicTreeSelect);
-                fixture.detectChanges();
-
-                fixture.componentInstance.control.disable();
-                fixture.detectChanges();
-                const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                expect(overlayContainerElement.textContent).toEqual('');
-
-                expect(fixture.componentInstance.select.panelOpen).toBe(false);
-
-                fixture.componentInstance.control.enable();
-                fixture.detectChanges();
-                expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('pointer');
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                expect(overlayContainerElement.textContent).toContain('rootNode_1');
-
-                expect(fixture.componentInstance.select.panelOpen).toBe(true);
-            }));
-        });
-
         xdescribe('keyboard scrolling', () => {
             let fixture: ComponentFixture<BasicTreeSelect>;
             let host: HTMLElement;
@@ -3506,84 +3241,6 @@ describe('KbqTreeSelect', () => {
         }));
     });
 
-    describe('with ngModel', () => {
-        beforeEach(() => {
-            configureKbqTreeSelectTestingModule([NgModelSelect]);
-        });
-
-        xit('should disable itself when control is disabled using the property', fakeAsync(() => {
-            const fixture = TestBed.createComponent(NgModelSelect);
-            fixture.detectChanges();
-
-            fixture.componentInstance.isDisabled = true;
-            fixture.detectChanges();
-            flush();
-
-            fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-            expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
-
-            trigger.click();
-            fixture.detectChanges();
-
-            expect(overlayContainerElement.textContent).toEqual('');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(false);
-
-            fixture.componentInstance.isDisabled = false;
-            fixture.detectChanges();
-            flush();
-
-            fixture.detectChanges();
-            expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('pointer');
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            expect(overlayContainerElement.textContent).toContain('rootNode_1');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(true);
-        }));
-    });
-
-    describe('with ngIf', () => {
-        let fixture: ComponentFixture<NgIfSelect>;
-
-        beforeEach(() => {
-            configureKbqTreeSelectTestingModule([NgIfSelect]);
-
-            fixture = TestBed.createComponent(NgIfSelect);
-            fixture.detectChanges();
-            fixture.detectChanges();
-        });
-
-        xit('should handle nesting in an ngIf', fakeAsync(() => {
-            fixture.componentInstance.isShowing = true;
-            fixture.detectChanges();
-            fixture.detectChanges();
-
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            trigger.style.width = '300px';
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
-            expect(value.nativeElement.textContent).toContain('rootNode_1');
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(pane.style.minWidth).toEqual('300px');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(true);
-            expect(overlayContainerElement.textContent).toContain('rootNode_1');
-            expect(overlayContainerElement.textContent).toContain('Pictures');
-            expect(overlayContainerElement.textContent).toContain('Documents');
-        }));
-    });
-
     describe('with search', () => {
         let fixture: ComponentFixture<SelectWithSearch>;
         let trigger: HTMLElement;
@@ -3768,51 +3425,6 @@ describe('KbqTreeSelect', () => {
             expect(spy).toHaveBeenCalled();
             subscription.unsubscribe();
         });
-    });
-
-    describe('when initially hidden', () => {
-        beforeEach(() => configureKbqTreeSelectTestingModule([BasicSelectInitiallyHidden]));
-
-        xit('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
-            const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
-            fixture.detectChanges();
-
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-            trigger.style.width = '200px';
-            fixture.componentInstance.isVisible = true;
-            fixture.detectChanges();
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(pane.style.minWidth).toBe('200px');
-        }));
-    });
-
-    describe('with no placeholder', () => {
-        let fixture: ComponentFixture<BasicSelectNoPlaceholder>;
-
-        beforeEach(() => {
-            configureKbqTreeSelectTestingModule([BasicSelectNoPlaceholder]);
-
-            fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
-            fixture.detectChanges();
-        });
-
-        xit('should set the width of the overlay if there is no placeholder', fakeAsync(() => {
-            fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(parseInt(pane.style.minWidth as string)).toBeGreaterThan(0);
-        }));
     });
 
     describe('with theming', () => {
@@ -4814,18 +4426,6 @@ describe('KbqTreeSelect', () => {
 
             xit('should stay within the viewport when overflowing on the left in ltr', fakeAsync(() => {
                 formField.style.left = '100px';
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                const panelLeft = document.querySelector('.kbq-tree-select__panel')!.getBoundingClientRect().left;
-
-                expect(panelLeft).toBeGreaterThan(0);
-            }));
-
-            xit('should stay within the viewport when overflowing on the left in rtl', fakeAsync(() => {
-                dir.value = 'rtl';
-                formField.style.left = '-100px';
                 trigger.click();
                 fixture.detectChanges();
                 flush();

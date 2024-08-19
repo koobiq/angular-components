@@ -4,7 +4,7 @@
         "outDir": "../../dist/out-tsc/koobiq-spec"
     },
     "files": [
-        "test.ts"
+        "karma-test.ts"
     ],
     "include": [
         "**/*.karma-spec.ts",
