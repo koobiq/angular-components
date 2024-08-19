@@ -1,50 +1,25 @@
-.buttons-container {
+.popover-placement-center-example {
     display: flex;
-    justify-content: flex-end;
+    column-gap: 16px;
 }
 
-.buttons-container button + button {
-    margin-left: 16px;
+.popover-placement-center-example__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
 }
 
-.visual-box {
-    margin: 200px auto;
-    height: 90px;
-    width: 90px;
-    position: relative;
-
-    border: 1px solid #b3b3b2;
-    border-radius: 8px;
+.popover-placement-center-example__column button {
+    width: 100%;
 }
 
-.popover-trigger {
-    height: 16px;
-    width: 16px;
-    position: absolute;
-    background: #338fcb;
-    cursor: pointer;
+.popover-placement-center-example__column button + button {
+    margin-top: 48px;
 }
 
-.active {
-    background: #cb3c33;
-}
-
-.popover-trigger-top {
-    top: -8px;
-    left: calc(50% - 8px);
-}
-
-.popover-trigger-left {
-    top: calc(50% - 8px);
-    left: -8px;
-}
-
-.popover-trigger-bottom {
-    bottom: -8px;
-    right: calc(50% - 8px);
-}
-
-.popover-trigger-right {
-    right: -8px;
-    bottom: calc(50% - 8px);
+.popover-placement-center-example__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
 }

@@ -1,0 +1,64 @@
+<div class="popover-header-example">
+    <ng-template #customContent>
+        <p>
+            Жёлтые кубики — это песок, кубик зелёный — весенний лесок, синие кубики — это река. Кубиков много — река
+            широка. Кубик на кубик — растут этажи: учатся строить UI малыши.
+        </p>
+        <kbq-dl class="kbq-dl_wide">
+            <kbq-dt>Желтые кубики</kbq-dt>
+            <kbq-dd>Песок</kbq-dd>
+
+            <kbq-dt>Кубик Зеленый</kbq-dt>
+            <kbq-dd>Весенний лесок</kbq-dd>
+
+            <kbq-dt>Кубиков много</kbq-dt>
+            <kbq-dd>Река широка Кубик на кубик Растут этажи</kbq-dd>
+
+            <kbq-dt>Кубик на кубик</kbq-dt>
+            <kbq-dd>
+                <kbq-badge [badgeColor]="badgeColors.FadeContrast">
+                    Растут этажи
+                </kbq-badge>
+            </kbq-dd>
+
+            <kbq-dt>Кубики вместе сложились</kbq-dt>
+            <kbq-dd>И сайт оживает</kbq-dd>
+
+            <kbq-dt>Взрослые мир создают</kbq-dt>
+            <kbq-dd>О котором мечтают</kbq-dd>
+        </kbq-dl>
+    </ng-template>
+
+    <ng-template #customFooter>
+        <button kbq-button>Закрыть</button>
+    </ng-template>
+
+    <div class="popover-header-example__buttons">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'header-example'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverHeader]="'Заголовок поповера'"
+        >
+            Только с шапкой
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'header-example'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+        >
+            Только с футером
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'header-example'"
+            [kbqPopoverContent]="customContent"
+        >
+            Без хедера и футера
+        </button>
+    </div>
+</div>

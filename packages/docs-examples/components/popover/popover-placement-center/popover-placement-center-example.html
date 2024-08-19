@@ -1,26 +1,66 @@
-<div class="visual-box">
-    <div
-        *ngFor="let placement of placements"
-        #popover="kbqPopover"
-        kbqPopover
-        kbqPopoverContent="kbqPopoverPlacement: {{ placement }}"
-        class="popover-trigger popover-trigger-{{ placement }}"
-        [class.active]="activePlacement === placement"
-        [kbqPopoverFooter]="customFooter"
-        [kbqPopoverHeader]="'Заголовок поповера'"
-        [kbqPopoverPlacement]="placement"
-        (kbqPopoverVisibleChange)="activePlacement = $event ? placement : null"
-    ></div>
-</div>
+<div class="popover-placement-center-example">
+    <ng-template #customContent>
+        <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+        <kbq-form-field>
+            <input
+                kbqInput
+                placeholder="Интересная мысль"
+            />
+        </kbq-form-field>
+    </ng-template>
 
-<ng-template #customFooter>
-    <div class="buttons-container">
+    <ng-template #customFooter>
+        <div class="popover-placement-center-example__buttons">
+            <button
+                kbq-button
+                [color]="'contrast'"
+            >
+                Сохранить
+            </button>
+            <button kbq-button>Отмена</button>
+        </div>
+    </ng-template>
+
+    <div class="popover-placement-center-example__column">
         <button
             kbq-button
-            [color]="'contrast'"
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.Left"
         >
-            Сохранить
+            left
         </button>
-        <button kbq-button>Отмена</button>
     </div>
-</ng-template>
+    <div class="popover-placement-center-example__column">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.Top"
+        >
+            top
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.Bottom"
+        >
+            bottom
+        </button>
+    </div>
+    <div class="popover-placement-center-example__column">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.Right"
+        >
+            right
+        </button>
+    </div>
+</div>

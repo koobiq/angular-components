@@ -1,0 +1,28 @@
+<div class="popover-close-example">
+    <ng-template #customContent>
+        <h1 class="kbq-headline">Making hybrid‑remote inclusive with unique audio technology</h1>
+        <p>Traditional video conferencing can make remote colleagues feel like second-class citizens</p>
+        <p>Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able to use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.” Everyone stays engaged. No one steals the spotlight.</p>
+        <p>We take privacy and security very seriously. We leverage industry standard data security policies to keep all customer data safe and treat the protection of user privacy and data with the utmost importance. You can learn more about our privacy policy here.</p>
+        <p>Encrypted Calls & Communication. All calls (including audio/video) are secured with TLS and AES-128 encryption.</p>
+        <p>We take privacy and security very seriously. We leverage industry standard data security policies to keep all customer data safe and treat the protection of user privacy and data with the utmost importance. You can learn more about our privacy policy here.</p>
+        <p>Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able to use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.” Everyone stays engaged. No one steals the spotlight.</p>
+    </ng-template>
+
+    <div class="popover-close-example__buttons">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+        >
+            Крестик в углу с большим заголовком
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+        >
+            Крестик в углу в диалоге «Поделиться»
+        </button>
+    </div>
+</div>

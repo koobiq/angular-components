@@ -1,0 +1,13 @@
+.popover-header-example__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.kbq-popover.header-example p:first-child {
+    margin-top: 0;
+}
+
+.kbq-popover.header-example p:last-child {
+    margin-bottom: 0;
+}

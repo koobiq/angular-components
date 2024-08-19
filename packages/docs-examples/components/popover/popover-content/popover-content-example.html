@@ -1,0 +1,62 @@
+<div class="popover-content-example">
+    <ng-template #customShareContent>
+        Share project
+        <form
+            novalidate
+            class="kbq-form-vertical"
+        >
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__label-wrapper">
+                    <label class="kbq-form__label">Email</label>
+                </div>
+                <div class="kbq-form__fieldset kbq-horizontal">
+                    <div class="kbq-form__row">
+                        <kbq-form-field class="kbq-form__control">
+                            <input
+                                kbqInput
+                                name="input"
+                            />
+
+                        </kbq-form-field>
+                    </div>
+                    <div class="kbq-form__row">
+                        <button
+                            kbq-button
+                            [color]="'contrast'"
+                        >
+                            Send invite
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #customContent>
+        Абракадабра!
+        Таинственное слово, которому приписывалась чудодейственная сила
+        <button
+            kbq-button
+            [color]="'contrast'"
+        >
+            Сделать магию
+        </button>
+    </ng-template>
+
+    <div class="popover-content-example__buttons">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customShareContent"
+        >
+            Без панели хедера
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+        >
+            Нестандартные стили и отступы
+        </button>
+    </div>
+</div>

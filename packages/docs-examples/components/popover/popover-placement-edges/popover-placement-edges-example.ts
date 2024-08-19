@@ -11,15 +11,5 @@ import { PopUpPlacements } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None
 })
 export class PopoverPlacementEdgesExample {
-    placements = [
-        PopUpPlacements.TopLeft,
-        PopUpPlacements.TopRight,
-        PopUpPlacements.BottomLeft,
-        PopUpPlacements.BottomRight,
-        PopUpPlacements.LeftBottom,
-        PopUpPlacements.LeftTop,
-        PopUpPlacements.RightBottom,
-        PopUpPlacements.RightTop
-    ];
-    activePlacement: PopUpPlacements | null;
+    placements = PopUpPlacements;
 }

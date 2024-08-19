@@ -1,108 +1,29 @@
-.buttons-container {
+.popover-placement-edges-example {
     display: flex;
-    justify-content: flex-end;
+    column-gap: 16px;
 }
 
-.buttons-container button + button {
-    margin-left: 16px;
+.popover-placement-edges-example__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
 }
 
-.visual-box {
-    margin: 200px auto;
-    height: 90px;
-    width: 90px;
-    position: relative;
-
-    border: 1px solid #b3b3b2;
-    border-radius: 8px;
+.popover-placement-edges-example__column button {
+    width: 100%;
 }
 
-.popover-trigger {
-    position: absolute;
-    cursor: pointer;
+.popover-placement-edges-example__column button + button {
+    margin-top: 52px;
 }
 
-.popover-trigger:after {
-    content: '';
-    display: block;
-    background: #338fcb;
-    height: 16px;
-    width: 16px;
-    position: relative;
+.popover-placement-edges-example__column.middle button + button {
+    margin-top: 136px;
 }
 
-.popover-trigger.active:after {
-    background: #cb3c33;
-}
-
-.popover-trigger-topLeft {
-    top: -8px;
-    left: 2px;
-}
-
-.popover-trigger-topLeft:after {
-    left: 9px;
-}
-
-.popover-trigger-topRight {
-    top: -8px;
-    right: 2px;
-}
-
-.popover-trigger-topRight:after {
-    right: 9px;
-}
-
-.popover-trigger-leftTop {
-    left: -8px;
-    top: 2px;
-}
-
-.popover-trigger-leftTop:after {
-    top: 9px;
-}
-
-.popover-trigger-leftBottom {
-    bottom: 2px;
-    left: -8px;
-}
-
-.popover-trigger-leftBottom:after {
-    bottom: 9px;
-}
-
-.popover-trigger-bottomRight {
-    bottom: -8px;
-    right: 2px;
-}
-
-.popover-trigger-bottomRight:after {
-    right: 9px;
-}
-
-.popover-trigger-bottomLeft {
-    bottom: -8px;
-    left: 2px;
-}
-
-.popover-trigger-bottomLeft:after {
-    left: 9px;
-}
-
-.popover-trigger-rightBottom {
-    right: -8px;
-    bottom: 2px;
-}
-
-.popover-trigger-rightBottom:after {
-    bottom: 9px;
-}
-
-.popover-trigger-rightTop {
-    right: -8px;
-    top: 2px;
-}
-
-.popover-trigger-rightTop:after {
-    top: 9px;
+.popover-placement-edges-example__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
 }

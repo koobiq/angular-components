@@ -1,68 +1,33 @@
-<ng-template #customContent>
-    Интересно, что это такое?
-    <kbq-form-field class="layout-margin-bottom-s">
-        <input
-            kbqInput
-            placeholder="Интересная мысль"
-        />
-    </kbq-form-field>
-</ng-template>
+<div class="popover-common-example">
+    <ng-template #customContent>
+        <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+        <kbq-form-field>
+            <input
+                kbqInput
+                placeholder="Интересная мысль"
+            />
+        </kbq-form-field>
+    </ng-template>
 
-<ng-template #customFooter>
-    <div class="buttons-container">
-        <button kbq-button>Действие 2</button>
-        <button
-            kbq-button
-            [color]="'contrast'"
-        >
-            Применить
-        </button>
-        <button kbq-button>Отмена</button>
-    </div>
-</ng-template>
+    <ng-template #customFooter>
+        <div class="popover-common-example__buttons">
+            <button
+                kbq-button
+                [color]="'contrast'"
+            >
+                Сохранить
+            </button>
+            <button kbq-button>Отмена</button>
+        </div>
+    </ng-template>
 
-<kbq-radio-group
-    class="example-radio-group"
-    [(ngModel)]="this.selectedElement"
->
-    <kbq-radio-button
-        class="example-radio-button"
-        [value]="ELEMENTS.BUTTON"
-    >
-        Button
-    </kbq-radio-button>
-    <kbq-radio-button
-        class="example-radio-button"
-        [value]="ELEMENTS.LINK"
-    >
-        Link
-    </kbq-radio-button>
-</kbq-radio-group>
-
-<div
-    style="padding: 16px"
-    [ngSwitch]="this.selectedElement"
->
     <button
-        *ngSwitchCase="ELEMENTS.BUTTON"
-        #popover="kbqPopover"
         kbq-button
         kbqPopover
-        kbqPopoverHeader="Заголовок поповера"
+        [kbqPopoverClass]="'common-example'"
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
     >
-        Toggle popover
+        Открыть поповер
     </button>
-    <a
-        *ngSwitchCase="ELEMENTS.LINK"
-        #popover="kbqPopover"
-        kbq-link
-        kbqPopover
-        kbqPopoverHeader="Заголовок поповера"
-        [kbqPopoverContent]="customContent"
-        [kbqPopoverFooter]="customFooter"
-    >
-        Link
-    </a>
 </div>

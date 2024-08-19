@@ -1,0 +1,5 @@
+.popover-content-example__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}

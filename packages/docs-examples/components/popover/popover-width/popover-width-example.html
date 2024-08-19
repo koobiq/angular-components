@@ -1,0 +1,69 @@
+<div class="popover-width-example">
+    <ng-template #customSmallContent>В Windows есть вещи, известные как системные переменные.</ng-template>
+
+    <ng-template #customContent>
+        В Windows есть вещи, известные как системные переменные. Это переменные, от которых зависит функционирование
+        Windows, потому что Windows всегда будет знать, что означают переменные и где они находятся, даже когда
+        мы перемещаем биты и байты повсюду. Системная переменная MAX_PATH — это та, которая ограничивает имена файлов
+        и пути к файлам до 260 символов.
+    </ng-template>
+
+    <ng-template #customLargeContent>
+        <p>
+            В Windows есть вещи, известные как системные переменные. Это переменные, от которых зависит функционирование
+            Windows, потому что Windows всегда будет знать, что означают переменные и где они находятся, даже когда
+            мы перемещаем биты и байты повсюду. Системная переменная MAX_PATH — это та, которая ограничивает имена
+            файлов и пути к файлам до 260 символов.
+        </p>
+        <p>
+            Будучи переменной, вы думаете, мы могли бы изменить это. Нет, мы не должны. Это все равно что выдернуть
+            нитку из свитера. Как только одна системная переменная изменяется, другие системные переменные и зависимые
+            от них компоненты начинают распадаться.
+        </p>
+    </ng-template>
+
+    <div class="popover-width-example__buttons">
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'width-example'"
+            [kbqPopoverContent]="customSmallContent"
+            [kbqPopoverHeader]="'Small'"
+            [kbqPopoverSize]="selectedSize"
+            (click)="selectedSize = popUpSizes.Small"
+        >
+            Small
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'width-example'"
+            [kbqPopoverContent]="customLargeContent"
+            [kbqPopoverHeader]="'Medium'"
+            [kbqPopoverSize]="selectedSize"
+            (click)="selectedSize = popUpSizes.Medium"
+        >
+            Medium
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'width-example'"
+            [kbqPopoverContent]="customLargeContent"
+            [kbqPopoverHeader]="'Large'"
+            [kbqPopoverSize]="selectedSize"
+            (click)="selectedSize = popUpSizes.Large"
+        >
+            Large
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'custom-width'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverHeader]="'Custom Width'"
+        >
+            Custom Width
+        </button>
+    </div>
+</div>
