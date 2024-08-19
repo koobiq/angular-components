@@ -3,3 +3,11 @@
     flex-wrap: wrap;
     gap: 16px;
 }
+
+.kbq-popover.close-example h1 {
+    margin-top: 0;
+}
+
+.kbq-popover.close-example p:last-child {
+    margin-bottom: 0;
+}

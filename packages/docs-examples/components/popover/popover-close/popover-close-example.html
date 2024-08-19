@@ -28,11 +28,14 @@
         </p>
     </ng-template>
 
+    <ng-template #shareContent>Share project</ng-template>
+
     <div class="popover-close-example__buttons">
         <button
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
+            [kbqPopoverClass]="'close-example'"
             [kbqPopoverContent]="customContent"
         >
             Крестик в углу с большим заголовком
@@ -41,7 +44,7 @@
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
-            [kbqPopoverContent]="customContent"
+            [kbqPopoverContent]="shareContent"
         >
             Крестик в углу в диалоге «Поделиться»
         </button>

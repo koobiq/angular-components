@@ -21,6 +21,7 @@
                 *ngIf="isTemplateRef(header)"
                 [ngTemplateOutlet]="$any(header)"
             />
+
             <ng-container *ngIf="!isTemplateRef(header)">
                 <div class="kbq-popover__header-text">{{ header }}</div>
             </ng-container>
@@ -30,10 +31,28 @@
             *ngIf="content"
             class="kbq-popover__content kbq-scrollbar"
         >
+            <div
+                *ngIf="hasCloseButton && !header"
+                class="kbq-popover__content-close-container"
+            >
+                <button
+                    kbq-button
+                    class="kbq-popover__close kbq-button_transparent"
+                    [color]="componentColors.Contrast"
+                    (click)="hide(0)"
+                >
+                    <i
+                        kbq-icon="mc-close-L_16"
+                        [color]="componentColors.Contrast"
+                    ></i>
+                </button>
+            </div>
+
             <ng-container
                 *ngIf="isTemplateRef(content)"
                 [ngTemplateOutlet]="$any(content)"
             />
+
             <ng-container *ngIf="!isTemplateRef(content)">
                 <div>{{ content }}</div>
             </ng-container>
@@ -47,6 +66,7 @@
                 *ngIf="isTemplateRef(footer)"
                 [ngTemplateOutlet]="$any(footer)"
             />
+
             <ng-container *ngIf="!isTemplateRef(footer)">
                 <div>{{ footer }}</div>
             </ng-container>
@@ -54,10 +74,10 @@
     </div>
 
     <button
-        *ngIf="hasCloseButton"
+        *ngIf="header"
         kbq-button
         class="kbq-popover__close kbq-button_transparent"
-        [color]="'contrast'"
+        [color]="componentColors.Contrast"
         (click)="hide(0)"
     >
         <i
@@ -65,5 +85,6 @@
             [color]="componentColors.Contrast"
         ></i>
     </button>
+
     <div class="kbq-popover__arrow"></div>
 </div>

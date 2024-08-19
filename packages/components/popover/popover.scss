@@ -69,6 +69,18 @@ $trigger-margin: 9px;
     }
 }
 
+.kbq-popover__content-close-container {
+    display: flex;
+    justify-content: flex-end;
+    height: 0;
+
+    .kbq-popover__close {
+        top: auto;
+        right: auto;
+        transform: translateY(-50%) translateX(50%);
+    }
+}
+
 .kbq-popover__header {
     display: flex;
     align-items: center;
