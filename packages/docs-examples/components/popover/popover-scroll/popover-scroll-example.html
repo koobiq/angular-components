@@ -14,30 +14,40 @@
             <button
                 kbq-button
                 [color]="'contrast'"
+                (click)="activePopover.hide(0)"
             >
                 Сохранить
             </button>
-            <button kbq-button>Отмена</button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Отмена
+            </button>
         </div>
     </ng-template>
 
     <div class="popover-scroll-example__buttons">
         <button
+            #kbqNoClosePopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverClass]="'scroll-example'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            (click)="activePopover = kbqNoClosePopover"
         >
             Поповер не закрывается при прокрутке
         </button>
         <button
+            #kbqClosePopover="kbqPopover"
             kbq-button
             kbqPopover
             [closeOnScroll]="true"
             [kbqPopoverClass]="'scroll-example'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            (click)="activePopover = kbqClosePopover"
         >
             Закрывается при прокрутке
         </button>

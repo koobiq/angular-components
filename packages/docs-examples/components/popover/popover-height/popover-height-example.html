@@ -115,39 +115,51 @@
             <button
                 kbq-button
                 [color]="'contrast'"
+                (click)="activePopover.hide(0)"
             >
                 Save
             </button>
-            <button kbq-button>Cancel</button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Cancel
+            </button>
         </div>
     </ng-template>
 
     <div class="popover-width-example__buttons">
         <button
+            #kbqNoScrollPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="shortContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqNoScrollPopover"
         >
             Без прокрутки
         </button>
         <button
+            #kbqAutoHeightPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqAutoHeightPopover"
         >
             С прокруткой, высота по умолчанию
         </button>
         <button
+            #kbqCustomHeightPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverClass]="'custom-height'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqCustomHeightPopover"
         >
             С прокруткой, произвольная высота
         </button>

@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
  * @title popover-height
@@ -9,4 +10,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['popover-height-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class PopoverHeightExample {}
+export class PopoverHeightExample {
+    activePopover: KbqPopoverTrigger;
+}

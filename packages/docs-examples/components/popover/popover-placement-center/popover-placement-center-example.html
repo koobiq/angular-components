@@ -14,51 +14,65 @@
             <button
                 kbq-button
                 [color]="'contrast'"
+                (click)="activePopover.hide(0)"
             >
                 Сохранить
             </button>
-            <button kbq-button>Отмена</button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Отмена
+            </button>
         </div>
     </ng-template>
 
     <div class="popover-placement-center-example__column">
         <button
+            #kbqLeftPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Left"
+            (click)="activePopover = kbqLeftPopover"
         >
             left
         </button>
     </div>
     <div class="popover-placement-center-example__column">
         <button
+            #kbqTopPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Top"
+            (click)="activePopover = kbqTopPopover"
         >
             top
         </button>
         <button
+            #kbqBottomPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Bottom"
+            (click)="activePopover = kbqBottomPopover"
         >
             bottom
         </button>
     </div>
     <div class="popover-placement-center-example__column">
         <button
+            #kbqRightPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Right"
+            (click)="activePopover = kbqRightPopover"
         >
             right
         </button>

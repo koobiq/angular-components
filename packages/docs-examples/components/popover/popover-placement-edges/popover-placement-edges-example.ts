@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
  * @title popover-placement-edges
@@ -12,4 +13,5 @@ import { PopUpPlacements } from '@koobiq/components/core';
 })
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
+    activePopover: KbqPopoverTrigger;
 }

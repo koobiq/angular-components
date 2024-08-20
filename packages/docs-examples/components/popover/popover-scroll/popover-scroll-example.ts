@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
  * @title popover-scroll
@@ -9,4 +10,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['popover-scroll-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class PopoverScrollExample {}
+export class PopoverScrollExample {
+    activePopover: KbqPopoverTrigger;
+}

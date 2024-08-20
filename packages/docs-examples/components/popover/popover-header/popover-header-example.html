@@ -28,7 +28,12 @@
     </ng-template>
 
     <ng-template #customFooter>
-        <button kbq-button>Закрыть</button>
+        <button
+            kbq-button
+            (click)="kbqPopover.hide()"
+        >
+            Закрыть
+        </button>
     </ng-template>
 
     <div class="popover-header-example__buttons">
@@ -43,6 +48,7 @@
             Только с шапкой
         </button>
         <button
+            #kbqPopover="kbqPopover"
             kbq-button
             kbqPopover
             [kbqPopoverClass]="'header-example'"
