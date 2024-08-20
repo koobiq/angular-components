@@ -417,31 +417,6 @@ describe('KbqAutocomplete', () => {
 
             expect(input.getAttribute('aria-haspopup')).toBe('false');
         });
-
-        xit('should scroll to active options below the fold for options with custom height', () => {
-            const DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
-            const trigger = fixture.componentInstance.trigger;
-
-            fixture.componentInstance.kbqOptionWidth = 50;
-            fixture.detectChanges();
-
-            fixture.componentInstance.trigger.openPanel();
-            fixture.detectChanges();
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
-            trigger.handleKeydown(DOWN_ARROW_EVENT);
-            fixture.detectChanges();
-            expect(scrollContainer.scrollTop).toEqual(4);
-
-            // These down arrows will set the 6th option active, below the fold.
-            const keydownEvents = [1, 2, 3, 4, 5];
-            keydownEvents.forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
-
-            // Expect option bottom minus the panel height (50 * 6 - 256 = 44)
-            expect(scrollContainer.scrollTop).toEqual(275);
-
-            expect(fixture.componentInstance.panel.keyManager.activeItemIndex).toEqual(5);
-        });
     });
 
     it('should have the correct text direction in RTL', () => {
@@ -886,21 +861,6 @@ describe('KbqAutocomplete', () => {
             expect(trigger.panelOpen).toBe(false);
         }));
 
-        xit('should scroll to active options below the fold', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
-            trigger.handleKeydown(DOWN_ARROW_EVENT);
-            fixture.detectChanges();
-            expect(scrollContainer.scrollTop).toEqual(0);
-
-            // These down arrows will set the 6th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
-
-            // Expect option bottom minus the panel height (288 - 256 - 4 = 32)
-            expect(scrollContainer.scrollTop).toEqual(28);
-        });
-
         it('should not scroll to active options on UP arrow', () => {
             const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
 
@@ -908,47 +868,6 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             expect(scrollContainer.scrollTop).toEqual(0);
-        });
-
-        xit('should not scroll to active options that are fully in the panel', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
-            trigger.handleKeydown(DOWN_ARROW_EVENT);
-            fixture.detectChanges();
-
-            expect(scrollContainer.scrollTop).toEqual(0);
-
-            // These down arrows will set the 6th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
-
-            // Expect option bottom minus the panel height (288 - 256 - 4 = 28)
-            expect(scrollContainer.scrollTop).toEqual(28);
-
-            // These up arrows will set the 2nd option active
-            [4, 3, 2, 1].forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
-
-            // Expect no scrolling to have occurred. Still showing bottom of 6th option.
-            expect(scrollContainer.scrollTop).toEqual(28);
-        });
-
-        xit('should scroll to active options that are above the panel', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
-            trigger.handleKeydown(DOWN_ARROW_EVENT);
-            fixture.detectChanges();
-
-            expect(scrollContainer.scrollTop).toEqual(0);
-
-            // These down arrows will set the 7th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
-
-            // These up arrows will set the 2nd option active
-            [7, 6, 5, 4, 3, 2, 1].forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
-
-            // Expect to show the top of the 2nd option at the top of the panel
-            expect(scrollContainer.scrollTop).toEqual(28);
         });
 
         it('should close the panel when pressing escape', fakeAsync(() => {
@@ -1843,55 +1762,6 @@ describe('KbqAutocomplete', () => {
         }));
     });
 
-    xit('should have correct width when opened', () => {
-        const widthFixture = createComponent(SimpleAutocomplete);
-        widthFixture.componentInstance.width = 300;
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.trigger.openPanel();
-        widthFixture.detectChanges();
-
-        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
-
-        widthFixture.componentInstance.trigger.closePanel();
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.width = 500;
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.trigger.openPanel();
-        widthFixture.detectChanges();
-
-        // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
-    });
-
-    xit('should update the width while the panel is open', () => {
-        const widthFixture = createComponent(SimpleAutocomplete);
-
-        widthFixture.componentInstance.width = 300;
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.trigger.openPanel();
-        widthFixture.detectChanges();
-
-        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        const input = widthFixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
-
-        widthFixture.componentInstance.width = 500;
-        widthFixture.detectChanges();
-
-        input.focus();
-        dispatchFakeEvent(input, 'input');
-        widthFixture.detectChanges();
-
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
-    });
-
     it('should not reopen a closed autocomplete when returning to a blurred tab', () => {
         const fixture = createComponent(SimpleAutocomplete);
         fixture.detectChanges();
@@ -1920,42 +1790,6 @@ describe('KbqAutocomplete', () => {
         fixture.detectChanges();
 
         expect(trigger.panelOpen).toBe(false);
-    });
-
-    xit('should update the panel width if the window is resized', fakeAsync(() => {
-        const widthFixture = createComponent(SimpleAutocomplete);
-
-        widthFixture.componentInstance.width = 300;
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.trigger.openPanel();
-        widthFixture.detectChanges();
-
-        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
-
-        widthFixture.componentInstance.width = 400;
-        widthFixture.detectChanges();
-
-        dispatchFakeEvent(window, 'resize');
-        tick(20);
-
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(398);
-    }));
-
-    xit('should have panel width match host width by default', () => {
-        const widthFixture = createComponent(SimpleAutocomplete);
-
-        widthFixture.componentInstance.width = 300;
-        widthFixture.detectChanges();
-
-        widthFixture.componentInstance.trigger.openPanel();
-        widthFixture.detectChanges();
-
-        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
     });
 
     it('should have panel width set to string value', () => {
