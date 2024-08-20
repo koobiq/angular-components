@@ -1,3 +1,15 @@
+# 17.2.0 (2024-08-20)
+
+### Koobiq
+
+ * bug fix  **docs:** added @docsearch/css dependency ([#212](https://github.com/koobiq/angular-components/issues/212)) ([d99030b](https://github.com/koobiq/angular-components/commit/d99030b58016808b7277654bbe1f187812d3ae65))
+ * bug fix  hide tooltip and popover on disable ([#DS-2733](https://github.com/koobiq/angular-components/issues/issue/DS-2733)) ([#218](https://github.com/koobiq/angular-components/issues/218)) ([75234dd](https://github.com/koobiq/angular-components/commit/75234ddeddd3212b0fa7132f1ec4ca5cbe7ab253))
+ * bug fix  **toast:** close icon top by calc variables ([#DS-2738](https://github.com/koobiq/angular-components/issues/issue/DS-2738)) ([#207](https://github.com/koobiq/angular-components/issues/207)) ([7d0bd50](https://github.com/koobiq/angular-components/commit/7d0bd503e3c198565c1251af8b4df7e598248dc6))
+ * feature  migrated from yarn to pnpm ([#DS-2687](https://github.com/koobiq/angular-components/issues/issue/DS-2687)) ([#209](https://github.com/koobiq/angular-components/issues/209)) ([6d62e7b](https://github.com/koobiq/angular-components/commit/6d62e7b6115b642ed981feafc391a78ed0226af8))
+ * feature  removed card component ([#DS-2534](https://github.com/koobiq/angular-components/issues/issue/DS-2534)) ([#203](https://github.com/koobiq/angular-components/issues/203)) ([5df8982](https://github.com/koobiq/angular-components/commit/5df898260597ab229b0219a17ad9a04d424aa1b0))
+ * feature  **tooltip:** arrowless & error, warning colors ([#DS-2645](https://github.com/koobiq/angular-components/issues/issue/DS-2645)) ([#210](https://github.com/koobiq/angular-components/issues/210)) ([6ae1371](https://github.com/koobiq/angular-components/commit/6ae137109d942f77b6fca7f62f91719027f24387))
+ * feature  updated design-tokens 3.3.1 ([#219](https://github.com/koobiq/angular-components/issues/219)) ([29d11c7](https://github.com/koobiq/angular-components/commit/29d11c74bff6f8d5d02b46c3cfb91b3626082517))
+
 # 17.1.0 (2024-08-13)
 
 ### Koobiq
