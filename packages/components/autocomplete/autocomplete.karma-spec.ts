@@ -1,4 +1,3 @@
-// TODO: fixed linters
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, NgZone, OnDestroy, Provider, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';

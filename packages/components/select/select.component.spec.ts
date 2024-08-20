@@ -1,4 +1,3 @@
-// TODO: fix linter
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
@@ -13,7 +12,7 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import {
     ControlValueAccessor,
     FormGroupDirective,
@@ -79,9 +78,6 @@ function finishInit(fixture: ComponentFixture<any>) {
     flush();
     fixture.autoDetectChanges();
 }
-
-/** The debounce interval when typing letters to select an option. */
-const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
 
 const OPTIONS = [
     'Abakan',
@@ -350,37 +346,6 @@ class BasicEvents {
 }
 
 @Component({
-    selector: 'ng-model-select',
-    template: `
-        <kbq-form-field>
-            <kbq-select
-                [disabled]="isDisabled"
-                placeholder="Food"
-                ngModel
-            >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `
-})
-class NgModelSelect {
-    foods: any[] = [
-        { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
-    ];
-    isDisabled: boolean;
-
-    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
-    @ViewChildren(KbqOption) options: QueryList<KbqOption>;
-}
-
-@Component({
     selector: 'many-selects',
     template: `
         <kbq-form-field>
@@ -398,38 +363,6 @@ class NgModelSelect {
     `
 })
 class ManySelects {}
-
-@Component({
-    selector: 'ng-if-select',
-    template: `
-        <div *ngIf="isShowing">
-            <kbq-form-field>
-                <kbq-select
-                    [formControl]="control"
-                    placeholder="Food I want to eat right now"
-                >
-                    <kbq-option
-                        *ngFor="let food of foods"
-                        [value]="food.value"
-                    >
-                        {{ food.viewValue }}
-                    </kbq-option>
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-    `
-})
-class NgIfSelect {
-    isShowing = false;
-    foods: any[] = [
-        { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' }
-    ];
-    control = new UntypedFormControl('pizza-1');
-
-    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
-}
 
 @Component({
     selector: 'select-with-change-event',
@@ -802,32 +735,6 @@ class SelectWithPlainTabindex {}
     `
 })
 class SelectEarlyAccessSibling {}
-
-@Component({
-    selector: 'basic-select-initially-hidden',
-    template: `
-        <kbq-form-field>
-            <kbq-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `
-})
-class BasicSelectInitiallyHidden {
-    isVisible = false;
-}
-
-@Component({
-    selector: 'basic-select-no-placeholder',
-    template: `
-        <kbq-form-field>
-            <kbq-select>
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `
-})
-class BasicSelectNoPlaceholder {}
 
 @Component({
     selector: 'basic-select-with-theming',
@@ -2194,17 +2101,6 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(false);
             }));
 
-            xit('should set the width of the overlay based on the trigger', fakeAsync(() => {
-                trigger.style.width = '200px';
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-                expect(pane.style.minWidth).toBe('200px');
-            }));
-
             it('should not attempt to open a select that does not have any options', fakeAsync(() => {
                 fixture.componentInstance.foods = [];
                 fixture.detectChanges();
@@ -2835,40 +2731,6 @@ describe('KbqSelect', () => {
             }));
         });
 
-        describe('disabled behavior', () => {
-            xit('should disable itself when control is disabled programmatically', fakeAsync(() => {
-                const fixture = TestBed.createComponent(BasicSelect);
-                fixture.detectChanges();
-
-                fixture.componentInstance.control.disable();
-                fixture.detectChanges();
-                const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-                expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                expect(overlayContainerElement.textContent).toEqual('');
-
-                expect(fixture.componentInstance.select.panelOpen).toBe(false);
-
-                fixture.componentInstance.control.enable();
-                fixture.detectChanges();
-
-                expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('pointer');
-
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-
-                expect(overlayContainerElement.textContent).toContain('Steak');
-
-                expect(fixture.componentInstance.select.panelOpen).toBe(true);
-            }));
-        });
-
         describe('keyboard scrolling', () => {
             let fixture: ComponentFixture<BasicSelect>;
             let host: HTMLElement;
@@ -2901,89 +2763,6 @@ describe('KbqSelect', () => {
                 flush();
 
                 expect(panel.scrollTop).toBe(initialScrollPosition);
-            }));
-
-            xit('should scroll down to the active option', fakeAsync(() => {
-                for (let i = 0; i < 15; i++) {
-                    dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                    flush();
-                }
-
-                expect(panel.scrollTop).toBe(336);
-            }));
-
-            xit('should scroll up to the active option', fakeAsync(() => {
-                // Scroll to the bottom.
-                for (let i = 0; i < fixture.componentInstance.foods.length; i++) {
-                    dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                    flush();
-                }
-
-                for (let i = 0; i < 20; i++) {
-                    dispatchKeyboardEvent(host, 'keydown', UP_ARROW);
-                    flush();
-                }
-
-                expect(panel.scrollTop).toBe(208);
-            }));
-
-            xit('should skip option group labels', fakeAsync(() => {
-                fixture.destroy();
-
-                const groupFixture = TestBed.createComponent(SelectWithGroups);
-
-                groupFixture.detectChanges();
-                groupFixture.componentInstance.select.open();
-                groupFixture.detectChanges();
-                flush();
-
-                host = groupFixture.debugElement.query(By.css('kbq-select')).nativeElement;
-                panel = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
-
-                for (let i = 0; i < 5; i++) {
-                    dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                }
-                flush();
-
-                // Note that we press down 5 times, but it will skip
-                // 3 options because the second group is disabled.
-                expect(panel.scrollTop).toBe(158);
-            }));
-
-            xit('should scroll top the top when pressing HOME', fakeAsync(() => {
-                for (let i = 0; i < 20; i++) {
-                    dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                    fixture.detectChanges();
-                    flush();
-                }
-
-                expect(panel.scrollTop).toBeGreaterThan(0);
-
-                dispatchKeyboardEvent(host, 'keydown', HOME);
-                fixture.detectChanges();
-                flush();
-
-                expect(panel.scrollTop).toBe(0);
-            }));
-
-            xit('should scroll to the bottom of the panel when pressing END', fakeAsync(() => {
-                dispatchKeyboardEvent(host, 'keydown', END);
-                fixture.detectChanges();
-                flush();
-
-                expect(panel.scrollTop).toBe(704);
-            }));
-
-            xit('should scroll to the active option when typing', fakeAsync(() => {
-                for (let i = 0; i < 15; i++) {
-                    // Press the letter 'o' 15 times since all the options are named 'Option <index>'
-                    dispatchEvent(host, createKeyboardEvent('keydown', 79, undefined, 'o'));
-                    fixture.detectChanges();
-                    tick(LETTER_KEY_DEBOUNCE_INTERVAL);
-                }
-                flush();
-
-                expect(panel.scrollTop).toBe(336);
             }));
         });
 
@@ -3191,79 +2970,6 @@ describe('KbqSelect', () => {
         }));
     });
 
-    describe('with ngModel', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([NgModelSelect]);
-        });
-
-        xit('should disable itself when control is disabled using the property', fakeAsync(() => {
-            const fixture = TestBed.createComponent(NgModelSelect);
-            fixture.detectChanges();
-
-            fixture.componentInstance.isDisabled = true;
-            fixture.detectChanges();
-            flush();
-
-            fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
-
-            trigger.click();
-            fixture.detectChanges();
-
-            expect(overlayContainerElement.textContent).toEqual('');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(false);
-
-            fixture.componentInstance.isDisabled = false;
-            fixture.detectChanges();
-            flush();
-
-            fixture.detectChanges();
-            expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('pointer');
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            expect(overlayContainerElement.textContent).toContain('Steak');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(true);
-        }));
-    });
-
-    describe('with ngIf', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([NgIfSelect]);
-        });
-
-        xit('should handle nesting in an ngIf', fakeAsync(() => {
-            const fixture = TestBed.createComponent(NgIfSelect);
-            fixture.detectChanges();
-
-            fixture.componentInstance.isShowing = true;
-            fixture.detectChanges();
-
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            trigger.style.width = '300px';
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
-            expect(value.nativeElement.textContent).toContain('Pizza');
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(pane.style.minWidth).toEqual('300px');
-
-            expect(fixture.componentInstance.select.panelOpen).toBe(true);
-            expect(overlayContainerElement.textContent).toContain('Steak');
-            expect(overlayContainerElement.textContent).toContain('Pizza');
-            expect(overlayContainerElement.textContent).toContain('Tacos');
-        }));
-    });
-
     describe('with multiple kbq-select elements in one view', () => {
         beforeEach(() => {
             configureKbqSelectTestingModule([ManySelects]);
@@ -3348,49 +3054,6 @@ describe('KbqSelect', () => {
             expect(spy).toHaveBeenCalled();
             subscription.unsubscribe();
         });
-    });
-
-    describe('when initially hidden', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([BasicSelectInitiallyHidden]);
-        });
-
-        xit('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
-            const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
-            fixture.detectChanges();
-
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            trigger.style.width = '200px';
-            fixture.componentInstance.isVisible = true;
-            fixture.detectChanges();
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(pane.style.minWidth).toBe('200px');
-        }));
-    });
-
-    describe('with no placeholder', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([BasicSelectNoPlaceholder]);
-        });
-
-        xit('should set the width of the overlay if there is no placeholder', fakeAsync(() => {
-            const fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
-
-            fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-            trigger.click();
-            fixture.detectChanges();
-            flush();
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-            expect(parseInt(pane.style.minWidth as string)).toBeGreaterThan(0);
-        }));
     });
 
     describe('with theming', () => {
@@ -5200,26 +4863,6 @@ describe('KbqSelect', () => {
             flush();
         }));
 
-        xit('should display tooltip if ellipse applied', fakeAsync(() => {
-            trigger.click();
-            fixture.autoDetectChanges();
-
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
-            dispatchMouseEvent(options[1], 'mouseenter');
-            fixture.autoDetectChanges();
-
-            window.dispatchEvent(new Event('resize'));
-            fixture.autoDetectChanges();
-            flush();
-
-            discardPeriodicTasks();
-
-            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
-            expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toEqual(options[1].textContent!.trim());
-            flush();
-        }));
-
         xit('should change tooltip if option content changed', fakeAsync(() => {
             trigger.click();
             tick();
@@ -5344,34 +4987,6 @@ describe('KbqSelect', () => {
             expect(testInstance.select.keyManager.activeItem).toBeInstanceOf(KbqOption);
             expect((testInstance.select.selected as any[]).length).toEqual(2);
             expect((testInstance.select.selected as any[])[1]).toBeInstanceOf(KbqVirtualOption);
-        }));
-
-        xit('should calculate hidden items with virtual options', fakeAsync(() => {
-            const triggerEl: HTMLElement = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-
-            fixture.componentInstance.style = { width: '100px' };
-
-            triggerEl.click();
-            fixture.detectChanges();
-
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
-
-            for (let step = 0; step < 2; step++) {
-                if (options.item(step)) {
-                    options.item(step).click();
-                    tick();
-                }
-            }
-            fixture.autoDetectChanges();
-            flush();
-
-            expect(fixture.componentInstance.select.hiddenItems).toEqual(1);
-
-            options.item(2).click();
-            fixture.autoDetectChanges();
-            tick();
-            flush();
-            expect(fixture.componentInstance.select.hiddenItems).toEqual(2);
         }));
 
         it('should recalculate hidden items when previous rendered options range disappeared', fakeAsync(() => {
