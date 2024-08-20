@@ -71,17 +71,19 @@
     </div>
 
     <ng-template #closeButton>
-        <button
-            kbq-button
-            class="kbq-popover__close kbq-button_transparent"
-            [color]="componentColors.Contrast"
-            (click)="hide(0)"
-        >
-            <i
-                kbq-icon="mc-close-L_16"
+        <div class="kbq-popover__close">
+            <button
+                kbq-button
+                class="kbq-button_transparent"
                 [color]="componentColors.Contrast"
-            ></i>
-        </button>
+                (click)="hide(0)"
+            >
+                <i
+                    kbq-icon="mc-close-L_16"
+                    [color]="componentColors.Contrast"
+                ></i>
+            </button>
+        </div>
     </ng-template>
 
     <div class="kbq-popover__arrow"></div>

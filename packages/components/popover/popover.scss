@@ -124,4 +124,6 @@ $arrow-padding: calc(18px - $trigger-margin);
     position: absolute;
     top: kbq-css-variable(size-s);
     right: kbq-css-variable(size-s);
+    background-color: rgba(252, 252, 253, 0.88);
+    border-radius: kbq-css-variable(button-size-border-radius);
 }
