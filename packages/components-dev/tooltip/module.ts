@@ -54,6 +54,13 @@ export class DemoComponent {
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];
 
+    toolTipContext = {
+        header: 'Header',
+        content: `В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
+             добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов
+            неизвестным печатником еще в XVI веке.`
+    };
+
     constructor() {
         this.tooltipActiveStage = 1;
     }

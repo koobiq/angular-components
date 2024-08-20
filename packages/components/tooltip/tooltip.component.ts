@@ -11,6 +11,7 @@ import {
     EventEmitter,
     Inject,
     InjectionToken,
+    Injector,
     Input,
     NgZone,
     OnDestroy,
@@ -18,8 +19,12 @@ import {
     Output,
     TemplateRef,
     Type,
+    ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    runInInjectionContext
 } from '@angular/core';
 import {
     KbqComponentColors,
@@ -27,7 +32,8 @@ import {
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
-    PopUpTriggers
+    PopUpTriggers,
+    applyPopupMargins
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { kbqTooltipAnimations } from './tooltip.animations';
@@ -60,8 +66,11 @@ export const MIN_TIME_FOR_DELAY = 2000;
 export class KbqTooltipComponent extends KbqPopUp {
     prefix = 'kbq-tooltip';
 
+    @ViewChild('tooltip') elementRef: ElementRef;
+
     constructor(
         changeDetectorRef: ChangeDetectorRef,
+        private injector: Injector,
         @Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime
     ) {
         super(changeDetectorRef);
@@ -73,6 +82,12 @@ export class KbqTooltipComponent extends KbqPopUp {
         }
 
         super.show(Date.now() - this.openTime.value < MIN_TIME_FOR_DELAY ? 0 : delay);
+
+        if (this.offset !== null) {
+            runInInjectionContext(this.injector, () =>
+                applyPopupMargins(this.elementRef, this.prefix, `${this.offset!.toString()}px`)
+            );
+        }
 
         this.openTime.value = Date.now();
     }
@@ -193,6 +208,18 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
     }
 
+    @Input('kbqTooltipContext')
+    get context() {
+        return this._context;
+    }
+
+    set context(ctx) {
+        this._context = ctx;
+        this.updateData();
+    }
+
+    private _context: any = null;
+
     @Input('kbqTooltipColor')
     get color(): string {
         return `kbq-${this._color}`;
@@ -203,6 +230,9 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     }
 
     private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
+
+    @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = true;
+    @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
     @Output('kbqPlacementChange') placementChange = new EventEmitter();
 
@@ -255,6 +285,9 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.instance.content = this.content;
+        this.instance.context = this.context && { $implicit: this.context };
+        this.instance.arrow = this.arrow;
+        this.instance.offset = this.offset;
         this.instance.detectChanges();
     }
 

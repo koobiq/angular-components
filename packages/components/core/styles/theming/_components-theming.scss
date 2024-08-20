@@ -1736,6 +1736,16 @@
             background: map.get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-background'),
             text: map.get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-text'),
             shadow: map.get($tokens, 'tooltip-#{$scheme}-contrast-fade-off-shadow')
+        ),
+        warning-fade-off: (
+            background: map.get($tokens, 'tooltip-#{$scheme}-warning-fade-off-background'),
+            text: map.get($tokens, 'tooltip-#{$scheme}-warning-fade-off-text'),
+            shadow: map.get($tokens, 'tooltip-#{$scheme}-warning-fade-off-shadow')
+        ),
+        error-fade-off: (
+            background: map.get($tokens, 'tooltip-#{$scheme}-error-fade-off-background'),
+            text: map.get($tokens, 'tooltip-#{$scheme}-error-fade-off-text'),
+            shadow: map.get($tokens, 'tooltip-#{$scheme}-error-fade-off-shadow')
         )
     );
 

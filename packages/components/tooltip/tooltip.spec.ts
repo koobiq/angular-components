@@ -7,6 +7,11 @@ import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
+const tooltipDefaultEnterDelayWithDefer = 410;
+const tickTime = 100;
+const defaultOffsetForTooltip = 8;
+const defaultOffsetForTooltipWithoutArrow = 4;
+
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -15,7 +20,12 @@ describe('KbqTooltip', () => {
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqToolTipModule, NoopAnimationsModule],
-            declarations: [KbqTooltipTestWrapperComponent, KbqTooltipTestNewComponent, KbqTooltipDisabledComponent]
+            declarations: [
+                KbqTooltipTestWrapperComponent,
+                KbqTooltipTestNewComponent,
+                KbqTooltipDisabledComponent,
+                KbqTooltipWithTemplateRefContent
+            ]
         });
         TestBed.compileComponents();
     }));
@@ -26,6 +36,24 @@ describe('KbqTooltip', () => {
     afterEach(() => {
         overlayContainer.ngOnDestroy();
     });
+
+    const getTooltipAndStyles = (
+        trigger: ElementRef,
+        selector = '.kbq-tooltip'
+    ): [Element | null, CSSStyleDeclaration | null] => {
+        dispatchMouseEvent(trigger.nativeElement, 'mouseenter');
+        fixture.detectChanges();
+        tick(tooltipDefaultEnterDelayWithDefer);
+
+        const tooltip = overlayContainer.getContainerElement().querySelector(selector);
+        const styles = tooltip && window.getComputedStyle(tooltip);
+
+        return [
+            tooltip,
+            styles
+        ];
+    };
+
     describe('should bring no break change', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(KbqTooltipTestWrapperComponent);
@@ -40,7 +68,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -56,7 +84,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -69,14 +97,14 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the trigger element to hide it
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -90,7 +118,7 @@ describe('KbqTooltip', () => {
             flush();
             expect(overlayContainerElement.textContent).toContain(featureKey);
             dispatchMouseEvent(triggerElement, 'blur');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
@@ -103,7 +131,7 @@ describe('KbqTooltip', () => {
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -119,10 +147,49 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // Move out from the tooltip element to hide it
             dispatchMouseEvent(overlayElement, 'mouseleave');
-            tick(100);
+            tick(tickTime);
             fixture.detectChanges();
             tick(); // wait for next tick to hide
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
+        }));
+
+        it('should hide arrow', fakeAsync(() => {
+            let [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeFalsy();
+
+            // hide tooltip
+            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(tickTime);
+
+            (component as KbqTooltipTestWrapperComponent).arrow = false;
+            fixture.detectChanges();
+
+            [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeTruthy();
+            expect(tooltip?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
+        }));
+
+        it('should change offset for arrowless tooltip', fakeAsync(() => {
+            let [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger);
+
+            expect(tooltip).toBeTruthy();
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltip}px`);
+
+            // hide tooltip
+            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
+            fixture.detectChanges();
+            tick(tickTime);
+
+            (component as KbqTooltipTestWrapperComponent).arrow = false;
+            fixture.detectChanges();
+
+            [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+
+            expect(tooltip).toBeTruthy();
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
         }));
     });
     xdescribe('should support directive usage', () => {
@@ -144,18 +211,39 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.disabled = false;
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick(410);
+            tick(tooltipDefaultEnterDelayWithDefer);
             tick();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
+        }));
+    });
+
+    describe('with TemplateRef', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(KbqTooltipWithTemplateRefContent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should provide info with context', fakeAsync(() => {
+            const trigger = (component as KbqTooltipWithTemplateRefContent).trigger.nativeElement;
+
+            trigger.click();
+            dispatchMouseEvent(trigger, 'focus');
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toEqual(component.tooltipContext.content);
         }));
     });
 });
@@ -227,6 +315,14 @@ class KbqTooltipTestNewComponent {
         >
             Show
         </span>
+        <span
+            #dynamicArrowAndOffsetTrigger
+            [kbqTooltip]="'ArrowAndOffset'"
+            [kbqTooltipArrow]="arrow"
+            [kbqTooltipOffset]="offset"
+        >
+            Show
+        </span>
     `
 })
 class KbqTooltipTestWrapperComponent {
@@ -236,8 +332,12 @@ class KbqTooltipTestWrapperComponent {
     @ViewChild('visibleTrigger', { static: false }) visibleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { static: false }) mostSimpleTrigger: ElementRef;
     @ViewChild('mostSimpleTrigger', { read: KbqTooltipTrigger, static: false }) mostSimpleDirective: KbqTooltipTrigger;
+    @ViewChild('dynamicArrowAndOffsetTrigger', { static: false })
+    dynamicArrowAndOffsetTrigger: ElementRef;
 
     visible: boolean;
+    arrow: boolean = true;
+    offset: number | null = null;
 }
 
 @Component({
@@ -256,4 +356,28 @@ class KbqTooltipTestWrapperComponent {
 class KbqTooltipDisabledComponent {
     @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;
     @ViewChild('disabledAttribute', { read: KbqTooltipTrigger, static: false }) disabledDirective: KbqTooltipTrigger;
+}
+
+@Component({
+    selector: 'kbq-tooltip-wih-template-ref-content',
+    template: `
+        <ng-template
+            #tooltipContent
+            let-ctx
+        >
+            <div>{{ ctx.content }}</div>
+        </ng-template>
+        <button
+            #trigger
+            [kbqTooltip]="tooltipContent"
+            [kbqTooltipContext]="tooltipContext"
+            kbqTrigger="click"
+        >
+            Button
+        </button>
+    `
+})
+class KbqTooltipWithTemplateRefContent {
+    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    tooltipContext = { content: 'TestContent' };
 }

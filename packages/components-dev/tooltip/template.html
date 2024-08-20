@@ -1,13 +1,15 @@
-<ng-template #tooltipContent>
-    <div>
-        В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
-        добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов
-        неизвестным печатником еще в XVI веке.
-    </div>
+<ng-template
+    #tooltipContent
+    let-ctx
+>
+    <div>{{ ctx.content }}</div>
 </ng-template>
 
-<ng-template #tooltipHeader>
-    <span>Header</span>
+<ng-template
+    #tooltipHeader
+    let-ctx
+>
+    <span>{{ ctx.header }}</span>
 </ng-template>
 
 <div class="container flex-100 layout-column layout-align-start-start">
@@ -52,6 +54,8 @@
                         <kbq-option [value]="componentColors.Contrast">Contrast</kbq-option>
                         <kbq-option [value]="componentColors.ContrastFade">ContrastFade</kbq-option>
                         <kbq-option [value]="componentColors.Theme">Theme</kbq-option>
+                        <kbq-option [value]="componentColors.Warning">Warning</kbq-option>
+                        <kbq-option [value]="componentColors.Error">Error</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
             </div>
@@ -311,6 +315,7 @@
                 [kbqPlacement]="selectedPlacement"
                 [kbqPlacementPriority]="multipleSelected"
                 [kbqTooltip]="inputText"
+                [kbqTooltipArrow]="false"
                 [kbqTooltipColor]="selectedColor"
                 [kbqTrigger]="selectedTrigger"
                 (kbqPlacementChange)="onPlacementChange($event)"
@@ -325,9 +330,12 @@
                 [kbqExtendedTooltip]="tooltipContent"
                 [kbqPlacement]="selectedPlacement"
                 [kbqPlacementPriority]="multipleSelected"
+                [kbqTooltipArrow]="false"
                 [kbqTooltipClass]="'tooltip-485'"
                 [kbqTooltipColor]="selectedColor"
+                [kbqTooltipContext]="toolTipContext"
                 [kbqTooltipHeader]="tooltipHeader"
+                [kbqTooltipOffset]="123"
                 [kbqTrigger]="selectedTrigger"
                 (kbqPlacementChange)="onPlacementChange($event)"
                 (kbqVisibleChange)="onTooltipVisibleChange($event)"

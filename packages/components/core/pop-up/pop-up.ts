@@ -7,10 +7,14 @@ import { PopUpVisibility } from './constants';
 export abstract class KbqPopUp implements OnDestroy {
     header: string | TemplateRef<any>;
     content: string | TemplateRef<any>;
+    context: { $implicit: any } | null;
 
     classMap = {};
 
     warning: boolean;
+    arrow: boolean;
+
+    offset: number | null;
 
     visibility = PopUpVisibility.Initial;
     visibleChange = new EventEmitter<boolean>();

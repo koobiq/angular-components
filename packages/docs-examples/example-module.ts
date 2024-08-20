@@ -3496,6 +3496,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-toggle"
     }
   },
+  "tooltip-arrow-and-offset": {
+    "packagePath": "components/tooltip/tooltip-arrow-and-offset",
+    "title": "Tooltip Arrow And Offset Example",
+    "componentName": "TooltipArrowAndOffsetExample",
+    "files": [
+      "tooltip-arrow-and-offset-example.ts",
+      "tooltip-arrow-and-offset-example.html",
+      "tooltip-arrow-and-offset-example.css"
+    ],
+    "selector": "tooltip-arrow-and-offset-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-arrow-and-offset-example.ts",
+    "module": {
+      "name": "TooltipExamplesModule",
+      "importSpecifier": "components/tooltip",
+      "importPath": "koobiq-docs-examples-components-tooltip"
+    }
+  },
   "tooltip-extended": {
     "packagePath": "components/tooltip/tooltip-extended",
     "title": "Extended tooltip",
@@ -3598,6 +3616,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-placement-edges-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-placement-edges-example.ts",
+    "module": {
+      "name": "TooltipExamplesModule",
+      "importSpecifier": "components/tooltip",
+      "importPath": "koobiq-docs-examples-components-tooltip"
+    }
+  },
+  "tooltip-style": {
+    "packagePath": "components/tooltip/tooltip-style",
+    "title": "Tooltip Style",
+    "componentName": "TooltipStyleExample",
+    "files": [
+      "tooltip-style-example.ts",
+      "tooltip-style-example.html",
+      "tooltip-style-example.css"
+    ],
+    "selector": "tooltip-style-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-style-example.ts",
     "module": {
       "name": "TooltipExamplesModule",
       "importSpecifier": "components/tooltip",
