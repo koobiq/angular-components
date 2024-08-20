@@ -30,8 +30,6 @@ module.exports = () => {
             'junit'
         ],
 
-        files: [{ pattern: '../../dist/components/prebuilt-themes/light-theme.css', included: true, watched: true }],
-
         port: 9876,
         colors: true,
         logLevel: constants.LOG_INFO,

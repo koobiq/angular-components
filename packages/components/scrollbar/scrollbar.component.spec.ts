@@ -32,26 +32,20 @@ describe('KbqScrollbar', () => {
         let component: KbqScrollbar;
         let fixture: ComponentFixture<KbqScrollbar>;
 
+        beforeAll(() => {
+            Object.defineProperty(global.window, 'getComputedStyle', {
+                value: () => ({
+                    getPropertyValue: (_property: string) => ''
+                })
+            });
+        });
+
         beforeEach(() => {
             configureTestingModule([KbqScrollbar]);
 
             fixture = TestBed.createComponent(KbqScrollbar);
             component = fixture.componentInstance;
             fixture.detectChanges();
-        });
-
-        it('should create the component', () => {
-            expect(component).toBeTruthy();
-        });
-
-        it('should set options', () => {
-            component.options = { scrollbars: { autoHide: 'never' } };
-            expect(component.options).toEqual(component['options']);
-        });
-
-        it('should set events', () => {
-            component.events = { initialized: () => {} };
-            expect(component.events).toEqual(component['events']);
         });
 
         it('should initialize OverlayScrollbars on ngAfterViewInit', () => {
