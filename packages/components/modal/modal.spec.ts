@@ -2,18 +2,16 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, NgModule } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
-import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { ModalSize } from './modal.type';
 
 describe('KbqModal', () => {
     let modalService: KbqModalService;
@@ -481,90 +479,8 @@ describe('KbqModal', () => {
 
             flush();
         }));
-
-        xit('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-            const fixtureComponent = TestBed.createComponent(ModalByServiceFromDropdownComponent);
-            buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
-            fixtureComponent.detectChanges();
-
-            expect(document.activeElement).not.toBe(buttonElement);
-
-            buttonElement.click();
-            fixtureComponent.detectChanges();
-            tick();
-
-            const dropdownItems = fixtureComponent.debugElement
-                .queryAll(By.directive(KbqDropdownItem))
-                .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
-
-            dropdownItems[0].click();
-            fixtureComponent.detectChanges();
-            tick();
-
-            const activeElement: HTMLButtonElement | null = document.activeElement as HTMLButtonElement;
-
-            expect(activeElement).not.toBe(buttonElement);
-            expect(activeElement).not.toBe(dropdownItems[0]);
-            expect(activeElement).toBeTruthy();
-
-            if (activeElement) {
-                expect(activeElement.textContent?.trim()).toEqual(fixtureComponent.componentInstance.kbqOkText);
-            }
-
-            flush();
-        }));
     });
 });
-
-@Component({
-    selector: 'mc-modal-by-service-from-dropdown',
-    template: `
-        <kbq-modal
-            [(kbqVisible)]="nonServiceModalVisible"
-            kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
-        />
-        <button
-            class="template-button"
-            [kbqDropdownTriggerFor]="dropdown"
-            kbq-button
-        >
-            Open modal from dropdown
-        </button>
-        <kbq-dropdown #dropdown>
-            <ng-template kbqDropdownContent>
-                <button
-                    (click)="showConfirm()"
-                    kbq-dropdown-item
-                >
-                    open Component Modal
-                </button>
-            </ng-template>
-        </kbq-dropdown>
-    `,
-    // Testing for service with parent service
-    providers: [KbqModalControlService]
-})
-class ModalByServiceFromDropdownComponent {
-    nonServiceModalVisible = false;
-    kbqOkText = 'Save';
-
-    constructor(
-        public modalControlService: KbqModalControlService,
-        public modalService: KbqModalService
-    ) {}
-
-    showConfirm() {
-        this.modalService.success({
-            kbqSize: ModalSize.Small,
-            kbqRestoreFocus: false,
-            kbqMaskClosable: true,
-            kbqContent: 'Save all?',
-            kbqOkText: this.kbqOkText,
-            kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
-        });
-    }
-}
 
 @Component({
     template: `
@@ -593,8 +509,7 @@ class ModalByServiceComponent {
 
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,
-    TestModalContentComponent,
-    ModalByServiceFromDropdownComponent
+    TestModalContentComponent
 ];
 
 @NgModule({
