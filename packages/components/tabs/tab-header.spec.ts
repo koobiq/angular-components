@@ -200,17 +200,6 @@ describe('KbqTabHeader', () => {
                 appComponent = fixture.componentInstance;
             });
 
-            xit('should show width when tab list width exceeds container', () => {
-                fixture.detectChanges();
-                expect(appComponent.tabHeader.showPaginationControls).toBe(false);
-
-                // Add enough tabs that it will obviously exceed the width
-                appComponent.addTabsForScrolling();
-                fixture.detectChanges();
-
-                expect(appComponent.tabHeader.showPaginationControls).toBe(true);
-            });
-
             it('should scroll to show the focused tab label', () => {
                 appComponent.addTabsForScrolling();
                 fixture.detectChanges();
