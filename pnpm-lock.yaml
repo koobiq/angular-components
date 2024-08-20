@@ -127,8 +127,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       '@koobiq/design-tokens':
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^3.3.1
+        version: 3.3.1
       '@koobiq/luxon-date-adapter':
         specifier: ^3.1.2
         version: 3.1.2(@koobiq/date-adapter@3.1.2)(luxon@3.4.4)
@@ -136,8 +136,8 @@ importers:
         specifier: ^3.1.2
         version: 3.1.2(@koobiq/date-adapter@3.1.2)(moment@2.29.4)
       '@koobiq/tokens-builder':
-        specifier: 3.3.0
-        version: 3.3.0
+        specifier: 3.3.1
+        version: 3.3.1
       '@messageformat/core':
         specifier: ^3.0.1
         version: 3.3.0
@@ -2442,8 +2442,8 @@ packages:
       '@koobiq/date-adapter': ^3.0.0
       '@messageformat/core': ^3.2.0
 
-  '@koobiq/design-tokens@3.3.0':
-    resolution: {integrity: sha512-cGBY/eqXHcG6Z4v1g12QjjVbnuNBJeno17YMvEOwdUy1fZLqe4ApfTN/qqX+qzx7p/QPCAX9gUXJcMIfmjK5Gw==}
+  '@koobiq/design-tokens@3.3.1':
+    resolution: {integrity: sha512-+8kaKyM5giqdtB1ngh2ZF5axaGzmpNAHtE+jgm4H2WAgmS+tp6nEcLIb3Hn7Vy0z8byy08GW2PsWe6I9qM5sHQ==}
 
   '@koobiq/icons@7.1.1':
     resolution: {integrity: sha512-gU5uDyRVQd0/K0kAdERg2pmDgC9AT+x6iAlEVoyh+w65JdYZv91Ogy3wsSLSeoBLy4vGjrnjVElAdGMYuvF0Jg==}
@@ -2461,8 +2461,8 @@ packages:
       '@koobiq/date-adapter': ^3.0.0
       moment: ^2.24.0
 
-  '@koobiq/tokens-builder@3.3.0':
-    resolution: {integrity: sha512-xI+TZSyssXNQfdF1TYqF9GJdq5Nv0B64jMCd9xk/vGVIZ/9gmN9KS2QVO7a7lRU9bVRyqzF7w4yurbMOTw6cbA==}
+  '@koobiq/tokens-builder@3.3.1':
+    resolution: {integrity: sha512-h54lrOZd9GEBnU84x4GjXLdb8On2A8jC8bJUUhf2iIVVYbN7MCKOzs0kmHDSzwxDskcEu46HkbENuKbk6QbD7w==}
 
   '@leichtgewicht/ip-codec@2.0.4':
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
@@ -11260,7 +11260,7 @@ snapshots:
       '@koobiq/date-adapter': 3.1.2
       '@messageformat/core': 3.3.0
 
-  '@koobiq/design-tokens@3.3.0': {}
+  '@koobiq/design-tokens@3.3.1': {}
 
   '@koobiq/icons@7.1.1': {}
 
@@ -11274,7 +11274,7 @@ snapshots:
       '@koobiq/date-adapter': 3.1.2
       moment: 2.29.4
 
-  '@koobiq/tokens-builder@3.3.0': {}
+  '@koobiq/tokens-builder@3.3.1': {}
 
   '@leichtgewicht/ip-codec@2.0.4': {}
 
