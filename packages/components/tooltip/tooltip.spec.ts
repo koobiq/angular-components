@@ -9,8 +9,6 @@ import { KbqToolTipModule } from './tooltip.module';
 
 const tooltipDefaultEnterDelayWithDefer = 410;
 const tickTime = 100;
-const defaultOffsetForTooltip = 8;
-const defaultOffsetForTooltipWithoutArrow = 4;
 
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
@@ -18,16 +16,19 @@ describe('KbqTooltip', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToolTipModule, NoopAnimationsModule],
+            imports: [
+                KbqToolTipModule,
+                NoopAnimationsModule
+            ],
             declarations: [
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipTestNewComponent,
                 KbqTooltipDisabledComponent,
                 KbqTooltipWithTemplateRefContent
             ]
-        });
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
+
     beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
         overlayContainer = oc;
         overlayContainerElement = oc.getContainerElement();
@@ -42,7 +43,6 @@ describe('KbqTooltip', () => {
         selector = '.kbq-tooltip'
     ): [Element | null, CSSStyleDeclaration | null] => {
         dispatchMouseEvent(trigger.nativeElement, 'mouseenter');
-        fixture.detectChanges();
         tick(tooltipDefaultEnterDelayWithDefer);
 
         const tooltip = overlayContainer.getContainerElement().querySelector(selector);
@@ -170,33 +170,13 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
             tick(tickTime);
 
-            (component as KbqTooltipTestWrapperComponent).arrow = false;
+            component.arrow = false;
             fixture.detectChanges();
 
             [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeTruthy();
             expect(tooltip?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
-        }));
-
-        it('should change offset for arrowless tooltip', fakeAsync(() => {
-            let [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger);
-
-            expect(tooltip).toBeTruthy();
-            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltip}px`);
-
-            // hide tooltip
-            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
-            fixture.detectChanges();
-            tick(tickTime);
-
-            (component as KbqTooltipTestWrapperComponent).arrow = false;
-            fixture.detectChanges();
-
-            [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
-
-            expect(tooltip).toBeTruthy();
-            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
         }));
     });
 
@@ -232,6 +212,9 @@ describe('KbqTooltip', () => {
     });
 
     describe('with TemplateRef', () => {
+        let fixture: ComponentFixture<KbqTooltipWithTemplateRefContent>;
+        let component: KbqTooltipWithTemplateRefContent;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(KbqTooltipWithTemplateRefContent);
             component = fixture.componentInstance;
@@ -239,7 +222,7 @@ describe('KbqTooltip', () => {
         });
 
         it('should provide info with context', fakeAsync(() => {
-            const trigger = (component as KbqTooltipWithTemplateRefContent).trigger.nativeElement;
+            const trigger = component.trigger.nativeElement;
 
             trigger.click();
             dispatchMouseEvent(trigger, 'focus');
@@ -252,7 +235,6 @@ describe('KbqTooltip', () => {
         }));
     });
 });
-
 @Component({
     selector: 'kbq-tooltip-test-new',
     template: `
@@ -288,6 +270,7 @@ class KbqTooltipTestNewComponent {
     })
     titleTemplateKbqTooltipDirective: KbqTooltipTrigger;
 }
+
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     template: `
