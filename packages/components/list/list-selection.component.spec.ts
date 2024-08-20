@@ -850,37 +850,6 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
         expect(ngModel.value.length).toBe(2);
     });
-
-    xit('should update model when items selected by pressing SHIFT + arrows', () => {
-        const manager = selectionList.componentInstance.keyManager;
-
-        const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
-        const DOWN_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-        const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW);
-
-        Object.defineProperty(UP_EVENT, 'shiftKey', { get: () => true });
-        Object.defineProperty(DOWN_EVENT, 'shiftKey', { get: () => true });
-
-        expect(ngModel.value.length).toBe(0);
-
-        manager.setFirstItemActive();
-        fixture.detectChanges();
-
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(3);
-
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(UP_EVENT);
-
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(1);
-    });
 });
 
 @Component({
