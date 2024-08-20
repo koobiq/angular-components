@@ -181,6 +181,10 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
 
     set disabled(value) {
         this._disabled = coerceBooleanProperty(value);
+
+        if (this._disabled) {
+            this.hide();
+        }
     }
 
     @Input('kbqTrigger')
