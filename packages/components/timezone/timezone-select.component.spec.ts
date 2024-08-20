@@ -1,6 +1,6 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -576,36 +576,6 @@ describe('KbqTimezoneSelect', () => {
                     expect(options[1].classList).not.toContain('kbq-selected');
                 }));
             });
-
-            describe('disabled behavior', () => {
-                xit('should disable itself when control is disabled programmatically', fakeAsync(() => {
-                    const fixture = TestBed.createComponent(BasicTimezoneSelect);
-                    fixture.detectChanges();
-
-                    fixture.componentInstance.control.disable();
-                    fixture.detectChanges();
-                    const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                    expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
-
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(overlayContainerElement.textContent).toEqual('');
-                    expect(fixture.componentInstance.select.panelOpen).toBe(false);
-
-                    fixture.componentInstance.control.enable();
-                    fixture.detectChanges();
-                    expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('pointer');
-
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(overlayContainerElement.textContent).toContain('UTC−02:00city1city4');
-                    expect(fixture.componentInstance.select.panelOpen).toBe(true);
-                }));
-            });
         });
     });
 
@@ -758,28 +728,6 @@ describe('KbqTimezoneSelect', () => {
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(0);
-        }));
-
-        xit('should display tooltip if ellipse applied', fakeAsync(() => {
-            trigger.click();
-            fixture.autoDetectChanges();
-
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-timezone-option');
-
-            options[2].style.width = '200px';
-            dispatchMouseEvent(options[2], 'mouseenter');
-            fixture.autoDetectChanges();
-
-            window.dispatchEvent(new Event('resize'));
-            fixture.autoDetectChanges();
-            flush();
-
-            discardPeriodicTasks();
-
-            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
-
-            expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toContain(longOptionText);
         }));
     });
 });
