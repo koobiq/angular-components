@@ -46,7 +46,7 @@ function checkDirection<T>(
 }
 
 @Component({
-    selector: 'kbq-demo-spllitter',
+    selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter>
             <div kbq-splitter-area>first</div>
@@ -58,7 +58,7 @@ function checkDirection<T>(
 class KbqSplitterDefaultDirection {}
 
 @Component({
-    selector: 'kbq-demo-spllitter',
+    selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter [direction]="direction">
             <div kbq-splitter-area>first</div>
@@ -72,7 +72,7 @@ class KbqSplitterDirection {
 }
 
 @Component({
-    selector: 'kbq-demo-spllitter',
+    selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter (gutterPositionChange)="gutterPositionChange()">
             <div
@@ -101,7 +101,7 @@ class KbqSplitterEvents {
 }
 
 @Component({
-    selector: 'kbq-demo-spllitter',
+    selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter
             #splitter
@@ -134,7 +134,7 @@ class KbqSplitterGhost {
 }
 
 @Component({
-    selector: 'kbq-demo-spllitter',
+    selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter
             [direction]="direction"
@@ -246,35 +246,6 @@ describe('KbqSplitter', () => {
             expect(ghostGutters.length).toBe(1);
         }));
 
-        xit('should display ghost gutter after mousedown and hide after mouseup', fakeAsync(() => {
-            const fixture = createTestComponent(KbqSplitterGhost);
-
-            fixture.detectChanges();
-
-            tick();
-
-            const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
-            const ghostGutters = fixture.debugElement.queryAll(By.directive(KbqGutterGhostDirective));
-
-            const elementStyleBeforeMouseDown = getComputedStyle(ghostGutters[0].nativeElement).display;
-
-            gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
-
-            fixture.detectChanges();
-
-            const elementStyleAfterMouseDown = getComputedStyle(ghostGutters[0].nativeElement).display;
-
-            document.dispatchEvent(new Event('mouseup'));
-
-            fixture.detectChanges();
-
-            const elementStyleAfterMouseUp = getComputedStyle(ghostGutters[0].nativeElement).display;
-
-            expect(elementStyleBeforeMouseDown === 'none').toBeTruthy();
-            expect(elementStyleAfterMouseDown === 'none').toBeFalsy();
-            expect(elementStyleAfterMouseUp === 'none').toBeTruthy();
-        }));
-
         it('should not resize areas when moving gutter', fakeAsync(() => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
@@ -297,34 +268,6 @@ describe('KbqSplitter', () => {
 
             expect(fixture.componentInstance.areaA.getSize()).toBe(areaAInitialSize);
             expect(fixture.componentInstance.areaB.getSize()).toBe(areaBInitialSize);
-        }));
-
-        xit('should resize areas after releasing gutter', fakeAsync(() => {
-            const fixture = createTestComponent(KbqSplitterGhost);
-
-            fixture.detectChanges();
-
-            tick();
-
-            const areaAInitialSize: number = fixture.componentInstance.areaA.getSize();
-            const areaBInitialSize: number = fixture.componentInstance.areaB.getSize();
-            const mouseOffset = -10;
-
-            const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
-            gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
-
-            fixture.detectChanges();
-
-            document.dispatchEvent(new MouseEvent('mousemove', { screenX: mouseOffset, screenY: 0 }));
-
-            fixture.detectChanges();
-
-            document.dispatchEvent(new Event('mouseup'));
-
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.areaA.getSize()).toBe(areaAInitialSize + mouseOffset);
-            expect(fixture.componentInstance.areaB.getSize()).toBe(areaBInitialSize - mouseOffset);
         }));
 
         // todo this TC fail on CI
