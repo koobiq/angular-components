@@ -171,6 +171,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     set disabled(value) {
         this._disabled = coerceBooleanProperty(value);
+
+        if (this._disabled) {
+            this.hide();
+        }
     }
 
     @Input('kbqEnterDelay') enterDelay = 400;
