@@ -14,14 +14,21 @@
             <button
                 kbq-button
                 [color]="'contrast'"
+                (click)="kbqPopover.hide(0)"
             >
                 Сохранить
             </button>
-            <button kbq-button>Отмена</button>
+            <button
+                kbq-button
+                (click)="kbqPopover.hide(0)"
+            >
+                Отмена
+            </button>
         </div>
     </ng-template>
 
     <button
+        #kbqPopover="kbqPopover"
         kbq-button
         kbqPopover
         [kbqPopoverClass]="'common-example'"
