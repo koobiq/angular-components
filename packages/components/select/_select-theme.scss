@@ -33,8 +33,8 @@
     }
 
     .kbq-select__panel {
-        box-shadow: kbq-css-variable(select-panel-shadow, map.get($select-panel, shadow));
-        background: kbq-css-variable(select-panel-background, map.get($select-panel, background));
+        box-shadow: kbq-css-variable(select-panel-dropdown-shadow, map.get($select-panel, shadow));
+        background: kbq-css-variable(select-panel-dropdown-background, map.get($select-panel, background));
 
         & .kbq-select__footer {
             border-color: kbq-css-variable(divider-color, map.get($divider, color));

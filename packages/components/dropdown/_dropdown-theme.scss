@@ -9,10 +9,10 @@
     $state: map.get($component, $style-name);
 
     background: kbq-css-variable(list-#{$style-name}-container-background, map.get($state, container-background));
-    color: kbq-css-variable(list-#{$style-name}-text, map.get($state, text));
+    color: kbq-css-variable(list-#{$style-name}-text-color, map.get($state, text));
 
     .kbq-dropdown-item__caption {
-        color: kbq-css-variable(list-#{$style-name}-caption, map.get($state, caption));
+        color: kbq-css-variable(list-#{$style-name}-caption-color, map.get($state, caption));
     }
 }
 
@@ -20,8 +20,8 @@
     $dropdown: map.get(map.get($theme, components), dropdown);
 
     .kbq-dropdown__panel {
-        box-shadow: kbq-css-variable(dropdown-box-shadow, map.get($dropdown, box-shadow));
-        background: kbq-css-variable(dropdown-background, map.get($dropdown, background));
+        box-shadow: kbq-css-variable(dropdown-container-box-shadow, map.get($dropdown, box-shadow));
+        background: kbq-css-variable(dropdown-container-background, map.get($dropdown, background));
     }
 
     .kbq-dropdown-item {

@@ -67,19 +67,25 @@
     }
 }
 
-@mixin kbq-link-state($component, $state-name) {
-    $state: map.get($component, $state-name);
+@mixin kbq-link-state($component, $state-name: null) {
+    $state: $component;
+    $state-path: link;
 
-    color: kbq-css-variable(link-#{$state-name}-text, map.get($state, text));
+    @if $state-name {
+        $state: map.get($component, $state-name);
+        $state-path: link-#{$state-name};
+    }
+
+    color: kbq-css-variable(#{$state-path}-text, map.get($state, text));
 
     &.kbq-text-only,
     &.kbq-text-with-icon .kbq-link__text,
     &.kbq-text-with-dot .kbq-link__text {
-        border-bottom-color: kbq-css-variable(link-#{$state-name}-border-bottom, map.get($state, border-bottom));
+        border-bottom-color: kbq-css-variable(#{$state-path}-border-bottom, map.get($state, border-bottom));
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(link-#{$state-name}-text, map.get($state, text)) !important;
+        color: kbq-css-variable(#{$state-path}-text, map.get($state, text)) !important;
     }
 }
 
@@ -91,7 +97,7 @@
     .kbq-link {
         @include kbq-link-geometry($tokens);
 
-        @include kbq-link-state($link, default);
+        @include kbq-link-state($link);
 
         transition: color ease-out 300ms;
 

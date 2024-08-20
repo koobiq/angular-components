@@ -88,11 +88,11 @@
 
         &.kbq-button_transparent {
             &.kbq-theme {
-                @include kbq-button-type($button, transparent, theme);
+                @include kbq-button-type($button, transparent, theme-fade-on);
             }
 
             &.kbq-contrast {
-                @include kbq-button-type($button, transparent, contrast);
+                @include kbq-button-type($button, transparent, contrast-fade-on);
             }
         }
 

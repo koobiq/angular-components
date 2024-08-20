@@ -16,18 +16,18 @@
 
     &.kbq-checked,
     &.kbq-indeterminate {
-        border-color: kbq-css-variable(#{$base}-checked-border, map.get($style, checked, border));
-        background: kbq-css-variable(#{$base}-checked-background, map.get($style, checked, background));
+        border-color: kbq-css-variable(#{$base}-states-checked-border, map.get($style, checked, border));
+        background: kbq-css-variable(#{$base}-states-checked-background, map.get($style, checked, background));
     }
 
     &.kbq-disabled {
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
-            color: kbq-css-variable(#{$base}-disabled-color, map.get($style, disabled, color));
+            color: kbq-css-variable(#{$base}-states-disabled-color, map.get($style, disabled, color));
         }
 
-        border-color: kbq-css-variable(#{$base}-disabled-border, map.get($style, disabled, border));
-        background: kbq-css-variable(#{$base}-disabled-background, map.get($style, disabled, background));
+        border-color: kbq-css-variable(#{$base}-states-disabled-border, map.get($style, disabled, border));
+        background: kbq-css-variable(#{$base}-states-disabled-background, map.get($style, disabled, background));
     }
 }
 

@@ -254,7 +254,7 @@
             )
         ),
         transparent: (
-            theme: (
+            theme-fade-on: (
                 border: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-border'),
                 foreground: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-foreground'),
                 background: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-background'),
@@ -271,7 +271,7 @@
                 states-disabled-right-icon:
                     map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-right-icon')
             ),
-            contrast: (
+            contrast-fade-on: (
                 border: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-border'),
                 foreground: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-foreground'),
                 background: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-background'),
@@ -885,10 +885,8 @@
     );
 
     $link: (
-        default: (
-            text: map.get($tokens, 'link-#{$scheme}-text'),
-            border-bottom: map.get($tokens, 'link-#{$scheme}-border-bottom')
-        ),
+        text: map.get($tokens, 'link-#{$scheme}-text'),
+        border-bottom: map.get($tokens, 'link-#{$scheme}-border-bottom'),
         state-visited: (
             text: map.get($tokens, 'link-#{$scheme}-state-visited-text'),
             border-bottom: map.get($tokens, 'link-#{$scheme}-state-visited-border-bottom')

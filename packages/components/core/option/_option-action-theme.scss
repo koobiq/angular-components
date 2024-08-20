@@ -17,7 +17,7 @@
         &:active,
         &.kbq-pressed {
             & .kbq-icon {
-                color: kbq-css-variable(states-icon-contrast-fade, map.get($states, icon, contrast-fade));
+                color: kbq-css-variable(states-icon-contrast-fade-active, map.get($states, icon, contrast-fade-active));
             }
 
             background-color: kbq-css-variable(background-transparent, map.get($background, transparent));

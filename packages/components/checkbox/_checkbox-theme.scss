@@ -30,18 +30,21 @@
     &:hover,
     &.kbq-hover {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-hover-border, map.get($style, hover, border));
+            border-color: kbq-css-variable(#{$base}-states-hover-border, map.get($style, hover, border));
 
-            background-color: kbq-css-variable(#{$base}-hover-background, map.get($style, hover, background));
+            background-color: kbq-css-variable(#{$base}-states-hover-background, map.get($style, hover, background));
         }
     }
 
     &.kbq-checked,
     &.kbq-indeterminate {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-checked-border, map.get($style, checked, border));
+            border-color: kbq-css-variable(#{$base}-states-checked-border, map.get($style, checked, border));
 
-            background-color: kbq-css-variable(#{$base}-checked-background, map.get($style, checked, background));
+            background-color: kbq-css-variable(
+                #{$base}-states-checked-background,
+                map.get($style, checked, background)
+            );
         }
     }
 
@@ -50,10 +53,10 @@
         &:hover,
         &.kbq-hover {
             .kbq-checkbox__frame {
-                border-color: kbq-css-variable(#{$base}-hover-border, map.get($style, checked-hover, border));
+                border-color: kbq-css-variable(#{$base}-states-hover-border, map.get($style, checked-hover, border));
 
                 background-color: kbq-css-variable(
-                    #{$base}-hover-background,
+                    #{$base}-states-hover-background,
                     map.get($style, checked-hover, background)
                 );
             }
@@ -61,41 +64,50 @@
 
         & .kbq-checkbox-input.cdk-keyboard-focused {
             + .kbq-checkbox__frame {
-                border-color: kbq-css-variable(#{$base}-focused-border, map.get($style, checked-focused, border));
+                border-color: kbq-css-variable(
+                    #{$base}-states-focused-border,
+                    map.get($style, checked-focused, border)
+                );
                 background-color: kbq-css-variable(
-                    #{$base}-focused-background,
+                    #{$base}-states-focused-background,
                     map.get($style, checked-focused, background)
                 );
-                outline: kbq-css-variable(#{$base}-focused-outline, map.get($style, checked-focused, outline));
+                outline: kbq-css-variable(#{$base}-states-focused-outline, map.get($style, checked-focused, outline));
             }
         }
     }
 
     & .kbq-checkbox-input.cdk-keyboard-focused {
         + .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-focused-border, map.get($style, focused, border));
-            background-color: kbq-css-variable(#{$base}-focused-background, map.get($style, focused, background));
-            outline: kbq-css-variable(#{$base}-focused-outline, map.get($style, focused, outline));
+            border-color: kbq-css-variable(#{$base}-states-focused-border, map.get($style, focused, border));
+            background-color: kbq-css-variable(
+                #{$base}-states-focused-background,
+                map.get($style, focused, background)
+            );
+            outline: kbq-css-variable(#{$base}-states-focused-outline, map.get($style, focused, outline));
         }
     }
 
     &.kbq-disabled {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-disabled-border, map.get($style, disabled, border));
-            background-color: kbq-css-variable(#{$base}-disabled-background, map.get($style, disabled, background));
+            border-color: kbq-css-variable(#{$base}-states-disabled-border, map.get($style, disabled, border));
+            background-color: kbq-css-variable(
+                #{$base}-states-disabled-background,
+                map.get($style, disabled, background)
+            );
 
             & .kbq-checkbox-checkmark,
             & .kbq-checkbox-mixedmark {
-                color: kbq-css-variable(#{$base}-disabled-color, map.get($style, disabled, color));
+                color: kbq-css-variable(#{$base}-states-disabled-color, map.get($style, disabled, color));
             }
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: kbq-css-variable(#{$base}-disabled-caption, map.get($style, disabled, caption));
+            color: kbq-css-variable(#{$base}-states-disabled-caption, map.get($style, disabled, caption));
         }
 
         .kbq-checkbox-label {
-            color: kbq-css-variable(#{$base}-disabled-text, map.get($style, disabled, text));
+            color: kbq-css-variable(#{$base}-states-disabled-text, map.get($style, disabled, text));
         }
     }
 }
