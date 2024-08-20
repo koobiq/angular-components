@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testi
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DELETE, TAB } from '@koobiq/cdk/keycodes';
+import { TAB } from '@koobiq/cdk/keycodes';
 import {
     createFakeEvent,
     dispatchEvent,
@@ -11,7 +11,6 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-import { take } from 'rxjs';
 import { createFile } from './file-drop.spec';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
@@ -30,7 +29,6 @@ function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME
 }
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
-const fileItemRowCssClass = 'multiple__uploaded-item';
 
 const fileItemCssClass = 'file-item';
 const fileItemTextCssClass = 'file-item__text';
@@ -104,28 +102,6 @@ describe('MultipleFileUploadComponent', () => {
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
-
-        xit('should remove file via button keydown.delete in a row', () => {
-            component.disabled = false;
-            fixture.detectChanges();
-            const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], 'test.file');
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
-            fixture.detectChanges();
-
-            component.fileUpload.fileQueueChanged.pipe(take(1)).subscribe((value) => {
-                expect(value.length).toBeFalsy();
-            });
-
-            dispatchKeyboardEvent(
-                fixture.debugElement.query(By.css(`.${fileItemRowCssClass}`)).nativeElement,
-                'keydown',
-                DELETE
-            );
-        });
     });
 
     describe('with file queue change', () => {
@@ -358,26 +334,6 @@ describe('SingleFileUploadComponent', () => {
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
-
-        xit('should remove file via button keydown.delete', () => {
-            component.disabled = false;
-            fixture.detectChanges();
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], 'test.file');
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
-            fixture.detectChanges();
-
-            component.fileUpload.fileQueueChange.pipe(take(1)).subscribe((value) => {
-                expect(value).toBeFalsy();
-            });
-
-            dispatchKeyboardEvent(
-                component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`),
-                'keydown',
-                DELETE
-            );
-        });
     });
 
     describe('with file queue change', () => {
