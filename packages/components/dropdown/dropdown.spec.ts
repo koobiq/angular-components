@@ -45,9 +45,7 @@ import {
     KbqDropdownItem,
     KbqDropdownModule,
     KbqDropdownPanel,
-    KbqDropdownTrigger,
-    NESTED_PANEL_LEFT_PADDING,
-    NESTED_PANEL_TOP_PADDING
+    KbqDropdownTrigger
 } from './index';
 
 const PANEL_SELECTOR = '.kbq-dropdown__panel';
@@ -1304,80 +1302,6 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelector(PANEL_SELECTOR)!.contains(document.activeElement)).toBe(true);
         }));
 
-        xit('should position the nested dropdown to the right edge of the trigger in ltr', () => {
-            compileTestComponent();
-            instance.rootTriggerEl.nativeElement.style.position = 'fixed';
-            instance.rootTriggerEl.nativeElement.style.left = '50px';
-            instance.rootTriggerEl.nativeElement.style.top = '50px';
-            instance.rootTrigger.open();
-            fixture.detectChanges();
-
-            instance.levelOneTrigger.open();
-            fixture.detectChanges();
-
-            const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-            const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
-
-            expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left) + NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
-        });
-
-        xit('should fall back to aligning to the left edge of the trigger in ltr', () => {
-            compileTestComponent();
-            instance.rootTriggerEl.nativeElement.style.position = 'fixed';
-            instance.rootTriggerEl.nativeElement.style.right = '10px';
-            instance.rootTriggerEl.nativeElement.style.top = '50%';
-            instance.rootTrigger.open();
-            fixture.detectChanges();
-
-            instance.levelOneTrigger.open();
-            fixture.detectChanges();
-
-            const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-            const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
-
-            expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right) - NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
-        });
-
-        xit('should position the nested dropdown to the left edge of the trigger in rtl', () => {
-            compileTestComponent('rtl');
-            instance.rootTriggerEl.nativeElement.style.position = 'fixed';
-            instance.rootTriggerEl.nativeElement.style.left = '50%';
-            instance.rootTriggerEl.nativeElement.style.top = '50%';
-            instance.rootTrigger.open();
-            fixture.detectChanges();
-
-            instance.levelOneTrigger.open();
-            fixture.detectChanges();
-
-            const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-            const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
-
-            expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right) + NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
-        });
-
-        xit('should fall back to aligning to the right edge of the trigger in rtl', fakeAsync(() => {
-            compileTestComponent('rtl');
-            instance.rootTriggerEl.nativeElement.style.position = 'fixed';
-            instance.rootTriggerEl.nativeElement.style.left = '10px';
-            instance.rootTriggerEl.nativeElement.style.top = '50%';
-            instance.rootTrigger.open();
-            fixture.detectChanges();
-            tick(500);
-
-            instance.levelOneTrigger.open();
-            fixture.detectChanges();
-            tick(500);
-
-            const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
-            const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
-
-            expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left) - NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
-        }));
-
         it('should close all of the dropdowns when an item is clicked', fakeAsync(() => {
             compileTestComponent();
             instance.rootTriggerEl.nativeElement.click();
@@ -1622,18 +1546,6 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
         });
 
-        xit('should display tooltip if text is overflown', fakeAsync(() => {
-            const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
-
-            dispatchMouseEvent(dropdownItems[0], 'mouseenter');
-            fixture.detectChanges();
-            flush();
-
-            const tooltipInstance = overlayContainerElement.querySelector('.kbq-tooltip');
-
-            expect(tooltipInstance).not.toBeNull();
-        }));
-
         it('should NOT display tooltip if text is NOT overflown', fakeAsync(() => {
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
 
@@ -1644,18 +1556,6 @@ describe('KbqDropdown', () => {
             const tooltipInstance = overlayContainerElement.querySelector('.kbq-tooltip');
 
             expect(tooltipInstance).toBeNull();
-        }));
-
-        xit('should display tooltip if text is complex and overflown', fakeAsync(() => {
-            const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
-
-            dispatchMouseEvent(dropdownItems[2], 'mouseenter');
-            fixture.detectChanges();
-            flush();
-
-            const tooltipInstance = overlayContainerElement.querySelector('.kbq-tooltip');
-
-            expect(tooltipInstance).not.toBeNull();
         }));
 
         it('should NOT display tooltip if text is complex and is NOT overflown', fakeAsync(() => {
