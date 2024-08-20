@@ -95,17 +95,6 @@ describe('KbqTabNavBar', () => {
 
             expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === -1)).toBe(true);
         });
-
-        xit('should make disabled links unclickable', () => {
-            const tabLinkElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
-
-            expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe('none');
-
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-
-            expect(getComputedStyle(tabLinkElement).pointerEvents).toBe('none');
-        });
     });
 
     it('should support binding to the tabIndex', () => {
