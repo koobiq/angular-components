@@ -6,17 +6,15 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
             declarations: [
                 ButtonToggleGroupWithNgModel,
                 ButtonToggleGroupWithFormControl
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('using FormControl', () => {
         let fixture: ComponentFixture<ButtonToggleGroupWithFormControl>;
@@ -24,7 +22,7 @@ describe('KbqButtonToggle with forms', () => {
         let groupInstance: KbqButtonToggleGroup;
         let testComponent: ButtonToggleGroupWithFormControl;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ButtonToggleGroupWithFormControl);
             fixture.detectChanges();
 
@@ -32,7 +30,7 @@ describe('KbqButtonToggle with forms', () => {
 
             groupDebugElement = fixture.debugElement.query(By.directive(KbqButtonToggleGroup));
             groupInstance = groupDebugElement.injector.get<KbqButtonToggleGroup>(KbqButtonToggleGroup);
-        }));
+        });
 
         it('should toggle the disabled state', () => {
             testComponent.control.disable();
@@ -55,7 +53,7 @@ describe('KbqButtonToggle with forms', () => {
         });
 
         it('should register the on change callback', () => {
-            const spy = jasmine.createSpy('onChange callback');
+            const spy = jest.fn();
 
             testComponent.control.registerOnChange(spy);
             testComponent.control.setValue('blue');
@@ -74,7 +72,7 @@ describe('KbqButtonToggle with forms', () => {
         let groupNgModel: NgModel;
         let innerButtons: HTMLElement[];
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ButtonToggleGroupWithNgModel);
             fixture.detectChanges();
             testComponent = fixture.debugElement.componentInstance;
@@ -88,7 +86,7 @@ describe('KbqButtonToggle with forms', () => {
             innerButtons = buttonToggleDebugElements.map((debugEl) => debugEl.query(By.css('button')).nativeElement);
 
             fixture.detectChanges();
-        }));
+        });
 
         it('should update the model before firing change event', fakeAsync(() => {
             expect(testComponent.modelValue).toBeUndefined();
@@ -154,9 +152,12 @@ describe('KbqButtonToggle with forms', () => {
 });
 
 describe('KbqButtonToggle without forms', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule, KbqButtonToggleModule],
+            imports: [
+                KbqButtonModule,
+                KbqButtonToggleModule
+            ],
             declarations: [
                 ButtonTogglesInsideButtonToggleGroup,
                 ButtonTogglesInsideButtonToggleGroupMultiple,
@@ -165,10 +166,8 @@ describe('KbqButtonToggle without forms', () => {
                 StandaloneButtonToggle,
                 RepeatedButtonTogglesWithPreselectedValue
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('inside of an exclusive selection group', () => {
         let fixture: ComponentFixture<ButtonTogglesInsideButtonToggleGroup>;
@@ -287,7 +286,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event from button toggles', fakeAsync(() => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
-            const changeSpy = jasmine.createSpy('button-toggle change listener');
+            const changeSpy = jest.fn();
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
             buttonToggleLabelElements[0].click();
@@ -306,7 +305,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event from the button toggle group', fakeAsync(() => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jasmine.createSpy('button-toggle-group change listener');
+            const changeSpy = jest.fn();
             groupInstance.change.subscribe(changeSpy);
 
             buttonToggleLabelElements[0].click();
@@ -401,7 +400,7 @@ describe('KbqButtonToggle without forms', () => {
         let buttonToggleInstances: KbqButtonToggle[];
         let testComponent: ButtonTogglesInsideButtonToggleGroupMultiple;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
             fixture.detectChanges();
 
@@ -417,7 +416,7 @@ describe('KbqButtonToggle without forms', () => {
                 .queryAll(By.css('button'))
                 .map((debugEl) => debugEl.nativeElement);
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
-        }));
+        });
 
         it('should disable click interactions when the group is disabled', () => {
             testComponent.isGroupDisabled = true;
@@ -491,7 +490,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event for state changes', fakeAsync(() => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
-            const changeSpy = jasmine.createSpy('button-toggle change listener');
+            const changeSpy = jest.fn();
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
             buttonToggleButtonElements[0].click();
@@ -524,7 +523,7 @@ describe('KbqButtonToggle without forms', () => {
         let buttonToggleButtonElement: HTMLLabelElement;
         let buttonToggleInstance: KbqButtonToggle;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(StandaloneButtonToggle);
             fixture.detectChanges();
 
@@ -532,7 +531,7 @@ describe('KbqButtonToggle without forms', () => {
             buttonToggleButtonElement = fixture.debugElement.query(By.css('button')).nativeElement;
 
             buttonToggleInstance = buttonToggleDebugElement.componentInstance;
-        }));
+        });
 
         it('should toggle when clicked', fakeAsync(() => {
             buttonToggleButtonElement.click();
@@ -551,7 +550,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event for state changes', fakeAsync(() => {
             expect(buttonToggleInstance.checked).toBe(false);
 
-            const changeSpy = jasmine.createSpy('button-toggle change listener');
+            const changeSpy = jest.fn();
             buttonToggleInstance.change.subscribe(changeSpy);
 
             buttonToggleButtonElement.click();

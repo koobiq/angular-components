@@ -8,7 +8,7 @@ import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
 describe('KbqCheckbox', () => {
     let fixture: ComponentFixture<any>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
             declarations: [
@@ -25,10 +25,8 @@ describe('KbqCheckbox', () => {
                 CheckboxWithoutLabel,
                 CheckboxUsingViewChild
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('basic behaviors', () => {
         let checkboxDebugElement: DebugElement;
@@ -74,9 +72,7 @@ describe('KbqCheckbox', () => {
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
             expect(inputElement.checked).toBe(false);
             expect(inputElement.indeterminate).toBe(false);
-            expect(inputElement.getAttribute('aria-checked'))
-                .withContext('Expect aria-checked to be false')
-                .toBe('false');
+            expect(inputElement.getAttribute('aria-checked')).toBe('false');
 
             testComponent.isIndeterminate = true;
             fixture.detectChanges();
@@ -84,9 +80,7 @@ describe('KbqCheckbox', () => {
             expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
             expect(inputElement.checked).toBe(false);
             expect(inputElement.indeterminate).toBe(true);
-            expect(inputElement.getAttribute('aria-checked'))
-                .withContext('Expect aria checked to be mixed for indeterminate checkbox')
-                .toBe('mixed');
+            expect(inputElement.getAttribute('aria-checked')).toBe('mixed');
 
             testComponent.isIndeterminate = false;
             fixture.detectChanges();
@@ -126,9 +120,7 @@ describe('KbqCheckbox', () => {
             expect(inputElement.indeterminate).toBe(true);
             expect(inputElement.checked).toBe(true);
             expect(testComponent.isIndeterminate).toBe(true);
-            expect(inputElement.getAttribute('aria-checked'))
-                .withContext('Expect aria checked to be true')
-                .toBe('true');
+            expect(inputElement.getAttribute('aria-checked')).toBe('true');
 
             inputElement.click();
             fixture.detectChanges();
@@ -297,7 +289,7 @@ describe('KbqCheckbox', () => {
             // Since we're using a label element and a visual hidden input, this behavior can led
             // to an issue, where the click events on the checkbox are getting executed twice.
 
-            spyOn(testComponent, 'onCheckboxClick');
+            const onCheckboxClickSpyFn = jest.spyOn(testComponent, 'onCheckboxClick');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -308,11 +300,11 @@ describe('KbqCheckbox', () => {
             expect(checkboxNativeElement.classList).toContain('kbq-checked');
             expect(inputElement.checked).toBe(true);
 
-            expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(onCheckboxClickSpyFn).toHaveBeenCalledTimes(1);
         });
 
         it('should trigger a change event when the native input does', fakeAsync(() => {
-            spyOn(testComponent, 'onCheckboxChange');
+            const onCheckboxChangeSpyFn = jest.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -328,11 +320,11 @@ describe('KbqCheckbox', () => {
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
-            expect(testComponent.onCheckboxChange).toHaveBeenCalledTimes(1);
+            expect(onCheckboxChangeSpyFn).toHaveBeenCalledTimes(1);
         }));
 
         it('should not trigger the change event by changing the native value', fakeAsync(() => {
-            spyOn(testComponent, 'onCheckboxChange');
+            const onCheckboxChangeSpyFn = jest.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -348,7 +340,7 @@ describe('KbqCheckbox', () => {
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
-            expect(testComponent.onCheckboxChange).not.toHaveBeenCalled();
+            expect(onCheckboxChangeSpyFn).not.toHaveBeenCalled();
         }));
 
         it('should forward the required attribute', () => {
@@ -506,7 +498,7 @@ describe('KbqCheckbox', () => {
 
                 expect(inputElement.checked).toBe(false);
                 expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
-                expect(inputElement.indeterminate).withContext('indeterminate should not change').toBe(true);
+                expect(inputElement.indeterminate).toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
             }));
         });
@@ -533,7 +525,7 @@ describe('KbqCheckbox', () => {
         });
 
         it('should emit the event to the change observable', () => {
-            const changeSpy = jasmine.createSpy('onChangeObservable');
+            const changeSpy = jest.fn();
 
             checkboxInstance.change.subscribe(changeSpy);
 

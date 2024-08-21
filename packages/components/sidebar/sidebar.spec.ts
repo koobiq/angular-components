@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
 describe('Sidebar', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -14,23 +14,21 @@ describe('Sidebar', () => {
                 KbqSidebarModule
             ],
             declarations: [SimpleSidebar]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('base', () => {
         let fixture: ComponentFixture<SimpleSidebar>;
         let testComponent: SimpleSidebar;
         let sidebarComponent: KbqSidebar;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(SimpleSidebar);
             fixture.detectChanges();
 
             testComponent = fixture.debugElement.componentInstance;
             sidebarComponent = fixture.debugElement.componentInstance.sidebar;
-        }));
+        });
 
         it('should render with default parameters', () => {
             expect(sidebarComponent.opened).toBeTruthy();
@@ -77,7 +75,7 @@ describe('Sidebar', () => {
         });
 
         xit('should fire change event', () => {
-            const changeSpy = jasmine.createSpy('state change listener');
+            const changeSpy = jest.fn();
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
             expect(sidebarComponent.opened).toBeTruthy();
@@ -92,18 +90,18 @@ describe('Sidebar', () => {
         });
 
         it('should add and remove event listeners from document', () => {
-            spyOn(document, 'addEventListener');
-            spyOn(document, 'removeEventListener');
+            const addEventListenerSpyFn = jest.spyOn(document, 'addEventListener');
+            const removeEventListenerSpyFn = jest.spyOn(document, 'removeEventListener');
 
             testComponent.showContainer = false;
             fixture.detectChanges();
 
-            expect(document.removeEventListener).toHaveBeenCalledWith('keypress', jasmine.any(Function), true);
+            expect(removeEventListenerSpyFn).toHaveBeenCalledWith('keypress', expect.any(Function), true);
 
             testComponent.showContainer = true;
             fixture.detectChanges();
 
-            expect(document.addEventListener).toHaveBeenCalledWith('keypress', jasmine.any(Function), true);
+            expect(addEventListenerSpyFn).toHaveBeenCalledWith('keypress', expect.any(Function), true);
         });
     });
 });

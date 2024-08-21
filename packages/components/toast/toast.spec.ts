@@ -1,8 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
-import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { KbqToastModule } from './toast.module';
@@ -23,12 +23,16 @@ describe('ToastService', () => {
     let fixture;
     let testComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [CommonModule, KbqToastModule, BrowserAnimationsModule],
+            imports: [
+                CommonModule,
+                KbqToastModule,
+                NoopAnimationsModule
+            ],
             declarations: [KbqToastButtonWrapperComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([KbqToastService, OverlayContainer], (ts: KbqToastService, oc: OverlayContainer) => {
         toastService = ts;
@@ -67,18 +71,18 @@ describe('ToastService', () => {
             const toast = toastService.show({ style: 'warning', title: 'Warning', icon: true }, 0);
             fixture.detectChanges();
 
-            const toastIcon = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
+            const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
 
-            expect(toastIcon).toHaveClass('mc-error_16');
+            expect(toastIcon.classList).toContain('mc-error_16');
         });
 
         it('should create one sticky warning toast with custom icon', () => {
             const toast = toastService.show({ style: 'error', title: 'Error', icon: true, iconClass: 'mc-custom' }, 0);
             fixture.detectChanges();
 
-            const toastIcon = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
+            const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
 
-            expect(toastIcon).toHaveClass('mc-custom');
+            expect(toastIcon.classList).toContain('mc-custom');
         });
 
         it('should container only title', () => {
@@ -99,7 +103,7 @@ describe('ToastService', () => {
         });
 
         it('should delete one toast by click', fakeAsync(() => {
-            spyOn(toastService, 'hide');
+            const hideSpyFn = jest.spyOn(toastService, 'hide');
             const toast = toastService.show(MOCK_TOAST_DATA, 0);
 
             fixture.detectChanges();
@@ -114,38 +118,34 @@ describe('ToastService', () => {
             fixture.detectChanges();
             tick(600);
 
-            // метод вызывается, тост должен скрываться
-            expect(toastService.hide).toHaveBeenCalled();
-
-            // тут тест не проходит, toastService.toasts.indexOf(toast.ref) === 0 и длинна kbq-toast === 1
-            // expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
+            expect(hideSpyFn).toHaveBeenCalledTimes(1);
+            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
         }));
 
         it('should create one toast directly through service', fakeAsync(() => {
-            spyOn(toastService, 'show');
+            const showSpyFn = jest.spyOn(toastService, 'show');
             toastService.show(MOCK_TOAST_DATA, 600);
 
             fixture.detectChanges();
             tick(600);
             fixture.detectChanges();
 
-            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
-            expect(toastService.show).toHaveBeenCalledTimes(1);
+            expect(showSpyFn).toHaveBeenCalledTimes(1);
+            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
         }));
 
         it('should create one toast by click', fakeAsync(() => {
-            spyOn(testComponent, 'show').and.callThrough();
+            const showSpyFn = jest.spyOn(testComponent, 'show');
             const btn = fixture.nativeElement.querySelector('button');
 
             fixture.detectChanges();
-            expect(testComponent.show).not.toHaveBeenCalled();
+            expect(showSpyFn).not.toHaveBeenCalled();
 
             btn.click();
             fixture.detectChanges();
 
+            expect(showSpyFn).toHaveBeenCalledTimes(1);
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
-            expect(testComponent.show).toHaveBeenCalled();
-            expect(testComponent.show).toHaveBeenCalledTimes(1);
         }));
     });
 });
@@ -153,12 +153,12 @@ describe('ToastService', () => {
 describe('Standalone ToastService', () => {
     let service: KbqToastService;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqToastModule, NoopAnimationsModule],
             declarations: [KbqToastButtonWrapperComponent]
-        });
-    }));
+        }).compileComponents();
+    });
 
     it('should disappear after 3 seconds', fakeAsync(() => {
         const destroy$ = new Subject<void>();

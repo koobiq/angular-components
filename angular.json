@@ -230,12 +230,22 @@
                     }
                 },
                 "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "roots": ["packages/components"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
+                    }
+                },
+                "karma-test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
                         "karmaConfig": "packages/components/karma.conf.js",
-                        "main": "packages/components/test.ts",
-                        "tsConfig": "packages/components/tsconfig.spec.json",
-                        "codeCoverage": true
+                        "main": "packages/components/karma-test.ts",
+                        "tsConfig": "packages/components/tsconfig.karma-spec.json",
+                        "include": [
+                            "**/*.karma-spec.ts"
+                        ]
                     }
                 }
             }

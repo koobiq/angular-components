@@ -2,16 +2,22 @@
 
 ## Unit tests
 
--   write unit test for component using **Jasmine test framework**.
+We are using [Jest](https://github.com/jestjs/jest).
 
-## Browser tests
+Runs tests for package
 
--   in progress
+```bash
+ng test components
+```
 
-## Browser Webdriver/Integration tests
+Runs specific spec file
 
--   in progress
+```bash
+yarn jest packages/components/alert/alert.component.spec.ts
+```
 
-## Visual regression tests
+Runs specific test closure (`it`)
 
--   in progress
+```bash
+yarn jest packages/components/alert/alert.component.spec.ts --testNamePattern='should add class'
+```

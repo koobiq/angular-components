@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateTime } from 'luxon';
@@ -7,7 +7,7 @@ import { KbqCalendarBody } from './calendar-body.component';
 import { KbqMonthView } from './month-view.component';
 
 describe('KbqMonthView', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqLuxonDateModule],
             declarations: [
@@ -19,10 +19,8 @@ describe('KbqMonthView', () => {
                 MonthViewWithDateFilter,
                 MonthViewWithDateClass
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('standard month view', () => {
         let fixture: ComponentFixture<StandardMonthView>;
@@ -66,8 +64,8 @@ describe('KbqMonthView', () => {
         });
 
         it('should mark active date', () => {
-            const cellEls = monthViewNativeElement.querySelectorAll('.kbq-calendar__body-cell');
-            expect((cellEls[4] as HTMLElement).innerText.trim()).toBe('5');
+            const cellEls = monthViewNativeElement.querySelectorAll<HTMLElement>('.kbq-calendar__body-cell');
+            expect(cellEls[4].textContent!.trim()).toBe('5');
             expect(cellEls[4].classList).toContain('kbq-calendar__body_active');
         });
     });

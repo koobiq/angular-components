@@ -1,5 +1,5 @@
 import { LOCALE_ID } from '@angular/core';
-import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import moment from 'moment';
 
@@ -11,7 +11,7 @@ const JAN = 0;
 describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
     let adapter: MomentDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MomentDateModule],
             providers: [
@@ -19,7 +19,7 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
         adapter = d;
@@ -33,7 +33,7 @@ describe('MomentDateAdapter with KBQ_DATE_LOCALE override', () => {
 describe('MomentDateAdapter with LOCALE_ID override', () => {
     let adapter: MomentDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MomentDateModule],
             providers: [
@@ -41,7 +41,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
         adapter = d;
@@ -55,7 +55,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
 describe('MomentDateAdapter with KBQ_MOMENT_DATE_ADAPTER_OPTIONS override', () => {
     let adapter: MomentDateAdapter;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MomentDateModule],
             providers: [
@@ -66,7 +66,7 @@ describe('MomentDateAdapter with KBQ_MOMENT_DATE_ADAPTER_OPTIONS override', () =
                 { provide: KBQ_LOCALE_SERVICE, useValue: null }
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
         adapter = d;

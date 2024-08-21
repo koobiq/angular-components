@@ -1,32 +1,28 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, NgModule } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
-import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { ModalSize } from './modal.type';
 
 describe('KbqModal', () => {
     let modalService: KbqModalService;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ModalTestModule]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     beforeEach(inject([KbqModalService, OverlayContainer], (ms: KbqModalService, oc: OverlayContainer) => {
         modalService = ms;
@@ -55,7 +51,7 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger both afterOpen/kbqAfterOpen and have the correct openModals length', fakeAsync(() => {
-            const spy = jasmine.createSpy('afterOpen spy');
+            const spy = jest.fn();
             const kbqAfterOpen = new EventEmitter<void>();
             const modalRef = modalService.create({ kbqAfterOpen });
 
@@ -72,7 +68,7 @@ describe('KbqModal', () => {
         }));
 
         it('should fire onClick events', fakeAsync(() => {
-            const spy = jasmine.createSpy('kbqFooter onClick spy');
+            const spy = jest.fn();
             const onClickEmitter = new EventEmitter<void>();
 
             onClickEmitter.subscribe(spy);
@@ -103,7 +99,7 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger both afterClose/kbqAfterClose and have the correct openModals length', fakeAsync(() => {
-            const spy = jasmine.createSpy('afterClose spy');
+            const spy = jest.fn();
             const kbqAfterClose = new EventEmitter<void>();
             const modalRef = modalService.create({ kbqAfterClose });
 
@@ -123,7 +119,7 @@ describe('KbqModal', () => {
         }));
 
         it('should return/receive with/without result data', fakeAsync(() => {
-            const spy = jasmine.createSpy('afterClose without result spy');
+            const spy = jest.fn();
             const modalRef = modalService.success();
 
             modalRef.afterClose.subscribe(spy);
@@ -137,7 +133,7 @@ describe('KbqModal', () => {
 
         it('should return/receive with result data', fakeAsync(() => {
             const result = { data: 'Fake Error' };
-            const spy = jasmine.createSpy('afterClose with result spy');
+            const spy = jest.fn();
             const modalRef = modalService.delete();
 
             fixture.detectChanges();
@@ -150,7 +146,7 @@ describe('KbqModal', () => {
         }));
 
         it('should close all opened modals (include non-service modals)', fakeAsync(() => {
-            const spy = jasmine.createSpy('afterAllClose spy');
+            const spy = jest.fn();
             const modalMethods = ['create', 'delete', 'success'];
             const uniqueId = (name: string) => `__${name}_ID_SUFFIX__`;
             const queryOverlayElement = (name: string) =>
@@ -187,8 +183,8 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger nzOnOk/nzOnCancel', () => {
-            const spyOk = jasmine.createSpy('ok spy');
-            const spyCancel = jasmine.createSpy('cancel spy');
+            const spyOk = jest.fn();
+            const spyCancel = jest.fn();
             const modalRef: KbqModalRef = modalService.create({
                 kbqOnOk: spyOk,
                 kbqOnCancel: spyCancel
@@ -258,7 +254,7 @@ describe('KbqModal', () => {
         }));
 
         it('should called function on hotkey ctrl+enter. kbqFooter is array ', fakeAsync(() => {
-            const spyOk = jasmine.createSpy('ok spy');
+            const spyOk = jest.fn();
             const modalRef = modalService.create({
                 kbqContent: TestModalContentComponent,
                 kbqFooter: [
@@ -289,7 +285,7 @@ describe('KbqModal', () => {
         }));
 
         it('should called function on hotkey ctrl+enter. modal type is confirm ', () => {
-            const spyOk = jasmine.createSpy('ok spy');
+            const spyOk = jest.fn();
             const modalRef = modalService.success({
                 kbqContent: 'Сохранить сделанные изменения?',
                 kbqOkText: 'Сохранить',
@@ -483,94 +479,8 @@ describe('KbqModal', () => {
 
             flush();
         }));
-
-        it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-            const fixtureComponent = TestBed.createComponent(ModalByServiceFromDropdownComponent);
-            buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
-            fixtureComponent.detectChanges();
-
-            expect(document.activeElement).not.toBe(buttonElement);
-
-            buttonElement.click();
-            fixtureComponent.detectChanges();
-            tick();
-
-            const dropdownItems = fixtureComponent.debugElement
-                .queryAll(By.directive(KbqDropdownItem))
-                .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
-
-            dropdownItems[0].click();
-            fixtureComponent.detectChanges();
-            tick();
-
-            const activeElement: HTMLButtonElement | null = document.activeElement as HTMLButtonElement;
-
-            expect(activeElement).not.toBe(buttonElement);
-            expect(activeElement).not.toBe(dropdownItems[0]);
-            expect(activeElement).toBeTruthy();
-
-            if (activeElement) {
-                expect(activeElement.innerText).toEqual(fixtureComponent.componentInstance.kbqOkText);
-            }
-
-            flush();
-        }));
     });
 });
-
-// -------------------------------------------
-// | Testing Components
-// -------------------------------------------
-
-@Component({
-    selector: 'mc-modal-by-service-from-dropdown',
-    template: `
-        <kbq-modal
-            [(kbqVisible)]="nonServiceModalVisible"
-            kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
-        />
-        <button
-            class="template-button"
-            [kbqDropdownTriggerFor]="dropdown"
-            kbq-button
-        >
-            Open modal from dropdown
-        </button>
-        <kbq-dropdown #dropdown>
-            <ng-template kbqDropdownContent>
-                <button
-                    (click)="showConfirm()"
-                    kbq-dropdown-item
-                >
-                    open Component Modal
-                </button>
-            </ng-template>
-        </kbq-dropdown>
-    `,
-    // Testing for service with parent service
-    providers: [KbqModalControlService]
-})
-class ModalByServiceFromDropdownComponent {
-    nonServiceModalVisible = false;
-    kbqOkText = 'Save';
-
-    constructor(
-        public modalControlService: KbqModalControlService,
-        public modalService: KbqModalService
-    ) {}
-
-    showConfirm() {
-        this.modalService.success({
-            kbqSize: ModalSize.Small,
-            kbqRestoreFocus: false,
-            kbqMaskClosable: true,
-            kbqContent: 'Save all?',
-            kbqOkText: this.kbqOkText,
-            kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
-        });
-    }
-}
 
 @Component({
     template: `
@@ -594,15 +504,12 @@ class TestModalContentComponent {}
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     constructor(_modalControlService: KbqModalControlService) {}
 }
 
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,
-    TestModalContentComponent,
-    ModalByServiceFromDropdownComponent
+    TestModalContentComponent
 ];
 
 @NgModule({

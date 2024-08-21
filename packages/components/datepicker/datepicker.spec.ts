@@ -26,12 +26,12 @@ import { KbqDatepickerIntl, KbqDatepickerModule } from './index';
 
 describe('KbqDatepicker', () => {
     // Creates a test component fixture.
-    function createComponent(
-        component: Type<any>,
+    function createComponent<T>(
+        component: Type<T>,
         imports: Type<any>[] = [],
         providers: (FactoryProvider | ValueProvider)[] = [],
         entryComponents: Type<any>[] = []
-    ): ComponentFixture<any> {
+    ): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -63,12 +63,12 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<StandardDatepicker>;
             let testComponent: StandardDatepicker;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
             afterEach(fakeAsync(() => {
                 testComponent.datepicker.close();
@@ -159,17 +159,17 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker.open();
                 fixture.detectChanges();
 
-                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be open.').toBe(true);
+                expect(testComponent.datepicker.opened).toBe(true);
 
                 dispatchKeyboardEvent(fixture.nativeElement.querySelector('input'), 'keydown', ESCAPE);
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be closed.').toBe(false);
+                expect(testComponent.datepicker.opened).toBe(false);
             }));
 
             it('clicking the currently selected date should close the calendar without firing selectedChanged', fakeAsync(() => {
-                const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'next').and.callThrough();
+                const nextSpyFn = jest.spyOn(testComponent.datepicker.selectedChanged, 'next');
 
                 for (let changeCount = 1; changeCount < 3; changeCount++) {
                     const currentDay = changeCount;
@@ -196,13 +196,13 @@ describe('KbqDatepicker', () => {
                     flush();
                 }
 
-                expect(selectedChangedSpy.calls.count()).toEqual(1);
+                expect(nextSpyFn).toHaveBeenCalledTimes(1);
 
                 expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 2).toISO());
             }));
 
             it('pressing enter on the currently selected date should close the calendar without firing selectedChanged', () => {
-                const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'next').and.callThrough();
+                const nextSpyFn = jest.spyOn(testComponent.datepicker.selectedChanged, 'next');
 
                 testComponent.datepicker.open();
                 fixture.detectChanges();
@@ -215,7 +215,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 fixture.whenStable().then(() => {
-                    expect(selectedChangedSpy.calls.count()).toEqual(0);
+                    expect(nextSpyFn).toHaveBeenCalledTimes(0);
                     expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
                 });
             });
@@ -242,7 +242,7 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker.open();
                 fixture.detectChanges();
 
-                const spy = jasmine.createSpy('close event spy');
+                const spy = jest.fn();
                 const subscription = testComponent.datepicker.closedStream.subscribe(spy);
 
                 document.body.click();
@@ -382,17 +382,17 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<NoInputDatepicker>;
             let testComponent: NoInputDatepicker;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(NoInputDatepicker, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('should not throw when accessing disabled property', () => {
                 expect(() => testComponent.datepicker.disabled).not.toThrow();
@@ -407,17 +407,17 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithStartAt>;
             let testComponent: DatepickerWithStartAt;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithStartAt, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('explicit startAt should override input value', () => {
                 expect(testComponent.datepicker.startAt?.toISO()).toEqual(DateTime.local(2010, 1, 1).toISO());
@@ -428,7 +428,7 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithNgModel>;
             let testComponent: DatepickerWithNgModel;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithNgModel, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
@@ -437,12 +437,12 @@ describe('KbqDatepicker', () => {
 
                     testComponent = fixture.componentInstance;
                 });
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('should update datepicker when model changes', fakeAsync(() => {
                 expect(testComponent.datepickerInput.value).toBeNull();
@@ -598,17 +598,17 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithFormControl>;
             let testComponent: DatepickerWithFormControl;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithFormControl, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('should update datepicker when formControl changes', () => {
                 expect(testComponent.datepickerInput.value).toBeNull();
@@ -659,12 +659,12 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithToggle>;
             let testComponent: DatepickerWithToggle;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithToggle, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
             afterEach(fakeAsync(() => {
                 testComponent.datepicker.close();
@@ -714,19 +714,19 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 input.focus();
-                expect(document.activeElement).withContext('Expected input to be focused.').toBe(input);
+                expect(document.activeElement).toBe(input);
 
                 fixture.componentInstance.datepicker.open();
                 fixture.detectChanges();
 
                 const pane = document.querySelector('.cdk-overlay-pane')!;
 
-                expect(pane).withContext('Expected calendar to be open.').toBeTruthy();
+                expect(pane).toBeTruthy();
 
                 fixture.componentInstance.datepicker.close();
                 fixture.detectChanges();
 
-                expect(document.activeElement).withContext('Expected focus to be restored to input.').toBe(input);
+                expect(document.activeElement).toBe(input);
             });
 
             it('should re-render when the i18n labels change', inject(
@@ -767,13 +767,9 @@ describe('KbqDatepicker', () => {
                 const fixture = createComponent(DatepickerWithCustomIcon, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle .custom-icon'))
-                    .withContext('Expected custom icon to be rendered.')
-                    .toBeTruthy();
+                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle .custom-icon')).toBeTruthy();
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle kbq-icon'))
-                    .withContext('Expected default icon to be removed.')
-                    .toBeFalsy();
+                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle kbq-icon')).toBeFalsy();
             }));
         });
 
@@ -792,17 +788,17 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithMinAndMaxValidation>;
             let testComponent: DatepickerWithMinAndMaxValidation;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithMinAndMaxValidation, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('should mark invalid when value is before min', fakeAsync(() => {
                 testComponent.date = DateTime.local(2009, 11, 31);
@@ -877,12 +873,12 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithFilterAndValidation>;
             let testComponent: DatepickerWithFilterAndValidation;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithFilterAndValidation, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
             afterEach(fakeAsync(() => {
                 testComponent.datepicker.close();
@@ -922,55 +918,57 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithChangeAndInputEvents>;
             let testComponent: DatepickerWithChangeAndInputEvents;
             let inputEl: HTMLInputElement;
-            let spyOnDateChange;
+            let onDateChangeSpyFn: jest.SpyInstance;
+            let onChangeSpyFn: jest.SpyInstance;
+            let onDateInputSpyFn: jest.SpyInstance;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithChangeAndInputEvents, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
                 testComponent = fixture.componentInstance;
                 inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
-                spyOn(testComponent, 'onChange');
-                spyOn(testComponent, 'onDateInput');
-                spyOnDateChange = spyOn(testComponent, 'onDateChange');
-            }));
+                onChangeSpyFn = jest.spyOn(testComponent, 'onChange');
+                onDateInputSpyFn = jest.spyOn(testComponent, 'onDateInput');
+                onDateChangeSpyFn = jest.spyOn(testComponent, 'onDateChange');
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             it('should fire input and dateInput events when user types input', fakeAsync(() => {
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
                 inputEl.value = '01.01.2001';
                 dispatchKeyboardEvent(inputEl, 'keydown', ONE);
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.onDateInput).toHaveBeenCalled();
+                expect(onDateInputSpyFn).toHaveBeenCalled();
             }));
 
             it('should fire change and dateChange events when user commits typed input', fakeAsync(() => {
-                expect(testComponent.onChange).not.toHaveBeenCalled();
-                expect(testComponent.onDateChange).not.toHaveBeenCalled();
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onChangeSpyFn).not.toHaveBeenCalled();
+                expect(onDateChangeSpyFn).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
                 dispatchFakeEvent(inputEl, 'change');
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.onChange).toHaveBeenCalled();
-                expect(testComponent.onDateChange).toHaveBeenCalled();
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onChangeSpyFn).toHaveBeenCalled();
+                expect(onDateChangeSpyFn).toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
             }));
 
             it('should fire dateInput event when user selects calendar date', fakeAsync(() => {
-                expect(testComponent.onChange).not.toHaveBeenCalled();
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onChangeSpyFn).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
-                expect(testComponent.onDateChange).not.toHaveBeenCalled();
+                expect(onDateChangeSpyFn).not.toHaveBeenCalled();
 
                 testComponent.datepicker.open();
                 fixture.detectChanges();
@@ -980,32 +978,32 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.onChange).not.toHaveBeenCalled();
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onChangeSpyFn).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
-                expect(testComponent.onDateChange).toHaveBeenCalled();
+                expect(onDateChangeSpyFn).toHaveBeenCalled();
             }));
 
             it('should not fire the dateInput event if the value has not changed', fakeAsync(() => {
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
                 inputEl.value = '12.12.2011';
                 dispatchKeyboardEvent(inputEl, 'keydown', ONE);
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+                expect(onDateInputSpyFn).toHaveBeenCalledTimes(1);
 
                 inputEl.value = '12.12.2011';
                 dispatchKeyboardEvent(inputEl, 'keydown', ONE);
                 fixture.detectChanges();
                 flush();
 
-                expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+                expect(onDateInputSpyFn).toHaveBeenCalledTimes(1);
             }));
 
             it('should set datepicker selected value to null when input cleaned up', fakeAsync(() => {
-                expect(testComponent.onDateInput).not.toHaveBeenCalled();
+                expect(onDateInputSpyFn).not.toHaveBeenCalled();
 
                 inputEl.value = '12.12.2011';
                 dispatchKeyboardEvent(inputEl, 'keydown', ENTER);
@@ -1019,7 +1017,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
                 flush();
 
-                expect((spyOnDateChange.calls.mostRecent().args[0] as KbqDatepickerInputEvent<any>).value).toBeNull();
+                expect(onDateChangeSpyFn).toHaveBeenCalledWith(expect.objectContaining({ value: null }));
                 expect(testComponent.datepicker.selected).toBeNull();
             }));
         });
@@ -1028,15 +1026,15 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithISOStrings>;
             let testComponent: DatepickerWithISOStrings;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithISOStrings, [KbqLuxonDateModule]);
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
-            afterEach(fakeAsync(() => {
+            afterEach(() => {
                 testComponent.datepicker.close();
                 fixture.detectChanges();
-            }));
+            });
 
             // TODO ISO
             xit('should coerce ISO strings', fakeAsync(() => {
@@ -1055,11 +1053,11 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithEvents>;
             let testComponent: DatepickerWithEvents;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerWithEvents, [KbqLuxonDateModule]);
                 fixture.detectChanges();
                 testComponent = fixture.componentInstance;
-            }));
+            });
 
             it('should dispatch an event when a datepicker is opened', () => {
                 testComponent.datepicker.open();
@@ -1085,12 +1083,12 @@ describe('KbqDatepicker', () => {
             let testComponent: DatepickerOpeningOnFocus;
             let input: HTMLInputElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = createComponent(DatepickerOpeningOnFocus, [KbqLuxonDateModule]);
                 fixture.detectChanges();
                 testComponent = fixture.componentInstance;
                 input = fixture.debugElement.query(By.css('input')).nativeElement;
-            }));
+            });
 
             it('should not reopen if the browser fires the focus event asynchronously', fakeAsync(() => {
                 // Open initially by focusing.
@@ -1103,7 +1101,7 @@ describe('KbqDatepicker', () => {
                 (fixture.componentInstance.datepicker as any)._focusedElementBeforeOpen = input;
 
                 // Ensure that the datepicker is actually open.
-                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be open.').toBe(true);
+                expect(testComponent.datepicker.opened).toBe(true);
 
                 // Close the datepicker.
                 testComponent.datepicker.close();
@@ -1116,7 +1114,7 @@ describe('KbqDatepicker', () => {
                 // Flush out the scheduled tasks.
                 flush();
 
-                expect(testComponent.datepicker.opened).withContext('Expected datepicker to be closed.').toBe(false);
+                expect(testComponent.datepicker.opened).toBe(false);
             }));
         });
 
@@ -1191,7 +1189,7 @@ describe('KbqDatepicker', () => {
         let testComponent: DatepickerWithi18n;
         let input: HTMLInputElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = createComponent(
                 DatepickerWithi18n,
                 [KbqLuxonDateModule],
@@ -1200,7 +1198,7 @@ describe('KbqDatepicker', () => {
             fixture.detectChanges();
             testComponent = fixture.componentInstance;
             input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-        }));
+        });
 
         it('should have the correct input value even when inverted date format', fakeAsync(() => {
             const selected = DateTime.local(2017, 8, 1);
@@ -1446,8 +1444,8 @@ class DatepickerWithISOStrings {
 })
 class DatepickerWithEvents {
     selected: DateTime | null = null;
-    openedSpy = jasmine.createSpy('opened spy');
-    closedSpy = jasmine.createSpy('closed spy');
+    openedSpy = jest.fn();
+    closedSpy = jest.fn();
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
 }
 

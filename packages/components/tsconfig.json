@@ -3,7 +3,8 @@
     "compilerOptions": {
         "types": [
             "jasmine",
-            "node"
+            "node",
+            "jest"
         ]
     },
     "angularCompilerOptions": {

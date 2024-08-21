@@ -4,9 +4,6 @@ module.exports = function (config) {
     const baseConfig = getBaseKarmaConfig();
     return config.set({
         ...baseConfig,
-
-        coverageReporter: {
-            dir: '../../dist/coverage/components'
-        }
+        files: [{ pattern: '../../dist/components/prebuilt-themes/light-theme.css', included: true, watched: true }]
     });
 };

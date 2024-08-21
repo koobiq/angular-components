@@ -14,7 +14,7 @@ describe('KbqPopover', () => {
     let componentFixture;
     let component;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqPopoverModule, NoopAnimationsModule],
             declarations: [
@@ -22,9 +22,8 @@ describe('KbqPopover', () => {
                 KbqPopoverConfirmTestComponent,
                 KbqPopoverConfirmWithProvidersTestComponent
             ]
-        });
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
         overlayContainer = oc;
@@ -245,7 +244,7 @@ describe('KbqPopover', () => {
         }));
 
         it('Click emits confirm', fakeAsync(() => {
-            spyOn(component, 'onConfirm');
+            const onConfirmSpyFn = jest.spyOn(component, 'onConfirm');
 
             const triggerElement = component.test11.nativeElement;
             dispatchMouseEvent(triggerElement, 'click');
@@ -256,7 +255,7 @@ describe('KbqPopover', () => {
             tick();
             componentFixture.detectChanges();
 
-            expect(component.onConfirm).toHaveBeenCalled();
+            expect(onConfirmSpyFn).toHaveBeenCalled();
         }));
     });
 

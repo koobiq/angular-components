@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqProgressBarModule, ProgressBarMode } from './index';
 
@@ -11,39 +11,12 @@ const percentPairs = [
 ];
 
 describe('KbqProgressBar', () => {
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqProgressBarModule],
             declarations: [TestApp]
-        });
-
-        TestBed.compileComponents();
-    }));
-
-    // koobiq has one color
-    // it('should apply class based on color attribute', () => {
-    //     const fixture = TestBed.createComponent(TestApp);
-    //     const testComponent = fixture.debugElement.componentInstance;
-    //     const progressBarDebugElement = fixture.debugElement.query(By.css('.first'));
-    //
-    //     Object.keys(KbqComponentColors).forEach((key) => {
-    //         if (KbqComponentColors[key]) {
-    //             testComponent.color = KbqComponentColors[key];
-    //             fixture.detectChanges();
-    //             expect(
-    //                 progressBarDebugElement.nativeElement.classList.contains(`kbq-${KbqComponentColors[key]}`)
-    //             ).toBe(true);
-    //         }
-    //     });
-    // });
-
-    // koobiq has one color
-    // it('should has default primary color', () => {
-    //     const fixture = TestBed.createComponent(TestApp);
-    //     const progressBarDebugElement = fixture.debugElement.query(By.css('.default'));
-    //
-    //     expect(progressBarDebugElement.nativeElement.classList.contains(`kbq-${KbqComponentColors.Theme}`)).toBe(true);
-    // });
+        }).compileComponents();
+    });
 
     it('should return percentage', () => {
         const fixture = TestBed.createComponent(TestApp);

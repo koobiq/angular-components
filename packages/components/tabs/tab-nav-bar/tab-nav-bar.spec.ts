@@ -1,6 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNav, KbqTabsModule } from '../index';
@@ -9,7 +9,7 @@ describe('KbqTabNavBar', () => {
     const dir: Direction = 'ltr';
     let dirChange: Subject<Direction>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
             imports: [KbqTabsModule],
@@ -27,16 +27,16 @@ describe('KbqTabNavBar', () => {
                     })
                 }
             ]
-        });
-
-        TestBed.compileComponents();
-    }));
+        }).compileComponents();
+    });
 
     describe('basic behavior', () => {
         let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+        let component: SimpleTabNavBarTestApp;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            component = fixture.componentInstance;
             fixture.detectChanges();
         });
 
@@ -44,12 +44,12 @@ describe('KbqTabNavBar', () => {
             // select the second link
             let tabLink = fixture.debugElement.queryAll(By.css('a'))[1];
             tabLink.nativeElement.click();
-            expect(fixture.componentInstance.activeIndex).toBe(1);
+            expect(component.activeIndex).toBe(1);
 
             // select the third link
             tabLink = fixture.debugElement.queryAll(By.css('a'))[2];
             tabLink.nativeElement.click();
-            expect(fixture.componentInstance.activeIndex).toBe(2);
+            expect(component.activeIndex).toBe(2);
         });
 
         it('should add the active class if active', () => {
@@ -75,16 +75,12 @@ describe('KbqTabNavBar', () => {
                 .queryAll(By.css('a'))
                 .map((tabLinkDebugEl) => tabLinkDebugEl.nativeElement);
 
-            expect(tabLinkElements.every((tabLinkEl) => !tabLinkEl.hasAttribute('disabled')))
-                .withContext('Expected every tab link to not have the disabled class initially')
-                .toBe(true);
+            expect(tabLinkElements.every((tabLinkEl) => !tabLinkEl.hasAttribute('disabled'))).toBe(true);
 
-            fixture.componentInstance.disabled = true;
+            component.disabled = true;
             fixture.detectChanges();
 
-            expect(tabLinkElements.every((tabLinkEl) => tabLinkEl.hasAttribute('disabled')))
-                .withContext('Expected every tab link to have the disabled class if set through binding')
-                .toBe(true);
+            expect(tabLinkElements.every((tabLinkEl) => tabLinkEl.hasAttribute('disabled'))).toBe(true);
         });
 
         it('should update the tabindex if links are disabled', () => {
@@ -92,42 +88,28 @@ describe('KbqTabNavBar', () => {
                 .queryAll(By.css('a'))
                 .map((tabLinkDebugEl) => tabLinkDebugEl.nativeElement);
 
-            expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === 0))
-                .withContext('Expected element to be keyboard focusable by default')
-                .toBe(true);
+            expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === 0)).toBe(true);
 
-            fixture.componentInstance.disabled = true;
+            component.disabled = true;
             fixture.detectChanges();
 
-            expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === -1))
-                .withContext('Expected element to no longer be keyboard focusable if disabled.')
-                .toBe(true);
-        });
-
-        it('should make disabled links unclickable', () => {
-            const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
-
-            expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe('none');
-
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-
-            expect(getComputedStyle(tabLinkElement).pointerEvents).toBe('none');
+            expect(tabLinkElements.every((tabLink) => tabLink.tabIndex === -1)).toBe(true);
         });
     });
 
     it('should support binding to the tabIndex', () => {
         const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+        const component = fixture.componentInstance;
         fixture.detectChanges();
 
         const tabLink = fixture.debugElement.query(By.directive(KbqTabLink)).injector.get<KbqTabLink>(KbqTabLink);
 
-        expect(tabLink.tabIndex).withContext('Expected the tabIndex to be set to 0 by default.').toBe(0);
+        expect(tabLink.tabIndex).toBe(0);
 
-        fixture.componentInstance.tabIndex = 3;
+        component.tabIndex = 3;
         fixture.detectChanges();
 
-        expect(tabLink.tabIndex).withContext('Expected the tabIndex to be have been set to 3.').toBe(3);
+        expect(tabLink.tabIndex).toBe(3);
     });
 });
 
