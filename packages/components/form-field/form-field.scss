@@ -116,12 +116,12 @@ $tokens: meta.module-variables(tokens) !default;
     justify-content: center;
     align-items: center;
 
-    width: kbq-css-variable(form-field-size-button-width);
+    width: kbq-css-variable(form-field-size-icon-button-size);
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
         cursor: pointer;
-        width: kbq-css-variable(form-field-size-button-width);
+        width: kbq-css-variable(form-field-size-icon-button-size);
         text-align: center;
     }
 

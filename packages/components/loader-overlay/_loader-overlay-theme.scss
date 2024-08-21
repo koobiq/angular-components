@@ -7,37 +7,41 @@
 @mixin kbq-loader-overlay-theme($theme) {
     $loader-overlay: map.get(map.get($theme, components), loader-overlay);
 
+    // TODO: move to unified mixin if necessary
     .kbq-loader-overlay_filled {
         &.kbq-loader-overlay {
             background: kbq-css-variable(
-                loader-overlay-filled-background,
+                loader-overlay-filled-overlay-background,
                 map.get($loader-overlay, filled, background)
             );
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-filled-text, map.get($loader-overlay, filled, text));
+            color: kbq-css-variable(loader-overlay-filled-text-color, map.get($loader-overlay, filled, text));
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(loader-overlay-filled-caption, map.get($loader-overlay, filled, caption));
+            color: kbq-css-variable(loader-overlay-filled-caption-color, map.get($loader-overlay, filled, caption));
         }
     }
 
     .kbq-loader-overlay_transparent {
         &.kbq-loader-overlay {
             background: kbq-css-variable(
-                loader-overlay-transparent-background,
+                loader-overlay-transparent-overlay-background,
                 map.get($loader-overlay, transparent, background)
             );
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-transparent-text, map.get($loader-overlay, transparent, text));
+            color: kbq-css-variable(loader-overlay-transparent-text-color, map.get($loader-overlay, transparent, text));
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(loader-overlay-transparent-caption, map.get($loader-overlay, transparent, caption));
+            color: kbq-css-variable(
+                loader-overlay-transparent-caption-color,
+                map.get($loader-overlay, transparent, caption)
+            );
         }
     }
 }

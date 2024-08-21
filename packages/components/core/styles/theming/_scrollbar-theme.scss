@@ -58,7 +58,8 @@
 
         // firefox
         @supports not selector(::-webkit-scrollbar) {
-            scrollbar-color: map.get($scrollbar, default) transparent;
+            scrollbar-color: kbq-css-variable(scrollbar-thumb-default-background, map.get($scrollbar, default))
+                transparent;
         }
 
         // webkit

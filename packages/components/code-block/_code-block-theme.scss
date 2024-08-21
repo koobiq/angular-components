@@ -5,6 +5,10 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
+@function kbq-code-block-hljs-attr($attr, $hljs) {
+    @return kbq-css-variable(code-block-hljs-#{$attr}, map.get($hljs, $attr));
+}
+
 @mixin kbq-code-block-style($component, $style-name) {
     $style: map.get($component, $style-name);
     $base: code-block-#{$style-name};
@@ -84,262 +88,262 @@
             overflow-x: auto;
 
             &-addition {
-                background-color: map.get($hljs, addition-background);
-                color: map.get($hljs, addition-color);
+                background-color: kbq-code-block-hljs-attr(addition-background, $hljs);
+                color: kbq-code-block-hljs-attr(addition-color, $hljs);
             }
 
             &-attr {
-                background-color: map.get($hljs, attr-background);
-                color: map.get($hljs, attr-color);
+                background-color: kbq-code-block-hljs-attr(attr-background, $hljs);
+                color: kbq-code-block-hljs-attr(attr-color, $hljs);
             }
 
             &-attribute {
-                background-color: map.get($hljs, attribute-background);
-                color: map.get($hljs, attribute-color);
+                background-color: kbq-code-block-hljs-attr(attribute-background, $hljs);
+                color: kbq-code-block-hljs-attr(attribute-color, $hljs);
             }
 
             &-built_in {
-                background-color: map.get($hljs, built_in-background);
-                color: map.get($hljs, built_in-color);
+                background-color: kbq-code-block-hljs-attr(built_in-background, $hljs);
+                color: kbq-code-block-hljs-attr(built_in-color, $hljs);
             }
 
             &-bullet {
-                background-color: map.get($hljs, bullet-background);
-                color: map.get($hljs, bullet-color);
+                background-color: kbq-code-block-hljs-attr(bullet-background, $hljs);
+                color: kbq-code-block-hljs-attr(bullet-color, $hljs);
             }
 
             &-char-escape {
-                background-color: map.get($hljs, char-escape-background);
-                color: map.get($hljs, char-escape-color);
+                background-color: kbq-code-block-hljs-attr(char-escape-background, $hljs);
+                color: kbq-code-block-hljs-attr(char-escape-color, $hljs);
             }
 
             &-class {
-                background-color: map.get($hljs, class-background);
-                color: map.get($hljs, class-color);
+                background-color: kbq-code-block-hljs-attr(class-background, $hljs);
+                color: kbq-code-block-hljs-attr(class-color, $hljs);
             }
 
             &-code {
-                background-color: map.get($hljs, code-background);
-                color: map.get($hljs, code-color);
+                background-color: kbq-code-block-hljs-attr(code-background, $hljs);
+                color: kbq-code-block-hljs-attr(code-color, $hljs);
             }
 
             &-comment {
-                background-color: map.get($hljs, comment-background);
-                color: map.get($hljs, comment-color);
+                background-color: kbq-code-block-hljs-attr(comment-background, $hljs);
+                color: kbq-code-block-hljs-attr(comment-color, $hljs);
             }
 
             &-deletion {
-                background-color: map.get($hljs, deletion-background);
-                color: map.get($hljs, deletion-color);
+                background-color: kbq-code-block-hljs-attr(deletion-background, $hljs);
+                color: kbq-code-block-hljs-attr(deletion-color, $hljs);
             }
 
             &-doctag {
-                background-color: map.get($hljs, doctag-background);
-                color: map.get($hljs, doctag-color);
+                background-color: kbq-code-block-hljs-attr(doctag-background, $hljs);
+                color: kbq-code-block-hljs-attr(doctag-color, $hljs);
             }
 
             &-emphasis {
-                background-color: map.get($hljs, emphasis-background);
-                color: map.get($hljs, emphasis-color);
+                background-color: kbq-code-block-hljs-attr(emphasis-background, $hljs);
+                color: kbq-code-block-hljs-attr(emphasis-color, $hljs);
             }
 
             &-formula {
-                background-color: map.get($hljs, formula-background);
-                color: map.get($hljs, formula-color);
+                background-color: kbq-code-block-hljs-attr(formula-background, $hljs);
+                color: kbq-code-block-hljs-attr(formula-color, $hljs);
             }
 
             &-function {
-                background-color: map.get($hljs, function-background);
-                color: map.get($hljs, function-color);
+                background-color: kbq-code-block-hljs-attr(function-background, $hljs);
+                color: kbq-code-block-hljs-attr(function-color, $hljs);
             }
 
             &-keyword {
-                background-color: map.get($hljs, keyword-background);
-                color: map.get($hljs, keyword-color);
+                background-color: kbq-code-block-hljs-attr(keyword-background, $hljs);
+                color: kbq-code-block-hljs-attr(keyword-color, $hljs);
             }
 
             &-link {
-                background-color: map.get($hljs, link-background);
-                color: map.get($hljs, link-color);
+                background-color: kbq-code-block-hljs-attr(link-background, $hljs);
+                color: kbq-code-block-hljs-attr(link-color, $hljs);
             }
 
             &-literal {
-                background-color: map.get($hljs, literal-background);
-                color: map.get($hljs, literal-color);
+                background-color: kbq-code-block-hljs-attr(literal-background, $hljs);
+                color: kbq-code-block-hljs-attr(literal-color, $hljs);
             }
 
             &-meta {
-                background-color: map.get($hljs, meta-background);
-                color: map.get($hljs, meta-color);
+                background-color: kbq-code-block-hljs-attr(meta-background, $hljs);
+                color: kbq-code-block-hljs-attr(meta-color, $hljs);
             }
 
             &-meta-keyword {
-                background-color: map.get($hljs, meta-keyword-background);
-                color: map.get($hljs, meta-keyword-color);
+                background-color: kbq-code-block-hljs-attr(meta-keyword-background, $hljs);
+                color: kbq-code-block-hljs-attr(meta-keyword-color, $hljs);
             }
 
             &-meta-string {
-                background-color: map.get($hljs, meta-string-background);
-                color: map.get($hljs, meta-string-color);
+                background-color: kbq-code-block-hljs-attr(meta-string-background, $hljs);
+                color: kbq-code-block-hljs-attr(meta-string-color, $hljs);
             }
 
             &-meta-prompt {
-                background-color: map.get($hljs, meta-prompt-background);
-                color: map.get($hljs, meta-prompt-color);
+                background-color: kbq-code-block-hljs-attr(meta-prompt-background, $hljs);
+                color: kbq-code-block-hljs-attr(meta-prompt-color, $hljs);
             }
 
             &-name {
-                background-color: map.get($hljs, name-background);
-                color: map.get($hljs, name-color);
+                background-color: kbq-code-block-hljs-attr(name-background, $hljs);
+                color: kbq-code-block-hljs-attr(name-color, $hljs);
             }
 
             &-number {
-                background-color: map.get($hljs, number-background);
-                color: map.get($hljs, number-color);
+                background-color: kbq-code-block-hljs-attr(number-background, $hljs);
+                color: kbq-code-block-hljs-attr(number-color, $hljs);
             }
 
             &-operator {
-                background-color: map.get($hljs, operator-background);
-                color: map.get($hljs, operator-color);
+                background-color: kbq-code-block-hljs-attr(operator-background, $hljs);
+                color: kbq-code-block-hljs-attr(operator-color, $hljs);
             }
 
             &-params {
-                background-color: map.get($hljs, params-background);
-                color: map.get($hljs, params-color);
+                background-color: kbq-code-block-hljs-attr(params-background, $hljs);
+                color: kbq-code-block-hljs-attr(params-color, $hljs);
             }
 
             &-property {
-                background-color: map.get($hljs, property-background);
-                color: map.get($hljs, property-color);
+                background-color: kbq-code-block-hljs-attr(property-background, $hljs);
+                color: kbq-code-block-hljs-attr(property-color, $hljs);
             }
 
             &-punctuation {
-                background-color: map.get($hljs, punctuation-background);
-                color: map.get($hljs, punctuation-color);
+                background-color: kbq-code-block-hljs-attr(punctuation-background, $hljs);
+                color: kbq-code-block-hljs-attr(punctuation-color, $hljs);
             }
 
             &-quote {
-                background-color: map.get($hljs, quote-background);
-                color: map.get($hljs, quote-color);
+                background-color: kbq-code-block-hljs-attr(quote-background, $hljs);
+                color: kbq-code-block-hljs-attr(quote-color, $hljs);
             }
 
             &-regexp {
-                background-color: map.get($hljs, regexp-background);
-                color: map.get($hljs, regexp-color);
+                background-color: kbq-code-block-hljs-attr(regexp-background, $hljs);
+                color: kbq-code-block-hljs-attr(regexp-color, $hljs);
             }
 
             &-section {
-                background-color: map.get($hljs, section-background);
-                color: map.get($hljs, section-color);
+                background-color: kbq-code-block-hljs-attr(section-background, $hljs);
+                color: kbq-code-block-hljs-attr(section-color, $hljs);
             }
 
             &-selector-attr {
-                background-color: map.get($hljs, selector-attr-background);
-                color: map.get($hljs, selector-attr-color);
+                background-color: kbq-code-block-hljs-attr(selector-attr-background, $hljs);
+                color: kbq-code-block-hljs-attr(selector-attr-color, $hljs);
             }
 
             &-selector-class {
-                background-color: map.get($hljs, selector-class-background);
-                color: map.get($hljs, selector-class-color);
+                background-color: kbq-code-block-hljs-attr(selector-class-background, $hljs);
+                color: kbq-code-block-hljs-attr(selector-class-color, $hljs);
             }
 
             &-selector-id {
-                background-color: map.get($hljs, selector-id-background);
-                color: map.get($hljs, selector-id-color);
+                background-color: kbq-code-block-hljs-attr(selector-id-background, $hljs);
+                color: kbq-code-block-hljs-attr(selector-id-color, $hljs);
             }
 
             &-selector-pseudo {
-                background-color: map.get($hljs, selector-pseudo-background);
-                color: map.get($hljs, selector-pseudo-color);
+                background-color: kbq-code-block-hljs-attr(selector-pseudo-background, $hljs);
+                color: kbq-code-block-hljs-attr(selector-pseudo-color, $hljs);
             }
 
             &-selector-tag {
-                background-color: map.get($hljs, selector-tag-background);
-                color: map.get($hljs, selector-tag-color);
+                background-color: kbq-code-block-hljs-attr(selector-tag-background, $hljs);
+                color: kbq-code-block-hljs-attr(selector-tag-color, $hljs);
             }
 
             &-string {
-                background-color: map.get($hljs, string-background);
-                color: map.get($hljs, string-color);
+                background-color: kbq-code-block-hljs-attr(string-background, $hljs);
+                color: kbq-code-block-hljs-attr(string-color, $hljs);
             }
 
             &-strong {
-                background-color: map.get($hljs, strong-background);
-                color: map.get($hljs, strong-color);
+                background-color: kbq-code-block-hljs-attr(strong-background, $hljs);
+                color: kbq-code-block-hljs-attr(strong-color, $hljs);
             }
 
             &-subst {
-                background-color: map.get($hljs, subst-background);
-                color: map.get($hljs, subst-color);
+                background-color: kbq-code-block-hljs-attr(subst-background, $hljs);
+                color: kbq-code-block-hljs-attr(subst-color, $hljs);
             }
 
             &-symbol {
-                background-color: map.get($hljs, symbol-background);
-                color: map.get($hljs, symbol-color);
+                background-color: kbq-code-block-hljs-attr(symbol-background, $hljs);
+                color: kbq-code-block-hljs-attr(symbol-color, $hljs);
             }
 
             &-tag {
-                background-color: map.get($hljs, tag-background);
-                color: map.get($hljs, tag-color);
+                background-color: kbq-code-block-hljs-attr(tag-background, $hljs);
+                color: kbq-code-block-hljs-attr(tag-color, $hljs);
             }
 
             &-template-tag {
-                background-color: map.get($hljs, template-tag-background);
-                color: map.get($hljs, template-tag-color);
+                background-color: kbq-code-block-hljs-attr(template-tag-background, $hljs);
+                color: kbq-code-block-hljs-attr(template-tag-color, $hljs);
             }
 
             &-template-variable {
-                background-color: map.get($hljs, template-variable-background);
-                color: map.get($hljs, template-variable-color);
+                background-color: kbq-code-block-hljs-attr(template-variable-background, $hljs);
+                color: kbq-code-block-hljs-attr(template-variable-color, $hljs);
             }
 
             &-title {
-                background-color: map.get($hljs, title-background);
-                color: map.get($hljs, title-color);
+                background-color: kbq-code-block-hljs-attr(title-background, $hljs);
+                color: kbq-code-block-hljs-attr(title-color, $hljs);
             }
 
             &-title-class {
-                background-color: map.get($hljs, title-class-background);
-                color: map.get($hljs, title-class-color);
+                background-color: kbq-code-block-hljs-attr(title-class-background, $hljs);
+                color: kbq-code-block-hljs-attr(title-class-color, $hljs);
             }
 
             &-title-class-inherited {
-                background-color: map.get($hljs, title-class-inherited-background);
-                color: map.get($hljs, title-class-inherited-color);
+                background-color: kbq-code-block-hljs-attr(title-class-inherited-background, $hljs);
+                color: kbq-code-block-hljs-attr(title-class-inherited-color, $hljs);
             }
 
             &-title-function {
-                background-color: map.get($hljs, title-function-background);
-                color: map.get($hljs, title-function-color);
+                background-color: kbq-code-block-hljs-attr(title-function-background, $hljs);
+                color: kbq-code-block-hljs-attr(title-function-color, $hljs);
             }
 
             &-title-function-invoke {
-                background-color: map.get($hljs, title-function-invoke-background);
-                color: map.get($hljs, title-function-invoke-color);
+                background-color: kbq-code-block-hljs-attr(title-function-invoke-background, $hljs);
+                color: kbq-code-block-hljs-attr(title-function-invoke-color, $hljs);
             }
 
             &-type {
-                background-color: map.get($hljs, type-background);
-                color: map.get($hljs, type-color);
+                background-color: kbq-code-block-hljs-attr(type-background, $hljs);
+                color: kbq-code-block-hljs-attr(type-color, $hljs);
             }
 
             &-variable {
-                background-color: map.get($hljs, variable-background);
-                color: map.get($hljs, variable-color);
+                background-color: kbq-code-block-hljs-attr(variable-background, $hljs);
+                color: kbq-code-block-hljs-attr(variable-color, $hljs);
             }
 
             &-variable-constant {
-                background-color: map.get($hljs, variable-constant-background);
-                color: map.get($hljs, variable-constant-color);
+                background-color: kbq-code-block-hljs-attr(variable-constant-background, $hljs);
+                color: kbq-code-block-hljs-attr(variable-constant-color, $hljs);
             }
 
             &-variable-language {
-                background-color: map.get($hljs, variable-language-background);
-                color: map.get($hljs, variable-language-color);
+                background-color: kbq-code-block-hljs-attr(variable-language-background, $hljs);
+                color: kbq-code-block-hljs-attr(variable-language-color, $hljs);
             }
 
             &-ln-n {
-                color: map.get($hljs, line-numbers-color);
+                color: kbq-code-block-hljs-attr(line-numbers-color, $hljs);
             }
 
             &-line-numbers {

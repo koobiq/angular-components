@@ -1017,25 +1017,25 @@
                 icon-left: map.get($tokens, 'navbar-item-#{$scheme}-default-content-icon-left'),
                 icon-right: map.get($tokens, 'navbar-item-#{$scheme}-default-content-icon-right')
             ),
-            hover: (
+            states-hover: (
                 background: map.get($tokens, 'navbar-item-#{$scheme}-states-hover-content-background'),
                 text: map.get($tokens, 'navbar-item-#{$scheme}-states-hover-content-text'),
                 icon-left: map.get($tokens, 'navbar-item-#{$scheme}-states-hover-content-icon-left'),
                 icon-right: map.get($tokens, 'navbar-item-#{$scheme}-states-hover-content-icon-right')
             ),
-            selected: (
+            states-selected: (
                 background: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-content-background'),
                 text: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-content-text'),
                 icon-left: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-content-icon-left'),
                 icon-right: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-content-icon-right')
             ),
-            selected-hover: (
+            states-selected-hover: (
                 background: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-background'),
                 text: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-text'),
                 icon-left: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-icon-left'),
                 icon-right: map.get($tokens, 'navbar-item-#{$scheme}-states-selected-hover-content-icon-right')
             ),
-            disabled: (
+            states-disabled: (
                 background: map.get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-background'),
                 text: map.get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-text'),
                 icon-left: map.get($tokens, 'navbar-item-#{$scheme}-states-disabled-content-icon-left'),

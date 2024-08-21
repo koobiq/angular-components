@@ -9,16 +9,16 @@
 
     .kbq-progress-spinner {
         .kbq-progress-spinner__circle {
-            stroke: kbq-css-variable(progress-spinner-circle, map.get($progress-spinner, circle));
+            stroke: kbq-css-variable(progress-spinner-circle-background, map.get($progress-spinner, circle));
         }
     }
 
     .kbq-progress-spinner-text {
-        color: kbq-css-variable(progress-spinner-text, map.get($progress-spinner, text));
+        color: kbq-css-variable(progress-spinner-text-color, map.get($progress-spinner, text));
     }
 
     .kbq-progress-spinner-caption {
-        color: kbq-css-variable(progress-spinner-caption, map.get($progress-spinner, caption));
+        color: kbq-css-variable(progress-spinner-caption-color, map.get($progress-spinner, caption));
     }
 }
 

@@ -1,6 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
+// TODO: review @use rules usage
 @use '../core/pop-up/pop-up' as *;
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;

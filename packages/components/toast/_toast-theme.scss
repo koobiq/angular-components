@@ -33,7 +33,7 @@
         }
 
         &.kbq-toast_warning {
-            @include kbq-toast($toast, success);
+            @include kbq-toast($toast, warning);
         }
 
         &.kbq-toast_error {

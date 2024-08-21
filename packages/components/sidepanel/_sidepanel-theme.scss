@@ -8,17 +8,17 @@
     $sidepanel: map.get($theme, components, sidepanel);
 
     .kbq-sidepanel-title {
-        color: kbq-css-variable(sidepanel-header-text, map.get($sidepanel, header-text));
+        color: kbq-css-variable(sidepanel-header-text-color, map.get($sidepanel, header-text));
     }
 
     .kbq-sidepanel-content {
-        background-color: kbq-css-variable(sidepanel-background, map.get($sidepanel, background));
-        color: kbq-css-variable(sidepanel-content-text, map.get($sidepanel, content-text));
+        background-color: kbq-css-variable(sidepanel-container-background, map.get($sidepanel, background));
+        color: kbq-css-variable(sidepanel-content-text-color, map.get($sidepanel, content-text));
     }
 
     .kbq-sidepanel-container_shadowed {
         .kbq-sidepanel-content {
-            box-shadow: kbq-css-variable(sidepanel-box-shadow, map.get($sidepanel, box-shadow));
+            box-shadow: kbq-css-variable(sidepanel-container-box-shadow, map.get($sidepanel, box-shadow));
         }
     }
 }

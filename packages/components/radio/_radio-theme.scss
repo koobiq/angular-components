@@ -34,7 +34,7 @@
     @include kbq-radio-state($component, $type-name, default);
 
     & .kbq-hint .kbq-hint__text {
-        color: map.get($component, $type-name, default, caption);
+        color: kbq-css-variable(radio-#{$type-name}-default-caption, map.get($component, $type-name, default, caption));
     }
 
     &:hover {
@@ -58,11 +58,17 @@
 
         & .kbq-radio-label {
             cursor: default;
-            color: map.get($component, $type-name, states-disabled, caption);
+            color: kbq-css-variable(
+                radio-#{$type-name}-states-disabled-caption,
+                map.get($component, $type-name, states-disabled, caption)
+            );
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: map.get($component, $type-name, states-disabled, caption);
+            color: kbq-css-variable(
+                radio-#{$type-name}-states-disabled-caption,
+                map.get($component, $type-name, states-disabled, caption)
+            );
         }
     }
 }

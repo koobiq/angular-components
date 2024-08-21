@@ -10,10 +10,10 @@
     $base: tabs-tab-item-#{$type}-#{$sub-type}-#{$style-name};
 
     background: kbq-css-variable(#{$base}-background, map.get($style, background));
-    color: kbq-css-variable(#{$base}-text, map.get($style, text));
+    color: kbq-css-variable(#{$base}-text-color, map.get($style, text));
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base}-icon, map.get($style, icon));
+        color: kbq-css-variable(#{$base}-icon-color, map.get($style, icon));
     }
 }
 
@@ -34,7 +34,7 @@
 
     &.cdk-keyboard-focused {
         border-color: kbq-css-variable(
-            tabs-tab-item-#{$type}-#{$sub-type}-states-focused-border-color,
+            tabs-tab-item-#{$type}-#{$sub-type}-states-focused-focus-outline-color,
             map.get($component, $type, $sub-type, states-focused, border-color)
         );
     }
@@ -76,6 +76,7 @@
                     );
                 }
 
+                // TODO: need check, tab-group has different subtype
                 & .kbq-tab-label {
                     @include kbq-tab-item-style($tab-item, filled, on-background);
                 }

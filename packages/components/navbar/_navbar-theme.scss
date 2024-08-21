@@ -10,20 +10,20 @@
     &:not(.kbq-navbar-item_has-nested) {
         &:after {
             display: block;
-            background: kbq-css-variable(navbar-item-#{$state-name}-background, map.get($state, background));
+            background: kbq-css-variable(navbar-item-#{$state-name}-content-background, map.get($state, background));
         }
     }
 
     .kbq-navbar-title {
-        color: kbq-css-variable(navbar-item-#{$state-name}-text, map.get($state, text));
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-text, map.get($state, text));
     }
 
     & > .kbq-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-icon-left, map.get($state, icon-left)) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-left, map.get($state, icon-left)) !important;
     }
 
     .kbq-navbar-item__arrow-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-icon-right, map.get($state, icon-right)) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-right, map.get($state, icon-right)) !important;
     }
 }
 
@@ -48,7 +48,7 @@
         @include kbq-navbar-item($item, default);
 
         &:hover:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item($item, hover);
+            @include kbq-navbar-item($item, states-hover);
         }
 
         &.cdk-focused.cdk-keyboard-focused {
@@ -63,7 +63,7 @@
 
         &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
         &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item($item, selected);
+            @include kbq-navbar-item($item, states-selected);
         }
 
         &.kbq-navbar-focusable-item {
@@ -71,7 +71,7 @@
         }
 
         &.kbq-disabled {
-            @include kbq-navbar-item($item, disabled);
+            @include kbq-navbar-item($item, states-disabled);
 
             pointer-events: none;
             cursor: default;
@@ -106,7 +106,7 @@ button {
 
 @mixin kbq-navbar-typography($config) {
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles($config, text-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-strong);
     }
 
     .kbq-navbar-brand {

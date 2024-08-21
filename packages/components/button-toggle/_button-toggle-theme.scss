@@ -62,7 +62,7 @@
                 }
 
                 &.cdk-keyboard-focused {
-                    border-color: map.get($button, focused);
+                    border-color: kbq-css-variable(button-toggle-item-states-focused-outline map.get($button, focused));
                 }
             }
         }

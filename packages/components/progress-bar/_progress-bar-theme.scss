@@ -18,11 +18,11 @@
     }
 
     .kbq-progress-bar-text {
-        color: kbq-css-variable(progress-bar-text, map.get($progress-bar, text));
+        color: kbq-css-variable(progress-bar-text-color, map.get($progress-bar, text));
     }
 
     .kbq-progress-bar-caption {
-        color: kbq-css-variable(progress-bar-caption, map.get($progress-bar, caption));
+        color: kbq-css-variable(progress-bar-caption-color, map.get($progress-bar, caption));
     }
 }
 
