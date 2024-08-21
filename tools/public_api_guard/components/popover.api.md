@@ -5,7 +5,7 @@
 ```ts
 
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
