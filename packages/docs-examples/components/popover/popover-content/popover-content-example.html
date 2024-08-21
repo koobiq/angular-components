@@ -1,5 +1,5 @@
 <div class="popover-content-example">
-    <ng-template #customShareContent>
+    <ng-template #shareContent>
         <div class="kbq-subheading">Share project</div>
         <div class="popover-share-content__text">
             Give your teammates access to the project and start collaborating in real time
@@ -97,7 +97,7 @@
             kbqPopover
             [hasCloseButton]="true"
             [kbqPopoverClass]="'share-content'"
-            [kbqPopoverContent]="customShareContent"
+            [kbqPopoverContent]="shareContent"
         >
             Без панели хедера
         </button>
