@@ -22,6 +22,7 @@
                         <button
                             kbq-button
                             [color]="'contrast'"
+                            (click)="kbqSharePopover.hide(0)"
                         >
                             Send invite
                         </button>
@@ -43,6 +44,7 @@
             <button
                 kbq-button
                 [color]="'contrast'"
+                (click)="kbqCustomPopover.hide(0)"
             >
                 Сделать магию
             </button>
@@ -51,6 +53,7 @@
 
     <div class="popover-content-example__buttons">
         <button
+            #kbqSharePopover="kbqPopover"
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
@@ -59,6 +62,7 @@
             Без панели хедера
         </button>
         <button
+            #kbqCustomPopover="kbqPopover"
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
