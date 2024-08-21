@@ -22,8 +22,8 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: ./.github/workflows/actions/setup-pnpm
+      - name: Setup Yarn
+        uses: ./.github/workflows/actions/setup-yarn
 
       - name: Build Packages
         uses: ./.github/workflows/actions/build-packages

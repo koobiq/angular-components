@@ -6,7 +6,7 @@ runs:
     - name: Build Documentation
       shell: bash
       run: |
-        pnpm run build:docs-examples-module
-        pnpm run build:docs-examples
-        pnpm run build:docs-content && pnpm run build:package-docs-content
-        pnpm run docs:prod-build:aot
+        yarn run build:docs-examples-module
+        yarn run build:docs-examples
+        yarn run build:docs-content && yarn run build:package-docs-content
+        yarn run docs:prod-build:aot
