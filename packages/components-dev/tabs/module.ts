@@ -3,6 +3,7 @@ import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Observer } from 'rxjs';
@@ -90,7 +91,8 @@ export class TabsDemoComponent {
         KbqInputModule,
         KbqToolTipModule,
         KbqSelectModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqPopoverModule
     ],
     bootstrap: [TabsDemoComponent]
 })

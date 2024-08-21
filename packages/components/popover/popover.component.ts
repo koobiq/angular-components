@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    CdkScrollable,
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
@@ -278,6 +279,17 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         @Optional() direction: Directionality
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+
+        this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
+            if (!scrollable) return;
+
+            const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+            const childRects = elementRef.nativeElement.getBoundingClientRect();
+
+            if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
+                this.hide();
+            }
+        });
     }
 
     updateData() {
