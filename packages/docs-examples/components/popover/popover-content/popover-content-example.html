@@ -1,7 +1,9 @@
 <div class="popover-content-example">
     <ng-template #customShareContent>
-        <div>Share project</div>
-        <div>Give your teammates access to the project and start collaborating in real time</div>
+        <div class="kbq-subheading">Share project</div>
+        <div class="popover-share-content__text">
+            Give your teammates access to the project and start collaborating in real time
+        </div>
         <form
             novalidate
             class="kbq-form-vertical"
@@ -31,19 +33,19 @@
                 </div>
             </div>
         </form>
-        <div class="popover-custom-example__list">
-            <div class="popover-custom-example__list-title">Members</div>
+        <div class="popover-share-content__list">
+            <div class="popover-share-content__list-title">Members</div>
             <div
                 *ngFor="let member of members; let i = index"
-                class="popover-custom-example__list-item"
+                class="popover-share-content__list-item"
             >
-                <div class="popover-custom-example__list-item-left">
+                <div class="popover-share-content__list-item-left">
                     <img
                         alt="{{ member.name }}"
                         src="assets/images/popover/list-member-{{ i + 1 }}.png"
-                        class="popover-custom-example__list-item-image"
+                        class="popover-share-content__list-item-image"
                     />
-                    <div class="popover-custom-example__list-item-name">{{ member.name }}</div>
+                    <div class="popover-share-content__list-item-name">{{ member.name }}</div>
                 </div>
                 <button
                     kbq-button
@@ -94,6 +96,7 @@
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
+            [kbqPopoverClass]="'share-content'"
             [kbqPopoverContent]="customShareContent"
         >
             Без панели хедера

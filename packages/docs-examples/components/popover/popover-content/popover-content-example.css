@@ -24,38 +24,47 @@
     right: 8px;
 }
 
-.popover-custom-example__image {
+.kbq-popover.share-content .kbq-form__label {
+    display: block;
+}
+
+.popover-share-content__text {
+    color: #6c7393;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+.popover-share-content__image {
     display: block;
     width: 100%;
 }
 
-.popover-custom-example__container {
+.popover-share-content__container {
     padding: 24px 32px 40px 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.popover-custom-example__list {
+.popover-share-content__list {
     margin-top: 16px;
 }
 
-.popover-custom-example__list-item {
+.popover-share-content__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 12px;
 }
 
-.popover-custom-example__list-item-left {
+.popover-share-content__list-item-left {
     display: flex;
     align-items: center;
 }
 
-.popover-custom-example__list-item-image {
+.popover-share-content__list-item-image {
     width: 32px;
     height: 32px;
     border-radius: 100%;
-    background: red;
     margin-right: 12px;
 }
