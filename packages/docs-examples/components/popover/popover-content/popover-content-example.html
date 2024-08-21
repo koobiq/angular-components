@@ -32,13 +32,21 @@
     </ng-template>
 
     <ng-template #customContent>
-        Абракадабра! Таинственное слово, которому приписывалась чудодейственная сила
-        <button
-            kbq-button
-            [color]="'contrast'"
-        >
-            Сделать магию
-        </button>
+        <img
+            alt=""
+            src="assets/images/popover/hero-header.png"
+            class="popover-custom-example__image"
+        />
+        <div class="popover-custom-example__container">
+            <h4 class="kbq-title">Абракадабра!</h4>
+            <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
+            <button
+                kbq-button
+                [color]="'contrast'"
+            >
+                Сделать магию
+            </button>
+        </div>
     </ng-template>
 
     <div class="popover-content-example__buttons">
@@ -54,6 +62,7 @@
             kbq-button
             kbqPopover
             [hasCloseButton]="true"
+            [kbqPopoverClass]="'custom-content'"
             [kbqPopoverContent]="customContent"
         >
             Нестандартные стили и отступы

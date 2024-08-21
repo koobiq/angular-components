@@ -3,3 +3,35 @@
     flex-wrap: wrap;
     gap: 16px;
 }
+
+.kbq-popover.custom-content .kbq-title {
+    margin: 0 0;
+}
+
+.kbq-popover.custom-content .kbq-popover__content {
+    padding: 0 0;
+}
+
+.kbq-popover.custom-content .kbq-popover__content p {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.kbq-popover.custom-content .kbq-popover__content .kbq-popover__close-container .kbq-popover__close {
+    transform: none;
+    top: 8px;
+    right: 8px;
+}
+
+.popover-custom-example__image {
+    display: block;
+    width: 100%;
+}
+
+.popover-custom-example__container {
+    padding: 24px 32px 40px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
