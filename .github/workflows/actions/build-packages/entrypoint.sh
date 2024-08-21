@@ -9,29 +9,29 @@ fi
 set -Eeuo pipefail
 
 echo "::group:: Build CDK ..."
-    pnpm run build:cdk
+    yarn run build:cdk
 echo '::endgroup::'
 
 echo "::group:: Build Components ..."
-    pnpm run build:components
+    yarn run build:components
 echo '::endgroup::'
 
 echo "::group:: Luxon Adapter ..."
-    pnpm run build:angular-luxon-adapter
+    yarn run build:angular-luxon-adapter
 echo '::endgroup::'
 
 echo "::group:: Moment Adapter ..."
-    pnpm run build:angular-moment-adapter
+    yarn run build:angular-moment-adapter
 echo '::endgroup::'
 
 echo "::group:: SCSS Styles ..."
-    pnpm run styles:built-all
+    yarn run styles:built-all
 echo '::endgroup::'
 
 echo "::group:: CLI ..."
-    pnpm run build:cli
+    yarn run build:cli
 echo '::endgroup::'
 
 echo "::group:: Schematics ..."
-    pnpm run build:schematics
+    yarn run build:schematics
 echo '::endgroup::'

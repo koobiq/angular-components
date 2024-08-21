@@ -1,2 +1,2 @@
 git restore --staged packages/components/core/version.ts
-pnpm lint-staged
+yarn lint-staged

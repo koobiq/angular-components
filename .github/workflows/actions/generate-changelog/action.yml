@@ -14,7 +14,7 @@ runs:
       id: generate-changelog
       shell: bash
       run: |
-        pnpm run release:extract-changelog
+        yarn run release:extract-changelog
         changelog=$(cat ./CHANGELOG_CURRENT.md)
 
         # Output multiline strings: https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
