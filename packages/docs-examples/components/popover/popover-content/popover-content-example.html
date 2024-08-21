@@ -31,31 +31,42 @@
                 </div>
             </div>
         </form>
-        <div>Members</div>
-        <div *ngFor="let member of members">
-            {{ member.name }}
-            <button
-                kbq-button
-                class="kbq-button_transparent"
-                [color]="componentColors.Contrast"
-                [kbqDropdownTriggerFor]="appDropdown"
+        <div class="popover-custom-example__list">
+            <div class="popover-custom-example__list-title">Members</div>
+            <div
+                *ngFor="let member of members; let i = index"
+                class="popover-custom-example__list-item"
             >
-                Editor
-                <i
-                    kbq-icon="mc-angle-down-S_16"
+                <div class="popover-custom-example__list-item-left">
+                    <img
+                        alt="{{ member.name }}"
+                        src="assets/images/popover/list-member-{{ i + 1 }}.png"
+                        class="popover-custom-example__list-item-image"
+                    />
+                    <div class="popover-custom-example__list-item-name">{{ member.name }}</div>
+                </div>
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
                     [color]="componentColors.Contrast"
-                ></i>
-            </button>
+                    [kbqDropdownTriggerFor]="appDropdown"
+                >
+                    {{ member.role }}
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        [color]="componentColors.Contrast"
+                    ></i>
+                </button>
+            </div>
+            <kbq-dropdown
+                #appDropdown="kbqDropdown"
+                [class]="'max-width'"
+                [navigationWithWrap]="true"
+            >
+                <button kbq-dropdown-item>Editor</button>
+                <button kbq-dropdown-item>Viewer</button>
+            </kbq-dropdown>
         </div>
-        <kbq-dropdown
-            #appDropdown="kbqDropdown"
-            [class]="'max-width'"
-            [navigationWithWrap]="true"
-        >
-            <button kbq-dropdown-item>Point 2</button>
-            <button kbq-dropdown-item>Point 3</button>
-            <button kbq-dropdown-item>Link</button>
-        </kbq-dropdown>
     </ng-template>
 
     <ng-template #customContent>

@@ -6,7 +6,9 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -14,6 +16,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { PopoverCloseExample } from './popover-close/popover-close-example';
 import { PopoverCommonExample } from './popover-common/popover-common-example';
 import { PopoverContentExample } from './popover-content/popover-content-example';
@@ -23,9 +26,6 @@ import { PopoverPlacementCenterExample } from './popover-placement-center/popove
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqTitleModule } from '@koobiq/components/title';
 
 export {
     PopoverCloseExample,

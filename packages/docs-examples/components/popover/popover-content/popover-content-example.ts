@@ -12,16 +12,16 @@ import { KbqComponentColors } from '@koobiq/components/core';
 })
 export class PopoverContentExample {
     members: object[] = [
-        { name: 'Alexandr Vsekhvalnov', role: 'editor' },
-        { name: 'Sergey Voximplant', role: 'editor' },
-        { name: 'Roman Turov', role: 'editor' },
-        { name: 'Viber Curly', role: 'editor' },
-        { name: 'Jackie Ckang', role: 'editor' },
-        { name: 'Robert Skinner', role: 'editor' },
-        { name: 'Woodie Hoodie', role: 'editor' },
-        { name: 'Alex Buckmaster', role: 'editor' },
-        { name: 'Chris Glasser', role: 'editor' },
-        { name: 'Corina McCoy', role: 'editor' }
+        { name: 'Alexandr Vsekhvalnov', role: 'Editor' },
+        { name: 'Sergey Voximplant', role: 'Editor' },
+        { name: 'Roman Turov', role: 'Viewer' },
+        { name: 'Viber Curly', role: 'Viewer' },
+        { name: 'Jackie Ckang', role: 'Viewer' },
+        { name: 'Robert Skinner', role: 'Viewer' },
+        { name: 'Woodie Hoodie', role: 'Viewer' },
+        { name: 'Alex Buckmaster', role: 'Viewer' },
+        { name: 'Chris Glasser', role: 'Viewer' },
+        { name: 'Corina McCoy', role: 'Viewer' }
     ];
     protected readonly componentColors = KbqComponentColors;
 }

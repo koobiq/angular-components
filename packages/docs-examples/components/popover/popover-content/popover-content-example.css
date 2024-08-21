@@ -35,3 +35,27 @@
     flex-direction: column;
     align-items: center;
 }
+
+.popover-custom-example__list {
+    margin-top: 16px;
+}
+
+.popover-custom-example__list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.popover-custom-example__list-item-left {
+    display: flex;
+    align-items: center;
+}
+
+.popover-custom-example__list-item-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    background: red;
+    margin-right: 12px;
+}
