@@ -23,6 +23,9 @@ import { PopoverPlacementCenterExample } from './popover-placement-center/popove
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 export {
     PopoverCloseExample,
@@ -64,7 +67,10 @@ const EXAMPLES = [
         KbqRadioModule,
         KbqLinkModule,
         KbqDlModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqDropdownModule,
+        KbqDividerModule,
+        KbqTitleModule
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES

@@ -1,6 +1,7 @@
 <div class="popover-content-example">
     <ng-template #customShareContent>
-        Share project
+        <div>Share project</div>
+        <div>Give your teammates access to the project and start collaborating in real time</div>
         <form
             novalidate
             class="kbq-form-vertical"
@@ -30,6 +31,31 @@
                 </div>
             </div>
         </form>
+        <div>Members</div>
+        <div *ngFor="let member of members">
+            {{ member.name }}
+            <button
+                kbq-button
+                class="kbq-button_transparent"
+                [color]="componentColors.Contrast"
+                [kbqDropdownTriggerFor]="appDropdown"
+            >
+                Editor
+                <i
+                    kbq-icon="mc-angle-down-S_16"
+                    [color]="componentColors.Contrast"
+                ></i>
+            </button>
+        </div>
+        <kbq-dropdown
+            #appDropdown="kbqDropdown"
+            [class]="'max-width'"
+            [navigationWithWrap]="true"
+        >
+            <button kbq-dropdown-item>Point 2</button>
+            <button kbq-dropdown-item>Point 3</button>
+            <button kbq-dropdown-item>Link</button>
+        </kbq-dropdown>
     </ng-template>
 
     <ng-template #customContent>
