@@ -37,6 +37,7 @@ jobs:
           yarn run unit:angular-moment-adapter
           yarn run unit:angular-luxon-adapter
           yarn run unit:schematics
+          yarn run unit:koobiq-docs
 
       - name: License validation
         run: yarn run validate:license

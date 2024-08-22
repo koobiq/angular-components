@@ -260,7 +260,8 @@
         "unit:components": "ng test components && ng run components:karma-test",
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
         "unit:angular-luxon-adapter": "ng test angular-luxon-adapter",
-        "unit:schematics": "jest --roots packages/schematics"
+        "unit:schematics": "jest --roots packages/schematics",
+        "unit:koobiq-docs": "ng test koobiq-docs"
     },
     "release": {
         "packages": [

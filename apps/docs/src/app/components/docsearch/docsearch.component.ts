@@ -1,6 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import docsearch from '@docsearch/js';
-import * as UAParser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
@@ -24,7 +24,7 @@ export class DocsearchComponent {
             hitsPerPage: 40
         },
         disableUserPersonalization: false,
-        resultsFooterComponent: null,
+        resultsFooterComponent: () => null,
         placeholder: 'Поиск'
     };
 
@@ -66,7 +66,7 @@ export class DocsearchComponent {
 
     private readonly translations = (): _DocSearchProps['translations'] => {
         const uaParser = new UAParser();
-        const osName = uaParser.getOS().name;
+        const osName = uaParser.getOS().name || '';
         let buttonText = 'Поиск';
         if (osName.includes('Win')) {
             buttonText += ' Ctrl+K';
