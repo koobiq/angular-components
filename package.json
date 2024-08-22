@@ -178,7 +178,7 @@
         "docs:prod-build": "ng build koobiq-docs",
         "docs:prod-build:aot": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
-        "docs:api-gen": "set BASE_PATH=packages && node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only tools/api-gen/generate-api-docs.mts",
+        "docs:api-gen": "BASE_PATH=packages && node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only tools/api-gen/generate-api-docs.mts",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
         "eslint": "eslint . --ext='.js,.ts,.html'",
         "eslint:fix": "yarn run eslint --fix",
