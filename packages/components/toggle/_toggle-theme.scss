@@ -84,7 +84,7 @@
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(foreground-text-disabled map.get($foreground, text-disabled));
+            color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
         }
     }
 }
