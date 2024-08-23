@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    CdkScrollable,
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
@@ -8,6 +9,7 @@ import {
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -98,7 +100,7 @@ export function getKbqPopoverInvalidPositionError(position: string) {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
+export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
     @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;
@@ -238,7 +240,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
      * Use CloseScrollStrategy as alternative
      */
     @Input()
-    get closeOnScroll(): boolean {
+    get closeOnScroll(): boolean | null {
         return this._closeOnScroll;
     }
 
@@ -246,7 +248,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         this._closeOnScroll = coerceBooleanProperty(value);
     }
 
-    private _closeOnScroll: boolean = false;
+    private _closeOnScroll: boolean | null = null;
 
     get hasClickTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);
@@ -278,6 +280,21 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         @Optional() direction: Directionality
     ) {
         super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+    }
+
+    ngAfterContentInit(): void {
+        if (this.closeOnScroll === null) {
+            this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
+                if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
+
+                const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+                const childRects = this.elementRef.nativeElement.getBoundingClientRect();
+
+                if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
+                    this.hide();
+                }
+            });
+        }
     }
 
     updateData() {

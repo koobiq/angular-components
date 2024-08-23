@@ -8,7 +8,21 @@
         >
             Content 4
         </kbq-tab>
-        <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
+        <kbq-tab [label]="'label 5'">
+            <div style="height: 200px">
+                <div style="height: 300px"></div>
+                <button
+                    kbq-button
+                    kbqPopover
+                    [kbqPopoverContent]="
+                        'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'
+                    "
+                >
+                    Button
+                </button>
+                <div style="height: 300px"></div>
+            </div>
+        </kbq-tab>
         <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
         <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
         <kbq-tab [label]="'label 8'">Content 8</kbq-tab>
