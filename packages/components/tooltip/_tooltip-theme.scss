@@ -1,7 +1,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-// TODO: review @use rules usage
+// FIXME: @use properties are used, which are most likely not applied. Need to check
 @use '../core/pop-up/pop-up' as *;
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;

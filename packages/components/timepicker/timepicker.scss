@@ -4,7 +4,7 @@
 @use '../core/styles/common/tokens' as *;
 
 .kbq-timepicker {
-    // TODO: default token doesn't exist
+    // FIXME: default token doesn't exist
     padding-right: kbq-css-variable(timepicker-size-padding-right);
 }
 

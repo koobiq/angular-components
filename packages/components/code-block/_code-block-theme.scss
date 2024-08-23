@@ -17,11 +17,11 @@
 
     & .kbq-tab-header {
         background: kbq-css-variable(#{$base}-header-background, map.get($style, header, background)) !important;
-        border-color: kbq-css-variable(#{$base}-container-border, map.get($style, container, border));
+        border-color: kbq-css-variable(#{$base}-container-border-color, map.get($style, container, border));
     }
 
     .kbq-tab-body__wrapper {
-        border-color: kbq-css-variable(#{$base}-container-border, map.get($style, container, border));
+        border-color: kbq-css-variable(#{$base}-container-border-color, map.get($style, container, border));
     }
 
     &:not(.kbq-code-block_no-header) {

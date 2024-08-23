@@ -76,7 +76,7 @@
                     );
                 }
 
-                // TODO: need check, tab-group has different subtype
+                // FIXME: need check, tab-group has different subtype
                 & .kbq-tab-label {
                     @include kbq-tab-item-style($tab-item, filled, on-background);
                 }

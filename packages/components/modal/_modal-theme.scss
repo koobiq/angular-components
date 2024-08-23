@@ -25,11 +25,11 @@
             color: kbq-css-variable(modal-content-text-color, map.get($modal, content));
         }
 
-        // TODO: default token doesn't exist
+        // FIXME: default token doesn't exist
         .kbq-modal-header.kbq-modal-body_top-overflow {
             box-shadow: kbq-css-variable(modal-body-top-shadow, map.get($modal, body-top-shadow));
         }
-        // TODO: default token doesn't exist
+        // FIXME: default token doesn't exist
         .kbq-modal-footer.kbq-modal-body_bottom-overflow {
             box-shadow: kbq-css-variable(modal-body-bottom-shadow, map.get($modal, body-bottom-shadow));
         }

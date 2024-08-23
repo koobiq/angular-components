@@ -116,7 +116,7 @@
 
     .kbq-button-icon.kbq-button-wrapper {
         .kbq-icon {
-            line-height: kbq-line-height($config, body);
+            @include kbq-css-font-variable(typography, body, line-height, '');
         }
     }
 }

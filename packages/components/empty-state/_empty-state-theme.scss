@@ -19,11 +19,11 @@
 
     .kbq-empty-state_error-color {
         .kbq-empty-state-title {
-            color: kbq-css-variable(empty-state-title, map.get($theme, foreground, error));
+            color: kbq-css-variable(foreground-error, map.get($theme, foreground, error));
         }
 
         .kbq-empty-state-text {
-            color: kbq-css-variable(empty-state-title, map.get($theme, foreground, error));
+            color: kbq-css-variable(foreground-error, map.get($theme, foreground, error));
         }
     }
 }

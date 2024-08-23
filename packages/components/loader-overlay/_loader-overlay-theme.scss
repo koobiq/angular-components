@@ -7,7 +7,7 @@
 @mixin kbq-loader-overlay-theme($theme) {
     $loader-overlay: map.get(map.get($theme, components), loader-overlay);
 
-    // TODO: move to unified mixin if necessary
+    // FIXME: move to unified mixin if necessary
     .kbq-loader-overlay_filled {
         &.kbq-loader-overlay {
             background: kbq-css-variable(

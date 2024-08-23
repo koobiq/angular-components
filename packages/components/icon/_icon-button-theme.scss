@@ -11,7 +11,7 @@
             outline: none;
         }
 
-        // TODO: move to unified mixin
+        // FIXME: move to unified mixin
         &.kbq-theme {
             color: kbq-css-variable(icon-button-theme-default, map.get($icon-button, theme, default));
 
@@ -128,7 +128,7 @@
         }
 
         &.kbq-warning {
-            color: kbq-css-variable(icon-button-default, map.get($icon-button, default));
+            color: kbq-css-variable(icon-button-warning-default, map.get($icon-button, warning, default));
 
             &:active,
             &.kbq-active {

@@ -17,7 +17,6 @@
             cursor: row-resize;
         }
 
-        // todo
         &[disabled] {
             background-color: kbq-css-variable(background-background-disabled, map.get($background, disabled));
 

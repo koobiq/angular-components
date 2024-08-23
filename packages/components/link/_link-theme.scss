@@ -73,7 +73,7 @@
 
     @if $state-name {
         $state: map.get($component, $state-name);
-        $state-path: link-#{$state-name};
+        $base-path: link-#{$state-name};
     }
 
     color: kbq-css-variable(#{$base-path}-text, map.get($state, text));

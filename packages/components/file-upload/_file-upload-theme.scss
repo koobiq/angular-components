@@ -20,7 +20,7 @@
 
     .kbq-single-file-upload {
         .kbq-file-upload {
-            // TODO: move to mixin kbq-file-upload-state
+            // FIXME: move to mixin kbq-file-upload-state
             background-color: kbq-css-variable(
                 file-upload-single-default-container-background,
                 map.get($file-upload, single, default, background)
