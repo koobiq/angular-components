@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -131,11 +132,11 @@ export class KbqPopoverModule {
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
+export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
     constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
     // (undocumented)
     backdropClass: string;
-    get closeOnScroll(): boolean;
+    get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);
     // (undocumented)
     closingActions(): Observable<void | MouseEvent | CdkScrollable>;
@@ -163,6 +164,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     // (undocumented)
     get header(): string | TemplateRef<any>;
     set header(value: string | TemplateRef<any>);
+    // (undocumented)
+    ngAfterContentInit(): void;
     // (undocumented)
     protected originSelector: string;
     // (undocumented)
