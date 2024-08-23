@@ -1529,20 +1529,20 @@
                 icon: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-default-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-default-close-button')
             ),
-            hover: (
+            states-hover: (
                 background: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-hover-close-button')
             ),
-            focus: (
+            states-focus: (
                 background: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-close-button'),
                 outline: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-focus-outline')
             ),
-            disabled: (
+            states-disabled: (
                 background: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-theme-fade-on-states-disabled-icon'),
@@ -1556,20 +1556,20 @@
                 icon: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-default-close-button')
             ),
-            hover: (
+            states-hover: (
                 background: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-hover-close-button')
             ),
-            focus: (
+            states-focus: (
                 background: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-close-button'),
                 outline: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-focus-outline')
             ),
-            disabled: (
+            states-disabled: (
                 background: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-contrast-fade-on-states-disabled-icon'),
@@ -1583,20 +1583,20 @@
                 icon: map.get($tokens, 'tag-#{$scheme}-error-fade-on-default-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-error-fade-on-default-close-button')
             ),
-            hover: (
+            states-hover: (
                 background: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-hover-close-button')
             ),
-            focus: (
+            states-focus: (
                 background: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-icon'),
                 close-button: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-close-button'),
                 outline: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-focus-outline')
             ),
-            disabled: (
+            states-disabled: (
                 background: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-background'),
                 text: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-text'),
                 icon: map.get($tokens, 'tag-#{$scheme}-error-fade-on-states-disabled-icon'),

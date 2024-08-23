@@ -26,11 +26,11 @@
 
     &:hover,
     &.kbq-hovered {
-        @include kbq-tag-state($component, $type, hover);
+        @include kbq-tag-state($component, $type, states-hover);
     }
 
     &.kbq-focused {
-        @include kbq-tag-state($component, $type, focus);
+        @include kbq-tag-state($component, $type, states-focus);
 
         box-shadow:
             inset 0 0 0.1px 1px
@@ -40,7 +40,7 @@
     }
 
     &.kbq-disabled {
-        @include kbq-tag-state($component, $type, disabled);
+        @include kbq-tag-state($component, $type, states-disabled);
     }
 }
 
