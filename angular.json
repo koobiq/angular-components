@@ -81,12 +81,13 @@
                         "namedChunks": true,
                         "allowedCommonJsDependencies": [
                             "highlight.js",
-                            "@messageformat/core"
+                            "@messageformat/core",
+                            "ua-parser-js"
                         ]
                     },
                     "configurations": {
                         "development": {
-                            "tsConfig": "apps/docs/tsconfig.dev.json",
+                            "tsConfig": "apps/docs/tsconfig.app.json",
                             "fileReplacements": [
                                 {
                                     "replace": "apps/docs/src/environments/environment.ts",
@@ -102,7 +103,7 @@
                             ]
                         },
                         "production": {
-                            "tsConfig": "apps/docs/tsconfig.aot.json",
+                            "tsConfig": "apps/docs/tsconfig.build.json",
                             "fileReplacements": [
                                 {
                                     "replace": "apps/docs/src/environments/environment.ts",

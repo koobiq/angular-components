@@ -3,6 +3,8 @@
         "streetsidesoftware.code-spell-checker",
         "esbenp.prettier-vscode",
         "stylelint.vscode-stylelint",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "angular.ng-template",
+        "editorconfig.editorconfig"
     ]
 }

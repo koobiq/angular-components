@@ -120,7 +120,7 @@ export class DocExampleViewer implements OnDestroy {
         });
 
         this.nativeElement.innerHTML = rawDocument;
-        this.textContent = this.nativeElement.textContent;
+        this.textContent = this.nativeElement.textContent || '';
 
         this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
 

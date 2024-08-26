@@ -65,8 +65,8 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
                     this.router.navigate(['/404']);
                 }
 
-                this.docItem = docItem;
-                this.docCategoryName = this.docItems.getCategoryById(this.docItem.packageName).name;
+                this.docItem = docItem!;
+                this.docCategoryName = this.docItems.getCategoryById(this.docItem.packageName!)!.name;
             });
 
         this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);
@@ -96,7 +96,7 @@ export class BaseOverviewComponent implements OnDestroy {
 
     @ViewChild(AnchorsComponent, { static: false }) anchors: AnchorsComponent;
 
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
@@ -115,13 +115,13 @@ export class BaseOverviewComponent implements OnDestroy {
     ) {
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
         // parent route for the section (koobiq/cdk).
-        this.routeActivated.parent.url
-            .pipe(
+        this.routeActivated
+            .parent!.url.pipe(
                 map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
                 filter((p) => !!p),
                 takeUntil(this.destroyed)
             )
-            .subscribe((d) => (this.componentDocItem = d));
+            .subscribe((d) => (this.componentDocItem = d!));
 
         this.currentUrl = this.getRoute(router.url);
 
@@ -206,7 +206,7 @@ const animations = [
     encapsulation: ViewEncapsulation.None
 })
 export class CdkOverviewComponent extends BaseOverviewComponent {
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
@@ -236,7 +236,7 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class ComponentOverviewComponent extends BaseOverviewComponent {
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
@@ -266,7 +266,7 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class ComponentApiComponent extends BaseOverviewComponent {
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
@@ -296,7 +296,7 @@ export class ComponentApiComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class CdkApiComponent extends BaseOverviewComponent {
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
@@ -326,7 +326,7 @@ export class CdkApiComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class ComponentExamplesComponent extends BaseOverviewComponent {
-    get docItemUrl(): string {
+    get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }

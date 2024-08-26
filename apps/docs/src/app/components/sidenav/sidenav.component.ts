@@ -16,7 +16,7 @@ enum TreeNodeType {
 class TreeNode {
     constructor(
         public id: string,
-        public children: TreeNode[],
+        public children: TreeNode[] | null,
         public name: string,
         public type: TreeNodeType
     ) {}
@@ -175,10 +175,6 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    private findTreeNodeById(id: string): TreeFlatNode {
-        return this.treeControl.dataNodes?.find((node) => node.id === id);
-    }
-
     private transformer = (node: TreeNode, level: number, parent: any) => {
         const flatNode = new TreeFlatNode();
 
@@ -200,7 +196,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         return node.expandable;
     };
 
-    private getChildren = (node: TreeNode): TreeNode[] => {
+    private getChildren = (node: TreeNode): TreeNode[] | null => {
         return node.children;
     };
 
