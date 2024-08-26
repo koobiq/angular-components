@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
 import { default as StackBlitzSDK } from '@stackblitz/sdk';
-import { Observable } from 'rxjs';
-import { shareReplay, take } from 'rxjs/operators';
+import { Observable, firstValueFrom } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { koobiqVersion } from '../../version';
 
 const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`;
@@ -195,8 +195,6 @@ export class StackblitzWriter {
             this.fileCache.set(fileUrl, stream);
         }
 
-        // The `take(1)` is necessary, because the Promise from `toPromise` resolves on complete.
-        // eslint-disable-next-line rxjs/no-topromise
-        return stream.pipe(take(1)).toPromise();
+        return firstValueFrom(stream);
     }
 }

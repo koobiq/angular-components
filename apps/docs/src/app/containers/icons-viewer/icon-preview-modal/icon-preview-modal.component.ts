@@ -74,9 +74,9 @@ export class IconPreviewModalComponent implements AfterViewInit {
         });
     }
 
-    getHexColor(): string {
+    getHexColor(): string | null {
         if (!this.iconPreview) {
-            return;
+            return null;
         }
 
         const color = window
@@ -107,7 +107,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
         const arr: number[] = [];
 
-        color.match(/[\d+\.]+/g).forEach((substring: string) => arr.push(parseFloat(substring)));
+        color.match(/[\d+\.]+/g)!.forEach((substring: string) => arr.push(parseFloat(substring)));
 
         return `${arr.slice(0, 3).map(toHex).join('')}`;
     }

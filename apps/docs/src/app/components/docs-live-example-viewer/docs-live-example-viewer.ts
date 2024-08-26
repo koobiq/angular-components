@@ -184,7 +184,7 @@ export class DocsLiveExampleViewer {
         const filteredFiles = codeFiles.filter((file) => file.content);
         if (filteredFiles.length === 1) {
             /* If there is only one non-empty document in the example, then show the block without tabs */
-            filteredFiles[0].filename = null;
+            filteredFiles[0].filename = '';
         }
         return filteredFiles;
     }

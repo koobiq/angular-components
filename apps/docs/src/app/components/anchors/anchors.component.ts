@@ -46,11 +46,10 @@ export class AnchorsComponent implements OnDestroy, OnInit {
     private debounceTime = 15;
 
     private destroyed: Subject<boolean> = new Subject();
-    private currentUrl: any;
     private scrollSubscription: Subscription;
 
     private get scrollContainer(): HTMLElement {
-        return this.document.querySelector('docs-component-viewer');
+        return this.document.querySelector('docs-component-viewer')!;
     }
 
     private get firstAnchor(): KbqDocsAnchor {
@@ -175,8 +174,8 @@ export class AnchorsComponent implements OnDestroy, OnInit {
     }
 
     private createAnchors(): KbqDocsAnchor[] {
-        return Array.from(this.document.querySelectorAll(this.headerSelectors)).map(
-            (header: HTMLElement, i): KbqDocsAnchor => {
+        return Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors)).map(
+            (header: HTMLElement, i: number): KbqDocsAnchor => {
                 return {
                     href: header ? `${header.id}` : '',
                     name: header.innerText.trim(),
@@ -196,7 +195,7 @@ export class AnchorsComponent implements OnDestroy, OnInit {
     }
 
     private getLevel(classList): number {
-        const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__'));
+        const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__')) || '';
 
         return [
             'kbq-markdown__h3',

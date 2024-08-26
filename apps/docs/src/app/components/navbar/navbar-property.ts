@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 export interface NavbarPropertyParameters {
     // name of local storage property
@@ -19,7 +19,7 @@ export class NavbarProperty {
     data: any[];
     currentValue: any;
 
-    changes = new BehaviorSubject<NavbarPropertyChange>(undefined);
+    changes = new ReplaySubject<NavbarPropertyChange>(1);
 
     private readonly property: string;
 

@@ -34,7 +34,7 @@ export class IconsViewerComponent implements OnDestroy {
     themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
-    filteredIcons: BehaviorSubject<IconItem[] | undefined>;
+    filteredIcons = new BehaviorSubject<IconItem[]>([]);
 
     availableSizes: number[];
 
@@ -69,18 +69,16 @@ export class IconsViewerComponent implements OnDestroy {
 
         this.activeRoute.queryParamMap.subscribe(({ params }: any) => (this.queryParamMap = params));
 
-        this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);
+        this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 
     init() {
-        this.filteredIcons = new BehaviorSubject([]);
-
         this.searchControl.valueChanges
             .pipe(
                 auditTime(SEARCH_DEBOUNCE_TIME),
                 distinctUntilChanged(),
                 map((value) => {
-                    this.syncSearchQuery(value);
+                    this.syncSearchQuery(value!);
 
                     if (!value) {
                         return this.iconItems.getItems();
@@ -100,7 +98,7 @@ export class IconsViewerComponent implements OnDestroy {
                 }),
                 takeUntil(this.destroy)
             )
-            .subscribe((filteredItems) => this.filteredIcons.next(filteredItems));
+            .subscribe((filteredItems) => this.filteredIcons.next(filteredItems!));
 
         this.activeRoute.queryParams.subscribe((params) => {
             if (params.id) {
