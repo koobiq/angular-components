@@ -1,3 +1,16 @@
+# 17.3.0 (2024-08-26)
+
+### Koobiq
+
+ * bug fix  **docs,chore:** docs api gen within CI ([#227](https://github.com/koobiq/angular-components/issues/227)) ([36e9cb1](https://github.com/koobiq/angular-components/commit/36e9cb1432ac4f8cb0432c7919a19c8fa7677493))
+ * bug fix  revert pnpm migration ([#222](https://github.com/koobiq/angular-components/issues/222)) ([37fb6d1](https://github.com/koobiq/angular-components/commit/37fb6d121e97807067e323a92b2de92532659fa0))
+ * bug fix  **tabs:** prevent closing popover on scroll in tab ([#DS-2749](https://github.com/koobiq/angular-components/issues/issue/DS-2749)) ([#224](https://github.com/koobiq/angular-components/issues/224)) ([baef7c9](https://github.com/koobiq/angular-components/commit/baef7c95a745b7175a010ae60e2d7b12aed4bf7e))
+ * bug fix  **typography:** initialize base typography with use of css-vars ([#DS-2757](https://github.com/koobiq/angular-components/issues/issue/DS-2757)) ([#229](https://github.com/koobiq/angular-components/issues/229)) ([f84045b](https://github.com/koobiq/angular-components/commit/f84045b1a8e0ee93b2e7bb3f2b397054086e7a90))
+ * bug fix  **visual:** corrected kbq-css vars typos & added kbq-css-vars for properties with map.get only ([#DS-2756](https://github.com/koobiq/angular-components/issues/issue/DS-2756)) ([#225](https://github.com/koobiq/angular-components/issues/225)) ([7421ab7](https://github.com/koobiq/angular-components/commit/7421ab76ce4fe36c23ba04eb23c9d6023ecfbb6e))
+ * feature  **docs:** added support root tsconfig ([#DS-2775](https://github.com/koobiq/angular-components/issues/issue/DS-2775)) ([#231](https://github.com/koobiq/angular-components/issues/231)) ([d179528](https://github.com/koobiq/angular-components/commit/d179528b01c86fb2a2ee17c6f3fb496dff23ce59))
+ * feature  migrated apps/docs from karma+jasmine to jest ([#DS-2765](https://github.com/koobiq/angular-components/issues/issue/DS-2765)) ([#226](https://github.com/koobiq/angular-components/issues/226)) ([cbff3e3](https://github.com/koobiq/angular-components/commit/cbff3e3d774295d6d3ca6e43a0b5b8f4888c56f2))
+ * feature  migrated packages/components from jasmine/karma to jest ([#DS-2694](https://github.com/koobiq/angular-components/issues/issue/DS-2694)) ([#196](https://github.com/koobiq/angular-components/issues/196)) ([8b218e9](https://github.com/koobiq/angular-components/commit/8b218e95754d60618f62f75cdc51ef4c7de086f2))
+
 # 17.2.0 (2024-08-20)
 
 ### Koobiq
