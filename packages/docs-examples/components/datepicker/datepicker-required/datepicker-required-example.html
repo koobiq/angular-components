@@ -1,7 +1,8 @@
 <kbq-form-field (click)="datepicker.toggle()">
     <input
         [kbqDatepicker]="datepicker"
-        [(ngModel)]="date"
+        [ngModel]="date"
+        [required]="true"
     />
     <i
         kbq-icon="mc-calendar_16"
