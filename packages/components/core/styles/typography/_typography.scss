@@ -2,6 +2,8 @@
 
 @use 'typography-utils' as *;
 
+@use '../common/tokens' as *;
+
 @function kbq-typography-config($tokens) {
     $font-family: map.get($tokens, font-family-base);
     $typography: map.get(map.get($tokens, koobiq), typography);
@@ -147,275 +149,275 @@
     );
 }
 
-@mixin kbq-base-typography($config) {
+@mixin kbq-base-typography() {
     //legacy will be deleted
     .kbq-display-1 {
-        @include kbq-typography-level-to-styles($config, display-1);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-1);
     }
 
     .kbq-display-2 {
-        @include kbq-typography-level-to-styles($config, display-2);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-2);
     }
 
     .kbq-display-3 {
-        @include kbq-typography-level-to-styles($config, display-3);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-3);
     }
 
     .kbq-display-1-strong {
-        @include kbq-typography-level-to-styles($config, display-1-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-1-strong);
     }
 
     .kbq-display-2-strong {
-        @include kbq-typography-level-to-styles($config, display-2-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-2-strong);
     }
 
     .kbq-display-3-strong {
-        @include kbq-typography-level-to-styles($config, display-3-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-3-strong);
     }
 
     .kbq-headline {
-        @include kbq-typography-level-to-styles($config, headline);
+        @include kbq-typography-level-to-styles_css-variables(typography, headline);
     }
 
     .kbq-subheading {
-        @include kbq-typography-level-to-styles($config, subheading);
+        @include kbq-typography-level-to-styles_css-variables(typography, subheading);
     }
 
     .kbq-title {
-        @include kbq-typography-level-to-styles($config, title);
+        @include kbq-typography-level-to-styles_css-variables(typography, title);
     }
 
     .kbq-body {
-        @include kbq-typography-level-to-styles($config, body);
+        @include kbq-typography-level-to-styles_css-variables(typography, body);
     }
 
     .kbq-body_tabular {
-        @include kbq-typography-level-to-styles($config, body-tabular);
+        @include kbq-typography-level-to-styles_css-variables(typography, body-tabular);
     }
 
     .kbq-body_strong {
-        @include kbq-typography-level-to-styles($config, body-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, body-strong);
     }
 
     .kbq-body_caps {
-        @include kbq-typography-level-to-styles($config, body-caps);
+        @include kbq-typography-level-to-styles_css-variables(typography, body-caps);
     }
 
     .kbq-body_mono {
-        @include kbq-typography-level-to-styles($config, body-mono);
+        @include kbq-typography-level-to-styles_css-variables(typography, body-mono);
     }
 
     .kbq-body_mono_strong {
-        @include kbq-typography-level-to-styles($config, body-mono-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, body-mono-strong);
     }
 
     .kbq-caption {
-        @include kbq-typography-level-to-styles($config, caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption);
     }
 
     .kbq-caption_tabular {
-        @include kbq-typography-level-to-styles($config, caption-tabular);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption-tabular);
     }
 
     .kbq-caption_strong {
-        @include kbq-typography-level-to-styles($config, caption-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption-strong);
     }
 
     .kbq-caption_caps {
-        @include kbq-typography-level-to-styles($config, caption-caps);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption-caps);
     }
 
     .kbq-caption_mono {
-        @include kbq-typography-level-to-styles($config, caption-mono);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption-mono);
     }
 
     .kbq-caption_mono_strong {
-        @include kbq-typography-level-to-styles($config, caption-mono-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, caption-mono-strong);
     }
 
     //.kbq-small-text {
-    //    @include kbq-typography-level-to-styles($config, small-text);
+    //    @include kbq-typography-level-to-styles_css-variables(typography,config, small-text);
     //}
 
     .kbq-extra-small-text {
-        @include kbq-typography-level-to-styles($config, extra-small-text);
+        @include kbq-typography-level-to-styles_css-variables(typography, extra-small-text);
     }
 
     .kbq-extra-small-text-strong {
-        @include kbq-typography-level-to-styles($config, extra-small-text-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, extra-small-text-strong);
     }
 
     // new
     .kbq-display-big {
-        @include kbq-typography-level-to-styles($config, display-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-big);
     }
 
     .kbq-display-big-strong {
-        @include kbq-typography-level-to-styles($config, display-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-big-strong);
     }
 
     .kbq-display-normal {
-        @include kbq-typography-level-to-styles($config, display-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-normal);
     }
 
     .kbq-display-normal-strong {
-        @include kbq-typography-level-to-styles($config, display-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-normal-strong);
     }
 
     .kbq-display-compact {
-        @include kbq-typography-level-to-styles($config, display-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-compact);
     }
 
     .kbq-display-compact-strong {
-        @include kbq-typography-level-to-styles($config, display-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, display-compact-strong);
     }
 
     .kbq-text-big {
-        @include kbq-typography-level-to-styles($config, text-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 
     .kbq-text-big-strong {
-        @include kbq-typography-level-to-styles($config, text-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big-strong);
     }
 
     .kbq-text-normal {
-        @include kbq-typography-level-to-styles($config, text-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-text-normal-strong {
-        @include kbq-typography-level-to-styles($config, text-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-strong);
     }
 
     .kbq-text-compact {
-        @include kbq-typography-level-to-styles($config, text-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 
     .kbq-text-compact-strong {
-        @include kbq-typography-level-to-styles($config, text-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact-strong);
     }
 
     .kbq-caps-big {
-        @include kbq-typography-level-to-styles($config, caps-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-big);
     }
 
     .kbq-caps-big-strong {
-        @include kbq-typography-level-to-styles($config, caps-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-big-strong);
     }
 
     .kbq-caps-normal {
-        @include kbq-typography-level-to-styles($config, caps-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-normal);
     }
 
     .kbq-caps-normal-strong {
-        @include kbq-typography-level-to-styles($config, caps-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-normal-strong);
     }
 
     .kbq-caps-compact {
-        @include kbq-typography-level-to-styles($config, caps-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-compact);
     }
 
     .kbq-caps-compact-strong {
-        @include kbq-typography-level-to-styles($config, caps-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-compact-strong);
     }
 
     .kbq-mono-big {
-        @include kbq-typography-level-to-styles($config, mono-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-big);
     }
 
     .kbq-mono-big-strong {
-        @include kbq-typography-level-to-styles($config, mono-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-big-strong);
     }
 
     .kbq-mono-normal {
-        @include kbq-typography-level-to-styles($config, mono-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-normal);
     }
 
     .kbq-mono-normal-strong {
-        @include kbq-typography-level-to-styles($config, mono-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-normal-strong);
     }
 
     .kbq-mono-compact {
-        @include kbq-typography-level-to-styles($config, mono-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-compact);
     }
 
     .kbq-mono-compact-strong {
-        @include kbq-typography-level-to-styles($config, mono-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-compact-strong);
     }
 
     .kbq-tabular-big {
-        @include kbq-typography-level-to-styles($config, tabular-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-big);
     }
 
     .kbq-tabular-big-strong {
-        @include kbq-typography-level-to-styles($config, tabular-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-big-strong);
     }
 
     .kbq-tabular-normal {
-        @include kbq-typography-level-to-styles($config, tabular-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-normal);
     }
 
     .kbq-tabular-normal-strong {
-        @include kbq-typography-level-to-styles($config, tabular-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-normal-strong);
     }
 
     .kbq-tabular-compact {
-        @include kbq-typography-level-to-styles($config, tabular-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-compact);
     }
 
     .kbq-tabular-compact-strong {
-        @include kbq-typography-level-to-styles($config, tabular-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-compact-strong);
     }
 
     .kbq-italic-big {
-        @include kbq-typography-level-to-styles($config, italic-big);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-big);
     }
 
     .kbq-italic-big-strong {
-        @include kbq-typography-level-to-styles($config, italic-big-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-big-strong);
     }
 
     .kbq-italic-normal {
-        @include kbq-typography-level-to-styles($config, italic-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-normal);
     }
 
     .kbq-italic-normal-strong {
-        @include kbq-typography-level-to-styles($config, italic-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-normal-strong);
     }
 
     .kbq-italic-compact {
-        @include kbq-typography-level-to-styles($config, italic-compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-compact);
     }
 
     .kbq-italic-compact-strong {
-        @include kbq-typography-level-to-styles($config, italic-compact-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, italic-compact-strong);
     }
 }
 
-@mixin kbq-markdown-base-typography($config) {
+@mixin kbq-markdown-base-typography() {
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .md-h#{$i} {
-            @include kbq-typography-level-to-styles($config, md-h#{$i});
+            @include kbq-typography-level-to-styles_css-variables(typography, md-h#{$i});
         }
     }
 
     .md-body {
-        @include kbq-typography-level-to-styles($config, md-body);
+        @include kbq-typography-level-to-styles_css-variables(typography, md-body);
     }
 
     .md-body-mono {
-        @include kbq-typography-level-to-styles($config, md-body-mono);
+        @include kbq-typography-level-to-styles_css-variables(typography, md-body-mono);
     }
 
     .md-caption {
-        @include kbq-typography-level-to-styles($config, md-caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, md-caption);
     }
 
     .md-table-cell {
-        @include kbq-typography-level-to-styles($config, md-table-cell);
+        @include kbq-typography-level-to-styles_css-variables(typography, md-table-cell);
     }
 
     .md-table-header {
-        @include kbq-typography-level-to-styles($config, md-table-header);
+        @include kbq-typography-level-to-styles_css-variables(typography, md-table-header);
     }
 }

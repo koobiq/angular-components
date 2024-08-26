@@ -119,8 +119,8 @@
         $md-config: kbq-markdown-typography-config($tokens);
     }
 
-    @include kbq-base-typography($config);
-    @include kbq-markdown-base-typography($md-config);
+    @include kbq-base-typography();
+    @include kbq-markdown-base-typography();
 
     @include kbq-alert-typography($config);
     @include kbq-badge-typography($config);
