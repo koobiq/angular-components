@@ -18,8 +18,8 @@
     }
 
     .kbq-form-horizontal {
-        $line-height: map.get($tokens, forms-font-label-line-height);
-        $form-field-size-height: map.get($tokens, form-field-size-height);
+        $line-height: kbq-css-variable(forms-font-label-line-height, map.get($tokens, forms-font-label-line-height));
+        $form-field-size-height: kbq-css-variable(form-field-size-height, map.get($tokens, form-field-size-height));
 
         & .kbq-form-row_margin {
             margin-bottom: kbq-css-variable(forms-size-horizontal-row-margin-bottom);

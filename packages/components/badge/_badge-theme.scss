@@ -6,22 +6,23 @@
 
 @mixin kbq-badge-style($component, $type, $sub-type, $style-name) {
     $style: map.get($component, $type, $sub-type, $style-name);
+    $base-path: badge-#{$type}-#{$sub-type}-#{$style-name};
 
-    color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-color, map.get($style, color));
-    background: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-background, map.get($style, background));
+    color: kbq-css-variable(#{$base-path}-color, map.get($style, color));
+    background: kbq-css-variable(#{$base-path}-background, map.get($style, background));
 
     & .kbq-badge-caption {
-        color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-caption, map.get($style, caption));
+        color: kbq-css-variable(#{$base-path}-caption, map.get($style, caption));
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-icon, map.get($style, icon)) !important;
+        color: kbq-css-variable(#{$base-path}-icon, map.get($style, icon)) !important;
     }
 
     @if $type == filled {
         border: transparent;
     } @else {
-        border-color: kbq-css-variable(badge-#{$type}-#{$sub-type}-#{$style-name}-border, map.get($style, border));
+        border-color: kbq-css-variable(#{$base-path}-border, map.get($style, border));
     }
 }
 

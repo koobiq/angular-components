@@ -64,7 +64,7 @@
             }
 
             &:active {
-                color: kbq-css-variable(markdown-link-state-active-text, map.get($markdown, link-state-active-text));
+                color: kbq-css-variable(markdown-link-state-active, map.get($markdown, link-state-active-text));
             }
 
             &:focus {

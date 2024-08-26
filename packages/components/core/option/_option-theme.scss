@@ -10,15 +10,15 @@
     background: kbq-css-variable(list-#{$style-name}-container-background, map.get($state, container-background));
 
     .kbq-option-text {
-        color: kbq-css-variable(list-#{$style-name}-text, map.get($state, text));
+        color: kbq-css-variable(list-#{$style-name}-text-color, map.get($state, text));
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(list-#{$style-name}-icon-button, map.get($state, icon-button));
+        color: kbq-css-variable(list-#{$style-name}-icon-button-color, map.get($state, icon-button));
     }
 
     .kbq-option-caption {
-        color: kbq-css-variable(list-#{$style-name}-caption, map.get($state, caption));
+        color: kbq-css-variable(list-#{$style-name}-caption-color, map.get($state, caption));
     }
 }
 
@@ -34,7 +34,10 @@
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: map.get($list-item, states-focused, focus-outline);
+            border-color: kbq-css-variable(
+                list-states-focused-focus-outline-color,
+                map.get($list-item, states-focused, focus-outline)
+            );
         }
 
         &.kbq-selected {

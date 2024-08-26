@@ -5,7 +5,7 @@
 
 @mixin kbq-icon-item-style($component, $type, $style-name) {
     $style: map.get($component, $type, $style-name);
-    $base: icon-item-filled-#{$type}-#{$type}-#{$style-name};
+    $base: icon-item-filled-#{$type}-#{$style-name};
 
     color: kbq-css-variable(#{$base}-color, map.get($component, $type, $style-name, color));
     background: kbq-css-variable(#{$base}-background, map.get($component, $type, $style-name, background));

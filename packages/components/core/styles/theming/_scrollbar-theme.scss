@@ -58,7 +58,8 @@
 
         // firefox
         @supports not selector(::-webkit-scrollbar) {
-            scrollbar-color: map.get($scrollbar, default) transparent;
+            scrollbar-color: kbq-css-variable(scrollbar-thumb-default-background, map.get($scrollbar, default))
+                transparent;
         }
 
         // webkit
@@ -72,18 +73,18 @@
             border-color: transparent;
 
             background-clip: content-box;
-            background-color: map.get($scrollbar, default);
+            background-color: kbq-css-variable(scrollbar-thumb-default-background, map.get($scrollbar, default));
 
             &:hover {
-                background-color: map.get($scrollbar, hover);
+                background-color: kbq-css-variable(scrollbar-thumb-hover-background, map.get($scrollbar, hover));
             }
 
             &:disabled {
-                background-color: map.get($scrollbar, disabled);
+                background-color: kbq-css-variable(scrollbar-thumb-disabled-background, map.get($scrollbar, disabled));
             }
 
             &:active {
-                background-color: map.get($scrollbar, active);
+                background-color: kbq-css-variable(scrollbar-thumb-active-background, map.get($scrollbar, active));
             }
         }
     }

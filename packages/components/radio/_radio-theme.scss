@@ -6,27 +6,17 @@
 
 @mixin kbq-radio-state($component, $type, $state-name) {
     $state: map.get($component, $type, $state-name);
+    $base-path: radio-#{$type}-#{$state-name};
 
     & .kbq-radio-button__outer-circle {
-        border-color: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-border,
-            map.get($state, outer-circle-border)
-        );
-        background: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-background,
-            map.get($state, outer-circle-background)
-        );
-        box-shadow: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-outer-circle-shadow,
-            map.get($state, outer-circle-shadow)
-        );
+        border-color: kbq-css-variable(#{$base-path}-outer-circle-border, map.get($state, outer-circle-border));
+        background: kbq-css-variable(#{$base-path}-outer-circle-background, map.get($state, outer-circle-background));
+        // FIXME: move under &.cdk-keyboard-focused, because used only for focused state.
+        box-shadow: kbq-css-variable(#{$base-path}-outer-circle-shadow, map.get($state, outer-circle-shadow));
     }
 
     & .kbq-radio-button__inner-circle {
-        background: kbq-css-variable(
-            radio-#{$type}-#{$state-name}-inner-circle-background,
-            map.get($state, inner-circle-background)
-        );
+        background: kbq-css-variable(#{$base-path}-inner-circle-background, map.get($state, inner-circle-background));
     }
 }
 
@@ -34,7 +24,7 @@
     @include kbq-radio-state($component, $type-name, default);
 
     & .kbq-hint .kbq-hint__text {
-        color: map.get($component, $type-name, default, caption);
+        color: kbq-css-variable(radio-#{$type-name}-default-caption, map.get($component, $type-name, default, caption));
     }
 
     &:hover {
@@ -58,11 +48,17 @@
 
         & .kbq-radio-label {
             cursor: default;
-            color: map.get($component, $type-name, states-disabled, caption);
+            color: kbq-css-variable(
+                radio-#{$type-name}-states-disabled-caption,
+                map.get($component, $type-name, states-disabled, caption)
+            );
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: map.get($component, $type-name, states-disabled, caption);
+            color: kbq-css-variable(
+                radio-#{$type-name}-states-disabled-caption,
+                map.get($component, $type-name, states-disabled, caption)
+            );
         }
     }
 }

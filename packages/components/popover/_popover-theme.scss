@@ -8,7 +8,7 @@
     $popover: map.get(map.get($theme, components), popover);
 
     .kbq-popover {
-        box-shadow: kbq-css-variable(popover-ontainer-box-shadow, map.get($popover, container, box-shadow));
+        box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
     }
 
     .kbq-popover__container {
@@ -16,16 +16,16 @@
     }
 
     .kbq-popover__arrow {
-        box-shadow: kbq-css-variable(popover-ontainer-box-shadow, map.get($popover, container, box-shadow));
+        box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
         background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
     }
 
     .kbq-popover__header {
-        color: kbq-css-variable(popover-header-text, map.get($popover, header, text));
+        color: kbq-css-variable(popover-header-text-color, map.get($popover, header, text));
     }
 
     .kbq-popover__content {
-        color: kbq-css-variable(popover-content-text, map.get($popover, content, text));
+        color: kbq-css-variable(popover-content-text-color, map.get($popover, content, text));
     }
 }
 

@@ -88,11 +88,11 @@
 
         &.kbq-button_transparent {
             &.kbq-theme {
-                @include kbq-button-type($button, transparent, theme);
+                @include kbq-button-type($button, transparent, theme-fade-on);
             }
 
             &.kbq-contrast {
-                @include kbq-button-type($button, transparent, contrast);
+                @include kbq-button-type($button, transparent, contrast-fade-on);
             }
         }
 
@@ -100,7 +100,7 @@
         &.kbq-button_outline,
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
-                $focused-color: map.get($theme, states, focused-color);
+                $focused-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }
@@ -116,7 +116,7 @@
 
     .kbq-button-icon.kbq-button-wrapper {
         .kbq-icon {
-            line-height: kbq-line-height($config, body);
+            @include kbq-css-font-variable(typography, body, line-height, '');
         }
     }
 }

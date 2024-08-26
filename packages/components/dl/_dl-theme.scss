@@ -8,11 +8,11 @@
     $dl: map.get(map.get($theme, components), dl);
 
     .kbq-dt {
-        color: kbq-css-variable(dl-dt, map.get($dl, dt));
+        color: kbq-css-variable(description-list-term-color, map.get($dl, dt));
     }
 
     .kbq-dd {
-        color: kbq-css-variable(dl-dd, map.get($dl, dd));
+        color: kbq-css-variable(description-list-description-color, map.get($dl, dd));
     }
 }
 

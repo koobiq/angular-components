@@ -11,19 +11,19 @@
     background: kbq-css-variable(tree-#{$state-name}-container-background, map.get($state, container-background));
 
     .kbq-option-text {
-        color: kbq-css-variable(tree-#{$state-name}-text, map.get($state, text));
+        color: kbq-css-variable(tree-#{$state-name}-text-color, map.get($state, text));
     }
 
     .kbq-tree-node-toggle .kbq-icon {
-        color: kbq-css-variable(tree-#{$state-name}-tree-toggle, map.get($state, tree-toggle));
+        color: kbq-css-variable(tree-#{$state-name}-tree-toggle-color, map.get($state, tree-toggle));
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(tree-#{$state-name}-action-button, map.get($state, action-button));
+        color: kbq-css-variable(tree-#{$state-name}-action-button-color, map.get($state, action-button));
     }
 
     .kbq-option-caption {
-        color: kbq-css-variable(tree-#{$state-name}-caption, map.get($state, caption));
+        color: kbq-css-variable(tree-#{$state-name}-caption-color, map.get($state, caption));
     }
 }
 
@@ -44,7 +44,7 @@
         &.kbq-focused,
         &.kbq-active {
             border-color: kbq-css-variable(
-                tree-states-focused-focus-outline,
+                tree-states-focused-focus-outline-color,
                 map.get($tree-item, states-focused, focus-outline)
             );
         }

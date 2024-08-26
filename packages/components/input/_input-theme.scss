@@ -11,6 +11,6 @@
     }
 
     .kbq-input.kbq-input-password {
-        @include kbq-typography-level-to-styles($config, mono-normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-normal);
     }
 }

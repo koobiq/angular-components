@@ -9,7 +9,7 @@
     $state: map.get($component, $state-name);
 
     .kbq-form-field__container {
-        border-color: kbq-css-variable(form-field-#{$state-name}-border, map.get($state, border));
+        border-color: kbq-css-variable(form-field-#{$state-name}-border-color, map.get($state, border));
         background-color: kbq-css-variable(form-field-#{$state-name}-background, map.get($state, background));
     }
 
@@ -66,7 +66,7 @@
             & .kbq-form-field__container {
                 box-shadow: 0 0 0.1px 1px
                     kbq-css-variable(
-                        form-field-states-focused-focu-outline,
+                        form-field-states-focused-focus-outline,
                         map.get($form-field, states-focused, focus-outline)
                     );
             }
@@ -79,7 +79,7 @@
             &.cdk-focused .kbq-form-field__container {
                 box-shadow: 0 0 0.1px 1px
                     kbq-css-variable(
-                        form-field-states-error-focu-outline,
+                        form-field-states-error-focused-focus-outline,
                         map.get($form-field, states-error, focus-outline)
                     );
             }
@@ -89,10 +89,10 @@
             @include kbq-form-field-state($form-field, states-disabled);
 
             .kbq-icon {
-                color: kbq-css-variable(form-field-disabled-text, map.get($form-field, disabled, text));
+                color: kbq-css-variable(form-field-states-disabled-text, map.get($form-field, states-disabled, text));
                 -webkit-text-fill-color: kbq-css-variable(
-                    form-field-disabled-text,
-                    map.get($form-field, disabled, text)
+                    form-field-states-disabled-text,
+                    map.get($form-field, states-disabled, text)
                 );
             }
         }
