@@ -83,9 +83,17 @@ $trigger-margin: 9px;
     }
 }
 
+.kbq-popover__header_with-shadow {
+    box-shadow: 0 9px 8px -12px rgba(138, 143, 168, 1);
+}
+
 .kbq-popover__footer {
     padding: kbq-css-variable(popover-size-footer-padding-vertical)
         kbq-css-variable(popover-size-footer-padding-horizontal);
+}
+
+.kbq-popover__footer_with-shadow {
+    box-shadow: 0 -9px 8px -12px rgba(138, 143, 168, 1);
 }
 
 .kbq-popover__arrow {

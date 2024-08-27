@@ -23,7 +23,7 @@ import {
     Optional,
     Output,
     TemplateRef,
-    Type,
+    Type, ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -57,6 +57,8 @@ export class KbqPopoverComponent extends KbqPopUp {
     footer: string | TemplateRef<any>;
 
     isTrapFocus: boolean = false;
+
+    @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
