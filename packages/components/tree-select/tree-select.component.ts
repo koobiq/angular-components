@@ -9,6 +9,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
@@ -27,8 +28,10 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     DOWN_ARROW,
@@ -76,7 +79,7 @@ import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { Observable, Subject, Subscription, defer, merge } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -468,11 +471,10 @@ export class KbqTreeSelect
     /** Unique id for this input. */
     private readonly uid = `kbq-select-${nextUniqueId++}`;
 
-    /** Emits whenever the component is destroyed. */
-    private readonly destroy = new Subject<void>();
-
     // Used for storing the values that were assigned before the options were initialized.
     private tempValues: string | string[] | null;
+
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         elementRef: ElementRef,
@@ -491,7 +493,7 @@ export class KbqTreeSelect
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
-        this.localeService?.changes.pipe(takeUntil(this.destroy)).subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -509,21 +511,23 @@ export class KbqTreeSelect
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
         // https://github.com/angular/angular/issues/24084
-        this.panelDoneAnimatingStream.pipe(distinctUntilChanged(), takeUntil(this.destroy)).subscribe(() => {
-            if (this.panelOpen) {
-                this.scrollTop = 0;
+        this.panelDoneAnimatingStream
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                if (this.panelOpen) {
+                    this.scrollTop = 0;
 
-                if (this.search) {
-                    this.search.focus();
+                    if (this.search) {
+                        this.search.focus();
+                    }
+
+                    this.openedChange.emit(true);
+                } else {
+                    this.openedChange.emit(false);
+                    this.overlayDir.offsetX = 0;
+                    this.changeDetectorRef.markForCheck();
                 }
-
-                this.openedChange.emit(true);
-            } else {
-                this.openedChange.emit(false);
-                this.overlayDir.offsetX = 0;
-                this.changeDetectorRef.markForCheck();
-            }
-        });
+            });
     }
 
     ngAfterContentInit() {
@@ -564,7 +568,7 @@ export class KbqTreeSelect
             this.tempValues = null;
         }
 
-        this.userInteractionChanges.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.userInteractionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (!this.multiple && this.panelOpen) {
                 this.close();
 
@@ -572,7 +576,7 @@ export class KbqTreeSelect
             }
         });
 
-        this.tree.selectionChange.pipe(takeUntil(this.destroy)).subscribe((event) => {
+        this.tree.selectionChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             this.onChange(this.selectedValues);
 
             this.selectionChange.emit(new KbqTreeSelectChange(this, event.option));
@@ -586,7 +590,7 @@ export class KbqTreeSelect
             this.selectionModel.changed
                 .pipe(
                     filter(({ added }) => !!added.length),
-                    takeUntil(this.destroy)
+                    takeUntilDestroyed(this.destroyRef)
                 )
                 .subscribe(({ added }) => {
                     this.tree.keyManager.setFocusOrigin('program');
@@ -622,8 +626,6 @@ export class KbqTreeSelect
     }
 
     ngOnDestroy() {
-        this.destroy.next();
-        this.destroy.complete();
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
     }
@@ -1113,7 +1115,7 @@ export class KbqTreeSelect
 
         this.tree.onKeyDown = () => {};
 
-        this.tree.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.tree.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this._panelOpen && this.panel) {
                 this.scrollActiveOptionIntoView();
             } else if (!this._panelOpen && !this.multiple && this.tree.keyManager.activeItem) {

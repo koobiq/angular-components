@@ -10,6 +10,7 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     OnDestroy,
@@ -17,13 +18,15 @@ import {
     QueryList,
     Self,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, mixinColor } from '@koobiq/components/core';
-import { EMPTY, Subject, merge } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { EMPTY, merge } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
 import { KbqFormFieldControl } from './form-field-control';
 import {
@@ -116,7 +119,7 @@ export class KbqFormField
 
     canCleanerClearByEsc: boolean = true;
 
-    private $unsubscribe = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     get hasFocus(): boolean {
         return this.control.focused;
@@ -199,7 +202,7 @@ export class KbqFormField
         const valueChanges = this.control.ngControl?.valueChanges || EMPTY;
 
         merge(valueChanges, this.hint.changes, this.passwordHints.changes)
-            .pipe(takeUntil(this.$unsubscribe))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
@@ -263,9 +266,6 @@ export class KbqFormField
     }
 
     ngOnDestroy(): void {
-        this.$unsubscribe.next();
-        this.$unsubscribe.complete();
-
         this.stopFocusMonitor();
     }
 

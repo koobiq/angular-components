@@ -12,6 +12,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -23,9 +24,10 @@ import {
     ViewContainerRef,
     inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, delay as rxDelay, takeUntil } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, delay as rxDelay } from 'rxjs/operators';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
@@ -42,6 +44,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
     protected readonly hostView: ViewContainerRef = inject(ViewContainerRef);
     protected readonly direction = inject(Directionality, { optional: true });
+    protected readonly destroyRef = inject(DestroyRef);
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
@@ -78,7 +81,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected closingActionsSubscription: Subscription;
 
     protected readonly availablePositions: { [key: string]: ConnectionPositionPair } = POSITION_MAP;
-    protected readonly destroyed = new Subject<void>();
+
     protected triggerName: string;
     protected mouseEvent?: MouseEvent;
     protected strategy: FlexibleConnectedPositionStrategy;
@@ -101,9 +104,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.listeners.forEach(this.removeEventListener);
 
         this.listeners.clear();
-
-        this.destroyed.next();
-        this.destroyed.complete();
     }
 
     updatePlacement(value: PopUpPlacements) {
@@ -167,17 +167,19 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.instance = this.overlayRef.attach(this.portal).instance;
 
-        this.instance.afterHidden().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
+        this.instance.afterHidden().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.detach);
 
         this.updateClassMap();
 
         this.updateData();
 
-        this.instance.visibleChange.pipe(takeUntil(this.destroyed), distinctUntilChanged()).subscribe((value) => {
-            this.visible = value;
-            this.visibleChange.emit(value);
-            this.isOpen = value;
-        });
+        this.instance.visibleChange
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => {
+                this.visible = value;
+                this.visibleChange.emit(value);
+                this.isOpen = value;
+            });
 
         this.updatePosition();
 
@@ -214,7 +216,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
             .withLockedPosition()
             .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
 
-        this.strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
+        this.strategy.positionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onPositionChange);
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
@@ -225,7 +227,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.subscribeOnClosingActions();
 
-        this.overlayRef.detachments().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
+        this.overlayRef.detachments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.detach);
 
         return this.overlayRef;
     }
@@ -372,7 +374,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.closingActionsSubscription?.unsubscribe();
 
         this.closingActionsSubscription = this.closingActions()
-            .pipe(takeUntil(this.destroyed))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(rxDelay(0))
             .subscribe((event) => {
                 if (event?.type === 'click' && event.kbqPopoverPreventHide) {

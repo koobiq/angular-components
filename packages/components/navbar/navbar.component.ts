@@ -6,18 +6,21 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     forwardRef,
+    inject,
     Input,
     OnDestroy,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, startWith, takeUntil } from 'rxjs/operators';
+import { debounceTime, startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItem,
     KbqNavbarFocusableItemEvent,
@@ -53,18 +56,17 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
         return merge(...this.focusableItems.map((option) => option.onBlur));
     }
 
-    protected readonly destroyed = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     private optionFocusSubscription: Subscription | null;
     private optionBlurSubscription: Subscription | null;
-    private focusMonitorSubscription: Subscription | null;
 
     constructor(
-        protected changeDetectorRef: ChangeDetectorRef,
-        elementRef: ElementRef,
-        private focusMonitor: FocusMonitor
+        protected readonly changeDetectorRef: ChangeDetectorRef,
+        protected readonly elementRef: ElementRef,
+        protected readonly focusMonitor: FocusMonitor
     ) {
-        this.focusMonitorSubscription = this.focusMonitor.monitor(elementRef).subscribe((focusOrigin) => {
+        this.focusMonitor.monitor(elementRef).subscribe((focusOrigin) => {
             this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
@@ -72,7 +74,7 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
-        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.tabIndex = -1;
 
             setTimeout(() => {
@@ -81,7 +83,7 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
             });
         });
 
-        this.focusableItems.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+        this.focusableItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
 
             // Check to see if we need to update our tab index
@@ -90,14 +92,7 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.destroyed.next();
-
-        this.destroyed.complete();
-
-        if (this.focusMonitorSubscription) {
-            this.focusMonitorSubscription.unsubscribe();
-            this.focusMonitorSubscription = null;
-        }
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus(): void {
@@ -221,9 +216,9 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private resizeSubscription: Subscription;
 
     constructor(
-        private elementRef: ElementRef,
-        changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
+        protected readonly elementRef: ElementRef,
+        protected readonly changeDetectorRef: ChangeDetectorRef,
+        protected readonly focusMonitor: FocusMonitor
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 

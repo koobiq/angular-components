@@ -4,16 +4,18 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     ElementRef,
-    OnDestroy,
+    inject,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
-import { BehaviorSubject, Subject, auditTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { IconItem, IconItems } from 'src/app/components/icons-items/icon-items';
 import { DocStates } from '../../components/doс-states';
 import { IconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
@@ -30,7 +32,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class IconsViewerComponent implements OnDestroy {
+export class IconsViewerComponent {
     themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
@@ -40,8 +42,7 @@ export class IconsViewerComponent implements OnDestroy {
 
     private iconItems: IconItems;
     private queryParamMap: { [key: string]: string };
-
-    private destroy: Subject<void> = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private http: HttpClient,
@@ -97,7 +98,7 @@ export class IconsViewerComponent implements OnDestroy {
 
                     return items.length ? items : undefined;
                 }),
-                takeUntil(this.destroy)
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((filteredItems) => this.filteredIcons.next(filteredItems!));
 
@@ -149,11 +150,6 @@ export class IconsViewerComponent implements OnDestroy {
 
                 this.setActiveIcon(undefined);
             });
-    }
-
-    ngOnDestroy(): void {
-        this.destroy.next();
-        this.destroy.complete();
     }
 
     private syncSearchQuery(value: string) {

@@ -4,16 +4,17 @@ import {
     ChangeDetectionStrategy,
     Component,
     ContentChild,
+    DestroyRef,
     ElementRef,
     EventEmitter,
+    inject,
     Inject,
     InjectionToken,
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { CanDisableCtor, HasTabIndexCtor, mixinDisabled, mixinTabIndex } from '../common-behaviors';
 
 export interface KbqOptionActionParent {
@@ -78,7 +79,7 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
         return this.hasFocus || !!this.option.dropdownTrigger?.opened;
     }
 
-    private readonly destroy = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private elementRef: ElementRef,
@@ -97,7 +98,7 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
 
         this.option.dropdownTrigger.restoreFocus = false;
 
-        this.option.dropdownTrigger.dropdownClosed.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.option.dropdownTrigger.dropdownClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.preventShowingTooltip();
 
             const destroyReason: FocusOrigin =
@@ -108,8 +109,6 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
     }
 
     ngOnDestroy(): void {
-        this.destroy.next();
-        this.destroy.complete();
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 

@@ -3,6 +3,7 @@ import {
     AfterContentChecked,
     ChangeDetectorRef,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     Inject,
@@ -16,11 +17,12 @@ import {
     TrackByFunction,
     ViewChild,
     ViewContainerRef,
-    forwardRef
+    forwardRef,
+    inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';
 import { KbqTreeNodeOutlet } from './outlet';
@@ -60,9 +62,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     /** Differ used to find the changes in the data provided by the data source. */
     protected dataDiffer: IterableDiffer<T>;
 
-    /** Subject that emits when the component has been destroyed. */
-    private onDestroy = new Subject<void>();
-
     /** Stores the node definition that does not have a when predicate. */
     private defaultNodeDef: KbqTreeNodeDef<T> | null;
 
@@ -90,6 +89,8 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
     private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
+    protected readonly destroyRef = inject(DestroyRef);
+
     constructor(
         protected differs: IterableDiffers,
         protected changeDetectorRef: ChangeDetectorRef
@@ -105,9 +106,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
     ngOnDestroy() {
         this.nodeOutlet.viewContainer.clear();
-
-        this.onDestroy.next();
-        this.onDestroy.complete();
 
         if (this._dataSource && typeof (this.dataSource as DataSource<T>).disconnect === 'function') {
             (this.dataSource as DataSource<T>).disconnect(this);
@@ -232,7 +230,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         if (dataStream) {
             this.dataSubscription = dataStream
-                .pipe(takeUntil(this.onDestroy))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((data) => this.renderNodeChanges(data));
         } else {
             throw getTreeNoValidDataSourceError();

@@ -10,10 +10,12 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
     Input,
     NgZone,
@@ -25,6 +27,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FocusKeyManager, IFocusableOption } from '@koobiq/cdk/a11y';
 import {
@@ -61,7 +64,7 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { startWith, take, takeUntil } from 'rxjs/operators';
+import { startWith, take } from 'rxjs/operators';
 
 export interface KbqOptionEvent {
     option: KbqListOption;
@@ -133,7 +136,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
 })
 export class KbqListSelection
     extends KbqListSelectionMixinBase
-    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor, OnDestroy
+    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor
 {
     keyManager: FocusKeyManager<KbqListOption>;
 
@@ -207,8 +210,7 @@ export class KbqListSelection
 
     _value: string[] | null;
 
-    /** Emits whenever the component is destroyed. */
-    private readonly destroyed = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     private optionFocusSubscription: Subscription | null;
 
@@ -249,7 +251,7 @@ export class KbqListSelection
             .withVerticalOrientation(!this.horizontal)
             .withHorizontalOrientation(this.horizontal ? 'ltr' : null);
 
-        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this._tabIndex = -1;
 
             setTimeout(() => {
@@ -262,7 +264,7 @@ export class KbqListSelection
             this.setOptionsFromValues(this._value);
         }
 
-        this.selectionModel.changed.pipe(takeUntil(this.destroyed)).subscribe((event) => {
+        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             for (const item of event.added) {
                 item.selected = true;
             }
@@ -272,7 +274,7 @@ export class KbqListSelection
             }
         });
 
-        this.options.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
 
             // Check to see if we need to update our tab index
@@ -280,12 +282,6 @@ export class KbqListSelection
         });
 
         this.updateScrollSize();
-    }
-
-    ngOnDestroy() {
-        this.destroyed.next();
-
-        this.destroyed.complete();
     }
 
     focus(): void {

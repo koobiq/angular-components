@@ -14,7 +14,6 @@ import {
     Input,
     IterableDiffer,
     IterableDiffers,
-    OnDestroy,
     Optional,
     Output,
     QueryList,
@@ -22,6 +21,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import {
@@ -42,9 +42,9 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import { CanDisable, getKbqSelectNonArrayValueError, HasTabIndex, MultipleMode } from '@koobiq/components/core';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { delay, takeUntil } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeBase } from './tree-base';
@@ -115,7 +115,7 @@ interface SelectionModelOption {
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
-    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex, OnDestroy
+    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex
 {
     renderedOptions = new QueryList<KbqTreeOption>();
 
@@ -218,8 +218,6 @@ export class KbqTreeSelection
         return this.sortedNodes.length === 0;
     }
 
-    private readonly destroy = new Subject<void>();
-
     private optionFocusSubscription: Subscription | null;
 
     private optionBlurSubscription: Subscription | null;
@@ -255,7 +253,7 @@ export class KbqTreeSelection
             .withVerticalOrientation(true)
             .withHorizontalOrientation(null);
 
-        this.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.keyManager.activeItem) {
                 this.emitNavigationEvent(this.keyManager.activeItem);
 
@@ -266,39 +264,34 @@ export class KbqTreeSelection
             }
         });
 
-        this.keyManager.tabOut.pipe(takeUntil(this.destroy)).subscribe(() => this.allowFocusEscape());
+        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.allowFocusEscape());
 
-        this.selectionModel.changed.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.onChange(this.getSelectedValues());
 
             this.renderedOptions.notifyOnChanges();
         });
 
-        this.renderedOptions.changes.pipe(delay(0, this.scheduler), takeUntil(this.destroy)).subscribe((options) => {
-            this.resetOptions();
+        this.renderedOptions.changes
+            .pipe(delay(0, this.scheduler), takeUntilDestroyed(this.destroyRef))
+            .subscribe((options) => {
+                this.resetOptions();
 
-            // Check to see if we need to update our tab index
-            this.updateTabIndex();
+                // Check to see if we need to update our tab index
+                this.updateTabIndex();
 
-            const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
+                const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
 
-            options.forEach((option) => {
-                if (selectedValues.includes(option.value)) {
-                    option.select(false);
-                } else {
-                    option.deselect();
-                }
+                options.forEach((option) => {
+                    if (selectedValues.includes(option.value)) {
+                        option.select(false);
+                    } else {
+                        option.deselect();
+                    }
 
-                option.markForCheck();
+                    option.markForCheck();
+                });
             });
-        });
-    }
-
-    ngOnDestroy(): void {
-        super.ngOnDestroy();
-
-        this.destroy.next();
-        this.destroy.complete();
     }
 
     focus($event): void {
