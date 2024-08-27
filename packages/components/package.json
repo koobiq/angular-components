@@ -8,8 +8,12 @@
     },
     "keywords": [
         "angular",
-        "koobiq",
-        "components"
+        "component",
+        "service",
+        "directive",
+        "development",
+        "kit",
+        "koobiq"
     ],
     "license": "MIT",
     "bugs": {

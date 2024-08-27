@@ -7,11 +7,12 @@
         "url": "https://github.com/koobiq/angular-components.git"
     },
     "keywords": [
+        "angular",
         "cdk",
         "component",
         "development",
         "kit",
-        "mosaic"
+        "koobiq"
     ],
     "license": "MIT",
     "peerDependencies": {
