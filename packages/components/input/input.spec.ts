@@ -200,6 +200,20 @@ class KbqFormWithRequiredValidation {
     });
 }
 
+@Component({
+    standalone: true,
+    imports: [ReactiveFormsModule, KbqInputModule],
+    template: `
+        <input
+            [formControl]="formControl"
+            kbqInput
+        />
+    `
+})
+class KbqInputWithFormControl {
+    readonly formControl = new FormControl();
+}
+
 describe('KbqInput', () => {
     describe('basic behaviors', () => {
         it('should change state "disable"', fakeAsync(() => {
@@ -314,6 +328,26 @@ describe('KbqInput', () => {
             expect(fixture.componentInstance.submitReactive).toHaveBeenCalled();
             expect(fixture.componentInstance.submitResult).toEqual('invalid');
         }));
+
+        it('should add built-in Validator.required', async () => {
+            await TestBed.configureTestingModule({ imports: [KbqInputWithFormControl] }).compileComponents();
+            const fixture = TestBed.createComponent(KbqInputWithFormControl);
+            const { formControl } = fixture.componentInstance;
+            const input: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            expect(formControl.hasValidator(Validators.required)).toBeFalsy();
+            expect(input.hasAttribute('required')).toBeFalsy();
+
+            formControl.addValidators(Validators.required);
+            fixture.detectChanges();
+            expect(formControl.hasValidator(Validators.required)).toBeTruthy();
+            expect(input.hasAttribute('required')).toBeTruthy();
+
+            formControl.removeValidators(Validators.required);
+            fixture.detectChanges();
+            expect(formControl.hasValidator(Validators.required)).toBeFalsy();
+            expect(input.hasAttribute('required')).toBeFalsy();
+        });
     });
 
     describe('appearance', () => {

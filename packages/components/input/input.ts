@@ -12,7 +12,7 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import {
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
@@ -169,14 +169,14 @@ export class KbqInput
      */
     @Input()
     get required(): boolean {
-        return this._required;
+        return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
     }
 
     set required(value: boolean) {
         this._required = coerceBooleanProperty(value);
     }
 
-    private _required = false;
+    private _required: boolean | undefined;
 
     /** Input type of the element. */
     @Input()
