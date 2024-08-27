@@ -11,7 +11,7 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
@@ -129,16 +129,14 @@ export class KbqInputPassword
      */
     @Input()
     get required(): boolean {
-        return this._required;
+        return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
     }
 
     set required(value: boolean) {
         this._required = coerceBooleanProperty(value);
     }
 
-    private _required = false;
-
-    // this.elementRef.nativeElement.type = this._type;
+    private _required: boolean | undefined;
 
     /**
      * Implemented as part of KbqFormFieldControl.

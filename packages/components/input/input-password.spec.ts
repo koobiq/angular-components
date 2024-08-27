@@ -1,6 +1,6 @@
 import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
@@ -140,6 +140,20 @@ class KbqPasswordInputCustomPasswordRule {
     };
 }
 
+@Component({
+    standalone: true,
+    imports: [ReactiveFormsModule, KbqInputModule],
+    template: `
+        <input
+            [formControl]="formControl"
+            kbqInputPassword
+        />
+    `
+})
+class KbqInputPasswordWithFormControl {
+    readonly formControl = new FormControl();
+}
+
 describe('KbqPasswordInput', () => {
     it('should have toggle', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
@@ -231,4 +245,24 @@ describe('KbqPasswordInput', () => {
             fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
         );
     }));
+
+    it('should add built-in Validator.required', async () => {
+        await TestBed.configureTestingModule({ imports: [KbqInputPasswordWithFormControl] }).compileComponents();
+        const fixture = TestBed.createComponent(KbqInputPasswordWithFormControl);
+        const { formControl } = fixture.componentInstance;
+        const input: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement;
+
+        expect(formControl.hasValidator(Validators.required)).toBeFalsy();
+        expect(input.hasAttribute('required')).toBeFalsy();
+
+        formControl.addValidators(Validators.required);
+        fixture.detectChanges();
+        expect(formControl.hasValidator(Validators.required)).toBeTruthy();
+        expect(input.hasAttribute('required')).toBeTruthy();
+
+        formControl.removeValidators(Validators.required);
+        fixture.detectChanges();
+        expect(formControl.hasValidator(Validators.required)).toBeFalsy();
+        expect(input.hasAttribute('required')).toBeFalsy();
+    });
 });
