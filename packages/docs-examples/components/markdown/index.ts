@@ -54,6 +54,7 @@ const EXAMPLES = [
     imports: [
         CommonModule,
         KbqMarkdownModule,
+        KbqMarkdownModule,
         KbqMarkdownModule
     ],
     declarations: EXAMPLES,
