@@ -8,10 +8,10 @@
 
     .kbq-splitter-area {
         overflow: hidden;
+    }
 
-        &_resizing {
-            pointer-events: none;
-        }
+    .kbq-splitter-area_resizing {
+        pointer-events: none;
     }
 }
 
