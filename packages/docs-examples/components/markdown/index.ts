@@ -53,6 +53,7 @@ const EXAMPLES = [
 @NgModule({
     imports: [
         CommonModule,
+        KbqMarkdownModule,
         KbqMarkdownModule
     ],
     declarations: EXAMPLES,
