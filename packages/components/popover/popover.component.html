@@ -15,7 +15,7 @@
         <div
             *ngIf="header"
             class="kbq-popover__header"
-            [class.kbq-popover__header_with-shadow]="popoverContent ? popoverContent.nativeElement.scrollTop > 0 : ''"
+            [class.kbq-popover__header_with-shadow]="popoverContent ? contentScrollTop > 0 : ''"
         >
             <ng-container
                 *ngIf="isTemplateRef(header)"
@@ -30,6 +30,7 @@
             *ngIf="content"
             #popoverContent
             class="kbq-popover__content kbq-scrollbar"
+            (scroll)="contentScrollTop = popoverContent.scrollTop"
         >
             <ng-container
                 *ngIf="isTemplateRef(content)"
@@ -45,7 +46,7 @@
             class="kbq-popover__footer"
             [class.kbq-popover__footer_with-shadow]="
                 popoverContent
-                    ? popoverContent.nativeElement.scrollTop + popoverContent.nativeElement.offsetHeight <
+                    ? contentScrollTop + popoverContent.nativeElement.offsetHeight <
                       popoverContent.nativeElement.scrollHeight
                     : ''
             "

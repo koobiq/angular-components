@@ -59,6 +59,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     isTrapFocus: boolean = false;
 
     @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
+    contentScrollTop: number = 0;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
