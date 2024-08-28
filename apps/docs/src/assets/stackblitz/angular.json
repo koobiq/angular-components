@@ -25,9 +25,7 @@
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "tsconfig.app.json",
-                        "assets": [
-                            "src/assets"
-                        ],
+                        "assets": ["src/assets"],
                         "styles": ["src/styles.scss"],
                         "scripts": []
                     },
@@ -63,16 +61,15 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "koobiq-docs:build:production"
+                            "buildTarget": "koobiq-docs:build:production"
                         },
                         "development": {
-                            "browserTarget": "koobiq-docs:build:development"
+                            "buildTarget": "koobiq-docs:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
                 }
             }
         }
-    },
-    "defaultProject": "koobiq-docs"
+    }
 }
