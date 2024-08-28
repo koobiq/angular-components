@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api manifest generation should generate a manifest from multiple collections 1`] = `
+[
+  {
+    "moduleName": "cdk",
+    "packagesApiInfo": [
+      {
+        "entries": [
+          {
+            "description": "",
+            "entryType": "component",
+            "jsdocTags": [],
+            "name": "KbqButton",
+            "publicUrl": "cdk/button/api#KbqButton",
+            "rawComment": "",
+          },
+          {
+            "description": "",
+            "entryType": "constant",
+            "jsdocTags": [],
+            "name": "TOOLTIP_TIMEOUT",
+            "publicUrl": "cdk/button/api#TOOLTIP_TIMEOUT",
+            "rawComment": "",
+          },
+        ],
+        "packageName": "button",
+      },
+    ],
+  },
+]
+`;
+
+exports[`api manifest generation should should filter private entries 1`] = `
+[
+  {
+    "moduleName": "components",
+    "packagesApiInfo": [
+      {
+        "entries": [
+          {
+            "description": "",
+            "entryType": "component",
+            "jsdocTags": [],
+            "name": "KbqButton",
+            "publicUrl": "components/button/api#KbqButton",
+            "rawComment": "",
+          },
+        ],
+        "packageName": "button",
+      },
+    ],
+  },
+]
+`;
