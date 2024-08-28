@@ -81,274 +81,274 @@
     $code-block: map.get(map.get($theme, components), code-block);
 
     .kbq-code-block {
-        .hljs {
-            $hljs: map.get($code-block, hljs);
+        $hljs: map.get($code-block, hljs);
 
+        .hljs {
             display: block;
             overflow-x: auto;
+        }
 
-            &-addition {
-                background-color: kbq-code-block-hljs-attr(addition-background, $hljs);
-                color: kbq-code-block-hljs-attr(addition-color, $hljs);
-            }
+        .hljs-addition {
+            background-color: kbq-code-block-hljs-attr(addition-background, $hljs);
+            color: kbq-code-block-hljs-attr(addition-color, $hljs);
+        }
 
-            &-attr {
-                background-color: kbq-code-block-hljs-attr(attr-background, $hljs);
-                color: kbq-code-block-hljs-attr(attr-color, $hljs);
-            }
+        .hljs-attr {
+            background-color: kbq-code-block-hljs-attr(attr-background, $hljs);
+            color: kbq-code-block-hljs-attr(attr-color, $hljs);
+        }
 
-            &-attribute {
-                background-color: kbq-code-block-hljs-attr(attribute-background, $hljs);
-                color: kbq-code-block-hljs-attr(attribute-color, $hljs);
-            }
+        .hljs-attribute {
+            background-color: kbq-code-block-hljs-attr(attribute-background, $hljs);
+            color: kbq-code-block-hljs-attr(attribute-color, $hljs);
+        }
 
-            &-built_in {
-                background-color: kbq-code-block-hljs-attr(built_in-background, $hljs);
-                color: kbq-code-block-hljs-attr(built_in-color, $hljs);
-            }
+        .hljs-built_in {
+            background-color: kbq-code-block-hljs-attr(built_in-background, $hljs);
+            color: kbq-code-block-hljs-attr(built_in-color, $hljs);
+        }
 
-            &-bullet {
-                background-color: kbq-code-block-hljs-attr(bullet-background, $hljs);
-                color: kbq-code-block-hljs-attr(bullet-color, $hljs);
-            }
+        .hljs-bullet {
+            background-color: kbq-code-block-hljs-attr(bullet-background, $hljs);
+            color: kbq-code-block-hljs-attr(bullet-color, $hljs);
+        }
 
-            &-char-escape {
-                background-color: kbq-code-block-hljs-attr(char-escape-background, $hljs);
-                color: kbq-code-block-hljs-attr(char-escape-color, $hljs);
-            }
+        .hljs-char-escape {
+            background-color: kbq-code-block-hljs-attr(char-escape-background, $hljs);
+            color: kbq-code-block-hljs-attr(char-escape-color, $hljs);
+        }
 
-            &-class {
-                background-color: kbq-code-block-hljs-attr(class-background, $hljs);
-                color: kbq-code-block-hljs-attr(class-color, $hljs);
-            }
+        .hljs-class {
+            background-color: kbq-code-block-hljs-attr(class-background, $hljs);
+            color: kbq-code-block-hljs-attr(class-color, $hljs);
+        }
 
-            &-code {
-                background-color: kbq-code-block-hljs-attr(code-background, $hljs);
-                color: kbq-code-block-hljs-attr(code-color, $hljs);
-            }
+        .hljs-code {
+            background-color: kbq-code-block-hljs-attr(code-background, $hljs);
+            color: kbq-code-block-hljs-attr(code-color, $hljs);
+        }
 
-            &-comment {
-                background-color: kbq-code-block-hljs-attr(comment-background, $hljs);
-                color: kbq-code-block-hljs-attr(comment-color, $hljs);
-            }
+        .hljs-comment {
+            background-color: kbq-code-block-hljs-attr(comment-background, $hljs);
+            color: kbq-code-block-hljs-attr(comment-color, $hljs);
+        }
 
-            &-deletion {
-                background-color: kbq-code-block-hljs-attr(deletion-background, $hljs);
-                color: kbq-code-block-hljs-attr(deletion-color, $hljs);
-            }
+        .hljs-deletion {
+            background-color: kbq-code-block-hljs-attr(deletion-background, $hljs);
+            color: kbq-code-block-hljs-attr(deletion-color, $hljs);
+        }
 
-            &-doctag {
-                background-color: kbq-code-block-hljs-attr(doctag-background, $hljs);
-                color: kbq-code-block-hljs-attr(doctag-color, $hljs);
-            }
+        .hljs-doctag {
+            background-color: kbq-code-block-hljs-attr(doctag-background, $hljs);
+            color: kbq-code-block-hljs-attr(doctag-color, $hljs);
+        }
 
-            &-emphasis {
-                background-color: kbq-code-block-hljs-attr(emphasis-background, $hljs);
-                color: kbq-code-block-hljs-attr(emphasis-color, $hljs);
-            }
+        .hljs-emphasis {
+            background-color: kbq-code-block-hljs-attr(emphasis-background, $hljs);
+            color: kbq-code-block-hljs-attr(emphasis-color, $hljs);
+        }
 
-            &-formula {
-                background-color: kbq-code-block-hljs-attr(formula-background, $hljs);
-                color: kbq-code-block-hljs-attr(formula-color, $hljs);
-            }
+        .hljs-formula {
+            background-color: kbq-code-block-hljs-attr(formula-background, $hljs);
+            color: kbq-code-block-hljs-attr(formula-color, $hljs);
+        }
 
-            &-function {
-                background-color: kbq-code-block-hljs-attr(function-background, $hljs);
-                color: kbq-code-block-hljs-attr(function-color, $hljs);
-            }
+        .hljs-function {
+            background-color: kbq-code-block-hljs-attr(function-background, $hljs);
+            color: kbq-code-block-hljs-attr(function-color, $hljs);
+        }
 
-            &-keyword {
-                background-color: kbq-code-block-hljs-attr(keyword-background, $hljs);
-                color: kbq-code-block-hljs-attr(keyword-color, $hljs);
-            }
+        .hljs-keyword {
+            background-color: kbq-code-block-hljs-attr(keyword-background, $hljs);
+            color: kbq-code-block-hljs-attr(keyword-color, $hljs);
+        }
 
-            &-link {
-                background-color: kbq-code-block-hljs-attr(link-background, $hljs);
-                color: kbq-code-block-hljs-attr(link-color, $hljs);
-            }
+        .hljs-link {
+            background-color: kbq-code-block-hljs-attr(link-background, $hljs);
+            color: kbq-code-block-hljs-attr(link-color, $hljs);
+        }
 
-            &-literal {
-                background-color: kbq-code-block-hljs-attr(literal-background, $hljs);
-                color: kbq-code-block-hljs-attr(literal-color, $hljs);
-            }
+        .hljs-literal {
+            background-color: kbq-code-block-hljs-attr(literal-background, $hljs);
+            color: kbq-code-block-hljs-attr(literal-color, $hljs);
+        }
 
-            &-meta {
-                background-color: kbq-code-block-hljs-attr(meta-background, $hljs);
-                color: kbq-code-block-hljs-attr(meta-color, $hljs);
-            }
+        .hljs-meta {
+            background-color: kbq-code-block-hljs-attr(meta-background, $hljs);
+            color: kbq-code-block-hljs-attr(meta-color, $hljs);
+        }
 
-            &-meta-keyword {
-                background-color: kbq-code-block-hljs-attr(meta-keyword-background, $hljs);
-                color: kbq-code-block-hljs-attr(meta-keyword-color, $hljs);
-            }
+        .hljs-meta-keyword {
+            background-color: kbq-code-block-hljs-attr(meta-keyword-background, $hljs);
+            color: kbq-code-block-hljs-attr(meta-keyword-color, $hljs);
+        }
 
-            &-meta-string {
-                background-color: kbq-code-block-hljs-attr(meta-string-background, $hljs);
-                color: kbq-code-block-hljs-attr(meta-string-color, $hljs);
-            }
+        .hljs-meta-string {
+            background-color: kbq-code-block-hljs-attr(meta-string-background, $hljs);
+            color: kbq-code-block-hljs-attr(meta-string-color, $hljs);
+        }
 
-            &-meta-prompt {
-                background-color: kbq-code-block-hljs-attr(meta-prompt-background, $hljs);
-                color: kbq-code-block-hljs-attr(meta-prompt-color, $hljs);
-            }
+        .hljs-meta-prompt {
+            background-color: kbq-code-block-hljs-attr(meta-prompt-background, $hljs);
+            color: kbq-code-block-hljs-attr(meta-prompt-color, $hljs);
+        }
 
-            &-name {
-                background-color: kbq-code-block-hljs-attr(name-background, $hljs);
-                color: kbq-code-block-hljs-attr(name-color, $hljs);
-            }
+        .hljs-name {
+            background-color: kbq-code-block-hljs-attr(name-background, $hljs);
+            color: kbq-code-block-hljs-attr(name-color, $hljs);
+        }
 
-            &-number {
-                background-color: kbq-code-block-hljs-attr(number-background, $hljs);
-                color: kbq-code-block-hljs-attr(number-color, $hljs);
-            }
+        .hljs-number {
+            background-color: kbq-code-block-hljs-attr(number-background, $hljs);
+            color: kbq-code-block-hljs-attr(number-color, $hljs);
+        }
 
-            &-operator {
-                background-color: kbq-code-block-hljs-attr(operator-background, $hljs);
-                color: kbq-code-block-hljs-attr(operator-color, $hljs);
-            }
+        .hljs-operator {
+            background-color: kbq-code-block-hljs-attr(operator-background, $hljs);
+            color: kbq-code-block-hljs-attr(operator-color, $hljs);
+        }
 
-            &-params {
-                background-color: kbq-code-block-hljs-attr(params-background, $hljs);
-                color: kbq-code-block-hljs-attr(params-color, $hljs);
-            }
+        .hljs-params {
+            background-color: kbq-code-block-hljs-attr(params-background, $hljs);
+            color: kbq-code-block-hljs-attr(params-color, $hljs);
+        }
 
-            &-property {
-                background-color: kbq-code-block-hljs-attr(property-background, $hljs);
-                color: kbq-code-block-hljs-attr(property-color, $hljs);
-            }
+        .hljs-property {
+            background-color: kbq-code-block-hljs-attr(property-background, $hljs);
+            color: kbq-code-block-hljs-attr(property-color, $hljs);
+        }
 
-            &-punctuation {
-                background-color: kbq-code-block-hljs-attr(punctuation-background, $hljs);
-                color: kbq-code-block-hljs-attr(punctuation-color, $hljs);
-            }
+        .hljs-punctuation {
+            background-color: kbq-code-block-hljs-attr(punctuation-background, $hljs);
+            color: kbq-code-block-hljs-attr(punctuation-color, $hljs);
+        }
 
-            &-quote {
-                background-color: kbq-code-block-hljs-attr(quote-background, $hljs);
-                color: kbq-code-block-hljs-attr(quote-color, $hljs);
-            }
+        .hljs-quote {
+            background-color: kbq-code-block-hljs-attr(quote-background, $hljs);
+            color: kbq-code-block-hljs-attr(quote-color, $hljs);
+        }
 
-            &-regexp {
-                background-color: kbq-code-block-hljs-attr(regexp-background, $hljs);
-                color: kbq-code-block-hljs-attr(regexp-color, $hljs);
-            }
+        .hljs-regexp {
+            background-color: kbq-code-block-hljs-attr(regexp-background, $hljs);
+            color: kbq-code-block-hljs-attr(regexp-color, $hljs);
+        }
 
-            &-section {
-                background-color: kbq-code-block-hljs-attr(section-background, $hljs);
-                color: kbq-code-block-hljs-attr(section-color, $hljs);
-            }
+        .hljs-section {
+            background-color: kbq-code-block-hljs-attr(section-background, $hljs);
+            color: kbq-code-block-hljs-attr(section-color, $hljs);
+        }
 
-            &-selector-attr {
-                background-color: kbq-code-block-hljs-attr(selector-attr-background, $hljs);
-                color: kbq-code-block-hljs-attr(selector-attr-color, $hljs);
-            }
+        .hljs-selector-attr {
+            background-color: kbq-code-block-hljs-attr(selector-attr-background, $hljs);
+            color: kbq-code-block-hljs-attr(selector-attr-color, $hljs);
+        }
 
-            &-selector-class {
-                background-color: kbq-code-block-hljs-attr(selector-class-background, $hljs);
-                color: kbq-code-block-hljs-attr(selector-class-color, $hljs);
-            }
+        .hljs-selector-class {
+            background-color: kbq-code-block-hljs-attr(selector-class-background, $hljs);
+            color: kbq-code-block-hljs-attr(selector-class-color, $hljs);
+        }
 
-            &-selector-id {
-                background-color: kbq-code-block-hljs-attr(selector-id-background, $hljs);
-                color: kbq-code-block-hljs-attr(selector-id-color, $hljs);
-            }
+        .hljs-selector-id {
+            background-color: kbq-code-block-hljs-attr(selector-id-background, $hljs);
+            color: kbq-code-block-hljs-attr(selector-id-color, $hljs);
+        }
 
-            &-selector-pseudo {
-                background-color: kbq-code-block-hljs-attr(selector-pseudo-background, $hljs);
-                color: kbq-code-block-hljs-attr(selector-pseudo-color, $hljs);
-            }
+        .hljs-selector-pseudo {
+            background-color: kbq-code-block-hljs-attr(selector-pseudo-background, $hljs);
+            color: kbq-code-block-hljs-attr(selector-pseudo-color, $hljs);
+        }
 
-            &-selector-tag {
-                background-color: kbq-code-block-hljs-attr(selector-tag-background, $hljs);
-                color: kbq-code-block-hljs-attr(selector-tag-color, $hljs);
-            }
+        .hljs-selector-tag {
+            background-color: kbq-code-block-hljs-attr(selector-tag-background, $hljs);
+            color: kbq-code-block-hljs-attr(selector-tag-color, $hljs);
+        }
 
-            &-string {
-                background-color: kbq-code-block-hljs-attr(string-background, $hljs);
-                color: kbq-code-block-hljs-attr(string-color, $hljs);
-            }
+        .hljs-string {
+            background-color: kbq-code-block-hljs-attr(string-background, $hljs);
+            color: kbq-code-block-hljs-attr(string-color, $hljs);
+        }
 
-            &-strong {
-                background-color: kbq-code-block-hljs-attr(strong-background, $hljs);
-                color: kbq-code-block-hljs-attr(strong-color, $hljs);
-            }
+        .hljs-strong {
+            background-color: kbq-code-block-hljs-attr(strong-background, $hljs);
+            color: kbq-code-block-hljs-attr(strong-color, $hljs);
+        }
 
-            &-subst {
-                background-color: kbq-code-block-hljs-attr(subst-background, $hljs);
-                color: kbq-code-block-hljs-attr(subst-color, $hljs);
-            }
+        .hljs-subst {
+            background-color: kbq-code-block-hljs-attr(subst-background, $hljs);
+            color: kbq-code-block-hljs-attr(subst-color, $hljs);
+        }
 
-            &-symbol {
-                background-color: kbq-code-block-hljs-attr(symbol-background, $hljs);
-                color: kbq-code-block-hljs-attr(symbol-color, $hljs);
-            }
+        .hljs-symbol {
+            background-color: kbq-code-block-hljs-attr(symbol-background, $hljs);
+            color: kbq-code-block-hljs-attr(symbol-color, $hljs);
+        }
 
-            &-tag {
-                background-color: kbq-code-block-hljs-attr(tag-background, $hljs);
-                color: kbq-code-block-hljs-attr(tag-color, $hljs);
-            }
+        .hljs-tag {
+            background-color: kbq-code-block-hljs-attr(tag-background, $hljs);
+            color: kbq-code-block-hljs-attr(tag-color, $hljs);
+        }
 
-            &-template-tag {
-                background-color: kbq-code-block-hljs-attr(template-tag-background, $hljs);
-                color: kbq-code-block-hljs-attr(template-tag-color, $hljs);
-            }
+        .hljs-template-tag {
+            background-color: kbq-code-block-hljs-attr(template-tag-background, $hljs);
+            color: kbq-code-block-hljs-attr(template-tag-color, $hljs);
+        }
 
-            &-template-variable {
-                background-color: kbq-code-block-hljs-attr(template-variable-background, $hljs);
-                color: kbq-code-block-hljs-attr(template-variable-color, $hljs);
-            }
+        .hljs-template-variable {
+            background-color: kbq-code-block-hljs-attr(template-variable-background, $hljs);
+            color: kbq-code-block-hljs-attr(template-variable-color, $hljs);
+        }
 
-            &-title {
-                background-color: kbq-code-block-hljs-attr(title-background, $hljs);
-                color: kbq-code-block-hljs-attr(title-color, $hljs);
-            }
+        .hljs-title {
+            background-color: kbq-code-block-hljs-attr(title-background, $hljs);
+            color: kbq-code-block-hljs-attr(title-color, $hljs);
+        }
 
-            &-title-class {
-                background-color: kbq-code-block-hljs-attr(title-class-background, $hljs);
-                color: kbq-code-block-hljs-attr(title-class-color, $hljs);
-            }
+        .hljs-title-class {
+            background-color: kbq-code-block-hljs-attr(title-class-background, $hljs);
+            color: kbq-code-block-hljs-attr(title-class-color, $hljs);
+        }
 
-            &-title-class-inherited {
-                background-color: kbq-code-block-hljs-attr(title-class-inherited-background, $hljs);
-                color: kbq-code-block-hljs-attr(title-class-inherited-color, $hljs);
-            }
+        .hljs-title-class-inherited {
+            background-color: kbq-code-block-hljs-attr(title-class-inherited-background, $hljs);
+            color: kbq-code-block-hljs-attr(title-class-inherited-color, $hljs);
+        }
 
-            &-title-function {
-                background-color: kbq-code-block-hljs-attr(title-function-background, $hljs);
-                color: kbq-code-block-hljs-attr(title-function-color, $hljs);
-            }
+        .hljs-title-function {
+            background-color: kbq-code-block-hljs-attr(title-function-background, $hljs);
+            color: kbq-code-block-hljs-attr(title-function-color, $hljs);
+        }
 
-            &-title-function-invoke {
-                background-color: kbq-code-block-hljs-attr(title-function-invoke-background, $hljs);
-                color: kbq-code-block-hljs-attr(title-function-invoke-color, $hljs);
-            }
+        .hljs-title-function-invoke {
+            background-color: kbq-code-block-hljs-attr(title-function-invoke-background, $hljs);
+            color: kbq-code-block-hljs-attr(title-function-invoke-color, $hljs);
+        }
 
-            &-type {
-                background-color: kbq-code-block-hljs-attr(type-background, $hljs);
-                color: kbq-code-block-hljs-attr(type-color, $hljs);
-            }
+        .hljs-type {
+            background-color: kbq-code-block-hljs-attr(type-background, $hljs);
+            color: kbq-code-block-hljs-attr(type-color, $hljs);
+        }
 
-            &-variable {
-                background-color: kbq-code-block-hljs-attr(variable-background, $hljs);
-                color: kbq-code-block-hljs-attr(variable-color, $hljs);
-            }
+        .hljs-variable {
+            background-color: kbq-code-block-hljs-attr(variable-background, $hljs);
+            color: kbq-code-block-hljs-attr(variable-color, $hljs);
+        }
 
-            &-variable-constant {
-                background-color: kbq-code-block-hljs-attr(variable-constant-background, $hljs);
-                color: kbq-code-block-hljs-attr(variable-constant-color, $hljs);
-            }
+        .hljs-variable-constant {
+            background-color: kbq-code-block-hljs-attr(variable-constant-background, $hljs);
+            color: kbq-code-block-hljs-attr(variable-constant-color, $hljs);
+        }
 
-            &-variable-language {
-                background-color: kbq-code-block-hljs-attr(variable-language-background, $hljs);
-                color: kbq-code-block-hljs-attr(variable-language-color, $hljs);
-            }
+        .hljs-variable-language {
+            background-color: kbq-code-block-hljs-attr(variable-language-background, $hljs);
+            color: kbq-code-block-hljs-attr(variable-language-color, $hljs);
+        }
 
-            &-ln-n {
-                color: kbq-code-block-hljs-attr(line-numbers-color, $hljs);
-            }
+        .hljs-ln-n {
+            color: kbq-code-block-hljs-attr(line-numbers-color, $hljs);
+        }
 
-            &-line-numbers {
-                color: map.get($code-block, main-code-color);
-            }
+        .hljs-line-numbers {
+            color: map.get($code-block, main-code-color);
         }
 
         &.kbq-code-block_outline {
