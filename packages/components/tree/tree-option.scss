@@ -48,6 +48,11 @@ $tokens: meta.module-variables(tokens) !default;
 
         padding-top: kbq-css-variable(list-size-text-padding-vertical);
         padding-bottom: kbq-css-variable(list-size-text-padding-vertical);
+
+        .kbq-icon {
+            font-size: initial;
+            margin-right: kbq-css-variable(tree-size-container-content-gap-horizontal);
+        }
     }
 
     &:focus {
