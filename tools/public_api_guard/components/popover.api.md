@@ -60,11 +60,15 @@ export const kbqPopoverAnimations: {
 export class KbqPopoverComponent extends KbqPopUp {
     constructor(changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
+    contentScrollTop: number;
+    // (undocumented)
     footer: string | TemplateRef<any>;
     // (undocumented)
     header: string | TemplateRef<any>;
     // (undocumented)
     isTrapFocus: boolean;
+    // (undocumented)
+    popoverContent: ElementRef<HTMLDivElement>;
     // (undocumented)
     prefix: string;
     // (undocumented)
