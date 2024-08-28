@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DemoMosaicModule } from '../koobiq.module';
+import { DemoKoobiqModule } from '../koobiq.module';
 import '../polyfills';
 import { KoobiqDocsExample } from './koobiq-docs-example';
 
@@ -14,7 +14,7 @@ import { KoobiqDocsExample } from './koobiq-docs-example';
         BrowserAnimationsModule,
         FormsModule,
         HttpClientModule,
-        DemoMosaicModule,
+        DemoKoobiqModule,
         ReactiveFormsModule,
         ScrollingModule
     ],

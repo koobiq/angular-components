@@ -1,7 +1,6 @@
 Компонент показывает переформатированный текстовый контент и подсвечивает синтаксис.
 
 <!-- example(code-block-common) -->
-<!-- https://www.figma.com/file/Y5NWlgM9FDbdf7plybXvZK/Mosaic-Spec?node-id=2255%3A59388&t=8ZxsAMNJttUp2DMD-1 -->
 
 ### Описание работы и возможности
 
