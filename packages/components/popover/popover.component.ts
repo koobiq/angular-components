@@ -23,7 +23,8 @@ import {
     Optional,
     Output,
     TemplateRef,
-    Type, ViewChild,
+    Type,
+    ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
