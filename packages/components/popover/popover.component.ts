@@ -60,10 +60,28 @@ export class KbqPopoverComponent extends KbqPopUp {
     isTrapFocus: boolean = false;
 
     @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
-    contentScrollTop: number = 0;
+
+    isContentTopOverflow: boolean = false;
+    isContentBottomOverflow: boolean = false;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
+    }
+
+    checkContentOverflow(): void {
+        const nativeElement = this.popoverContent.nativeElement;
+
+        if (!nativeElement) {
+            return;
+        }
+
+        const scrollTop: number = nativeElement.scrollTop;
+        const offsetHeight: number = nativeElement.offsetHeight;
+        const scrollHeight: number = nativeElement.scrollHeight;
+
+        this.isContentTopOverflow = scrollTop > 0;
+
+        this.isContentBottomOverflow = (((scrollTop as number) + offsetHeight) as number) < scrollHeight;
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
