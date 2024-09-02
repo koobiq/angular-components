@@ -44,6 +44,8 @@ function buildTokens(themeConfig) {
         delete extendedPlatform.platforms.figma;
 
         extendedPlatform.platforms.css.files[0].options.selector = `.${platform.skin}`;
+        extendedPlatform.platforms.css.files[1].options.selector = '.theme-light';
+        extendedPlatform.platforms.css.files[2].options.selector = '.theme-dark';
 
         const StyleDictionaryExtended = StyleDictionary.extend(extendedPlatform);
         delete StyleDictionaryExtended.platforms.figma;

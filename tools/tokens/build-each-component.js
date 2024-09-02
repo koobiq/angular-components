@@ -1,5 +1,4 @@
 require('@koobiq/tokens-builder/build');
-const fs = require('fs/promises');
 const path = require('path');
 const StyleDictionary = require('style-dictionary');
 const { formatHelpers } = require('style-dictionary');
@@ -9,16 +8,20 @@ const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 const fileHeader = '// stylelint-disable no-unknown-custom-properties';
 
-const sdConfig = {
-    source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
+// resolve path for components where the name of token file and name of the folder in the components are different
+const resolvePath = (componentName) => `${componentName}/${componentName}-tokens.scss`;
+
+const styleDictionaryConfig = {
+    source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/alert.json5`],
     platforms: {
         css: {
             buildPath: `packages/components/`,
             transformGroup: 'kbq/css',
-            filter: (token) => !['font', 'size', 'typography', 'md-typography'].includes(token.attributes.category),
-            options: {
+            filter: (token) => !['font', 'size', 'typography', 'md-typography'].includes(token.attributes.category)
+            // FIXME: add when move all components to css vars
+            /*options: {
                 outputReferences: true
-            }
+            }*/
         }
     }
 };
@@ -68,19 +71,14 @@ StyleDictionary.registerFormat({
 });
 
 const main = async () => {
-    const files = await fs.readdir(
-        path.join(process.cwd(), 'node_modules', '@koobiq', 'design-tokens', 'web', 'components'),
-        {
-            encoding: 'utf8'
-        }
-    );
+    const files = [`alert.${TOKEN_FILE_EXT}`];
 
-    sdConfig.platforms.css.files = files
+    styleDictionaryConfig.platforms.css.files = files
         .filter((file) => path.extname(file).includes(TOKEN_FILE_EXT))
         .map((currentValue) => {
             const component = path.basename(currentValue, `.${TOKEN_FILE_EXT}`);
             return {
-                destination: `${component}/${component}-tokens.scss`,
+                destination: resolvePath(component),
                 filter: (token) =>
                     token.attributes.category?.includes(path.basename(currentValue, `.${TOKEN_FILE_EXT}`)) ||
                     path.basename(currentValue, `.${TOKEN_FILE_EXT}`).includes(token.attributes.category) ||
@@ -91,6 +89,6 @@ const main = async () => {
             };
         });
 
-    StyleDictionary.extend(sdConfig).buildAllPlatforms();
+    StyleDictionary.extend(styleDictionaryConfig).buildPlatform('css');
 };
 main();

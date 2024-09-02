@@ -59,7 +59,6 @@
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-alert-theme();
     @include kbq-autocomplete-theme($theme);
     @include kbq-badge-theme($theme);
     @include kbq-button-theme($theme);
@@ -122,7 +121,6 @@
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
-    @include kbq-alert-typography();
     @include kbq-badge-typography($config);
     @include kbq-button-typography($config);
     @include kbq-button-toggle-typography($config);
