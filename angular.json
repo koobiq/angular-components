@@ -357,11 +357,7 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true,
-                        "styles": [
-                            "./node_modules/@koobiq/design-tokens/web/css-tokens.css",
-                            "./node_modules/@koobiq/design-tokens/web/css-tokens-light.css"
-                        ]
+                        "namedChunks": true
                     }
                 },
                 "serve": {
