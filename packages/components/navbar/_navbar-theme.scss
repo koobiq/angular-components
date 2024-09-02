@@ -106,7 +106,7 @@ button {
 
 @mixin kbq-navbar-typography($config) {
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-strong);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
     }
 
     .kbq-navbar-brand {
