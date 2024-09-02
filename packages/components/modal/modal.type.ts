@@ -17,7 +17,7 @@ export enum ModalSize {
 }
 
 // Public options for using by service
-export interface ModalOptions<T = any, R = any> {
+export interface ModalOptions<C = any, R = any> {
     kbqModalType?: ModalType;
     kbqVisible?: boolean;
     kbqWidth?: number | string;
@@ -28,8 +28,8 @@ export interface ModalOptions<T = any, R = any> {
     // eslint-disable-next-line @typescript-eslint/ban-types
     kbqTitle?: string | TemplateRef<{}>;
     // eslint-disable-next-line @typescript-eslint/ban-types
-    kbqContent?: string | TemplateRef<{}> | Type<T>;
-    kbqComponent?: Type<T>; // The instance of component opened into the dialog.
+    kbqContent?: string | TemplateRef<{}> | Type<C>;
+    kbqComponent?: Type<C>; // The instance of component opened into the dialog.
     kbqComponentParams?: any;
     kbqClosable?: boolean;
     kbqMask?: boolean;
@@ -37,7 +37,7 @@ export interface ModalOptions<T = any, R = any> {
     kbqMaskStyle?: object;
     kbqBodyStyle?: object;
     // eslint-disable-next-line @typescript-eslint/ban-types
-    kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<T>[]; // Default Modal ONLY
+    kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<C>[]; // Default Modal ONLY
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null; // STATIC
     kbqAfterOpen?: EventEmitter<void>;
     kbqAfterClose?: EventEmitter<R>;
@@ -48,10 +48,10 @@ export interface ModalOptions<T = any, R = any> {
     kbqOkText?: string;
     kbqOkType?: string;
     kbqOkLoading?: boolean;
-    kbqOnOk?: EventEmitter<T> | OnClickCallback<T>;
+    kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
     kbqCancelText?: string;
     kbqCancelLoading?: boolean;
-    kbqOnCancel?: EventEmitter<T> | OnClickCallback<T>;
+    kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
 }
 
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {

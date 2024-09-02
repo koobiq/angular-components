@@ -1,3 +1,5 @@
+// @ts-check
+
 const scope_types = [
     'alert',
     'autocomplete',
