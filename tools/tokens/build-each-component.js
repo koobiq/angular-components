@@ -8,7 +8,7 @@ const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 const fileHeader = '// stylelint-disable no-unknown-custom-properties';
 
-// resolve path for components where the name of token file and name of the folder in the components are different
+// FIXME: resolve path for components where the name of token file and name of the folder in the components are different (#DS-2788)
 const resolvePath = (componentName) => `${componentName}/${componentName}-tokens.scss`;
 
 const styleDictionaryConfig = {
@@ -18,7 +18,7 @@ const styleDictionaryConfig = {
             buildPath: `packages/components/`,
             transformGroup: 'kbq/css',
             filter: (token) => !['font', 'size', 'typography', 'md-typography'].includes(token.attributes.category)
-            // FIXME: add when move all components to css vars
+            // FIXME: add when move all components to css vars (#DS-2788)
             /*options: {
                 outputReferences: true
             }*/
