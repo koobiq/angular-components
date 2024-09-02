@@ -6,7 +6,6 @@ const { applyCustomTransformations } = require('@koobiq/tokens-builder/formats/u
 
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
-const fileHeader = '// stylelint-disable no-unknown-custom-properties';
 
 // FIXME: resolve path for components where the name of token file and name of the folder in the components are different (#DS-2788)
 const resolvePath = (componentName) => `${componentName}/${componentName}-tokens.scss`;
@@ -56,17 +55,14 @@ StyleDictionary.registerFormat({
             (token) => token.attributes.dark
         );
 
-        return (
-            `${fileHeader}\n` +
-            Object.entries({
-                [selector]: baseDictionary,
-                [darkThemeSelector]: darkDictionary
+        return Object.entries({
+            [selector]: baseDictionary,
+            [darkThemeSelector]: darkDictionary
+        })
+            .map(([key, currentDictionary]) => {
+                return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
             })
-                .map(([key, currentDictionary]) => {
-                    return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
-                })
-                .join('\n')
-        );
+            .join('\n');
     }
 });
 
