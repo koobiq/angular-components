@@ -276,7 +276,7 @@ export class KbqModalModule {
 // @public
 export abstract class KbqModalRef<C = any, R = any> {
     // (undocumented)
-    abstract afterClose: Observable<R | undefined>;
+    abstract afterClose: Observable<R>;
     // (undocumented)
     abstract afterOpen: Observable<void>;
     // (undocumented)

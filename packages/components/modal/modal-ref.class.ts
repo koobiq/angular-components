@@ -7,7 +7,7 @@ import { KbqModalComponent } from './modal.component';
  */
 export abstract class KbqModalRef<C = any, R = any> {
     abstract afterOpen: Observable<void>;
-    abstract afterClose: Observable<R | undefined>;
+    abstract afterClose: Observable<R>;
 
     abstract open(): void;
 
