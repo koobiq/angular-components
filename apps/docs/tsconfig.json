@@ -5,12 +5,6 @@
         "outDir": "../../dist/out-tsc",
         "declaration": false,
         "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true,
-        "paths": {
-            "@koobiq/cdk/*": ["../../packages/cdk/*"],
-            "@koobiq/components/*": ["../../packages/components/*"],
-            "@koobiq/angular-moment-adapter/*": ["../../packages/angular-moment-adapter/*"],
-            "@koobiq/angular-luxon-adapter/*": ["../../packages/angular-luxon-adapter/*"]
-        }
+        "allowSyntheticDefaultImports": true
     }
 }
