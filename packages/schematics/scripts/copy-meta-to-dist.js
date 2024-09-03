@@ -1,11 +1,7 @@
-import { access, copyFile, mkdir } from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const { access, copyFile, mkdir } = require('fs/promises');
+const { resolve, join } = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const resolvePath = (...segments) => path.resolve(__dirname, ...segments);
+const resolvePath = (...segments) => resolve(__dirname, ...segments);
 
 const ensureDirectoryExistence = async (filePath) => {
     try {
@@ -26,8 +22,8 @@ const copyFileWrapper = async (src, dest) => {
 
 const init = async () => {
     const distCLIPath = resolvePath('../../../dist/components');
-    const schematicsPath = path.join(distCLIPath, 'schematics');
-    const ngAddPath = path.join(schematicsPath, 'ng-add');
+    const schematicsPath = join(distCLIPath, 'schematics');
+    const ngAddPath = join(schematicsPath, 'ng-add');
 
     // Ensure directories exist
     await ensureDirectoryExistence(distCLIPath);
@@ -35,9 +31,9 @@ const init = async () => {
     await ensureDirectoryExistence(ngAddPath);
 
     // Copy files
-    await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), path.join(ngAddPath, 'index.js'));
-    await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), path.join(ngAddPath, 'schema.json'));
-    await copyFileWrapper(resolvePath('../src/collection.json'), path.join(schematicsPath, 'collection.json'));
+    await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
+    await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
+    await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
 };
 
 init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));
