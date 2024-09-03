@@ -30,6 +30,7 @@
             *ngIf="content"
             #popoverContent
             class="kbq-popover__content kbq-scrollbar"
+            (cdkObserveContent)="onContentChange()"
         >
             <ng-container
                 *ngIf="isTemplateRef(content)"

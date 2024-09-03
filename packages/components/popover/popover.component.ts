@@ -76,23 +76,27 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.checkContentOverflow(this.popoverContent.nativeElement);
+
         fromEvent(this.popoverContent.nativeElement, 'scroll')
             .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                const nativeElement = event.target as HTMLElement;
-
-                if (!nativeElement) {
-                    return;
-                }
-
-                const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
-
-                this.isContentTopOverflow = scrollTop > 0;
-
-                this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
-
-                super.detectChanges();
+                this.checkContentOverflow(event.target as HTMLElement);
             });
+    }
+
+    onContentChange() {
+        this.checkContentOverflow(this.popoverContent.nativeElement);
+    }
+
+    checkContentOverflow(contentElement: HTMLElement) {
+        const { scrollTop, offsetHeight, scrollHeight } = contentElement;
+
+        this.isContentTopOverflow = scrollTop > 0;
+
+        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+
+        super.detectChanges();
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
