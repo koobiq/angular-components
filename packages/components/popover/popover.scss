@@ -122,6 +122,7 @@ $arrow-padding: calc(18px - $trigger-margin);
 
 .kbq-popover__close {
     position: absolute;
+    z-index: 2;
     top: kbq-css-variable(size-s);
     right: kbq-css-variable(size-s);
     background-color: rgba(252, 252, 253, 0.88);

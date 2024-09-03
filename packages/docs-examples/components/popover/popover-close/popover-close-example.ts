@@ -12,9 +12,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
 })
 export class PopoverCloseExample {
     members: object[] = [
-        { name: 'Alexandr Vsekhvalnov', role: 'Editor' },
-        { name: 'Sergey Voximplant', role: 'Editor' },
-        { name: 'Roman Turov', role: 'Viewer' },
+        { name: 'Alex Unipraise', role: 'Editor' },
+        { name: 'Serge Vox', role: 'Editor' },
+        { name: 'Rick Brick', role: 'Viewer' },
         { name: 'Viber Curly', role: 'Viewer' },
         { name: 'Jackie Ckang', role: 'Viewer' },
         { name: 'Robert Skinner', role: 'Viewer' },
