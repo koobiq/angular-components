@@ -30,7 +30,6 @@
             *ngIf="content"
             #popoverContent
             class="kbq-popover__content kbq-scrollbar"
-            (scroll)="checkContentOverflow()"
         >
             <ng-container
                 *ngIf="isTemplateRef(content)"

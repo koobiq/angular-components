@@ -10,9 +10,11 @@ import {
 } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -26,8 +28,10 @@ import {
     Type,
     ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KbqPopUp,
     KbqPopUpTrigger,
@@ -36,7 +40,8 @@ import {
     PopUpSizes,
     PopUpTriggers
 } from '@koobiq/components/core';
-import { NEVER, merge } from 'rxjs';
+import { NEVER, fromEvent, merge } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 @Component({
@@ -51,7 +56,7 @@ import { kbqPopoverAnimations } from './popover-animations';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqPopoverAnimations.popoverState]
 })
-export class KbqPopoverComponent extends KbqPopUp {
+export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-popover';
 
     header: string | TemplateRef<any>;
@@ -61,6 +66,8 @@ export class KbqPopoverComponent extends KbqPopUp {
 
     @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
 
+    private debounceTime = 15;
+    private readonly destroyRef = inject(DestroyRef);
     isContentTopOverflow: boolean = false;
     isContentBottomOverflow: boolean = false;
 
@@ -68,18 +75,24 @@ export class KbqPopoverComponent extends KbqPopUp {
         super(changeDetectorRef);
     }
 
-    checkContentOverflow(): void {
-        const nativeElement = this.popoverContent.nativeElement;
+    ngAfterViewInit() {
+        fromEvent(this.popoverContent.nativeElement, 'scroll')
+            .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                const nativeElement = event.target as HTMLElement;
 
-        if (!nativeElement) {
-            return;
-        }
+                if (!nativeElement) {
+                    return;
+                }
 
-        const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
+                const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
 
-        this.isContentTopOverflow = scrollTop > 0;
+                this.isContentTopOverflow = scrollTop > 0;
 
-        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+                this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+
+                super.detectChanges();
+            });
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
