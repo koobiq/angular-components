@@ -91,7 +91,7 @@
     }
 
     .kbq-navbar-divider {
-        background: kbq-css-variable(line-contrast-fade, map.get($theme, line, contrast-fade));
+        background: kbq-css-variable(line-contrast-less, map.get($theme, line, contrast-less));
     }
 }
 

@@ -14,7 +14,7 @@
             color: kbq-css-variable(foreground-contrast-secondary, map.get($foreground, contrast-secondary));
 
             & > tr > th {
-                border-bottom-color: kbq-css-variable(line-contrast-fade, map.get($line, contrast-fade));
+                border-bottom-color: kbq-css-variable(line-contrast-less, map.get($line, contrast-less));
             }
         }
 
@@ -38,7 +38,7 @@
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: kbq-css-variable(line-contrast-fade, map.get($line, contrast-fade));
+                    border-bottom-color: kbq-css-variable(line-contrast-less, map.get($line, contrast-less));
                 }
             }
         }

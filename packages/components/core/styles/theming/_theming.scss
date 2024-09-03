@@ -143,6 +143,7 @@
         theme-fade: map.get($tokens, '#{$scheme}-line-theme-fade'),
         contrast: map.get($tokens, '#{$scheme}-line-contrast'),
         contrast-fade: map.get($tokens, '#{$scheme}-line-contrast-fade'),
+        contrast-less: map.get($tokens, '#{$scheme}-line-contrast-less'),
         success: map.get($tokens, '#{$scheme}-line-success'),
         success-fade: map.get($tokens, '#{$scheme}-line-success-fade'),
         warning: map.get($tokens, '#{$scheme}-line-warning'),
