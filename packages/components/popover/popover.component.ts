@@ -75,13 +75,11 @@ export class KbqPopoverComponent extends KbqPopUp {
             return;
         }
 
-        const scrollTop: number = nativeElement.scrollTop;
-        const offsetHeight: number = nativeElement.offsetHeight;
-        const scrollHeight: number = nativeElement.scrollHeight;
+        const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
 
         this.isContentTopOverflow = scrollTop > 0;
 
-        this.isContentBottomOverflow = (((scrollTop as number) + offsetHeight) as number) < scrollHeight;
+        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
