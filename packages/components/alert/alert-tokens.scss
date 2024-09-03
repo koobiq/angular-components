@@ -1,4 +1,4 @@
-:root {
+.kbq-alert {
     --kbq-alert-size-normal-container-border-radius: 12px;
     --kbq-alert-size-normal-container-padding-top: 0;
     --kbq-alert-size-normal-container-padding-right: 8px;
@@ -63,6 +63,9 @@
         sans-serif;
     --kbq-alert-font-text-text-transform: null;
     --kbq-alert-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-alert-default-contrast-container-background: hsla(229, 15%, 92%, 100%);
     --kbq-alert-default-contrast-container-title: hsla(229, 15%, 15%, 100%);
     --kbq-alert-default-contrast-container-text: hsla(229, 15%, 15%, 100%);
@@ -95,7 +98,7 @@
     --kbq-alert-colored-theme-container-text: hsla(229, 15%, 15%, 100%);
 }
 
-.kbq-dark {
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-alert-default-contrast-container-background: hsla(229, 15%, 25%, 100%);
     --kbq-alert-default-contrast-container-title: hsla(229, 15%, 80%, 100%);
     --kbq-alert-default-contrast-container-text: hsla(229, 15%, 80%, 100%);

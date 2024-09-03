@@ -30,10 +30,20 @@ const dictionaryMapper = (dictionary, outputReferences) => {
     return dictionary.allTokens.map(formatProperty).join('\n');
 };
 
+const filterTokens = (dictionary, predicate) => {
+    const filteredTokens = dictionary.allTokens.filter(predicate);
+    return { ...dictionary, allTokens: filteredTokens, allProperties: filteredTokens };
+};
+
 StyleDictionary.registerFormat({
     name: 'kbq-css/component',
     formatter: function ({ dictionary, options = {} }) {
-        const { outputReferences, selector = ':root', darkThemeSelector = '.kbq-dark' } = options;
+        const {
+            outputReferences,
+            component,
+            lightThemeSelector = ':where(.kbq-light, .theme-light, .kbq-theme-light)',
+            darkThemeSelector = ':where(.kbq-dark, .theme-dark, .kbq-theme-dark)'
+        } = options;
 
         const allTokens = applyCustomTransformations(dictionary);
 
@@ -45,18 +55,16 @@ StyleDictionary.registerFormat({
         );
 
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
-        const baseDictionary = { ...dictionary };
-        const darkDictionary = { ...dictionary };
-
-        baseDictionary.allTokens = baseDictionary.allProperties = baseDictionary.allTokens.filter(
-            (token) => token.attributes.light || token.attributes.type === 'size' || token.attributes.font
+        const baseDictionary = filterTokens(
+            dictionary,
+            (token) => token.attributes.type === 'size' || token.attributes.font
         );
-        darkDictionary.allTokens = darkDictionary.allProperties = darkDictionary.allTokens.filter(
-            (token) => token.attributes.dark
-        );
+        const lightDictionary = filterTokens(dictionary, (token) => token.attributes.light);
+        const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);
 
         return Object.entries({
-            [selector]: baseDictionary,
+            [`.kbq-${component}`]: baseDictionary,
+            [lightThemeSelector]: lightDictionary,
             [darkThemeSelector]: darkDictionary
         })
             .map(([key, currentDictionary]) => {
@@ -81,7 +89,10 @@ const main = async () => {
                     // give access to light/dark/palette tokens to resolve reference manually
                     ['light', 'dark', 'palette'].includes(token.attributes.category),
                 format: 'kbq-css/component',
-                prefix: 'kbq'
+                prefix: 'kbq',
+                options: {
+                    component
+                }
             };
         });
 
