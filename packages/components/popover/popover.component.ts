@@ -28,6 +28,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
+    KbqComponentColors,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
@@ -57,6 +58,7 @@ export class KbqPopoverComponent extends KbqPopUp {
     footer: string | TemplateRef<any>;
 
     isTrapFocus: boolean = false;
+    hasCloseButton: boolean = false;
 
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
@@ -69,6 +71,8 @@ export class KbqPopoverComponent extends KbqPopUp {
     updateTrapFocus(isTrapFocus: boolean): void {
         this.isTrapFocus = isTrapFocus;
     }
+
+    protected readonly componentColors = KbqComponentColors;
 }
 
 export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
@@ -234,6 +238,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.updateClassMap();
     }
 
+    @Input()
+    get hasCloseButton() {
+        return this._hasCloseButton;
+    }
+    set hasCloseButton(value) {
+        this._hasCloseButton = value;
+        this.updateData();
+    }
+    private _hasCloseButton = false;
+
     /**
      * Controls the behavior of closing the component on scroll.
      * The default value is `false`.
@@ -305,6 +319,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.header = this.header;
         this.instance.content = this.content;
         this.instance.footer = this.footer;
+        this.instance.hasCloseButton = this.hasCloseButton;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

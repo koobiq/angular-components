@@ -15,11 +15,13 @@
         <div
             *ngIf="header"
             class="kbq-popover__header"
+            [class.kbq-popover__header_with-close-button]="hasCloseButton"
         >
             <ng-container
                 *ngIf="isTemplateRef(header)"
                 [ngTemplateOutlet]="$any(header)"
             />
+
             <ng-container *ngIf="!isTemplateRef(header)">
                 <div class="kbq-popover__header-text">{{ header }}</div>
             </ng-container>
@@ -29,10 +31,18 @@
             *ngIf="content"
             class="kbq-popover__content kbq-scrollbar"
         >
+            <div
+                *ngIf="hasCloseButton && !header"
+                class="kbq-popover__close-container"
+            >
+                <ng-container *ngTemplateOutlet="closeButton" />
+            </div>
+
             <ng-container
                 *ngIf="isTemplateRef(content)"
                 [ngTemplateOutlet]="$any(content)"
             />
+
             <ng-container *ngIf="!isTemplateRef(content)">
                 <div>{{ content }}</div>
             </ng-container>
@@ -46,11 +56,35 @@
                 *ngIf="isTemplateRef(footer)"
                 [ngTemplateOutlet]="$any(footer)"
             />
+
             <ng-container *ngIf="!isTemplateRef(footer)">
                 <div>{{ footer }}</div>
             </ng-container>
         </div>
     </div>
+
+    <div
+        *ngIf="hasCloseButton && header"
+        class="kbq-popover__close-container"
+    >
+        <ng-container *ngTemplateOutlet="closeButton" />
+    </div>
+
+    <ng-template #closeButton>
+        <div class="kbq-popover__close">
+            <button
+                kbq-button
+                class="kbq-button_transparent"
+                [color]="componentColors.Contrast"
+                (click)="hide(0)"
+            >
+                <i
+                    kbq-icon="mc-close-L_16"
+                    [color]="componentColors.Contrast"
+                ></i>
+            </button>
+        </div>
+    </ng-template>
 
     <div class="kbq-popover__arrow"></div>
 </div>
