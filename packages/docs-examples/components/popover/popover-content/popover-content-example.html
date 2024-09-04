@@ -72,11 +72,10 @@
     </ng-template>
 
     <ng-template #customContent>
-        <img
-            alt=""
-            src="assets/images/popover/hero-header.png"
+        <div
             class="popover-custom-content__image"
-        />
+            [ngStyle]="{ 'background-image': 'url(\'/assets/images/popover/hero-header.jpg\')' }"
+        ></div>
         <div class="popover-custom-content__container">
             <h4 class="kbq-title">Абракадабра!</h4>
             <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
