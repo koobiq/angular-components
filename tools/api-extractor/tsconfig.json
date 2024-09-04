@@ -6,8 +6,7 @@
         "module": "commonjs",
         "strictNullChecks": false,
         "types": [
-            "node",
-            "jasmine"
+            "node"
         ],
         "paths": {}
     },

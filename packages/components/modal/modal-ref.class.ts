@@ -5,7 +5,7 @@ import { KbqModalComponent } from './modal.component';
  * API class that public to users to handle the modal instance.
  * KbqModalRef is aim to avoid accessing to the modal instance directly by users.
  */
-export abstract class KbqModalRef<T = any, R = any> {
+export abstract class KbqModalRef<C = any, R = any> {
     abstract afterOpen: Observable<void>;
     abstract afterClose: Observable<R>;
 
@@ -34,7 +34,7 @@ export abstract class KbqModalRef<T = any, R = any> {
      * Note: this method may return undefined if the Component has not ready yet.
      * (it only available after Modal's ngOnInit)
      */
-    abstract getContentComponent(): T;
+    abstract getContentComponent(): C;
 
     /**
      * Get the dom element of this Modal

@@ -49,7 +49,7 @@ export class DemoComponent implements AfterViewInit, OnInit {
 
         this.startAt = this.adapter.today();
         this.minDate = this.adapter.createDate(2024, 5, 5);
-        this.maxDate = this.adapter.createDate(2025, 10, 20);
+        this.maxDate = this.adapter.createDate(2024, 7, 20);
     }
 
     ngOnInit() {

@@ -21,7 +21,7 @@
 
     .docs-icons-viewer__table-cell {
         background: map.get($background, bg);
-        border-color: map.get($line, contrast-fade);
+        border-color: map.get($line, contrast-less);
 
         > .docs-icons-viewer__table-cell-name {
             color: map.get($foreground, text-less-contrast);

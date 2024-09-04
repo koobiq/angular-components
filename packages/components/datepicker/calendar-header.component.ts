@@ -90,6 +90,12 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         return this.compareDate(this.activeDate, this.minDate!) <= 0;
     }
 
+    get currentDisabled(): boolean {
+        const today = this.adapter.today();
+
+        return this.compareDate(today, this.minDate!) < 0 || this.compareDate(today, this.maxDate!) > 0;
+    }
+
     get nextDisabled(): boolean {
         return this.compareDate(this.activeDate, this.maxDate!) >= 0;
     }

@@ -17,16 +17,14 @@
         margin-bottom: 0;
     }
 
-    .toggle {
-        &-group {
-            display: flex;
-            justify-content: flex-start;
-        }
+    .toggle-group {
+        display: flex;
+        justify-content: flex-start;
+    }
 
-        &-item {
-            color: black;
-            padding: 15px;
-        }
+    .toggle-item {
+        color: black;
+        padding: 15px;
     }
 
     .overflown {

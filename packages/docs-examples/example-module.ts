@@ -775,18 +775,36 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-date-formatter"
     }
   },
-  "datepicker-language": {
-    "packagePath": "components/datepicker/datepicker-language",
-    "title": "multilingual datepicker",
-    "componentName": "DatepickerLanguageExample",
+  "datepicker-and-timepicker": {
+    "packagePath": "components/datepicker/datepicker-and-timepicker",
+    "title": "datepicker-and-timepicker",
+    "componentName": "DatepickerAndTimepickerExample",
     "files": [
-      "datepicker-language-example.ts",
-      "datepicker-language-example.html",
-      "datepicker-language-example.css"
+      "datepicker-and-timepicker-example.ts",
+      "datepicker-and-timepicker-example.html",
+      "datepicker-and-timepicker-example.css"
     ],
-    "selector": "datepicker-language-example",
+    "selector": "datepicker-and-timepicker-example",
     "additionalComponents": [],
-    "primaryFile": "datepicker-language-example.ts",
+    "primaryFile": "datepicker-and-timepicker-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-inactive": {
+    "packagePath": "components/datepicker/datepicker-inactive",
+    "title": "datepicker-inactive",
+    "componentName": "DatepickerInactiveExample",
+    "files": [
+      "datepicker-inactive-example.ts",
+      "datepicker-inactive-example.html",
+      "datepicker-inactive-example.css"
+    ],
+    "selector": "datepicker-inactive-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-inactive-example.ts",
     "module": {
       "name": "DatepickerExamplesModule",
       "importSpecifier": "components/datepicker",
@@ -811,24 +829,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-datepicker"
     }
   },
-  "datepicker-not-empty": {
-    "packagePath": "components/datepicker/datepicker-not-empty",
-    "title": "Datepicker",
-    "componentName": "DatepickerNotEmptyExample",
-    "files": [
-      "datepicker-not-empty-example.ts",
-      "datepicker-not-empty-example.html",
-      "datepicker-not-empty-example.css"
-    ],
-    "selector": "datepicker-not-empty-example",
-    "additionalComponents": [],
-    "primaryFile": "datepicker-not-empty-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
-  },
   "datepicker-overview": {
     "packagePath": "components/datepicker/datepicker-overview",
     "title": "Datepicker",
@@ -841,6 +841,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-overview-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-range": {
+    "packagePath": "components/datepicker/datepicker-range",
+    "title": "datepicker-range",
+    "componentName": "DatepickerRangeExample",
+    "files": [
+      "datepicker-range-example.ts",
+      "datepicker-range-example.html",
+      "datepicker-range-example.css"
+    ],
+    "selector": "datepicker-range-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-range-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-required": {
+    "packagePath": "components/datepicker/datepicker-required",
+    "title": "datepicker-required",
+    "componentName": "DatepickerRequiredExample",
+    "files": [
+      "datepicker-required-example.ts",
+      "datepicker-required-example.html",
+      "datepicker-required-example.css"
+    ],
+    "selector": "datepicker-required-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-required-example.ts",
     "module": {
       "name": "DatepickerExamplesModule",
       "importSpecifier": "components/datepicker",

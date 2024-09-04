@@ -3,7 +3,9 @@
     "version": "{{VERSION}}",
     "description": "Koobiq Luxon Adapter",
     "keywords": [
-        "moment",
+        "angular",
+        "luxon",
+        "datepicker",
         "component",
         "development",
         "kit",

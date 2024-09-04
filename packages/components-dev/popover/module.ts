@@ -29,6 +29,7 @@ export class DemoComponent {
 
     popoverActiveStage: number;
     selectedOrder: boolean;
+    isClosable: boolean = false;
 
     isPopoverVisibleLeft: boolean = false;
 

@@ -148,6 +148,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;
     // (undocumented)
+    get currentDisabled(): boolean;
+    // (undocumented)
     get maxDate(): D | null;
     set maxDate(value: D | null);
     // (undocumented)
