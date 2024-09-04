@@ -4506,10 +4506,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:3.3.1":
-  version: 3.3.1
-  resolution: "@koobiq/tokens-builder@npm:3.3.1"
-  checksum: 10c0/7f143ef222d1a1c7b33859002af98b2fe0f51595120469a149e5ad0fd37976086e4b551731a09dea785341122212db0fae8b7035c453ba4dd636b8394b9c00e0
+"@koobiq/tokens-builder@npm:3.4.0":
+  version: 3.4.0
+  resolution: "@koobiq/tokens-builder@npm:3.4.0"
+  checksum: 10c0/da84be572f1f9d881434685cd6413703c5c8cd6873a29233ea9be6e6375d6175e63639b306c1483dd589b0ac7f99e736fec2eef6c232e05fc3979baf207ad0ff
   languageName: node
   linkType: hard
 
@@ -14335,7 +14335,7 @@ __metadata:
     "@koobiq/icons": "npm:^7.1.1"
     "@koobiq/luxon-date-adapter": "npm:^3.1.2"
     "@koobiq/moment-date-adapter": "npm:^3.1.2"
-    "@koobiq/tokens-builder": "npm:3.3.1"
+    "@koobiq/tokens-builder": "npm:3.4.0"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
