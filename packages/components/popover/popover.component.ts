@@ -78,6 +78,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        if (!this.popoverContent) return;
+
         this.checkContentOverflow(this.popoverContent.nativeElement);
 
         fromEvent(this.popoverContent.nativeElement, 'scroll')
