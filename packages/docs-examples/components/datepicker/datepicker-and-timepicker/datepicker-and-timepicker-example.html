@@ -1,0 +1,32 @@
+<div class="kbq-form-vertical">
+    <label class="kbq-form__label">Время выпуска пакета</label>
+    <div class="kbq-form__row">
+        <div>
+            <kbq-form-field
+                class="layout-margin-right-s"
+                (click)="datepicker.toggle()"
+            >
+                <input
+                    [kbqDatepicker]="datepicker"
+                    [ngModel]="selectedDateTime"
+                />
+                <i
+                    kbq-icon="mc-calendar_16"
+                    kbqSuffix
+                ></i>
+                <kbq-datepicker #datepicker />
+            </kbq-form-field>
+
+            <kbq-form-field>
+                <i
+                    kbq-icon="mc-clock_16"
+                    kbqPrefix
+                ></i>
+                <input
+                    kbqTimepicker
+                    [ngModel]="selectedDateTime"
+                />
+            </kbq-form-field>
+        </div>
+    </div>
+</div>
