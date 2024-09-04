@@ -1,11 +1,12 @@
 import { ViewportScroller } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
-import { Subject, delay } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { delay } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DocCategory, DocumentationItems, documentationItemSections } from '../documentation-items';
 import { DocStates } from '../doс-states';
 
@@ -58,7 +59,7 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
     },
     encapsulation: ViewEncapsulation.None
 })
-export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
+export class ComponentSidenav implements AfterViewInit, OnInit {
     @ViewChild(KbqScrollbar) sidenavMenuContainer: KbqScrollbar;
     @ViewChild('tree') tree: KbqTreeSelection;
 
@@ -98,8 +99,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private _selectedItem: string;
-
-    private destroy: Subject<void> = new Subject();
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         public docStates: DocStates,
@@ -133,7 +133,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
                     return first.path;
                 }),
                 delay(0),
-                takeUntil(this.destroy)
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((url: string) => {
                 if (!url) {
@@ -146,11 +146,6 @@ export class ComponentSidenav implements AfterViewInit, OnInit, OnDestroy {
         this.treeControl.expandAll();
 
         this.docStates.registerNavbarScrollContainer(this.sidenavMenuContainer.contentElement.nativeElement);
-    }
-
-    ngOnDestroy() {
-        this.destroy.next();
-        this.destroy.complete();
     }
 
     needSelectDefaultItem = () => {
