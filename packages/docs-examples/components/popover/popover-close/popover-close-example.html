@@ -1,0 +1,123 @@
+<div class="popover-close-example">
+    <ng-template #customContent>
+        <h1 class="kbq-headline">Making hybrid‑remote inclusive with unique audio technology</h1>
+        <p>Traditional video conferencing can make remote colleagues feel like second-class citizens</p>
+        <p>
+            Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able
+            to use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.”
+            Everyone stays engaged. No one steals the spotlight.
+        </p>
+        <p>
+            We take privacy and security very seriously. We leverage industry standard data security policies to keep
+            all customer data safe and treat the protection of user privacy and data with the utmost importance. You can
+            learn more about our privacy policy here.
+        </p>
+        <p>
+            Encrypted Calls & Communication. All calls (including audio/video) are secured with TLS and AES-128
+            encryption.
+        </p>
+        <p>
+            We take privacy and security very seriously. We leverage industry standard data security policies to keep
+            all customer data safe and treat the protection of user privacy and data with the utmost importance. You can
+            learn more about our privacy policy here.
+        </p>
+        <p>
+            Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able
+            to use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.”
+            Everyone stays engaged. No one steals the spotlight.
+        </p>
+    </ng-template>
+
+    <ng-template #shareContent>
+        <div class="kbq-subheading">Share project</div>
+        <div class="popover-share-content__text">
+            Give your teammates access to the project and start collaborating in real time
+        </div>
+        <form
+            novalidate
+            class="kbq-form-vertical"
+        >
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__label-wrapper">
+                    <label class="kbq-form__label">Email</label>
+                </div>
+                <div class="kbq-form__fieldset kbq-horizontal">
+                    <div class="kbq-form__row">
+                        <kbq-form-field class="kbq-form__control">
+                            <input
+                                kbqInput
+                                name="input"
+                            />
+                        </kbq-form-field>
+                    </div>
+                    <div class="kbq-form__row">
+                        <button
+                            kbq-button
+                            [color]="'contrast'"
+                            (click)="kbqSharePopover.hide(0)"
+                        >
+                            Send invite
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="popover-share-content__list">
+            <div class="popover-share-content__list-title">Members</div>
+            <div
+                *ngFor="let member of members; let i = index"
+                class="popover-share-content__list-item"
+            >
+                <div class="popover-share-content__list-item-left">
+                    <img
+                        alt="{{ member.name }}"
+                        src="assets/images/popover/list-member-{{ i + 1 }}.png"
+                        class="popover-share-content__list-item-image"
+                    />
+                    <div class="popover-share-content__list-item-name">{{ member.name }}</div>
+                </div>
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
+                    [color]="componentColors.Contrast"
+                    [kbqDropdownTriggerFor]="appDropdown"
+                >
+                    {{ member.role }}
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        [color]="componentColors.Contrast"
+                    ></i>
+                </button>
+            </div>
+            <kbq-dropdown
+                #appDropdown="kbqDropdown"
+                [class]="'max-width'"
+                [navigationWithWrap]="true"
+            >
+                <button kbq-dropdown-item>Editor</button>
+                <button kbq-dropdown-item>Viewer</button>
+            </kbq-dropdown>
+        </div>
+    </ng-template>
+
+    <div class="popover-close-example__buttons">
+        <button
+            kbq-button
+            kbqPopover
+            [hasCloseButton]="true"
+            [kbqPopoverClass]="'close-example'"
+            [kbqPopoverContent]="customContent"
+        >
+            Крестик в углу с большим заголовком
+        </button>
+        <button
+            kbq-button
+            kbqPopover
+            [hasCloseButton]="true"
+            [kbqPopoverClass]="'share-content'"
+            [kbqPopoverContent]="shareContent"
+        >
+            Крестик в углу в окне «Поделиться»
+        </button>
+    </div>
+</div>

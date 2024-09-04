@@ -1,0 +1,114 @@
+<div class="popover-content-example">
+    <ng-template #shareContent>
+        <div class="kbq-subheading">Share project</div>
+        <div class="popover-share-content__text">
+            Give your teammates access to the project and start collaborating in real time
+        </div>
+        <form
+            novalidate
+            class="kbq-form-vertical"
+        >
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__label-wrapper">
+                    <label class="kbq-form__label">Email</label>
+                </div>
+                <div class="kbq-form__fieldset kbq-horizontal">
+                    <div class="kbq-form__row">
+                        <kbq-form-field class="kbq-form__control">
+                            <input
+                                kbqInput
+                                name="input"
+                            />
+                        </kbq-form-field>
+                    </div>
+                    <div class="kbq-form__row">
+                        <button
+                            kbq-button
+                            [color]="'contrast'"
+                            (click)="kbqSharePopover.hide(0)"
+                        >
+                            Send invite
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="popover-share-content__list">
+            <div class="popover-share-content__list-title">Members</div>
+            <div
+                *ngFor="let member of members; let i = index"
+                class="popover-share-content__list-item"
+            >
+                <div class="popover-share-content__list-item-left">
+                    <img
+                        alt="{{ member.name }}"
+                        src="assets/images/popover/list-member-{{ i + 1 }}.png"
+                        class="popover-share-content__list-item-image"
+                    />
+                    <div class="popover-share-content__list-item-name">{{ member.name }}</div>
+                </div>
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
+                    [color]="componentColors.Contrast"
+                    [kbqDropdownTriggerFor]="appDropdown"
+                >
+                    {{ member.role }}
+                    <i
+                        kbq-icon="mc-angle-down-S_16"
+                        [color]="componentColors.Contrast"
+                    ></i>
+                </button>
+            </div>
+            <kbq-dropdown
+                #appDropdown="kbqDropdown"
+                [class]="'max-width'"
+                [navigationWithWrap]="true"
+            >
+                <button kbq-dropdown-item>Editor</button>
+                <button kbq-dropdown-item>Viewer</button>
+            </kbq-dropdown>
+        </div>
+    </ng-template>
+
+    <ng-template #customContent>
+        <div
+            class="popover-custom-content__image"
+            [ngStyle]="{ 'background-image': 'url(\'/assets/images/popover/hero-header.jpg\')' }"
+        ></div>
+        <div class="popover-custom-content__container">
+            <h4 class="kbq-title">Абракадабра!</h4>
+            <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
+            <button
+                kbq-button
+                [color]="'contrast'"
+                (click)="kbqCustomPopover.hide(0)"
+            >
+                Сделать магию
+            </button>
+        </div>
+    </ng-template>
+
+    <div class="popover-content-example__buttons">
+        <button
+            #kbqSharePopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [hasCloseButton]="true"
+            [kbqPopoverClass]="'share-content'"
+            [kbqPopoverContent]="shareContent"
+        >
+            Без панели хедера
+        </button>
+        <button
+            #kbqCustomPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [hasCloseButton]="true"
+            [kbqPopoverClass]="'custom-content'"
+            [kbqPopoverContent]="customContent"
+        >
+            Нестандартные стили и отступы
+        </button>
+    </div>
+</div>

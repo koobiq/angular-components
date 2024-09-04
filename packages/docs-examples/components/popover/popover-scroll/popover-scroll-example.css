@@ -1,20 +1,9 @@
-kbq-checkbox {
-    margin-top: 8px;
-}
-
-.buttons-container {
+.popover-scroll-example__buttons {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-.buttons-container button + button {
-    margin-left: 16px;
-}
-
-.buttons-container button:first-child {
-    margin-right: auto;
-}
-
-kbq-form-field {
-    margin-top: 8px;
+.kbq-popover.kbq-popover_medium.scroll-example {
+    width: 400px;
 }

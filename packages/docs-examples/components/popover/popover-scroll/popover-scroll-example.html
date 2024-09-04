@@ -1,51 +1,55 @@
-<ng-template #customContent>
-    Интересно, что это такое?
-    <kbq-form-field class="layout-margin-bottom-s">
-        <input
-            kbqInput
-            placeholder="Интересная мысль"
-        />
-    </kbq-form-field>
-</ng-template>
+<div class="popover-scroll-example">
+    <ng-template #customContent>
+        <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+        <kbq-form-field>
+            <input
+                kbqInput
+                placeholder="Интересная мысль"
+            />
+        </kbq-form-field>
+    </ng-template>
 
-<ng-template #customFooter>
-    <div class="buttons-container">
-        <button kbq-button>Действие 2</button>
+    <ng-template #customFooter>
+        <div class="popover-common-example__buttons">
+            <button
+                kbq-button
+                [color]="'contrast'"
+                (click)="activePopover.hide(0)"
+            >
+                Сохранить
+            </button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Отмена
+            </button>
+        </div>
+    </ng-template>
+
+    <div class="popover-scroll-example__buttons">
         <button
+            #kbqNoClosePopover="kbqPopover"
             kbq-button
-            [color]="'contrast'"
+            kbqPopover
+            [kbqPopoverClass]="'scroll-example'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            (click)="activePopover = kbqNoClosePopover"
         >
-            Применить
+            Поповер не закрывается при прокрутке
         </button>
-        <button kbq-button>Отмена</button>
+        <button
+            #kbqClosePopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [closeOnScroll]="true"
+            [kbqPopoverClass]="'scroll-example'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            (click)="activePopover = kbqClosePopover"
+        >
+            Закрывается при прокрутке
+        </button>
     </div>
-</ng-template>
-
-<div>
-    <button
-        *ngIf="closeOnScroll"
-        #popover="kbqPopover"
-        kbq-button
-        kbqPopover
-        kbqPopoverHeader="Заголовок поповера"
-        [closeOnScroll]="true"
-        [kbqPopoverContent]="customContent"
-        [kbqPopoverFooter]="customFooter"
-    >
-        Toggle popover
-    </button>
-
-    <button
-        *ngIf="!closeOnScroll"
-        #popover="kbqPopover"
-        kbq-button
-        kbqPopover
-        kbqPopoverHeader="Заголовок поповера"
-        [kbqPopoverContent]="customContent"
-        [kbqPopoverFooter]="customFooter"
-    >
-        Toggle popover
-    </button>
 </div>
-
-<kbq-checkbox [(ngModel)]="closeOnScroll">Скрывать при скролле</kbq-checkbox>

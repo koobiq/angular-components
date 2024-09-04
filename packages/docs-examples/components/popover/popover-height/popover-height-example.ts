@@ -2,14 +2,14 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
- * @title popover-scroll
+ * @title popover-height
  */
 @Component({
-    selector: 'popover-scroll-example',
-    templateUrl: 'popover-scroll-example.html',
-    styleUrls: ['popover-scroll-example.css'],
+    selector: 'popover-height-example',
+    templateUrl: 'popover-height-example.html',
+    styleUrls: ['popover-height-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class PopoverScrollExample {
+export class PopoverHeightExample {
     activePopover: KbqPopoverTrigger;
 }

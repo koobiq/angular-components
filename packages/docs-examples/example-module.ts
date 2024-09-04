@@ -2272,6 +2272,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-number-formatter"
     }
   },
+  "popover-close": {
+    "packagePath": "components/popover/popover-close",
+    "title": "popover-close",
+    "componentName": "PopoverCloseExample",
+    "files": [
+      "popover-close-example.ts",
+      "popover-close-example.html",
+      "popover-close-example.css"
+    ],
+    "selector": "popover-close-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-close-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
   "popover-common": {
     "packagePath": "components/popover/popover-common",
     "title": "popover-common",
@@ -2284,6 +2302,60 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-common-example",
     "additionalComponents": [],
     "primaryFile": "popover-common-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-content": {
+    "packagePath": "components/popover/popover-content",
+    "title": "popover-content",
+    "componentName": "PopoverContentExample",
+    "files": [
+      "popover-content-example.ts",
+      "popover-content-example.html",
+      "popover-content-example.css"
+    ],
+    "selector": "popover-content-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-content-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-header": {
+    "packagePath": "components/popover/popover-header",
+    "title": "popover-header",
+    "componentName": "PopoverHeaderExample",
+    "files": [
+      "popover-header-example.ts",
+      "popover-header-example.html",
+      "popover-header-example.css"
+    ],
+    "selector": "popover-header-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-header-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-height": {
+    "packagePath": "components/popover/popover-height",
+    "title": "popover-height",
+    "componentName": "PopoverHeightExample",
+    "files": [
+      "popover-height-example.ts",
+      "popover-height-example.html",
+      "popover-height-example.css"
+    ],
+    "selector": "popover-height-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-height-example.ts",
     "module": {
       "name": "PopoverExamplesModule",
       "importSpecifier": "components/popover",
@@ -2338,6 +2410,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-scroll-example",
     "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-width": {
+    "packagePath": "components/popover/popover-width",
+    "title": "popover-width",
+    "componentName": "PopoverWidthExample",
+    "files": [
+      "popover-width-example.ts",
+      "popover-width-example.html",
+      "popover-width-example.css"
+    ],
+    "selector": "popover-width-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-width-example.ts",
     "module": {
       "name": "PopoverExamplesModule",
       "importSpecifier": "components/popover",
