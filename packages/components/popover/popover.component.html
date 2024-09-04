@@ -15,6 +15,7 @@
         <div
             *ngIf="header"
             class="kbq-popover__header"
+            [class.kbq-popover__header_top-overflow]="isContentTopOverflow"
             [class.kbq-popover__header_with-close-button]="hasCloseButton"
         >
             <ng-container
@@ -29,7 +30,9 @@
 
         <div
             *ngIf="content"
+            #popoverContent
             class="kbq-popover__content kbq-scrollbar"
+            (cdkObserveContent)="onContentChange()"
         >
             <div
                 *ngIf="hasCloseButton && !header"
@@ -51,6 +54,7 @@
         <div
             *ngIf="footer"
             class="kbq-popover__footer"
+            [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
         >
             <ng-container
                 *ngIf="isTemplateRef(footer)"

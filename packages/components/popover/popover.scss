@@ -95,6 +95,10 @@ $trigger-margin: 9px;
     }
 }
 
+.kbq-popover__header_top-overflow {
+    box-shadow: 0 9px 8px -12px rgba(138, 143, 168, 1);
+}
+
 .kbq-popover__header_with-close-button {
     padding-right: kbq-css-variable(size-4xl);
 }
@@ -102,6 +106,10 @@ $trigger-margin: 9px;
 .kbq-popover__footer {
     padding: kbq-css-variable(popover-size-footer-padding-vertical)
         kbq-css-variable(popover-size-footer-padding-horizontal);
+}
+
+.kbq-popover__footer_bottom-overflow {
+    box-shadow: 0 -9px 8px -12px rgba(138, 143, 168, 1);
 }
 
 .kbq-popover__arrow {

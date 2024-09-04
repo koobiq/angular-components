@@ -10,9 +10,11 @@ import {
 } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -24,9 +26,12 @@ import {
     Output,
     TemplateRef,
     Type,
+    ViewChild,
     ViewContainerRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KbqComponentColors,
     KbqPopUp,
@@ -36,7 +41,8 @@ import {
     PopUpSizes,
     PopUpTriggers
 } from '@koobiq/components/core';
-import { NEVER, merge } from 'rxjs';
+import { NEVER, fromEvent, merge } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 @Component({
@@ -51,7 +57,7 @@ import { kbqPopoverAnimations } from './popover-animations';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqPopoverAnimations.popoverState]
 })
-export class KbqPopoverComponent extends KbqPopUp {
+export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-popover';
 
     header: string | TemplateRef<any>;
@@ -60,8 +66,41 @@ export class KbqPopoverComponent extends KbqPopUp {
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
+    @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
+
+    private debounceTime = 15;
+    private readonly destroyRef = inject(DestroyRef);
+    isContentTopOverflow: boolean = false;
+    isContentBottomOverflow: boolean = false;
+
     constructor(changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
+    }
+
+    ngAfterViewInit() {
+        if (!this.popoverContent) return;
+
+        this.checkContentOverflow(this.popoverContent.nativeElement);
+
+        fromEvent(this.popoverContent.nativeElement, 'scroll')
+            .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                this.checkContentOverflow(event.target as HTMLElement);
+            });
+    }
+
+    onContentChange() {
+        this.checkContentOverflow(this.popoverContent.nativeElement);
+    }
+
+    checkContentOverflow(contentElement: HTMLElement) {
+        const { scrollTop, offsetHeight, scrollHeight } = contentElement;
+
+        this.isContentTopOverflow = scrollTop > 0;
+
+        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+
+        super.detectChanges();
     }
 
     updateClassMap(placement: string, customClass: string, size: PopUpSizes) {

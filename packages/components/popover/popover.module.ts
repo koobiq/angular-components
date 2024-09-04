@@ -1,4 +1,5 @@
 import { A11yModule, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -14,7 +15,7 @@ import {
 @NgModule({
     declarations: [KbqPopoverComponent, KbqPopoverTrigger, KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger],
     exports: [KbqPopoverComponent, KbqPopoverTrigger, KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger],
-    imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule, KbqIconModule],
+    imports: [CommonModule, OverlayModule, KbqButtonModule, A11yModule, KbqIconModule, CdkObserveContent],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]

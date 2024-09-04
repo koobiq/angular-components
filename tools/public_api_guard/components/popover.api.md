@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -17,6 +18,7 @@ import * as i4 from '@angular/cdk/overlay';
 import * as i5 from '@koobiq/components/button';
 import * as i6 from '@angular/cdk/a11y';
 import * as i7 from '@koobiq/components/icon';
+import * as i8 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
@@ -59,8 +61,10 @@ export const kbqPopoverAnimations: {
 };
 
 // @public (undocumented)
-export class KbqPopoverComponent extends KbqPopUp {
+export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
+    // (undocumented)
+    checkContentOverflow(contentElement: HTMLElement): void;
     // (undocumented)
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -70,7 +74,17 @@ export class KbqPopoverComponent extends KbqPopUp {
     // (undocumented)
     header: string | TemplateRef<any>;
     // (undocumented)
+    isContentBottomOverflow: boolean;
+    // (undocumented)
+    isContentTopOverflow: boolean;
+    // (undocumented)
     isTrapFocus: boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    onContentChange(): void;
+    // (undocumented)
+    popoverContent: ElementRef<HTMLDivElement>;
     // (undocumented)
     prefix: string;
     // (undocumented)
@@ -131,7 +145,7 @@ export class KbqPopoverModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqButtonModule, typeof i6.A11yModule, typeof i7.KbqIconModule], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqButtonModule, typeof i6.A11yModule, typeof i7.KbqIconModule, typeof i8.CdkObserveContent], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
 }
 
 // @public
