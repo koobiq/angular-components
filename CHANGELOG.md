@@ -1,3 +1,23 @@
+# 17.4.0 (2024-09-04)
+
+### Koobiq
+
+ * bug fix  **modal:** return type ([#DS-2702](https://github.com/koobiq/angular-components/issues/issue/DS-2702)) ([#243](https://github.com/koobiq/angular-components/issues/243)) ([07a356a](https://github.com/koobiq/angular-components/commit/07a356a84e16569eb4b8f3b0940f9bc7dd30fa0c))
+ * bug fix  **number:** input number stepper arrow fix ([#DS-2790](https://github.com/koobiq/angular-components/issues/issue/DS-2790)) ([#246](https://github.com/koobiq/angular-components/issues/246)) ([d3100f4](https://github.com/koobiq/angular-components/commit/d3100f4fd061f574f285d0ea0f8190b7b5ca1d38))
+ * bug fix  **popover:** close button background dark-theme ([#251](https://github.com/koobiq/angular-components/issues/251)) ([fb3b3da](https://github.com/koobiq/angular-components/commit/fb3b3da22a4e3664bdcb9d917f1b0d2f76f31afa))
+ * bug fix  resolved stackblitz warnings ([#DS-2785](https://github.com/koobiq/angular-components/issues/issue/DS-2785)) ([#239](https://github.com/koobiq/angular-components/issues/239)) ([ff0352b](https://github.com/koobiq/angular-components/commit/ff0352b3bd6c9d31db94a09badb7301645979691))
+ * feature  added stylelint rule - selector-no-union-class-name ([#DS-2783](https://github.com/koobiq/angular-components/issues/issue/DS-2783)) ([#236](https://github.com/koobiq/angular-components/issues/236)) ([0188817](https://github.com/koobiq/angular-components/commit/0188817951e60d889b38d9fd7b990c938b2801c5))
+ * feature  **docs:** examples for datepicker ([#DS-2744](https://github.com/koobiq/angular-components/issues/issue/DS-2744)) ([#232](https://github.com/koobiq/angular-components/issues/232)) ([00537a7](https://github.com/koobiq/angular-components/commit/00537a74a05d0a5babd1cd09bb63a1085d797740))
+ * feature  **docs:** popover new docs ([#DS-2731](https://github.com/koobiq/angular-components/issues/issue/DS-2731)) ([#215](https://github.com/koobiq/angular-components/issues/215)) ([4270d36](https://github.com/koobiq/angular-components/commit/4270d3689864d01c635abe6b0e430210d860f66f))
+ * feature  **docs:** updated tsconfig paths ([#247](https://github.com/koobiq/angular-components/issues/247)) ([9f34855](https://github.com/koobiq/angular-components/commit/9f34855ebf28960b977896be509e277356fa9905))
+ * feature  **markdown:** markdown fixes styles + markdown new docs ([#DS-2629](https://github.com/koobiq/angular-components/issues/issue/DS-2629))  ([#187](https://github.com/koobiq/angular-components/issues/187)) ([c66034a](https://github.com/koobiq/angular-components/commit/c66034a04c56cb272d10ad5eeb436abb157f947d))
+ * feature  **popover:** add closable ([#DS-2754](https://github.com/koobiq/angular-components/issues/issue/DS-2754)) ([#214](https://github.com/koobiq/angular-components/issues/214)) ([9bb36af](https://github.com/koobiq/angular-components/commit/9bb36af79cbb8243c89d4b2b328dc7bf334886fe))
+ * feature  **popover:** content shadows if scroll ([#DS-2753](https://github.com/koobiq/angular-components/issues/issue/DS-2753)) ([#237](https://github.com/koobiq/angular-components/issues/237)) ([1778e51](https://github.com/koobiq/angular-components/commit/1778e5187a530d27c19d66540dbf2881e2ad6259))
+ * feature  refactored tools/api-gen module ([#DS-2766](https://github.com/koobiq/angular-components/issues/issue/DS-2766)) ([#241](https://github.com/koobiq/angular-components/issues/241)) ([aefc57b](https://github.com/koobiq/angular-components/commit/aefc57bfc6b211811bf0ebe1b5d12af3ec94fc65))
+ * feature  removed unused file for public_api_guard ([#248](https://github.com/koobiq/angular-components/issues/248)) ([ed83b97](https://github.com/koobiq/angular-components/commit/ed83b9750104e2ac5e1f1e629097c1754d5d9dfb))
+ * feature  renamed stackblitz demo module ([#DS-2782](https://github.com/koobiq/angular-components/issues/issue/DS-2782)) ([#234](https://github.com/koobiq/angular-components/issues/234)) ([72b13af](https://github.com/koobiq/angular-components/commit/72b13af8d4fac53ed3085e2eedab561a27322347))
+ * feature  **visual, navbar:** applied new tokens for components, updated navbar styles ([#DS-2786](https://github.com/koobiq/angular-components/issues/issue/DS-2786)) ([#244](https://github.com/koobiq/angular-components/issues/244)) ([87beeb8](https://github.com/koobiq/angular-components/commit/87beeb88c2929007797e98b8c2d717c9844c8526))
+
 # 17.3.0 (2024-08-26)
 
 ### Koobiq
