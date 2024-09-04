@@ -27,7 +27,7 @@
   --kbq-badge-font-normal-default-font-size: 14px;
   --kbq-badge-font-normal-default-line-height: 20px;
   --kbq-badge-font-normal-default-letter-spacing: -0.006em;
-  --kbq-badge-font-normal-default-font-weight: 600;
+  --kbq-badge-font-normal-default-font-weight: 500;
   --kbq-badge-font-normal-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-badge-font-normal-default-text-transform: null;
   --kbq-badge-font-normal-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -41,7 +41,7 @@
   --kbq-badge-font-compact-default-font-size: 12px;
   --kbq-badge-font-compact-default-line-height: 16px;
   --kbq-badge-font-compact-default-letter-spacing: normal;
-  --kbq-badge-font-compact-default-font-weight: 600;
+  --kbq-badge-font-compact-default-font-weight: 500;
   --kbq-badge-font-compact-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-badge-font-compact-default-text-transform: null;
   --kbq-badge-font-compact-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -55,14 +55,14 @@
   --kbq-button-toggle-font-item-font-size: 14px;
   --kbq-button-toggle-font-item-line-height: 20px;
   --kbq-button-toggle-font-item-letter-spacing: -0.006em;
-  --kbq-button-toggle-font-item-font-weight: 600;
+  --kbq-button-toggle-font-item-font-weight: 500;
   --kbq-button-toggle-font-item-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-button-toggle-font-item-text-transform: null;
   --kbq-button-toggle-font-item-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
   --kbq-button-font-default-font-size: 14px;
   --kbq-button-font-default-line-height: 20px;
   --kbq-button-font-default-letter-spacing: -0.006em;
-  --kbq-button-font-default-font-weight: 600;
+  --kbq-button-font-default-font-weight: 500;
   --kbq-button-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-button-font-default-text-transform: null;
   --kbq-button-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -311,14 +311,14 @@
   --kbq-hint-font-normal-text-font-size: 14px;
   --kbq-hint-font-normal-text-line-height: 20px;
   --kbq-hint-font-normal-text-letter-spacing: -0.006em;
-  --kbq-hint-font-normal-text-font-weight: 600;
+  --kbq-hint-font-normal-text-font-weight: 500;
   --kbq-hint-font-normal-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-hint-font-normal-text-text-transform: null;
   --kbq-hint-font-normal-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
   --kbq-hint-font-compact-text-font-size: 12px;
   --kbq-hint-font-compact-text-line-height: 16px;
   --kbq-hint-font-compact-text-letter-spacing: normal;
-  --kbq-hint-font-compact-text-font-weight: 600;
+  --kbq-hint-font-compact-text-font-weight: normal;
   --kbq-hint-font-compact-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-hint-font-compact-text-text-transform: null;
   --kbq-hint-font-compact-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -374,7 +374,7 @@
   --kbq-list-font-subheading-font-size: 12px;
   --kbq-list-font-subheading-line-height: 16px;
   --kbq-list-font-subheading-letter-spacing: 1px;
-  --kbq-list-font-subheading-font-weight: 600;
+  --kbq-list-font-subheading-font-weight: 500;
   --kbq-list-font-subheading-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-list-font-subheading-text-transform: uppercase;
   --kbq-list-font-subheading-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -444,7 +444,7 @@
   --kbq-markdown-h6-font-default-font-size: 14px;
   --kbq-markdown-h6-font-default-line-height: 20px;
   --kbq-markdown-h6-font-default-letter-spacing: 0.08em;
-  --kbq-markdown-h6-font-default-font-weight: 600;
+  --kbq-markdown-h6-font-default-font-weight: 500;
   --kbq-markdown-h6-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-markdown-h6-font-default-text-transform: uppercase;
   --kbq-markdown-h6-font-default-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -668,7 +668,7 @@
   --kbq-tabs-font-text-font-size: 14px;
   --kbq-tabs-font-text-line-height: 20px;
   --kbq-tabs-font-text-letter-spacing: -0.006em;
-  --kbq-tabs-font-text-font-weight: 600;
+  --kbq-tabs-font-text-font-weight: 500;
   --kbq-tabs-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-tabs-font-text-text-transform: null;
   --kbq-tabs-font-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -682,7 +682,7 @@
   --kbq-tag-font-default-font-size: 14px;
   --kbq-tag-font-default-line-height: 20px;
   --kbq-tag-font-default-letter-spacing: -0.006em;
-  --kbq-tag-font-default-font-weight: 600;
+  --kbq-tag-font-default-font-weight: 500;
   --kbq-tag-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-tag-font-default-text-transform: null;
   --kbq-tag-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -717,7 +717,7 @@
   --kbq-timezone-option-font-optgroup-label-font-size: 12px;
   --kbq-timezone-option-font-optgroup-label-line-height: 16px;
   --kbq-timezone-option-font-optgroup-label-letter-spacing: 1px;
-  --kbq-timezone-option-font-optgroup-label-font-weight: 600;
+  --kbq-timezone-option-font-optgroup-label-font-weight: 500;
   --kbq-timezone-option-font-optgroup-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-timezone-option-font-optgroup-label-text-transform: uppercase;
   --kbq-timezone-option-font-optgroup-label-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -773,7 +773,7 @@
   --kbq-tooltip-font-title-font-size: 12px;
   --kbq-tooltip-font-title-line-height: 16px;
   --kbq-tooltip-font-title-letter-spacing: normal;
-  --kbq-tooltip-font-title-font-weight: 600;
+  --kbq-tooltip-font-title-font-weight: normal;
   --kbq-tooltip-font-title-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --kbq-tooltip-font-title-text-transform: null;
   --kbq-tooltip-font-title-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";

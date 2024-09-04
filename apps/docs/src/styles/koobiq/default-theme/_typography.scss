@@ -78,14 +78,14 @@ $typography-body-tabular-font-feature-settings: "calt", "ss01", "ss04", "tnum";
 $typography-body-strong-font-size: 16px;
 $typography-body-strong-line-height: 24px;
 $typography-body-strong-letter-spacing: normal;
-$typography-body-strong-font-weight: 600;
+$typography-body-strong-font-weight: 500;
 $typography-body-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-body-strong-text-transform: null;
 $typography-body-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 $typography-body-caps-font-size: 16px;
 $typography-body-caps-line-height: 24px;
 $typography-body-caps-letter-spacing: 0.08em;
-$typography-body-caps-font-weight: 600;
+$typography-body-caps-font-weight: 400;
 $typography-body-caps-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-body-caps-text-transform: uppercase;
 $typography-body-caps-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -99,7 +99,7 @@ $typography-body-mono-font-feature-settings: initial;
 $typography-body-mono-strong-font-size: 16px;
 $typography-body-mono-strong-line-height: 24px;
 $typography-body-mono-strong-letter-spacing: normal;
-$typography-body-mono-strong-font-weight: 600;
+$typography-body-mono-strong-font-weight: 700;
 $typography-body-mono-strong-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
 $typography-body-mono-strong-text-transform: null;
 $typography-body-mono-strong-font-feature-settings: initial;
@@ -120,7 +120,7 @@ $typography-caption-tabular-font-feature-settings: "calt", "ss01", "ss04", "tnum
 $typography-caption-strong-font-size: 14px;
 $typography-caption-strong-line-height: 20px;
 $typography-caption-strong-letter-spacing: -0.006em;
-$typography-caption-strong-font-weight: 600;
+$typography-caption-strong-font-weight: 500;
 $typography-caption-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-caption-strong-text-transform: null;
 $typography-caption-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -141,7 +141,7 @@ $typography-caption-mono-font-feature-settings: initial;
 $typography-caption-mono-strong-font-size: 14px;
 $typography-caption-mono-strong-line-height: 20px;
 $typography-caption-mono-strong-letter-spacing: normal;
-$typography-caption-mono-strong-font-weight: 600;
+$typography-caption-mono-strong-font-weight: 700;
 $typography-caption-mono-strong-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
 $typography-caption-mono-strong-text-transform: null;
 $typography-caption-mono-strong-font-feature-settings: initial;
@@ -155,7 +155,7 @@ $typography-extra-small-text-font-feature-settings: "calt", "kern", "liga", "ss0
 $typography-extra-small-text-strong-font-size: 12px;
 $typography-extra-small-text-strong-line-height: 16px;
 $typography-extra-small-text-strong-letter-spacing: normal;
-$typography-extra-small-text-strong-font-weight: 600;
+$typography-extra-small-text-strong-font-weight: 500;
 $typography-extra-small-text-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-extra-small-text-strong-text-transform: null;
 $typography-extra-small-text-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -222,6 +222,13 @@ $typography-text-big-font-weight: normal;
 $typography-text-big-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-text-big-text-transform: null;
 $typography-text-big-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+$typography-text-big-medium-font-size: 16px;
+$typography-text-big-medium-line-height: 24px;
+$typography-text-big-medium-letter-spacing: -0.011em;
+$typography-text-big-medium-font-weight: 500;
+$typography-text-big-medium-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-text-big-medium-text-transform: null;
+$typography-text-big-medium-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 $typography-text-big-strong-font-size: 16px;
 $typography-text-big-strong-line-height: 24px;
 $typography-text-big-strong-letter-spacing: -0.011em;
@@ -236,6 +243,13 @@ $typography-text-normal-font-weight: normal;
 $typography-text-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-text-normal-text-transform: null;
 $typography-text-normal-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+$typography-text-normal-medium-font-size: 14px;
+$typography-text-normal-medium-line-height: 20px;
+$typography-text-normal-medium-letter-spacing: -0.006em;
+$typography-text-normal-medium-font-weight: 500;
+$typography-text-normal-medium-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-text-normal-medium-text-transform: null;
+$typography-text-normal-medium-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 $typography-text-normal-strong-font-size: 14px;
 $typography-text-normal-strong-line-height: 20px;
 $typography-text-normal-strong-letter-spacing: -0.006em;
@@ -250,6 +264,13 @@ $typography-text-compact-font-weight: normal;
 $typography-text-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-text-compact-text-transform: null;
 $typography-text-compact-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+$typography-text-compact-medium-font-size: 12px;
+$typography-text-compact-medium-line-height: 16px;
+$typography-text-compact-medium-letter-spacing: normal;
+$typography-text-compact-medium-font-weight: 500;
+$typography-text-compact-medium-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$typography-text-compact-medium-text-transform: null;
+$typography-text-compact-medium-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 $typography-text-compact-strong-font-size: 12px;
 $typography-text-compact-strong-line-height: 16px;
 $typography-text-compact-strong-letter-spacing: normal;
@@ -267,7 +288,7 @@ $typography-caps-big-font-feature-settings: "calt", "case", "kern", "liga", "ss0
 $typography-caps-big-strong-font-size: 16px;
 $typography-caps-big-strong-line-height: 24px;
 $typography-caps-big-strong-letter-spacing: 0.08em;
-$typography-caps-big-strong-font-weight: 600;
+$typography-caps-big-strong-font-weight: 500;
 $typography-caps-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-caps-big-strong-text-transform: uppercase;
 $typography-caps-big-strong-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -281,7 +302,7 @@ $typography-caps-normal-font-feature-settings: "calt", "case", "kern", "liga", "
 $typography-caps-normal-strong-font-size: 14px;
 $typography-caps-normal-strong-line-height: 20px;
 $typography-caps-normal-strong-letter-spacing: 0.08em;
-$typography-caps-normal-strong-font-weight: 600;
+$typography-caps-normal-strong-font-weight: 500;
 $typography-caps-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-caps-normal-strong-text-transform: uppercase;
 $typography-caps-normal-strong-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -295,7 +316,7 @@ $typography-caps-compact-font-feature-settings: "calt", "case", "kern", "liga", 
 $typography-caps-compact-strong-font-size: 12px;
 $typography-caps-compact-strong-line-height: 16px;
 $typography-caps-compact-strong-letter-spacing: 1px;
-$typography-caps-compact-strong-font-weight: 600;
+$typography-caps-compact-strong-font-weight: 500;
 $typography-caps-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-caps-compact-strong-text-transform: uppercase;
 $typography-caps-compact-strong-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
@@ -358,7 +379,7 @@ $typography-tabular-big-font-feature-settings: "calt", "ss01", "ss04", "tnum";
 $typography-tabular-big-strong-font-size: 16px;
 $typography-tabular-big-strong-line-height: 24px;
 $typography-tabular-big-strong-letter-spacing: normal;
-$typography-tabular-big-strong-font-weight: 600;
+$typography-tabular-big-strong-font-weight: 500;
 $typography-tabular-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-tabular-big-strong-text-transform: null;
 $typography-tabular-big-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -372,7 +393,7 @@ $typography-tabular-normal-font-feature-settings: "calt", "ss01", "ss04", "tnum"
 $typography-tabular-normal-strong-font-size: 14px;
 $typography-tabular-normal-strong-line-height: 20px;
 $typography-tabular-normal-strong-letter-spacing: -0.006em;
-$typography-tabular-normal-strong-font-weight: 600;
+$typography-tabular-normal-strong-font-weight: 500;
 $typography-tabular-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-tabular-normal-strong-text-transform: null;
 $typography-tabular-normal-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -386,7 +407,7 @@ $typography-tabular-compact-font-feature-settings: "calt", "ss01", "ss04", "tnum
 $typography-tabular-compact-strong-font-size: 12px;
 $typography-tabular-compact-strong-line-height: 16px;
 $typography-tabular-compact-strong-letter-spacing: normal;
-$typography-tabular-compact-strong-font-weight: 600;
+$typography-tabular-compact-strong-font-weight: 500;
 $typography-tabular-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-tabular-compact-strong-text-transform: null;
 $typography-tabular-compact-strong-font-feature-settings: "calt", "ss01", "ss04", "tnum";
@@ -402,7 +423,7 @@ $typography-italic-big-strong-font-style: italic;
 $typography-italic-big-strong-font-size: 16px;
 $typography-italic-big-strong-line-height: 24px;
 $typography-italic-big-strong-letter-spacing: -0.011em;
-$typography-italic-big-strong-font-weight: 600;
+$typography-italic-big-strong-font-weight: 500;
 $typography-italic-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-italic-big-strong-text-transform: null;
 $typography-italic-big-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -418,7 +439,7 @@ $typography-italic-normal-strong-font-style: italic;
 $typography-italic-normal-strong-font-size: 14px;
 $typography-italic-normal-strong-line-height: 20px;
 $typography-italic-normal-strong-letter-spacing: -0.006em;
-$typography-italic-normal-strong-font-weight: 600;
+$typography-italic-normal-strong-font-weight: 500;
 $typography-italic-normal-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-italic-normal-strong-text-transform: null;
 $typography-italic-normal-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -434,7 +455,7 @@ $typography-italic-compact-strong-font-style: italic;
 $typography-italic-compact-strong-font-size: 12px;
 $typography-italic-compact-strong-line-height: 16px;
 $typography-italic-compact-strong-letter-spacing: normal;
-$typography-italic-compact-strong-font-weight: 600;
+$typography-italic-compact-strong-font-weight: 500;
 $typography-italic-compact-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 $typography-italic-compact-strong-text-transform: null;
 $typography-italic-compact-strong-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
@@ -736,6 +757,15 @@ $koobiq: (
       'text-transform': $typography-text-big-text-transform,
       'font-feature-settings': $typography-text-big-font-feature-settings
     ),
+    'text-big-medium': (
+      'font-size': $typography-text-big-medium-font-size,
+      'line-height': $typography-text-big-medium-line-height,
+      'letter-spacing': $typography-text-big-medium-letter-spacing,
+      'font-weight': $typography-text-big-medium-font-weight,
+      'font-family': $typography-text-big-medium-font-family,
+      'text-transform': $typography-text-big-medium-text-transform,
+      'font-feature-settings': $typography-text-big-medium-font-feature-settings
+    ),
     'text-big-strong': (
       'font-size': $typography-text-big-strong-font-size,
       'line-height': $typography-text-big-strong-line-height,
@@ -754,6 +784,15 @@ $koobiq: (
       'text-transform': $typography-text-normal-text-transform,
       'font-feature-settings': $typography-text-normal-font-feature-settings
     ),
+    'text-normal-medium': (
+      'font-size': $typography-text-normal-medium-font-size,
+      'line-height': $typography-text-normal-medium-line-height,
+      'letter-spacing': $typography-text-normal-medium-letter-spacing,
+      'font-weight': $typography-text-normal-medium-font-weight,
+      'font-family': $typography-text-normal-medium-font-family,
+      'text-transform': $typography-text-normal-medium-text-transform,
+      'font-feature-settings': $typography-text-normal-medium-font-feature-settings
+    ),
     'text-normal-strong': (
       'font-size': $typography-text-normal-strong-font-size,
       'line-height': $typography-text-normal-strong-line-height,
@@ -771,6 +810,15 @@ $koobiq: (
       'font-family': $typography-text-compact-font-family,
       'text-transform': $typography-text-compact-text-transform,
       'font-feature-settings': $typography-text-compact-font-feature-settings
+    ),
+    'text-compact-medium': (
+      'font-size': $typography-text-compact-medium-font-size,
+      'line-height': $typography-text-compact-medium-line-height,
+      'letter-spacing': $typography-text-compact-medium-letter-spacing,
+      'font-weight': $typography-text-compact-medium-font-weight,
+      'font-family': $typography-text-compact-medium-font-family,
+      'text-transform': $typography-text-compact-medium-text-transform,
+      'font-feature-settings': $typography-text-compact-medium-font-feature-settings
     ),
     'text-compact-strong': (
       'font-size': $typography-text-compact-strong-font-size,
