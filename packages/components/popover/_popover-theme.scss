@@ -6,6 +6,7 @@
 
 @mixin kbq-popover-theme($theme) {
     $popover: map.get(map.get($theme, components), popover);
+    $background: map.get($theme, background);
 
     .kbq-popover {
         box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
@@ -18,6 +19,10 @@
     .kbq-popover__arrow {
         box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
         background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
+    }
+
+    .kbq-popover__close {
+        background-color: map.get($background, overlay-inverse);
     }
 
     .kbq-popover__header {
