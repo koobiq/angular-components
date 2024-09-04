@@ -9,10 +9,6 @@ const config = {
         // should be last
         'stylelint-prettier/recommended'
     ],
-    ignoreFiles: [
-        '**/dist/**',
-        '**/node_modules/**'
-    ],
     rules: {
         'rule-empty-line-before': [
             'always-multi-line',
@@ -40,7 +36,8 @@ const config = {
                 ]
             }
         ],
-        'scss/operator-no-newline-after': null
+        'scss/operator-no-newline-after': null,
+        'scss/selector-no-union-class-name': true
     }
 };
 

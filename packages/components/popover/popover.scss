@@ -69,6 +69,18 @@ $trigger-margin: 9px;
     }
 }
 
+.kbq-popover__content .kbq-popover__close-container {
+    display: flex;
+    justify-content: flex-end;
+    height: 0;
+
+    .kbq-popover__close {
+        top: auto;
+        right: auto;
+        transform: translateY(-50%) translateX(50%);
+    }
+}
+
 .kbq-popover__header {
     display: flex;
     align-items: center;
@@ -85,6 +97,10 @@ $trigger-margin: 9px;
 
 .kbq-popover__header_top-overflow {
     box-shadow: 0 9px 8px -12px rgba(138, 143, 168, 1);
+}
+
+.kbq-popover__header_with-close-button {
+    padding-right: kbq-css-variable(size-4xl);
 }
 
 .kbq-popover__footer {
@@ -111,3 +127,12 @@ $arrow-offset: calc(($arrow-size - 1px) / -2);
 $arrow-padding: calc(18px - $trigger-margin);
 
 @include pop-up.popup-arrow-positions(kbq-popover, $arrow-offset, $arrow-padding);
+
+.kbq-popover__close {
+    position: absolute;
+    z-index: 2;
+    top: kbq-css-variable(size-s);
+    right: kbq-css-variable(size-s);
+    background-color: rgba(252, 252, 253, 0.88);
+    border-radius: kbq-css-variable(button-size-border-radius);
+}

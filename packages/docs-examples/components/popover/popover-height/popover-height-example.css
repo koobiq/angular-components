@@ -1,0 +1,9 @@
+.popover-height-example__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.kbq-popover.custom-height .kbq-popover__container {
+    max-height: 240px;
+}

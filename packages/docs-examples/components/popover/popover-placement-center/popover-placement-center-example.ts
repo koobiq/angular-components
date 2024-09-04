@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
  * @title popover-placement-center
@@ -11,6 +12,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None
 })
 export class PopoverPlacementCenterExample {
-    placements = [PopUpPlacements.Top, PopUpPlacements.Right, PopUpPlacements.Bottom, PopUpPlacements.Left];
-    activePlacement: PopUpPlacements | null;
+    placements = PopUpPlacements;
+    activePopover: KbqPopoverTrigger;
 }

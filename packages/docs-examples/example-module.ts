@@ -775,18 +775,36 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-date-formatter"
     }
   },
-  "datepicker-language": {
-    "packagePath": "components/datepicker/datepicker-language",
-    "title": "multilingual datepicker",
-    "componentName": "DatepickerLanguageExample",
+  "datepicker-and-timepicker": {
+    "packagePath": "components/datepicker/datepicker-and-timepicker",
+    "title": "datepicker-and-timepicker",
+    "componentName": "DatepickerAndTimepickerExample",
     "files": [
-      "datepicker-language-example.ts",
-      "datepicker-language-example.html",
-      "datepicker-language-example.css"
+      "datepicker-and-timepicker-example.ts",
+      "datepicker-and-timepicker-example.html",
+      "datepicker-and-timepicker-example.css"
     ],
-    "selector": "datepicker-language-example",
+    "selector": "datepicker-and-timepicker-example",
     "additionalComponents": [],
-    "primaryFile": "datepicker-language-example.ts",
+    "primaryFile": "datepicker-and-timepicker-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-inactive": {
+    "packagePath": "components/datepicker/datepicker-inactive",
+    "title": "datepicker-inactive",
+    "componentName": "DatepickerInactiveExample",
+    "files": [
+      "datepicker-inactive-example.ts",
+      "datepicker-inactive-example.html",
+      "datepicker-inactive-example.css"
+    ],
+    "selector": "datepicker-inactive-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-inactive-example.ts",
     "module": {
       "name": "DatepickerExamplesModule",
       "importSpecifier": "components/datepicker",
@@ -811,24 +829,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-datepicker"
     }
   },
-  "datepicker-not-empty": {
-    "packagePath": "components/datepicker/datepicker-not-empty",
-    "title": "Datepicker",
-    "componentName": "DatepickerNotEmptyExample",
-    "files": [
-      "datepicker-not-empty-example.ts",
-      "datepicker-not-empty-example.html",
-      "datepicker-not-empty-example.css"
-    ],
-    "selector": "datepicker-not-empty-example",
-    "additionalComponents": [],
-    "primaryFile": "datepicker-not-empty-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
-  },
   "datepicker-overview": {
     "packagePath": "components/datepicker/datepicker-overview",
     "title": "Datepicker",
@@ -841,6 +841,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-overview-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-range": {
+    "packagePath": "components/datepicker/datepicker-range",
+    "title": "datepicker-range",
+    "componentName": "DatepickerRangeExample",
+    "files": [
+      "datepicker-range-example.ts",
+      "datepicker-range-example.html",
+      "datepicker-range-example.css"
+    ],
+    "selector": "datepicker-range-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-range-example.ts",
+    "module": {
+      "name": "DatepickerExamplesModule",
+      "importSpecifier": "components/datepicker",
+      "importPath": "koobiq-docs-examples-components-datepicker"
+    }
+  },
+  "datepicker-required": {
+    "packagePath": "components/datepicker/datepicker-required",
+    "title": "datepicker-required",
+    "componentName": "DatepickerRequiredExample",
+    "files": [
+      "datepicker-required-example.ts",
+      "datepicker-required-example.html",
+      "datepicker-required-example.css"
+    ],
+    "selector": "datepicker-required-example",
+    "additionalComponents": [],
+    "primaryFile": "datepicker-required-example.ts",
     "module": {
       "name": "DatepickerExamplesModule",
       "importSpecifier": "components/datepicker",
@@ -2017,6 +2053,186 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-loader-overlay"
     }
   },
+  "markdown-article": {
+    "packagePath": "components/markdown/markdown-article",
+    "title": "Markdown article",
+    "componentName": "MarkdownArticleExample",
+    "files": [
+      "markdown-article-example.ts",
+      "markdown-article-example.html",
+      "markdown-article-example.css"
+    ],
+    "selector": "markdown-article-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-article-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-code-block": {
+    "packagePath": "components/markdown/markdown-code-block",
+    "title": "Markdown code block",
+    "componentName": "MarkdownCodeBlockExample",
+    "files": [
+      "markdown-code-block-example.ts",
+      "markdown-code-block-example.html",
+      "markdown-code-block-example.css"
+    ],
+    "selector": "markdown-code-block-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-code-block-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-code": {
+    "packagePath": "components/markdown/markdown-code",
+    "title": "Markdown code",
+    "componentName": "MarkdownCodeExample",
+    "files": [
+      "markdown-code-example.ts",
+      "markdown-code-example.html",
+      "markdown-code-example.css"
+    ],
+    "selector": "markdown-code-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-code-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-divider": {
+    "packagePath": "components/markdown/markdown-divider",
+    "title": "Markdown divider",
+    "componentName": "MarkdownDividerExample",
+    "files": [
+      "markdown-divider-example.ts",
+      "markdown-divider-example.html",
+      "markdown-divider-example.css"
+    ],
+    "selector": "markdown-divider-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-divider-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-headers-combinations": {
+    "packagePath": "components/markdown/markdown-headers-combinations",
+    "title": "Markdown headers combinations",
+    "componentName": "MarkdownHeadersCombinationsExample",
+    "files": [
+      "markdown-headers-combinations-example.ts",
+      "markdown-headers-combinations-example.html",
+      "markdown-headers-combinations-example.css"
+    ],
+    "selector": "markdown-headers-combinations-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-headers-combinations-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-headers": {
+    "packagePath": "components/markdown/markdown-headers",
+    "title": "Markdown headers",
+    "componentName": "MarkdownHeadersExample",
+    "files": [
+      "markdown-headers-example.ts",
+      "markdown-headers-example.html",
+      "markdown-headers-example.css"
+    ],
+    "selector": "markdown-headers-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-headers-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-image": {
+    "packagePath": "components/markdown/markdown-image",
+    "title": "Markdown image",
+    "componentName": "MarkdownImageExample",
+    "files": [
+      "markdown-image-example.ts",
+      "markdown-image-example.html",
+      "markdown-image-example.css"
+    ],
+    "selector": "markdown-image-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-image-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-line-break": {
+    "packagePath": "components/markdown/markdown-line-break",
+    "title": "Markdown line break",
+    "componentName": "MarkdownLineBreakExample",
+    "files": [
+      "markdown-line-break-example.ts",
+      "markdown-line-break-example.html",
+      "markdown-line-break-example.css"
+    ],
+    "selector": "markdown-line-break-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-line-break-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-link": {
+    "packagePath": "components/markdown/markdown-link",
+    "title": "Markdown link",
+    "componentName": "MarkdownLinkExample",
+    "files": [
+      "markdown-link-example.ts",
+      "markdown-link-example.html",
+      "markdown-link-example.css"
+    ],
+    "selector": "markdown-link-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-link-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-list": {
+    "packagePath": "components/markdown/markdown-list",
+    "title": "Markdown list",
+    "componentName": "MarkdownListExample",
+    "files": [
+      "markdown-list-example.ts",
+      "markdown-list-example.html",
+      "markdown-list-example.css"
+    ],
+    "selector": "markdown-list-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-list-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
   "markdown-overview": {
     "packagePath": "components/markdown/markdown-overview",
     "title": "Markdown overview",
@@ -2029,6 +2245,78 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-overview-example",
     "additionalComponents": [],
     "primaryFile": "markdown-overview-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-paragraph": {
+    "packagePath": "components/markdown/markdown-paragraph",
+    "title": "Markdown paragraph",
+    "componentName": "MarkdownParagraphExample",
+    "files": [
+      "markdown-paragraph-example.ts",
+      "markdown-paragraph-example.html",
+      "markdown-paragraph-example.css"
+    ],
+    "selector": "markdown-paragraph-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-paragraph-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-quote": {
+    "packagePath": "components/markdown/markdown-quote",
+    "title": "Markdown quote",
+    "componentName": "MarkdownQuoteExample",
+    "files": [
+      "markdown-quote-example.ts",
+      "markdown-quote-example.html",
+      "markdown-quote-example.css"
+    ],
+    "selector": "markdown-quote-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-quote-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-selection": {
+    "packagePath": "components/markdown/markdown-selection",
+    "title": "Markdown selection",
+    "componentName": "MarkdownSelectionExample",
+    "files": [
+      "markdown-selection-example.ts",
+      "markdown-selection-example.html",
+      "markdown-selection-example.css"
+    ],
+    "selector": "markdown-selection-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-selection-example.ts",
+    "module": {
+      "name": "MarkdownExamplesModule",
+      "importSpecifier": "components/markdown",
+      "importPath": "koobiq-docs-examples-components-markdown"
+    }
+  },
+  "markdown-table": {
+    "packagePath": "components/markdown/markdown-table",
+    "title": "Markdown table",
+    "componentName": "MarkdownTableExample",
+    "files": [
+      "markdown-table-example.ts",
+      "markdown-table-example.html",
+      "markdown-table-example.css"
+    ],
+    "selector": "markdown-table-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-table-example.ts",
     "module": {
       "name": "MarkdownExamplesModule",
       "importSpecifier": "components/markdown",
@@ -2236,6 +2524,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-number-formatter"
     }
   },
+  "popover-close": {
+    "packagePath": "components/popover/popover-close",
+    "title": "popover-close",
+    "componentName": "PopoverCloseExample",
+    "files": [
+      "popover-close-example.ts",
+      "popover-close-example.html",
+      "popover-close-example.css"
+    ],
+    "selector": "popover-close-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-close-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
   "popover-common": {
     "packagePath": "components/popover/popover-common",
     "title": "popover-common",
@@ -2248,6 +2554,60 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-common-example",
     "additionalComponents": [],
     "primaryFile": "popover-common-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-content": {
+    "packagePath": "components/popover/popover-content",
+    "title": "popover-content",
+    "componentName": "PopoverContentExample",
+    "files": [
+      "popover-content-example.ts",
+      "popover-content-example.html",
+      "popover-content-example.css"
+    ],
+    "selector": "popover-content-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-content-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-header": {
+    "packagePath": "components/popover/popover-header",
+    "title": "popover-header",
+    "componentName": "PopoverHeaderExample",
+    "files": [
+      "popover-header-example.ts",
+      "popover-header-example.html",
+      "popover-header-example.css"
+    ],
+    "selector": "popover-header-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-header-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-height": {
+    "packagePath": "components/popover/popover-height",
+    "title": "popover-height",
+    "componentName": "PopoverHeightExample",
+    "files": [
+      "popover-height-example.ts",
+      "popover-height-example.html",
+      "popover-height-example.css"
+    ],
+    "selector": "popover-height-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-height-example.ts",
     "module": {
       "name": "PopoverExamplesModule",
       "importSpecifier": "components/popover",
@@ -2302,6 +2662,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-scroll-example",
     "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
+    "module": {
+      "name": "PopoverExamplesModule",
+      "importSpecifier": "components/popover",
+      "importPath": "koobiq-docs-examples-components-popover"
+    }
+  },
+  "popover-width": {
+    "packagePath": "components/popover/popover-width",
+    "title": "popover-width",
+    "componentName": "PopoverWidthExample",
+    "files": [
+      "popover-width-example.ts",
+      "popover-width-example.html",
+      "popover-width-example.css"
+    ],
+    "selector": "popover-width-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-width-example.ts",
     "module": {
       "name": "PopoverExamplesModule",
       "importSpecifier": "components/popover",

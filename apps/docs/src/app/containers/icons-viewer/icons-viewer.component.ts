@@ -141,8 +141,8 @@ export class IconsViewerComponent implements OnDestroy {
                 kbqClassName: 'icon-preview-modal',
                 kbqWidth: 400
             })
-            .afterClose.subscribe((result: string) => {
-                if (result) {
+            .afterClose.subscribe((result) => {
+                if (typeof result === 'string') {
                     this.searchControl.setValue(result);
                 }
 

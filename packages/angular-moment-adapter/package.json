@@ -3,11 +3,13 @@
     "version": "{{VERSION}}",
     "description": "Koobiq Moment Adapter",
     "keywords": [
+        "angular",
         "moment",
+        "datepicker",
         "component",
         "development",
         "kit",
-        "mosaic"
+        "koobiq"
     ],
     "license": "MIT",
     "peerDependencies": {

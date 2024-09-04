@@ -38,6 +38,7 @@ jobs:
           yarn run unit:angular-luxon-adapter
           yarn run unit:schematics
           yarn run unit:koobiq-docs
+          yarn run unit:api-gen
 
       - name: License validation
         run: yarn run validate:license

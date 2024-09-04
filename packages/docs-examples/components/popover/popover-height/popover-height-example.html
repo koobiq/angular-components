@@ -1,0 +1,167 @@
+<div class="popover-height-example">
+    <ng-template #shortContent>
+        <form
+            novalidate
+            class="kbq-form-vertical"
+        >
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Relying Party Indicator</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Relying Party Indicator</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Post Back URL</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                        <kbq-hint>
+                            URL of the Management Center SAML assertion consumer, including schema (http:// or https://)
+                            and port.
+                        </kbq-hint>
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Identity Provider Metadata</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                        <kbq-hint>Your Identity Provider’s metadata in XML format</kbq-hint>
+                    </kbq-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #customContent>
+        <form
+            novalidate
+            class="kbq-form-vertical"
+        >
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Relying Party Indicator</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Relying Party Indicator</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Post Back URL</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                        <kbq-hint>
+                            URL of the Management Center SAML assertion consumer, including schema (http:// or https://)
+                            and port.
+                        </kbq-hint>
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Group Attribute</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                    </kbq-form-field>
+                </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Identity Provider Metadata</label>
+                    <kbq-form-field class="kbq-form__control">
+                        <input
+                            kbqInput
+                            name="input"
+                        />
+                        <kbq-hint>Your Identity Provider’s metadata in XML format</kbq-hint>
+                    </kbq-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #customFooter>
+        <div class="popover-height-example__buttons">
+            <button
+                kbq-button
+                [color]="'contrast'"
+                (click)="activePopover.hide(0)"
+            >
+                Save
+            </button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Cancel
+            </button>
+        </div>
+    </ng-template>
+
+    <div class="popover-width-example__buttons">
+        <button
+            #kbqNoScrollPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="shortContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqNoScrollPopover"
+        >
+            Без прокрутки
+        </button>
+        <button
+            #kbqAutoHeightPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqAutoHeightPopover"
+        >
+            С прокруткой, высота по умолчанию
+        </button>
+        <button
+            #kbqCustomHeightPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverClass]="'custom-height'"
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverHeader]="'SSO-connection'"
+            (click)="activePopover = kbqCustomHeightPopover"
+        >
+            С прокруткой, произвольная высота
+        </button>
+    </div>
+</div>

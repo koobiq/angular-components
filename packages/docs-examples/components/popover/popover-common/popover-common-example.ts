@@ -9,10 +9,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['popover-common-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class PopoverCommonExample {
-    ELEMENTS = {
-        BUTTON: 'button',
-        LINK: 'link'
-    };
-    selectedElement: string = this.ELEMENTS.BUTTON;
-}
+export class PopoverCommonExample {}

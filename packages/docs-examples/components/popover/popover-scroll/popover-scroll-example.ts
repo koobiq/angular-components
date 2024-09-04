@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 /**
@@ -11,7 +11,5 @@ import { KbqPopoverTrigger } from '@koobiq/components/popover';
     encapsulation: ViewEncapsulation.None
 })
 export class PopoverScrollExample {
-    @ViewChild('popover', { static: false }) popover: KbqPopoverTrigger;
-
-    closeOnScroll: boolean;
+    activePopover: KbqPopoverTrigger;
 }

@@ -3,7 +3,14 @@
         <ng-container *ngSwitchCase="1">
             В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
             добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых
-            образцов неизвестным печатником еще в XVI веке.
+            образцов неизвестным печатником еще в XVI веке. В западной традиции рыбой выступает фрагмент латинского
+            текста из философского трактата Цицерона «О пределах добра и зла», написанного в 45 году до нашей эры.
+            Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке. В
+            западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
+            добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых
+            образцов неизвестным печатником еще в XVI веке. В западной традиции рыбой выступает фрагмент латинского
+            текста из философского трактата Цицерона «О пределах добра и зла», написанного в 45 году до нашей эры.
+            Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке.
         </ng-container>
         <ng-container *ngSwitchCase="2">
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
@@ -63,6 +70,23 @@
                     id="order"
                     class="kbq-form__control"
                     [(ngModel)]="selectedOrder"
+                >
+                    Yes/No
+                </kbq-checkbox>
+            </div>
+
+            <div class="kbq-form__row">
+                <label
+                    for="isClosable"
+                    class="kbq-form__label"
+                >
+                    Is closable
+                </label>
+
+                <kbq-checkbox
+                    id="isClosable"
+                    class="kbq-form__control"
+                    [(ngModel)]="isClosable"
                 >
                     Yes/No
                 </kbq-checkbox>
@@ -383,6 +407,7 @@
             <h3>Configuration:</h3>
             <ul>
                 <li>Popover size: {{ selectedSize }}</li>
+                <li>Popover closable: {{ isClosable }}</li>
                 <li>Popover trigger: {{ selectedTrigger }}</li>
                 <li>Popover anchor placement: {{ selectedPlacement }}</li>
                 <li>Popover anchored element: {{ selectedElement }}</li>
@@ -412,6 +437,7 @@
                 *ngSwitchCase="ELEMENTS.BUTTON"
                 kbq-button
                 kbqPopover
+                [hasCloseButton]="isClosable"
                 [kbqPopoverClass]="'popover-485'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
@@ -525,12 +551,10 @@
                         <button
                             kbq-button
                             kbqPopover
+                            [hasCloseButton]="true"
                             [kbqPopoverClass]="'popover-485'"
                             [kbqPopoverContent]="customContent"
                             [kbqPopoverFooter]="customFooter"
-                            [kbqPopoverHeader]="
-                                'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'
-                            "
                             [kbqPopoverPlacement]="selectedPlacement"
                             [kbqPopoverPlacementPriority]="multipleSelected"
                             [kbqPopoverSize]="selectedSize"

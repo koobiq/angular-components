@@ -1,21 +1,9 @@
-.buttons-container {
+.popover-common-example__buttons {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-.buttons-container button + button {
-    margin-left: 16px;
-}
-
-.buttons-container button:first-child {
-    margin-right: auto;
-}
-
-.example-radio-group {
-    display: inline-flex;
-    flex-direction: column;
-}
-
-.example-radio-button {
-    margin-bottom: 10px;
+.kbq-popover.kbq-popover_medium.common-example {
+    width: 400px;
 }

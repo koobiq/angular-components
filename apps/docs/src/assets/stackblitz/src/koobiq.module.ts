@@ -89,4 +89,4 @@ const KBQ_CORE = [KbqHighlightModule, KbqPseudoCheckboxModule, KbqFormattersModu
 @NgModule({
     exports: [...KBQ_COMPONENTS, ...KBQ_CORE]
 })
-export class DemoMosaicModule {}
+export class DemoKoobiqModule {}

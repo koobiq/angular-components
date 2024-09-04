@@ -76,65 +76,65 @@ app {
         .active {
             background: red;
         }
+    }
 
-        &_placement-top-left {
-            top: -6px;
-            left: 10px;
-        }
+    .visual-box_placement-top-left {
+        top: -6px;
+        left: 10px;
+    }
 
-        &_placement-top {
-            top: -6px;
-            left: calc(50% - 6px);
-        }
+    .visual-box_placement-top {
+        top: -6px;
+        left: calc(50% - 6px);
+    }
 
-        &_placement-top-right {
-            top: -6px;
-            right: 10px;
-        }
+    .visual-box_placement-top-right {
+        top: -6px;
+        right: 10px;
+    }
 
-        &_placement-left-top {
-            top: 10px;
-            left: -6px;
-        }
+    .visual-box_placement-left-top {
+        top: 10px;
+        left: -6px;
+    }
 
-        &_placement-left {
-            top: calc(50% - 6px);
-            left: -6px;
-        }
+    .visual-box_placement-left {
+        top: calc(50% - 6px);
+        left: -6px;
+    }
 
-        &_placement-left-bottom {
-            bottom: 10px;
-            left: -6px;
-        }
+    .visual-box_placement-left-bottom {
+        bottom: 10px;
+        left: -6px;
+    }
 
-        &_placement-bottom-right {
-            bottom: -6px;
-            right: 10px;
-        }
+    .visual-box_placement-bottom-right {
+        bottom: -6px;
+        right: 10px;
+    }
 
-        &_placement-bottom {
-            bottom: -6px;
-            right: calc(50% - 6px);
-        }
+    .visual-box_placement-bottom {
+        bottom: -6px;
+        right: calc(50% - 6px);
+    }
 
-        &_placement-bottom-left {
-            bottom: -6px;
-            left: 10px;
-        }
+    .visual-box_placement-bottom-left {
+        bottom: -6px;
+        left: 10px;
+    }
 
-        &_placement-right-bottom {
-            right: -6px;
-            bottom: 10px;
-        }
+    .visual-box_placement-right-bottom {
+        right: -6px;
+        bottom: 10px;
+    }
 
-        &_placement-right {
-            right: -6px;
-            bottom: calc(50% - 6px);
-        }
+    .visual-box_placement-right {
+        right: -6px;
+        bottom: calc(50% - 6px);
+    }
 
-        &_placement-right-top {
-            right: -6px;
-            top: 10px;
-        }
+    .visual-box_placement-right-top {
+        right: -6px;
+        top: 10px;
     }
 }

@@ -65,34 +65,34 @@
     row-gap: $size-l;
 
     margin-top: $size-s;
+}
 
-    &_16 {
-        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
-    }
+.docs-icons-viewer__table-row_16 {
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+}
 
-    &_24 {
-        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
-    }
+.docs-icons-viewer__table-row_24 {
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+}
 
-    &_32 {
-        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
-    }
+.docs-icons-viewer__table-row_32 {
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+}
 
-    &_48 {
-        grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
-    }
+.docs-icons-viewer__table-row_48 {
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+}
 
-    &_64 {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
+.docs-icons-viewer__table-row_64 {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
 
-    &_128 {
-        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
-    }
+.docs-icons-viewer__table-row_128 {
+    grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+}
 
-    &_256 {
-        grid-template-columns: repeat(auto-fill, minmax(304px, 1fr));
-    }
+.docs-icons-viewer__table-row_256 {
+    grid-template-columns: repeat(auto-fill, minmax(304px, 1fr));
 }
 
 .docs-icons-viewer__table-cell {
@@ -110,42 +110,42 @@
 
     cursor: pointer;
 
-    &_16 {
-        max-width: 106px;
-    }
-
-    &_24 {
-        max-width: 106px;
-    }
-
-    &_32 {
-        max-width: 110px;
-    }
-
-    &_48 {
-        max-width: 118px;
-    }
-
-    &_64 {
-        height: 132px;
-        min-width: 120px;
-        max-width: 144px;
-    }
-
-    &_128 {
-        height: 176px;
-        min-width: 136px;
-        max-width: 176px;
-    }
-
-    &_256 {
-        height: 304px;
-        min-width: 304px;
-    }
-
     & .kbq-icon {
         margin: auto;
     }
+}
+
+.docs-icons-viewer__table-cell_16 {
+    max-width: 106px;
+}
+
+.docs-icons-viewer__table-cell_24 {
+    max-width: 106px;
+}
+
+.docs-icons-viewer__table-cell_32 {
+    max-width: 110px;
+}
+
+.docs-icons-viewer__table-cell_48 {
+    max-width: 118px;
+}
+
+.docs-icons-viewer__table-cell_64 {
+    height: 132px;
+    min-width: 120px;
+    max-width: 144px;
+}
+
+.docs-icons-viewer__table-cell_128 {
+    height: 176px;
+    min-width: 136px;
+    max-width: 176px;
+}
+
+.docs-icons-viewer__table-cell_256 {
+    height: 304px;
+    min-width: 304px;
 }
 
 .docs-icons-viewer__table-cell-name {

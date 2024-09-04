@@ -20,7 +20,6 @@ $tokens: meta.module-variables(tokens) !default;
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .kbq-markdown__h#{$i} {
-            max-width: kbq-css-variable(markdown-h#{$i}-size-max-width);
             margin-top: kbq-css-variable(markdown-h#{$i}-size-margin-top);
             margin-bottom: kbq-css-variable(markdown-h#{$i}-size-margin-bottom);
         }
@@ -38,14 +37,12 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-markdown__p {
-        max-width: kbq-css-variable(markdown-p-size-max-width);
         margin-top: kbq-css-variable(markdown-p-size-margin-top);
         margin-bottom: kbq-css-variable(markdown-p-size-margin-bottom);
     }
 
     .kbq-markdown__ul,
     .kbq-markdown__ol {
-        max-width: kbq-css-variable(markdown-list-size-max-width);
         margin-top: kbq-css-variable(markdown-list-size-margin-top);
         margin-bottom: kbq-css-variable(markdown-list-size-margin-bottom);
 
@@ -93,7 +90,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-markdown__blockquote {
-        max-width: kbq-css-variable(markdown-blockquote-size-max-width);
         margin-top: kbq-css-variable(markdown-blockquote-size-margin-top);
         margin-left: 0;
         margin-bottom: kbq-css-variable(markdown-blockquote-size-margin-bottom);
@@ -129,12 +125,11 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-markdown__p > .kbq-markdown__code {
-        max-width: kbq-css-variable(markdown-code-size-max-width);
         padding: kbq-css-variable(markdown-code-size-inline-padding);
     }
 
     .kbq-markdown__img {
-        max-width: kbq-css-variable(markdown-image-size-max-width);
+        max-width: 100%;
         margin-top: kbq-css-variable(markdown-image-size-margin-top);
         margin-bottom: kbq-css-variable(markdown-image-size-margin-bottom);
 
@@ -196,4 +191,8 @@ $tokens: meta.module-variables(tokens) !default;
             padding-right: 0;
         }
     }
+}
+
+.docs-live-example.kbq-markdown {
+    margin-bottom: 128px;
 }

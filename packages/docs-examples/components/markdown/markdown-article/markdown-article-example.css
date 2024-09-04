@@ -1,0 +1,3 @@
+.markdown-article-example img[alt='image-custom-width'] {
+    width: 50%;
+}

@@ -274,7 +274,7 @@ export class KbqModalModule {
 }
 
 // @public
-export abstract class KbqModalRef<T = any, R = any> {
+export abstract class KbqModalRef<C = any, R = any> {
     // (undocumented)
     abstract afterClose: Observable<R>;
     // (undocumented)
@@ -283,7 +283,7 @@ export abstract class KbqModalRef<T = any, R = any> {
     abstract close(result?: R): void;
     // (undocumented)
     abstract destroy(result?: R): void;
-    abstract getContentComponent(): T;
+    abstract getContentComponent(): C;
     abstract getElement(): HTMLElement;
     abstract getInstance(): KbqModalComponent;
     abstract markForCheck(): any;
@@ -302,17 +302,17 @@ export class KbqModalService {
     // (undocumented)
     closeAll(): void;
     // (undocumented)
-    confirm<T>(options?: IModalOptionsForService<T>, confirmType?: ConfirmType): KbqModalRef<T>;
+    confirm<C, R>(options?: IModalOptionsForService<C>, confirmType?: ConfirmType): KbqModalRef<C, R>;
     // (undocumented)
-    create<T>(options?: IModalOptionsForService<T>): KbqModalRef<T>;
+    create<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
-    delete<T>(options?: IModalOptionsForService<T>): KbqModalRef<T>;
+    delete<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
-    open<T>(options?: IModalOptionsForService<T>): KbqModalRef<T>;
+    open<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
     get openModals(): KbqModalRef[];
     // (undocumented)
-    success<T>(options?: IModalOptionsForService<T>): KbqModalRef<T>;
+    success<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalService, never>;
     // (undocumented)
@@ -328,7 +328,7 @@ export class KbqModalTitle {
 }
 
 // @public (undocumented)
-export interface ModalOptions<T = any, R = any> {
+export interface ModalOptions<C = any, R = any> {
     // (undocumented)
     kbqAfterClose?: EventEmitter<R>;
     // (undocumented)
@@ -346,13 +346,13 @@ export interface ModalOptions<T = any, R = any> {
     // (undocumented)
     kbqCloseByESC?: boolean;
     // (undocumented)
-    kbqComponent?: Type<T>;
+    kbqComponent?: Type<C>;
     // (undocumented)
     kbqComponentParams?: any;
     // (undocumented)
-    kbqContent?: string | TemplateRef<{}> | Type<T>;
+    kbqContent?: string | TemplateRef<{}> | Type<C>;
     // (undocumented)
-    kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<T>[];
+    kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<C>[];
     // (undocumented)
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null;
     // (undocumented)
@@ -370,9 +370,9 @@ export interface ModalOptions<T = any, R = any> {
     // (undocumented)
     kbqOkType?: string;
     // (undocumented)
-    kbqOnCancel?: EventEmitter<T> | OnClickCallback<T>;
+    kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
     // (undocumented)
-    kbqOnOk?: EventEmitter<T> | OnClickCallback<T>;
+    kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
     // (undocumented)
     kbqRestoreFocus?: boolean;
     // (undocumented)

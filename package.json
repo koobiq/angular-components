@@ -59,7 +59,7 @@
         "@commitlint/config-conventional": "^19.2.2",
         "@cspell/dict-markdown": "^2.0.2",
         "@cspell/dict-ru_ru": "^2.2.1",
-        "@koobiq/design-tokens": "^3.3.1",
+        "@koobiq/design-tokens": "^3.4.0",
         "@koobiq/luxon-date-adapter": "^3.1.2",
         "@koobiq/moment-date-adapter": "^3.1.2",
         "@koobiq/tokens-builder": "3.3.1",
@@ -177,7 +177,7 @@
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
         "docs:build": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
-        "docs:api-gen": "BASE_PATH=packages && node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only tools/api-gen/generate-api-docs.mts",
+        "docs:api-gen": "rimraf dist/api-gen && rollup -c tools/api-gen/rollup.config.js && node dist/api-gen/generate-api-docs.mjs",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
         "eslint": "eslint . --ext='.js,.ts,.html'",
         "eslint:fix": "yarn run eslint --fix",
@@ -260,7 +260,8 @@
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
         "unit:angular-luxon-adapter": "ng test angular-luxon-adapter",
         "unit:schematics": "jest --roots packages/schematics",
-        "unit:koobiq-docs": "ng test koobiq-docs"
+        "unit:koobiq-docs": "ng test koobiq-docs",
+        "unit:api-gen": "jest --roots tools/api-gen"
     },
     "release": {
         "packages": [

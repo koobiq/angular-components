@@ -1,26 +1,127 @@
-<div class="visual-box">
-    <div
-        *ngFor="let placement of placements"
-        #popover="kbqPopover"
-        kbqPopover
-        kbqPopoverContent="kbqPopoverPlacement: {{ placement }}"
-        class="popover-trigger popover-trigger-{{ placement }}"
-        [class.active]="activePlacement === placement"
-        [kbqPopoverFooter]="customFooter"
-        [kbqPopoverHeader]="'Заголовок поповера'"
-        [kbqPopoverPlacement]="placement"
-        (kbqPopoverVisibleChange)="activePlacement = $event ? placement : null"
-    ></div>
-</div>
+<div class="popover-placement-edges-example">
+    <ng-template #customContent>
+        <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+        <kbq-form-field>
+            <input
+                kbqInput
+                placeholder="Интересная мысль"
+            />
+        </kbq-form-field>
+    </ng-template>
 
-<ng-template #customFooter>
-    <div class="buttons-container">
+    <ng-template #customFooter>
+        <div class="popover-placement-edges-example__buttons">
+            <button
+                kbq-button
+                [color]="'contrast'"
+                (click)="activePopover.hide(0)"
+            >
+                Сохранить
+            </button>
+            <button
+                kbq-button
+                (click)="activePopover.hide(0)"
+            >
+                Отмена
+            </button>
+        </div>
+    </ng-template>
+
+    <div class="popover-placement-edges-example__column">
         <button
+            #kbqLeftTopPopover="kbqPopover"
             kbq-button
-            [color]="'contrast'"
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.LeftTop"
+            (click)="activePopover = kbqLeftTopPopover"
         >
-            Сохранить
+            leftTop
         </button>
-        <button kbq-button>Отмена</button>
+        <button
+            #kbqLeftBottomPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.LeftBottom"
+            (click)="activePopover = kbqLeftBottomPopover"
+        >
+            leftBottom
+        </button>
     </div>
-</ng-template>
+    <div class="popover-placement-edges-example__column middle">
+        <button
+            #kbqTopLeftPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.TopLeft"
+            (click)="activePopover = kbqTopLeftPopover"
+        >
+            topLeft
+        </button>
+        <button
+            #kbqBottomLeftPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.BottomLeft"
+            (click)="activePopover = kbqBottomLeftPopover"
+        >
+            bottomLeft
+        </button>
+    </div>
+    <div class="popover-placement-edges-example__column"></div>
+    <div class="popover-placement-edges-example__column middle">
+        <button
+            #kbqTopRightPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.TopRight"
+            (click)="activePopover = kbqTopRightPopover"
+        >
+            topRight
+        </button>
+        <button
+            #kbqBottomRightPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.BottomRight"
+            (click)="activePopover = kbqBottomRightPopover"
+        >
+            bottomRight
+        </button>
+    </div>
+    <div class="popover-placement-edges-example__column">
+        <button
+            #kbqRightTopPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.RightTop"
+            (click)="activePopover = kbqRightTopPopover"
+        >
+            rightTop
+        </button>
+        <button
+            #kbqRightBottomPopover="kbqPopover"
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="customContent"
+            [kbqPopoverFooter]="customFooter"
+            [kbqPopoverPlacement]="placements.RightBottom"
+            (click)="activePopover = kbqRightBottomPopover"
+        >
+            rightBottom
+        </button>
+    </div>
+</div>
