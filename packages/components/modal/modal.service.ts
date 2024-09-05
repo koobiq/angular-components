@@ -86,7 +86,7 @@ export class KbqModalService {
         this.modalControl.closeAll();
     }
 
-    create<C, R>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
+    create<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         if (typeof options.kbqOnCancel !== 'function') {
             // Leave a empty function to close this modal by default
             options.kbqOnCancel = () => {};
@@ -111,7 +111,10 @@ export class KbqModalService {
         return new ModalBuilderForService(this.overlay, options).getInstance()!;
     }
 
-    confirm<C, R>(options: IModalOptionsForService<C> = {}, confirmType: ConfirmType = 'confirm'): KbqModalRef<C, R> {
+    confirm<C, R = unknown>(
+        options: IModalOptionsForService<C> = {},
+        confirmType: ConfirmType = 'confirm'
+    ): KbqModalRef<C, R> {
         if ('kbqFooter' in options) {
             console.warn(`The Confirm-Modal doesn't support "kbqFooter", this property will be ignored.`);
         }
@@ -128,17 +131,17 @@ export class KbqModalService {
         return this.create<C, R>(options);
     }
 
-    open<C, R>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
+    open<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         options.kbqModalType = 'custom';
 
         return this.create<C, R>(options);
     }
 
-    success<C, R>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
+    success<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         return this.confirm<C, R>(options, 'success');
     }
 
-    delete<C, R>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
+    delete<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         return this.confirm<C, R>(options, 'warn');
     }
 }
