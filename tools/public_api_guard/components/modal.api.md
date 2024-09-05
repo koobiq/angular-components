@@ -274,7 +274,7 @@ export class KbqModalModule {
 }
 
 // @public
-export abstract class KbqModalRef<C = any, R = any> {
+export abstract class KbqModalRef<C = any, R = unknown> {
     // (undocumented)
     abstract afterClose: Observable<R>;
     // (undocumented)
@@ -302,17 +302,17 @@ export class KbqModalService {
     // (undocumented)
     closeAll(): void;
     // (undocumented)
-    confirm<C, R>(options?: IModalOptionsForService<C>, confirmType?: ConfirmType): KbqModalRef<C, R>;
+    confirm<C, R = unknown>(options?: IModalOptionsForService<C>, confirmType?: ConfirmType): KbqModalRef<C, R>;
     // (undocumented)
-    create<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
+    create<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
-    delete<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
+    delete<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
-    open<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
+    open<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
     get openModals(): KbqModalRef[];
     // (undocumented)
-    success<C, R>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
+    success<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalService, never>;
     // (undocumented)

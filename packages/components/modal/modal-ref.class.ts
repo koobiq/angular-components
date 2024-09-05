@@ -5,7 +5,7 @@ import { KbqModalComponent } from './modal.component';
  * API class that public to users to handle the modal instance.
  * KbqModalRef is aim to avoid accessing to the modal instance directly by users.
  */
-export abstract class KbqModalRef<C = any, R = any> {
+export abstract class KbqModalRef<C = any, R = unknown> {
     abstract afterOpen: Observable<void>;
     abstract afterClose: Observable<R>;
 
