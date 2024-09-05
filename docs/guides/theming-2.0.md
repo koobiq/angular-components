@@ -7,7 +7,7 @@
 1. Импортируйте компонент
 2. Добавьте `kbq-theme-light` селектор к элементу `<body>` вашего HTML-документа для использования светлой темы и `kbq-theme-dark` для темной темы.
 
-Для переключения тем используйте [ThemeService.](https://github.com/koobiq/angular-components/blob/main/packages/components/core/services/theme.service.ts#L24)
+Для переключения тем используйте [ThemeService.](https://github.com/koobiq/angular-components/blob/main/packages/components/core/services/theme.service.ts)
 
 ### Доступные селекторы для темной и светлой темы
 
