@@ -56,6 +56,7 @@
 
 -   [alert](/packages/components/alert/alert-tokens.scss)
 -   [autocomplete](/packages/components/autocomplete/autocomplete-tokens.scss)
+-   [badge](/packages/components/badge/badge-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

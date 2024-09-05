@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './badge-theme' as *;
+
 .kbq-badge {
     display: inline-flex;
     flex-direction: row;
@@ -60,3 +62,6 @@
         }
     }
 }
+
+@include kbq-badge-theme();
+@include kbq-badge-typography();

@@ -4,93 +4,90 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-badge-style($component, $type, $sub-type, $style-name) {
-    $style: map.get($component, $type, $sub-type, $style-name);
+@mixin kbq-badge-style($type, $sub-type, $style-name) {
     $base-path: badge-#{$type}-#{$sub-type}-#{$style-name};
 
-    color: kbq-css-variable(#{$base-path}-color, map.get($style, color));
-    background: kbq-css-variable(#{$base-path}-background, map.get($style, background));
+    color: kbq-css-variable(#{$base-path}-color);
+    background: kbq-css-variable(#{$base-path}-background);
 
     & .kbq-badge-caption {
-        color: kbq-css-variable(#{$base-path}-caption, map.get($style, caption));
+        color: kbq-css-variable(#{$base-path}-caption);
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base-path}-icon, map.get($style, icon)) !important;
+        color: kbq-css-variable(#{$base-path}-icon) !important;
     }
 
     @if $type == filled {
         border: transparent;
     } @else {
-        border-color: kbq-css-variable(#{$base-path}-border, map.get($style, border));
+        border-color: kbq-css-variable(#{$base-path}-border);
     }
 }
 
-@mixin kbq-badge-theme($theme) {
-    $badge: map.get(map.get($theme, components), badge);
-
+@mixin kbq-badge-theme() {
     .kbq-badge-filled {
         &.kbq-badge_fade-contrast {
-            @include kbq-badge-style($badge, filled, fade-on, contrast);
+            @include kbq-badge-style(filled, fade-on, contrast);
         }
 
         &.kbq-badge_fade-theme {
-            @include kbq-badge-style($badge, filled, fade-on, theme);
+            @include kbq-badge-style(filled, fade-on, theme);
         }
 
         &.kbq-badge_fade-success {
-            @include kbq-badge-style($badge, filled, fade-on, success);
+            @include kbq-badge-style(filled, fade-on, success);
         }
 
         &.kbq-badge_fade-warning {
-            @include kbq-badge-style($badge, filled, fade-on, warning);
+            @include kbq-badge-style(filled, fade-on, warning);
         }
 
         &.kbq-badge_fade-error {
-            @include kbq-badge-style($badge, filled, fade-on, error);
+            @include kbq-badge-style(filled, fade-on, error);
         }
 
         &.kbq-badge_theme {
-            @include kbq-badge-style($badge, filled, fade-off, theme);
+            @include kbq-badge-style(filled, fade-off, theme);
         }
 
         &.kbq-badge_success {
-            @include kbq-badge-style($badge, filled, fade-off, success);
+            @include kbq-badge-style(filled, fade-off, success);
         }
 
         &.kbq-badge_warning {
-            @include kbq-badge-style($badge, filled, fade-off, warning);
+            @include kbq-badge-style(filled, fade-off, warning);
         }
 
         &.kbq-badge_error {
-            @include kbq-badge-style($badge, filled, fade-off, error);
+            @include kbq-badge-style(filled, fade-off, error);
         }
     }
 
     .kbq-badge-outline {
         &.kbq-badge_fade-contrast {
-            @include kbq-badge-style($badge, outline, fade-on, contrast);
+            @include kbq-badge-style(outline, fade-on, contrast);
         }
 
         &.kbq-badge_fade-theme {
-            @include kbq-badge-style($badge, outline, fade-on, theme);
+            @include kbq-badge-style(outline, fade-on, theme);
         }
 
         &.kbq-badge_fade-success {
-            @include kbq-badge-style($badge, outline, fade-on, success);
+            @include kbq-badge-style(outline, fade-on, success);
         }
 
         &.kbq-badge_fade-warning {
-            @include kbq-badge-style($badge, outline, fade-on, warning);
+            @include kbq-badge-style(outline, fade-on, warning);
         }
 
         &.kbq-badge_fade-error {
-            @include kbq-badge-style($badge, outline, fade-on, error);
+            @include kbq-badge-style(outline, fade-on, error);
         }
     }
 }
 
-@mixin kbq-badge-typography($config) {
+@mixin kbq-badge-typography() {
     .kbq-badge {
         @include kbq-typography-css-variables(badge, normal-default);
 
