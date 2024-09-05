@@ -124,7 +124,7 @@ export class KbqModalComponent<T = any, R = any>
     // Trigger when modal open(visible) after animations
     @Output() kbqAfterOpen = new EventEmitter<void>();
     // Trigger when modal leave-animation over
-    @Output() kbqAfterClose = new EventEmitter<R>();
+    @Output() kbqAfterClose = new EventEmitter<R | undefined>();
 
     // --- Predefined OK & Cancel buttons
     @Input() kbqOkText: string;
@@ -176,7 +176,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // Observable alias for kbqAfterClose
-    get afterClose(): Observable<R> {
+    get afterClose(): Observable<R | undefined> {
         return this.kbqAfterClose.asObservable();
     }
 
