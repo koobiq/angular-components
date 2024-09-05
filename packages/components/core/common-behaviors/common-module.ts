@@ -74,7 +74,7 @@ export class KbqCommonModule {
                 console.warn(
                     'Could not find koobiq core theme. Most koobiq ' +
                         'components may not work as expected. For more info refer ' +
-                        'to the theming guide: link there'
+                        'to the theming guide: https://koobiq.io/main/theming/overview'
                 );
             }
 

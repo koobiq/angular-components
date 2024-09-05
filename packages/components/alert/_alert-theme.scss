@@ -4,73 +4,69 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-alert-style($component, $type, $style-name) {
-    $style: map.get($component, $type, $style-name);
-
-    background: kbq-css-variable(alert-#{$type}-#{$style-name}-container-background, map.get($style, background));
+@mixin kbq-alert-style($type, $style-name) {
+    background: kbq-css-variable(alert-#{$type}-#{$style-name}-container-background);
 
     .kbq-alert__title {
-        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-title, map.get($style, title));
+        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-title);
     }
 
     .kbq-alert__text {
-        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-text, map.get($style, text));
+        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-text);
     }
 }
 
-@mixin kbq-alert-theme($theme) {
-    $alert: map.get(map.get($theme, components), alert);
-
+@mixin kbq-alert-theme() {
     .kbq-alert__close:focus {
         outline: none;
     }
 
     .kbq-alert.kbq-alert_default {
         &.kbq-alert_contrast {
-            @include kbq-alert-style($alert, default, contrast);
+            @include kbq-alert-style(default, contrast);
         }
 
         &.kbq-alert_error {
-            @include kbq-alert-style($alert, default, error);
+            @include kbq-alert-style(default, error);
         }
 
         &.kbq-alert_warning {
-            @include kbq-alert-style($alert, default, warning);
+            @include kbq-alert-style(default, warning);
         }
 
         &.kbq-alert_success {
-            @include kbq-alert-style($alert, default, success);
+            @include kbq-alert-style(default, success);
         }
 
         &.kbq-alert_theme {
-            @include kbq-alert-style($alert, default, theme);
+            @include kbq-alert-style(default, theme);
         }
     }
 
     .kbq-alert.kbq-alert_colored {
         &.kbq-alert_contrast {
-            @include kbq-alert-style($alert, colored, contrast);
+            @include kbq-alert-style(colored, contrast);
         }
 
         &.kbq-alert_error {
-            @include kbq-alert-style($alert, colored, error);
+            @include kbq-alert-style(colored, error);
         }
 
         &.kbq-alert_warning {
-            @include kbq-alert-style($alert, colored, warning);
+            @include kbq-alert-style(colored, warning);
         }
 
         &.kbq-alert_success {
-            @include kbq-alert-style($alert, colored, success);
+            @include kbq-alert-style(colored, success);
         }
 
         &.kbq-alert_theme {
-            @include kbq-alert-style($alert, colored, theme);
+            @include kbq-alert-style(colored, theme);
         }
     }
 }
 
-@mixin kbq-alert-typography($config) {
+@mixin kbq-alert-typography() {
     .kbq-alert {
         @include kbq-typography-css-variables(alert, text);
 

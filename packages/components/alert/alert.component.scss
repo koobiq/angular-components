@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './alert-theme' as *;
+
 .kbq-alert {
     display: flex;
 
@@ -119,3 +121,6 @@
         margin-left: kbq-css-variable(alert-size-compact-close-button-margin-left);
     }
 }
+
+@include kbq-alert-theme();
+@include kbq-alert-typography();
