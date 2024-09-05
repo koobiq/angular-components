@@ -11,12 +11,12 @@ import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
     encapsulation: ViewEncapsulation.None
 })
 export class ModalComponentExample {
-    componentModal: KbqModalRef;
+    modalRef: KbqModalRef<KbqModalCustomComponent, 'save' | 'close'>;
 
     constructor(private modalService: KbqModalService) {}
 
     openModal() {
-        this.componentModal = this.modalService.open({
+        this.modalRef = this.modalService.open({
             kbqComponent: KbqModalCustomComponent,
             kbqComponentParams: {
                 title: 'Title',
@@ -24,11 +24,11 @@ export class ModalComponentExample {
             }
         });
 
-        this.componentModal.afterOpen.subscribe(() => {
+        this.modalRef.afterOpen.subscribe(() => {
             console.log('[afterOpen] emitted!');
         });
 
-        this.componentModal.afterClose.subscribe((action: 'save' | 'close') => {
+        this.modalRef.afterClose.subscribe((action) => {
             console.log(`[afterClose] emitted, chosen action: ${action}`);
         });
     }
@@ -76,7 +76,7 @@ export class KbqModalCustomComponent {
     @Input() title: string;
     @Input() subtitle: string;
 
-    constructor(private modal: KbqModalRef) {}
+    constructor(private modal: KbqModalRef<KbqModalCustomComponent, 'save' | 'close'>) {}
 
     destroyModal(action: 'save' | 'close') {
         this.modal.destroy(action);
