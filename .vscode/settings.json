@@ -17,5 +17,6 @@
         "javascript",
         "typescript",
         "html"
-    ]
+    ],
+    "editor.rulers": [120]
 }
