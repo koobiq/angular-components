@@ -6,6 +6,8 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
+@use './button-theme' as *;
+
 $tokens: meta.module-variables(tokens) !default;
 
 .kbq-button {
@@ -46,3 +48,6 @@ $tokens: meta.module-variables(tokens) !default;
 
     border-radius: inherit;
 }
+
+@include kbq-button-theme();
+@include kbq-button-typography();

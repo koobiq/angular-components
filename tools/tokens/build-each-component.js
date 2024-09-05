@@ -13,7 +13,7 @@ const {
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 
-const componentsWithCss = ['alert', 'autocomplete', 'badge'];
+const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button'];
 
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
@@ -79,8 +79,7 @@ const main = async () => {
             return {
                 destination: resolvePath(component),
                 filter: (token) =>
-                    token.attributes.category?.includes(path.basename(currentValue, `.${TOKEN_FILE_EXT}`)) ||
-                    path.basename(currentValue, `.${TOKEN_FILE_EXT}`).includes(token.attributes.category) ||
+                    token.attributes.category === path.basename(currentValue, `.${TOKEN_FILE_EXT}`) ||
                     additionalFilter(token, component),
                 // give access to light/dark/palette tokens to resolve reference manually
                 // ['light', 'dark', 'palette'].includes(token.attributes.category),
