@@ -55,6 +55,7 @@
 Для каких компонентов удалить CSS-переменные (в них используются значения по умолчанию):
 
 -   [alert](/packages/components/alert/alert-tokens.scss)
+-   [autocomplete](/packages/components/autocomplete/autocomplete-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

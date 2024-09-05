@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './autocomplete-theme' as *;
+
 .kbq-autocomplete-panel {
     visibility: hidden;
 
@@ -43,3 +45,5 @@
         margin-top: -1px;
     }
 }
+
+@include kbq-autocomplete-theme();

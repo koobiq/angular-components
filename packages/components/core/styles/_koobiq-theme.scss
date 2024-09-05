@@ -6,7 +6,6 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../selection/pseudo-checkbox/pseudo-checkbox-theme' as *;
-@use '../../autocomplete/autocomplete-theme' as *;
 @use '../../badge/badge-theme' as *;
 @use '../../button/button-theme' as *;
 @use '../../button-toggle/button-toggle-theme' as *;
@@ -58,7 +57,6 @@
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-autocomplete-theme($theme);
     @include kbq-badge-theme($theme);
     @include kbq-button-theme($theme);
     @include kbq-button-toggle-theme($theme);

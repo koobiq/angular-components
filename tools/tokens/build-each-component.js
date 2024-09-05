@@ -1,17 +1,22 @@
 require('@koobiq/tokens-builder/build');
 const path = require('path');
 const StyleDictionary = require('style-dictionary');
-const { formatHelpers } = require('style-dictionary');
-const { applyCustomTransformations } = require('@koobiq/tokens-builder/formats/utils.js');
+const {
+    applyCustomTransformations,
+    resolvePath,
+    additionalFilter,
+    resolveComponentName,
+    filterTokens,
+    dictionaryMapper
+} = require('./utils');
 
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 
-// FIXME: resolve path for components where the name of token file and name of the folder in the components are different (#DS-2788)
-const resolvePath = (componentName) => `${componentName}/${componentName}-tokens.scss`;
+const componentsWithCss = ['alert', 'autocomplete'];
 
 const styleDictionaryConfig = {
-    source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/alert.json5`],
+    source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
     platforms: {
         css: {
             buildPath: `packages/components/`,
@@ -23,16 +28,6 @@ const styleDictionaryConfig = {
             }*/
         }
     }
-};
-
-const dictionaryMapper = (dictionary, outputReferences) => {
-    const formatProperty = formatHelpers.createPropertyFormatter({ outputReferences, dictionary, format: 'css' });
-    return dictionary.allTokens.map(formatProperty).join('\n');
-};
-
-const filterTokens = (dictionary, predicate) => {
-    const filteredTokens = dictionary.allTokens.filter(predicate);
-    return { ...dictionary, allTokens: filteredTokens, allProperties: filteredTokens };
 };
 
 StyleDictionary.registerFormat({
@@ -63,7 +58,7 @@ StyleDictionary.registerFormat({
         const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);
 
         return Object.entries({
-            [`.kbq-${component}`]: baseDictionary,
+            [`.kbq-${resolveComponentName(component)}`]: baseDictionary,
             [lightThemeSelector]: lightDictionary,
             [darkThemeSelector]: darkDictionary
         })
@@ -75,7 +70,7 @@ StyleDictionary.registerFormat({
 });
 
 const main = async () => {
-    const files = [`alert.${TOKEN_FILE_EXT}`];
+    const files = componentsWithCss.map((component) => `${component}.${TOKEN_FILE_EXT}`);
 
     styleDictionaryConfig.platforms.css.files = files
         .filter((file) => path.extname(file).includes(TOKEN_FILE_EXT))
@@ -86,8 +81,9 @@ const main = async () => {
                 filter: (token) =>
                     token.attributes.category?.includes(path.basename(currentValue, `.${TOKEN_FILE_EXT}`)) ||
                     path.basename(currentValue, `.${TOKEN_FILE_EXT}`).includes(token.attributes.category) ||
-                    // give access to light/dark/palette tokens to resolve reference manually
-                    ['light', 'dark', 'palette'].includes(token.attributes.category),
+                    additionalFilter(token, component),
+                // give access to light/dark/palette tokens to resolve reference manually
+                // ['light', 'dark', 'palette'].includes(token.attributes.category),
                 format: 'kbq-css/component',
                 prefix: 'kbq',
                 options: {

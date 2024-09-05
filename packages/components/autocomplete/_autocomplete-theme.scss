@@ -4,11 +4,9 @@
 @use '../core/styles/theming/theming';
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-autocomplete-theme($theme) {
-    $select-panel: map.get(map.get($theme, components), select-panel);
-
+@mixin kbq-autocomplete-theme {
     .kbq-autocomplete-panel {
-        box-shadow: kbq-css-variable(select-panel-dropdown-shadow, map.get($select-panel, shadow));
-        background: kbq-css-variable(select-panel-dropdown-background, map.get($select-panel, background));
+        box-shadow: kbq-css-variable(select-panel-dropdown-shadow);
+        background: kbq-css-variable(select-panel-dropdown-background);
     }
 }

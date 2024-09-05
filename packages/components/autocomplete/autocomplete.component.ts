@@ -55,7 +55,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     selector: 'kbq-autocomplete',
     exportAs: 'kbqAutocomplete',
     templateUrl: 'autocomplete.html',
-    styleUrls: ['autocomplete.scss'],
+    styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
     host: {
         class: 'kbq-autocomplete'
     },
