@@ -307,7 +307,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             </div>
         </button>
     `,
-    styleUrls: ['button-toggle.scss'],
+    styleUrls: ['button-toggle.scss', 'button-toggle-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

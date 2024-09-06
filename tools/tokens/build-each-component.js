@@ -13,7 +13,7 @@ const {
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 
-const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button'];
+const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button', 'button-toggle'];
 
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],

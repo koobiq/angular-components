@@ -6,7 +6,8 @@ const filter = {
 };
 
 const componentNameMapping = {
-    autocomplete: 'autocomplete-panel'
+    autocomplete: 'autocomplete-panel',
+    'button-toggle': 'button-toggle-group'
 };
 
 const applyCustomTransformations = (dictionary) => {
