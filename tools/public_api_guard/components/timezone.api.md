@@ -6,9 +6,7 @@
 
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/select';
 import * as i11 from '@koobiq/components/icon';
@@ -23,12 +21,8 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export function filterCitiesBySearchString(cities: string, searchPattern?: string): string;
@@ -83,7 +77,7 @@ export class KbqTimezoneOption extends KbqOption {
 
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
+    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption);
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -95,7 +89,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, [null, null, null, null, null, null, null, null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, never>;
 }
 
 // @public (undocumented)

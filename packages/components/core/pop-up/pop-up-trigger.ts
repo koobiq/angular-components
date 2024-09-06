@@ -7,7 +7,8 @@ import {
     Overlay,
     OverlayConfig,
     OverlayRef,
-    ScrollDispatcher
+    ScrollDispatcher,
+    ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
@@ -19,7 +20,8 @@ import {
     OnInit,
     TemplateRef,
     Type,
-    ViewContainerRef
+    ViewContainerRef,
+    inject
 } from '@angular/core';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -34,6 +36,15 @@ import { PopUpPlacements, PopUpTriggers } from './constants';
 
 @Directive()
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+    protected overlay: Overlay = inject(Overlay);
+    protected elementRef: ElementRef = inject(ElementRef);
+    protected ngZone: NgZone = inject(NgZone);
+    protected scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
+    protected hostView: ViewContainerRef = inject(ViewContainerRef);
+    protected direction = inject(Directionality, { optional: true });
+
+    protected abstract scrollStrategy: () => ScrollStrategy;
+
     isOpen: boolean = false;
 
     enterDelay: number = 0;
@@ -66,21 +77,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected listeners = new Map<string, EventListener>();
     protected closingActionsSubscription: Subscription;
 
-    protected readonly availablePositions: { [key: string]: ConnectionPositionPair };
+    protected readonly availablePositions: { [key: string]: ConnectionPositionPair } = POSITION_MAP;
     protected readonly destroyed = new Subject<void>();
     protected triggerName: string;
-
-    protected constructor(
-        protected overlay: Overlay,
-        protected elementRef: ElementRef,
-        protected ngZone: NgZone,
-        protected scrollDispatcher: ScrollDispatcher,
-        protected hostView: ViewContainerRef,
-        protected scrollStrategy,
-        protected direction?: Directionality
-    ) {
-        this.availablePositions = POSITION_MAP;
-    }
 
     abstract updateClassMap(newPlacement?: string): void;
 
@@ -217,7 +216,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
-            direction: this.direction,
+            direction: this.direction || undefined,
             positionStrategy: strategy,
             scrollStrategy: this.scrollStrategy()
         });

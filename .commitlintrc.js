@@ -40,6 +40,7 @@ const scope_types = [
     'popover',
     'progress-bar',
     'progress-spinner',
+    'pop-up',
     'radio',
     'schematics',
     'scrolling',

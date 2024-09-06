@@ -1,7 +1,5 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
@@ -18,7 +16,6 @@ import {
     OnDestroy,
     Optional,
     TemplateRef,
-    ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
@@ -28,7 +25,7 @@ import { PopUpPlacements, PopUpTriggers, toBoolean } from '@koobiq/components/co
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
 import { EMPTY, Subject, merge } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
@@ -456,18 +453,10 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         public rectangleElement: KbqNavbarRectangleElement,
         public navbarFocusableItem: KbqNavbarFocusableItem,
         private changeDetectorRef: ChangeDetectorRef,
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        focusMonitor: FocusMonitor,
-        @Optional() direction: Directionality,
         @Optional() private dropdownTrigger: KbqDropdownTrigger,
         @Optional() private bento: KbqNavbarBento
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+        super();
 
         if (this.hasDropDownTrigger) {
             this.dropdownTrigger.openByArrowDown = false;
@@ -588,17 +577,9 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     constructor(
         public navbar: KbqVerticalNavbar,
         private changeDetectorRef: ChangeDetectorRef,
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        focusMonitor: FocusMonitor,
-        @Optional() direction: Directionality,
         @Optional() @Inject(DOCUMENT) private document: any
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+        super();
 
         this.placement = PopUpPlacements.Right;
 

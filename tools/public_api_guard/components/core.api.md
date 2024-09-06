@@ -109,7 +109,7 @@ export enum AnimationCurves {
 }
 
 // @public (undocumented)
-export const applyPopupMargins: (element: ElementRef, name: string, value: string) => void;
+export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
 // @public (undocumented)
 export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
@@ -1345,7 +1345,6 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
-    protected constructor(changeDetectorRef: ChangeDetectorRef);
     afterHidden(): Observable<void>;
     // (undocumented)
     animationDone({ toState }: AnimationEvent_2): void;
@@ -1353,6 +1352,8 @@ export abstract class KbqPopUp implements OnDestroy {
     animationStart(): void;
     // (undocumented)
     arrow: boolean;
+    // (undocumented)
+    protected changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     classMap: {};
     // (undocumented)
@@ -1384,6 +1385,8 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected prefix: string;
     // (undocumented)
+    protected renderer: Renderer2;
+    // (undocumented)
     show(delay: number): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
@@ -1401,7 +1404,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
 // @public (undocumented)
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
-    protected constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction?: Directionality | undefined);
     // (undocumented)
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
@@ -1426,7 +1428,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     detach: () => void;
     // (undocumented)
-    protected direction?: Directionality | undefined;
+    protected direction: Directionality | null;
     // (undocumented)
     abstract disabled: boolean;
     // (undocumented)
@@ -1486,7 +1488,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected scrollDispatcher: ScrollDispatcher;
     // (undocumented)
-    protected scrollStrategy: any;
+    protected abstract scrollStrategy: () => ScrollStrategy;
     // (undocumented)
     show(delay?: number): void;
     // (undocumented)

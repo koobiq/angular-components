@@ -1,25 +1,19 @@
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     Directive,
-    ElementRef,
     EventEmitter,
     Inject,
     InjectionToken,
     Input,
-    NgZone,
     Optional,
     Output,
-    ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
-import { KBQ_POPOVER_SCROLL_STRATEGY, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
+import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
 
 export const KBQ_POPOVER_CONFIRM_TEXT = new InjectionToken<string>('');
 export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
@@ -39,8 +33,8 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
     confirmText: string;
 
-    constructor(changeDetectorRef: ChangeDetectorRef) {
-        super(changeDetectorRef);
+    constructor() {
+        super();
     }
 }
 
@@ -83,17 +77,10 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     private _confirmButtonText: string = 'Да';
 
     constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_POPOVER_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
         @Optional() @Inject(KBQ_POPOVER_CONFIRM_TEXT) confirmText: string,
         @Optional() @Inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT) confirmButtonText: string
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+        super();
 
         this.confirmText = confirmText || 'Вы уверены, что хотите продолжить?';
         this.confirmButtonText = confirmButtonText || 'Да';

@@ -21,7 +21,6 @@ import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
@@ -53,20 +52,17 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(option: KbqOption, overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, focusMonitor: FocusMonitor);
+    constructor(option: KbqOption);
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
@@ -86,7 +82,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptionTooltip, "kbq-option", never, {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionTooltip, [null, null, null, null, null, null, null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionTooltip, never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqSelectMixinBase" needs to be exported by the entry point index.d.ts

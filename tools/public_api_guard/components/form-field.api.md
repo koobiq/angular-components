@@ -11,7 +11,6 @@ import { AfterViewInit } from '@angular/core';
 import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -25,16 +24,12 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqValidationOptions } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
-import { ViewContainerRef } from '@angular/core';
 
 // @public (undocumented)
 export function getKbqFormFieldMissingControlError(): Error;
@@ -250,7 +245,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
 // @public (undocumented)
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, focusMonitor: FocusMonitor, direction: Directionality, formField: KbqFormFieldRef, changeDetector: ChangeDetectorRef);
+    constructor(formField: KbqFormFieldRef, changeDetector: ChangeDetectorRef);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -271,7 +266,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, [null, null, null, null, null, null, null, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, never>;
 }
 
 // @public (undocumented)
