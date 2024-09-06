@@ -59,6 +59,7 @@
 -   [badge](/packages/components/badge/badge-tokens.scss)
 -   [button](/packages/components/button/button-tokens.scss)
 -   [button-toggle](/packages/components/button-toggle/button-toggle-tokens.scss)
+-   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

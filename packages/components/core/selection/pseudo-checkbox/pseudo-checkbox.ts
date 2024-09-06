@@ -39,7 +39,7 @@ export const KbqPseudoCheckboxMixinBase: CanColorCtor & CanDisableCtor & typeof 
 @Component({
     selector: 'kbq-pseudo-checkbox',
     templateUrl: 'pseudo-checkbox.partial.html',
-    styleUrls: ['pseudo-checkbox.scss'],
+    styleUrls: ['pseudo-checkbox.scss', 'pseudo-checkbox-tokens.scss'],
     host: {
         class: 'kbq-pseudo-checkbox',
         '[class.kbq-checkbox_big]': 'big',

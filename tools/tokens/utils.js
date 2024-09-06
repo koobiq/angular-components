@@ -1,8 +1,10 @@
 const { unwrapObjectTransformer } = require('@koobiq/tokens-builder/formats/utils.js');
 const { formatHelpers } = require('style-dictionary');
 
+// provide additional tokens for component
 const filter = {
-    autocomplete: 'select-panel-dropdown'
+    autocomplete: 'select-panel-dropdown',
+    'pseudo-checkbox': 'checkbox'
 };
 
 const componentNameMapping = {
@@ -21,8 +23,16 @@ const applyCustomTransformations = (dictionary) => {
     return dictionary.allTokens;
 };
 
-// FIXME: resolve path for components where the name of token file and name of the folder in the components are different (#DS-2788)
-const resolvePath = (componentName) => `${componentName}/${componentName}-tokens.scss`;
+const componentAliases = {
+    checkbox: [
+        { path: 'checkbox/checkbox-tokens.scss', aliasName: 'checkbox' },
+        { path: 'core/selection/pseudo-checkbox/pseudo-checkbox-tokens.scss', aliasName: 'pseudo-checkbox' }
+    ]
+};
+
+const resolvePath = (componentName) =>
+    componentAliases[componentName] || `${componentName}/${componentName}-tokens.scss`;
+
 const resolveComponentName = (componentName) => componentNameMapping[componentName] || componentName;
 
 const additionalFilter = (token, componentName) =>

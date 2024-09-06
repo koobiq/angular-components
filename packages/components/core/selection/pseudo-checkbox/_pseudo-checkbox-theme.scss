@@ -2,43 +2,40 @@
 
 @use '../../styles/common/tokens' as *;
 
-@mixin kbq-pseudo-checkbox-color($component, $style-name) {
-    $style: map.get($component, $style-name);
+@mixin kbq-pseudo-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
 
-    border-color: kbq-css-variable(#{$base}-default-border, map.get($style, default, border));
-    background: kbq-css-variable(#{$base}-default-background, map.get($style, default, background));
+    border-color: kbq-css-variable(#{$base}-default-border);
+    background: kbq-css-variable(#{$base}-default-background);
 
     & .kbq-checkbox-checkmark,
     & .kbq-checkbox-mixedmark {
-        color: kbq-css-variable(#{$base}-default-color, map.get($style, default, color));
+        color: kbq-css-variable(#{$base}-default-color);
     }
 
     &.kbq-checked,
     &.kbq-indeterminate {
-        border-color: kbq-css-variable(#{$base}-states-checked-border, map.get($style, checked, border));
-        background: kbq-css-variable(#{$base}-states-checked-background, map.get($style, checked, background));
+        border-color: kbq-css-variable(#{$base}-states-checked-border);
+        background: kbq-css-variable(#{$base}-states-checked-background);
     }
 
     &.kbq-disabled {
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
-            color: kbq-css-variable(#{$base}-states-disabled-color, map.get($style, disabled, color));
+            color: kbq-css-variable(#{$base}-states-disabled-color);
         }
 
-        border-color: kbq-css-variable(#{$base}-states-disabled-border, map.get($style, disabled, border));
-        background: kbq-css-variable(#{$base}-states-disabled-background, map.get($style, disabled, background));
+        border-color: kbq-css-variable(#{$base}-states-disabled-border);
+        background: kbq-css-variable(#{$base}-states-disabled-background);
     }
 }
 
-@mixin kbq-pseudo-checkbox-theme($theme) {
-    $checkbox: map.get($theme, components, checkbox);
-
+@mixin kbq-pseudo-checkbox-theme() {
     .kbq-pseudo-checkbox {
-        @include kbq-pseudo-checkbox-color($checkbox, theme);
+        @include kbq-pseudo-checkbox-color(theme);
 
         &.kbq-error {
-            @include kbq-pseudo-checkbox-color($checkbox, error);
+            @include kbq-pseudo-checkbox-color(error);
         }
     }
 }

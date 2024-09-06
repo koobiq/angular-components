@@ -13,7 +13,7 @@ const {
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 
-const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button', 'button-toggle'];
+const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button', 'button-toggle', 'checkbox'];
 
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
@@ -69,26 +69,34 @@ StyleDictionary.registerFormat({
     }
 });
 
+function fileFormat(destination, component) {
+    return {
+        destination,
+        filter: (token) => token.attributes.category === component || additionalFilter(token, component),
+        // give access to light/dark/palette tokens to resolve reference manually
+        // ['light', 'dark', 'palette'].includes(token.attributes.category),
+        format: 'kbq-css/component',
+        prefix: 'kbq',
+        options: {
+            component
+        }
+    };
+}
+
 const main = async () => {
     const files = componentsWithCss.map((component) => `${component}.${TOKEN_FILE_EXT}`);
 
     styleDictionaryConfig.platforms.css.files = files
         .filter((file) => path.extname(file).includes(TOKEN_FILE_EXT))
-        .map((currentValue) => {
+        .flatMap((currentValue) => {
             const component = path.basename(currentValue, `.${TOKEN_FILE_EXT}`);
-            return {
-                destination: resolvePath(component),
-                filter: (token) =>
-                    token.attributes.category === path.basename(currentValue, `.${TOKEN_FILE_EXT}`) ||
-                    additionalFilter(token, component),
-                // give access to light/dark/palette tokens to resolve reference manually
-                // ['light', 'dark', 'palette'].includes(token.attributes.category),
-                format: 'kbq-css/component',
-                prefix: 'kbq',
-                options: {
-                    component
-                }
-            };
+            const destination = resolvePath(component);
+
+            if (Array.isArray(destination)) {
+                return destination.map(({ path, aliasName }) => fileFormat(path, aliasName));
+            }
+
+            return fileFormat(destination, component);
         });
 
     StyleDictionary.extend(styleDictionaryConfig).buildPlatform('css');

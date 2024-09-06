@@ -4,10 +4,9 @@
 @use '../core/styles/common/visually-hidden';
 @use '../core/styles/common/layout';
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './checkbox-theme' as *;
 
 .kbq-checkbox-checkmark,
 .kbq-checkbox-mixedmark {
@@ -43,9 +42,9 @@ $tokens: meta.module-variables(tokens) !default;
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
     cursor: inherit;
 
-    padding-top: kbq-css-variable(checkbox-size-normal-paddding-top);
+    padding-top: kbq-css-variable(checkbox-size-normal-padding-top);
 
-    padding-bottom: kbq-css-variable(checkbox-size-normal-paddding-bottom);
+    padding-bottom: kbq-css-variable(checkbox-size-normal-padding-bottom);
 
     padding-left: kbq-sum-series-css-variables(
         [checkbox-size-normal-width,
@@ -159,3 +158,6 @@ $tokens: meta.module-variables(tokens) !default;
         left: unset;
     }
 }
+
+@include kbq-checkbox-theme();
+@include kbq-checkbox-typography();
