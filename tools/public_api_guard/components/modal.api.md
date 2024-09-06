@@ -86,7 +86,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // Warning: (ae-forgotten-export) The symbol "KbqModalControlService" needs to be exported by the entry point index.d.ts
     constructor(overlay: Overlay, renderer: Renderer2, cfr: ComponentFactoryResolver, elementRef: ElementRef, viewContainer: ViewContainerRef, modalControl: KbqModalControlService, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, document: any);
     // (undocumented)
-    get afterClose(): Observable<R>;
+    get afterClose(): Observable<R | undefined>;
     // (undocumented)
     get afterOpen(): Observable<void>;
     // (undocumented)
@@ -134,7 +134,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
-    kbqAfterClose: EventEmitter<R>;
+    kbqAfterClose: EventEmitter<R | undefined>;
     // (undocumented)
     kbqAfterOpen: EventEmitter<void>;
     // (undocumented)
@@ -276,7 +276,7 @@ export class KbqModalModule {
 // @public
 export abstract class KbqModalRef<C = any, R = unknown> {
     // (undocumented)
-    abstract afterClose: Observable<R>;
+    abstract afterClose: Observable<R | undefined>;
     // (undocumented)
     abstract afterOpen: Observable<void>;
     // (undocumented)
