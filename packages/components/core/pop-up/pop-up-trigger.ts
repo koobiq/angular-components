@@ -36,12 +36,12 @@ import { PopUpPlacements, PopUpTriggers } from './constants';
 
 @Directive()
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
-    protected overlay: Overlay = inject(Overlay);
-    protected elementRef: ElementRef = inject(ElementRef);
-    protected ngZone: NgZone = inject(NgZone);
-    protected scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
-    protected hostView: ViewContainerRef = inject(ViewContainerRef);
-    protected direction = inject(Directionality, { optional: true });
+    protected readonly overlay: Overlay = inject(Overlay);
+    protected readonly elementRef: ElementRef = inject(ElementRef);
+    protected readonly ngZone: NgZone = inject(NgZone);
+    protected readonly scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
+    protected readonly hostView: ViewContainerRef = inject(ViewContainerRef);
+    protected readonly direction = inject(Directionality, { optional: true });
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 

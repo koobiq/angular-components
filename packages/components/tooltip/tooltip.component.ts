@@ -328,10 +328,6 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     }
 
     protected modifier: TooltipModifier = TooltipModifier.Warning;
-
-    constructor() {
-        super();
-    }
 }
 
 @Directive({
@@ -370,10 +366,6 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     private _header: string | TemplateRef<any>;
 
     protected modifier: TooltipModifier = TooltipModifier.Extended;
-
-    constructor() {
-        super();
-    }
 
     updateData() {
         if (!this.instance) {

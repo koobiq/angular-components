@@ -46,7 +46,6 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    constructor();
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -175,7 +174,6 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
 // @public (undocumented)
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
-    constructor();
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);

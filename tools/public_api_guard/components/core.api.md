@@ -1353,7 +1353,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     arrow: boolean;
     // (undocumented)
-    protected changeDetectorRef: ChangeDetectorRef;
+    protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     classMap: {};
     // (undocumented)
@@ -1385,7 +1385,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected prefix: string;
     // (undocumented)
-    protected renderer: Renderer2;
+    protected readonly renderer: Renderer2;
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
@@ -1428,13 +1428,13 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     detach: () => void;
     // (undocumented)
-    protected direction: Directionality | null;
+    protected readonly direction: Directionality | null;
     // (undocumented)
     abstract disabled: boolean;
     // (undocumented)
     protected _disabled: boolean;
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected readonly elementRef: ElementRef;
     // (undocumented)
     enterDelay: number;
     // (undocumented)
@@ -1450,7 +1450,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     hide(delay?: number): void;
     // (undocumented)
-    protected hostView: ViewContainerRef;
+    protected readonly hostView: ViewContainerRef;
     // (undocumented)
     initListeners(): void;
     // (undocumented)
@@ -1466,13 +1466,13 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    protected ngZone: NgZone;
+    protected readonly ngZone: NgZone;
     // (undocumented)
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
     // (undocumented)
     protected abstract originSelector: string;
     // (undocumented)
-    protected overlay: Overlay;
+    protected readonly overlay: Overlay;
     // (undocumented)
     protected abstract overlayConfig: OverlayConfig;
     // (undocumented)
@@ -1486,7 +1486,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected portal: ComponentPortal<T>;
     // (undocumented)
-    protected scrollDispatcher: ScrollDispatcher;
+    protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)
     protected abstract scrollStrategy: () => ScrollStrategy;
     // (undocumented)

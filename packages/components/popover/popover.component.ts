@@ -66,10 +66,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     isContentTopOverflow: boolean = false;
     isContentBottomOverflow: boolean = false;
 
-    constructor() {
-        super();
-    }
-
     ngAfterViewInit() {
         if (!this.popoverContent) return;
 
@@ -316,10 +312,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass
         };
-    }
-
-    constructor() {
-        super();
     }
 
     ngAfterContentInit(): void {

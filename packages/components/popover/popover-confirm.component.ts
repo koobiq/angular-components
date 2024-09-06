@@ -32,10 +32,6 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     confirmButtonText: string;
 
     confirmText: string;
-
-    constructor() {
-        super();
-    }
 }
 
 @Directive({

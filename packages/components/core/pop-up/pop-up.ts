@@ -5,8 +5,8 @@ import { PopUpVisibility } from './constants';
 
 @Directive()
 export abstract class KbqPopUp implements OnDestroy {
-    protected renderer: Renderer2 = inject(Renderer2);
-    protected changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly renderer: Renderer2 = inject(Renderer2);
+    protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     header: string | TemplateRef<any>;
     content: string | TemplateRef<any>;

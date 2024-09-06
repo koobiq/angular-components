@@ -57,7 +57,6 @@ export const kbqPopoverAnimations: {
 
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
-    constructor();
     // (undocumented)
     checkContentOverflow(contentElement: HTMLElement): void;
     // (undocumented)
@@ -94,7 +93,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
 // @public (undocumented)
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
-    constructor();
     // (undocumented)
     confirmButtonText: string;
     // (undocumented)
@@ -148,7 +146,6 @@ export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollS
 
 // @public (undocumented)
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
-    constructor();
     // (undocumented)
     backdropClass: string;
     get closeOnScroll(): boolean | null;
