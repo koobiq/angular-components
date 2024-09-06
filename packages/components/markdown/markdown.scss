@@ -22,6 +22,12 @@ $tokens: meta.module-variables(tokens) !default;
         .kbq-markdown__h#{$i} {
             margin-top: kbq-css-variable(markdown-h#{$i}-size-margin-top);
             margin-bottom: kbq-css-variable(markdown-h#{$i}-size-margin-bottom);
+
+            @for $i from 1 through 6 {
+                & + .kbq-markdown__h#{$i} {
+                    margin-top: 0;
+                }
+            }
         }
     }
 
