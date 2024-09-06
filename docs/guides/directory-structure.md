@@ -12,16 +12,17 @@
 ### packages
 
 ```
-├─ cdk ················· component development kit
-├─ components ·········· исходный код компонентов
-├─ components-dev ······ внутренние dev примеры
-└─ docs-examples ······· примеры для сайта документации
+├─ cdk ························· Component Development Kit
+├─ components ·················· Исходный код компонентов
+├─ components-dev ·············· Внутренние dev примеры
+├─ components-experimental ····· Прототипы и эксперименты
+└─ docs-examples ··············· Примеры для сайта документации
 ```
 
 #### @koobiq/button
 
 ```
-└─ button ···························· имя компоненты
+└─ button ···························· Имя компонента
     ├─ _button-base.scss ············· Базовые стили компонента (включают button.scss)
     ├─ _button-theme.scss ············ Стили темы & типографики (включают to _all-themes & _all-typography)
     ├─ button.component.html ········· Шаблон компонента

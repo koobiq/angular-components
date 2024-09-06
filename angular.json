@@ -232,6 +232,36 @@
                 }
             }
         },
+        "components-experimental": {
+            "projectType": "library",
+            "root": "packages/components-experimental",
+            "sourceRoot": "packages/components-experimental",
+            "architect": {
+                "packagr": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "packages/components-experimental/tsconfig.lib.json",
+                        "project": "packages/components-experimental/ng-package.json"
+                    }
+                },
+                "build": {
+                    "builder": "@koobiq/builders:packager",
+                    "options": {
+                        "buildTarget": "packagr",
+                        "versionPlaceholder": "{{VERSION}}",
+                        "ngVersionPlaceholder": "{{NG_VERSION}}"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-builders/jest:run",
+                    "options": {
+                        "roots": ["packages/components-experimental"],
+                        "configPath": "../../jest.config.js",
+                        "tsConfig": "../../tsconfig.spec.json"
+                    }
+                }
+            }
+        },
         "angular-moment-adapter": {
             "projectType": "library",
             "root": "packages/angular-moment-adapter",

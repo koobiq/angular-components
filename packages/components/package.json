@@ -19,7 +19,7 @@
     "bugs": {
         "url": "https://github.com/koobiq/angular-components/issues"
     },
-    "homepage": "https://github.com/koobiq/angular-components/blob/master/README.md",
+    "homepage": "https://github.com/koobiq/angular-components#readme",
     "peerDependencies": {
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
