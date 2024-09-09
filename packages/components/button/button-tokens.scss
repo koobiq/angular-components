@@ -15,6 +15,9 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
+    // TODO: remove after all settled, should be assigned via css-tokens.css (#DS-2846)
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-button-filled-contrast-fade-off-background: hsla(229, 15%, 25%, 100%);
     --kbq-button-filled-contrast-fade-off-border: transparent;
     --kbq-button-filled-contrast-fade-off-foreground: hsla(229, 15%, 100%, 100%);
@@ -67,22 +70,22 @@
     --kbq-button-outline-theme-fade-on-states-disabled-left-icon: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-theme-fade-on-states-disabled-right-icon: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-contrast-fade-on-background: transparent;
-    --kbq-button-outline-contrast-fade-on-border: hsla(229, 15%, 70%, 100%);
+    --kbq-button-outline-contrast-fade-on-border: hsla(229, 15%, 80%, 100%);
     --kbq-button-outline-contrast-fade-on-foreground: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-left-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-right-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-hover-background: hsla(229, 15%, 50%, 8%);
-    --kbq-button-outline-contrast-fade-on-states-hover-border: hsla(229, 15%, 70%, 100%);
+    --kbq-button-outline-contrast-fade-on-states-hover-border: hsla(229, 15%, 80%, 100%);
     --kbq-button-outline-contrast-fade-on-states-hover-foreground: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-hover-left-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-hover-right-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-background: hsla(229, 15%, 50%, 16%);
-    --kbq-button-outline-contrast-fade-on-states-active-border: hsla(229, 15%, 70%, 100%);
+    --kbq-button-outline-contrast-fade-on-states-active-border: hsla(229, 15%, 80%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-foreground: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-left-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-right-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-hover-background: hsla(229, 15%, 50%, 16%);
-    --kbq-button-outline-contrast-fade-on-states-active-hover-border: hsla(229, 15%, 70%, 100%);
+    --kbq-button-outline-contrast-fade-on-states-active-hover-border: hsla(229, 15%, 80%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-hover-foreground: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-hover-left-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-hover-right-icon: hsla(229, 15%, 15%, 100%);
@@ -144,6 +147,8 @@
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-button-filled-contrast-fade-off-background: hsla(229, 15%, 90%, 100%);
     --kbq-button-filled-contrast-fade-off-border: transparent;
     --kbq-button-filled-contrast-fade-off-foreground: hsla(229, 15%, 15%, 100%);

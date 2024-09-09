@@ -4,6 +4,7 @@ const { formatHelpers } = require('style-dictionary');
 // provide additional tokens for component
 const filter = {
     autocomplete: 'select-panel-dropdown',
+    button: 'kbq-states-focused-color',
     'pseudo-checkbox': 'checkbox'
 };
 

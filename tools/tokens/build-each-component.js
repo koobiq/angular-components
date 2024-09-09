@@ -46,7 +46,7 @@ StyleDictionary.registerFormat({
             token.name = token.name.replace(/(light|dark)-/, '');
         });
         dictionary.allTokens = dictionary.allProperties = allTokens.filter(
-            (token) => !['light', 'dark'].includes(token.attributes.category)
+            (token) => !['light', 'dark'].includes(token.attributes.category) || additionalFilter(token, component)
         );
 
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
