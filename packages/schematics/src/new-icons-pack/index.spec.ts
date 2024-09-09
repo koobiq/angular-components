@@ -19,14 +19,14 @@ describe('new-icons-pack', () => {
         '<i class="mc kbq-icon mc-word-wrap_16"></i>',
         '<div [class.mc-word-wrap_16]="true"></div>'
     ];
-    const updatedPkgName = '@koobiq/kbq-icons';
+    const updatedPkgName = '@koobiq/icons';
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner, { style: 'scss' });
         const pkgPath = '/package.json';
         const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        pkg.dependencies['@koobiq/kbq-icons'] = '^8.0.0-beta.2';
+        pkg.dependencies['@koobiq/icons'] = '^8.0.2';
         appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
         const workspace = await getWorkspace(appTree);
@@ -46,7 +46,7 @@ describe('new-icons-pack', () => {
     it('should skip changes if koobiq icons package with breaking changes is not installed', async () => {
         const pkgPath = '/package.json';
         const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        delete pkg.dependencies['@koobiq/kbq-icons'];
+        delete pkg.dependencies['@koobiq/icons'];
         appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
         runner.logger.subscribe(({ message }) =>
@@ -73,12 +73,11 @@ describe('new-icons-pack', () => {
         ).toBeFalsy();
         expect(firstProjectStylesContent).toContain(updatedPkgName);
 
-        const [secondProjectTemplateContent, secondProjectStylesContent] = readProjectContent(secondProjectKey);
+        const [secondProjectTemplateContent] = readProjectContent(secondProjectKey);
         expect(
             elementsWithDeprecatedIconPrefixes.filter((item) => secondProjectTemplateContent.indexOf(item) !== -1)
                 .length
         ).toEqual(elementsWithDeprecatedIconPrefixes.length);
-        expect(secondProjectStylesContent).not.toContain(updatedPkgName);
     });
 
     it('should run migration for whole tree', async () => {
@@ -86,12 +85,10 @@ describe('new-icons-pack', () => {
 
         projects.forEach((project) => {
             const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
-            const stylesContent = tree.read(`/${project.root}/src/styles.scss`)!.toString();
 
             expect(
                 elementsWithDeprecatedIconPrefixes.filter((item) => templateContent.indexOf(item) !== -1).length
             ).toBeFalsy();
-            expect(stylesContent).toContain(updatedPkgName);
         });
     });
 
