@@ -8,8 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { ChangeDetectorRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -23,18 +21,15 @@ import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export function getKbqPopoverInvalidPositionError(position: string): Error;
@@ -62,7 +57,6 @@ export const kbqPopoverAnimations: {
 
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
-    constructor(changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     checkContentOverflow(contentElement: HTMLElement): void;
     // (undocumented)
@@ -99,7 +93,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
 // @public (undocumented)
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
-    constructor(changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     confirmButtonText: string;
     // (undocumented)
@@ -114,7 +107,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
 // @public (undocumented)
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality, confirmText: string, confirmButtonText: string);
+    constructor(confirmText: string, confirmButtonText: string);
     // (undocumented)
     confirm: EventEmitter<void>;
     // (undocumented)
@@ -132,7 +125,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverConfirmTrigger, "[kbqPopoverConfirm]", ["kbqPopoverConfirm"], { "confirmText": { "alias": "kbqPopoverConfirmText"; "required": false; }; "confirmButtonText": { "alias": "kbqPopoverConfirmButtonText"; "required": false; }; }, { "confirm": "confirm"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmTrigger, [{ optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
@@ -153,7 +146,6 @@ export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollS
 
 // @public (undocumented)
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
-    constructor(overlay: Overlay, elementRef: ElementRef, ngZone: NgZone, scrollDispatcher: ScrollDispatcher, hostView: ViewContainerRef, scrollStrategy: any, direction: Directionality);
     // (undocumented)
     backdropClass: string;
     get closeOnScroll(): boolean | null;
@@ -205,6 +197,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get popoverVisible(): boolean;
     set popoverVisible(value: boolean);
     // (undocumented)
+    protected scrollStrategy: () => ScrollStrategy;
+    // (undocumented)
     get size(): PopUpSizes;
     set size(value: PopUpSizes);
     // (undocumented)
@@ -220,7 +214,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, [null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }
 
 // (No @packageDocumentation comment for this package)

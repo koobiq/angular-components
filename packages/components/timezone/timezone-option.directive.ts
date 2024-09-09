@@ -1,19 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Directive,
-    ElementRef,
-    Inject,
-    NgZone,
-    OnDestroy,
-    Optional,
-    ViewContainerRef
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Directive, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTimezoneOption } from './timezone-option.component';
 
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
@@ -30,17 +17,9 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private option: KbqTimezoneOption,
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor
+        private option: KbqTimezoneOption
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+        super();
         this.tooltipPlacement = PopUpPlacements.Right;
     }
 

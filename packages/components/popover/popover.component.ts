@@ -1,33 +1,26 @@
-import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
-    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
-    Inject,
     InjectionToken,
     Input,
-    NgZone,
-    Optional,
     Output,
     TemplateRef,
     Type,
     ViewChild,
-    ViewContainerRef,
     ViewEncapsulation,
     inject
 } from '@angular/core';
@@ -72,10 +65,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     private readonly destroyRef = inject(DestroyRef);
     isContentTopOverflow: boolean = false;
     isContentBottomOverflow: boolean = false;
-
-    constructor(changeDetectorRef: ChangeDetectorRef) {
-        super(changeDetectorRef);
-    }
 
     ngAfterViewInit() {
         if (!this.popoverContent) return;
@@ -144,6 +133,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
+    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
+
     @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;
@@ -321,18 +312,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass
         };
-    }
-
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_POPOVER_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
     }
 
     ngAfterContentInit(): void {

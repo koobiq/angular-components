@@ -1,10 +1,13 @@
 import { AnimationEvent } from '@angular/animations';
-import { ChangeDetectorRef, Directive, EventEmitter, OnDestroy, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Directive, EventEmitter, inject, OnDestroy, Renderer2, TemplateRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { PopUpVisibility } from './constants';
 
 @Directive()
 export abstract class KbqPopUp implements OnDestroy {
+    protected readonly renderer: Renderer2 = inject(Renderer2);
+    protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     header: string | TemplateRef<any>;
     content: string | TemplateRef<any>;
     context: { $implicit: any } | null;
@@ -28,8 +31,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
     private showTimeoutId: any;
     private hideTimeoutId: any;
-
-    protected constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);

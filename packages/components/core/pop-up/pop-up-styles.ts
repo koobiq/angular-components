@@ -1,15 +1,14 @@
-import { ElementRef, inject, Renderer2 } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
-export const applyPopupMargins = (element: ElementRef, name: string, value: string) => {
-    const renderer = inject(Renderer2);
-    const classList = element.nativeElement.classList;
+export const applyPopupMargins = (renderer: Renderer2, element: HTMLElement, name: string, value: string) => {
+    const classList = element.classList;
 
     if (
         classList.contains(`${name}_placement-top`) ||
         classList.contains(`${name}_placement-top-left`) ||
         classList.contains(`${name}_placement-top-right`)
     ) {
-        renderer.setStyle(element.nativeElement, 'margin-bottom', value);
+        renderer.setStyle(element, 'margin-bottom', value);
     }
 
     if (
@@ -17,7 +16,7 @@ export const applyPopupMargins = (element: ElementRef, name: string, value: stri
         classList.contains(`${name}_placement-right-top`) ||
         classList.contains(`${name}_placement-right-bottom`)
     ) {
-        renderer.setStyle(element.nativeElement, 'margin-left', value);
+        renderer.setStyle(element, 'margin-left', value);
     }
 
     if (
@@ -25,7 +24,7 @@ export const applyPopupMargins = (element: ElementRef, name: string, value: stri
         classList.contains(`${name}_placement-bottom-left`) ||
         classList.contains(`${name}_placement-bottom-right`)
     ) {
-        renderer.setStyle(element.nativeElement, 'margin-top', value);
+        renderer.setStyle(element, 'margin-top', value);
     }
 
     if (
@@ -33,6 +32,6 @@ export const applyPopupMargins = (element: ElementRef, name: string, value: stri
         classList.contains(`${name}_placement-left-top`) ||
         classList.contains(`${name}_placement-left-bottom`)
     ) {
-        renderer.setStyle(element.nativeElement, 'margin-right', value);
+        renderer.setStyle(element, 'margin-right', value);
     }
 };

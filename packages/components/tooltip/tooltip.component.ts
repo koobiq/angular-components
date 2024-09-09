@@ -1,30 +1,24 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Overlay, OverlayConfig, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     Directive,
     ElementRef,
     EventEmitter,
     Inject,
     InjectionToken,
-    Injector,
     Input,
-    NgZone,
     OnDestroy,
-    Optional,
     Output,
     TemplateRef,
     Type,
     ViewChild,
-    ViewContainerRef,
     ViewEncapsulation,
     booleanAttribute,
-    numberAttribute,
-    runInInjectionContext
+    inject,
+    numberAttribute
 } from '@angular/core';
 import {
     KbqComponentColors,
@@ -68,12 +62,8 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     @ViewChild('tooltip') elementRef: ElementRef;
 
-    constructor(
-        changeDetectorRef: ChangeDetectorRef,
-        private injector: Injector,
-        @Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime
-    ) {
-        super(changeDetectorRef);
+    constructor(@Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime) {
+        super();
     }
 
     show(delay: number) {
@@ -84,8 +74,11 @@ export class KbqTooltipComponent extends KbqPopUp {
         super.show(Date.now() - this.openTime.value < MIN_TIME_FOR_DELAY ? 0 : delay);
 
         if (this.offset !== null) {
-            runInInjectionContext(this.injector, () =>
-                applyPopupMargins(this.elementRef, this.prefix, `${this.offset!.toString()}px`)
+            applyPopupMargins(
+                this.renderer,
+                this.elementRef.nativeElement,
+                this.prefix,
+                `${this.offset!.toString()}px`
             );
         }
 
@@ -126,6 +119,9 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     }
 })
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
+    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+    protected focusMonitor: FocusMonitor = inject(FocusMonitor);
+
     @Input('kbqVisible')
     get tooltipVisible(): boolean {
         return this.visible;
@@ -254,17 +250,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     protected modifier: TooltipModifier = TooltipModifier.Default;
 
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        protected focusMonitor: FocusMonitor
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction);
+    constructor() {
+        super();
 
         this.focusMonitor.monitor(this.elementRef.nativeElement);
     }
@@ -341,19 +328,6 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     }
 
     protected modifier: TooltipModifier = TooltipModifier.Warning;
-
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
-    }
 }
 
 @Directive({
@@ -392,19 +366,6 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     private _header: string | TemplateRef<any>;
 
     protected modifier: TooltipModifier = TooltipModifier.Extended;
-
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
-    }
 
     updateData() {
         if (!this.instance) {

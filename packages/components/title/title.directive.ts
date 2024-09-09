@@ -1,20 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
-import {
-    AfterViewInit,
-    ContentChild,
-    Directive,
-    ElementRef,
-    Host,
-    Inject,
-    NgZone,
-    OnDestroy,
-    Optional,
-    ViewContainerRef
-} from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, ElementRef, Host, Inject, OnDestroy, Optional } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -58,18 +44,8 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     @ContentChild('kbqTitleContainer')
     private parentContainer: ElementRef;
 
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        focusMonitor: FocusMonitor,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        @Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+    constructor(@Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef) {
+        super();
     }
 
     ngAfterViewInit() {

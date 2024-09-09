@@ -1,25 +1,18 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     Inject,
     Input,
-    NgZone,
-    Optional,
     TemplateRef,
     ViewChild,
-    ViewContainerRef,
     ViewEncapsulation,
     forwardRef
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 @Component({
     selector: `kbq-password-toggle`,
@@ -66,18 +59,10 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     constructor(
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        focusMonitor: FocusMonitor,
-        @Optional() direction: Directionality,
         @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: KbqFormFieldRef,
         private changeDetector: ChangeDetectorRef
     ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+        super();
 
         this.trigger = `${PopUpTriggers.Hover}`;
     }

@@ -1,18 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Inject,
-    NgZone,
-    OnDestroy,
-    Optional,
-    ViewContainerRef
-} from '@angular/core';
+import { AfterViewInit, Directive, OnDestroy } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 @Directive({
     selector: 'kbq-option',
@@ -35,18 +23,8 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         return this.textElement.clientWidth < this.textElement.scrollWidth;
     }
 
-    constructor(
-        private option: KbqOption,
-        overlay: Overlay,
-        elementRef: ElementRef,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy,
-        @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
+    constructor(private option: KbqOption) {
+        super();
     }
 
     ngAfterViewInit() {

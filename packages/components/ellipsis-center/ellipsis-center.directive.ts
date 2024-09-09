@@ -1,21 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directionality } from '@angular/cdk/bidi';
-import { Overlay, ScrollDispatcher } from '@angular/cdk/overlay';
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Inject,
-    Input,
-    NgModule,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Renderer2,
-    ViewContainerRef
-} from '@angular/core';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { AfterViewInit, Directive, inject, Input, NgModule, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -29,6 +13,8 @@ const MIN_VISIBLE_LENGTH = 50;
     }
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
+    private renderer: Renderer2 = inject(Renderer2);
+
     @Input() set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
@@ -43,20 +29,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private resizeSubscription = Subscription.EMPTY;
 
     private readonly debounceInterval: number = 50;
-
-    constructor(
-        overlay: Overlay,
-        elementRef: ElementRef<HTMLElement>,
-        ngZone: NgZone,
-        scrollDispatcher: ScrollDispatcher,
-        hostView: ViewContainerRef,
-        @Inject(KBQ_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
-        @Optional() direction: Directionality,
-        focusMonitor: FocusMonitor,
-        private renderer: Renderer2
-    ) {
-        super(overlay, elementRef, ngZone, scrollDispatcher, hostView, scrollStrategy, direction, focusMonitor);
-    }
 
     override ngOnInit(): void {
         super.ngOnInit();
