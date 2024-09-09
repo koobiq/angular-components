@@ -18,7 +18,7 @@
             {{ monthNames[selectedMonth].nameShort | titlecase }}
 
             <i
-                kbq-icon="mc-angle-down-S_16"
+                kbq-icon="kbq-chevron-down-s_16"
                 class="layout-padding-left-3xs"
                 [color]="'contrast'"
             ></i>
@@ -52,7 +52,7 @@
             {{ selectedYear.value }}
 
             <i
-                kbq-icon="mc-angle-down-S_16"
+                kbq-icon="kbq-chevron-down-s_16"
                 class="layout-padding-left-3xs"
             ></i>
         </button>
@@ -77,7 +77,7 @@
         [tabindex]="-1"
         (click)="selectPreviousMonth()"
     >
-        <i kbq-icon="mc-angle-left-L_16"></i>
+        <i kbq-icon="kbq-chevron-left_16"></i>
     </button>
 
     <button
@@ -88,7 +88,7 @@
         [tabindex]="-1"
         (click)="selectCurrentDate()"
     >
-        <i kbq-icon="mc-circle-8_16"></i>
+        <i kbq-icon="kbq-circle-6_16"></i>
     </button>
 
     <button
@@ -100,6 +100,6 @@
         [tabindex]="-1"
         (click)="selectNextMonth()"
     >
-        <i kbq-icon="mc-angle-right-L_16"></i>
+        <i kbq-icon="kbq-chevron-right_16"></i>
     </button>
 </div>

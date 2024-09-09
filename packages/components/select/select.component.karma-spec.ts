@@ -218,7 +218,7 @@ const OPTIONS = [
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
+                            kbq-icon="kbq-xmark-s_16"
                             kbqTagRemove
                         ></i>
                     </kbq-tag>
@@ -437,7 +437,7 @@ class SelectWithGroups {
                         <i
                             *ngIf="!option.disabled && !select.disabled"
                             (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
+                            kbq-icon="kbq-xmark-s_16"
                             kbqTagRemove
                         ></i>
                     </kbq-tag>

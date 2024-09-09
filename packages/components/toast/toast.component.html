@@ -6,7 +6,7 @@
         <ng-container [ngSwitch]="data.style">
             <ng-container *ngSwitchCase="'contrast'">
                 <i
-                    kbq-icon="mc-info_16"
+                    kbq-icon="kbq-info-circle_16"
                     class="kbq-toast__icon"
                     [color]="$any(data.style)"
                     [ngClass]="data.iconClass"
@@ -15,7 +15,7 @@
 
             <ng-container *ngSwitchCase="'success'">
                 <i
-                    kbq-icon="mc-success_16"
+                    kbq-icon="kbq-check-circle_16"
                     class="kbq-toast__icon"
                     [color]="$any(data.style)"
                     [ngClass]="data.iconClass"
@@ -24,7 +24,7 @@
 
             <ng-container *ngSwitchCase="'warning'">
                 <i
-                    kbq-icon="mc-error_16"
+                    kbq-icon="kbq-exclamation-triangle_16"
                     class="kbq-toast__icon"
                     [color]="$any(data.style)"
                     [ngClass]="data.iconClass"
@@ -33,7 +33,7 @@
 
             <ng-container *ngSwitchCase="'error'">
                 <i
-                    kbq-icon="mc-error_16"
+                    kbq-icon="kbq-exclamation-triangle_16"
                     class="kbq-toast__icon"
                     [color]="$any(data.style)"
                     [ngClass]="data.iconClass"
@@ -112,7 +112,7 @@
 <div *ngIf="data.closeButton">
     <i
         *ngIf="data.closeButton === true"
-        kbq-icon-button="mc-close-M_16"
+        kbq-icon-button="kbq-xmark_16"
         kbq-toast-close-button
         (click)="close()"
     ></i>

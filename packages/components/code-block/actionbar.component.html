@@ -11,11 +11,11 @@
     >
         <i
             *ngIf="!softWrap"
-            kbq-icon="mc-word-wrap_16"
+            kbq-icon="kbq-word-wrap_16"
         ></i>
         <i
             *ngIf="softWrap"
-            kbq-icon="mc-word-wrap-slash_16"
+            kbq-icon="kbq-word-wrap-slash_16"
         ></i>
     </button>
 
@@ -27,7 +27,7 @@
         [kbqTooltip]="config.downloadTooltip"
         (click)="downloadCode.emit()"
     >
-        <i kbq-icon="mc-download_16"></i>
+        <i kbq-icon="kbq-arrow-down-to-line_16"></i>
     </button>
 
     <button
@@ -38,7 +38,7 @@
         [kbqTooltip]="copyTooltipText"
         (click)="onCopy()"
     >
-        <i kbq-icon="mc-copy-o_16"></i>
+        <i kbq-icon="kbq-file-multiple-o_16"></i>
     </button>
 
     <button
@@ -49,6 +49,6 @@
         [kbqTooltip]="config.openExternalSystemTooltip"
         (click)="openExternalSystem.emit()"
     >
-        <i kbq-icon="mc-external-link_16"></i>
+        <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
     </button>
 </div>

@@ -19,16 +19,16 @@
 -   Текста подсказки (не обязательно)
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
     <span> Если есть ограничения по формату допустимых файлов или по размеру, перечислите их в тексте подсказки </span>
 </div>
 
 ##### Файлы загружены
 
--   Иконки [файла](/icons?id=file-empty_16)
+-   Иконки [файла](/icons?id=file_16)
 -   Имени загруженного файла
 -   Размер загруженного файла (только при загрузки нескольких файлов)
--   Иконки [удалить](/icons?id=close-circle_16)
+-   Иконки [удалить](/icons?id=xmark-circle_16)
 
 #### Вариации
 
@@ -61,7 +61,7 @@
 Если названия файла не влезает полностью, оно в середине обрезается многоточием, а при наведении показывается [тултип](/components/tooltip/overview) с полным названием (это правило действует и для загрузки нескольких файлов)
 
 <div class="kbq-alert kbq-alert_warning" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-exclamation-triangle_16 kbq-alert__icon"></i>
     <span> Стандартный тултип из Koobiq имеет ограничение по ширине в 240px, в данном случае стоит это ограничение не учитывать, чтобы имя файла показывалось в тултипе без переносов. Но ширина тултипа не должна превышать ширину экрана, в таком случае перенос имени файла на другую строку допустим. </span>
 </div>
 
@@ -76,7 +76,7 @@
 #### Валидация
 
 <div class="kbq-alert kbq-alert_warning" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-error_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-exclamation-triangle_16 kbq-alert__icon"></i>
     <span> Если процесс загрузки файлов не завершился, ограничьте возможность отправки формы путем блокирования кнопки отправки. </span>
 </div>
 
@@ -84,7 +84,7 @@
 
 Текст ошибки выводится под компонентом, с указанием причины ошибки.
 
-Если не удалось загрузить файл по неизвестным причинам, вместо иконки [файла](/icons?id=file-empty_16), выводится иконка [ошибки](/icons?id=error_16)
+Если не удалось загрузить файл по неизвестным причинам, вместо иконки [файла](/icons?id=file_16), выводится иконка [ошибки](/icons?id=exclamation-triangle_16)
 
 <!-- example(file-upload-single-error-overview) -->
 

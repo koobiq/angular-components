@@ -10,6 +10,8 @@ export const iconReplacements: ReplaceData[] = [
     { replace: 'kbq-icon-button="mc-', replaceWith: 'kbq-icon-button="kbq-' },
     { replace: 'class="mc kbq-icon mc-', replaceWith: 'class="kbq kbq-icon kbq-' },
     { replace: 'class="mc kbq-', replaceWith: 'class="kbq kbq-' },
+    { replace: "class: 'mc kbq-", replaceWith: "class: 'kbq kbq-" },
+    { replace: 'mc mc-', replaceWith: 'kbq kbq-' },
     { replace: '\\[class\\.mc', replaceWith: '[class.kbq' },
     { replace: "'mc-", replaceWith: "'kbq-" }
 ];

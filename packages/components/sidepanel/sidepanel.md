@@ -14,7 +14,7 @@
 ### Описание работы
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
     <span>По умолчанию сайдпанель показывается справа, но в зависимости от контекста может показываться и слева тоже.</span> 
 </div>
 
@@ -81,7 +81,7 @@
 #### Размер
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px; margin-bottom: 30px">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
     <span>Всегда занимает всю высоту окна браузера. Горизонтального скролла не бывает, содержимое панели должно умещаться по ширине.</span> 
 </div>
 

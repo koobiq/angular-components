@@ -52,7 +52,7 @@
                             {{ option.viewValue }}
                             <i
                                 *ngIf="!option.disabled && !disabled"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                                 (click)="onRemoveMatcherItem(option, $event)"
                             ></i>
@@ -89,7 +89,7 @@
 
         <div class="kbq-select__arrow-wrapper">
             <i
-                kbq-icon="mc-angle-down-S_16"
+                kbq-icon="kbq-chevron-down-s_16"
                 class="kbq-select__arrow"
                 [color]="'contrast-fade'"
             ></i>

@@ -78,9 +78,9 @@
     >
         <kbq-tab [tabId]="'firstTab'">
             <ng-template kbq-tab-label>
-                <i kbq-icon="mc-play_16"></i>
+                <i kbq-icon="kbq-play_16"></i>
                 First long long long long long long long long tab name
-                <i kbq-icon="mc-play_16"></i>
+                <i kbq-icon="kbq-play_16"></i>
             </ng-template>
             Content 1
         </kbq-tab>
@@ -91,7 +91,7 @@
         >
             <ng-template kbq-tab-label>
                 Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty
-                <i kbq-icon="mc-play_16"></i>
+                <i kbq-icon="kbq-play_16"></i>
             </ng-template>
             Empty Content
         </kbq-tab>
@@ -116,7 +116,7 @@
             [disabled]="true"
             (click)="activeLink = 1"
         >
-            <i kbq-icon="mc-play_16"></i>
+            <i kbq-icon="kbq-play_16"></i>
             Disabled
         </a>
     </nav>
@@ -144,7 +144,7 @@
             [disabled]="true"
             (click)="activeLink = 1"
         >
-            <i kbq-icon="mc-play_16"></i>
+            <i kbq-icon="kbq-play_16"></i>
             Disabled
         </a>
     </nav>
@@ -159,7 +159,7 @@
     <kbq-tab-group kbq-stretch-tabs>
         <kbq-tab>
             <ng-template kbq-tab-label>
-                <i kbq-icon="mc-search_16"></i>
+                <i kbq-icon="kbq-magnifying-glass_16"></i>
                 First
             </ng-template>
             Content 1
@@ -168,14 +168,14 @@
         <kbq-tab>
             <ng-template kbq-tab-label>
                 Second
-                <i kbq-icon="mc-search_16"></i>
+                <i kbq-icon="kbq-magnifying-glass_16"></i>
             </ng-template>
             Content 2
         </kbq-tab>
 
         <kbq-tab>
             <ng-template kbq-tab-label>
-                <i kbq-icon="mc-search_16"></i>
+                <i kbq-icon="kbq-magnifying-glass_16"></i>
                 Third
             </ng-template>
             Content 3
@@ -187,7 +187,7 @@
     <!--        style="width: 400px; max-height: 500px">-->
     <!--        <kbq-tab [tabId]="'firstTab'" [disabled]="false">-->
     <!--            <ng-template kbq-tab-label>-->
-    <!--                <i kbq-icon="mc-play_16"></i>label 1-->
+    <!--                <i kbq-icon="kbq-play_16"></i>label 1-->
     <!--            </ng-template>-->
     <!--            <div>-->
     <!--                <kbq-select placeholder="select">-->
@@ -206,7 +206,7 @@
         <kbq-tab *ngFor="let tab of tabsWithScroll; let i = index">
             <ng-template kbq-tab-label>
                 <i
-                    kbq-icon="kbq-close-S_16"
+                    kbq-icon="kbq-xmark-s_16"
                     (click)="tabsWithScroll.splice(i, 1)"
                 ></i>
                 label {{ tab }}

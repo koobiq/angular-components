@@ -150,7 +150,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -216,7 +216,7 @@ class BasicTreeSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -276,7 +276,7 @@ class BasicEvents {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -335,7 +335,7 @@ class NgModelSelect {
                             kbqTreeNodePadding
                         >
                             <i
-                                kbq-icon="mc-angle-S_16"
+                                kbq-icon="kbq-angle-S_16"
                                 kbqTreeNodeToggle
                             ></i>
                             {{ treeControl.getViewValue(node) }}
@@ -392,7 +392,7 @@ class NgIfSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -448,7 +448,7 @@ class SelectWithChangeEvent {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -503,7 +503,7 @@ class MultiSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -555,7 +555,7 @@ class BasicSelectInitiallyHidden {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}

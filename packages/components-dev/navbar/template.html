@@ -68,7 +68,7 @@
             [kbqTooltip]="'Приложения'"
             [kbqTrigger]="'hover'"
         >
-            <i kbq-icon="mc-bento_16"></i>
+            <i kbq-icon="kbq-bento-menu_16"></i>
         </kbq-navbar-item>
 
         <a
@@ -87,7 +87,7 @@
             [kbqPlacement]="popUpPlacements.Bottom"
             [kbqTooltip]="'Панели мониторинга'"
         >
-            <i kbq-icon="mc-folder-closed_16"></i>
+            <i kbq-icon="kbq-folder_16"></i>
         </button>
 
         <kbq-navbar-item
@@ -132,7 +132,7 @@
             [kbqPlacement]="popUpPlacements.Bottom"
             [kbqTooltip]="'Уведомления'"
         >
-            <i kbq-icon="mc-bell_16"></i>
+            <i kbq-icon="kbq-bell_16"></i>
             <kbq-badge
                 [badgeColor]="'error'"
                 [compact]="true"
@@ -145,7 +145,7 @@
             [kbqPlacement]="popUpPlacements.Bottom"
             [kbqTooltip]="'Администрирование'"
         >
-            <i kbq-icon="mc-gear_16"></i>
+            <i kbq-icon="kbq-gear_16"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-divider />
@@ -154,7 +154,7 @@
             [kbqPlacement]="popUpPlacements.Bottom"
             [kbqTooltip]="'Справка'"
         >
-            <i kbq-icon="mc-search_16"></i>
+            <i kbq-icon="kbq-magnifying-glass_16"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-item
@@ -165,7 +165,7 @@
             [kbqTooltip]="'Профиль'"
             [kbqTrigger]="'hover'"
         >
-            <i kbq-icon="mc-user_16"></i>
+            <i kbq-icon="kbq-user_16"></i>
         </kbq-navbar-item>
     </kbq-navbar-container>
 </kbq-navbar>
@@ -186,7 +186,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
             >
-                <i kbq-icon="mc-bento_16"></i>
+                <i kbq-icon="kbq-bento-menu_16"></i>
             </a>
 
             <div
@@ -205,12 +205,12 @@
                 href="#"
                 kbq-navbar-item
             >
-                <i kbq-icon="mc-folder-opened_16"></i>
+                <i kbq-icon="kbq-folder-open_16"></i>
                 <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
             </a>
 
             <button kbq-navbar-item>
-                <i kbq-icon="mc-folder-opened_16"></i>
+                <i kbq-icon="kbq-folder-open_16"></i>
                 <span kbq-navbar-title>Задачи</span>
             </button>
 
@@ -219,7 +219,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
             >
-                <i kbq-icon="mc-ellipsis_16"></i>
+                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                 <kbq-navbar-title>Еще</kbq-navbar-title>
             </kbq-navbar-item>
 
@@ -233,7 +233,7 @@
                     [kbqTooltip]="'Новый инцидент'"
                     [kbqTooltipDisabled]="verticalNavbar.expanded"
                 >
-                    <i kbq-icon="mc-info-o_16"></i>
+                    <i kbq-icon="kbq-info-circle-o_16"></i>
                     <span *ngIf="verticalNavbar.expanded">Новый инцидент</span>
                 </button>
             </kbq-navbar-item>
@@ -250,7 +250,7 @@
                 [kbqPopoverHeader]="'Центр уведомлений'"
                 [kbqPopoverPlacement]="popUpPlacements.Right"
             >
-                <i kbq-icon="mc-bell-o_16"></i>
+                <i kbq-icon="kbq-bell_16"></i>
                 <kbq-navbar-title>Уведомления</kbq-navbar-title>
                 <kbq-badge
                     [badgeColor]="'error'"
@@ -263,7 +263,7 @@
             <kbq-navbar-divider />
 
             <kbq-navbar-item>
-                <i kbq-icon="mc-gear_16"></i>
+                <i kbq-icon="kbq-gear_16"></i>
                 <kbq-navbar-title>Настройки</kbq-navbar-title>
             </kbq-navbar-item>
 
@@ -307,12 +307,12 @@
 <!--    <kbq-navbar class="small-navbar" #navbar>-->
 <!--        <kbq-navbar-container>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-info_16"></i>-->
+<!--                <i kbq-icon="kbq-info-circle_16"></i>-->
 <!--                <kbq-navbar-title>Left icon</kbq-navbar-title>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Right icon</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-play_16"></i>-->
+<!--                <i kbq-icon="kbq-play_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-brand>-->
 <!--                <kbq-navbar-logo>-->
@@ -322,49 +322,49 @@
 <!--            </kbq-navbar-brand>-->
 <!--            <kbq-navbar-title>Title before</kbq-navbar-title>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-pause_16"></i>-->
+<!--                <i kbq-icon="kbq-pause_16"></i>-->
 <!--                <kbq-navbar-title>Left icon</kbq-navbar-title>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-clock_16"></i>-->
+<!--                <i kbq-icon="kbq-clock_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Right icon</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-search_16"></i>-->
+<!--                <i kbq-icon="kbq-magnifying-glass_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Custom title</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-gear_16"></i>-->
+<!--                <i kbq-icon="kbq-gear_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Right icon</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-calendar_16"></i>-->
+<!--                <i kbq-icon="kbq-calendar-o_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-circle-8_16"></i>-->
+<!--                <i kbq-icon="kbq-circle-6_16"></i>-->
 <!--                <kbq-navbar-title>Left icon</kbq-navbar-title>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Right icon</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-close-L_16"></i>-->
+<!--                <i kbq-icon="kbq-xmark_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-error_16"></i>-->
+<!--                <i kbq-icon="kbq-exclamation-triangle_16"></i>-->
 <!--                <kbq-navbar-title>Left icon</kbq-navbar-title>-->
 <!--            </kbq-navbar-item>-->
 <!--        </kbq-navbar-container>-->
 
 <!--        <kbq-navbar-container>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-info_16"></i>-->
+<!--                <i kbq-icon="kbq-info-circle_16"></i>-->
 <!--                <kbq-navbar-title>Left icon</kbq-navbar-title>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
-<!--                <i kbq-icon="mc-download_16"></i>-->
+<!--                <i kbq-icon="kbq-arrow-down-to-line_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--            <kbq-navbar-item>-->
 <!--                <kbq-navbar-title>Right icon</kbq-navbar-title>-->
-<!--                <i kbq-icon="mc-copy_16"></i>-->
+<!--                <i kbq-icon="kbq-square-multiple-o_16"></i>-->
 <!--            </kbq-navbar-item>-->
 <!--        </kbq-navbar-container>-->
 <!--    </kbq-navbar>-->

@@ -5,7 +5,7 @@
 Когда нужно наглядно показать, что блок загружается или идет какой-то процесс.
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
     Перед добавлением оверлея с загрузчиком уточните время загрузки.
 </div>
 
@@ -61,7 +61,7 @@
 Если надо показать процесс загрузки на всей странице, используется увеличенный спиннер.
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="mc kbq-icon kbq-info-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
     Не используйте текст, состоящий из одного слов «Загрузка», с увеличенным спиннером.
 </div>
 

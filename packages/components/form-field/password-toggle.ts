@@ -51,7 +51,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     get iconClass(): string {
-        return this.hidden ? 'mc-eye_16' : 'mc-eye-crossed_16';
+        return this.hidden ? 'kbq-eye_16' : 'kbq-eye-slash_16';
     }
 
     get visibility(): string {

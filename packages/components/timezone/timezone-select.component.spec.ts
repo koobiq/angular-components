@@ -129,7 +129,7 @@ class BasicTimezoneSelect {
                 >
                     <i
                         kbqPrefix
-                        kbq-icon="mc-search_16"
+                        kbq-icon="kbq-magnifying-glass_16"
                     ></i>
                     <input
                         [formControl]="searchCtrl"
