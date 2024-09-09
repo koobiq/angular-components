@@ -18,6 +18,7 @@ import * as i6 from '@angular/cdk/a11y';
 import * as i7 from '@koobiq/components/button';
 import * as i8 from '@koobiq/components/icon';
 import * as i9 from '@koobiq/components/title';
+import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -296,7 +297,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
 
 // @public (undocumented)
 export class KbqModalService {
-    constructor(overlay: Overlay, modalControl: KbqModalControlService);
+    constructor(overlay: Overlay, modalControl: KbqModalControlService, injector: Injector);
     // (undocumented)
     get afterAllClose(): Observable<void>;
     // (undocumented)
@@ -329,6 +330,8 @@ export class KbqModalTitle {
 
 // @public (undocumented)
 export interface ModalOptions<C = any, R = any> {
+    // (undocumented)
+    data?: any;
     // (undocumented)
     kbqAfterClose?: EventEmitter<R>;
     // (undocumented)

@@ -1,4 +1,4 @@
-import { Component, Input, NgModule, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, NgModule, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -7,6 +7,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KBQ_MODAL_DATA } from '../../components/modal/modal.service';
 
 @Component({
     selector: 'app',
@@ -133,7 +134,8 @@ export class ModalDemoComponent {
                         componentInstance.title = 'title in inner component is changed';
                     }
                 }
-            ]
+            ],
+            data: { myData: 'myData' }
         });
 
         modal.afterOpen.subscribe(() => {
@@ -225,10 +227,14 @@ export class KbqModalLongCustomComponent {
 export class KbqModalCustomComponent {
     componentColors = KbqComponentColors;
 
+    data = inject(KBQ_MODAL_DATA);
+
     @Input() title: string;
     @Input() subtitle: string;
 
-    constructor(private modal: KbqModalRef) {}
+    constructor(private modal: KbqModalRef) {
+        console.log('data: ', this.data);
+    }
 
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });

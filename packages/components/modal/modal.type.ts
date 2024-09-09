@@ -52,6 +52,8 @@ export interface ModalOptions<C = any, R = any> {
     kbqCancelText?: string;
     kbqCancelLoading?: boolean;
     kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
+
+    data?;
 }
 
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {

@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, Injectable } from '@angular/core';
+import { ComponentRef, Injectable, InjectionToken, Injector } from '@angular/core';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -8,6 +8,9 @@ import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
 import { ConfirmType, IModalOptionsForService, ModalOptions } from './modal.type';
+
+/** Injection token that can be used to access the data that was passed in to a modal. */
+export const KBQ_MODAL_DATA = new InjectionToken<any>('KbqModalData');
 
 // A builder used for managing service creating modals
 export class ModalBuilderForService {
@@ -17,7 +20,8 @@ export class ModalBuilderForService {
 
     constructor(
         private readonly overlay: Overlay,
-        readonly options: IModalOptionsForService = {}
+        readonly options: IModalOptionsForService = {},
+        private readonly injector: Injector
     ) {
         this.createModal();
 
@@ -61,7 +65,8 @@ export class ModalBuilderForService {
     private createModal(): void {
         this.overlayRef = this.overlay.create();
         this.overlayRef.hostElement.classList.add('kbq-modal-overlay');
-        this.modalRef = this.overlayRef.attach(new ComponentPortal(KbqModalComponent));
+
+        this.modalRef = this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
     }
 }
 
@@ -78,7 +83,8 @@ export class KbqModalService {
 
     constructor(
         private readonly overlay: Overlay,
-        private readonly modalControl: KbqModalControlService
+        private readonly modalControl: KbqModalControlService,
+        private injector: Injector
     ) {}
 
     // Closes all of the currently-open dialogs
@@ -108,7 +114,12 @@ export class KbqModalService {
             options.kbqFooter = undefined;
         }
 
-        return new ModalBuilderForService(this.overlay, options).getInstance()!;
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [{ provide: KBQ_MODAL_DATA, useValue: options.data }]
+        });
+
+        return new ModalBuilderForService(this.overlay, options, injector).getInstance()!;
     }
 
     confirm<C, R = unknown>(
