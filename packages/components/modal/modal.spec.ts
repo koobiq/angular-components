@@ -346,7 +346,7 @@ describe('KbqModal', () => {
             expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer').length).toBe(1);
         }));
 
-        it('should not show the footer, when kbqOkText, mcOkCancel and kbqFooter are not specified', fakeAsync(() => {
+        it('should not show the footer, when kbqOkText, kbqOkCancel and kbqFooter are not specified', fakeAsync(() => {
             const modalRef = modalService.create();
 
             fixture.detectChanges();

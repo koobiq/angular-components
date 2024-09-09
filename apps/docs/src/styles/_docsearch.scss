@@ -2,7 +2,7 @@
 
 @use '@docsearch/css/dist/style.scss';
 @use 'koobiq/default-theme/variables' as *;
-@use '@koobiq/icons/dist/fonts/mc-icons';
+@use '@koobiq/icons/fonts/kbq-icons';
 
 .DocSearch-Button {
     padding: 0 $button-size-horizontal-padding;
