@@ -17,7 +17,7 @@ yarn add @koobiq/icons
 Затем вы должны импортировать стили:
 
 ```
-@use '@koobiq/icons/dist/fonts/kbq-icons.css';
+@use '@koobiq/icons/fonts/kbq-icons.css';
 ```
 
 И импортируйте KbqIconModule в ваш модуль.
