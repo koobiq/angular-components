@@ -187,7 +187,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'copy-o_16',
-        replaceWith: 'file-multiple-o_16'
+        replaceWith: 'file-multiple_16'
     },
     {
         replace: 'download_16',
