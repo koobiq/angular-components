@@ -89,7 +89,7 @@ export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCt
     selector: 'kbq-checkbox',
     exportAs: 'kbqCheckbox',
     templateUrl: 'checkbox.html',
-    styleUrls: ['checkbox.scss'],
+    styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
     host: {
         class: 'kbq-checkbox',
         '[id]': 'id',

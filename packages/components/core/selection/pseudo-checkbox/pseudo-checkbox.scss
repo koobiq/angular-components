@@ -1,10 +1,9 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../../styles/tokens';
 @use '../../styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './pseudo-checkbox-theme' as *;
 
 .kbq-pseudo-checkbox {
     position: relative;
@@ -64,3 +63,5 @@ $tokens: meta.module-variables(tokens) !default;
         width: kbq-css-variable(checkbox-size-big-border-width);
     }
 }
+
+@include kbq-pseudo-checkbox-theme();

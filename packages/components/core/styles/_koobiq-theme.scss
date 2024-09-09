@@ -5,11 +5,6 @@
 
 @use 'theming/scrollbar-theme' as *;
 
-@use '../selection/pseudo-checkbox/pseudo-checkbox-theme' as *;
-@use '../../autocomplete/autocomplete-theme' as *;
-@use '../../badge/badge-theme' as *;
-@use '../../button/button-theme' as *;
-@use '../../button-toggle/button-toggle-theme' as *;
 @use '../../checkbox/checkbox-theme' as *;
 @use '../../code-block/code-block-theme' as *;
 @use '../../datepicker/datepicker-theme' as *;
@@ -58,11 +53,6 @@
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-autocomplete-theme($theme);
-    @include kbq-badge-theme($theme);
-    @include kbq-button-theme($theme);
-    @include kbq-button-toggle-theme($theme);
-    @include kbq-checkbox-theme($theme);
     @include kbq-code-block-theme($theme);
     @include kbq-datepicker-theme($theme);
     @include kbq-dl-theme($theme);
@@ -89,7 +79,6 @@
     @include kbq-popover-theme($theme);
     @include kbq-progress-bar-theme($theme);
     @include kbq-progress-spinner-theme($theme);
-    @include kbq-pseudo-checkbox-theme($theme);
     @include kbq-radio-theme($theme);
     @include kbq-risk-level-theme($theme);
     @include kbq-scrollbar-theme($theme);
@@ -120,10 +109,6 @@
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
-    @include kbq-badge-typography($config);
-    @include kbq-button-typography($config);
-    @include kbq-button-toggle-typography($config);
-    @include kbq-checkbox-typography($config);
     @include kbq-code-block-typography($config);
     @include kbq-datepicker-typography($config);
     @include kbq-dropdown-typography($config);

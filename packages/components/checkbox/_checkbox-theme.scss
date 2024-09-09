@@ -4,47 +4,40 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-checkbox-color($component, $style-name) {
-    $style: map.get($component, $style-name);
+@mixin kbq-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
 
     .kbq-checkbox__frame {
-        border-color: kbq-css-variable(#{$base}-default-border, map.get($style, default, border));
-
-        background-color: kbq-css-variable(#{$base}-default-background, map.get($style, default, background));
+        border-color: kbq-css-variable(#{$base}-default-border);
+        background-color: kbq-css-variable(#{$base}-default-background);
 
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
-            color: kbq-css-variable(#{$base}-default-color, map.get($style, default, color));
+            color: kbq-css-variable(#{$base}-default-color);
         }
     }
 
     .kbq-checkbox-label {
-        color: kbq-css-variable(#{$base}-default-text, map.get($style, default, text));
+        color: kbq-css-variable(#{$base}-default-text);
     }
 
     & .kbq-hint .kbq-hint__text {
-        color: kbq-css-variable(#{$base}-default-caption, map.get($style, default, caption));
+        color: kbq-css-variable(#{$base}-default-caption);
     }
 
     &:hover,
     &.kbq-hover {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-states-hover-border, map.get($style, hover, border));
-
-            background-color: kbq-css-variable(#{$base}-states-hover-background, map.get($style, hover, background));
+            border-color: kbq-css-variable(#{$base}-states-hover-border);
+            background-color: kbq-css-variable(#{$base}-states-hover-background);
         }
     }
 
     &.kbq-checked,
     &.kbq-indeterminate {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-states-checked-border, map.get($style, checked, border));
-
-            background-color: kbq-css-variable(
-                #{$base}-states-checked-background,
-                map.get($style, checked, background)
-            );
+            border-color: kbq-css-variable(#{$base}-states-checked-border);
+            background-color: kbq-css-variable(#{$base}-states-checked-background);
         }
     }
 
@@ -53,84 +46,60 @@
         &:hover,
         &.kbq-hover {
             .kbq-checkbox__frame {
-                border-color: kbq-css-variable(
-                    #{$base}-states-checked-hover-border,
-                    map.get($style, checked-hover, border)
-                );
-
-                background-color: kbq-css-variable(
-                    #{$base}-states-checked-hover-background,
-                    map.get($style, checked-hover, background)
-                );
+                border-color: kbq-css-variable(#{$base}-states-checked-hover-border);
+                background-color: kbq-css-variable(#{$base}-states-checked-hover-background);
             }
         }
 
         & .kbq-checkbox-input.cdk-keyboard-focused {
             + .kbq-checkbox__frame {
-                border-color: kbq-css-variable(
-                    #{$base}-states-checked-focused-border,
-                    map.get($style, checked-focused, border)
-                );
-                background-color: kbq-css-variable(
-                    #{$base}-states-checked-focused-background,
-                    map.get($style, checked-focused, background)
-                );
-                outline: kbq-css-variable(
-                    #{$base}-states-checked-focused-outline,
-                    map.get($style, checked-focused, outline)
-                );
+                border-color: kbq-css-variable(#{$base}-states-checked-focused-border);
+                background-color: kbq-css-variable(#{$base}-states-checked-focused-background);
+                outline: kbq-css-variable(#{$base}-states-checked-focused-outline);
             }
         }
     }
 
     & .kbq-checkbox-input.cdk-keyboard-focused {
         + .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-states-focused-border, map.get($style, focused, border));
-            background-color: kbq-css-variable(
-                #{$base}-states-focused-background,
-                map.get($style, focused, background)
-            );
-            outline: kbq-css-variable(#{$base}-states-focused-outline, map.get($style, focused, outline));
+            border-color: kbq-css-variable(#{$base}-states-focused-border);
+            background-color: kbq-css-variable(#{$base}-states-focused-background);
+            outline: kbq-css-variable(#{$base}-states-focused-outline);
         }
     }
 
     &.kbq-disabled {
         .kbq-checkbox__frame {
-            border-color: kbq-css-variable(#{$base}-states-disabled-border, map.get($style, disabled, border));
-            background-color: kbq-css-variable(
-                #{$base}-states-disabled-background,
-                map.get($style, disabled, background)
-            );
+            border-color: kbq-css-variable(#{$base}-states-disabled-border);
+            background-color: kbq-css-variable(#{$base}-states-disabled-background);
 
             & .kbq-checkbox-checkmark,
             & .kbq-checkbox-mixedmark {
-                color: kbq-css-variable(#{$base}-states-disabled-color, map.get($style, disabled, color));
+                color: kbq-css-variable(#{$base}-states-disabled-color);
             }
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: kbq-css-variable(#{$base}-states-disabled-caption, map.get($style, disabled, caption));
+            color: kbq-css-variable(#{$base}-states-disabled-caption);
         }
 
         .kbq-checkbox-label {
-            color: kbq-css-variable(#{$base}-states-disabled-text, map.get($style, disabled, text));
+            color: kbq-css-variable(#{$base}-states-disabled-text);
         }
     }
 }
 
-@mixin kbq-checkbox-theme($theme) {
-    $checkbox: map.get(map.get($theme, components), checkbox);
-
+@mixin kbq-checkbox-theme() {
     .kbq-checkbox {
-        @include kbq-checkbox-color($checkbox, theme);
+        @include kbq-checkbox-color(theme);
 
         &.kbq-error {
-            @include kbq-checkbox-color($checkbox, error);
+            @include kbq-checkbox-color(error);
         }
     }
 }
 
-@mixin kbq-checkbox-typography($config) {
+@mixin kbq-checkbox-typography() {
     .kbq-checkbox {
         @include kbq-typography-css-variables(checkbox, normal-label);
 

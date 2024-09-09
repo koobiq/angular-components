@@ -132,7 +132,7 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButt
 @Component({
     selector: '[kbq-button]',
     templateUrl: './button.component.html',
-    styleUrls: ['./button.scss'],
+    styleUrls: ['./button.scss', './button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     inputs: ['color', 'tabIndex'],

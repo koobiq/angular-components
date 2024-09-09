@@ -18,46 +18,37 @@
     }
 }
 
-@mixin kbq-button-type($component, $type, $sub-type) {
-    $style: map.get($component, $type, $sub-type);
+@mixin kbq-button-type($type, $sub-type) {
     $base-path: button-#{$type}-#{$sub-type};
 
-    border-color: kbq-css-variable(#{$base-path}-border, map.get($style, border));
-    color: kbq-css-variable(#{$base-path}-foreground, map.get($style, foreground));
-    background: kbq-css-variable(#{$base-path}-background, map.get($style, background));
+    border-color: kbq-css-variable(#{$base-path}-border);
+    color: kbq-css-variable(#{$base-path}-foreground);
+    background: kbq-css-variable(#{$base-path}-background);
 
-    @include _icon(
-        kbq-css-variable(#{$base-path}-left-icon, map.get($style, left-icon)),
-        kbq-css-variable(#{$base-path}-right-icon, map.get($style, right-icon))
-    );
+    @include _icon(kbq-css-variable(#{$base-path}-left-icon), kbq-css-variable(#{$base-path}-right-icon));
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
-        background: kbq-css-variable(#{$base-path}-states-hover-background, map.get($style, states-hover-background));
+        background: kbq-css-variable(#{$base-path}-states-hover-background);
     }
 
     &:active:not(.kbq-disabled),
     &.kbq-active:not(.kbq-disabled) {
-        background: kbq-css-variable(#{$base-path}-states-active-background, map.get($style, states-active-background));
+        background: kbq-css-variable(#{$base-path}-states-active-background);
     }
 
     &.kbq-disabled {
-        color: kbq-css-variable(#{$base-path}-states-disabled-foreground, map.get($style, states-disabled-foreground));
-        background: kbq-css-variable(
-            #{$base-path}-states-disabled-background,
-            map.get($style, states-disabled-background)
-        );
+        color: kbq-css-variable(#{$base-path}-states-disabled-foreground);
+        background: kbq-css-variable(#{$base-path}-states-disabled-background);
 
         @include _icon(
-            kbq-css-variable(#{$base-path}-states-disabled-left-icon, map.get($style, states-disabled-left-icon)),
-            kbq-css-variable(#{$base-path}-states-disabled-right-icon, map.get($style, states-disabled-right-icon))
+            kbq-css-variable(#{$base-path}-states-disabled-left-icon),
+            kbq-css-variable(#{$base-path}-states-disabled-right-icon)
         );
     }
 }
 
-@mixin kbq-button-theme($theme) {
-    $button: map.get(map.get($theme, components), button);
-
+@mixin kbq-button-theme() {
     .kbq-button-overlay {
         display: none;
     }
@@ -68,31 +59,31 @@
 
         &.kbq-button_filled {
             &.kbq-contrast {
-                @include kbq-button-type($button, filled, contrast-fade-off);
+                @include kbq-button-type(filled, contrast-fade-off);
             }
 
             &.kbq-contrast-fade {
-                @include kbq-button-type($button, filled, contrast-fade-on);
+                @include kbq-button-type(filled, contrast-fade-on);
             }
         }
 
         &.kbq-button_outline {
             &.kbq-theme-fade {
-                @include kbq-button-type($button, outline, theme-fade-on);
+                @include kbq-button-type(outline, theme-fade-on);
             }
 
             &.kbq-contrast-fade {
-                @include kbq-button-type($button, outline, contrast-fade-on);
+                @include kbq-button-type(outline, contrast-fade-on);
             }
         }
 
         &.kbq-button_transparent {
             &.kbq-theme {
-                @include kbq-button-type($button, transparent, theme-fade-on);
+                @include kbq-button-type(transparent, theme-fade-on);
             }
 
             &.kbq-contrast {
-                @include kbq-button-type($button, transparent, contrast-fade-on);
+                @include kbq-button-type(transparent, contrast-fade-on);
             }
         }
 
@@ -100,7 +91,7 @@
         &.kbq-button_outline,
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
-                $focused-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+                $focused-color: kbq-css-variable(states-focused-color);
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }
@@ -108,7 +99,7 @@
     }
 }
 
-@mixin kbq-button-typography($config) {
+@mixin kbq-button-typography() {
     .kbq-button,
     .kbq-button-icon {
         @include kbq-typography-css-variables(button, default);

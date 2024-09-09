@@ -3,10 +3,9 @@
 
 @use '../core/styles/common';
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './button-toggle-theme' as *;
 
 .kbq-button-toggle-group {
     box-sizing: border-box;
@@ -89,3 +88,6 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 }
+
+@include kbq-button-toggle-theme();
+@include kbq-button-toggle-typography();
