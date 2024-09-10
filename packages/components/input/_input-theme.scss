@@ -1,10 +1,6 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-input-typography($config) {
+@mixin kbq-input-typography() {
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {
         @include kbq-typography-css-variables(input, text);

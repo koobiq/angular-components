@@ -5,12 +5,17 @@ const { formatHelpers } = require('style-dictionary');
 const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
-    'pseudo-checkbox': 'checkbox'
+    'pseudo-checkbox': 'checkbox',
+    datepicker: 'states-foreground-disabled',
+    dropdown: ['kbq-list', 'foreground-contrast-secondary'],
+    'icon-button': 'states-focused-color'
 };
 
 const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
-    'button-toggle': 'button-toggle-group'
+    'button-toggle': 'button-toggle-group',
+    datepicker: 'datepicker__content',
+    dropdown: 'dropdown__panel'
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -28,7 +33,10 @@ const componentAliases = {
     checkbox: [
         { path: 'checkbox/checkbox-tokens.scss', aliasName: 'checkbox' },
         { path: 'core/selection/pseudo-checkbox/pseudo-checkbox-tokens.scss', aliasName: 'pseudo-checkbox' }
-    ]
+    ],
+    hint: 'form-field/hint-tokens.scss',
+    'icon-button': 'icon/icon-button-tokens.scss',
+    'icon-item': 'icon/icon-item-tokens.scss'
 };
 
 const resolvePath = (componentName) =>
@@ -36,8 +44,14 @@ const resolvePath = (componentName) =>
 
 const resolveComponentName = (componentName) => componentNameMapping[componentName] || componentName;
 
-const additionalFilter = (token, componentName) =>
-    token.name.replace(/(light|dark)-/, '').includes(filter[componentName]);
+const additionalFilter = (token, componentName) => {
+    const filters = filter[componentName];
+    const themeAgnosticTokenName = token.name.replace(/(light|dark)-/, '');
+    if (Array.isArray(filters)) {
+        return filters.some((filter) => themeAgnosticTokenName.includes(filter));
+    }
+    return themeAgnosticTokenName.includes(filter[componentName]);
+};
 
 const dictionaryMapper = (dictionary, outputReferences) => {
     const formatProperty = formatHelpers.createPropertyFormatter({ outputReferences, dictionary, format: 'css' });

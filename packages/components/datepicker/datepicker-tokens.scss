@@ -1,0 +1,59 @@
+.kbq-datepicker__content {
+    --kbq-datepicker-size-container-padding-vertical: 12px;
+    --kbq-datepicker-size-container-border-radius: 8px;
+    --kbq-datepicker-size-header-padding-horizontal: 4px;
+    --kbq-datepicker-size-header-margin-bottom: 2px;
+    --kbq-datepicker-size-grid-padding-horizontal: 12px;
+    --kbq-datepicker-size-grid-content-gap-vertical: 2px;
+    --kbq-datepicker-size-grid-divider-height: 1px;
+    --kbq-datepicker-size-grid-cell-padding-horizontal: 8px;
+    --kbq-datepicker-size-grid-cell-padding-vertical: 8px;
+    --kbq-datepicker-size-grid-cell-border-radius: 8px;
+    --kbq-datepicker-font-text-font-size: 14px;
+    --kbq-datepicker-font-text-line-height: 20px;
+    --kbq-datepicker-font-text-letter-spacing: -0.006em;
+    --kbq-datepicker-font-text-font-weight: normal;
+    --kbq-datepicker-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
+    --kbq-datepicker-font-text-text-transform: null;
+    --kbq-datepicker-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-states-foreground-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-datepicker-container-background: hsla(229, 15%, 100%, 100%);
+    --kbq-datepicker-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
+        0 3px 8px hsla(229, 15%, 6%, 12%);
+    --kbq-datepicker-header-text: hsla(229, 15%, 60%, 100%);
+    --kbq-datepicker-header-divider: hsla(229, 15%, 6%, 12%);
+    --kbq-datepicker-grid-cell-default-background: transparent;
+    --kbq-datepicker-grid-cell-default-text: hsla(229, 15%, 15%, 100%);
+    --kbq-datepicker-grid-cell-today-background: transparent;
+    --kbq-datepicker-grid-cell-today-text: hsla(216, 100%, 50%, 100%);
+    --kbq-datepicker-grid-cell-states-hover-background: hsla(229, 15%, 50%, 8%);
+    --kbq-datepicker-grid-cell-states-active-background: hsla(229, 15%, 50%, 16%);
+    --kbq-datepicker-grid-cell-states-selected-background: hsla(229, 15%, 25%, 100%);
+    --kbq-datepicker-grid-cell-states-selected-text: hsla(0, 0%, 100%, 100%);
+    --kbq-datepicker-grid-cell-states-selected-hover-background: hsla(229, 15%, 15%, 100%);
+    --kbq-datepicker-grid-cell-states-disabled-background: transparent;
+    --kbq-datepicker-grid-cell-states-disabled-text: hsla(229, 15%, 15%, 32%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-states-foreground-disabled: hsla(229, 15%, 40%, 100%);
+    --kbq-datepicker-container-background: hsla(229, 15%, 15%, 100%);
+    --kbq-datepicker-container-box-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
+    --kbq-datepicker-header-text: hsla(229, 15%, 45%, 100%);
+    --kbq-datepicker-header-divider: hsla(229, 15%, 22%, 100%);
+    --kbq-datepicker-grid-cell-default-background: transparent;
+    --kbq-datepicker-grid-cell-default-text: hsla(229, 15%, 80%, 100%);
+    --kbq-datepicker-grid-cell-today-background: transparent;
+    --kbq-datepicker-grid-cell-today-text: hsla(216, 100%, 65%, 100%);
+    --kbq-datepicker-grid-cell-states-hover-background: hsla(229, 15%, 50%, 16%);
+    --kbq-datepicker-grid-cell-states-active-background: hsla(229, 100%, 85%, 15%);
+    --kbq-datepicker-grid-cell-states-selected-background: hsla(229, 15%, 90%, 100%);
+    --kbq-datepicker-grid-cell-states-selected-text: hsla(229, 15%, 15%, 100%);
+    --kbq-datepicker-grid-cell-states-selected-hover-background: hsla(229, 15%, 55%, 100%);
+    --kbq-datepicker-grid-cell-states-disabled-background: transparent;
+    --kbq-datepicker-grid-cell-states-disabled-text: hsla(229, 15%, 40%, 100%);
+}

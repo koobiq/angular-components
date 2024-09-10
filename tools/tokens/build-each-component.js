@@ -13,7 +13,23 @@ const {
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
 
-const componentsWithCss = ['alert', 'autocomplete', 'badge', 'button', 'button-toggle', 'checkbox'];
+const componentsWithCss = [
+    'alert',
+    'autocomplete',
+    'badge',
+    'button',
+    'button-toggle',
+    'checkbox',
+    'datepicker',
+    'dropdown',
+    'form-field',
+    'hint',
+    'icon',
+    'icon-button',
+    'icon-item',
+    'input',
+    'link'
+];
 
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
@@ -62,6 +78,7 @@ StyleDictionary.registerFormat({
             [lightThemeSelector]: lightDictionary,
             [darkThemeSelector]: darkDictionary
         })
+            .filter(([, currentDictionary]) => currentDictionary.allTokens.length)
             .map(([key, currentDictionary]) => {
                 return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
             })

@@ -43,7 +43,7 @@ import {
     selector: 'kbq-dropdown',
     exportAs: 'kbqDropdown',
     templateUrl: 'dropdown.html',
-    styleUrls: ['dropdown.scss'],
+    styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     animations: [

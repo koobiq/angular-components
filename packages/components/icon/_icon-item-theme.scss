@@ -3,59 +3,56 @@
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-icon-item-style($component, $type, $style-name) {
-    $style: map.get($component, $type, $style-name);
+@mixin kbq-icon-item-style($type, $style-name) {
     $base: icon-item-filled-#{$type}-#{$style-name};
 
-    color: kbq-css-variable(#{$base}-color, map.get($component, $type, $style-name, color));
-    background: kbq-css-variable(#{$base}-background, map.get($component, $type, $style-name, background));
+    color: kbq-css-variable(#{$base}-color);
+    background: kbq-css-variable(#{$base}-background);
 }
 
-@mixin kbq-icon-item-theme($theme) {
-    $icon-item: map.get($theme, components, icon-item);
-
+@mixin kbq-icon-item-theme() {
     .kbq-icon-item.kbq-icon-item_filled {
         &.kbq-icon-item_fade-off {
             &.kbq-theme {
-                @include kbq-icon-item-style($icon-item, fade-off, theme);
+                @include kbq-icon-item-style(fade-off, theme);
             }
 
             &.kbq-contrast {
-                @include kbq-icon-item-style($icon-item, fade-off, contrast);
+                @include kbq-icon-item-style(fade-off, contrast);
             }
 
             &.kbq-error {
-                @include kbq-icon-item-style($icon-item, fade-off, error);
+                @include kbq-icon-item-style(fade-off, error);
             }
 
             &.kbq-warning {
-                @include kbq-icon-item-style($icon-item, fade-off, warning);
+                @include kbq-icon-item-style(fade-off, warning);
             }
 
             &.kbq-success {
-                @include kbq-icon-item-style($icon-item, fade-off, success);
+                @include kbq-icon-item-style(fade-off, success);
             }
         }
 
         &.kbq-icon-item_fade-on {
             &.kbq-theme {
-                @include kbq-icon-item-style($icon-item, fade-on, theme);
+                @include kbq-icon-item-style(fade-on, theme);
             }
 
             &.kbq-contrast {
-                @include kbq-icon-item-style($icon-item, fade-on, contrast);
+                @include kbq-icon-item-style(fade-on, contrast);
             }
 
             &.kbq-error {
-                @include kbq-icon-item-style($icon-item, fade-on, error);
+                @include kbq-icon-item-style(fade-on, error);
             }
 
             &.kbq-warning {
-                @include kbq-icon-item-style($icon-item, fade-on, warning);
+                @include kbq-icon-item-style(fade-on, warning);
             }
 
             &.kbq-success {
-                @include kbq-icon-item-style($icon-item, fade-on, success);
+                @include kbq-icon-item-style(fade-on, success);
             }
         }
     }

@@ -1,10 +1,8 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-link-geometry($tokens) {
+@use './link-tokens';
+
+@mixin kbq-link-geometry() {
     display: inline;
 
     text-decoration: none;
@@ -67,73 +65,67 @@
     }
 }
 
-@mixin kbq-link-state($component, $state-name: null) {
-    $state: $component;
+@mixin kbq-link-state($state-name: null) {
     $base-path: link;
 
     @if $state-name {
-        $state: map.get($component, $state-name);
         $base-path: link-#{$state-name};
     }
 
-    color: kbq-css-variable(#{$base-path}-text, map.get($state, text));
+    color: kbq-css-variable(#{$base-path}-text);
 
     &.kbq-text-only,
     &.kbq-text-with-icon .kbq-link__text,
     &.kbq-text-with-dot .kbq-link__text {
-        border-bottom-color: kbq-css-variable(#{$base-path}-border-bottom, map.get($state, border-bottom));
+        border-bottom-color: kbq-css-variable(#{$base-path}-border-bottom);
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base-path}-text, map.get($state, text)) !important;
+        color: kbq-css-variable(#{$base-path}-text) !important;
     }
 }
 
-@mixin kbq-link-theme($theme) {
-    $link: map.get(map.get($theme, components), link);
-
-    $tokens: map.get($theme, tokens);
-
+@mixin kbq-link-theme() {
     .kbq-link {
-        @include kbq-link-geometry($tokens);
+        @include kbq-link-geometry();
 
-        @include kbq-link-state($link);
+        @include kbq-link-state();
 
         transition: color ease-out 300ms;
 
         &:hover {
             transition: color 0ms;
 
-            @include kbq-link-state($link, state-hover);
+            @include kbq-link-state(state-hover);
         }
 
         &:active,
         &.kbq-active {
-            @include kbq-link-state($link, state-active);
+            @include kbq-link-state(state-active);
         }
 
         &.kbq-link_use-visited:not(.kbq-disabled):visited {
-            @include kbq-link-state($link, state-visited);
+            @include kbq-link-state(state-visited);
 
             &:hover {
-                @include kbq-link-state($link, state-visited-hover);
+                @include kbq-link-state(state-visited-hover);
             }
 
             &:active,
             &.kbq-active {
-                @include kbq-link-state($link, state-visited-active);
+                @include kbq-link-state(state-visited-active);
             }
         }
 
         &.cdk-keyboard-focused {
-            outline: kbq-css-variable(link-state-focused-outline, map.get($link, state-focused, outline)) solid;
+            outline: kbq-css-variable(link-state-focused-outline) solid;
         }
 
         &.kbq-disabled {
             cursor: default;
             pointer-events: none;
 
-            @include kbq-link-state($link, state-disabled);
+            @include kbq-link-state(state-disabled);
         }
 
         @media print {
@@ -153,7 +145,7 @@
     }
 }
 
-@mixin kbq-link-typography($config) {
+@mixin kbq-link-typography() {
     .kbq-link {
         @include kbq-typography-css-variables(link, normal);
 

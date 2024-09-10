@@ -5,19 +5,10 @@
 
 @use 'theming/scrollbar-theme' as *;
 
-@use '../../checkbox/checkbox-theme' as *;
 @use '../../code-block/code-block-theme' as *;
-@use '../../datepicker/datepicker-theme' as *;
 @use '../../divider/divider-theme' as *;
-@use '../../dropdown/dropdown-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
-@use '../../form-field/form-field-theme' as *;
-@use '../../form-field/hint-theme' as *;
-@use '../../icon/icon-theme' as *;
-@use '../../icon/icon-item-theme' as *;
-@use '../../icon/icon-button-theme' as *;
-@use '../../input/input-theme' as *;
 @use '../../link/link-theme' as *;
 @use '../../list/list-theme' as *;
 @use '../../loader-overlay/loader-overlay-theme' as *;
@@ -54,20 +45,14 @@
     @include kbq-core-theme($theme);
 
     @include kbq-code-block-theme($theme);
-    @include kbq-datepicker-theme($theme);
     @include kbq-dl-theme($theme);
     @include kbq-divider-theme($theme);
-    @include kbq-dropdown-theme($theme);
     @include kbq-empty-state-theme($theme);
-    @include kbq-form-field-theme($theme);
     @include kbq-file-upload-theme($theme);
-    @include kbq-hint-theme($theme);
     @include kbq-forms-theme($theme);
-    @include kbq-highlight-theme($theme);
-    @include kbq-icon-theme($theme);
-    @include kbq-icon-item-theme($theme);
-    @include kbq-icon-button-theme($theme);
-    @include kbq-link-theme($theme);
+    @include kbq-highlight-theme();
+    // link is a directive, so styles for it should be applied globally
+    @include kbq-link-theme();
     @include kbq-list-theme($theme);
     @include kbq-loader-overlay-theme($theme);
     @include kbq-modal-theme($theme);
@@ -110,16 +95,10 @@
     @include kbq-markdown-base-typography();
 
     @include kbq-code-block-typography($config);
-    @include kbq-datepicker-typography($config);
-    @include kbq-dropdown-typography($config);
     @include kbq-empty-state-typography($config);
     @include kbq-dl-typography($config);
-    @include kbq-form-field-typography($config);
-    @include kbq-hint-typography($config);
     @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
-    @include kbq-input-typography($config);
-    @include kbq-link-typography($config);
     @include kbq-list-typography($config);
     @include kbq-loader-overlay-typography($config);
     @include kbq-modal-typography($config);

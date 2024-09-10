@@ -5,80 +5,54 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-datepicker-theme($theme) {
-    $datepicker: map.get(map.get($theme, components), datepicker);
-
+@mixin kbq-datepicker-theme() {
     .kbq-datepicker__content {
-        background: kbq-css-variable(datepicker-container-background, map.get($datepicker, container, background));
-        box-shadow: kbq-css-variable(datepicker-container-box-shadow, map.get($datepicker, container, box-shadow));
+        background: kbq-css-variable(datepicker-container-background);
+        box-shadow: kbq-css-variable(datepicker-container-box-shadow);
     }
 
     .kbq-calendar__table-header {
-        color: kbq-css-variable(datepicker-header-text, map.get($datepicker, header, text));
+        color: kbq-css-variable(datepicker-header-text);
     }
 
     .kbq-calendar__table-header-divider::after {
-        background: kbq-css-variable(datepicker-header-divider, map.get($datepicker, header, divider));
+        background: kbq-css-variable(datepicker-header-divider);
     }
 
     .kbq-calendar__body-cell-content {
-        background: kbq-css-variable(
-            datepicker-grid-cell-default-background,
-            map.get($datepicker, cell, default, background)
-        );
-        color: kbq-css-variable(datepicker-grid-cell-default-text, map.get($datepicker, cell, default, text));
+        background: kbq-css-variable(datepicker-grid-cell-default-background);
+        color: kbq-css-variable(datepicker-grid-cell-default-text);
 
         &.kbq-calendar__body-today {
-            background: kbq-css-variable(
-                datepicker-grid-cell-today-background,
-                map.get($datepicker, cell, today, background)
-            );
-            color: kbq-css-variable(datepicker-grid-cell-today-text, map.get($datepicker, cell, today, text));
+            background: kbq-css-variable(datepicker-grid-cell-today-background);
+            color: kbq-css-variable(datepicker-grid-cell-today-text);
         }
 
         &:hover:not(.kbq-disabled) {
-            background: kbq-css-variable(
-                datepicker-grid-cell-states-hover-background,
-                map.get($datepicker, cell, hover, background)
-            );
+            background: kbq-css-variable(datepicker-grid-cell-states-hover-background);
         }
 
         &:active:not(.kbq-disabled) {
-            background: kbq-css-variable(
-                datepicker-grid-cell-states-active-background,
-                map.get($datepicker, cell, active, background)
-            );
+            background: kbq-css-variable(datepicker-grid-cell-states-active-background);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
-            background: kbq-css-variable(
-                datepicker-grid-cell-states-selected-background,
-                map.get($datepicker, cell, selected, background)
-            );
-            color: kbq-css-variable(
-                datepicker-grid-cell-states-selected-text,
-                map.get($datepicker, cell, selected, text)
-            );
+            background: kbq-css-variable(datepicker-grid-cell-states-selected-background);
+            color: kbq-css-variable(datepicker-grid-cell-states-selected-text);
 
             &:hover {
-                background: kbq-css-variable(
-                    datepicker-grid-cell-states-selected-hover-background,
-                    map.get($datepicker, cell, selected-hover, background)
-                );
+                background: kbq-css-variable(datepicker-grid-cell-states-selected-hover-background);
             }
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(states-foreground-disabled, map.get($theme, states, foreground, disabled));
-            background: kbq-css-variable(
-                datepicker-grid-cell-states-disabled-background,
-                map.get($datepicker, cell, disabled, background)
-            );
+            color: kbq-css-variable(states-foreground-disabled);
+            background: kbq-css-variable(datepicker-grid-cell-states-disabled-background);
         }
     }
 }
 
-@mixin kbq-datepicker-typography($config) {
+@mixin kbq-datepicker-typography() {
     .kbq-calendar {
         @include kbq-typography-css-variables(datepicker, text);
     }

@@ -1,0 +1,67 @@
+.kbq-icon-button {
+    --kbq-icon-button-size-horizontal-padding: 8px;
+    --kbq-icon-button-size-left-icon-padding: 6px;
+    --kbq-icon-button-size-normal-horizontal-padding: 0;
+    --kbq-icon-button-size-normal-vertical-padding: 0;
+    --kbq-icon-button-size-small-horizontal-padding: 4px;
+    --kbq-icon-button-size-small-vertical-padding: 4px;
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    // TODO: remove after all settled, should be assigned via css-tokens.css (#DS-2846)
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
+    --kbq-icon-button-theme-default: hsla(216, 100%, 50%, 100%);
+    --kbq-icon-button-theme-states-hover: hsla(216, 100%, 45%, 100%);
+    --kbq-icon-button-theme-states-active: hsla(216, 100%, 40%, 100%);
+    --kbq-icon-button-theme-states-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-icon-button-contrast-default: hsla(229, 15%, 15%, 100%);
+    --kbq-icon-button-contrast-states-hover: hsla(229, 15%, 10%, 100%);
+    --kbq-icon-button-contrast-states-active: hsla(229, 15%, 10%, 100%);
+    --kbq-icon-button-contrast-states-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-icon-button-fade-contrast-default: hsla(229, 15%, 60%, 100%);
+    --kbq-icon-button-fade-contrast-states-hover: hsla(229, 15%, 50%, 100%);
+    --kbq-icon-button-fade-contrast-states-active: hsla(229, 15%, 40%, 100%);
+    --kbq-icon-button-fade-contrast-states-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-icon-button-error-default: hsla(7, 97%, 45%, 100%);
+    --kbq-icon-button-error-states-hover: hsla(7, 97%, 45%, 100%);
+    --kbq-icon-button-error-states-active: hsla(7, 97%, 40%, 100%);
+    --kbq-icon-button-error-states-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-icon-button-success-default: hsla(104, 64%, 40%, 100%);
+    --kbq-icon-button-success-states-hover: hsla(104, 64%, 40%, 100%);
+    --kbq-icon-button-success-states-active: hsla(104, 64%, 30%, 100%);
+    --kbq-icon-button-success-states-disabled: hsla(229, 15%, 15%, 32%);
+    --kbq-icon-button-warning-default: hsla(38, 100%, 42%, 100%);
+    --kbq-icon-button-warning-states-hover: hsla(38, 100%, 45%, 100%);
+    --kbq-icon-button-warning-states-active: hsla(38, 100%, 42%, 100%);
+    --kbq-icon-button-warning-states-disabled: hsla(229, 15%, 15%, 32%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
+    --kbq-icon-button-theme-default: hsla(216, 100%, 65%, 100%);
+    --kbq-icon-button-theme-states-hover: hsla(216, 100%, 45%, 100%);
+    --kbq-icon-button-theme-states-active: hsla(216, 100%, 40%, 100%);
+    --kbq-icon-button-theme-states-disabled: hsla(229, 15%, 30%, 100%);
+    --kbq-icon-button-contrast-default: hsla(229, 15%, 80%, 100%);
+    --kbq-icon-button-contrast-states-hover: hsla(229, 15%, 90%, 100%);
+    --kbq-icon-button-contrast-states-active: hsla(229, 15%, 80%, 100%);
+    --kbq-icon-button-contrast-states-disabled: hsla(229, 15%, 30%, 100%);
+    --kbq-icon-button-fade-contrast-default: hsla(229, 15%, 45%, 100%);
+    --kbq-icon-button-fade-contrast-states-hover: hsla(229, 15%, 50%, 100%);
+    --kbq-icon-button-fade-contrast-states-active: hsla(229, 15%, 40%, 100%);
+    --kbq-icon-button-fade-contrast-states-disabled: hsla(229, 15%, 30%, 100%);
+    --kbq-icon-button-error-default: hsla(7, 97%, 60%, 100%);
+    --kbq-icon-button-error-states-hover: hsla(7, 97%, 50%, 100%);
+    --kbq-icon-button-error-states-active: hsla(7, 97%, 40%, 100%);
+    --kbq-icon-button-error-states-disabled: hsla(229, 15%, 30%, 100%);
+    --kbq-icon-button-success-default: hsla(104, 64%, 45%, 100%);
+    --kbq-icon-button-success-states-hover: hsla(104, 64%, 40%, 100%);
+    --kbq-icon-button-success-states-active: hsla(104, 64%, 30%, 100%);
+    --kbq-icon-button-success-states-disabled: hsla(229, 15%, 30%, 100%);
+    --kbq-icon-button-warning-default: hsla(38, 100%, 60%, 100%);
+    --kbq-icon-button-warning-states-hover: hsla(38, 100%, 45%, 100%);
+    --kbq-icon-button-warning-states-active: hsla(38, 100%, 42%, 100%);
+    --kbq-icon-button-warning-states-disabled: hsla(229, 15%, 30%, 100%);
+}

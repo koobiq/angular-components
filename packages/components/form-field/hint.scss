@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './hint-theme' as *;
+
 .kbq-hint {
     display: flex;
 
@@ -18,3 +20,6 @@
         }
     }
 }
+
+@include kbq-hint-theme();
+@include kbq-hint-typography();
