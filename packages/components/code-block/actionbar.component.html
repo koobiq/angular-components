@@ -1,6 +1,8 @@
 <div class="kbq-code-block__fade-gradient"></div>
 
 <div class="kbq-actionbar-block__button-stack layout-row">
+    <!-- TODO: Почему-то тут не те иконки в режиме dev:code-block -->
+    <!-- Актуальные иконки: https://www.figma.com/design/y44d4NE7WYcbE9jQicsyIg/branch/mWqp3vecvC35GFJR1nHzPw/koobiq-%C2%B7-PT-2023?node-id=21447-12907&node-type=symbol&t=VzwrWqi1sohignJF-11 -->
     <button
         *ngIf="multiLine"
         kbq-button
@@ -11,11 +13,11 @@
     >
         <i
             *ngIf="!softWrap"
-            kbq-icon="kbq-word-wrap_16"
+            kbq-icon="kbq-wrap-text_16"
         ></i>
         <i
             *ngIf="softWrap"
-            kbq-icon="kbq-word-wrap-slash_16"
+            kbq-icon="kbq-wrap-text_16"
         ></i>
     </button>
 
