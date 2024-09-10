@@ -1,0 +1,19 @@
+/* stylelint-disable block-no-empty */
+.kbq-input {
+    --kbq-input-size-padding-horizontal: 12px;
+    --kbq-input-size-padding-vertical: 6px;
+    --kbq-input-font-text-font-size: 14px;
+    --kbq-input-font-text-line-height: 20px;
+    --kbq-input-font-text-letter-spacing: -0.006em;
+    --kbq-input-font-text-font-weight: normal;
+    --kbq-input-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
+    --kbq-input-font-text-text-transform: null;
+    --kbq-input-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+}

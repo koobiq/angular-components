@@ -26,7 +26,8 @@ const componentsWithCss = [
     'hint',
     'icon',
     'icon-button',
-    'icon-item'
+    'icon-item',
+    'input'
 ];
 
 const styleDictionaryConfig = {

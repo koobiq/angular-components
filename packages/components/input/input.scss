@@ -1,10 +1,7 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/input';
-
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
+
+@use './input-theme' as *;
 
 .kbq-input {
     @include input.kbq-reset-input();
@@ -42,3 +39,5 @@ input.kbq-input:invalid {
 input.kbq-input::placeholder {
     opacity: 1;
 }
+
+@include kbq-input-typography();

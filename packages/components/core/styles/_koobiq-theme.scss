@@ -9,7 +9,6 @@
 @use '../../divider/divider-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
-@use '../../input/input-theme' as *;
 @use '../../link/link-theme' as *;
 @use '../../list/list-theme' as *;
 @use '../../loader-overlay/loader-overlay-theme' as *;
@@ -99,7 +98,6 @@
     @include kbq-dl-typography($config);
     @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
-    @include kbq-input-typography($config);
     @include kbq-link-typography($config);
     @include kbq-list-typography($config);
     @include kbq-loader-overlay-typography($config);
