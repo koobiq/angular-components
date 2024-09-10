@@ -5,13 +5,10 @@
         "declaration": true,
         "inlineSources": true,
         "types": [],
-        "lib": [
-            "dom",
-            "es2020"
-        ],
         "paths": {
             "@koobiq/cdk/*": ["./dist/cdk/*"],
             "@koobiq/components/*": ["./dist/components/*"],
+            "@koobiq/components-experimental/*": ["./dist/components-experimental/*"],
             "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"],
             "@koobiq/angular-luxon-adapter/*": ["./dist/angular-luxon-adapter/*"]
         }

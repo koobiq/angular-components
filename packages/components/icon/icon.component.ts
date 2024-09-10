@@ -91,7 +91,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     }
 
     private updateState = () => {
-        this.hasError = this.formField.shouldForward('invalid');
+        this.hasError = this.formField.control?.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

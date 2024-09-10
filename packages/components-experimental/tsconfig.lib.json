@@ -4,6 +4,12 @@
         "outDir": "../../dist/out-tsc",
         "declaration": true,
         "inlineSources": true,
-        "types": []
+        "types": [],
+        "paths": {
+            "@koobiq/cdk/*": ["./dist/cdk/*"],
+            "@koobiq/components/*": ["./dist/components/*"],
+            "@koobiq/angular-luxon-adapter/*": ["./dist/angular-luxon-adapter/*"],
+            "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"]
+        }
     }
 }

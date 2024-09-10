@@ -1,0 +1,11 @@
+@use '../../components/core/styles/common/tokens' as *;
+
+.kbq-cleaner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: kbq-css-variable(form-field-size-icon-button-size);
+    height: 100%;
+    margin-right: kbq-css-variable(form-field-size-icon-button-margin-right);
+    cursor: pointer;
+}
