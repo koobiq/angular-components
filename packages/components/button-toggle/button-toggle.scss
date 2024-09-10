@@ -27,11 +27,14 @@
         align-items: center;
 
         height: kbq-css-variable(button-toggle-size-item-height);
+        min-height: kbq-css-variable(button-toggle-size-item-height);
 
         border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
         > .kbq-button,
         > .kbq-button-icon {
+            height: inherit;
+            min-height: inherit;
             border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
 
             padding: kbq-difference-series-css-variables(
