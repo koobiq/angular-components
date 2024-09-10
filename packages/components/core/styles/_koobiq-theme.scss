@@ -6,7 +6,6 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../../link/link-theme' as *;
-@use '../../modal/modal-theme' as *;
 @use '../../markdown/markdown-theme' as *;
 @use '../../navbar/navbar-theme' as *;
 @use '../../popover/popover-theme' as *;
@@ -34,7 +33,6 @@
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
     @include kbq-link-theme();
-    @include kbq-modal-theme($theme);
     @include kbq-markdown-theme($theme);
     @include kbq-navbar-theme($theme);
     @include kbq-option-theme($theme);
@@ -67,7 +65,6 @@
     @include kbq-markdown-base-typography();
 
     @include kbq-forms-typography($config);
-    @include kbq-modal-typography($config);
     @include kbq-navbar-typography($config);
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);

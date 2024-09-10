@@ -5,6 +5,8 @@
 
 @use './modal-confirm';
 
+@use './modal-theme' as *;
+
 .kbq-modal {
     box-sizing: border-box;
 
@@ -143,3 +145,6 @@
 .kbq-modal-open {
     overflow: hidden;
 }
+
+@include kbq-modal-theme();
+@include kbq-modal-typography();

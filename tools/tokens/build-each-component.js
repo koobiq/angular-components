@@ -36,6 +36,8 @@ const componentsWithCss = [
     'link',
     'list',
     'loader-overlay',
+    'modal',
+    'loader-overlay',
     'list',
     'link',
     'table',
