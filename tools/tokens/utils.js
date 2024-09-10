@@ -6,13 +6,15 @@ const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
     'pseudo-checkbox': 'checkbox',
-    datepicker: 'states-foreground-disabled'
+    datepicker: 'states-foreground-disabled',
+    dropdown: ['kbq-list', 'foreground-contrast-secondary']
 };
 
 const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
     'button-toggle': 'button-toggle-group',
-    datepicker: 'datepicker__content'
+    datepicker: 'datepicker__content',
+    dropdown: 'dropdown__panel'
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -38,8 +40,14 @@ const resolvePath = (componentName) =>
 
 const resolveComponentName = (componentName) => componentNameMapping[componentName] || componentName;
 
-const additionalFilter = (token, componentName) =>
-    token.name.replace(/(light|dark)-/, '').includes(filter[componentName]);
+const additionalFilter = (token, componentName) => {
+    const filters = filter[componentName];
+    const themeAgnosticTokenName = token.name.replace(/(light|dark)-/, '');
+    if (Array.isArray(filters)) {
+        return filters.some((filter) => themeAgnosticTokenName.includes(filter));
+    }
+    return themeAgnosticTokenName.includes(filter[componentName]);
+};
 
 const dictionaryMapper = (dictionary, outputReferences) => {
     const formatProperty = formatHelpers.createPropertyFormatter({ outputReferences, dictionary, format: 'css' });

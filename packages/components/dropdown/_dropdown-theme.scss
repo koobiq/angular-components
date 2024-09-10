@@ -5,58 +5,49 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-dropdown-item-state($component, $style-name) {
-    $state: map.get($component, $style-name);
-
-    background: kbq-css-variable(list-#{$style-name}-container-background, map.get($state, container-background));
-    color: kbq-css-variable(list-#{$style-name}-text-color, map.get($state, text));
+@mixin kbq-dropdown-item-state($style-name) {
+    background: kbq-css-variable(list-#{$style-name}-container-background);
+    color: kbq-css-variable(list-#{$style-name}-text-color);
 
     .kbq-dropdown-item__caption {
-        color: kbq-css-variable(list-#{$style-name}-caption-color, map.get($state, caption));
+        color: kbq-css-variable(list-#{$style-name}-caption-color);
     }
 }
 
-@mixin kbq-dropdown-theme($theme) {
-    $dropdown: map.get(map.get($theme, components), dropdown);
-
+@mixin kbq-dropdown-theme() {
     .kbq-dropdown__panel {
-        box-shadow: kbq-css-variable(dropdown-container-box-shadow, map.get($dropdown, box-shadow));
-        background: kbq-css-variable(dropdown-container-background, map.get($dropdown, background));
+        box-shadow: kbq-css-variable(dropdown-container-box-shadow);
+        background: kbq-css-variable(dropdown-container-background);
     }
 
     .kbq-dropdown-item {
-        $list-item: map.get(map.get($theme, components), list-item);
-
-        @include kbq-dropdown-item-state($list-item, default);
+        @include kbq-dropdown-item-state(default);
 
         &.kbq-dropdown-item_highlighted,
         &:hover:not(.kbq-disabled) {
-            @include kbq-dropdown-item-state($list-item, states-hover);
+            @include kbq-dropdown-item-state(states-hover);
         }
 
         &.cdk-keyboard-focused {
-            border-color: kbq-css-variable(
-                list-states-focused-focus-outline-color,
-                map.get($list-item, states-focused, focus-outline)
-            );
+            border-color: kbq-css-variable(list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
-            @include kbq-dropdown-item-state($list-item, states-selected);
+            @include kbq-dropdown-item-state(states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-dropdown-item-state($list-item, states-selected-hover);
+                @include kbq-dropdown-item-state(states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-dropdown-item-state($list-item, states-disabled);
+            @include kbq-dropdown-item-state(states-disabled);
         }
     }
 
     .kbq-dropdown__group-header {
         &.kbq-dropdown__group-header_small {
-            color: kbq-css-variable(foreground-contrast-secondary, map.get($theme, foreground, contrast-secondary));
+            color: kbq-css-variable(foreground-contrast-secondary);
         }
     }
 
@@ -65,7 +56,7 @@
     }
 }
 
-@mixin kbq-dropdown-typography($config) {
+@mixin kbq-dropdown-typography() {
     .kbq-dropdown-item,
     .kbq-dropdown__content {
         @include kbq-typography-css-variables(list, text);
