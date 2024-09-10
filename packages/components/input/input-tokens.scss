@@ -1,4 +1,3 @@
-/* stylelint-disable block-no-empty */
 .kbq-input {
     --kbq-input-size-padding-horizontal: 12px;
     --kbq-input-size-padding-vertical: 6px;
@@ -10,10 +9,4 @@
         sans-serif;
     --kbq-input-font-text-text-transform: null;
     --kbq-input-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
 }

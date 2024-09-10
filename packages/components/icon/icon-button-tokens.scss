@@ -8,6 +8,9 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
+    // TODO: remove after all settled, should be assigned via css-tokens.css (#DS-2846)
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-icon-button-theme-default: hsla(216, 100%, 50%, 100%);
     --kbq-icon-button-theme-states-hover: hsla(216, 100%, 45%, 100%);
     --kbq-icon-button-theme-states-active: hsla(216, 100%, 40%, 100%);
@@ -35,6 +38,8 @@
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-icon-button-theme-default: hsla(216, 100%, 65%, 100%);
     --kbq-icon-button-theme-states-hover: hsla(216, 100%, 45%, 100%);
     --kbq-icon-button-theme-states-active: hsla(216, 100%, 40%, 100%);

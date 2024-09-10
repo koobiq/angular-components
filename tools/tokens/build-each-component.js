@@ -78,6 +78,7 @@ StyleDictionary.registerFormat({
             [lightThemeSelector]: lightDictionary,
             [darkThemeSelector]: darkDictionary
         })
+            .filter(([, currentDictionary]) => currentDictionary.allTokens.length)
             .map(([key, currentDictionary]) => {
                 return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
             })
