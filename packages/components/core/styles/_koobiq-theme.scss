@@ -9,9 +9,6 @@
 @use '../../divider/divider-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
-@use '../../icon/icon-theme' as *;
-@use '../../icon/icon-item-theme' as *;
-@use '../../icon/icon-button-theme' as *;
 @use '../../input/input-theme' as *;
 @use '../../link/link-theme' as *;
 @use '../../list/list-theme' as *;
@@ -55,9 +52,6 @@
     @include kbq-file-upload-theme($theme);
     @include kbq-forms-theme($theme);
     @include kbq-highlight-theme($theme);
-    @include kbq-icon-theme($theme);
-    @include kbq-icon-item-theme($theme);
-    @include kbq-icon-button-theme($theme);
     @include kbq-link-theme($theme);
     @include kbq-list-theme($theme);
     @include kbq-loader-overlay-theme($theme);

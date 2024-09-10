@@ -1,6 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
+@use './icon-theme' as *;
+
 .kbq-icon-rotate_90 {
     transform: rotate(90deg);
 }
@@ -24,3 +26,5 @@
 .kbq-icon-flip-vh {
     transform: scale(-1);
 }
+
+@include kbq-icon-theme();

@@ -1,34 +1,29 @@
-@use 'sass:map';
-
-@use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-icon-theme($theme) {
-    $icon: map.get($theme, components, icon);
-
+@mixin kbq-icon-theme() {
     .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
         &.kbq-theme {
-            color: kbq-css-variable(icon-theme-color, map.get($icon, theme, color));
+            color: kbq-css-variable(icon-theme-color);
         }
 
         &.kbq-contrast {
-            color: kbq-css-variable(icon-contrast-color, map.get($icon, contrast, color));
+            color: kbq-css-variable(icon-contrast-color);
         }
 
         &.kbq-contrast-fade {
-            color: kbq-css-variable(icon-fade-contrast-color, map.get($icon, fade-contrast, color));
+            color: kbq-css-variable(icon-fade-contrast-color);
         }
 
         &.kbq-error {
-            color: kbq-css-variable(icon-error-color, map.get($icon, error, color));
+            color: kbq-css-variable(icon-error-color);
         }
 
         &.kbq-warning {
-            color: kbq-css-variable(icon-warning-color, map.get($icon, warning, color));
+            color: kbq-css-variable(icon-warning-color);
         }
 
         &.kbq-success {
-            color: kbq-css-variable(icon-success-color, map.get($icon, success, color));
+            color: kbq-css-variable(icon-success-color);
         }
     }
 }

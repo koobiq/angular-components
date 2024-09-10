@@ -7,7 +7,8 @@ const filter = {
     button: 'kbq-states-focused-color',
     'pseudo-checkbox': 'checkbox',
     datepicker: 'states-foreground-disabled',
-    dropdown: ['kbq-list', 'foreground-contrast-secondary']
+    dropdown: ['kbq-list', 'foreground-contrast-secondary'],
+    'icon-button': 'states-focused-color'
 };
 
 const componentNameMapping = {
@@ -33,7 +34,9 @@ const componentAliases = {
         { path: 'checkbox/checkbox-tokens.scss', aliasName: 'checkbox' },
         { path: 'core/selection/pseudo-checkbox/pseudo-checkbox-tokens.scss', aliasName: 'pseudo-checkbox' }
     ],
-    hint: 'form-field/hint-tokens.scss'
+    hint: 'form-field/hint-tokens.scss',
+    'icon-button': 'icon/icon-button-tokens.scss',
+    'icon-item': 'icon/icon-item-tokens.scss'
 };
 
 const resolvePath = (componentName) =>

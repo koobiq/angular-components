@@ -64,6 +64,9 @@
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
 -   [hint](/packages/components/form-field/hint-tokens.scss)
+-   [icon](/packages/components/icon/icon-tokens.scss)
+-   [icon-button](/packages/components/icon/icon-button-tokens.scss)
+-   [icon-item](/packages/components/icon/icon-item-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

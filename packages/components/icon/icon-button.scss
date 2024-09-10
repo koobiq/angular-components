@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './icon-button-theme' as *;
+
 .kbq-icon-button {
     &:not(.kbq-disabled) {
         cursor: pointer;
@@ -16,3 +18,5 @@
             kbq-css-variable(icon-button-size-small-horizontal-padding);
     }
 }
+
+@include kbq-icon-button-theme();

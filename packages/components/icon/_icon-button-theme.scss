@@ -3,9 +3,7 @@
 @use '../core/styles/theming/theming' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-icon-button-theme($theme) {
-    $icon-button: map.get($theme, components, icon-button);
-
+@mixin kbq-icon-button-theme() {
     .kbq-icon-button {
         &:focus {
             outline: none;
@@ -13,147 +11,111 @@
 
         // FIXME: move to unified mixin
         &.kbq-theme {
-            color: kbq-css-variable(icon-button-theme-default, map.get($icon-button, theme, default));
+            color: kbq-css-variable(icon-button-theme-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-theme-states-active, map.get($icon-button, theme, state-active));
+                color: kbq-css-variable(icon-button-theme-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-theme-states-hover, map.get($icon-button, theme, state-hover));
+                color: kbq-css-variable(icon-button-theme-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-theme-states-disabled,
-                    map.get($icon-button, theme, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-theme-states-disabled);
             }
         }
 
         &.kbq-contrast {
-            color: kbq-css-variable(icon-button-contrast-default, map.get($icon-button, contrast, default));
+            color: kbq-css-variable(icon-button-contrast-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-contrast-states-active,
-                    map.get($icon-button, contrast, state-active)
-                );
+                color: kbq-css-variable(icon-button-contrast-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(
-                    icon-button-contrast-states-hover,
-                    map.get($icon-button, contrast, state-hover)
-                );
+                color: kbq-css-variable(icon-button-contrast-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-contrast-states-disabled,
-                    map.get($icon-button, contrast, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-contrast-states-disabled);
             }
         }
 
         &.kbq-contrast-fade {
-            color: kbq-css-variable(icon-button-fade-contrast-default, map.get($icon-button, fade-contrast, default));
+            color: kbq-css-variable(icon-button-fade-contrast-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-fade-contrast-states-active,
-                    map.get($icon-button, fade-contrast, state-active)
-                );
+                color: kbq-css-variable(icon-button-fade-contrast-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(
-                    icon-button-fade-contrast-states-hover,
-                    map.get($icon-button, fade-contrast, state-hover)
-                );
+                color: kbq-css-variable(icon-button-fade-contrast-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-fade-contrast-states-disabled,
-                    map.get($icon-button, fade-contrast, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-fade-contrast-states-disabled);
             }
         }
 
         &.kbq-error {
-            color: kbq-css-variable(icon-button-error-default, map.get($icon-button, error, default));
+            color: kbq-css-variable(icon-button-error-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-error-states-active, map.get($icon-button, error, state-active));
+                color: kbq-css-variable(icon-button-error-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-error-states-hover, map.get($icon-button, error, state-hover));
+                color: kbq-css-variable(icon-button-error-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-error-states-disabled,
-                    map.get($icon-button, error, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-error-states-disabled);
             }
         }
 
         &.kbq-success {
-            color: kbq-css-variable(icon-button-success-default, map.get($icon-button, success, default));
+            color: kbq-css-variable(icon-button-success-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-success-states-active,
-                    map.get($icon-button, success, state-active)
-                );
+                color: kbq-css-variable(icon-button-success-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-success-states-hover, map.get($icon-button, success, state-hover));
+                color: kbq-css-variable(icon-button-success-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-success-states-disabled,
-                    map.get($icon-button, success, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-success-states-disabled);
             }
         }
 
         &.kbq-warning {
-            color: kbq-css-variable(icon-button-warning-default, map.get($icon-button, warning, default));
+            color: kbq-css-variable(icon-button-warning-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(
-                    icon-button-warning-states-active,
-                    map.get($icon-button, warning, state-active)
-                );
+                color: kbq-css-variable(icon-button-warning-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-warning-states-hover, map.get($icon-button, warning, state-hover));
+                color: kbq-css-variable(icon-button-warning-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(
-                    icon-button-warning-states-disabled,
-                    map.get($icon-button, warning, state-disabled)
-                );
+                color: kbq-css-variable(icon-button-warning-states-disabled);
             }
         }
 
         &.cdk-keyboard-focused {
             box-shadow:
-                inset 0 0 0.1px 1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color)),
-                0 0 0.1px 1px kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+                inset 0 0 0.1px 1px kbq-css-variable(states-focused-color),
+                0 0 0.1px 1px kbq-css-variable(states-focused-color);
         }
     }
 }

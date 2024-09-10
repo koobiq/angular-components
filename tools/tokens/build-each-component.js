@@ -23,7 +23,10 @@ const componentsWithCss = [
     'datepicker',
     'dropdown',
     'form-field',
-    'hint'
+    'hint',
+    'icon',
+    'icon-button',
+    'icon-item'
 ];
 
 const styleDictionaryConfig = {

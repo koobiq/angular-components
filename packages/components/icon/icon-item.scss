@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './icon-item-theme' as *;
+
 .kbq-icon-item {
     box-sizing: border-box;
 
@@ -18,3 +20,5 @@
             kbq-css-variable(icon-item-size-big-horizontal-padding);
     }
 }
+
+@include kbq-icon-item-theme();
