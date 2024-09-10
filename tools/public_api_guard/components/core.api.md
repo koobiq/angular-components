@@ -1667,6 +1667,14 @@ export interface KbqTheme {
 }
 
 // @public (undocumented)
+export enum KbqThemeSelector {
+    // (undocumented)
+    Dark = "kbq-theme-dark",
+    // (undocumented)
+    Default = "kbq-theme-light"
+}
+
+// @public (undocumented)
 export interface KbqTitleTextRef {
     // (undocumented)
     parentTextElement?: ElementRef;

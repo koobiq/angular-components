@@ -164,11 +164,11 @@ $dark: theming.kbq-dark-theme($tokens);
     @include theme-kbq.app-typography(tokens.$tokens, tokens.$typography-config, tokens.$markdown-typography-config);
 
     /* selectors the same as in theme.service.ts */
-    &.theme-light {
+    &.kbq-theme-light {
         @include theme-kbq.app-theme(tokens.$light);
     }
 
-    &.theme-dark {
+    &.kbq-theme-dark {
         @include theme-kbq.app-theme(tokens.$dark);
     }
 }
@@ -205,7 +205,7 @@ $dark: theming.kbq-dark-theme($tokens);
             href="favicon.ico"
         />
     </head>
-    <body class="theme-light kbq">
+    <body class="kbq-theme-light kbq">
         <app-root></app-root>
     </body>
 </html>

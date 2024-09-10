@@ -7,15 +7,20 @@ export interface KbqTheme {
     selected: boolean;
 }
 
+export enum KbqThemeSelector {
+    Default = 'kbq-theme-light',
+    Dark = 'kbq-theme-dark'
+}
+
 export const KbqDefaultThemes: KbqTheme[] = [
     {
         name: 'light',
-        className: 'kbq-theme-light',
+        className: KbqThemeSelector.Default,
         selected: true
     },
     {
         name: 'dark',
-        className: 'kbq-theme-dark',
+        className: KbqThemeSelector.Dark,
         selected: false
     }
 ];
