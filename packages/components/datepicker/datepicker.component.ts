@@ -62,7 +62,7 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     selector: 'kbq-datepicker__content',
     exportAs: 'kbqDatepickerContent',
     templateUrl: 'datepicker-content.html',
-    styleUrls: ['datepicker-content.scss'],
+    styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
     host: {
         class: 'kbq-datepicker__content',
 

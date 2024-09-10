@@ -1,16 +1,12 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './datepicker-theme' as *;
 
 $kbq-datepicker-non-touch-calendar-cell-size: 40px;
-$kbq-datepicker-size-grid-padding-horizontal: kbq-css-variable(
-    datepicker-size-grid-padding-horizontal,
-    map.get($tokens, datepicker-size-grid-padding-horizontal)
-);
+$kbq-datepicker-size-grid-padding-horizontal: kbq-css-variable(datepicker-size-grid-padding-horizontal);
 
 $kbq-datepicker-non-touch-calendar-width: calc(
     $kbq-datepicker-non-touch-calendar-cell-size * 7 + $kbq-datepicker-size-grid-padding-horizontal * 2
@@ -33,3 +29,6 @@ $kbq-datepicker-non-touch-calendar-height: 270px;
         padding-bottom: kbq-css-variable(datepicker-size-container-padding-vertical);
     }
 }
+
+@include kbq-datepicker-theme();
+@include kbq-datepicker-typography();

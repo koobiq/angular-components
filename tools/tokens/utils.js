@@ -5,12 +5,14 @@ const { formatHelpers } = require('style-dictionary');
 const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
-    'pseudo-checkbox': 'checkbox'
+    'pseudo-checkbox': 'checkbox',
+    datepicker: 'states-foreground-disabled'
 };
 
 const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
-    'button-toggle': 'button-toggle-group'
+    'button-toggle': 'button-toggle-group',
+    datepicker: 'datepicker__content'
 };
 
 const applyCustomTransformations = (dictionary) => {
