@@ -330,7 +330,6 @@ export class KbqModalTitle {
 
 // @public (undocumented)
 export interface ModalOptions<C = any, R = any> {
-    // (undocumented)
     data?: any;
     // (undocumented)
     kbqAfterClose?: EventEmitter<R>;
@@ -350,7 +349,6 @@ export interface ModalOptions<C = any, R = any> {
     kbqCloseByESC?: boolean;
     // (undocumented)
     kbqComponent?: Type<C>;
-    // (undocumented)
     kbqComponentParams?: any;
     // (undocumented)
     kbqContent?: string | TemplateRef<{}> | Type<C>;
