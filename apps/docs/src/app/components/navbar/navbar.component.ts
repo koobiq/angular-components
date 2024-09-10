@@ -78,15 +78,9 @@ export class NavbarComponent implements OnDestroy {
     ngOnDestroy() {
         this.themeService.ngOnDestroy();
         try {
-            // Chrome & Firefox
             this.colorAutomaticTheme.removeEventListener('change', this.setAutoTheme);
         } catch (err) {
-            try {
-                // Safari
-                this.colorAutomaticTheme.removeListener(this.setAutoTheme);
-            } catch (errSafari) {
-                console.error(errSafari);
-            }
+            console.error(err);
         }
     }
 

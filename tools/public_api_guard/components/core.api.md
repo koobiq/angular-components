@@ -1666,11 +1666,9 @@ export interface KbqTheme {
     selected: boolean;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqThemeSelector {
-    // (undocumented)
     Dark = "kbq-theme-dark",
-    // (undocumented)
     Default = "kbq-theme-light"
 }
 
