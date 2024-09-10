@@ -115,7 +115,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
             <ng-content />
         </div>
     `,
-    styleUrls: ['./list.scss'],
+    styleUrls: ['./list.scss', 'list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     inputs: ['disabled'],

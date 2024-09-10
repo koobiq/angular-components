@@ -34,6 +34,8 @@ const componentsWithCss = [
     'icon-item',
     'input',
     'link',
+    'list',
+    'link',
     'table',
     'textarea',
     'timezone',

@@ -14,7 +14,7 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
     selector: 'kbq-list',
     host: { class: 'kbq-list' },
     template: '<ng-content />',
-    styleUrls: ['./list.scss'],
+    styleUrls: ['./list.scss', 'list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
