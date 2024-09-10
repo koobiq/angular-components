@@ -40,7 +40,7 @@ export class KbqLoaderOverlayCaption {}
 @Component({
     selector: 'kbq-loader-overlay',
     templateUrl: './loader-overlay.component.html',
-    styleUrls: ['./loader-overlay.scss'],
+    styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
     host: {
         class: 'kbq-loader-overlay',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',

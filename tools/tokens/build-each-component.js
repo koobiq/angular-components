@@ -35,6 +35,8 @@ const componentsWithCss = [
     'input',
     'link',
     'list',
+    'loader-overlay',
+    'list',
     'link',
     'table',
     'textarea',

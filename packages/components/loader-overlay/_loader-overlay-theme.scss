@@ -1,52 +1,37 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-loader-overlay-theme($theme) {
-    $loader-overlay: map.get(map.get($theme, components), loader-overlay);
-
+@mixin kbq-loader-overlay-theme() {
     // FIXME: move to unified mixin if necessary
     .kbq-loader-overlay_filled {
         &.kbq-loader-overlay {
-            background: kbq-css-variable(
-                loader-overlay-filled-overlay-background,
-                map.get($loader-overlay, filled, background)
-            );
+            background: kbq-css-variable(loader-overlay-filled-overlay-background);
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-filled-text-color, map.get($loader-overlay, filled, text));
+            color: kbq-css-variable(loader-overlay-filled-text-color);
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(loader-overlay-filled-caption-color, map.get($loader-overlay, filled, caption));
+            color: kbq-css-variable(loader-overlay-filled-caption-color);
         }
     }
 
     .kbq-loader-overlay_transparent {
         &.kbq-loader-overlay {
-            background: kbq-css-variable(
-                loader-overlay-transparent-overlay-background,
-                map.get($loader-overlay, transparent, background)
-            );
+            background: kbq-css-variable(loader-overlay-transparent-overlay-background);
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-transparent-text-color, map.get($loader-overlay, transparent, text));
+            color: kbq-css-variable(loader-overlay-transparent-text-color);
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(
-                loader-overlay-transparent-caption-color,
-                map.get($loader-overlay, transparent, caption)
-            );
+            color: kbq-css-variable(loader-overlay-transparent-caption-color);
         }
     }
 }
 
-@mixin kbq-loader-overlay-typography($config) {
+@mixin kbq-loader-overlay-typography() {
     .kbq-loader-overlay_big {
         & .kbq-loader-overlay-text {
             @include kbq-typography-css-variables(loader-overlay, big-text);
