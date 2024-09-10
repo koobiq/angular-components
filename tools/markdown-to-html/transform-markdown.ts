@@ -4,24 +4,33 @@
  */
 import { docTask } from './utils';
 
-const examplesDirComponents = ['packages/components/**/!(README|examples*).md', 'docs/guides/*.md'];
-const examplesDirCdk = 'packages/cdk/**/!(README|examples*).md';
-const examplesDirExamples = 'packages/components/**/examples.*.md';
+const makeDocsContent = async () => {
+    for (const task of [
+        docTask('markdown-docs-koobiq', {
+            source: [
+                'packages/components/**/!(README|examples*).md',
+                'packages/components-experimental/**/!(README|examples*).md',
+                'docs/guides/*.md'
+            ],
+            dest: 'dist/docs-content/overviews'
+        }),
 
-const markdownDocsKoobiq = docTask('markdown-docs-koobiq', {
-    source: examplesDirComponents,
-    dest: 'dist/docs-content/overviews'
-});
-const markdownDocsCdk = docTask('markdown-docs-cdk', { source: examplesDirCdk, dest: 'dist/docs-content/cdk' });
-const markdownDocsExamples: () => object = docTask('markdown-docs-koobiq', {
-    source: examplesDirExamples,
-    dest: 'dist/docs-content/examples'
-});
+        docTask('markdown-docs-cdk', {
+            source: 'packages/cdk/**/!(README|examples*).md',
+            dest: 'dist/docs-content/cdk'
+        }),
 
-const docsContent = async () => {
-    for (const task of [markdownDocsKoobiq, markdownDocsCdk, markdownDocsExamples]) {
+        docTask('markdown-docs-koobiq', {
+            source: [
+                'packages/components/**/examples.*.md',
+                'packages/components-experimental/**/examples.*.md'
+            ],
+            dest: 'dist/docs-content/examples'
+        })
+
+    ]) {
         await task();
     }
 };
 
-docsContent();
+makeDocsContent();

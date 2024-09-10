@@ -1,0 +1,27 @@
+@use '../../components/core/styles/common/tokens' as *;
+
+.kbq-stepper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: kbq-css-variable(form-field-size-icon-button-size);
+    margin-right: kbq-css-variable(form-field-size-icon-button-margin-right);
+    height: 100%;
+
+    .kbq-stepper-step-up,
+    .kbq-stepper-step-down {
+        cursor: pointer;
+        width: kbq-css-variable(form-field-size-icon-button-size);
+        text-align: center;
+    }
+
+    .kbq-stepper-step-up {
+        transform: scaleY(-1);
+    }
+
+    .kbq-icon-button.kbq-icon-button_small {
+        padding: 0;
+    }
+}

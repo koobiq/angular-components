@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqFormField should display kbq-cleaner 1`] = `
+DebugElement {
+  "nativeNode": <kbq-cleaner
+    class="kbq-cleaner"
+  >
+    <i
+      class="mc kbq-icon kbq-icon-button kbq-contrast-fade mc-close-circle_16"
+      kbq-icon-button="mc-close-circle_16"
+      tabindex="0"
+    />
+  </kbq-cleaner>,
+}
+`;
+
+exports[`KbqFormField should display kbq-error 1`] = `
+DebugElement {
+  "nativeNode": <kbq-error
+    class="kbq-error kbq-hint"
+    id="kbq-error-1"
+  >
+    <span
+      class="kbq-hint__text"
+    >
+      Error
+    </span>
+  </kbq-error>,
+}
+`;
+
+exports[`KbqFormField should display kbq-hint 1`] = `
+DebugElement {
+  "nativeNode": <kbq-hint
+    class="kbq-hint"
+    id="kbq-hint-0"
+  >
+    <span
+      class="kbq-hint__text"
+    >
+      Hint
+    </span>
+  </kbq-hint>,
+}
+`;
+
+exports[`KbqFormField should display kbq-label 1`] = `
+DebugElement {
+  "nativeNode": <kbq-label
+    class="kbq-label"
+    id="kbq-label-0"
+  >
+    Label
+  </kbq-label>,
+}
+`;
+
+exports[`KbqFormField should display kbqPrefix 1`] = `
+DebugElement {
+  "nativeNode": <span
+    class="kbq-prefix"
+    kbqprefix=""
+  >
+    Prefix
+  </span>,
+}
+`;
+
+exports[`KbqFormField should display kbqSuffix 1`] = `
+DebugElement {
+  "nativeNode": <span
+    class="kbq-suffix"
+    kbqsuffix=""
+  >
+    Suffix
+  </span>,
+}
+`;

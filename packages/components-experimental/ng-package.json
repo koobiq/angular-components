@@ -3,5 +3,12 @@
     "dest": "../../dist/components-experimental",
     "lib": {
         "entryFile": "index.ts"
-    }
+    },
+    "assets": [
+        {
+            "input": "",
+            "glob": "**/*.scss",
+            "output": ""
+        }
+    ]
 }

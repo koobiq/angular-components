@@ -5,7 +5,6 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
 import { Subject, delay } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-
 import { DocCategory, DocumentationItems, documentationItemSections } from '../documentation-items';
 import { DocStates } from '../doс-states';
 

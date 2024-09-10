@@ -1,0 +1,59 @@
+@use '../../components/core/styles/theming/theming' as *;
+@use '../../components/core/styles/typography/typography-utils' as *;
+@use '../../components/core/styles/common/tokens' as *;
+
+@mixin kbq-hint-color($type, $style-name) {
+    color: kbq-css-variable(hint-#{$type}-#{$style-name}-text);
+
+    & .kbq-icon {
+        color: kbq-css-variable(hint-#{$type}-#{$style-name}-icon) !important;
+    }
+}
+
+@mixin kbq-hint-theme() {
+    .kbq-hint {
+        &.kbq-contrast-fade {
+            @include kbq-hint-color(fill-text-on, fade-contrast);
+        }
+
+        &.kbq-success {
+            @include kbq-hint-color(fill-text-on, success);
+        }
+
+        &.kbq-warning {
+            @include kbq-hint-color(fill-text-on, warning);
+        }
+
+        &.kbq-error {
+            @include kbq-hint-color(fill-text-on, error);
+        }
+    }
+
+    .kbq-hint.kbq-hint_fill-text-off {
+        &.kbq-contrast-fade {
+            @include kbq-hint-color(fill-text-off, fade-contrast);
+        }
+
+        &.kbq-success {
+            @include kbq-hint-color(fill-text-off, success);
+        }
+
+        &.kbq-warning {
+            @include kbq-hint-color(fill-text-off, warning);
+        }
+
+        &.kbq-error {
+            @include kbq-hint-color(fill-text-off, error);
+        }
+    }
+}
+
+@mixin kbq-hint-typography() {
+    .kbq-hint .kbq-hint__text {
+        @include kbq-typography-css-variables(hint, normal-text);
+    }
+
+    .kbq-hint.kbq-hint_compact .kbq-hint__text {
+        @include kbq-typography-css-variables(hint, compact-text);
+    }
+}

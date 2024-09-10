@@ -8,5 +8,6 @@ runs:
       run: |
         yarn run build:docs-examples-module
         yarn run build:docs-examples
-        yarn run build:docs-content && yarn run build:package-docs-content
+        yarn run build:docs-content
+        yarn run build:package-docs-content
         yarn run docs:build
