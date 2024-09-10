@@ -9,7 +9,6 @@
 @use '../../divider/divider-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
-@use '../../form-field/hint-theme' as *;
 @use '../../icon/icon-theme' as *;
 @use '../../icon/icon-item-theme' as *;
 @use '../../icon/icon-button-theme' as *;
@@ -54,7 +53,6 @@
     @include kbq-divider-theme($theme);
     @include kbq-empty-state-theme($theme);
     @include kbq-file-upload-theme($theme);
-    @include kbq-hint-theme($theme);
     @include kbq-forms-theme($theme);
     @include kbq-highlight-theme($theme);
     @include kbq-icon-theme($theme);
@@ -105,7 +103,6 @@
     @include kbq-code-block-typography($config);
     @include kbq-empty-state-typography($config);
     @include kbq-dl-typography($config);
-    @include kbq-hint-typography($config);
     @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
     @include kbq-input-typography($config);

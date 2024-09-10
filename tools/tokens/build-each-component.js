@@ -22,7 +22,8 @@ const componentsWithCss = [
     'checkbox',
     'datepicker',
     'dropdown',
-    'form-field'
+    'form-field',
+    'hint'
 ];
 
 const styleDictionaryConfig = {

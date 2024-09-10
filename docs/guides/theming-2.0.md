@@ -63,6 +63,7 @@
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
+-   [hint](/packages/components/form-field/hint-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

@@ -32,7 +32,8 @@ const componentAliases = {
     checkbox: [
         { path: 'checkbox/checkbox-tokens.scss', aliasName: 'checkbox' },
         { path: 'core/selection/pseudo-checkbox/pseudo-checkbox-tokens.scss', aliasName: 'pseudo-checkbox' }
-    ]
+    ],
+    hint: 'form-field/hint-tokens.scss'
 };
 
 const resolvePath = (componentName) =>

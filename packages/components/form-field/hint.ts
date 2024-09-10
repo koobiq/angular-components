@@ -21,7 +21,7 @@ export const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase = mixinColor(Kb
             <ng-content />
         </span>
     `,
-    styleUrls: ['hint.scss'],
+    styleUrls: ['hint.scss', 'hint-tokens.scss'],
     inputs: ['color'],
     host: {
         class: 'kbq-hint',
