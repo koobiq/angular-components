@@ -59,7 +59,8 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
         '../input/input.scss',
         '../timepicker/timepicker.scss',
         '../datepicker/datepicker-input.scss',
-        '../textarea/textarea.scss'
+        '../textarea/textarea.scss',
+        'form-field-tokens.scss'
     ],
     host: {
         class: 'kbq-form-field',

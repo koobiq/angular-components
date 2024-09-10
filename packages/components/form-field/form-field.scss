@@ -5,10 +5,9 @@
 
 @use '../core/forms/forms';
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './form-field-theme' as *;
 
 .kbq-form-field {
     position: relative;
@@ -143,3 +142,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-password-hint {
     margin-top: kbq-css-variable(form-field-hint-size-gap);
 }
+
+@include kbq-form-field-theme();
+@include kbq-form-field-typography();

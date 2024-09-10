@@ -62,6 +62,7 @@
 -   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
+-   [form-field](/packages/components/form-field/form-field-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 
