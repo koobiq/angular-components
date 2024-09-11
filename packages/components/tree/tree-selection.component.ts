@@ -93,7 +93,7 @@ interface SelectionModelOption {
     selector: 'kbq-tree-selection',
     exportAs: 'kbqTreeSelection',
     template: '<ng-container kbqTreeNodeOutlet />',
-    styleUrls: ['./tree-selection.scss'],
+    styleUrls: ['./tree-selection.scss', 'tree-tokens.scss'],
     host: {
         class: 'kbq-tree-selection',
 

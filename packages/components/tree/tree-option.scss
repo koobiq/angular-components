@@ -5,6 +5,8 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
+@use './tree-theme' as *;
+
 .kbq-tree-option {
     @include common.kbq-no-select;
 
@@ -66,3 +68,6 @@
         }
     }
 }
+
+@include kbq-tree-theme();
+@include kbq-tree-typography();
