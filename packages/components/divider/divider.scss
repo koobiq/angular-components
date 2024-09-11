@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './divider-theme' as *;
+
 .kbq-divider {
     display: block;
     margin: 0;
@@ -28,3 +30,5 @@
         }
     }
 }
+
+@include kbq-divider-theme();

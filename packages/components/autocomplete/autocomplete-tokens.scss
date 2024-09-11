@@ -6,8 +6,7 @@
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-select-panel-dropdown-background: hsla(229, 15%, 100%, 100%);
-    --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
+    --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%), 0 3px 8px hsla(229, 15%, 6%, 12%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {

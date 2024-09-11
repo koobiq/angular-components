@@ -8,7 +8,6 @@
 @use '../../checkbox/checkbox-theme' as *;
 @use '../../code-block/code-block-theme' as *;
 @use '../../datepicker/datepicker-theme' as *;
-@use '../../divider/divider-theme' as *;
 @use '../../dropdown/dropdown-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
@@ -56,7 +55,6 @@
     @include kbq-code-block-theme($theme);
     @include kbq-datepicker-theme($theme);
     @include kbq-dl-theme($theme);
-    @include kbq-divider-theme($theme);
     @include kbq-dropdown-theme($theme);
     @include kbq-empty-state-theme($theme);
     @include kbq-form-field-theme($theme);
