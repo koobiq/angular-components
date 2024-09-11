@@ -21,6 +21,7 @@ const componentsWithCss = [
     'button-toggle',
     'checkbox',
     'datepicker',
+    'description-list',
     'dropdown',
     'form-field',
     'hint',

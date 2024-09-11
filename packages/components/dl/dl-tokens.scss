@@ -1,0 +1,30 @@
+.kbq-description-list {
+    --kbq-description-list-size-horizontal-content-gap-horizontal: 16px;
+    --kbq-description-list-size-horizontal-gap-vertical: 16px;
+    --kbq-description-list-size-vertical-content-gap-vertical: 2px;
+    --kbq-description-list-size-vertical-gap-vertical: 12px;
+    --kbq-description-list-font-term-font-size: 14px;
+    --kbq-description-list-font-term-line-height: 20px;
+    --kbq-description-list-font-term-letter-spacing: -0.006em;
+    --kbq-description-list-font-term-font-weight: normal;
+    --kbq-description-list-font-term-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-description-list-font-term-text-transform: null;
+    --kbq-description-list-font-term-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-description-list-font-description-font-size: 14px;
+    --kbq-description-list-font-description-line-height: 20px;
+    --kbq-description-list-font-description-letter-spacing: -0.006em;
+    --kbq-description-list-font-description-font-weight: normal;
+    --kbq-description-list-font-description-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-description-list-font-description-text-transform: null;
+    --kbq-description-list-font-description-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-description-list-term-color: hsla(229, 15%, 50%, 100%);
+    --kbq-description-list-description-color: hsla(229, 15%, 15%, 100%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-description-list-term-color: hsla(229, 15%, 50%, 100%);
+    --kbq-description-list-description-color: hsla(229, 15%, 80%, 100%);
+}

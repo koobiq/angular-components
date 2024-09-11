@@ -34,6 +34,7 @@ const componentAliases = {
         { path: 'checkbox/checkbox-tokens.scss', aliasName: 'checkbox' },
         { path: 'core/selection/pseudo-checkbox/pseudo-checkbox-tokens.scss', aliasName: 'pseudo-checkbox' }
     ],
+    'description-list': 'dl/dl-tokens.scss',
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
     'icon-item': 'icon/icon-item-tokens.scss'
