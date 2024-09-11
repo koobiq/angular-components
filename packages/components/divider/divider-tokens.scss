@@ -1,0 +1,14 @@
+.kbq-divider {
+    --kbq-divider-size-horizontal-width: 1px;
+    --kbq-divider-size-horizontal-margin-vertical: 4px;
+    --kbq-divider-size-vertical-width: 1px;
+    --kbq-divider-size-vertical-margin-horizontal: 4px;
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-divider-color: hsla(229, 15%, 6%, 12%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-divider-color: hsla(229, 15%, 22%, 100%);
+}
