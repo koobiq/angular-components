@@ -4,31 +4,29 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-empty-state-theme($theme) {
-    $empty-state: map.get($theme, components, empty-state);
-
+@mixin kbq-empty-state-theme() {
     .kbq-empty-state_normal-color {
         .kbq-empty-state-title {
-            color: kbq-css-variable(empty-state-title, map.get($empty-state, title));
+            color: kbq-css-variable(empty-state-title);
         }
 
         .kbq-empty-state-text {
-            color: kbq-css-variable(empty-state-title, map.get($empty-state, title));
+            color: kbq-css-variable(empty-state-title);
         }
     }
 
     .kbq-empty-state_error-color {
         .kbq-empty-state-title {
-            color: kbq-css-variable(foreground-error, map.get($theme, foreground, error));
+            color: kbq-css-variable(foreground-error);
         }
 
         .kbq-empty-state-text {
-            color: kbq-css-variable(foreground-error, map.get($theme, foreground, error));
+            color: kbq-css-variable(foreground-error);
         }
     }
 }
 
-@mixin kbq-empty-state-typography($config) {
+@mixin kbq-empty-state-typography() {
     .kbq-empty-state-title,
     .kbq-empty-state-text {
         text-align: center;
