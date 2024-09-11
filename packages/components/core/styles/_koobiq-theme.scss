@@ -31,7 +31,6 @@
 @use '../../toggle/toggle-theme' as *;
 @use '../../tooltip/tooltip-theme' as *;
 @use '../../tree-select/tree-select-theme' as *;
-@use '../../tree/tree-theme' as *;
 @use '../../table/table-theme' as *;
 @use '../forms/forms-theme' as *;
 @use '../option/option-theme' as *;
@@ -76,7 +75,6 @@
     @include kbq-toggle-theme($theme);
     @include kbq-tooltip-theme($theme);
     @include kbq-tree-select-theme($theme);
-    @include kbq-tree-theme($theme);
     @include kbq-table-theme($theme);
 }
 
@@ -118,7 +116,6 @@
     @include kbq-toggle-typography($config);
     @include kbq-tooltip-typography($config);
     @include kbq-tree-select-typography($config);
-    @include kbq-tree-typography($config);
     @include kbq-table-typography($config);
 
     @include kbq-markdown-typography($md-config);
