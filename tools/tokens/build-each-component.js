@@ -22,6 +22,7 @@ const componentsWithCss = [
     'checkbox',
     'datepicker',
     'dropdown',
+    'file-upload',
     'form-field',
     'hint',
     'icon',

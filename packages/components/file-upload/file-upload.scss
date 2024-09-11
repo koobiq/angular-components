@@ -1,6 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
 
+@use './file-upload-theme' as *;
+
 .kbq-file-upload {
     box-sizing: border-box;
     display: flex;
@@ -31,3 +33,6 @@
         }
     }
 }
+
+@include kbq-file-upload-theme();
+@include kbq-file-upload-typography();

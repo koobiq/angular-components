@@ -4,81 +4,45 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-file-upload-theme($theme) {
-    $file-upload: map.get($theme, components, file-upload);
-
+@mixin kbq-file-upload-theme() {
     .kbq-file-upload {
         .kbq-focused,
         .kbq-link.kbq-focused {
-            border: 2px solid
-                kbq-css-variable(
-                    file-upload-single-states-focused-focus-outline,
-                    map.get($file-upload, single, states, focused)
-                );
+            border: 2px solid kbq-css-variable(file-upload-single-states-focused-focus-outline);
         }
     }
 
     .kbq-single-file-upload {
         .kbq-file-upload {
             // FIXME: move to mixin kbq-file-upload-state
-            background-color: kbq-css-variable(
-                file-upload-single-default-container-background,
-                map.get($file-upload, single, default, background)
-            );
-            border-color: kbq-css-variable(
-                file-upload-single-default-container-border,
-                map.get($file-upload, single, default, border)
-            ) !important;
+            background-color: kbq-css-variable(file-upload-single-default-container-background);
+            border-color: kbq-css-variable(file-upload-single-default-container-border) !important;
 
             &.dragover {
-                background-color: kbq-css-variable(
-                    file-upload-single-states-on-drag-container-background,
-                    map.get($file-upload, single, states, on-drag, background)
-                );
-                border-color: kbq-css-variable(
-                    file-upload-single-states-on-drag-container-border,
-                    map.get($file-upload, single, states, on-drag, border)
-                ) !important;
+                background-color: kbq-css-variable(file-upload-single-states-on-drag-container-background);
+                border-color: kbq-css-variable(file-upload-single-states-on-drag-container-border) !important;
             }
 
             &.kbq-error:not(.kbq-disabled) {
                 &:not(.dragover) {
-                    background-color: kbq-css-variable(
-                        file-upload-single-states-error-container-background,
-                        map.get($file-upload, single, states, error, background)
-                    );
-                    border-color: kbq-css-variable(
-                        file-upload-single-states-error-container-border,
-                        map.get($file-upload, single, states, error, border)
-                    ) !important;
+                    background-color: kbq-css-variable(file-upload-single-states-error-container-background);
+                    border-color: kbq-css-variable(file-upload-single-states-error-container-border) !important;
                 }
 
                 *,
                 .kbq-icon {
-                    color: kbq-css-variable(
-                        file-upload-single-states-error-text-block-color,
-                        map.get($file-upload, single, states, error, text-block)
-                    );
+                    color: kbq-css-variable(file-upload-single-states-error-text-block-color);
                 }
             }
 
             &.kbq-disabled {
-                background-color: kbq-css-variable(
-                    file-upload-single-states-disabled-container-background,
-                    map.get($file-upload, single, states, disabled, background)
-                );
-                border-color: kbq-css-variable(
-                    file-upload-single-states-disabled-container-border,
-                    map.get($file-upload, single, states, disabled, border)
-                ) !important;
+                background-color: kbq-css-variable(file-upload-single-states-disabled-container-background);
+                border-color: kbq-css-variable(file-upload-single-states-disabled-container-border) !important;
 
                 &,
                 .kbq-icon,
                 .kbq-link {
-                    color: kbq-css-variable(
-                        file-upload-single-states-disabled-container-border,
-                        map.get($file-upload, single, states, disabled, border)
-                    );
+                    color: kbq-css-variable(file-upload-single-states-disabled-container-border);
                 }
             }
         }
@@ -86,85 +50,47 @@
 
     .kbq-multiple-file-upload {
         .kbq-file-upload {
-            background-color: kbq-css-variable(
-                file-upload-multiple-default-container-background,
-                map.get($file-upload, multiple, default, background)
-            );
-            border-color: kbq-css-variable(
-                file-upload-multiple-default-container-border,
-                map.get($file-upload, multiple, default, border)
-            ) !important;
+            background-color: kbq-css-variable(file-upload-multiple-default-container-background);
+            border-color: kbq-css-variable(file-upload-multiple-default-container-border) !important;
 
             .btn-upload {
-                border-top-color: kbq-css-variable(
-                    file-upload-multiple-default-container-border,
-                    map.get($file-upload, multiple, default, border)
-                );
+                border-top-color: kbq-css-variable(file-upload-multiple-default-container-border);
             }
 
             .kbq-file-multiple-uploaded__header {
-                border-bottom-color: kbq-css-variable(
-                    file-upload-multiple-default-grid-divider-color,
-                    map.get($file-upload, multiple, default, grid-divider)
-                );
-
-                .kbq-file-multiple-uploaded__header-inner {
-                    //color: map.get(map.get($multiple, default), border);
-                }
+                border-bottom-color: kbq-css-variable(file-upload-multiple-default-grid-divider-color);
             }
 
             &.dragover {
-                background-color: kbq-css-variable(
-                    file-upload-multiple-states-on-drag-container-background,
-                    map.get($file-upload, multiple, states, on-drag, background)
-                );
-                border-color: kbq-css-variable(
-                    file-upload-multiple-states-on-drag-container-border,
-                    map.get($file-upload, multiple, states, on-drag, border)
-                ) !important;
+                background-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-background);
+                border-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-border) !important;
 
                 .kbq-file-multiple-uploaded__header {
                     border-bottom-color: kbq-css-variable(
-                        file-upload-multiple-states-on-drag-container-background,
-                        map.get($file-upload, multiple, states, on-drag, background)
+                        file-upload-multiple-states-on-drag-container-background
                     ) !important;
                 }
 
                 &.selected {
                     .dropzone {
-                        border-top-color: kbq-css-variable(
-                            file-upload-multiple-states-on-drag-container-border,
-                            map.get($file-upload, multiple, states, on-drag, border)
-                        );
+                        border-top-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-border);
                     }
                 }
             }
 
             &.kbq-disabled {
-                background-color: kbq-css-variable(
-                    file-upload-multiple-states-disabled-container-background,
-                    map.get($file-upload, multiple, states, disabled, background)
-                );
-                border-color: kbq-css-variable(
-                    file-upload-multiple-states-disabled-container-border,
-                    map.get($file-upload, multiple, states, disabled, border)
-                ) !important;
+                background-color: kbq-css-variable(file-upload-multiple-states-disabled-container-background);
+                border-color: kbq-css-variable(file-upload-multiple-states-disabled-container-border) !important;
 
                 &,
                 .kbq-icon,
                 .kbq-link {
-                    color: kbq-css-variable(
-                        file-upload-multiple-states-disabled-container-border,
-                        map.get($file-upload, multiple, states, disabled, border)
-                    );
+                    color: kbq-css-variable(file-upload-multiple-states-disabled-container-border);
                 }
 
                 &.selected {
                     .dropzone {
-                        border-top-color: kbq-css-variable(
-                            file-upload-multiple-states-disabled-container-border,
-                            map.get($file-upload, multiple, states, disabled, border)
-                        );
+                        border-top-color: kbq-css-variable(file-upload-multiple-states-disabled-container-border);
                     }
                 }
             }
@@ -173,27 +99,18 @@
                 .kbq-file-upload__row.error {
                     *,
                     .kbq-icon {
-                        color: kbq-css-variable(
-                            file-upload-multiple-states-error-text-block-color,
-                            map.get($file-upload, multiple, states, error, text-block)
-                        );
+                        color: kbq-css-variable(file-upload-multiple-states-error-text-block-color);
                     }
                 }
             }
 
             .multiple__uploaded-item {
                 & .kbq-file-upload__file .kbq-icon {
-                    color: kbq-css-variable(
-                        file-upload-multiple-default-left-icon-color,
-                        map.get($file-upload, multiple, default, left-icon)
-                    );
+                    color: kbq-css-variable(file-upload-multiple-default-left-icon-color);
                 }
 
                 & .kbq-file-upload__action .kbq-icon {
-                    color: kbq-css-variable(
-                        file-upload-multiple-default-icon-button-color,
-                        map.get($file-upload, multiple, default, icon-button)
-                    );
+                    color: kbq-css-variable(file-upload-multiple-default-icon-button-color);
                 }
             }
         }
@@ -202,12 +119,12 @@
     .kbq-single-file-upload,
     .kbq-multiple-file-upload {
         .kbq-file-upload__hint:not(.kbq-error) {
-            color: kbq-css-variable(form-field-hint-text, map.get($theme, components, form-field-hint, text));
+            color: kbq-css-variable(form-field-hint-text);
         }
     }
 }
 
-@mixin kbq-file-upload-typography($config) {
+@mixin kbq-file-upload-typography() {
     .kbq-single-file-upload {
         & .file-item__text-wrapper,
         & .dropzone__text {
