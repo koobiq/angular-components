@@ -8,7 +8,8 @@ const filter = {
     'pseudo-checkbox': 'checkbox',
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
-    'icon-button': 'states-focused-color'
+    'icon-button': 'states-focused-color',
+    'file-upload': 'form-field-hint-text'
 };
 
 const componentNameMapping = {

@@ -98,6 +98,7 @@
     --kbq-file-upload-multiple-states-disabled-left-icon-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-multiple-states-disabled-text-block-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 15%, 32%);
+    --kbq-form-field-hint-text: hsla(229, 15%, 50%, 100%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
@@ -146,4 +147,5 @@
     --kbq-file-upload-multiple-states-disabled-left-icon-color: hsla(229, 15%, 30%, 100%);
     --kbq-file-upload-multiple-states-disabled-text-block-color: hsla(229, 15%, 40%, 100%);
     --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 50%, 32%);
+    --kbq-form-field-hint-text: hsla(229, 15%, 60%, 100%);
 }
