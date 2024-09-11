@@ -3,6 +3,8 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
+@use './code-block-theme' as *;
+
 $tokens: meta.module-variables(tokens) !default;
 
 $border-radius: kbq-css-variable(code-block-size-container-border-radius);
@@ -199,3 +201,6 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         border-radius: kbq-css-variable(button-size-border-radius);
     }
 }
+
+@include kbq-code-block-theme();
+@include kbq-code-block-typography();
