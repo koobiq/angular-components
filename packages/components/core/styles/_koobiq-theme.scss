@@ -29,7 +29,6 @@
 @use '../../timezone/timezone-option-theme' as *;
 @use '../../toast/toast-theme' as *;
 @use '../../toggle/toggle-theme' as *;
-@use '../../tooltip/tooltip-theme' as *;
 @use '../../tree-select/tree-select-theme' as *;
 @use '../../tree/tree-theme' as *;
 @use '../../table/table-theme' as *;
@@ -74,7 +73,6 @@
     @include kbq-timezone-option-theme($theme);
     @include kbq-toast-theme($theme);
     @include kbq-toggle-theme($theme);
-    @include kbq-tooltip-theme($theme);
     @include kbq-tree-select-theme($theme);
     @include kbq-tree-theme($theme);
     @include kbq-table-theme($theme);
@@ -116,7 +114,6 @@
     @include kbq-timezone-option-typography($config);
     @include kbq-toast-typography($config);
     @include kbq-toggle-typography($config);
-    @include kbq-tooltip-typography($config);
     @include kbq-tree-select-typography($config);
     @include kbq-tree-typography($config);
     @include kbq-table-typography($config);

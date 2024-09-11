@@ -70,6 +70,7 @@
 -   [icon-item](/packages/components/icon/icon-item-tokens.scss)
 -   [input](/packages/components/input/input-tokens.scss)
 -   [link](/packages/components/link/link-tokens.scss)
+-   [tooltip](/packages/components/tooltip/tooltip-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 
