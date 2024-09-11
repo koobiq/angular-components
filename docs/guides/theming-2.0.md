@@ -61,6 +61,7 @@
 -   [button-toggle](/packages/components/button-toggle/button-toggle-tokens.scss)
 -   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
+-   [divider](/packages/components/divider/divider-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
 -   [hint](/packages/components/form-field/hint-tokens.scss)
