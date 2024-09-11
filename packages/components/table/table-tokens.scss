@@ -19,3 +19,19 @@
     --kbq-table-font-body-text-transform: null;
     --kbq-table-font-body-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
 }
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-foreground-contrast: hsla(229, 15%, 15%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 50%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 60%, 100%);
+    --kbq-line-contrast-less: hsla(229, 15%, 6%, 12%);
+    --kbq-states-background-transparent-hover: hsla(229, 15%, 50%, 8%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-foreground-contrast: hsla(229, 15%, 80%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 60%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 45%, 100%);
+    --kbq-line-contrast-less: hsla(229, 15%, 22%, 100%);
+    --kbq-states-background-transparent-hover: hsla(229, 15%, 50%, 16%);
+}
