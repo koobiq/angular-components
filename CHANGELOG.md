@@ -1,3 +1,21 @@
+# 17.5.0 (2024-09-11)
+
+### Koobiq
+
+ * bug fix  api-gen build warnings ([#253](https://github.com/koobiq/angular-components/issues/253)) ([791114a](https://github.com/koobiq/angular-components/commit/791114a957d7e089cdcad1b84fb3124a6375c2da))
+ * bug fix  **button-toggle:** focus styling ([#DS-2776](https://github.com/koobiq/angular-components/issues/issue/DS-2776)) ([#263](https://github.com/koobiq/angular-components/issues/263)) ([a5ce429](https://github.com/koobiq/angular-components/commit/a5ce42984ae3ba53afd1ce647dd2fe00c8cba05a))
+ * bug fix  **markdowm:** headings margins ([#DS-2848](https://github.com/koobiq/angular-components/issues/issue/DS-2848)) ([#259](https://github.com/koobiq/angular-components/issues/259)) ([dced216](https://github.com/koobiq/angular-components/commit/dced2167cf2804990d36997f399bb86a4dbcb6d8))
+ * bug fix  **modal:** afterClose return type ([#DS-2793](https://github.com/koobiq/angular-components/issues/issue/DS-2793)) ([#257](https://github.com/koobiq/angular-components/issues/257)) ([91100a5](https://github.com/koobiq/angular-components/commit/91100a54d77a6ee0dbb7d7774e08d74196fc97c0))
+ * feature  added components-experimental section ([#258](https://github.com/koobiq/angular-components/issues/258)) ([ef902f0](https://github.com/koobiq/angular-components/commit/ef902f0d55e3c5d4748618d41e30272fe3806fb1))
+ * feature  added default type value for modal return value ([#254](https://github.com/koobiq/angular-components/issues/254)) ([c87daed](https://github.com/koobiq/angular-components/commit/c87daed84ff0fe74f5170ba549e58e60a401375a))
+ * feature  **alert,visual:** theming with CSS variables ([#DS-2679](https://github.com/koobiq/angular-components/issues/issue/DS-2679))  ([#208](https://github.com/koobiq/angular-components/issues/208)) ([fe332ad](https://github.com/koobiq/angular-components/commit/fe332ad6092bdfd14946be25f3c9ea12123a11fc))
+ * feature  **checkbox,button-toggle,button,badge,autocomplete:** components theming with CSS-vars ([#DS-2805](https://github.com/koobiq/angular-components/issues/issue/DS-2805)) ([#262](https://github.com/koobiq/angular-components/issues/262)) ([223d195](https://github.com/koobiq/angular-components/commit/223d195d00de47570bfd50ae88af3cdbcb5fb655))
+ * feature  **docs,chore:** added theme-less tokens,updated lines/contrast-fade ([#DS-2803](https://github.com/koobiq/angular-components/issues/issue/DS-2803)) ([#261](https://github.com/koobiq/angular-components/issues/261)) ([3db5611](https://github.com/koobiq/angular-components/commit/3db5611a65fb3210f69a88de140e5c8f48ffcf23))
+ * feature  **modal:** added KBQ_MODAL_DATA ([#DS-2715](https://github.com/koobiq/angular-components/issues/issue/DS-2715)) ([#264](https://github.com/koobiq/angular-components/issues/264)) ([1128223](https://github.com/koobiq/angular-components/commit/11282236a1bfaf4c71c5d529936e1ea602922ad6))
+ * feature  **pop-up:** refactoring KbqPopUpTrigger, KbqPopUp ([#DS-2852](https://github.com/koobiq/angular-components/issues/issue/DS-2852)) ([#260](https://github.com/koobiq/angular-components/issues/260)) ([b50ba3c](https://github.com/koobiq/angular-components/commit/b50ba3c4712851280748bb34ae0d487dd3e46a9b))
+ * feature  updated package scripts ([#249](https://github.com/koobiq/angular-components/issues/249)) ([45e1f91](https://github.com/koobiq/angular-components/commit/45e1f91aa5c2b6002e5f4adf9f74d1d24d2ec6f0))
+ * feature  **visual:** components theming with CSS-vars ([#DS-2817](https://github.com/koobiq/angular-components/issues/issue/DS-2817) ([#267](https://github.com/koobiq/angular-components/issues/267)) ([34dc444](https://github.com/koobiq/angular-components/commit/34dc4448c40b3e12290aa5c67ad4e4f43430d578))
+
 # 17.4.0 (2024-09-04)
 
 ### Koobiq
