@@ -125,11 +125,13 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
             throw Error(`Unknown [rule]=${this.rule}`);
         }
 
-        this.formField.control.stateChanges.subscribe(this.checkValue);
+        setTimeout(() => {
+            this.formField.control.stateChanges.subscribe(this.checkValue);
 
-        (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
-            this.checked = this.checkRule(this.control.value);
-            this.hasError = !this.checkRule(this.control.value);
+            (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
+                this.checked = this.checkRule(this.control.value);
+                this.hasError = !this.checkRule(this.control.value);
+            });
         });
     }
 
