@@ -28,7 +28,8 @@ const componentsWithCss = [
     'icon-button',
     'icon-item',
     'input',
-    'link'
+    'link',
+    'table'
 ];
 
 const styleDictionaryConfig = {

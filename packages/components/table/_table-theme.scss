@@ -4,17 +4,13 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-table-theme($theme) {
-    $foreground: map.get($theme, foreground);
-    $states-background: map.get($theme, states, background);
-    $line: map.get($theme, line);
-
+@mixin kbq-table-theme() {
     .kbq-table {
         & > thead {
-            color: kbq-css-variable(foreground-contrast-secondary, map.get($foreground, contrast-secondary));
+            color: kbq-css-variable(foreground-contrast-secondary);
 
             & > tr > th {
-                border-bottom-color: kbq-css-variable(line-contrast-less, map.get($line, contrast-less));
+                border-bottom-color: kbq-css-variable(line-contrast-less);
             }
         }
 
@@ -22,14 +18,11 @@
             & > tr {
                 & > th,
                 & > td {
-                    color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
+                    color: kbq-css-variable(foreground-contrast);
                 }
 
                 &:hover td {
-                    background-color: kbq-css-variable(
-                        states-background-transparent-hover,
-                        map.get($states-background, transparent-hover)
-                    );
+                    background-color: kbq-css-variable(states-background-transparent-hover);
                 }
             }
         }
@@ -38,14 +31,14 @@
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: kbq-css-variable(line-contrast-less, map.get($line, contrast-less));
+                    border-bottom-color: kbq-css-variable(line-contrast-less);
                 }
             }
         }
     }
 }
 
-@mixin kbq-table-typography($config) {
+@mixin kbq-table-typography() {
     .kbq-table {
         & > thead {
             & > tr > th {
