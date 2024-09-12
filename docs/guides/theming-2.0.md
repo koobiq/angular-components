@@ -62,6 +62,7 @@
 -   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
 -   [code-block](/packages/components/code-block/code-block-tokens.scss)
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
+-   [divider](/packages/components/divider/divider-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
 -   [hint](/packages/components/form-field/hint-tokens.scss)
@@ -70,6 +71,8 @@
 -   [icon-item](/packages/components/icon/icon-item-tokens.scss)
 -   [input](/packages/components/input/input-tokens.scss)
 -   [link](/packages/components/link/link-tokens.scss)
+-   [toast](/packages/components/toast/toast-tokens.scss)
+-   [toggle](/packages/components/toggle/toggle-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

@@ -22,6 +22,7 @@ const componentsWithCss = [
     'checkbox',
     'code-block',
     'datepicker',
+    'divider',
     'dropdown',
     'form-field',
     'hint',
@@ -29,7 +30,9 @@ const componentsWithCss = [
     'icon-button',
     'icon-item',
     'input',
-    'link'
+    'link',
+    'toast',
+    'toggle'
 ];
 
 const styleDictionaryConfig = {
