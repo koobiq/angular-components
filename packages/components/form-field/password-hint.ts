@@ -81,7 +81,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     checked: boolean = false;
 
     get icon(): string {
-        return this.checked ? 'kbq-check_16' : 'kbq-xmark_16';
+        return this.checked ? 'kbq-check-s_16' : 'kbq-xmark_16';
     }
 
     private checkRule: (value: string) => boolean;

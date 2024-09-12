@@ -143,7 +143,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'check_16',
-        replaceWith: 'check_16'
+        replaceWith: 'check-s_16'
     },
     {
         replace: 'circle-8_16',
@@ -275,7 +275,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'minus_16',
-        replaceWith: 'minus_16'
+        replaceWith: 'minus-s_16'
     },
     {
         replace: 'new-tab_16',
@@ -336,6 +336,10 @@ export const newIconsPackData: ReplaceData[] = [
     {
         replace: 'upload-to-cloud_24',
         replaceWith: 'arrow-up-from-line_24'
+    },
+    {
+        replace: 'arrow-up-from-line_24',
+        replaceWith: 'cloud-arrow-up_24'
     },
     {
         replace: 'upload-to-cloud_32',
