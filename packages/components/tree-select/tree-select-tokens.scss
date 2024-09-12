@@ -1,9 +1,4 @@
 .kbq-tree-select {
-    --kbq-datepicker-size-grid-divider-height: 1px;
-    --kbq-divider-size-horizontal-width: 1px;
-    --kbq-divider-size-horizontal-margin-vertical: 4px;
-    --kbq-divider-size-vertical-width: 1px;
-    --kbq-divider-size-vertical-margin-horizontal: 4px;
     --kbq-select-panel-size-border-radius: 8px;
     --kbq-select-panel-size-max-height: 256px;
     --kbq-select-panel-font-default-font-size: 14px;
@@ -17,24 +12,48 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-foreground-divider: hsla(229, 15%, 6%, 12%);
-    --kbq-datepicker-header-divider: hsla(229, 15%, 6%, 12%);
+    --kbq-error-default: hsla(7, 97%, 50%, 100%);
+    --kbq-foreground-contrast: hsla(229, 15%, 15%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 50%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 60%, 100%);
+    --kbq-foreground-text-disabled: hsla(229, 15%, 70%, 100%);
+    --kbq-icon-button-error-default: hsla(7, 97%, 45%, 100%);
+    --kbq-checkbox-error-default-border: hsla(7, 97%, 45%, 100%);
+    --kbq-checkbox-error-default-color: hsla(0, 0%, 100%, 100%);
+    --kbq-checkbox-error-default-text: hsla(229, 15%, 15%, 100%);
+    --kbq-checkbox-error-default-background: hsla(7, 97%, 99%, 100%);
+    --kbq-checkbox-error-default-caption: hsla(229, 15%, 50%, 100%);
     --kbq-divider-color: hsla(229, 15%, 6%, 12%);
-    --kbq-file-upload-multiple-default-grid-divider-color: hsla(229, 15%, 6%, 12%);
-    --kbq-file-upload-multiple-states-on-drag-grid-divider-color: hsla(216, 100%, 65%, 100%);
-    --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 15%, 32%);
+    --kbq-radio-error-default-outer-circle-border: hsla(7, 97%, 45%, 100%);
+    --kbq-radio-error-default-outer-circle-background: hsla(7, 97%, 99%, 100%);
+    --kbq-radio-error-default-inner-circle-background: transparent;
     --kbq-select-panel-dropdown-background: hsla(229, 15%, 100%, 100%);
     --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
         0 3px 8px hsla(229, 15%, 6%, 12%);
+    --kbq-toggle-error-default-border: hsla(7, 97%, 45%, 100%);
+    --kbq-toggle-error-default-background: hsla(7, 97%, 99%, 100%);
+    --kbq-toggle-error-default-circle-background: hsla(7, 97%, 45%, 100%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-foreground-divider: hsla(229, 15%, 22%, 100%);
-    --kbq-datepicker-header-divider: hsla(229, 15%, 22%, 100%);
+    --kbq-error-default: hsla(7, 97%, 50%, 100%);
+    --kbq-foreground-contrast: hsla(229, 15%, 80%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 60%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 45%, 100%);
+    --kbq-foreground-text-disabled: hsla(229, 15%, 70%, 100%);
+    --kbq-icon-button-error-default: hsla(7, 97%, 60%, 100%);
+    --kbq-checkbox-error-default-border: hsla(7, 97%, 35%, 100%);
+    --kbq-checkbox-error-default-color: hsla(0, 0%, 100%, 100%);
+    --kbq-checkbox-error-default-text: hsla(229, 15%, 80%, 100%);
+    --kbq-checkbox-error-default-background: hsla(7, 97%, 6%, 100%);
+    --kbq-checkbox-error-default-caption: hsla(229, 15%, 60%, 100%);
     --kbq-divider-color: hsla(229, 15%, 22%, 100%);
-    --kbq-file-upload-multiple-default-grid-divider-color: hsla(229, 15%, 22%, 100%);
-    --kbq-file-upload-multiple-states-on-drag-grid-divider-color: hsla(216, 100%, 30%, 100%);
-    --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 50%, 32%);
+    --kbq-radio-error-default-outer-circle-border: hsla(7, 97%, 35%, 100%);
+    --kbq-radio-error-default-outer-circle-background: hsla(7, 97%, 6%, 100%);
+    --kbq-radio-error-default-inner-circle-background: transparent;
     --kbq-select-panel-dropdown-background: hsla(229, 15%, 15%, 100%);
     --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
+    --kbq-toggle-error-default-border: hsla(7, 97%, 35%, 100%);
+    --kbq-toggle-error-default-background: hsla(7, 97%, 6%, 100%);
+    --kbq-toggle-error-default-circle-background: hsla(7, 97%, 60%, 100%);
 }

@@ -9,7 +9,13 @@ const filter = {
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
     'icon-button': 'states-focused-color',
-    'tree-select': ['select-panel', 'divider']
+    'tree-select': [
+        'select-panel',
+        'kbq-divider-color',
+        'foreground-contrast',
+        'error-default',
+        'foreground-text-disabled'
+    ]
 };
 
 const componentNameMapping = {
