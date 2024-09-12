@@ -60,7 +60,7 @@
 -   [button](/packages/components/button/button-tokens.scss)
 -   [button-toggle](/packages/components/button-toggle/button-toggle-tokens.scss)
 -   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
--   [code-block](/packages/components/dropdown/code-block-tokens.scss)
+-   [code-block](/packages/components/code-block/code-block-tokens.scss)
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
