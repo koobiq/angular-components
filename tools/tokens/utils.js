@@ -9,7 +9,8 @@ const filter = {
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
     'icon-button': 'states-focused-color',
-    table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast']
+    table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
+    toggle: 'foreground-text-disabled'
 };
 
 const componentNameMapping = {

@@ -6,7 +6,6 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../../code-block/code-block-theme' as *;
-@use '../../divider/divider-theme' as *;
 @use '../../empty-state/empty-state-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
 @use '../../link/link-theme' as *;
@@ -28,8 +27,6 @@
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
 @use '../../timezone/timezone-option-theme' as *;
-@use '../../toast/toast-theme' as *;
-@use '../../toggle/toggle-theme' as *;
 @use '../../tooltip/tooltip-theme' as *;
 @use '../../tree-select/tree-select-theme' as *;
 @use '../../tree/tree-theme' as *;
@@ -45,7 +42,6 @@
 
     @include kbq-code-block-theme($theme);
     @include kbq-dl-theme($theme);
-    @include kbq-divider-theme($theme);
     @include kbq-empty-state-theme($theme);
     @include kbq-file-upload-theme($theme);
     @include kbq-forms-theme($theme);
@@ -73,8 +69,6 @@
     @include kbq-tabs-theme($theme);
     @include kbq-tag-theme($theme);
     @include kbq-timezone-option-theme($theme);
-    @include kbq-toast-theme($theme);
-    @include kbq-toggle-theme($theme);
     @include kbq-tooltip-theme($theme);
     @include kbq-tree-select-theme($theme);
     @include kbq-tree-theme($theme);
@@ -114,8 +108,6 @@
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography($config);
     @include kbq-timezone-option-typography($config);
-    @include kbq-toast-typography($config);
-    @include kbq-toggle-typography($config);
     @include kbq-tooltip-typography($config);
     @include kbq-tree-select-typography($config);
     @include kbq-tree-typography($config);
