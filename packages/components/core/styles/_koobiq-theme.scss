@@ -7,7 +7,6 @@
 
 @use '../../link/link-theme' as *;
 @use '../../markdown/markdown-theme' as *;
-@use '../../progress-spinner/progress-spinner-theme' as *;
 @use '../../radio/radio-theme' as *;
 @use '../../risk-level/risk-level-theme' as *;
 @use '../../select/select-theme' as *;
@@ -34,7 +33,6 @@
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
-    @include kbq-progress-spinner-theme($theme);
     @include kbq-radio-theme($theme);
     @include kbq-risk-level-theme($theme);
     @include kbq-scrollbar-theme($theme);
@@ -58,7 +56,6 @@
     @include kbq-forms-typography($config);
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);
-    @include kbq-progress-spinner-typography($config);
     @include kbq-radio-typography($config);
     @include kbq-risk-level-typography($config);
     @include kbq-select-typography($config);

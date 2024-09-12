@@ -1,11 +1,8 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/functions/timing';
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './progress-spinner-theme' as *;
 
 @keyframes kbq-progress-spinner-indeterminate {
     100% {
@@ -65,3 +62,6 @@ $tokens: meta.module-variables(tokens) !default;
         stroke-dashoffset: 80%;
     }
 }
+
+@include kbq-progress-spinner-theme();
+@include kbq-progress-spinner-typography();

@@ -41,6 +41,7 @@ const componentsWithCss = [
     'navbar',
     'popover',
     'progress-bar',
+    'progress-spinner',
     'table',
     'textarea',
     'timezone',

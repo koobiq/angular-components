@@ -81,6 +81,7 @@
 -   [navbar](/packages/components/navbar/navbar-tokens.scss)
 -   [popover](/packages/components/popover/popover-tokens.scss)
 -   [progress-bar](/packages/components/progress-bar/progress-bar-tokens.scss)
+-   [progress-spinner](/packages/components/progress-spinner/progress-spinner-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)
