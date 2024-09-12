@@ -38,6 +38,7 @@ const componentsWithCss = [
     'loader-overlay',
     'modal',
     'markdown',
+    'navbar',
     'table',
     'textarea',
     'timezone',
@@ -85,7 +86,12 @@ StyleDictionary.registerFormat({
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
         const baseDictionary = filterTokens(
             dictionary,
-            (token) => token.attributes.type === 'size' || token.attributes.font || token.attributes.item === 'size'
+            (token) =>
+                [token.attributes.type, token.attributes.category, token.attributes.item].some(
+                    (attr) => attr === 'size'
+                ) ||
+                token.attributes.font ||
+                token.attributes.category === 'typography'
         );
         const lightDictionary = filterTokens(dictionary, (token) => token.attributes.light);
         const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);

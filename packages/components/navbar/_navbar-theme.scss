@@ -1,43 +1,34 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-navbar-item($component, $state-name) {
-    $state: map.get($component, $state-name);
-
+@mixin kbq-navbar-item($state-name) {
     &:not(.kbq-navbar-item_has-nested) {
         &:after {
             display: block;
-            background: kbq-css-variable(navbar-item-#{$state-name}-content-background, map.get($state, background));
+            background: kbq-css-variable(navbar-item-#{$state-name}-content-background);
         }
     }
 
     .kbq-navbar-title {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-text, map.get($state, text));
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-text);
     }
 
     & > .kbq-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-left, map.get($state, icon-left)) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-left) !important;
     }
 
     .kbq-navbar-item__arrow-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-right, map.get($state, icon-right)) !important;
+        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-right) !important;
     }
 }
 
-@mixin kbq-navbar-theme($theme) {
-    $navbar: map.get($theme, components, navbar);
-    $item: map.get($navbar, item);
-
+@mixin kbq-navbar-theme() {
     .kbq-navbar,
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        background-color: kbq-css-variable(navbar-background, map.get($navbar, background));
+        background-color: kbq-css-variable(navbar-background);
     }
 
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        border-right: 1px solid kbq-css-variable(navbar-border, map.get($navbar, border));
+        border-right: 1px solid kbq-css-variable(navbar-border);
     }
 
     .kbq-navbar-item,
@@ -45,10 +36,10 @@
     .kbq-navbar-toggle {
         cursor: pointer;
 
-        @include kbq-navbar-item($item, default);
+        @include kbq-navbar-item(default);
 
         &:hover:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item($item, states-hover);
+            @include kbq-navbar-item(states-hover);
         }
 
         &.cdk-focused.cdk-keyboard-focused {
@@ -56,14 +47,13 @@
 
             &:after {
                 display: block;
-                box-shadow: inset 0 0 0 2px
-                    kbq-css-variable(states-line-focus-theme, map.get($theme, states, line, focus-theme));
+                box-shadow: inset 0 0 0 2px kbq-css-variable(states-line-focus-theme);
             }
         }
 
         &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
         &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
-            @include kbq-navbar-item($item, states-selected);
+            @include kbq-navbar-item(states-selected);
         }
 
         &.kbq-navbar-focusable-item {
@@ -71,7 +61,7 @@
         }
 
         &.kbq-disabled {
-            @include kbq-navbar-item($item, states-disabled);
+            @include kbq-navbar-item(states-disabled);
 
             pointer-events: none;
             cursor: default;
@@ -91,7 +81,7 @@
     }
 
     .kbq-navbar-divider {
-        background: kbq-css-variable(line-contrast-less, map.get($theme, line, contrast-less));
+        background: kbq-css-variable(line-contrast-less);
     }
 }
 
@@ -104,7 +94,7 @@ button {
     }
 }
 
-@mixin kbq-navbar-typography($config) {
+@mixin kbq-navbar-typography() {
     .kbq-navbar-title {
         @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
     }

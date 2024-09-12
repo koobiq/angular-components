@@ -16,11 +16,27 @@ const filter = {
     table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
     toggle: 'foreground-text-disabled',
     'tree-select': [
-        'select-panel',
-        'kbq-divider-color',
-        'foreground-contrast',
-        'error-default',
-        'foreground-text-disabled'
+    'select-panel',
+    'kbq-divider-color',
+    'foreground-contrast',
+    'error-default',
+    'foreground-text-disabled'
+    ],
+    navbar: [
+        'states-line-focus-theme',
+        'line-contrast-less',
+        'typography-text-normal-medium',
+        'navbar-item',
+        'size-xxs',
+        'size-xs',
+        'size-s',
+        'size-l',
+        'size-m',
+        'size-xl',
+        'size-xxl',
+        'size-3xl',
+        'size-4xl',
+        'size-5xl'
     ]
 };
 
