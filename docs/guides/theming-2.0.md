@@ -77,6 +77,7 @@
 -   [list](/packages/components/list/list-tokens.scss)
 -   [loader-overlay](/packages/components/loader-overlay/loader-overlay-tokens.scss)
 -   [modal](/packages/components/modal/modal-tokens.scss)
+-   [markdown](/packages/components/markdown/markdown-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)
