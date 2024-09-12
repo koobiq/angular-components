@@ -7,7 +7,6 @@
 
 @use '../../link/link-theme' as *;
 @use '../../markdown/markdown-theme' as *;
-@use '../../risk-level/risk-level-theme' as *;
 @use '../../select/select-theme' as *;
 @use '../../sidepanel/sidepanel-theme' as *;
 @use '../../scrollbar/scrollbar-component-theme' as *;
@@ -32,7 +31,6 @@
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
-    @include kbq-risk-level-theme($theme);
     @include kbq-scrollbar-theme($theme);
     @include kbq-scrollbar-component-theme($theme);
     @include kbq-select-theme($theme);
@@ -54,7 +52,6 @@
     @include kbq-forms-typography($config);
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);
-    @include kbq-risk-level-typography($config);
     @include kbq-select-typography($config);
     @include kbq-sidepanel-typography($config);
     @include kbq-tabs-typography($config);

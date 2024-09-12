@@ -14,7 +14,7 @@ export enum KbqRiskLevelColors {
 @Component({
     selector: 'kbq-risk-level',
     template: '<ng-content />',
-    styleUrls: ['risk-level.component.scss'],
+    styleUrls: ['risk-level.component.scss', 'risk-level-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

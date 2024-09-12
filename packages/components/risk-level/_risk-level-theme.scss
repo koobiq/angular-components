@@ -4,78 +4,74 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-risk-level-filled-color($component, $type, $sub-type, $style-name) {
-    $style: map.get($component, $type, $sub-type, $style-name);
+@mixin kbq-risk-level-filled-color($type, $sub-type, $style-name) {
     $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
     border: transparent;
 
-    color: kbq-css-variable(#{$base}-color, map.get($style, color));
-    background: kbq-css-variable(#{$base}-background, map.get($style, background));
+    color: kbq-css-variable(#{$base}-color);
+    background: kbq-css-variable(#{$base}-background);
 }
 
-@mixin kbq-risk-level-outline-color($component, $type, $sub-type, $style-name) {
-    $style: map.get($component, $type, $sub-type, $style-name);
+@mixin kbq-risk-level-outline-color($type, $sub-type, $style-name) {
     $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
 
-    border-color: kbq-css-variable(#{$base}-border, map.get($style, border));
+    border-color: kbq-css-variable(#{$base}-border);
 
-    color: kbq-css-variable(#{$base}-color, map.get($style, color));
-    background: kbq-css-variable(#{$base}-background, map.get($style, background));
+    color: kbq-css-variable(#{$base}-color);
+    background: kbq-css-variable(#{$base}-background);
 }
 
-@mixin kbq-risk-level-theme($theme) {
-    $risk-level: map.get(map.get($theme, components), risk-level);
-
+@mixin kbq-risk-level-theme() {
     .kbq-risk-level_filled {
         &.kbq-risk-level_fade-contrast {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, contrast);
+            @include kbq-risk-level-filled-color(filled, fade-on, contrast);
         }
 
         &.kbq-risk-level_fade-success {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, success);
+            @include kbq-risk-level-filled-color(filled, fade-on, success);
         }
 
         &.kbq-risk-level_fade-warning {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, warning);
+            @include kbq-risk-level-filled-color(filled, fade-on, warning);
         }
 
         &.kbq-risk-level_fade-error {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-on, error);
+            @include kbq-risk-level-filled-color(filled, fade-on, error);
         }
 
         &.kbq-risk-level_success {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, success);
+            @include kbq-risk-level-filled-color(filled, fade-off, success);
         }
 
         &.kbq-risk-level_warning {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, warning);
+            @include kbq-risk-level-filled-color(filled, fade-off, warning);
         }
 
         &.kbq-risk-level_error {
-            @include kbq-risk-level-filled-color($risk-level, filled, fade-off, error);
+            @include kbq-risk-level-filled-color(filled, fade-off, error);
         }
     }
 
     .kbq-risk-level_outline {
         &.kbq-risk-level_fade-contrast {
-            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, contrast);
+            @include kbq-risk-level-outline-color(outline, fade-on, contrast);
         }
 
         &.kbq-risk-level_fade-success {
-            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, success);
+            @include kbq-risk-level-outline-color(outline, fade-on, success);
         }
 
         &.kbq-risk-level_fade-warning {
-            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, warning);
+            @include kbq-risk-level-outline-color(outline, fade-on, warning);
         }
 
         &.kbq-risk-level_fade-error {
-            @include kbq-risk-level-outline-color($risk-level, outline, fade-on, error);
+            @include kbq-risk-level-outline-color(outline, fade-on, error);
         }
     }
 }
 
-@mixin kbq-risk-level-typography($config) {
+@mixin kbq-risk-level-typography() {
     .kbq-risk-level {
         @include kbq-typography-css-variables(risk-level, text);
     }

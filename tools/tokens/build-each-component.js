@@ -43,6 +43,7 @@ const componentsWithCss = [
     'progress-bar',
     'progress-spinner',
     'radio',
+    'risk-level',
     'table',
     'textarea',
     'timezone',
