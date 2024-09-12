@@ -38,7 +38,7 @@ export class KbqProgressBarCaption {}
 @Component({
     selector: 'kbq-progress-bar',
     templateUrl: './progress-bar.component.html',
-    styleUrls: ['./progress-bar.scss'],
+    styleUrls: ['./progress-bar.scss', './progress-bar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],

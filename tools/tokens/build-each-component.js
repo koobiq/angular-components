@@ -40,6 +40,7 @@ const componentsWithCss = [
     'markdown',
     'navbar',
     'popover',
+    'progress-bar',
     'table',
     'textarea',
     'timezone',

@@ -1,11 +1,8 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/functions/timing';
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './progress-bar-theme' as *;
 
 @keyframes kbq-progress-bar-indeterminate {
     0% {
@@ -53,3 +50,6 @@ $tokens: meta.module-variables(tokens) !default;
         animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
     }
 }
+
+@include kbq-progress-bar-theme();
+@include kbq-progress-bar-typography();
