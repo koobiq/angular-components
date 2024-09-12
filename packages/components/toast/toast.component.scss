@@ -3,7 +3,7 @@
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './toast-theme' as *;
 
 .kbq-toast {
     display: flex;
@@ -98,3 +98,6 @@ $tokens: meta.module-variables(tokens) !default;
     );
     margin-right: kbq-css-variable(toast-size-close-button-margin-right);
 }
+
+@include kbq-toast-theme();
+@include kbq-toast-typography();

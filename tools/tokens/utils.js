@@ -5,10 +5,13 @@ const { formatHelpers } = require('style-dictionary');
 const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
+    'code-block': 'kbq-states-focused-color',
     'pseudo-checkbox': 'checkbox',
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
-    'icon-button': 'states-focused-color'
+    'icon-button': 'states-focused-color',
+    table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
+    toggle: 'foreground-text-disabled'
 };
 
 const componentNameMapping = {

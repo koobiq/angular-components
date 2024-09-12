@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
         '[class.kbq-divider_paddings]': 'paddings'
     },
     template: '',
-    styleUrls: ['divider.scss'],
+    styleUrls: ['divider.scss', 'divider-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
