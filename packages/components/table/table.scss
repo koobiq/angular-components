@@ -3,7 +3,7 @@
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './table-theme' as *;
 
 .kbq-table {
     border-spacing: 0;
@@ -73,3 +73,6 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 }
+
+@include kbq-table-theme();
+@include kbq-table-typography();

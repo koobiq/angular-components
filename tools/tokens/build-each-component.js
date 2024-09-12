@@ -30,6 +30,7 @@ const componentsWithCss = [
     'icon-item',
     'input',
     'link',
+    'table',
     'toast',
     'toggle'
 ];
