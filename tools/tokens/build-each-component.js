@@ -29,7 +29,8 @@ const componentsWithCss = [
     'icon-button',
     'icon-item',
     'input',
-    'link'
+    'link',
+    'toast'
 ];
 
 const styleDictionaryConfig = {
