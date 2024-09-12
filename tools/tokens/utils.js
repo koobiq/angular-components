@@ -37,6 +37,12 @@ const filter = {
         'size-3xl',
         'size-4xl',
         'size-5xl'
+    ],
+    popover: [
+        'kbq-size-s',
+        'kbq-size-4xl',
+        'button-size-border-radius',
+        'background-overlay-inverse'
     ]
 };
 

@@ -1,40 +1,33 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-popover-theme($theme) {
-    $popover: map.get(map.get($theme, components), popover);
-    $background: map.get($theme, background);
-
+@mixin kbq-popover-theme() {
     .kbq-popover {
-        box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
+        box-shadow: kbq-css-variable(popover-container-box-shadow);
     }
 
     .kbq-popover__container {
-        background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
+        background: kbq-css-variable(popover-container-background);
     }
 
     .kbq-popover__arrow {
-        box-shadow: kbq-css-variable(popover-container-box-shadow, map.get($popover, container, box-shadow));
-        background: kbq-css-variable(popover-container-background, map.get($popover, container, background));
+        box-shadow: kbq-css-variable(popover-container-box-shadow);
+        background: kbq-css-variable(popover-container-background);
     }
 
     .kbq-popover__close {
-        background-color: map.get($background, overlay-inverse);
+        background-color: kbq-css-variable(background-overlay-inverse);
     }
 
     .kbq-popover__header {
-        color: kbq-css-variable(popover-header-text-color, map.get($popover, header, text));
+        color: kbq-css-variable(popover-header-text-color);
     }
 
     .kbq-popover__content {
-        color: kbq-css-variable(popover-content-text-color, map.get($popover, content, text));
+        color: kbq-css-variable(popover-content-text-color);
     }
 }
 
-@mixin kbq-popover-typography($config) {
+@mixin kbq-popover-typography() {
     .kbq-popover__header {
         @include kbq-typography-css-variables(popover, header);
     }

@@ -42,7 +42,7 @@ import { kbqPopoverAnimations } from './popover-animations';
     selector: 'kbq-popover-component',
     templateUrl: './popover.component.html',
     preserveWhitespaces: false,
-    styleUrls: ['./popover.scss'],
+    styleUrls: ['./popover.scss', './popover-tokens.scss'],
     host: {
         '(keydown.esc)': 'hide(0)'
     },

@@ -39,6 +39,7 @@ const componentsWithCss = [
     'modal',
     'markdown',
     'navbar',
+    'popover',
     'table',
     'textarea',
     'timezone',

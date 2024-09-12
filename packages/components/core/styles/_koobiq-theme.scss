@@ -6,7 +6,6 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../../link/link-theme' as *;
-@use '../../popover/popover-theme' as *;
 @use '../../progress-bar/progress-bar-theme' as *;
 @use '../../progress-spinner/progress-spinner-theme' as *;
 @use '../../radio/radio-theme' as *;
@@ -34,7 +33,6 @@
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
-    @include kbq-popover-theme($theme);
     @include kbq-progress-bar-theme($theme);
     @include kbq-progress-spinner-theme($theme);
     @include kbq-radio-theme($theme);
@@ -59,7 +57,6 @@
     @include kbq-forms-typography($config);
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);
-    @include kbq-popover-typography($config);
     @include kbq-progress-bar-typography($config);
     @include kbq-progress-spinner-typography($config);
     @include kbq-radio-typography($config);
