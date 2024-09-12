@@ -5,6 +5,7 @@ const { formatHelpers } = require('style-dictionary');
 const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
+    'code-block': 'kbq-states-focused-color',
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
     'empty-state': 'foreground-error',

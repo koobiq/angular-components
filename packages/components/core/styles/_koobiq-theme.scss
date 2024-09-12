@@ -5,7 +5,6 @@
 
 @use 'theming/scrollbar-theme' as *;
 
-@use '../../code-block/code-block-theme' as *;
 @use '../../file-upload/file-upload-theme' as *;
 @use '../../link/link-theme' as *;
 @use '../../list/list-theme' as *;
@@ -39,7 +38,6 @@
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-code-block-theme($theme);
     @include kbq-dl-theme($theme);
     @include kbq-file-upload-theme($theme);
     @include kbq-forms-theme($theme);
@@ -84,7 +82,6 @@
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
-    @include kbq-code-block-typography($config);
     @include kbq-dl-typography($config);
     @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
