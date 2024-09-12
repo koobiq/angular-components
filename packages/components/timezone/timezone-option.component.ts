@@ -18,7 +18,7 @@ import { offsetFormatter } from './timezone.utils';
         class: 'kbq-timezone-option'
     },
     templateUrl: 'timezone-option.component.html',
-    styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss'],
+    styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss', 'timezone-option-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [

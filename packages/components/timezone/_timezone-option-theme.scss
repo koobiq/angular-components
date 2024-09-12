@@ -4,24 +4,22 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-timezone-option-theme($theme) {
-    $timezone: map.get(map.get($theme, components), timezone);
-
+@mixin kbq-timezone-option-theme() {
     .kbq-timezone-option__offset,
     .kbq-timezone-option__city {
-        color: kbq-css-variable(timezone-option-text, map.get($timezone, text));
+        color: kbq-css-variable(timezone-option-text);
     }
 
     .kbq-timezone-option__cities {
-        color: kbq-css-variable(timezone-option-caption, map.get($timezone, caption));
+        color: kbq-css-variable(timezone-option-caption);
     }
 
     .kbq-timezone-select__panel.kbq-select__panel .kbq-optgroup-label {
-        color: kbq-css-variable(timezone-option-optgroup-label, map.get($timezone, optgroup-label));
+        color: kbq-css-variable(timezone-option-optgroup-label);
     }
 }
 
-@mixin kbq-timezone-option-typography($config) {
+@mixin kbq-timezone-option-typography() {
     .kbq-timezone-option__offset {
         @include kbq-typography-css-variables(timezone-option, offset-text);
     }

@@ -36,7 +36,8 @@ const componentAliases = {
     ],
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
-    'icon-item': 'icon/icon-item-tokens.scss'
+    'icon-item': 'icon/icon-item-tokens.scss',
+    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }]
 };
 
 const resolvePath = (componentName) =>
