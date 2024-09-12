@@ -27,7 +27,6 @@ const filter = {
         'line-contrast-less',
         'typography-text-normal-medium',
         'navbar-item',
-<<<<<<< HEAD
         'kbq-size-xxs',
         'kbq-size-xs',
         'kbq-size-s',
@@ -38,18 +37,6 @@ const filter = {
         'kbq-size-3xl',
         'kbq-size-4xl',
         'kbq-size-5xl'
-=======
-        'size-xxs',
-        'size-xs',
-        'size-s',
-        'size-l',
-        'size-m',
-        'size-xl',
-        'size-xxl',
-        'size-3xl',
-        'size-4xl',
-        'size-5xl'
->>>>>>> 74af95ca (feat(popover): component theming with CSS-vars (#DS-2823))
     ],
     popover: [
         'kbq-size-s',
