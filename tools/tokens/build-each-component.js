@@ -25,6 +25,7 @@ const componentsWithCss = [
     'description-list',
     'divider',
     'dropdown',
+    'empty-state',
     'form-field',
     'hint',
     'icon',

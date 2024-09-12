@@ -6,10 +6,11 @@ const filter = {
     autocomplete: 'select-panel-dropdown',
     button: 'kbq-states-focused-color',
     'code-block': 'kbq-states-focused-color',
-    'pseudo-checkbox': 'checkbox',
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
+    'empty-state': 'foreground-error',
     'icon-button': 'states-focused-color',
+    'pseudo-checkbox': 'checkbox',
     table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
     toggle: 'foreground-text-disabled'
 };
