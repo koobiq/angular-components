@@ -25,7 +25,6 @@
 @use '../../splitter/splitter-theme' as *;
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
-@use '../../textarea/textarea-theme' as *;
 @use '../../timezone/timezone-option-theme' as *;
 @use '../../toast/toast-theme' as *;
 @use '../../toggle/toggle-theme' as *;
@@ -112,7 +111,6 @@
     @include kbq-sidepanel-typography($config);
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
-    @include kbq-textarea-typography($config);
     @include kbq-timezone-option-typography($config);
     @include kbq-toast-typography($config);
     @include kbq-toggle-typography($config);

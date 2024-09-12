@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './textarea-theme' as *;
+
 .kbq-textarea {
     display: inline-block;
 
@@ -38,3 +40,5 @@
 .kbq-textarea:invalid {
     box-shadow: unset;
 }
+
+@include kbq-textarea-typography();
