@@ -1666,6 +1666,12 @@ export interface KbqTheme {
     selected: boolean;
 }
 
+// @public
+export enum KbqThemeSelector {
+    Dark = "kbq-theme-dark",
+    Default = "kbq-theme-light"
+}
+
 // @public (undocumented)
 export interface KbqTitleTextRef {
     // (undocumented)
