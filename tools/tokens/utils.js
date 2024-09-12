@@ -9,7 +9,7 @@ const filter = {
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
     'icon-button': 'states-focused-color',
-    'file-upload': 'form-field-hint-text'
+    'file-upload': ['form-field-hint-text', 'form-field-hint-font-text']
 };
 
 const componentNameMapping = {
