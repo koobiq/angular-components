@@ -33,7 +33,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.docCategories = this.docItems.getCategories().filter((category) => category.isPreviewed);
         this.currentTheme$ = this.themeService.current.pipe(
-            map((currentTheme) => currentTheme.className.replace('theme-', ''))
+            map((currentTheme) => currentTheme.className.replace('kbq-theme-', ''))
         );
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }

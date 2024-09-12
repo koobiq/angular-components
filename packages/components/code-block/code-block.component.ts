@@ -65,7 +65,7 @@ const hasScroll = (element: HTMLElement) => {
     selector: 'kbq-code-block',
     exportAs: 'kbqCodeBlock',
     templateUrl: './code-block.component.html',
-    styleUrls: ['./code-block.scss'],
+    styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
     host: {
         class: 'kbq-code-block',
         '[class.kbq-code-block_filled]': 'filled',
