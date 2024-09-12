@@ -71,6 +71,7 @@
 -   [input](/packages/components/input/input-tokens.scss)
 -   [link](/packages/components/link/link-tokens.scss)
 -   [toast](/packages/components/toast/toast-tokens.scss)
+-   [toggle](/packages/components/toggle/toggle-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

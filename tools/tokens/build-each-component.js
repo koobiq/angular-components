@@ -30,7 +30,8 @@ const componentsWithCss = [
     'icon-item',
     'input',
     'link',
-    'toast'
+    'toast',
+    'toggle'
 ];
 
 const styleDictionaryConfig = {
