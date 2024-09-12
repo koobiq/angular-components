@@ -50,7 +50,7 @@ export class KbqToggleChange {
     selector: 'kbq-toggle',
     exportAs: 'kbqToggle',
     templateUrl: './toggle.component.html',
-    styleUrls: ['./toggle.scss'],
+    styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     inputs: ['color', 'tabIndex'],

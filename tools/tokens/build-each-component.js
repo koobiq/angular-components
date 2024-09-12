@@ -21,6 +21,7 @@ const componentsWithCss = [
     'button-toggle',
     'checkbox',
     'datepicker',
+    'divider',
     'dropdown',
     'empty-state',
     'form-field',
@@ -29,7 +30,10 @@ const componentsWithCss = [
     'icon-button',
     'icon-item',
     'input',
-    'link'
+    'link',
+    'table',
+    'toast',
+    'toggle'
 ];
 
 const styleDictionaryConfig = {
