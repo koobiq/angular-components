@@ -28,7 +28,7 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
 @Component({
     selector: 'kbq-sidepanel-container',
     templateUrl: './sidepanel-container.component.html',
-    styleUrls: ['./sidepanel.scss'],
+    styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     animations: [kbqSidepanelAnimations.sidepanelState],

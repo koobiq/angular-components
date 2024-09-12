@@ -1,11 +1,8 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common';
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './sidepanel-theme' as *;
 
 .kbq-sidepanel-container_top,
 .kbq-sidepanel-container_bottom {
@@ -182,3 +179,6 @@ $tokens: meta.module-variables(tokens) !default;
         gap: kbq-css-variable(sidepanel-size-footer-content-gap-horizontal);
     }
 }
+
+@include kbq-sidepanel-theme();
+@include kbq-sidepanel-typography();

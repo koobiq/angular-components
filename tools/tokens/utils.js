@@ -68,7 +68,8 @@ const componentNameMapping = {
     'timezone-option': 'timezone-select__panel',
     tree: ['tree', '.kbq-tree-selection'],
     radio: 'radio-button',
-    select: 'select, .kbq-select__panel'
+    select: 'select, .kbq-select__panel',
+    sidepanel: 'sidepanel-container'
 };
 
 const applyCustomTransformations = (dictionary) => {

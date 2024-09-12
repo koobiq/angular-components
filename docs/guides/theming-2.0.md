@@ -85,6 +85,7 @@
 -   [radio](/packages/components/radio/radio-tokens.scss)
 -   [risk-level](/packages/components/risk-level/risk-level-tokens.scss)
 -   [select](/packages/components/select/select-tokens.scss)
+-   [sidepanel](/packages/components/sidepanel/sidepanel-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)

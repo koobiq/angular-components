@@ -45,6 +45,7 @@ const componentsWithCss = [
     'radio',
     'risk-level',
     'select',
+    'sidepanel',
     'table',
     'textarea',
     'timezone',
