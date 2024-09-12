@@ -12,13 +12,13 @@
 .docs {
     @include theme-kbq.docs-typography(tokens.$tokens, tokens.$typography-config, tokens.$markdown-typography-config);
 
-    &.theme-light {
+    &.kbq-theme-light {
         @include hljs-light-theme();
 
         @include theme-kbq.kbq-docs-theme(tokens.$default-theme-light);
     }
 
-    &.theme-dark {
+    &.kbq-theme-dark {
         @include hljs-dark-theme();
 
         @include theme-kbq.kbq-docs-theme(tokens.$default-theme-dark);

@@ -31,7 +31,7 @@ let id = 0;
 @Component({
     selector: 'kbq-toast',
     templateUrl: './toast.component.html',
-    styleUrls: ['./toast.component.scss'],
+    styleUrls: ['./toast.component.scss', './toast-tokens.scss'],
     host: {
         class: 'kbq-toast',
         '[class]': 'toastStyle',
