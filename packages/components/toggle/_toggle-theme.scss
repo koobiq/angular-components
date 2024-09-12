@@ -1,95 +1,76 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../core/styles/theming/theming' as *;
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-toggle-state($component, $type, $state-name) {
-    $state: map.get($component, $type, $state-name);
+@mixin kbq-toggle-state($type, $state-name) {
     $base: toggle-#{$type}-#{$state-name};
 
     .kbq-toggle-bar {
-        border-color: kbq-css-variable(#{$base}-border, map.get($state, border));
-        background: kbq-css-variable(#{$base}-background, map.get($state, background));
+        border-color: kbq-css-variable(#{$base}-border);
+        background: kbq-css-variable(#{$base}-background);
     }
 
     .kbq-toggle__circle {
-        background: kbq-css-variable(#{$base}-circle-background, map.get($state, circle-background));
+        background: kbq-css-variable(#{$base}-circle-background);
     }
 }
 
-@mixin kbq-toggle-color($component, $type) {
-    @include kbq-toggle-state($component, $type, default);
+@mixin kbq-toggle-color($type) {
+    @include kbq-toggle-state($type, default);
 
     &:hover {
-        @include kbq-toggle-state($component, $type, states-hover);
+        @include kbq-toggle-state($type, states-hover);
     }
 
     &.kbq-active {
-        @include kbq-toggle-state($component, $type, states-checked);
+        @include kbq-toggle-state($type, states-checked);
     }
 
     &.kbq-active:hover {
-        @include kbq-toggle-state($component, $type, states-checked-hover);
+        @include kbq-toggle-state($type, states-checked-hover);
     }
 
     &.cdk-keyboard-focused {
-        @include kbq-toggle-state($component, $type, states-focused);
+        @include kbq-toggle-state($type, states-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(
-                toggle-#{$type}-states-focused-focus-outline,
-                map.get($component, $type, states-focused, focus-outline)
-            );
-            box-shadow: 0 0 0.1px 1px
-                kbq-css-variable(
-                    toggle-#{$type}-states-focused-focus-outline,
-                    map.get($component, $type, states-focused, focus-outline)
-                );
+            border-color: kbq-css-variable(toggle-#{$type}-states-focused-focus-outline);
+            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-focused-focus-outline);
         }
     }
 
     &.kbq-active.cdk-keyboard-focused {
-        @include kbq-toggle-state($component, $type, states-checked-focused);
+        @include kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(
-                toggle-#{$type}-states-checked-focused-focus-outline,
-                map.get($component, $type, states-checked-focused, focus-outline)
-            );
-            box-shadow: 0 0 0.1px 1px
-                kbq-css-variable(
-                    toggle-#{$type}-states-checked-focused-focus-outline,
-                    map.get($component, $type, states-checked-focused, focus-outline)
-                );
+            border-color: kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline);
+            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline);
         }
     }
 
     &.kbq-disabled,
     &.kbq-active.kbq-disabled {
-        @include kbq-toggle-state($component, $type, states-disabled);
+        @include kbq-toggle-state($type, states-disabled);
     }
 }
 
-@mixin kbq-toggle-theme($theme) {
-    $toggle: map.get($theme, components, toggle);
-    $foreground: map.get($theme, foreground);
-
+@mixin kbq-toggle-theme() {
     .kbq-toggle {
-        @include kbq-toggle-color($toggle, theme);
+        @include kbq-toggle-color(theme);
 
         &.kbq-error {
-            @include kbq-toggle-color($toggle, error);
+            @include kbq-toggle-color(error);
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
+            color: kbq-css-variable(foreground-text-disabled);
         }
     }
 }
 
-@mixin kbq-toggle-typography($config) {
+@mixin kbq-toggle-typography() {
     .kbq-toggle:not(.kbq-toggle_big) {
         @include kbq-typography-css-variables(toggle, normal-label);
 

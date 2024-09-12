@@ -3,7 +3,7 @@
 
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './toggle-theme' as *;
 
 .kbq-toggle {
     display: inline-block;
@@ -97,3 +97,6 @@ $tokens: meta.module-variables(tokens) !default;
 .kbq-toggle:not(.kbq-disabled) {
     cursor: pointer;
 }
+
+@include kbq-toggle-theme();
+@include kbq-toggle-typography();
