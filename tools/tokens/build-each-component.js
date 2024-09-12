@@ -50,6 +50,8 @@ const componentsWithCss = [
     'tree-select'
 ];
 
+const args = (process.argv.slice(2).length && process.argv.slice(2)) || componentsWithCss;
+
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
     platforms: {
@@ -125,7 +127,7 @@ function fileFormat(destination, component) {
 }
 
 const main = async () => {
-    const files = componentsWithCss.map((component) => `${component}.${TOKEN_FILE_EXT}`);
+    const files = args.map((component) => `${component}.${TOKEN_FILE_EXT}`);
 
     styleDictionaryConfig.platforms.css.files = files
         .filter((file) => path.extname(file).includes(TOKEN_FILE_EXT))
