@@ -1,13 +1,11 @@
 <kbq-form-field>
     <kbq-timezone-select [(value)]="selected">
-        <kbq-optgroup
-            *ngFor="let group of data"
-            [label]="group.countryName"
-        >
-            <kbq-timezone-option
-                *ngFor="let timezone of group.zones"
-                [timezone]="timezone"
-            />
-        </kbq-optgroup>
+        @for (group of data; track group) {
+            <kbq-optgroup [label]="group.countryName">
+                @for (timezone of group.zones; track timezone) {
+                    <kbq-timezone-option [timezone]="timezone" />
+                }
+            </kbq-optgroup>
+        }
     </kbq-timezone-select>
 </kbq-form-field>

@@ -68,7 +68,9 @@ export class SidepanelDemoComponent {
         <kbq-sidepanel-body class="layout-padding">
             <div class="kbq-subheading">Sidepanel Component Body</div>
 
-            <div *ngFor="let item of array; index as i">{{ i + 1 }}</div>
+            @for (item of array; track item; let i = $index) {
+                <div>{{ i + 1 }}</div>
+            }
         </kbq-sidepanel-body>
 
         <kbq-sidepanel-footer>

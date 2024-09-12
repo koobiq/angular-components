@@ -313,37 +313,38 @@ class NgModelSelect {
 @Component({
     selector: 'ng-if-select',
     template: `
-        <div *ngIf="isShowing">
-            <kbq-form-field>
-                <kbq-tree-select
-                    [formControl]="control"
-                    placeholder="Food I want to eat right now"
-                >
-                    <kbq-tree-selection
-                        [dataSource]="dataSource"
-                        [treeControl]="treeControl"
+        @if (isShowing) {
+            <div>
+                <kbq-form-field>
+                    <kbq-tree-select
+                        [formControl]="control"
+                        placeholder="Food I want to eat right now"
                     >
-                        <kbq-tree-option
-                            *kbqTreeNodeDef="let node"
-                            kbqTreeNodePadding
+                        <kbq-tree-selection
+                            [dataSource]="dataSource"
+                            [treeControl]="treeControl"
                         >
-                            {{ treeControl.getViewValue(node) }}
-                        </kbq-tree-option>
-
-                        <kbq-tree-option
-                            *kbqTreeNodeDef="let node; when: hasChild"
-                            kbqTreeNodePadding
-                        >
-                            <i
-                                kbq-icon="mc-angle-S_16"
-                                kbqTreeNodeToggle
-                            ></i>
-                            {{ treeControl.getViewValue(node) }}
-                        </kbq-tree-option>
-                    </kbq-tree-selection>
-                </kbq-tree-select>
-            </kbq-form-field>
-        </div>
+                            <kbq-tree-option
+                                *kbqTreeNodeDef="let node"
+                                kbqTreeNodePadding
+                            >
+                                {{ treeControl.getViewValue(node) }}
+                            </kbq-tree-option>
+                            <kbq-tree-option
+                                *kbqTreeNodeDef="let node; when: hasChild"
+                                kbqTreeNodePadding
+                            >
+                                <i
+                                    kbq-icon="mc-angle-S_16"
+                                    kbqTreeNodeToggle
+                                ></i>
+                                {{ treeControl.getViewValue(node) }}
+                            </kbq-tree-option>
+                        </kbq-tree-selection>
+                    </kbq-tree-select>
+                </kbq-form-field>
+            </div>
+        }
     `
 })
 class NgIfSelect {

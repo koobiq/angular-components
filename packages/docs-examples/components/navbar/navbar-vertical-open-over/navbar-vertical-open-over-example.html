@@ -79,7 +79,9 @@
                     [kbqTooltipDisabled]="verticalNavbar.expanded"
                 >
                     <i kbq-icon="mc-info-o_16"></i>
-                    <span *ngIf="verticalNavbar.expanded">Новая задача</span>
+                    @if (verticalNavbar.expanded) {
+                        <span>Новая задача</span>
+                    }
                 </button>
             </kbq-navbar-item>
         </kbq-navbar-container>

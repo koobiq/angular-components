@@ -1,16 +1,15 @@
-<div
-    *ngFor="let utcItem of timezone.offset | utcOffset | keyvalue"
-    class="kbq-timezone-option__offset-wrapper layout-row layout-align-space-between"
->
-    <div
-        class="kbq-timezone-option__offset"
-        [innerHTML]="utcItem.key | mcHighlight: highlightText"
-    ></div>
-    <div
-        class="kbq-timezone-option__offset"
-        [innerHTML]="utcItem.value | mcHighlight: highlightText"
-    ></div>
-</div>
+@for (utcItem of timezone.offset | utcOffset | keyvalue; track utcItem) {
+    <div class="kbq-timezone-option__offset-wrapper layout-row layout-align-space-between">
+        <div
+            class="kbq-timezone-option__offset"
+            [innerHTML]="utcItem.key | mcHighlight: highlightText"
+        ></div>
+        <div
+            class="kbq-timezone-option__offset"
+            [innerHTML]="utcItem.value | mcHighlight: highlightText"
+        ></div>
+    </div>
+}
 
 <div class="kbq-timezone-option__label">
     <span

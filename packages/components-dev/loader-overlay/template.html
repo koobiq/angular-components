@@ -16,11 +16,12 @@
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
-    <kbq-loader-overlay
-        *ngIf="loading"
-        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-        [text]="'Создание отчета'"
-    />
+    @if (loading) {
+        <kbq-loader-overlay
+            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
+            [text]="'Создание отчета'"
+        />
+    }
 </div>
 
 <br />
@@ -35,12 +36,13 @@ transparent
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
-    <kbq-loader-overlay
-        *ngIf="loading"
-        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-        [text]="'Создание отчета'"
-        [transparent]="true"
-    />
+    @if (loading) {
+        <kbq-loader-overlay
+            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
+            [text]="'Создание отчета'"
+            [transparent]="true"
+        />
+    }
 </div>
 
 <br />
@@ -55,12 +57,13 @@ compact
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
-    <kbq-loader-overlay
-        *ngIf="loading"
-        [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-        [compact]="true"
-        [text]="'Создание отчета'"
-    />
+    @if (loading) {
+        <kbq-loader-overlay
+            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
+            [compact]="true"
+            [text]="'Создание отчета'"
+        />
+    }
 </div>
 
 <br />
@@ -75,19 +78,19 @@ custom
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
-    <kbq-loader-overlay
-        *ngIf="loading"
-        fixed-top
-        [caption]="caption"
-        [text]="text"
-    >
-        <kbq-progress-spinner
-            kbq-loader-overlay-indicator
-            [color]="themePalette.Error"
-            [mode]="'indeterminate'"
-        />
-
-        <div kbq-loader-overlay-text>Создание отчета</div>
-        <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
-    </kbq-loader-overlay>
+    @if (loading) {
+        <kbq-loader-overlay
+            fixed-top
+            [caption]="caption"
+            [text]="text"
+        >
+            <kbq-progress-spinner
+                kbq-loader-overlay-indicator
+                [color]="themePalette.Error"
+                [mode]="'indeterminate'"
+            />
+            <div kbq-loader-overlay-text>Создание отчета</div>
+            <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
+        </kbq-loader-overlay>
+    }
 </div>

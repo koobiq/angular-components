@@ -1,10 +1,11 @@
-<div
-    *ngIf="iconItem || icon"
-    class="kbq-alert__icon"
-    [class.kbq-alert__icon_title]="title"
->
-    <ng-content select="[kbq-icon-item],[kbq-icon]" />
-</div>
+@if (iconItem || icon) {
+    <div
+        class="kbq-alert__icon"
+        [class.kbq-alert__icon_title]="title"
+    >
+        <ng-content select="[kbq-icon-item],[kbq-icon]" />
+    </div>
+}
 
 <div
     class="kbq-alert__content"
@@ -16,13 +17,14 @@
         <ng-content />
     </div>
 
-    <div
-        *ngIf="control"
-        class="kbq-alert__button-stack"
-        [class.kbq-alert__button-stack_has-button]="button"
-    >
-        <ng-content select="[kbq-alert-control]" />
-    </div>
+    @if (control) {
+        <div
+            class="kbq-alert__button-stack"
+            [class.kbq-alert__button-stack_has-button]="button"
+        >
+            <ng-content select="[kbq-alert-control]" />
+        </div>
+    }
 </div>
 
 <div

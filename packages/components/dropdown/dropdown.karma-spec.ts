@@ -207,15 +207,16 @@ describe('KbqDropdown', () => {
                 One
             </button>
             <button kbq-dropdown-item>Two</button>
-            <button
-                id="lazy-trigger"
-                #lazyTrigger="kbqDropdownTrigger"
-                *ngIf="showLazy"
-                [kbqDropdownTriggerFor]="lazy"
-                kbq-dropdown-item
-            >
-                Three
-            </button>
+            @if (showLazy) {
+                <button
+                    id="lazy-trigger"
+                    #lazyTrigger="kbqDropdownTrigger"
+                    [kbqDropdownTriggerFor]="lazy"
+                    kbq-dropdown-item
+                >
+                    Three
+                </button>
+            }
         </kbq-dropdown>
 
         <kbq-dropdown

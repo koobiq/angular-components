@@ -1,20 +1,19 @@
 <div class="docs-live-example__container">
-    <div
-        *ngIf="exampleData"
-        class="docs-live-example__example"
-    >
-        <ng-template
-            *ngIf="exampleComponentType && exampleModuleFactory"
-            [ngComponentOutlet]="exampleComponentType"
-            [ngComponentOutletNgModuleFactory]="exampleModuleFactory"
-        />
-    </div>
+    @if (exampleData) {
+        <div class="docs-live-example__example">
+            @if (exampleComponentType && exampleModuleFactory) {
+                <ng-template
+                    [ngComponentOutlet]="exampleComponentType"
+                    [ngComponentOutletNgModuleFactory]="exampleModuleFactory"
+                />
+            }
+        </div>
+    }
 
     <div class="docs-live-example__footer">
         <span
             kbq-link
             pseudo
-            [ngSwitch]="isSourceShown"
             (click)="toggleSourceView()"
             (keydown.enter)="toggleSourceView()"
         >
@@ -25,18 +24,17 @@
     </div>
 </div>
 
-<ng-container *ngIf="exampleData; else lostExample">
-    <kbq-code-block
-        *ngIf="isSourceShown"
-        [codeFiles]="this.files"
-        [codeFiles]="files"
-        [filled]="true"
-        [filled]="true"
-        [lineNumbers]="true"
-    />
-</ng-container>
-
-<ng-template #lostExample>
+@if (exampleData) {
+    @if (isSourceShown) {
+        <kbq-code-block
+            [codeFiles]="this.files"
+            [codeFiles]="files"
+            [filled]="true"
+            [filled]="true"
+            [lineNumbers]="true"
+        />
+    }
+} @else {
     <div class="kbq-alert kbq-alert_error kbq-alert_dismissible kbq-markdown">
         <span>
             Oops, this code example is lost... But you can help us find it! Just send a Pull Request to this repository:
@@ -48,4 +46,4 @@
             </a>
         </span>
     </div>
-</ng-template>
+}

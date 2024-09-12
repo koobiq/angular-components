@@ -524,21 +524,21 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 @Component({
     selector: 'kbq-navbar-toggle',
     template: `
-        <i
-            *ngIf="!customIcon"
-            [class.mc-angle-left-M_16]="navbar.expanded"
-            [class.mc-angle-right-M_16]="!navbar.expanded"
-            kbq-icon
-        ></i>
+        @if (!customIcon) {
+            <i
+                [class.mc-angle-left-M_16]="navbar.expanded"
+                [class.mc-angle-right-M_16]="!navbar.expanded"
+                kbq-icon
+            ></i>
+        }
 
         <ng-content select="[kbq-icon]" />
 
-        <div
-            class="kbq-navbar-item__title"
-            *ngIf="navbar.expanded"
-        >
-            <ng-content select="kbq-navbar-title" />
-        </div>
+        @if (navbar.expanded) {
+            <div class="kbq-navbar-item__title">
+                <ng-content select="kbq-navbar-title" />
+            </div>
+        }
     `,
     styleUrls: ['./navbar.scss'],
     host: {

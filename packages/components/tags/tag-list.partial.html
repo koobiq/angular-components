@@ -2,9 +2,8 @@
     <ng-content />
 </div>
 
-<div
-    *ngIf="canShowCleaner"
-    class="kbq-tags-list__cleaner"
->
-    <ng-content select="kbq-cleaner" />
-</div>
+@if (canShowCleaner) {
+    <div class="kbq-tags-list__cleaner">
+        <ng-content select="kbq-cleaner" />
+    </div>
+}

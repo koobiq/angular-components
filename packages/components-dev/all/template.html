@@ -1159,28 +1159,30 @@
             class="example-radio-group"
             [(ngModel)]="favoriteFruit"
         >
-            <kbq-radio-button
-                *ngFor="let season of fruits"
-                class="example-radio-button"
-                [value]="season"
-            >
-                {{ season }}
-            </kbq-radio-button>
+            @for (season of fruits; track season) {
+                <kbq-radio-button
+                    class="example-radio-button"
+                    [value]="season"
+                >
+                    {{ season }}
+                </kbq-radio-button>
+            }
         </kbq-radio-group>
 
         <p class="kbq-headline">Disabled buttons</p>
 
         <kbq-radio-group class="example-radio-group">
-            <kbq-radio-button
-                *ngFor="let data of selectionList"
-                name="data.value"
-                class="example-radio-button"
-                [checked]="data.selected"
-                [disabled]="true"
-                [value]="data.value"
-            >
-                {{ data.name }}
-            </kbq-radio-button>
+            @for (data of selectionList; track data) {
+                <kbq-radio-button
+                    name="data.value"
+                    class="example-radio-button"
+                    [checked]="data.selected"
+                    [disabled]="true"
+                    [value]="data.value"
+                >
+                    {{ data.name }}
+                </kbq-radio-button>
+            }
         </kbq-radio-group>
     </div>
 

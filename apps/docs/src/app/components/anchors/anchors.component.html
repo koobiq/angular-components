@@ -1,14 +1,15 @@
-<div
-    *ngFor="let anchor of anchors"
-    class="docs-anchors__element docs-anchors__element_{{ anchor.level }}"
-    [ngClass]="{ 'docs-anchors__element_active': anchor.active }"
->
-    <a
-        class="docs-anchors__link"
-        [fragment]="anchor.href"
-        [routerLink]="this.pathName"
-        (click)="scrollIntoView(anchor)"
+@for (anchor of anchors; track anchor) {
+    <div
+        class="docs-anchors__element docs-anchors__element_{{ anchor.level }}"
+        [ngClass]="{ 'docs-anchors__element_active': anchor.active }"
     >
-        {{ anchor.name }}
-    </a>
-</div>
+        <a
+            class="docs-anchors__link"
+            [fragment]="anchor.href"
+            [routerLink]="this.pathName"
+            (click)="scrollIntoView(anchor)"
+        >
+            {{ anchor.name }}
+        </a>
+    </div>
+}

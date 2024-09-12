@@ -26,11 +26,12 @@
         class="example-timepicker-element"
         [kbqWarningTooltip]="'Только цифры'"
     >
-        <i
-            *ngIf="isIconVisible"
-            kbq-icon="mc-clock_16"
-            kbqPrefix
-        ></i>
+        @if (isIconVisible) {
+            <i
+                kbq-icon="mc-clock_16"
+                kbqPrefix
+            ></i>
+        }
         <input
             kbqTimepicker
             [disabled]="isDisabled"

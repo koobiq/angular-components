@@ -8,14 +8,15 @@
 </kbq-form-field>
 &nbsp;
 
-<button
-    *ngFor="let language of locales"
-    kbq-dropdown-item
-    [class.mc-selected]="language.selected"
-    (click)="selectLanguage(language)"
->
-    {{ language.name }}
-</button>
+@for (language of locales; track language) {
+    <button
+        kbq-dropdown-item
+        [class.mc-selected]="language.selected"
+        (click)="selectLanguage(language)"
+    >
+        {{ language.name }}
+    </button>
+}
 
 <div class="kbq-subheading">
     <label>KBQ_LOCALE_ID:</label>

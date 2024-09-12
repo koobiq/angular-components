@@ -3,23 +3,24 @@
         novalidate
         class="kbq-form-vertical margin docs-width"
     >
-        <kbq-alert
-            *ngIf="showError"
-            [alertColor]="'error'"
-            [alertStyle]="'colored'"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="mc-info_16"
-                [color]="'error'"
-            ></i>
-            Заполните хотя бы одно из полей -
-            <b>Серия</b>
-            ,
-            <b>Номер</b>
-            или
-            <b>Фамилия</b>
-        </kbq-alert>
+        @if (showError) {
+            <kbq-alert
+                [alertColor]="'error'"
+                [alertStyle]="'colored'"
+                [compact]="true"
+            >
+                <i
+                    kbq-icon="mc-info_16"
+                    [color]="'error'"
+                ></i>
+                Заполните хотя бы одно из полей -
+                <b>Серия</b>
+                ,
+                <b>Номер</b>
+                или
+                <b>Фамилия</b>
+            </kbq-alert>
+        }
 
         <div class="kbq-form__fieldset">
             <div class="kbq-form__fieldset kbq-horizontal">

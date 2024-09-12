@@ -8,15 +8,16 @@
 
 <div class="docs-navbar__right flex layout-align-space-between">
     <div class="layout-row docs-navbar__anchor">
-        <button
-            *ngIf="docStates.isHeaderOverflown"
-            kbq-button
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
-            (click)="docStates.scrollUp()"
-        >
-            {{ docStates.currentHeader?.textContent }}
-        </button>
+        @if (docStates.isHeaderOverflown) {
+            <button
+                kbq-button
+                [color]="'contrast'"
+                [kbqStyle]="'transparent'"
+                (click)="docStates.scrollUp()"
+            >
+                {{ docStates.currentHeader?.textContent }}
+            </button>
+        }
     </div>
 
     <div class="layout-row layout-align-center-center">
@@ -75,14 +76,15 @@
                 <span class="kbq-caps-compact-strong">ТЕМА</span>
             </div>
 
-            <button
-                *ngFor="let theme of themeSwitch.data; let i = index"
-                kbq-dropdown-item
-                [class.kbq-selected]="theme.selected"
-                (click)="setTheme(i)"
-            >
-                {{ theme.name }}
-            </button>
+            @for (theme of themeSwitch.data; track theme; let i = $index) {
+                <button
+                    kbq-dropdown-item
+                    [class.kbq-selected]="theme.selected"
+                    (click)="setTheme(i)"
+                >
+                    {{ theme.name }}
+                </button>
+            }
         </kbq-dropdown>
     </div>
 </div>

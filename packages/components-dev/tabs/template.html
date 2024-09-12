@@ -101,14 +101,15 @@
     <h3>Navigation</h3>
 
     <nav kbq-tab-nav-bar>
-        <a
-            *ngFor="let link of links"
-            kbq-tab-link
-            [active]="activeLink === link"
-            (click)="activeLink = link"
-        >
-            {{ link }}
-        </a>
+        @for (link of links; track link) {
+            <a
+                kbq-tab-link
+                [active]="activeLink === link"
+                (click)="activeLink = link"
+            >
+                {{ link }}
+            </a>
+        }
 
         <a
             kbq-tab-link

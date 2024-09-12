@@ -44,15 +44,16 @@
         #docsLanguageDropdown="kbqDropdown"
         [class]="'docs-dropdown'"
     >
-        <button
-            *ngFor="let language of docsLanguageSwitch.data; let i = index"
-            kbq-dropdown-item
-            [class.kbq-selected]="language.selected"
-            [disabled]="language.id !== 'ru-RU'"
-            (click)="setLanguage(i)"
-        >
-            {{ language.value }}
-        </button>
+        @for (language of docsLanguageSwitch.data; track language; let i = $index) {
+            <button
+                kbq-dropdown-item
+                [class.kbq-selected]="language.selected"
+                [disabled]="language.id !== 'ru-RU'"
+                (click)="setLanguage(i)"
+            >
+                {{ language.value }}
+            </button>
+        }
     </kbq-dropdown>
 </div>
 
@@ -68,7 +69,9 @@
             [kbqDropdownTriggerFor]="versionDropdown"
         >
             {{ version }}
-            <span *ngIf="versionPicker.isNext">.next</span>
+            @if (versionPicker.isNext) {
+                <span>.next</span>
+            }
             <i
                 kbq-icon="mc-angle-down-S_16"
                 [color]="'contrast'"
@@ -82,28 +85,30 @@
                     <div class="kbq-caps-compact-strong">ВЕРСИЯ</div>
                 </div>
 
-                <button
-                    *ngFor="let version of versionPicker.versions"
-                    kbq-dropdown-item
-                    [class.kbq-selected]="version.selected"
-                    (click)="versionPicker.goToVersion(version)"
-                >
-                    <div>{{ version.name }}</div>
-                </button>
+                @for (version of versionPicker.versions; track version) {
+                    <button
+                        kbq-dropdown-item
+                        [class.kbq-selected]="version.selected"
+                        (click)="versionPicker.goToVersion(version)"
+                    >
+                        <div>{{ version.name }}</div>
+                    </button>
+                }
             </kbq-dropdown>
 
             <kbq-dropdown
                 #examplesLanguageDropdown="kbqDropdown"
                 [class]="'docs-dropdown'"
             >
-                <button
-                    *ngFor="let language of examplesLanguageSwitch.data; let i = index"
-                    kbq-dropdown-item
-                    [class.kbq-selected]="language.selected"
-                    (click)="setLanguage(i)"
-                >
-                    {{ language.value }}
-                </button>
+                @for (language of examplesLanguageSwitch.data; track language; let i = $index) {
+                    <button
+                        kbq-dropdown-item
+                        [class.kbq-selected]="language.selected"
+                        (click)="setLanguage(i)"
+                    >
+                        {{ language.value }}
+                    </button>
+                }
             </kbq-dropdown>
         </div>
     </div>

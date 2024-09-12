@@ -171,13 +171,14 @@
             [kbqAutocomplete]="auto"
         />
         <kbq-autocomplete #auto="kbqAutocomplete">
-            <kbq-option
-                *ngFor="let option of filteredOptions | async"
-                kbq-title
-                [value]="option"
-            >
-                {{ option }}
-            </kbq-option>
+            @for (option of filteredOptions | async; track option) {
+                <kbq-option
+                    kbq-title
+                    [value]="option"
+                >
+                    {{ option }}
+                </kbq-option>
+            }
         </kbq-autocomplete>
     </kbq-form-field>
 </div>

@@ -1623,12 +1623,11 @@ describe('KbqDropdown default overrides', () => {
                 <i class="kbq-icon">unicorn</i>
                 Item with an icon
             </button>
-            <button
-                *ngFor="let item of extraItems"
-                kbq-dropdown-item
-            >
-                {{ item }}
-            </button>
+            @for (item of extraItems; track item) {
+                <button kbq-dropdown-item>
+                    {{ item }}
+                </button>
+            }
         </kbq-dropdown>
     `
 })
@@ -1768,15 +1767,16 @@ class CustomDropdown {
                 One
             </button>
             <button kbq-dropdown-item>Two</button>
-            <button
-                id="lazy-trigger"
-                #lazyTrigger="kbqDropdownTrigger"
-                *ngIf="showLazy"
-                [kbqDropdownTriggerFor]="lazy"
-                kbq-dropdown-item
-            >
-                Three
-            </button>
+            @if (showLazy) {
+                <button
+                    id="lazy-trigger"
+                    #lazyTrigger="kbqDropdownTrigger"
+                    [kbqDropdownTriggerFor]="lazy"
+                    kbq-dropdown-item
+                >
+                    Three
+                </button>
+            }
         </kbq-dropdown>
 
         <kbq-dropdown
@@ -1845,14 +1845,15 @@ class NestedDropdown {
             Toggle dropdown
         </button>
         <kbq-dropdown #root="kbqDropdown">
-            <button
-                class="level-one-trigger"
-                *ngFor="let item of items"
-                [kbqDropdownTriggerFor]="levelOne"
-                kbq-dropdown-item
-            >
-                {{ item }}
-            </button>
+            @for (item of items; track item) {
+                <button
+                    class="level-one-trigger"
+                    [kbqDropdownTriggerFor]="levelOne"
+                    kbq-dropdown-item
+                >
+                    {{ item }}
+                </button>
+            }
         </kbq-dropdown>
 
         <kbq-dropdown #levelOne="kbqDropdown">

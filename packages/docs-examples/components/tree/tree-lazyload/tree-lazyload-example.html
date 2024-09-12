@@ -15,10 +15,9 @@
         kbqTreeNodePadding
     >
         <kbq-tree-node-toggle [node]="node" />
-        <kbq-progress-spinner
-            *ngIf="node.loading"
-            mode="indeterminate"
-        />
+        @if (node.loading) {
+            <kbq-progress-spinner mode="indeterminate" />
+        }
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>

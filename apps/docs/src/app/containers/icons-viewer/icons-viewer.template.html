@@ -22,42 +22,37 @@
 </div>
 
 <div class="docs-icons-viewer__table">
-    <ng-container *ngIf="filteredIcons | async as icons">
-        <ng-container *ngFor="let size of availableSizes">
-            <div
-                *ngIf="filterBySize(icons, size).length"
-                class="layout-column"
-            >
-                <div class="docs-icons-viewer__table-row-header">{{ size }}px</div>
-
-                <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{ size }}">
-                    <div
-                        *ngFor="let icon of filterBySize(icons, size)"
-                        tabindex="0"
-                        class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
-                        (click)="setActiveIcon(icon)"
-                        (keyup.enter)="setActiveIcon(icon)"
-                    >
-                        <i
-                            kbq-icon
-                            [color]="themePalette.FadeContrast"
-                            [ngClass]="icon.cssClass"
-                        ></i>
-                        <span
-                            class="docs-icons-viewer__table-cell-name"
-                            [innerHtml]="icon.name | mcHighlight: searchControl.value"
-                            [kbqTooltip]="icon.name"
-                        ></span>
+    @if (filteredIcons | async; as icons) {
+        @for (size of availableSizes; track size) {
+            @if (filterBySize(icons, size).length) {
+                <div class="layout-column">
+                    <div class="docs-icons-viewer__table-row-header">{{ size }}px</div>
+                    <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{ size }}">
+                        @for (icon of filterBySize(icons, size); track icon) {
+                            <div
+                                tabindex="0"
+                                class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                (click)="setActiveIcon(icon)"
+                                (keyup.enter)="setActiveIcon(icon)"
+                            >
+                                <i
+                                    kbq-icon
+                                    [ngClass]="icon.cssClass"
+                                ></i>
+                                <span
+                                    class="docs-icons-viewer__table-cell-name"
+                                    [innerHtml]="icon.name | mcHighlight: searchControl.value"
+                                    [kbqTooltip]="icon.name"
+                                ></span>
+                            </div>
+                        }
                     </div>
                 </div>
-            </div>
-        </ng-container>
-    </ng-container>
+            }
+        }
+    }
 
-    <div
-        *ngIf="searchControl.value && !filteredIcons.value"
-        class="docs-icons-viewer__table-empty-results"
-    >
-        Ничего не найдено
-    </div>
+    @if (searchControl.value && !filteredIcons.value) {
+        <div class="docs-icons-viewer__table-empty-results">Ничего не найдено</div>
+    }
 </div>

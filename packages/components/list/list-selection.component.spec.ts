@@ -858,12 +858,11 @@ describe('should update model after keyboard interaction with multiple mode = ch
             [(ngModel)]="selectedOptions"
             [compareWith]="compareWith"
         >
-            <mat-list-option
-                *ngFor="let option of options"
-                [value]="option"
-            >
-                {{ option.label }}
-            </mat-list-option>
+            @for (option of options; track option) {
+                <mat-list-option [value]="option">
+                    {{ option.label }}
+                </mat-list-option>
+            }
         </mat-selection-list>
     `
 })
@@ -912,13 +911,14 @@ class SelectionListWithCustomComparator {
             >
                 Sent Mail
             </kbq-list-option>
-            <kbq-list-option
-                *ngIf="showLastOption"
-                [value]="'drafts'"
-                checkboxPosition="before"
-            >
-                Drafts
-            </kbq-list-option>
+            @if (showLastOption) {
+                <kbq-list-option
+                    [value]="'drafts'"
+                    checkboxPosition="before"
+                >
+                    Drafts
+                </kbq-list-option>
+            }
         </kbq-list-selection>
     `
 })
@@ -1038,12 +1038,9 @@ class SelectionListWithTabindexInDisabledState {
         >
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option
-                *ngIf="renderLastOption"
-                [value]="'opt3'"
-            >
-                Option 3
-            </kbq-list-option>
+            @if (renderLastOption) {
+                <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+            }
         </kbq-list-selection>
     `
 })
@@ -1103,12 +1100,11 @@ class SelectionListWithPreselectedOptionAndModel {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-list-selection [formControl]="formControl">
-            <kbq-list-option
-                *ngFor="let opt of opts"
-                [value]="opt"
-            >
-                {{ opt }}
-            </kbq-list-option>
+            @for (opt of opts; track opt) {
+                <kbq-list-option [value]="opt">
+                    {{ opt }}
+                </kbq-list-option>
+            }
         </kbq-list-selection>
     `
 })

@@ -6,12 +6,9 @@
 </button>
 
 <kbq-splitter>
-    <div
-        *ngIf="isFirstVisible"
-        kbq-splitter-area
-    >
-        first
-    </div>
+    @if (isFirstVisible) {
+        <div kbq-splitter-area>first</div>
+    }
     <div
         kbq-splitter-area
         class="flex"

@@ -1,9 +1,5 @@
-<ng-container [ngSwitch]="internalState">
-    <ng-container *ngSwitchCase="true">
-        <ng-content select="[kbq-sidebar-opened]" />
-    </ng-container>
-
-    <ng-container *ngSwitchCase="false">
-        <ng-content select="[kbq-sidebar-closed]" />
-    </ng-container>
-</ng-container>
+@if (internalState) {
+    <ng-content select="[kbq-sidebar-opened]" />
+} @else {
+    <ng-content select="[kbq-sidebar-closed]" />
+}

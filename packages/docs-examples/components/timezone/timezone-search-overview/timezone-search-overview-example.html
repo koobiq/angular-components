@@ -20,15 +20,15 @@
 
         <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-        <kbq-optgroup
-            *ngFor="let group of filteredOptions$ | async"
-            [label]="group.countryName"
-        >
-            <kbq-timezone-option
-                *ngFor="let timezone of group.zones"
-                [highlightText]="searchPattern"
-                [timezone]="timezone"
-            />
-        </kbq-optgroup>
+        @for (group of filteredOptions$ | async; track group) {
+            <kbq-optgroup [label]="group.countryName">
+                @for (timezone of group.zones; track timezone) {
+                    <kbq-timezone-option
+                        [highlightText]="searchPattern"
+                        [timezone]="timezone"
+                    />
+                }
+            </kbq-optgroup>
+        }
     </kbq-timezone-select>
 </kbq-form-field>

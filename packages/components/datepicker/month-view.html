@@ -1,12 +1,11 @@
 <table class="kbq-calendar__table">
     <thead class="kbq-calendar__table-header">
         <tr>
-            <th
-                *ngFor="let day of weekdays"
-                [attr.aria-label]="day.long"
-            >
-                {{ day.narrow }}
-            </th>
+            @for (day of weekdays; track day) {
+                <th [attr.aria-label]="day.long">
+                    {{ day.narrow }}
+                </th>
+            }
         </tr>
         <tr>
             <th

@@ -190,9 +190,9 @@ export class ModalDemoComponent {
 @Component({
     selector: 'kbq-modal-custom-long-component',
     template: `
-        <ng-container *ngFor="let item of longText">
+        @for (item of longText; track item) {
             <p>{{ item }}</p>
-        </ng-container>
+        }
     `
 })
 export class KbqModalLongCustomComponent {

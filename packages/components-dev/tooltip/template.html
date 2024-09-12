@@ -292,14 +292,13 @@
                 <li>Tooltip trigger: {{ selectedTrigger }}</li>
                 <li>Tooltip anchor placement: {{ selectedPlacement }}</li>
                 <li>Tooltip anchored element: {{ selectedElement }}</li>
-                <li
-                    *ngIf="this.isFallbackActivated"
-                    class="actual red"
-                >
-                    Tooltip activated fallback position: {{ activatedPosition }}
-                </li>
+                @if (this.isFallbackActivated) {
+                    <li class="actual red">Tooltip activated fallback position: {{ activatedPosition }}</li>
+                }
                 <li>Layout positioning: {{ layoutClass }}</li>
-                <li *ngIf="multipleSelected">Placement priority order: {{ multipleSelected }}</li>
+                @if (multipleSelected) {
+                    <li>Placement priority order: {{ multipleSelected }}</li>
+                }
             </ul>
         </div>
     </div>
@@ -308,68 +307,73 @@
         class="{{ layoutClass }} result"
         [style]="getOrder('result')"
     >
-        <div [ngSwitch]="showElement()">
-            <button
-                *ngSwitchCase="ELEMENTS.BUTTON"
-                kbq-button
-                [kbqPlacement]="selectedPlacement"
-                [kbqPlacementPriority]="multipleSelected"
-                [kbqTooltip]="inputText"
-                [kbqTooltipArrow]="false"
-                [kbqTooltipColor]="selectedColor"
-                [kbqTrigger]="selectedTrigger"
-                (kbqPlacementChange)="onPlacementChange($event)"
-                (kbqVisibleChange)="onTooltipVisibleChange($event)"
-            >
-                Button
-            </button>
-
-            <button
-                *ngSwitchCase="ELEMENTS.EXTENDED"
-                kbq-button
-                [kbqExtendedTooltip]="tooltipContent"
-                [kbqPlacement]="selectedPlacement"
-                [kbqPlacementPriority]="multipleSelected"
-                [kbqTooltipArrow]="false"
-                [kbqTooltipClass]="'tooltip-485'"
-                [kbqTooltipColor]="selectedColor"
-                [kbqTooltipContext]="toolTipContext"
-                [kbqTooltipHeader]="tooltipHeader"
-                [kbqTooltipOffset]="123"
-                [kbqTrigger]="selectedTrigger"
-                (kbqPlacementChange)="onPlacementChange($event)"
-                (kbqVisibleChange)="onTooltipVisibleChange($event)"
-            >
-                Button
-            </button>
-
-            <kbq-form-field *ngSwitchCase="ELEMENTS.INPUT">
-                <input
-                    kbqInput
-                    placeholder="Button content"
-                    [kbqPlacement]="selectedPlacement"
-                    [kbqPlacementPriority]="multipleSelected"
-                    [kbqTooltip]="inputText"
-                    [kbqTooltipColor]="selectedColor"
-                    [kbqTrigger]="selectedTrigger"
-                    [(ngModel)]="content"
-                    (kbqPlacementChange)="onPlacementChange($event)"
-                    (kbqVisibleChange)="onTooltipVisibleChange($event)"
-                />
-            </kbq-form-field>
-
-            <div *ngSwitchCase="ELEMENTS.ICON">
-                <i
-                    kbq-icon="mc-calendar_16"
-                    [kbqPlacement]="selectedPlacement"
-                    [kbqPlacementPriority]="multipleSelected"
-                    [kbqTooltip]="inputText"
-                    [kbqTooltipColor]="selectedColor"
-                    [kbqTrigger]="selectedTrigger"
-                    (kbqPlacementChange)="onPlacementChange($event)"
-                    (kbqVisibleChange)="onTooltipVisibleChange($event)"
-                ></i>
-            </div>
+        <div>
+            @switch (showElement()) {
+                @case (ELEMENTS.BUTTON) {
+                    <button
+                        kbq-button
+                        [kbqPlacement]="selectedPlacement"
+                        [kbqPlacementPriority]="multipleSelected"
+                        [kbqTooltip]="inputText"
+                        [kbqTooltipArrow]="false"
+                        [kbqTooltipColor]="selectedColor"
+                        [kbqTrigger]="selectedTrigger"
+                        (kbqPlacementChange)="onPlacementChange($event)"
+                        (kbqVisibleChange)="onTooltipVisibleChange($event)"
+                    >
+                        Button
+                    </button>
+                }
+                @case (ELEMENTS.EXTENDED) {
+                    <button
+                        kbq-button
+                        [kbqExtendedTooltip]="tooltipContent"
+                        [kbqPlacement]="selectedPlacement"
+                        [kbqPlacementPriority]="multipleSelected"
+                        [kbqTooltipArrow]="false"
+                        [kbqTooltipClass]="'tooltip-485'"
+                        [kbqTooltipColor]="selectedColor"
+                        [kbqTooltipContext]="toolTipContext"
+                        [kbqTooltipHeader]="tooltipHeader"
+                        [kbqTooltipOffset]="123"
+                        [kbqTrigger]="selectedTrigger"
+                        (kbqPlacementChange)="onPlacementChange($event)"
+                        (kbqVisibleChange)="onTooltipVisibleChange($event)"
+                    >
+                        Button
+                    </button>
+                }
+                @case (ELEMENTS.INPUT) {
+                    <kbq-form-field>
+                        <input
+                            kbqInput
+                            placeholder="Button content"
+                            [kbqPlacement]="selectedPlacement"
+                            [kbqPlacementPriority]="multipleSelected"
+                            [kbqTooltip]="inputText"
+                            [kbqTooltipColor]="selectedColor"
+                            [kbqTrigger]="selectedTrigger"
+                            [(ngModel)]="content"
+                            (kbqPlacementChange)="onPlacementChange($event)"
+                            (kbqVisibleChange)="onTooltipVisibleChange($event)"
+                        />
+                    </kbq-form-field>
+                }
+                @case (ELEMENTS.ICON) {
+                    <div>
+                        <i
+                            kbq-icon="mc-calendar_16"
+                            [kbqPlacement]="selectedPlacement"
+                            [kbqPlacementPriority]="multipleSelected"
+                            [kbqTooltip]="inputText"
+                            [kbqTooltipColor]="selectedColor"
+                            [kbqTrigger]="selectedTrigger"
+                            (kbqPlacementChange)="onPlacementChange($event)"
+                            (kbqVisibleChange)="onTooltipVisibleChange($event)"
+                        ></i>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>

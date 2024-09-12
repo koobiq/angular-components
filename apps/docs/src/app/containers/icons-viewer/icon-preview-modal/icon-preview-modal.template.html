@@ -37,18 +37,19 @@
                     {{ selectedColorTheme | titlecase }}
                 </kbq-select-trigger>
 
-                <kbq-option
-                    *ngFor="let paletteName of themePalettes"
-                    class="icon-preview-modal__select-option"
-                    [value]="paletteName"
-                >
-                    <i
-                        kbq-icon="mc-circle-8_16"
-                        class="icon-preview-modal__palette-icon"
-                        [color]="paletteName"
-                    ></i>
-                    {{ paletteName | titlecase }}
-                </kbq-option>
+                @for (paletteName of themePalettes; track paletteName) {
+                    <kbq-option
+                        class="icon-preview-modal__select-option"
+                        [value]="paletteName"
+                    >
+                        <i
+                            kbq-icon="mc-circle-8_16"
+                            class="icon-preview-modal__palette-icon"
+                            [color]="paletteName"
+                        ></i>
+                        {{ paletteName | titlecase }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
 
@@ -106,15 +107,16 @@
 
             <kbq-dt>Ключевые слова</kbq-dt>
             <kbq-dd class="icon-preview-modal__key-words">
-                <kbq-badge
-                    *ngFor="let tag of iconItem.tags"
-                    [badgeColor]="'fade-theme'"
-                    [tabindex]="0"
-                    (click)="onTagSelect(tag)"
-                    (keydown.enter)="onTagSelect(tag)"
-                >
-                    {{ tag }}
-                </kbq-badge>
+                @for (tag of iconItem.tags; track tag) {
+                    <kbq-badge
+                        [badgeColor]="'fade-theme'"
+                        [tabindex]="0"
+                        (click)="onTagSelect(tag)"
+                        (keydown.enter)="onTagSelect(tag)"
+                    >
+                        {{ tag }}
+                    </kbq-badge>
+                }
             </kbq-dd>
         </kbq-dl>
     </div>

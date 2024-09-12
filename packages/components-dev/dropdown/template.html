@@ -13,14 +13,15 @@
 
     <kbq-dropdown #dropdown>
         <ng-template kbqDropdownContent>
-            <button
-                *ngFor="let pool of pools"
-                kbq-dropdown-item
-                [kbqDropdownTriggerData]="{ domains: pool.domains }"
-                [kbqDropdownTriggerFor]="domainsDropdown"
-            >
-                {{ pool.name }}
-            </button>
+            @for (pool of pools; track pool) {
+                <button
+                    kbq-dropdown-item
+                    [kbqDropdownTriggerData]="{ domains: pool.domains }"
+                    [kbqDropdownTriggerFor]="domainsDropdown"
+                >
+                    {{ pool.name }}
+                </button>
+            }
         </ng-template>
     </kbq-dropdown>
 
@@ -29,13 +30,14 @@
             kbqDropdownContent
             let-domains="domains"
         >
-            <button
-                *ngFor="let domain of domains"
-                kbq-dropdown-item
-                (click)="selectDomain(domain.id)"
-            >
-                {{ domain.name }}
-            </button>
+            @for (domain of domains; track domain) {
+                <button
+                    kbq-dropdown-item
+                    (click)="selectDomain(domain.id)"
+                >
+                    {{ domain.name }}
+                </button>
+            }
         </ng-template>
     </kbq-dropdown>
 

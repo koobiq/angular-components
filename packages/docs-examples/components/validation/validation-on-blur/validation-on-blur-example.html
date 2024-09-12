@@ -7,12 +7,9 @@
                     kbqInput
                     [formControl]="ipAddress"
                 />
-                <kbq-hint
-                    *ngIf="ipAddress.invalid"
-                    [color]="themePalette.Error"
-                >
-                    IP-адрес не соответствует стандартам RFC
-                </kbq-hint>
+                @if (ipAddress.invalid) {
+                    <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                }
 
                 <kbq-cleaner />
             </kbq-form-field>
@@ -27,18 +24,12 @@
                     [formControl]="frequency"
                 />
                 <kbq-hint>Введите значение от 1 до 24</kbq-hint>
-                <kbq-hint
-                    *ngIf="frequency.errors?.min"
-                    [color]="themePalette.Error"
-                >
-                    Минимальное значение: 1 час
-                </kbq-hint>
-                <kbq-hint
-                    *ngIf="frequency.errors?.max"
-                    [color]="themePalette.Error"
-                >
-                    Максимальное значение: 24 часа
-                </kbq-hint>
+                @if (frequency.errors?.min) {
+                    <kbq-hint [color]="themePalette.Error">Минимальное значение: 1 час</kbq-hint>
+                }
+                @if (frequency.errors?.max) {
+                    <kbq-hint [color]="themePalette.Error">Максимальное значение: 24 часа</kbq-hint>
+                }
             </kbq-form-field>
         </div>
     </div>

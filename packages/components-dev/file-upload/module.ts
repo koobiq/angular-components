@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -289,7 +288,6 @@ export class CustomTextDirective {}
         KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
-        NgIf,
         KbqCheckboxModule,
         KbqRadioModule,
         KbqDataSizePipe

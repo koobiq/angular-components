@@ -42,14 +42,15 @@
                 <span class="kbq-body_caps">язык</span>
             </div>
 
-            <button
-                *ngFor="let language of languages"
-                kbq-dropdown-item
-                [class.kbq-selected]="language.selected"
-                (click)="selectLanguage(language)"
-            >
-                {{ language.name }}
-            </button>
+            @for (language of languages; track language) {
+                <button
+                    kbq-dropdown-item
+                    [class.kbq-selected]="language.selected"
+                    (click)="selectLanguage(language)"
+                >
+                    {{ language.name }}
+                </button>
+            }
         </kbq-dropdown>
 
         <kbq-navbar-item>

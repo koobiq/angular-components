@@ -1,21 +1,18 @@
 <ng-content />
 
-<ng-template
-    let-area
-    let-index="index"
-    let-last="last"
-    ngFor
-    [ngForOf]="areas"
->
-    <kbq-gutter
-        *ngIf="last === false"
-        [attr.disabled]="disabled || null"
-        [direction]="direction"
-        [order]="index * 2 + 1"
-        [size]="gutterSize"
-        [style.display]="hideGutters ? 'none' : 'flex'"
-        (mousedown)="onMouseDown($event, index, index + 1)"
-    />
-</ng-template>
+@for (area of areas; track area; let index = $index; let last = $last) {
+    @if (last === false) {
+        <kbq-gutter
+            [attr.disabled]="disabled || null"
+            [direction]="direction"
+            [order]="index * 2 + 1"
+            [size]="gutterSize"
+            [style.display]="hideGutters ? 'none' : 'flex'"
+            (mousedown)="onMouseDown($event, index, index + 1)"
+        />
+    }
+}
 
-<kbq-gutter-ghost *ngIf="useGhost" />
+@if (useGhost) {
+    <kbq-gutter-ghost />
+}

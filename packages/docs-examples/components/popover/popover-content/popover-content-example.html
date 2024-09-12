@@ -35,31 +35,30 @@
         </form>
         <div class="popover-share-content__list">
             <div class="popover-share-content__list-title">Members</div>
-            <div
-                *ngFor="let member of members; let i = index"
-                class="popover-share-content__list-item"
-            >
-                <div class="popover-share-content__list-item-left">
-                    <img
-                        alt="{{ member.name }}"
-                        src="assets/images/popover/list-member-{{ i + 1 }}.png"
-                        class="popover-share-content__list-item-image"
-                    />
-                    <div class="popover-share-content__list-item-name">{{ member.name }}</div>
-                </div>
-                <button
-                    kbq-button
-                    class="kbq-button_transparent"
-                    [color]="componentColors.Contrast"
-                    [kbqDropdownTriggerFor]="appDropdown"
-                >
-                    {{ member.role }}
-                    <i
-                        kbq-icon="mc-angle-down-S_16"
+            @for (member of members; track member; let i = $index) {
+                <div class="popover-share-content__list-item">
+                    <div class="popover-share-content__list-item-left">
+                        <img
+                            alt="{{ member.name }}"
+                            src="assets/images/popover/list-member-{{ i + 1 }}.png"
+                            class="popover-share-content__list-item-image"
+                        />
+                        <div class="popover-share-content__list-item-name">{{ member.name }}</div>
+                    </div>
+                    <button
+                        kbq-button
+                        class="kbq-button_transparent"
                         [color]="componentColors.Contrast"
-                    ></i>
-                </button>
-            </div>
+                        [kbqDropdownTriggerFor]="appDropdown"
+                    >
+                        {{ member.role }}
+                        <i
+                            kbq-icon="mc-angle-down-S_16"
+                            [color]="componentColors.Contrast"
+                        ></i>
+                    </button>
+                </div>
+            }
             <kbq-dropdown
                 #appDropdown="kbqDropdown"
                 [class]="'max-width'"

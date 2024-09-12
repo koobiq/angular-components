@@ -1,19 +1,15 @@
 <ng-content select="kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]" />
 
-<ng-container [ngSwitch]="externalPseudoCheckbox">
-    <ng-content
-        *ngSwitchCase="true"
-        select="kbq-pseudo-checkbox"
-    />
-
-    <ng-container *ngSwitchCase="false">
+@if (externalPseudoCheckbox) {
+    <ng-content select="kbq-pseudo-checkbox" />
+} @else {
+    @if (showCheckbox) {
         <kbq-pseudo-checkbox
-            *ngIf="showCheckbox"
             [disabled]="disabled"
             [state]="checkboxState"
         />
-    </ng-container>
-</ng-container>
+    }
+}
 
 <ng-content select="kbq-checkbox" />
 

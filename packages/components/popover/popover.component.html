@@ -12,67 +12,61 @@
         [class.kbq-popover__container_with-footer]="footer"
         [class.kbq-popover__container_with-header]="header"
     >
-        <div
-            *ngIf="header"
-            class="kbq-popover__header"
-            [class.kbq-popover__header_top-overflow]="isContentTopOverflow"
-            [class.kbq-popover__header_with-close-button]="hasCloseButton"
-        >
-            <ng-container
-                *ngIf="isTemplateRef(header)"
-                [ngTemplateOutlet]="$any(header)"
-            />
-
-            <ng-container *ngIf="!isTemplateRef(header)">
-                <div class="kbq-popover__header-text">{{ header }}</div>
-            </ng-container>
-        </div>
-
-        <div
-            *ngIf="content"
-            #popoverContent
-            class="kbq-popover__content kbq-scrollbar"
-            (cdkObserveContent)="onContentChange()"
-        >
+        @if (header) {
             <div
-                *ngIf="hasCloseButton && !header"
-                class="kbq-popover__close-container"
+                class="kbq-popover__header"
+                [class.kbq-popover__header_top-overflow]="isContentTopOverflow"
+                [class.kbq-popover__header_with-close-button]="hasCloseButton"
             >
-                <ng-container *ngTemplateOutlet="closeButton" />
+                @if (isTemplateRef(header)) {
+                    <ng-container [ngTemplateOutlet]="$any(header)" />
+                }
+                @if (!isTemplateRef(header)) {
+                    <div class="kbq-popover__header-text">{{ header }}</div>
+                }
             </div>
+        }
 
-            <ng-container
-                *ngIf="isTemplateRef(content)"
-                [ngTemplateOutlet]="$any(content)"
-            />
+        @if (content) {
+            <div
+                #popoverContent
+                class="kbq-popover__content kbq-scrollbar"
+                (cdkObserveContent)="onContentChange()"
+            >
+                @if (hasCloseButton && !header) {
+                    <div class="kbq-popover__close-container">
+                        <ng-container *ngTemplateOutlet="closeButton" />
+                    </div>
+                }
+                @if (isTemplateRef(content)) {
+                    <ng-container [ngTemplateOutlet]="$any(content)" />
+                }
+                @if (!isTemplateRef(content)) {
+                    <div>{{ content }}</div>
+                }
+            </div>
+        }
 
-            <ng-container *ngIf="!isTemplateRef(content)">
-                <div>{{ content }}</div>
-            </ng-container>
-        </div>
-
-        <div
-            *ngIf="footer"
-            class="kbq-popover__footer"
-            [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
-        >
-            <ng-container
-                *ngIf="isTemplateRef(footer)"
-                [ngTemplateOutlet]="$any(footer)"
-            />
-
-            <ng-container *ngIf="!isTemplateRef(footer)">
-                <div>{{ footer }}</div>
-            </ng-container>
-        </div>
+        @if (footer) {
+            <div
+                class="kbq-popover__footer"
+                [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
+            >
+                @if (isTemplateRef(footer)) {
+                    <ng-container [ngTemplateOutlet]="$any(footer)" />
+                }
+                @if (!isTemplateRef(footer)) {
+                    <div>{{ footer }}</div>
+                }
+            </div>
+        }
     </div>
 
-    <div
-        *ngIf="hasCloseButton && header"
-        class="kbq-popover__close-container"
-    >
-        <ng-container *ngTemplateOutlet="closeButton" />
-    </div>
+    @if (hasCloseButton && header) {
+        <div class="kbq-popover__close-container">
+            <ng-container *ngTemplateOutlet="closeButton" />
+        </div>
+    }
 
     <ng-template #closeButton>
         <div class="kbq-popover__close">

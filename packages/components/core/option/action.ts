@@ -45,16 +45,11 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
     selector: 'kbq-option-action',
     exportAs: 'kbqOptionAction',
     template: `
-        <ng-container [ngSwitch]="!!customIcon">
-            <i
-                class="mc kbq-icon mc-ellipsis_16"
-                *ngSwitchCase="false"
-            ></i>
-            <ng-content
-                *ngSwitchCase="true"
-                select="[kbq-icon]"
-            />
-        </ng-container>
+        @if (!!customIcon) {
+            <ng-content select="[kbq-icon]" />
+        } @else {
+            <i class="mc kbq-icon mc-ellipsis_16"></i>
+        }
     `,
     styleUrls: ['./action.scss', 'option-action-tokens.scss'],
     host: {

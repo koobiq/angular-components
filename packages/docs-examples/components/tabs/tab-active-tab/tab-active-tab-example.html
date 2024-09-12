@@ -1,15 +1,14 @@
 <kbq-tab-group [(activeTab)]="selectedTabId">
-    <kbq-tab
-        *ngFor="let tab of tabs"
-        [tabId]="tab.tabId"
-    >
-        <ng-template kbq-tab-label>
-            <i
-                kbq-icon
-                [ngClass]="tab.icon"
-            ></i>
-            {{ tab.tabId }}
-        </ng-template>
-        Content for selected tab with tabId={{ selectedTabId }}
-    </kbq-tab>
+    @for (tab of tabs; track tab) {
+        <kbq-tab [tabId]="tab.tabId">
+            <ng-template kbq-tab-label>
+                <i
+                    kbq-icon
+                    [ngClass]="tab.icon"
+                ></i>
+                {{ tab.tabId }}
+            </ng-template>
+            Content for selected tab with tabId={{ selectedTabId }}
+        </kbq-tab>
+    }
 </kbq-tab-group>

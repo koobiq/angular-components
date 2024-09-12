@@ -297,16 +297,17 @@ interface ITab {
                 (indexFocused)="focusedIndex = $event"
                 (selectFocusedIndex)="selectedIndex = $event"
             >
-                <div
-                    class="label-content"
-                    *ngFor="let tab of tabs; let i = index"
-                    [disabled]="!!tab.disabled"
-                    (click)="selectedIndex = i"
-                    kbqTabLabelWrapper
-                    style="min-width: 30px; width: 30px"
-                >
-                    {{ tab.label }}
-                </div>
+                @for (tab of tabs; track tab; let i = $index) {
+                    <div
+                        class="label-content"
+                        [disabled]="!!tab.disabled"
+                        (click)="selectedIndex = i"
+                        kbqTabLabelWrapper
+                        style="min-width: 30px; width: 30px"
+                    >
+                        {{ tab.label }}
+                    </div>
+                }
             </kbq-tab-header>
         </div>
     `,

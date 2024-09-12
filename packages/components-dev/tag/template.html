@@ -33,17 +33,18 @@
     <h4 class="mc-title">Tag list, selectable=false</h4>
 
     <kbq-tag-list [selectable]="false">
-        <kbq-tag
-            *ngFor="let tag of simpleTags"
-            [value]="tag"
-            (removed)="onRemoveTag(tag)"
-        >
-            {{ tag }}
-            <i
-                kbq-icon="mc-close-S_16"
-                kbqTagRemove
-            ></i>
-        </kbq-tag>
+        @for (tag of simpleTags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="onRemoveTag(tag)"
+            >
+                {{ tag }}
+                <i
+                    kbq-icon="mc-close-S_16"
+                    kbqTagRemove
+                ></i>
+            </kbq-tag>
+        }
     </kbq-tag-list>
 
     <br />
@@ -51,18 +52,19 @@
     <br />
     <h4 class="kbq-title">Tags with icons</h4>
     <kbq-tag-list>
-        <kbq-tag
-            *ngFor="let tag of simpleTags"
-            [value]="tag"
-            (removed)="onRemoveTag(tag)"
-        >
-            <i kbq-icon="mc-search_16"></i>
-            {{ tag }}
-            <i
-                kbq-icon="mc-close-S_16"
-                kbqTagRemove
-            ></i>
-        </kbq-tag>
+        @for (tag of simpleTags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="onRemoveTag(tag)"
+            >
+                <i kbq-icon="mc-search_16"></i>
+                {{ tag }}
+                <i
+                    kbq-icon="mc-close-S_16"
+                    kbqTagRemove
+                ></i>
+            </kbq-tag>
+        }
     </kbq-tag-list>
     <br />
     <br />
@@ -70,21 +72,23 @@
 
     <h4 class="kbq-title">Without remove</h4>
     <kbq-tag-list>
-        <kbq-tag
-            *ngFor="let tag of simpleTags"
-            [value]="tag"
-            (removed)="onRemoveTag(tag)"
-        >
-            {{ tag }}
-        </kbq-tag>
-        <kbq-tag
-            *ngFor="let tag of simpleTags"
-            [value]="tag"
-            (removed)="onRemoveTag(tag)"
-        >
-            <i kbq-icon="mc-search_16"></i>
-            {{ tag }}
-        </kbq-tag>
+        @for (tag of simpleTags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="onRemoveTag(tag)"
+            >
+                {{ tag }}
+            </kbq-tag>
+        }
+        @for (tag of simpleTags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="onRemoveTag(tag)"
+            >
+                <i kbq-icon="mc-search_16"></i>
+                {{ tag }}
+            </kbq-tag>
+        }
     </kbq-tag-list>
 
     <br />
@@ -94,17 +98,18 @@
     <h4 class="kbq-title">Tags with input</h4>
     <kbq-form-field>
         <kbq-tag-list #inputTagList>
-            <kbq-tag
-                *ngFor="let tag of inputTags"
-                [value]="tag"
-                (removed)="inputOnRemoveTag(tag)"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of inputTags; track tag) {
+                <kbq-tag
+                    [value]="tag"
+                    (removed)="inputOnRemoveTag(tag)"
+                >
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
 
             <input
                 #inputTagInput
@@ -130,17 +135,18 @@
     <h4 class="kbq-title">Tags with autocomplete</h4>
     <kbq-form-field>
         <kbq-tag-list #autocompleteTagList>
-            <kbq-tag
-                *ngFor="let tag of autocompleteSelectedTags"
-                [value]="tag"
-                (removed)="autocompleteOnRemove(tag)"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of autocompleteSelectedTags; track tag) {
+                <kbq-tag
+                    [value]="tag"
+                    (removed)="autocompleteOnRemove(tag)"
+                >
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
             <input
                 #autocompleteTagInput
                 placeholder="Новый тег..."
@@ -157,24 +163,19 @@
             #autocomplete
             (optionSelected)="autocompleteOnSelect($event)"
         >
-            <kbq-option
-                *ngIf="canCreate"
-                [value]="{ new: true, value: autocompleteTagInput.value }"
-            >
-                Создать: {{ autocompleteTagInput.value }}
-            </kbq-option>
-            <kbq-option
-                *ngIf="hasDuplicates"
-                [disabled]="true"
-            >
-                Ничего не найдено
-            </kbq-option>
-            <kbq-option
-                *ngFor="let tag of autocompleteFilteredTags | async"
-                [value]="tag"
-            >
-                {{ tag }}
-            </kbq-option>
+            @if (canCreate) {
+                <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
+                    Создать: {{ autocompleteTagInput.value }}
+                </kbq-option>
+            }
+            @if (hasDuplicates) {
+                <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
+            }
+            @for (tag of autocompleteFilteredTags | async; track tag) {
+                <kbq-option [value]="tag">
+                    {{ tag }}
+                </kbq-option>
+            }
         </kbq-autocomplete>
     </kbq-form-field>
 
@@ -185,17 +186,18 @@
     <h4 class="kbq-title">Tags with tag adding on blur disabled</h4>
     <kbq-form-field>
         <kbq-tag-list #enterInputTagList>
-            <kbq-tag
-                *ngFor="let tag of enterTags"
-                [value]="tag"
-                (removed)="enterOnRemoveTag(tag)"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of enterTags; track tag) {
+                <kbq-tag
+                    [value]="tag"
+                    (removed)="enterOnRemoveTag(tag)"
+                >
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
             <input
                 #enterTagInput
                 placeholder="New tag..."
