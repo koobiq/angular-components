@@ -20,6 +20,7 @@ const componentsWithCss = [
     'button',
     'button-toggle',
     'checkbox',
+    'code-block',
     'datepicker',
     'divider',
     'dropdown',
@@ -30,6 +31,9 @@ const componentsWithCss = [
     'icon-item',
     'input',
     'link',
+    'table',
+    'toast',
+    'toggle',
     'tree-select'
 ];
 
