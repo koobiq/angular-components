@@ -75,6 +75,7 @@
 -   [table](/packages/components/table/table-tokens.scss)
 -   [toast](/packages/components/toast/toast-tokens.scss)
 -   [toggle](/packages/components/toggle/toggle-tokens.scss)
+-   [tree-select](/packages/components/tree-select/tree-select-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?
 

@@ -12,7 +12,14 @@ const filter = {
     'icon-button': 'states-focused-color',
     'pseudo-checkbox': 'checkbox',
     table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
-    toggle: 'foreground-text-disabled'
+    toggle: 'foreground-text-disabled',
+    'tree-select': [
+        'select-panel',
+        'kbq-divider-color',
+        'foreground-contrast',
+        'error-default',
+        'foreground-text-disabled'
+    ]
 };
 
 const componentNameMapping = {

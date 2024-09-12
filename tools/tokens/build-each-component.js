@@ -34,7 +34,8 @@ const componentsWithCss = [
     'link',
     'table',
     'toast',
-    'toggle'
+    'toggle',
+    'tree-select'
 ];
 
 const styleDictionaryConfig = {
