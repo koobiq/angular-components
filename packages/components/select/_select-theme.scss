@@ -1,56 +1,45 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/popup' as *;
 @use '../core/styles/theming/theming' as *;
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-select-theme($theme) {
-    $foreground: map.get($theme, foreground);
-
-    $error: map.get($theme, error);
-
-    $select-panel: map.get($theme, components, select-panel);
-    $divider: map.get($theme, components, divider);
-
+@mixin kbq-select-theme() {
     .kbq-select {
-        color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
+        color: kbq-css-variable(foreground-contrast);
 
         &.ng-invalid {
-            color: kbq-css-variable(error-default, kbq-color($error));
+            color: kbq-css-variable(error-default);
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
+            color: kbq-css-variable(foreground-text-disabled);
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: kbq-css-variable(foreground-text-disabled, map.get($foreground, text-disabled));
+        color: kbq-css-variable(foreground-text-disabled);
     }
 
     .kbq-select__panel {
-        box-shadow: kbq-css-variable(select-panel-dropdown-shadow, map.get($select-panel, shadow));
-        background: kbq-css-variable(select-panel-dropdown-background, map.get($select-panel, background));
+        box-shadow: kbq-css-variable(select-panel-dropdown-shadow);
+        background: kbq-css-variable(select-panel-dropdown-background);
 
         & .kbq-select__footer {
-            border-color: kbq-css-variable(divider-color, map.get($divider, color));
+            border-color: kbq-css-variable(divider-color);
         }
     }
 
     .kbq-select__search-container {
-        border-bottom-color: kbq-css-variable(divider-color, map.get($divider, color));
+        border-bottom-color: kbq-css-variable(divider-color);
     }
 
     .kbq-select__no-options-message {
-        color: kbq-css-variable(foreground-text-less-contrast, map.get($foreground, text-less-contrast));
+        color: kbq-css-variable(foreground-text-less-contrast);
     }
 }
 
-@mixin kbq-select-typography($config) {
+@mixin kbq-select-typography() {
     .kbq-select {
         @include kbq-typography-css-variables(select, default);
     }

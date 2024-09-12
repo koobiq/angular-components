@@ -84,6 +84,7 @@
 -   [progress-spinner](/packages/components/progress-spinner/progress-spinner-tokens.scss)
 -   [radio](/packages/components/radio/radio-tokens.scss)
 -   [risk-level](/packages/components/risk-level/risk-level-tokens.scss)
+-   [select](/packages/components/select/select-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)

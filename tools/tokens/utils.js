@@ -44,7 +44,18 @@ const filter = {
         'button-size-border-radius',
         'background-overlay-inverse'
     ],
-    radio: 'foreground-contrast'
+    radio: 'foreground-contrast',
+    select: [
+        'kbq-foreground-contrast',
+        'kbq-foreground-text-less-contrast',
+        'kbq-error-default',
+        'foreground-text-disabled',
+        'select-panel',
+        'kbq-divider-color',
+        'kbq-option-size',
+        'size-xxs',
+        'kbq-size-m'
+    ]
 };
 
 const componentNameMapping = {
@@ -56,7 +67,8 @@ const componentNameMapping = {
     list: 'list, .kbq-list-selection',
     'timezone-option': 'timezone-select__panel',
     tree: ['tree', '.kbq-tree-selection'],
-    radio: 'radio-button'
+    radio: 'radio-button',
+    select: 'select, .kbq-select__panel'
 };
 
 const applyCustomTransformations = (dictionary) => {

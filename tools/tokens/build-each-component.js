@@ -44,6 +44,7 @@ const componentsWithCss = [
     'progress-spinner',
     'radio',
     'risk-level',
+    'select',
     'table',
     'textarea',
     'timezone',

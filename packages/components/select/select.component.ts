@@ -125,7 +125,7 @@ const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorState
     selector: 'kbq-select',
     exportAs: 'kbqSelect',
     templateUrl: 'select.html',
-    styleUrls: ['./select.scss'],
+    styleUrls: ['./select.scss', './select-tokens.scss'],
     inputs: ['disabled', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
