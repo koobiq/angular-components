@@ -64,6 +64,7 @@
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
 -   [divider](/packages/components/divider/divider-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
+-   [empty-state](/packages/components/empty-state/empty-state-tokens.scss)
 -   [form-field](/packages/components/form-field/form-field-tokens.scss)
 -   [hint](/packages/components/form-field/hint-tokens.scss)
 -   [icon](/packages/components/icon/icon-tokens.scss)

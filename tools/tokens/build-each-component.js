@@ -24,6 +24,7 @@ const componentsWithCss = [
     'datepicker',
     'divider',
     'dropdown',
+    'empty-state',
     'form-field',
     'hint',
     'icon',
