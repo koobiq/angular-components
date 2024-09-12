@@ -43,7 +43,8 @@ const filter = {
         'kbq-size-4xl',
         'button-size-border-radius',
         'background-overlay-inverse'
-    ]
+    ],
+    radio: 'foreground-contrast'
 };
 
 const componentNameMapping = {
@@ -54,7 +55,8 @@ const componentNameMapping = {
     dropdown: 'dropdown__panel',
     list: 'list, .kbq-list-selection',
     'timezone-option': 'timezone-select__panel',
-    tree: ['tree', '.kbq-tree-selection']
+    tree: ['tree', '.kbq-tree-selection'],
+    radio: 'radio-button'
 };
 
 const applyCustomTransformations = (dictionary) => {
