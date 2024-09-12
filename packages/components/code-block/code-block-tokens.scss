@@ -132,6 +132,8 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-code-block-filled-container-background: hsla(229, 15%, 95%, 100%);
     --kbq-code-block-filled-container-border-color: transparent;
     --kbq-code-block-filled-header-background: hsla(229, 15%, 95%, 100%);
@@ -264,6 +266,8 @@
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
+    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-code-block-filled-container-background: hsla(229, 15%, 16%, 100%);
     --kbq-code-block-filled-container-border-color: hsla(229, 15%, 22%, 100%);
     --kbq-code-block-filled-header-background: hsla(229, 15%, 16%, 100%);

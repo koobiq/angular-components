@@ -1,11 +1,8 @@
 @use 'sass:meta';
 @use 'sass:map';
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
 @use './code-block-theme' as *;
-
-$tokens: meta.module-variables(tokens) !default;
 
 $border-radius: kbq-css-variable(code-block-size-container-border-radius);
 $border-width: kbq-css-variable(code-block-size-container-border-width);
