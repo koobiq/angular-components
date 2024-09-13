@@ -17,7 +17,7 @@
 #### Вариации
 
 <div class="kbq-alert kbq-alert_info">
-    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle_16 kbq-alert__icon"></i>
     Нужную вариацию выбирают дизайнер и аналитик в зависимости от задачи
 </div>
 

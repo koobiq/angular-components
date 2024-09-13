@@ -12,7 +12,7 @@
 #### Вариации
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle_16 kbq-alert__icon"></i>
     Нестандартный тултип всегда предпочтительнее системного. Не используйте системный и нестандартный тултип в одном интерфейсе. 
 </div>
 
@@ -85,7 +85,7 @@
 ### Выравнивание
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle_16 kbq-alert__icon"></i>
     Учитывайте контекст, в котором появляется тултип. Настройте выравнивание так, чтобы он не закрывал важный контент.
 </div>
 

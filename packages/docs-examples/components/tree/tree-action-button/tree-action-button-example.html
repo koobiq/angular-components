@@ -10,7 +10,7 @@
         kbqTreeNodePadding
         [disabled]="node.name === 'tests'"
     >
-        <i kbq-icon="kbq-info-circle-o_16"></i>
+        <i kbq-icon="kbq-info-circle_16"></i>
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
 
@@ -25,7 +25,7 @@
         *kbqTreeNodeDef="let node; when: hasChild"
         kbqTreeNodePadding
     >
-        <i kbq-icon="kbq-info-circle-o_16"></i>
+        <i kbq-icon="kbq-info-circle_16"></i>
 
         <kbq-tree-node-toggle [node]="node" />
 

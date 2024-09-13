@@ -19,7 +19,7 @@
 -   Текста подсказки (не обязательно)
 
 <div class="kbq-alert kbq-alert_info" style="margin-top: 15px;">
-    <i class="kbq kbq-icon kbq-info-circle-o_16 kbq-alert__icon"></i>
+    <i class="kbq kbq-icon kbq-info-circle_16 kbq-alert__icon"></i>
     <span> Если есть ограничения по формату допустимых файлов или по размеру, перечислите их в тексте подсказки </span>
 </div>
 

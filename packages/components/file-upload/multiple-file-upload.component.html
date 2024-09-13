@@ -9,7 +9,7 @@
     <ng-container *ngIf="!files.length; else fileOutput">
         <div class="dropzone">
             <ng-container *ngIf="size === 'default'; else compactCaption">
-                <i kbq-icon="kbq-cloud-arrow-up_32"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_32"></i>
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
@@ -106,7 +106,7 @@
 
         <div class="btn-upload">
             <div class="dropzone">
-                <i kbq-icon="kbq-cloud-arrow-up_24"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                 <span class="dropzone__text multiple__caption">
                     {{ separatedCaptionTextWhenSelected[0] }}
                     <label
@@ -127,7 +127,7 @@
 </ng-template>
 
 <ng-template #compactCaption>
-    <i kbq-icon="kbq-cloud-arrow-up_24"></i>
+    <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
     <span class="dropzone__text multiple__caption">
         {{ separatedCaptionTextForCompactSize[0] }}
         <label

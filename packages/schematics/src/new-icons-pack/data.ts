@@ -147,7 +147,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'circle-8_16',
-        replaceWith: 'circle-6_16'
+        replaceWith: 'circle-xs_16'
     },
     {
         replace: 'clock_16',
@@ -187,7 +187,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'copy-o_16',
-        replaceWith: 'file-multiple_16'
+        replaceWith: 'file-multiple-o_16'
     },
     {
         replace: 'download_16',
@@ -267,7 +267,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'info-o_16',
-        replaceWith: 'info-circle-o_16'
+        replaceWith: 'info-circle_16'
     },
     {
         replace: 'list_24',
@@ -279,7 +279,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'new-tab_16',
-        replaceWith: 'window-plus_16'
+        replaceWith: 'arrow-up-right-from-square_16'
     },
     {
         replace: 'pause_16',
@@ -311,7 +311,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'theme_16',
-        replaceWith: 'theme-mode_16'
+        replaceWith: 'sun-moon_16'
     },
     {
         replace: 'triangle-down_16',
@@ -339,7 +339,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'arrow-up-from-line_24',
-        replaceWith: 'cloud-arrow-up_24'
+        replaceWith: 'cloud-arrow-up-o_24'
     },
     {
         replace: 'upload-to-cloud_32',
