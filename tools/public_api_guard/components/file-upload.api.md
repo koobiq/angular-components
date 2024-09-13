@@ -256,7 +256,7 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
     statusChangeSubscription?: Subscription;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileQueueChange": "fileQueueChange"; }, never, ["[hint]", "[kbq-icon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileQueueChange": "fileQueueChange"; }, never, ["[kbq-icon]", "[hint]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, [null, null, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
 }
