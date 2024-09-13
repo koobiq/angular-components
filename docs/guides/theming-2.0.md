@@ -62,6 +62,7 @@
 -   [checkbox,pseudo-checkbox](/packages/components/checkbox/checkbox-tokens.scss)
 -   [code-block](/packages/components/code-block/code-block-tokens.scss)
 -   [datepicker](/packages/components/datepicker/datepicker-tokens.scss)
+-   [description-list](/packages/components/dl/dl-tokens.scss)
 -   [divider](/packages/components/divider/divider-tokens.scss)
 -   [dropdown](/packages/components/dropdown/dropdown-tokens.scss)
 -   [empty-state](/packages/components/empty-state/empty-state-tokens.scss)

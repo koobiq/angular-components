@@ -5,7 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 @Component({
     selector: 'kbq-dl',
     template: '<ng-content />',
-    styleUrls: ['dl.scss'],
+    styleUrls: ['dl.scss', 'dl-tokens.scss'],
     host: {
         class: 'kbq-dl',
         '[class.kbq-dl_vertical]': 'vertical',

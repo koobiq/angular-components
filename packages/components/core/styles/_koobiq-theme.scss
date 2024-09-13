@@ -32,12 +32,10 @@
 @use '../option/optgroup-theme' as *;
 @use '../option/option-action-theme' as *;
 @use '../highlight/highlight-theme' as *;
-@use '../../dl/dl-theme' as *;
 
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-dl-theme($theme);
     @include kbq-file-upload-theme($theme);
     @include kbq-forms-theme($theme);
     @include kbq-highlight-theme();
@@ -80,7 +78,6 @@
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
-    @include kbq-dl-typography($config);
     @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
     @include kbq-list-typography($config);
