@@ -50,7 +50,6 @@ const componentsWithCss = [
     'forms',
     'option',
     'splitter',
-    'tabs',
     'tag',
     'tabs',
     'table',

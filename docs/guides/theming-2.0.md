@@ -95,7 +95,6 @@
 -   [splitter](/packages/components/splitter/splitter-tokens.scss)
 -   [tag](/packages/components/tags/tag-tokens.scss)
 -   [tag-input](/packages/components/tags/tag-input-tokens.scss)
--   [splitter](/packages/components/splitter/splitter-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)
