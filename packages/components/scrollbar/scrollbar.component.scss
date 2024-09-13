@@ -1,7 +1,6 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/tokens' as *;
+
+@use './scrollbar-component-theme' as *;
 
 .kbq-scrollbar-component {
     $scrollbar-size-thumb-width: kbq-css-variable(scrollbar-size-thumb-width);
@@ -78,6 +77,8 @@
         outline: none;
     }
 }
+
+@include kbq-scrollbar-component-theme();
 
 // core
 .os-size-observer,

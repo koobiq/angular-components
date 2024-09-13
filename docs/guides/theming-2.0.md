@@ -86,6 +86,8 @@
 -   [risk-level](/packages/components/risk-level/risk-level-tokens.scss)
 -   [select](/packages/components/select/select-tokens.scss)
 -   [sidepanel](/packages/components/sidepanel/sidepanel-tokens.scss)
+-   [scrollbar-component](/packages/components/scrollbar/scrollbar-tokens.scss)
+-   [scrollbar](/packages/components/core/styles/theming/scrollbar-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)

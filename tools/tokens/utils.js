@@ -55,7 +55,8 @@ const filter = {
         'kbq-option-size',
         'size-xxs',
         'kbq-size-m'
-    ]
+    ],
+    'scrollbar-component': 'scrollbar'
 };
 
 const componentNameMapping = {
@@ -92,7 +93,11 @@ const componentAliases = {
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
     'icon-item': 'icon/icon-item-tokens.scss',
-    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }]
+    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }],
+    scrollbars: [
+        { path: 'core/styles/theming/scrollbar-tokens.scss', aliasName: 'scrollbar' },
+        { path: 'scrollbar/scrollbar-tokens.scss', aliasName: 'scrollbar-component' }
+    ]
 };
 
 const resolvePath = (componentName) =>

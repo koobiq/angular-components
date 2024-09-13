@@ -52,7 +52,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             <ng-content />
         </div>
     `,
-    styleUrls: ['./scrollbar.component.scss'],
+    styleUrls: ['./scrollbar.component.scss', 'scrollbar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

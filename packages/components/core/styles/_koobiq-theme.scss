@@ -29,8 +29,7 @@
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
-    @include kbq-scrollbar-theme($theme);
-    @include kbq-scrollbar-component-theme($theme);
+    @include kbq-scrollbar-theme();
     @include kbq-splitter-theme($theme);
     @include kbq-tabs-theme($theme);
     @include kbq-tag-theme($theme);

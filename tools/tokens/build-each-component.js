@@ -46,6 +46,7 @@ const componentsWithCss = [
     'risk-level',
     'select',
     'sidepanel',
+    'scrollbars',
     'table',
     'textarea',
     'timezone',
