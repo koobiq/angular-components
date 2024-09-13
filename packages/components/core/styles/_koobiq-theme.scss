@@ -7,15 +7,11 @@
 
 @use '../../link/link-theme' as *;
 @use '../../markdown/markdown-theme' as *;
-@use '../../scrollbar/scrollbar-component-theme' as *;
 @use '../../splitter/splitter-theme' as *;
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
 @use '../forms/forms-theme' as *;
-@use '../option/option-theme' as *;
-@use '../option/optgroup-theme' as *;
-@use '../option/option-action-theme' as *;
 @use '../highlight/highlight-theme' as *;
 
 @mixin koobiq-theme($theme) {
@@ -26,9 +22,6 @@
     // link is a directive, so styles for it should be applied globally
     @include kbq-link-theme();
     @include kbq-markdown-theme();
-    @include kbq-option-theme($theme);
-    @include kbq-optgroup-theme($theme);
-    @include kbq-option-action-theme($theme);
     @include kbq-scrollbar-theme();
     @include kbq-splitter-theme($theme);
     @include kbq-tabs-theme($theme);
@@ -45,8 +38,6 @@
     @include kbq-markdown-typography();
 
     @include kbq-forms-typography();
-    @include kbq-option-typography($config);
-    @include kbq-optgroup-typography($config);
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography();

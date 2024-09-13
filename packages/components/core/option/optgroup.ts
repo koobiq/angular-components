@@ -15,7 +15,7 @@ let uniqueOptgroupIdCounter = 0;
     selector: 'kbq-optgroup',
     exportAs: 'kbqOptgroup',
     templateUrl: 'optgroup.html',
-    styleUrls: ['./optgroup.scss'],
+    styleUrls: ['./optgroup.scss', './optgroup-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     inputs: ['disabled'],

@@ -1,5 +1,7 @@
 @use '../styles/common/tokens' as *;
 
+@use './option-action-theme' as *;
+
 .kbq-option-action {
     box-sizing: border-box;
 
@@ -27,3 +29,5 @@
         cursor: default;
     }
 }
+
+@include kbq-option-action-theme();

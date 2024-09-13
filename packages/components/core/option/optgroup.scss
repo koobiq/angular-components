@@ -1,11 +1,7 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../styles/common/vendor-prefixes';
-@use '../styles/tokens';
 @use '../styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './optgroup-theme' as *;
 
 .kbq-optgroup-label {
     padding-left: kbq-css-variable(size-m);
@@ -13,3 +9,6 @@ $tokens: meta.module-variables(tokens) !default;
     @include vendor-prefixes.user-select(none);
     cursor: default;
 }
+
+@include kbq-optgroup-theme();
+@include kbq-optgroup-typography();

@@ -1,38 +1,30 @@
-@use 'sass:map';
-
-@use '../styles/theming/theming' as *;
-@use '../styles/typography/typography-utils' as *;
 @use '../styles/common/tokens' as *;
 
-@mixin kbq-option-action-theme($theme) {
-    $background: map.get($theme, background);
-
-    $states: map.get($theme, states);
-
+@mixin kbq-option-action-theme() {
     .kbq-option-action {
         &.cdk-keyboard-focused {
-            border-color: kbq-css-variable(states-focused-color, map.get($theme, states, focused-color));
+            border-color: kbq-css-variable(states-focused-color);
         }
 
         &:active,
         &.kbq-pressed {
             & .kbq-icon {
-                color: kbq-css-variable(states-icon-contrast-fade-active, map.get($states, icon, contrast-fade-active));
+                color: kbq-css-variable(states-icon-contrast-fade-active);
             }
 
-            background-color: kbq-css-variable(background-transparent, map.get($background, transparent));
+            background-color: kbq-css-variable(background-transparent);
         }
 
         &:hover .kbq-icon {
-            color: kbq-css-variable(states-icon-contrast-fade-hover, map.get($states, icon, contrast-fade-hover));
+            color: kbq-css-variable(states-icon-contrast-fade-hover);
         }
 
         &.kbq-disabled {
             & .kbq-icon {
-                color: kbq-css-variable(states-icon-disabled, map.get($states, icon, disabled));
+                color: kbq-css-variable(states-icon-disabled);
             }
 
-            background-color: kbq-css-variable(background-transparent, map.get($background, transparent));
+            background-color: kbq-css-variable(background-transparent);
         }
     }
 }

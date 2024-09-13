@@ -48,6 +48,7 @@ const componentsWithCss = [
     'sidepanel',
     'scrollbars',
     'forms',
+    'option',
     'table',
     'textarea',
     'timezone',

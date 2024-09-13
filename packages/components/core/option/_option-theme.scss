@@ -1,60 +1,49 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../styles/typography/typography-utils' as *;
 @use '../styles/common/tokens' as *;
 
-@mixin kbq-option($component, $style-name) {
-    $state: map.get($component, $style-name);
-
-    background: kbq-css-variable(list-#{$style-name}-container-background, map.get($state, container-background));
+@mixin kbq-option($style-name) {
+    background: kbq-css-variable(list-#{$style-name}-container-background);
 
     .kbq-option-text {
-        color: kbq-css-variable(list-#{$style-name}-text-color, map.get($state, text));
+        color: kbq-css-variable(list-#{$style-name}-text-color);
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(list-#{$style-name}-icon-button-color, map.get($state, icon-button));
+        color: kbq-css-variable(list-#{$style-name}-icon-button-color);
     }
 
     .kbq-option-caption {
-        color: kbq-css-variable(list-#{$style-name}-caption-color, map.get($state, caption));
+        color: kbq-css-variable(list-#{$style-name}-caption-color);
     }
 }
 
-@mixin kbq-option-theme($theme) {
-    $list-item: map.get(map.get($theme, components), list-item);
-
+@mixin kbq-option-theme() {
     .kbq-option {
-        @include kbq-option($list-item, default);
+        @include kbq-option(default);
 
         &:hover:not(.kbq-disabled) {
-            @include kbq-option($list-item, states-hover);
+            @include kbq-option(states-hover);
         }
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: kbq-css-variable(
-                list-states-focused-focus-outline-color,
-                map.get($list-item, states-focused, focus-outline)
-            );
+            border-color: kbq-css-variable(list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
-            @include kbq-option($list-item, states-selected);
+            @include kbq-option(states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-option($list-item, states-selected-hover);
+                @include kbq-option(states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-option($list-item, states-disabled);
+            @include kbq-option(states-disabled);
         }
     }
 }
 
-@mixin kbq-option-typography($config) {
+@mixin kbq-option-typography() {
     .kbq-option {
         @include kbq-typography-css-variables(list, text);
     }
