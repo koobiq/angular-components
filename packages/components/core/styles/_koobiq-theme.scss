@@ -7,7 +7,6 @@
 
 @use '../../link/link-theme' as *;
 @use '../../markdown/markdown-theme' as *;
-@use '../../splitter/splitter-theme' as *;
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
@@ -23,8 +22,7 @@
     @include kbq-link-theme();
     @include kbq-markdown-theme();
     @include kbq-scrollbar-theme();
-    @include kbq-splitter-theme($theme);
-    @include kbq-tabs-theme($theme);
+    @include kbq-tabs-theme();
     @include kbq-tag-theme($theme);
 }
 
@@ -38,7 +36,7 @@
     @include kbq-markdown-typography();
 
     @include kbq-forms-typography();
-    @include kbq-tabs-typography($config);
+    @include kbq-tabs-typography();
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography();
 }

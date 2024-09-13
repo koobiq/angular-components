@@ -96,7 +96,8 @@ const componentNameMapping = {
     radio: 'radio-button',
     select: 'select, .kbq-select__panel',
     sidepanel: 'sidepanel-container',
-    forms: 'form'
+    forms: 'form',
+    tabs: 'tab-group, .kbq-tab-nav-bar'
 };
 
 const applyCustomTransformations = (dictionary) => {

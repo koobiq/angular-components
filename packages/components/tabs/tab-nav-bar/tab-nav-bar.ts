@@ -39,7 +39,7 @@ export const KbqTabLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqT
     selector: '[kbq-tab-nav-bar]',
     exportAs: 'kbqTabNavBar, kbqTabNav',
     template: '<ng-content />',
-    styleUrls: ['tab-nav-bar.scss'],
+    styleUrls: ['tab-nav-bar.scss', '../tabs-tokens.scss'],
     host: {
         class: 'kbq-tab-nav-bar',
         '[class.kbq-tab-nav-bar_filled]': '!transparent',
