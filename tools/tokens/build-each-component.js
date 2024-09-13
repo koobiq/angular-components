@@ -37,6 +37,7 @@ const componentsWithCss = [
     'table',
     'toast',
     'toggle',
+    'tooltip',
     'tree-select'
 ];
 

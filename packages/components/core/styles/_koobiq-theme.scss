@@ -24,7 +24,6 @@
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
 @use '../../timezone/timezone-option-theme' as *;
-@use '../../tooltip/tooltip-theme' as *;
 @use '../../tree/tree-theme' as *;
 @use '../forms/forms-theme' as *;
 @use '../option/option-theme' as *;
@@ -60,7 +59,6 @@
     @include kbq-tabs-theme($theme);
     @include kbq-tag-theme($theme);
     @include kbq-timezone-option-theme($theme);
-    @include kbq-tooltip-theme($theme);
     @include kbq-tree-theme($theme);
 }
 
@@ -94,7 +92,6 @@
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography($config);
     @include kbq-timezone-option-typography($config);
-    @include kbq-tooltip-typography($config);
     @include kbq-tree-typography($config);
 
     @include kbq-markdown-typography($md-config);

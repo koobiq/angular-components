@@ -5,6 +5,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './tooltip-theme' as *;
+
 $trigger-margin: 8px;
 $trigger-margin_without-arrow: 4px;
 
@@ -32,6 +34,9 @@ $trigger-margin_without-arrow: 4px;
         @include pop-up.popup-margins(kbq-tooltip, $trigger-margin_without-arrow);
     }
 }
+
+@include kbq-tooltip-theme();
+@include kbq-tooltip-typography();
 
 .kbq-tooltip__arrow {
     position: absolute;

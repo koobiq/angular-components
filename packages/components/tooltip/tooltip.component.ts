@@ -51,7 +51,7 @@ export const MIN_TIME_FOR_DELAY = 2000;
 @Component({
     selector: 'kbq-tooltip-component',
     templateUrl: './tooltip.component.html',
-    styleUrls: ['./tooltip.scss'],
+    styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
     animations: [kbqTooltipAnimations.tooltipState],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
