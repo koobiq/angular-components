@@ -23,7 +23,7 @@
     @include kbq-markdown-theme();
     @include kbq-scrollbar-theme();
     @include kbq-tabs-theme();
-    @include kbq-tag-theme($theme);
+    @include kbq-tag-theme();
 }
 
 @mixin koobiq-typography($tokens, $config: null, $md-config: null) {
@@ -37,6 +37,6 @@
 
     @include kbq-forms-typography();
     @include kbq-tabs-typography();
-    @include kbq-tag-typography($config);
+    @include kbq-tag-typography();
     @include kbq-textarea-typography();
 }

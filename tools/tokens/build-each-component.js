@@ -51,6 +51,8 @@ const componentsWithCss = [
     'option',
     'splitter',
     'tabs',
+    'tag',
+    'tabs',
     'table',
     'textarea',
     'timezone',
