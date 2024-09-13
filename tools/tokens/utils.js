@@ -56,7 +56,9 @@ const filter = {
         'size-xxs',
         'kbq-size-m'
     ],
-    'scrollbar-component': 'scrollbar'
+    'scrollbar-component': 'scrollbar',
+    'form-field': 'form-field-hint',
+    forms: 'form-field-size-height'
 };
 
 const componentNameMapping = {
@@ -70,7 +72,8 @@ const componentNameMapping = {
     tree: ['tree', '.kbq-tree-selection'],
     radio: 'radio-button',
     select: 'select, .kbq-select__panel',
-    sidepanel: 'sidepanel-container'
+    sidepanel: 'sidepanel-container',
+    forms: 'form'
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -97,7 +100,8 @@ const componentAliases = {
     scrollbars: [
         { path: 'core/styles/theming/scrollbar-tokens.scss', aliasName: 'scrollbar' },
         { path: 'scrollbar/scrollbar-tokens.scss', aliasName: 'scrollbar-component' }
-    ]
+    ],
+    forms: 'core/forms/forms-tokens.scss'
 };
 
 const resolvePath = (componentName) =>

@@ -1,30 +1,22 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../styles/typography/typography-utils' as *;
-@use './forms' as *;
 @use '../styles/common/tokens' as *;
 
-@mixin kbq-forms-theme($theme) {
-    @include kbq-form-geometry(map.get($theme, tokens));
+@use './forms' as *;
+@use './forms-tokens';
 
-    $forms: map.get(map.get($theme, components), forms);
+@mixin kbq-forms-theme() {
+    @include kbq-form-geometry();
 
     .kbq-form__label {
-        color: kbq-css-variable(forms-label, map.get($forms, label));
+        color: kbq-css-variable(forms-label);
     }
 
     .kbq-form__legend {
-        color: kbq-css-variable(forms-legend, map.get($forms, legend));
+        color: kbq-css-variable(forms-legend);
     }
 }
 
-@mixin kbq-forms-typography($config) {
+@mixin kbq-forms-typography() {
     .kbq-form__label {
         @include kbq-typography-css-variables(forms, label);
     }
-
-    //.kbq-form__legend {
-    //    @include kbq-typography-level-to-styles($config, map.get($tokens, forms-font-default-legend));
-    //}
 }

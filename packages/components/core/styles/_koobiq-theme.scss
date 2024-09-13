@@ -21,7 +21,7 @@
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-forms-theme($theme);
+    @include kbq-forms-theme();
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
     @include kbq-link-theme();
@@ -44,7 +44,7 @@
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();
 
-    @include kbq-forms-typography($config);
+    @include kbq-forms-typography();
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);
     @include kbq-tabs-typography($config);
