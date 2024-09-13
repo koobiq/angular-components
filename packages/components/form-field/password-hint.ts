@@ -125,6 +125,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
             throw Error(`Unknown [rule]=${this.rule}`);
         }
 
+        // prevent error when formField.control is undefined
         setTimeout(() => {
             this.formField.control.stateChanges.subscribe(this.checkValue);
 
