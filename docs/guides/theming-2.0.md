@@ -92,6 +92,7 @@
 -   [option](/packages/components/core/option/option-tokens.scss)
 -   [optgroup](/packages/components/core/option/optgroup-tokens.scss)
 -   [option-action](/packages/components/core/option/option-action-tokens.scss)
+-   [splitter](/packages/components/splitter/splitter-tokens.scss)  
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)

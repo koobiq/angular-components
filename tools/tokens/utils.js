@@ -80,7 +80,8 @@ const filter = {
         'kbq-list-font-text-line-height',
         'kbq-background-transparent',
         'kbq-states-icon-disabled'
-    ]
+    ],
+    splitter: 'kbq-background-background-disabled'
 };
 
 const componentNameMapping = {

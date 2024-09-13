@@ -1,0 +1,7 @@
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-background-background-disabled: hsla(229, 15%, 95%, 100%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-background-background-disabled: hsla(229, 15%, 95%, 100%);
+}

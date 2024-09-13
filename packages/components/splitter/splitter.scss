@@ -1,3 +1,5 @@
+@use './splitter-theme' as *;
+
 .kbq-splitter {
     display: flex;
     position: relative;
@@ -45,3 +47,5 @@
         display: block;
     }
 }
+
+@include kbq-splitter-theme();

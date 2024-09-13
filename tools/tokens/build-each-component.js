@@ -49,6 +49,7 @@ const componentsWithCss = [
     'scrollbars',
     'forms',
     'option',
+    'splitter',
     'table',
     'textarea',
     'timezone',
