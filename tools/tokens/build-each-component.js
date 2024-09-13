@@ -52,6 +52,8 @@ const componentsWithCss = [
     'splitter',
     'tag',
     'tabs',
+    'tag',
+    'tabs',
     'table',
     'textarea',
     'timezone',
