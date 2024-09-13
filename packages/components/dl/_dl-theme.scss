@@ -4,19 +4,17 @@
 @use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-dl-theme($theme) {
-    $dl: map.get(map.get($theme, components), dl);
-
+@mixin kbq-dl-theme() {
     .kbq-dt {
-        color: kbq-css-variable(description-list-term-color, map.get($dl, dt));
+        color: kbq-css-variable(description-list-term-color);
     }
 
     .kbq-dd {
-        color: kbq-css-variable(description-list-description-color, map.get($dl, dd));
+        color: kbq-css-variable(description-list-description-color);
     }
 }
 
-@mixin kbq-dl-typography($config) {
+@mixin kbq-dl-typography() {
     .kbq-dl {
         & .kbq-dt {
             @include kbq-typography-css-variables(description-list, term);

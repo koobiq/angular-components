@@ -7,15 +7,32 @@ export interface KbqTheme {
     selected: boolean;
 }
 
+/**
+ * Enum representing the available themes for the Koobiq design system.
+ * This enum is used to manage and switch between different visual themes.
+ */
+export enum KbqThemeSelector {
+    /**
+     * Represents the default light theme.
+     * This is the standard theme that is applied
+     * when the application is first loaded if nothing else provided
+     */
+    Default = 'kbq-theme-light',
+    /**
+     * This theme is used to provide a darker visual experience, often preferred in low-light environments.
+     */
+    Dark = 'kbq-theme-dark'
+}
+
 export const KbqDefaultThemes: KbqTheme[] = [
     {
         name: 'light',
-        className: 'kbq-theme-light',
+        className: KbqThemeSelector.Default,
         selected: true
     },
     {
         name: 'dark',
-        className: 'kbq-theme-dark',
+        className: KbqThemeSelector.Dark,
         selected: false
     }
 ];

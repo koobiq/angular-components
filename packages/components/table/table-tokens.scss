@@ -1,0 +1,37 @@
+.kbq-table {
+    --kbq-table-size-border-width: 1px;
+    --kbq-table-size-row-padding-vertical: 10px;
+    --kbq-table-size-row-padding-horizontal: 8px;
+    --kbq-table-font-header-font-size: 14px;
+    --kbq-table-font-header-line-height: 20px;
+    --kbq-table-font-header-letter-spacing: -0.006em;
+    --kbq-table-font-header-font-weight: normal;
+    --kbq-table-font-header-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
+    --kbq-table-font-header-text-transform: null;
+    --kbq-table-font-header-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-table-font-body-font-size: 14px;
+    --kbq-table-font-body-line-height: 20px;
+    --kbq-table-font-body-letter-spacing: -0.006em;
+    --kbq-table-font-body-font-weight: normal;
+    --kbq-table-font-body-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
+    --kbq-table-font-body-text-transform: null;
+    --kbq-table-font-body-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-foreground-contrast: hsla(229, 15%, 15%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 50%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 60%, 100%);
+    --kbq-line-contrast-less: hsla(229, 15%, 6%, 12%);
+    --kbq-states-background-transparent-hover: hsla(229, 15%, 50%, 8%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-foreground-contrast: hsla(229, 15%, 80%, 100%);
+    --kbq-foreground-contrast-secondary: hsla(229, 15%, 60%, 100%);
+    --kbq-foreground-contrast-tertiary: hsla(229, 15%, 45%, 100%);
+    --kbq-line-contrast-less: hsla(229, 15%, 22%, 100%);
+    --kbq-states-background-transparent-hover: hsla(229, 15%, 50%, 16%);
+}
