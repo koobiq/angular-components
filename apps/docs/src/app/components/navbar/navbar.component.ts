@@ -1,13 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqTheme, ThemeService } from '@koobiq/components/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
 import { koobiqVersion } from '../../version';
 import { DocStates, DocsNavbarState } from '../doс-states';
 import { NavbarProperty, NavbarPropertyParameters } from './navbar-property';
-
-export enum Themes {
-    Default = 'theme-light',
-    Dark = 'theme-dark'
-}
 
 @Component({
     selector: 'docs-navbar',
@@ -18,7 +13,7 @@ export enum Themes {
     },
     encapsulation: ViewEncapsulation.None
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnDestroy {
     version = koobiqVersion;
 
     themeSwitch: NavbarProperty;
@@ -29,17 +24,17 @@ export class NavbarComponent {
     kbqThemes: KbqTheme[] = [
         {
             name: 'Как в системе',
-            className: this.colorAutomaticTheme.matches ? Themes.Default : Themes.Dark,
+            className: this.colorAutomaticTheme.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark,
             selected: false
         },
         {
             name: 'Светлая',
-            className: Themes.Default,
+            className: KbqThemeSelector.Default,
             selected: false
         },
         {
             name: 'Тёмная',
-            className: Themes.Dark,
+            className: KbqThemeSelector.Dark,
             selected: false
         }
     ];
@@ -80,6 +75,15 @@ export class NavbarComponent {
         this.docStates.navbarMenu.subscribe((state) => (this.opened = state === DocsNavbarState.opened));
     }
 
+    ngOnDestroy() {
+        this.themeService.ngOnDestroy();
+        try {
+            this.colorAutomaticTheme.removeEventListener('change', this.setAutoTheme);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     toggleMenu() {
         this.docStates.toggleNavbarMenu();
     }
@@ -93,7 +97,7 @@ export class NavbarComponent {
     private setAutoTheme = (e) => {
         this.themeService.themes[0] = {
             ...this.themeService.themes[0],
-            className: e.matches ? Themes.Default : Themes.Dark
+            className: e.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark
         };
 
         if (this.themeService.themes[0].selected) {
