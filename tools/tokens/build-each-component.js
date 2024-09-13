@@ -26,6 +26,7 @@ const componentsWithCss = [
     'divider',
     'dropdown',
     'empty-state',
+    'file-upload',
     'form-field',
     'hint',
     'icon',

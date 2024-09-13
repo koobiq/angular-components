@@ -9,6 +9,7 @@ const filter = {
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
     'empty-state': 'foreground-error',
+    'file-upload': ['form-field-hint-text', 'form-field-hint-font-text'],
     'icon-button': 'states-focused-color',
     'pseudo-checkbox': 'checkbox',
     table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
