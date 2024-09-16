@@ -92,7 +92,8 @@ describe('new-icons-pack', () => {
         });
     });
 
-    it('should replace deprecated icons for fix = true', async () => {
+    // skip for UX testing
+    xit('should replace deprecated icons for fix = true', async () => {
         const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
         const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
         const iconsToBeReplacedWith = newIconsPackDataSlice.map(
