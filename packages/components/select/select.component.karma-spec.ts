@@ -219,7 +219,7 @@ const OPTIONS = [
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -439,7 +439,7 @@ class SelectWithGroups {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }

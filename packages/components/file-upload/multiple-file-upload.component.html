@@ -9,7 +9,7 @@
     @if (!files.length) {
         <div class="dropzone">
             @if (size === 'default') {
-                <i kbq-icon="mc-upload-to-cloud_32"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_32"></i>
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
             } @else {
-                <i kbq-icon="mc-upload-to-cloud_24"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                 <span class="dropzone__text multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
                     <label
@@ -90,7 +90,7 @@
                                 <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
                                 <div class="kbq-file-upload__action">
                                     <i
-                                        kbq-icon-button="mc-close-circle_16"
+                                        kbq-icon-button="kbq-xmark-circle_16"
                                         (click)="deleteFile(index, $event)"
                                     ></i>
                                 </div>
@@ -101,7 +101,7 @@
             </div>
             <div class="btn-upload">
                 <div class="dropzone">
-                    <i kbq-icon="mc-upload-to-cloud_24"></i>
+                    <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                     <span class="dropzone__text multiple__caption">
                         {{ separatedCaptionTextWhenSelected[0] }}
                         <label

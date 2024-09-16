@@ -13,8 +13,8 @@ export class TabActiveTabExample {
     selectedTabId = 'settings';
 
     tabs = [
-        { tabId: 'files', icon: 'mc-folder-opened_16' },
-        { tabId: 'settings', icon: 'mc-gear_16' },
-        { tabId: 'tasks', icon: 'mc-hamburger_16' }
+        { tabId: 'files', icon: 'kbq-folder-open_16' },
+        { tabId: 'settings', icon: 'kbq-gear_16' },
+        { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
     ];
 }

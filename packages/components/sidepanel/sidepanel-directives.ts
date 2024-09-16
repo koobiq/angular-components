@@ -68,7 +68,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
             >
                 <i
                     [color]="'contrast'"
-                    kbq-icon="mc-close-L_16"
+                    kbq-icon="kbq-xmark_16"
                 ></i>
             </button>
         }

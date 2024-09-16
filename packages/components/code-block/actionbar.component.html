@@ -10,10 +10,10 @@
             (click)="toggleSoftWrap.emit()"
         >
             @if (!softWrap) {
-                <i kbq-icon="mc-word-wrap_16"></i>
+                <i kbq-icon="kbq-wrap-text_16"></i>
             }
             @if (softWrap) {
-                <i kbq-icon="mc-word-wrap-slash_16"></i>
+                <i kbq-icon="kbq-wrap-text-slash_16"></i>
             }
         </button>
     }
@@ -26,7 +26,7 @@
             [kbqTooltip]="config.downloadTooltip"
             (click)="downloadCode.emit()"
         >
-            <i kbq-icon="mc-download_16"></i>
+            <i kbq-icon="kbq-arrow-down-to-line_16"></i>
         </button>
     }
 
@@ -38,7 +38,7 @@
         [kbqTooltip]="copyTooltipText"
         (click)="onCopy()"
     >
-        <i kbq-icon="mc-copy-o_16"></i>
+        <i kbq-icon="kbq-file-multiple-o_16"></i>
     </button>
 
     @if (codeFiles[selectedTabIndex].link) {
@@ -49,7 +49,7 @@
             [kbqTooltip]="config.openExternalSystemTooltip"
             (click)="openExternalSystem.emit()"
         >
-            <i kbq-icon="mc-external-link_16"></i>
+            <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </button>
     }
 </div>

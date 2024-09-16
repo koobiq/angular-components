@@ -322,7 +322,7 @@ class TestApp {
             type="button"
         >
             <!-- comment-before -->
-            <i kbq-icon="mc-angle-down-S_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
             <!-- comment-after -->
         </button>
     `
@@ -337,7 +337,7 @@ class KbqButtonCommentCaseTestApp {}
             type="button"
         >
             <span>Some text</span>
-            <i kbq-icon="mc-angle-down-S_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `
 })
@@ -350,7 +350,7 @@ class KbqButtonHtmlIconRightCaseTestApp {}
             kbq-button
             type="button"
         >
-            <i kbq-icon="mc-angle-down-S_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
             <span>Some text</span>
         </button>
     `
@@ -367,7 +367,7 @@ class KbqButtonHtmlIconLeftCaseTestApp {
             type="button"
         >
             Some text
-            <i kbq-icon="mc-angle-down-S_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
         </button>
     `
@@ -382,7 +382,7 @@ class KbqButtonTextIconCaseTestApp {}
             type="button"
         >
             @if (visible) {
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
             Some text
         </button>
@@ -403,7 +403,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
         >
             Some text
             @if (visible) {
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
     `
@@ -421,7 +421,7 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
         >
             Some text
             @if (visible) {
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
             Some text
         </button>
@@ -442,7 +442,7 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
             <span>Some text</span>
             <span>Some text</span>
             @if (visible) {
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
             <span>Some text</span>
             <span>Some text</span>
@@ -463,11 +463,11 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
         >
             <i
                 id="icon1"
-                kbq-icon="mc-angle-down-S_16"
+                kbq-icon="kbq-chevron-down-s_16"
             ></i>
             <i
                 id="icon2"
-                kbq-icon="mc-angle-down-S_16"
+                kbq-icon="kbq-chevron-down-s_16"
             ></i>
         </button>
     `
@@ -482,7 +482,7 @@ class KbqButtonTwoIconsCaseTestApp {}
             type="button"
         >
             @if (visible) {
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
     `

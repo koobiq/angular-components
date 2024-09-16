@@ -48,7 +48,7 @@ describe('KbqEmptyState', () => {
                 [fade]="true"
                 [big]="true"
                 [color]="'contrast'"
-                kbq-icon-item="mc-bell_16"
+                kbq-icon-item="kbq-bell_16"
                 kbq-empty-state-icon
             ></i>
             <div kbq-empty-state-title>kbq-empty-state-title</div>

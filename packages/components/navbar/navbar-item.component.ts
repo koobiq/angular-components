@@ -526,8 +526,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     template: `
         @if (!customIcon) {
             <i
-                [class.mc-angle-left-M_16]="navbar.expanded"
-                [class.mc-angle-right-M_16]="!navbar.expanded"
+                [class.kbq-chevron-left_16]="navbar.expanded"
+                [class.kbq-chevron-right_16]="!navbar.expanded"
                 kbq-icon
             ></i>
         }
