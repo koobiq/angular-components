@@ -20,7 +20,7 @@
         "@angular/router": "^17.2.0",
         "@koobiq/cdk": "${version}",
         "@koobiq/components": "${version}",
-        "@koobiq/icons": "^7.1.0",
+        "@koobiq/icons": "^9.0.0",
         "@koobiq/angular-luxon-adapter": "${version}",
         "@koobiq/angular-moment-adapter": "${version}",
         "@koobiq/date-adapter": "^3.1.2",
