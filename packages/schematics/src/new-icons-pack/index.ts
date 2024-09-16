@@ -14,7 +14,7 @@ const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
-    const breakingIconsVersionRegExp = /^\^|\~?8\.0\.2/;
+    const breakingIconsVersionRegExp = /^\^|\~?9\.0\.0/;
     const pkg = '@koobiq/icons';
 
     return async (tree: Tree, context: SchematicContext) => {
@@ -63,7 +63,7 @@ export default function newIconsPack(options: Schema): Rule {
                 return;
             }
 
-            if (path.endsWith('.html') || path.endsWith('.ts')) {
+            if (path.endsWith('.html') || path.endsWith('.ts') || path.endsWith('.md')) {
                 const initialContent = entry?.content.toString();
                 let newContent = initialContent;
 
@@ -93,7 +93,7 @@ export default function newIconsPack(options: Schema): Rule {
                 let newContent = initialContent;
 
                 if (newContent) {
-                    // replace icons in styles, update pkg name
+                    // replace icons in styles
                     newContent = newContent.replace(new RegExp('mc-', 'g'), 'kbq-');
 
                     newContent = handleDeprecatedIcons(newContent, path);

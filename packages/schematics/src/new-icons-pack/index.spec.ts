@@ -26,7 +26,7 @@ describe('new-icons-pack', () => {
         appTree = await createTestApp(runner, { style: 'scss' });
         const pkgPath = '/package.json';
         const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        pkg.dependencies['@koobiq/icons'] = '^8.0.2';
+        pkg.dependencies['@koobiq/icons'] = '^9.0.0';
         appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
         const workspace = await getWorkspace(appTree);
