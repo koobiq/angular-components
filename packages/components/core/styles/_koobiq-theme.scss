@@ -6,6 +6,7 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../../link/link-theme' as *;
+@use '../../markdown/markdown-theme' as *;
 @use '../../progress-bar/progress-bar-theme' as *;
 @use '../../progress-spinner/progress-spinner-theme' as *;
 @use '../../radio/radio-theme' as *;
@@ -30,6 +31,7 @@
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
     @include kbq-link-theme();
+    @include kbq-markdown-theme();
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
@@ -53,6 +55,7 @@
 
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
+    @include kbq-markdown-typography();
 
     @include kbq-forms-typography($config);
     @include kbq-option-typography($config);

@@ -1,7 +1,5 @@
 @use '../core/styles/common/tokens' as *;
 
-@use './markdown-theme' as *;
-
 .kbq-markdown {
     display: block;
 
@@ -198,6 +196,3 @@
 .docs-live-example.kbq-markdown {
     margin-bottom: 128px;
 }
-
-@include kbq-markdown-theme();
-@include kbq-markdown-typography();
