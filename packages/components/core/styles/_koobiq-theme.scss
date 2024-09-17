@@ -90,6 +90,7 @@
     @include kbq-sidepanel-typography($config);
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
+    @include kbq-textarea-typography();
     @include kbq-timezone-option-typography($config);
     @include kbq-tree-typography($config);
 
