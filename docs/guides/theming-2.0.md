@@ -76,9 +76,11 @@
 -   [link](/packages/components/link/link-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
 -   [textarea](/packages/components/textarea/textarea-tokens.scss)
+-   [timezone](/packages/components/timezone/timezone-option-tokens.scss)
 -   [toast](/packages/components/toast/toast-tokens.scss)
 -   [toggle](/packages/components/toggle/toggle-tokens.scss)
 -   [tooltip](/packages/components/tooltip/tooltip-tokens.scss)
+-   [tree](/packages/components/tree/tree-tokens.scss)
 -   [tree-select](/packages/components/tree-select/tree-select-tokens.scss)
 
 ### Откуда теперь брать значения дизайн-токенов для компонентов?

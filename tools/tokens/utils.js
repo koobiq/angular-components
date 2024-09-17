@@ -27,8 +27,10 @@ const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
     'button-toggle': 'button-toggle-group',
     datepicker: 'datepicker__content',
+    'description-list': 'dl',
     dropdown: 'dropdown__panel',
-    'description-list': 'dl'
+    'timezone-option': 'timezone-select__panel',
+    tree: ['tree', '.kbq-tree-selection']
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -50,7 +52,8 @@ const componentAliases = {
     'description-list': 'dl/dl-tokens.scss',
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
-    'icon-item': 'icon/icon-item-tokens.scss'
+    'icon-item': 'icon/icon-item-tokens.scss',
+    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }]
 };
 
 const resolvePath = (componentName) =>

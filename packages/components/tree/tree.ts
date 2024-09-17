@@ -7,7 +7,7 @@ import { KbqTreeBase } from './tree-base';
     template: `
         <ng-container kbqTreeNodeOutlet />
     `,
-    styleUrls: ['./tree.scss'],
+    styleUrls: ['./tree.scss', 'tree-tokens.scss'],
     host: {
         class: 'kbq-tree'
     },

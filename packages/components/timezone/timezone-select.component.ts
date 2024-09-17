@@ -10,7 +10,7 @@ export class KbqTimezoneSelectTrigger {}
     selector: 'kbq-timezone-select',
     exportAs: 'kbqTimezoneSelect',
     templateUrl: 'timezone-select.component.html',
-    styleUrls: ['../select/select.scss', 'timezone-select.component.scss'],
+    styleUrls: ['../select/select.scss', 'timezone-select.component.scss', 'timezone-option-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [

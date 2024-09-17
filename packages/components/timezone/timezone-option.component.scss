@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './timezone-option-theme' as *;
+
 .kbq-timezone-option.kbq-option {
     display: flex;
     flex-direction: row;
@@ -34,3 +36,6 @@
 .kbq-select__panel .kbq-timezone-option {
     height: kbq-css-variable(timezone-option-size-height);
 }
+
+@include kbq-timezone-option-theme();
+@include kbq-timezone-option-typography();

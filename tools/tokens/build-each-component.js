@@ -36,9 +36,11 @@ const componentsWithCss = [
     'link',
     'table',
     'textarea',
+    'timezone',
     'toast',
     'toggle',
     'tooltip',
+    'tree',
     'tree-select'
 ];
 

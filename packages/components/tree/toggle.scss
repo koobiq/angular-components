@@ -3,6 +3,8 @@
 
 @use '../core/styles/common/tokens' as *;
 
+@use './tree-theme' as *;
+
 .kbq-tree-node-toggle {
     display: flex;
     align-items: center;
@@ -30,3 +32,6 @@
         cursor: default;
     }
 }
+
+@include kbq-tree-theme();
+@include kbq-tree-typography();
