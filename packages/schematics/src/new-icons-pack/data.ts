@@ -174,10 +174,6 @@ export const newIconsPackData: ReplaceData[] = [
         replaceWith: 'xmark-s_16'
     },
     {
-        replace: 'cloud-404_256',
-        replaceWith: 'cloud-404_256'
-    },
-    {
         replace: 'color-palette_16',
         replaceWith: 'palette_16'
     },
