@@ -18,7 +18,8 @@ const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
     'button-toggle': 'button-toggle-group',
     datepicker: 'datepicker__content',
-    dropdown: 'dropdown__panel'
+    dropdown: 'dropdown__panel',
+    'timezone-option': 'timezone-select__panel'
 };
 
 const applyCustomTransformations = (dictionary) => {
