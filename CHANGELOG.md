@@ -1,3 +1,9 @@
+## 17.6.1 (2024-09-17)
+
+### Koobiq
+
+ * bug fix  disabled state for borders ([#DS-2874](https://github.com/koobiq/angular-components/issues/issue/DS-2874)) ([#292](https://github.com/koobiq/angular-components/issues/292)) ([b894f31](https://github.com/koobiq/angular-components/commit/b894f31e1d69da65fa9ef731dd7f087c9607225e))
+
 # 17.6.0 (2024-09-17)
 
 ### Koobiq
