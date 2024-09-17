@@ -34,6 +34,12 @@ const componentsWithCss = [
     'icon-item',
     'input',
     'link',
+    'list',
+    'loader-overlay',
+    'modal',
+    'markdown',
+    'navbar',
+    'popover',
     'table',
     'textarea',
     'timezone',
@@ -43,6 +49,8 @@ const componentsWithCss = [
     'tree',
     'tree-select'
 ];
+
+const args = (process.argv.slice(2).length && process.argv.slice(2)) || componentsWithCss;
 
 const styleDictionaryConfig = {
     source: [`${BASE_PATH}/properties/**/*.json5`, `${BASE_PATH}/components/**/*.json5`],
@@ -81,7 +89,12 @@ StyleDictionary.registerFormat({
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
         const baseDictionary = filterTokens(
             dictionary,
-            (token) => token.attributes.type === 'size' || token.attributes.font
+            (token) =>
+                [token.attributes.type, token.attributes.category, token.attributes.item].some(
+                    (attr) => attr === 'size'
+                ) ||
+                token.attributes.font ||
+                token.attributes.category === 'typography'
         );
         const lightDictionary = filterTokens(dictionary, (token) => token.attributes.light);
         const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);
@@ -114,7 +127,7 @@ function fileFormat(destination, component) {
 }
 
 const main = async () => {
-    const files = componentsWithCss.map((component) => `${component}.${TOKEN_FILE_EXT}`);
+    const files = args.map((component) => `${component}.${TOKEN_FILE_EXT}`);
 
     styleDictionaryConfig.platforms.css.files = files
         .filter((file) => path.extname(file).includes(TOKEN_FILE_EXT))

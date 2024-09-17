@@ -22,7 +22,7 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
     selector: 'kbq-popover-confirm-component',
     templateUrl: './popover-confirm.component.html',
     preserveWhitespaces: false,
-    styleUrls: ['./popover.scss'],
+    styleUrls: ['./popover.scss', './popover-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqPopoverAnimations.popoverState]

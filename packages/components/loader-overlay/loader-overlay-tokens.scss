@@ -1,0 +1,58 @@
+.kbq-loader-overlay {
+    --kbq-loader-overlay-size-big-overlay-padding-horizontal: 32px;
+    --kbq-loader-overlay-size-big-loader-margin-bottom: 24px;
+    --kbq-loader-overlay-size-big-content-content-gap-vertical: 4px;
+    --kbq-loader-overlay-size-compact-overlay-padding-horizontal: 32px;
+    --kbq-loader-overlay-size-compact-loader-margin-bottom: 8px;
+    --kbq-loader-overlay-size-compact-content-content-gap-vertical: 2px;
+    --kbq-loader-overlay-font-big-text-font-size: 18px;
+    --kbq-loader-overlay-font-big-text-line-height: 26px;
+    --kbq-loader-overlay-font-big-text-letter-spacing: normal;
+    --kbq-loader-overlay-font-big-text-font-weight: 600;
+    --kbq-loader-overlay-font-big-text-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-loader-overlay-font-big-text-text-transform: null;
+    --kbq-loader-overlay-font-big-text-font-feature-settings: 'calt', 'kern', 'liga';
+    --kbq-loader-overlay-font-big-caption-font-size: 14px;
+    --kbq-loader-overlay-font-big-caption-line-height: 20px;
+    --kbq-loader-overlay-font-big-caption-letter-spacing: -0.006em;
+    --kbq-loader-overlay-font-big-caption-font-weight: normal;
+    --kbq-loader-overlay-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-loader-overlay-font-big-caption-text-transform: null;
+    --kbq-loader-overlay-font-big-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-loader-overlay-font-compact-text-font-size: 14px;
+    --kbq-loader-overlay-font-compact-text-line-height: 20px;
+    --kbq-loader-overlay-font-compact-text-letter-spacing: -0.006em;
+    --kbq-loader-overlay-font-compact-text-font-weight: normal;
+    --kbq-loader-overlay-font-compact-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-loader-overlay-font-compact-text-text-transform: null;
+    --kbq-loader-overlay-font-compact-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-loader-overlay-font-compact-caption-font-size: 12px;
+    --kbq-loader-overlay-font-compact-caption-line-height: 16px;
+    --kbq-loader-overlay-font-compact-caption-letter-spacing: normal;
+    --kbq-loader-overlay-font-compact-caption-font-weight: normal;
+    --kbq-loader-overlay-font-compact-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-loader-overlay-font-compact-caption-text-transform: null;
+    --kbq-loader-overlay-font-compact-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-loader-overlay-transparent-overlay-background: hsla(229, 15%, 99%, 88%);
+    --kbq-loader-overlay-transparent-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-loader-overlay-transparent-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-loader-overlay-filled-overlay-background: hsla(0, 0%, 100%, 100%);
+    --kbq-loader-overlay-filled-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-loader-overlay-filled-caption-color: hsla(229, 15%, 50%, 100%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-loader-overlay-transparent-overlay-background: hsla(229, 15%, 12%, 80%);
+    --kbq-loader-overlay-transparent-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-loader-overlay-transparent-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-loader-overlay-filled-overlay-background: hsla(229, 15%, 12%, 100%);
+    --kbq-loader-overlay-filled-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-loader-overlay-filled-caption-color: hsla(229, 15%, 60%, 100%);
+}

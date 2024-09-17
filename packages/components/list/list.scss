@@ -4,6 +4,8 @@
 @use '../core/styles/common/list';
 @use '../core/styles/common/tokens' as *;
 
+@use './list-theme' as *;
+
 .kbq-list,
 .kbq-list-selection {
     display: block;
@@ -34,3 +36,6 @@
         }
     }
 }
+
+@include kbq-list-theme();
+@include kbq-list-typography();

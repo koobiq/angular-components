@@ -175,7 +175,8 @@ export class KbqNavbarContainer {}
         './navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss'
+        './navbar-divider.scss',
+        './navbar-tokens.scss'
     ],
     host: {
         class: 'kbq-navbar',

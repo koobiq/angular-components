@@ -6,12 +6,6 @@
 @use 'theming/scrollbar-theme' as *;
 
 @use '../../link/link-theme' as *;
-@use '../../list/list-theme' as *;
-@use '../../loader-overlay/loader-overlay-theme' as *;
-@use '../../modal/modal-theme' as *;
-@use '../../markdown/markdown-theme' as *;
-@use '../../navbar/navbar-theme' as *;
-@use '../../popover/popover-theme' as *;
 @use '../../progress-bar/progress-bar-theme' as *;
 @use '../../progress-spinner/progress-spinner-theme' as *;
 @use '../../radio/radio-theme' as *;
@@ -36,15 +30,9 @@
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
     @include kbq-link-theme();
-    @include kbq-list-theme($theme);
-    @include kbq-loader-overlay-theme($theme);
-    @include kbq-modal-theme($theme);
-    @include kbq-markdown-theme($theme);
-    @include kbq-navbar-theme($theme);
     @include kbq-option-theme($theme);
     @include kbq-optgroup-theme($theme);
     @include kbq-option-action-theme($theme);
-    @include kbq-popover-theme($theme);
     @include kbq-progress-bar-theme($theme);
     @include kbq-progress-spinner-theme($theme);
     @include kbq-radio-theme($theme);
@@ -63,21 +51,12 @@
         $config: kbq-typography-config($tokens);
     }
 
-    @if not $md-config {
-        $md-config: kbq-markdown-typography-config($tokens);
-    }
-
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
     @include kbq-forms-typography($config);
-    @include kbq-list-typography($config);
-    @include kbq-loader-overlay-typography($config);
-    @include kbq-modal-typography($config);
-    @include kbq-navbar-typography($config);
     @include kbq-option-typography($config);
     @include kbq-optgroup-typography($config);
-    @include kbq-popover-typography($config);
     @include kbq-progress-bar-typography($config);
     @include kbq-progress-spinner-typography($config);
     @include kbq-radio-typography($config);
@@ -87,6 +66,4 @@
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography();
-
-    @include kbq-markdown-typography($md-config);
 }

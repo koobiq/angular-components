@@ -13,7 +13,7 @@ import { KbqMarkdownService } from './markdown.service';
 
 @Component({
     selector: 'kbq-markdown',
-    styleUrls: ['./markdown.scss'],
+    styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
         <pre

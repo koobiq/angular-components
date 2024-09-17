@@ -1,13 +1,9 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/pop-up/pop-up';
 @use '../core/styles/common';
 
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './popover-theme' as *;
 
 $arrow-size: 12px;
 $trigger-margin: 9px;
@@ -135,3 +131,6 @@ $arrow-padding: calc(18px - $trigger-margin);
     right: kbq-css-variable(size-s);
     border-radius: kbq-css-variable(button-size-border-radius);
 }
+
+@include kbq-popover-theme();
+@include kbq-popover-typography();

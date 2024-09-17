@@ -1,10 +1,6 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
+@use './loader-overlay-theme' as *;
 
 .kbq-loader-overlay_parent {
     position: relative;
@@ -72,3 +68,6 @@ $tokens: meta.module-variables(tokens) !default;
         }
     }
 }
+
+@include kbq-loader-overlay-theme();
+@include kbq-loader-overlay-typography();

@@ -44,7 +44,7 @@ type AnimationState = 'enter' | 'leave' | null;
 @Component({
     selector: 'kbq-modal',
     templateUrl: './modal.component.html',
-    styleUrls: ['./modal.scss'],
+    styleUrls: ['./modal.scss', 'modal-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

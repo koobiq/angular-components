@@ -8,6 +8,7 @@ const filter = {
     'code-block': 'kbq-states-focused-color',
     datepicker: 'states-foreground-disabled',
     dropdown: ['kbq-list', 'foreground-contrast-secondary'],
+    markdown: ['foreground-contrast', 'background-bg'],
     'empty-state': 'foreground-error',
     'file-upload': ['form-field-hint-text', 'form-field-hint-font-text'],
     'icon-button': 'states-focused-color',
@@ -20,6 +21,28 @@ const filter = {
         'foreground-contrast',
         'error-default',
         'foreground-text-disabled'
+    ],
+    navbar: [
+        'states-line-focus-theme',
+        'line-contrast-less',
+        'typography-text-normal-medium',
+        'navbar-item',
+        'kbq-size-xxs',
+        'kbq-size-xs',
+        'kbq-size-s',
+        'kbq-size-l',
+        'kbq-size-m',
+        'kbq-size-xl',
+        'kbq-size-xxl',
+        'kbq-size-3xl',
+        'kbq-size-4xl',
+        'kbq-size-5xl'
+    ],
+    popover: [
+        'kbq-size-s',
+        'kbq-size-4xl',
+        'button-size-border-radius',
+        'background-overlay-inverse'
     ]
 };
 
@@ -29,6 +52,7 @@ const componentNameMapping = {
     datepicker: 'datepicker__content',
     'description-list': 'dl',
     dropdown: 'dropdown__panel',
+    list: 'list, .kbq-list-selection',
     'timezone-option': 'timezone-select__panel',
     tree: ['tree', '.kbq-tree-selection']
 };
