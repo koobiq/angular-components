@@ -37,7 +37,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
     templateUrl: './single-file-upload.component.html',
-    styleUrls: ['./file-upload.scss', './single-file-upload.component.scss'],
+    styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
