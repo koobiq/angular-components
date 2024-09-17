@@ -4,6 +4,8 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
+@use './empty-state-theme' as *;
+
 .kbq-empty-state {
     display: flex;
     flex-direction: column;
@@ -79,3 +81,6 @@
         justify-content: flex-start;
     }
 }
+
+@include kbq-empty-state-theme();
+@include kbq-empty-state-typography();

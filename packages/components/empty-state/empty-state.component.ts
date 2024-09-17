@@ -55,7 +55,7 @@ export class KbqEmptyStateActions {}
 @Component({
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
-    styleUrls: ['./empty-state.scss'],
+    styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
     host: {
         class: 'kbq-empty-state',
         '[class.kbq-empty-state_big]': 'big',

@@ -5,8 +5,6 @@
 
 @use 'theming/scrollbar-theme' as *;
 
-@use '../../empty-state/empty-state-theme' as *;
-@use '../../file-upload/file-upload-theme' as *;
 @use '../../link/link-theme' as *;
 @use '../../list/list-theme' as *;
 @use '../../loader-overlay/loader-overlay-theme' as *;
@@ -25,22 +23,16 @@
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
-@use '../../tooltip/tooltip-theme' as *;
-@use '../../tree-select/tree-select-theme' as *;
 @use '../../tree/tree-theme' as *;
 @use '../forms/forms-theme' as *;
 @use '../option/option-theme' as *;
 @use '../option/optgroup-theme' as *;
 @use '../option/option-action-theme' as *;
 @use '../highlight/highlight-theme' as *;
-@use '../../dl/dl-theme' as *;
 
 @mixin koobiq-theme($theme) {
     @include kbq-core-theme($theme);
 
-    @include kbq-dl-theme($theme);
-    @include kbq-empty-state-theme($theme);
-    @include kbq-file-upload-theme($theme);
     @include kbq-forms-theme($theme);
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
@@ -65,8 +57,6 @@
     @include kbq-splitter-theme($theme);
     @include kbq-tabs-theme($theme);
     @include kbq-tag-theme($theme);
-    @include kbq-tooltip-theme($theme);
-    @include kbq-tree-select-theme($theme);
     @include kbq-tree-theme($theme);
 }
 
@@ -82,9 +72,6 @@
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
 
-    @include kbq-empty-state-typography($config);
-    @include kbq-dl-typography($config);
-    @include kbq-file-upload-typography($config);
     @include kbq-forms-typography($config);
     @include kbq-list-typography($config);
     @include kbq-loader-overlay-typography($config);
@@ -102,8 +89,6 @@
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography($config);
-    @include kbq-tooltip-typography($config);
-    @include kbq-tree-select-typography($config);
     @include kbq-tree-typography($config);
 
     @include kbq-markdown-typography($md-config);
