@@ -36,7 +36,7 @@ import { KbqIconModule } from '@koobiq/components';
 
 Есть два варианта использования иконок:
 
-1. Добавить атрибут `[color]`, используя следующие значения: _primary_, _secondary_, _error_.
+1. Добавить атрибут `[color]`, используя следующие значения: _theme_, _theme-fade_, _contrast_, _contrast-fade_, _error_, _warning_, _success_.
 
 ```
 <i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
