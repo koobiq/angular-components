@@ -27,8 +27,9 @@ const componentNameMapping = {
     autocomplete: 'autocomplete-panel',
     'button-toggle': 'button-toggle-group',
     datepicker: 'datepicker__content',
+    'description-list': 'dl',
     dropdown: 'dropdown__panel',
-    'description-list': 'dl'
+    tree: ['tree', '.kbq-tree-selection']
 };
 
 const applyCustomTransformations = (dictionary) => {

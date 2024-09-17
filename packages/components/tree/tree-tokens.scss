@@ -1,0 +1,94 @@
+.kbq-tree,
+.kbq-tree-selection {
+    --kbq-tree-size-indent-level: 24px;
+    --kbq-tree-size-container-padding-right: 8px;
+    --kbq-tree-size-container-padding-vertical: 4px;
+    --kbq-tree-size-container-content-gap-horizontal: 8px;
+    --kbq-tree-size-container-content-gap-vertical: 0px;
+    --kbq-tree-size-container-focus-outline-width: 2px;
+    --kbq-tree-size-text-padding-vertical: 2px;
+    --kbq-tree-font-text-font-size: 14px;
+    --kbq-tree-font-text-line-height: 20px;
+    --kbq-tree-font-text-letter-spacing: -0.006em;
+    --kbq-tree-font-text-font-weight: normal;
+    --kbq-tree-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
+    --kbq-tree-font-text-text-transform: null;
+    --kbq-tree-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-tree-font-caption-font-size: 12px;
+    --kbq-tree-font-caption-line-height: 16px;
+    --kbq-tree-font-caption-letter-spacing: normal;
+    --kbq-tree-font-caption-font-weight: normal;
+    --kbq-tree-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
+    --kbq-tree-font-caption-text-transform: null;
+    --kbq-tree-font-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-tree-default-container-background: transparent;
+    --kbq-tree-default-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-default-icon-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-default-tree-toggle-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-default-action-button-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-default-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-tree-states-hover-container-background: hsla(229, 15%, 50%, 8%);
+    --kbq-tree-states-hover-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-hover-icon-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-hover-tree-toggle-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-hover-action-button-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-hover-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-tree-states-focused-focus-outline-color: hsla(216, 100%, 60%, 100%);
+    --kbq-tree-states-selected-container-background: hsla(216, 100%, 85%, 100%);
+    --kbq-tree-states-selected-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-selected-icon-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-selected-tree-toggle-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-selected-action-button-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-selected-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-tree-states-selected-hover-container-background: hsla(216, 100%, 91%, 100%);
+    --kbq-tree-states-selected-hover-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-selected-hover-icon-color: hsla(229, 15%, 15%, 100%);
+    --kbq-tree-states-selected-hover-tree-toggle-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-selected-hover-action-button-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-selected-hover-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-tree-states-disabled-container-background: transparent;
+    --kbq-tree-states-disabled-text-color: hsla(229, 15%, 15%, 32%);
+    --kbq-tree-states-disabled-icon-color: hsla(229, 15%, 15%, 32%);
+    --kbq-tree-states-disabled-tree-toggle-color: hsla(229, 15%, 15%, 32%);
+    --kbq-tree-states-disabled-action-button-color: hsla(229, 15%, 15%, 32%);
+    --kbq-tree-states-disabled-caption-color: hsla(229, 15%, 15%, 32%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-tree-default-container-background: transparent;
+    --kbq-tree-default-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-default-icon-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-default-tree-toggle-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-default-action-button-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-default-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-hover-container-background: hsla(229, 15%, 50%, 16%);
+    --kbq-tree-states-hover-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-hover-icon-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-hover-tree-toggle-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-hover-action-button-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-hover-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-focused-focus-outline-color: hsla(216, 100%, 60%, 100%);
+    --kbq-tree-states-selected-container-background: hsla(216, 100%, 20%, 100%);
+    --kbq-tree-states-selected-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-selected-icon-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-selected-tree-toggle-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-selected-action-button-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-selected-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-selected-hover-container-background: hsla(216, 100%, 18%, 100%);
+    --kbq-tree-states-selected-hover-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-selected-hover-icon-color: hsla(229, 15%, 80%, 100%);
+    --kbq-tree-states-selected-hover-tree-toggle-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-selected-hover-action-button-color: hsla(229, 15%, 45%, 100%);
+    --kbq-tree-states-selected-hover-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-tree-states-disabled-container-background: transparent;
+    --kbq-tree-states-disabled-text-color: hsla(229, 15%, 40%, 100%);
+    --kbq-tree-states-disabled-icon-color: hsla(229, 15%, 30%, 100%);
+    --kbq-tree-states-disabled-tree-toggle-color: hsla(229, 15%, 30%, 100%);
+    --kbq-tree-states-disabled-action-button-color: hsla(229, 15%, 30%, 100%);
+    --kbq-tree-states-disabled-caption-color: hsla(229, 15%, 40%, 100%);
+}

@@ -2,10 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/common';
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-tree-option {
     @include common.kbq-no-select;
@@ -39,8 +36,6 @@ $tokens: meta.module-variables(tokens) !default;
     gap: kbq-css-variable(tree-size-container-content-gap-horizontal);
 
     & .kbq-option-text {
-        $tokens: meta.module-variables(tokens) !default;
-
         @include common.kbq-line-wrapper-base();
         display: inline-block;
 
