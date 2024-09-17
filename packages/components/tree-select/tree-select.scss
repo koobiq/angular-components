@@ -4,6 +4,8 @@
 @use '../core/styles/common';
 @use '../core/styles/common/select' as *;
 
+@use './tree-select-theme' as *;
+
 .kbq-tree-select {
     @extend %kbq-select-base;
 }
@@ -29,3 +31,6 @@
         cursor: pointer;
     }
 }
+
+@include kbq-tree-select-theme();
+@include kbq-tree-select-typography();

@@ -1,53 +1,43 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-// FIXME: @use properties are used, which are most likely not applied. Need to check
-@use '../core/pop-up/pop-up' as *;
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-tooltip-color($component, $style-name) {
-    $style: map.get($component, $style-name);
-
-    box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow, map.get($style, shadow));
+@mixin kbq-tooltip-color($style-name) {
+    box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow);
 
     & .kbq-tooltip__inner {
-        color: kbq-css-variable(tooltip-#{$style-name}-text, map.get($style, text));
+        color: kbq-css-variable(tooltip-#{$style-name}-text);
 
-        background-color: kbq-css-variable(tooltip-#{$style-name}-background, map.get($style, background));
+        background-color: kbq-css-variable(tooltip-#{$style-name}-background);
     }
 
     & .kbq-tooltip__arrow {
-        background-color: kbq-css-variable(tooltip-#{$style-name}-background, map.get($style, background));
-        box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow, map.get($style, shadow));
+        background-color: kbq-css-variable(tooltip-#{$style-name}-background);
+        box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow);
     }
 }
 
-@mixin kbq-tooltip-theme($theme) {
-    $tooltip: map.get(map.get($theme, components), tooltip);
-
+@mixin kbq-tooltip-theme() {
     .kbq-tooltip.kbq-theme {
-        @include kbq-tooltip-color($tooltip, theme-fade-off);
+        @include kbq-tooltip-color(theme-fade-off);
     }
 
     .kbq-tooltip.kbq-contrast {
-        @include kbq-tooltip-color($tooltip, contrast-fade-off);
+        @include kbq-tooltip-color(contrast-fade-off);
     }
 
     .kbq-tooltip.kbq-contrast-fade {
-        @include kbq-tooltip-color($tooltip, contrast-fade-on);
+        @include kbq-tooltip-color(contrast-fade-on);
     }
 
     .kbq-tooltip.kbq-warning {
-        @include kbq-tooltip-color($tooltip, warning-fade-off);
+        @include kbq-tooltip-color(warning-fade-off);
     }
 
     .kbq-tooltip.kbq-error {
-        @include kbq-tooltip-color($tooltip, error-fade-off);
+        @include kbq-tooltip-color(error-fade-off);
     }
 }
 
-@mixin kbq-tooltip-typography($config) {
+@mixin kbq-tooltip-typography() {
     .kbq-tooltip {
         @include kbq-typography-css-variables(tooltip, default);
 

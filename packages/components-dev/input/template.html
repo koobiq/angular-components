@@ -32,7 +32,9 @@
             От 8 до 15 символов
         </kbq-password-hint>
 
-        <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+        @if (true) {
+            <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+        }
 
         <kbq-password-hint [rule]="passwordRules.LowerLatin">Строчная латинская буква</kbq-password-hint>
 

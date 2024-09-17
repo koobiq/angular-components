@@ -121,7 +121,7 @@ const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorS
     selector: 'kbq-tree-select',
     exportAs: 'kbqTreeSelect',
     templateUrl: 'tree-select.html',
-    styleUrls: ['./tree-select.scss'],
+    styleUrls: ['./tree-select.scss', 'tree-select-tokens.scss'],
     inputs: ['disabled', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
