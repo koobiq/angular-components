@@ -1,91 +1,76 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-radio-state($component, $type, $state-name) {
-    $state: map.get($component, $type, $state-name);
+@mixin kbq-radio-state($type, $state-name) {
     $base-path: radio-#{$type}-#{$state-name};
 
     & .kbq-radio-button__outer-circle {
-        border-color: kbq-css-variable(#{$base-path}-outer-circle-border, map.get($state, outer-circle-border));
-        background: kbq-css-variable(#{$base-path}-outer-circle-background, map.get($state, outer-circle-background));
+        border-color: kbq-css-variable(#{$base-path}-outer-circle-border);
+        background: kbq-css-variable(#{$base-path}-outer-circle-background);
         // FIXME: move under &.cdk-keyboard-focused, because used only for focused state.
-        box-shadow: kbq-css-variable(#{$base-path}-outer-circle-shadow, map.get($state, outer-circle-shadow));
+        box-shadow: kbq-css-variable(#{$base-path}-outer-circle-shadow);
     }
 
     & .kbq-radio-button__inner-circle {
-        background: kbq-css-variable(#{$base-path}-inner-circle-background, map.get($state, inner-circle-background));
+        background: kbq-css-variable(#{$base-path}-inner-circle-background);
     }
 }
 
-@mixin kbq-radio-color($component, $type-name) {
-    @include kbq-radio-state($component, $type-name, default);
+@mixin kbq-radio-color($type-name) {
+    @include kbq-radio-state($type-name, default);
 
     & .kbq-hint .kbq-hint__text {
-        color: kbq-css-variable(radio-#{$type-name}-default-caption, map.get($component, $type-name, default, caption));
+        color: kbq-css-variable(radio-#{$type-name}-default-caption);
     }
 
     &:hover {
-        @include kbq-radio-state($component, $type-name, states-hover);
+        @include kbq-radio-state($type-name, states-hover);
     }
 
     &.cdk-keyboard-focused {
-        @include kbq-radio-state($component, $type-name, states-focused);
+        @include kbq-radio-state($type-name, states-focused);
     }
 
     &.kbq-selected:not(.kbq-disabled) {
-        @include kbq-radio-state($component, $type-name, states-checked);
+        @include kbq-radio-state($type-name, states-checked);
     }
 
     &.kbq-selected.kbq-disabled {
-        @include kbq-radio-state($component, $type-name, states-checked-disabled);
+        @include kbq-radio-state($type-name, states-checked-disabled);
     }
 
     &.kbq-disabled {
-        @include kbq-radio-state($component, $type-name, states-disabled);
+        @include kbq-radio-state($type-name, states-disabled);
 
         & .kbq-radio-label {
             cursor: default;
-            color: kbq-css-variable(
-                radio-#{$type-name}-states-disabled-caption,
-                map.get($component, $type-name, states-disabled, caption)
-            );
+            color: kbq-css-variable(radio-#{$type-name}-states-disabled-caption);
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: kbq-css-variable(
-                radio-#{$type-name}-states-disabled-caption,
-                map.get($component, $type-name, states-disabled, caption)
-            );
+            color: kbq-css-variable(radio-#{$type-name}-states-disabled-caption);
         }
     }
 }
 
-@mixin kbq-radio-theme($theme) {
-    $foreground: map.get($theme, foreground);
-
-    $radio: map.get(map.get($theme, components), radio);
-
+@mixin kbq-radio-theme() {
     .kbq-radio-button {
         & .kbq-radio-button__inner-circle {
             border-width: 0 !important;
         }
 
-        @include kbq-radio-color($radio, theme);
+        @include kbq-radio-color(theme);
 
-        color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
+        color: kbq-css-variable(foreground-contrast);
 
         &.kbq-error {
-            @include kbq-radio-color($radio, error);
+            @include kbq-radio-color(error);
 
-            color: kbq-css-variable(foreground-contrast, map.get($foreground, contrast));
+            color: kbq-css-variable(foreground-contrast);
         }
     }
 }
 
-@mixin kbq-radio-typography($config) {
+@mixin kbq-radio-typography() {
     .kbq-radio-button {
         @include kbq-typography-css-variables(radio, normal-label);
 

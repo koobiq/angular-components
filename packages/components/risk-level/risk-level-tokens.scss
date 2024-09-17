@@ -1,0 +1,72 @@
+.kbq-risk-level {
+    --kbq-risk-level-size-padding-vertical: 2px;
+    --kbq-risk-level-size-padding-horizontal: 8px;
+    --kbq-risk-level-size-border-width: 1px;
+    --kbq-risk-level-size-border-radius: 4px;
+    --kbq-risk-level-font-text-font-size: 18px;
+    --kbq-risk-level-font-text-line-height: 26px;
+    --kbq-risk-level-font-text-letter-spacing: normal;
+    --kbq-risk-level-font-text-font-weight: 600;
+    --kbq-risk-level-font-text-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-risk-level-font-text-text-transform: null;
+    --kbq-risk-level-font-text-font-feature-settings: 'calt', 'kern', 'liga';
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-risk-level-filled-fade-off-success-background: hsla(104, 64%, 45%, 100%);
+    --kbq-risk-level-filled-fade-off-success-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-off-warning-background: hsla(38, 100%, 50%, 100%);
+    --kbq-risk-level-filled-fade-off-warning-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-off-error-background: hsla(7, 97%, 60%, 100%);
+    --kbq-risk-level-filled-fade-off-error-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-on-contrast-background: hsla(229, 15%, 92%, 100%);
+    --kbq-risk-level-filled-fade-on-contrast-text: hsla(229, 15%, 15%, 100%);
+    --kbq-risk-level-filled-fade-on-success-background: hsla(104, 64%, 80%, 100%);
+    --kbq-risk-level-filled-fade-on-success-text: hsla(104, 64%, 30%, 100%);
+    --kbq-risk-level-filled-fade-on-warning-background: hsla(38, 100%, 85%, 100%);
+    --kbq-risk-level-filled-fade-on-warning-text: hsla(38, 100%, 33%, 100%);
+    --kbq-risk-level-filled-fade-on-error-background: hsla(7, 97%, 90%, 100%);
+    --kbq-risk-level-filled-fade-on-error-text: hsla(7, 97%, 40%, 100%);
+    --kbq-risk-level-outline-fade-on-contrast-background: transparent;
+    --kbq-risk-level-outline-fade-on-contrast-text: hsla(229, 15%, 15%, 100%);
+    --kbq-risk-level-outline-fade-on-contrast-border: hsla(229, 15%, 80%, 100%);
+    --kbq-risk-level-outline-fade-on-success-background: transparent;
+    --kbq-risk-level-outline-fade-on-success-text: hsla(104, 64%, 30%, 100%);
+    --kbq-risk-level-outline-fade-on-success-border: hsla(104, 64%, 45%, 100%);
+    --kbq-risk-level-outline-fade-on-warning-background: transparent;
+    --kbq-risk-level-outline-fade-on-warning-text: hsla(38, 100%, 33%, 100%);
+    --kbq-risk-level-outline-fade-on-warning-border: hsla(38, 100%, 55%, 100%);
+    --kbq-risk-level-outline-fade-on-error-background: transparent;
+    --kbq-risk-level-outline-fade-on-error-text: hsla(7, 97%, 40%, 100%);
+    --kbq-risk-level-outline-fade-on-error-border: hsla(7, 97%, 65%, 100%);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-risk-level-filled-fade-off-success-background: hsla(104, 64%, 40%, 100%);
+    --kbq-risk-level-filled-fade-off-success-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-off-warning-background: hsla(38, 100%, 39%, 100%);
+    --kbq-risk-level-filled-fade-off-warning-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-off-error-background: hsla(7, 97%, 41%, 100%);
+    --kbq-risk-level-filled-fade-off-error-text: hsla(0, 0%, 100%, 100%);
+    --kbq-risk-level-filled-fade-on-contrast-background: hsla(229, 15%, 25%, 100%);
+    --kbq-risk-level-filled-fade-on-contrast-text: hsla(229, 15%, 80%, 100%);
+    --kbq-risk-level-filled-fade-on-success-background: hsla(104, 64%, 12%, 100%);
+    --kbq-risk-level-filled-fade-on-success-text: hsla(104, 64%, 45%, 100%);
+    --kbq-risk-level-filled-fade-on-warning-background: hsla(38, 100%, 14%, 100%);
+    --kbq-risk-level-filled-fade-on-warning-text: hsla(38, 100%, 60%, 100%);
+    --kbq-risk-level-filled-fade-on-error-background: hsla(7, 97%, 15%, 100%);
+    --kbq-risk-level-filled-fade-on-error-text: hsla(7, 97%, 60%, 100%);
+    --kbq-risk-level-outline-fade-on-contrast-background: transparent;
+    --kbq-risk-level-outline-fade-on-contrast-text: hsla(229, 15%, 80%, 100%);
+    --kbq-risk-level-outline-fade-on-contrast-border: hsla(229, 15%, 30%, 100%);
+    --kbq-risk-level-outline-fade-on-success-background: transparent;
+    --kbq-risk-level-outline-fade-on-success-text: hsla(104, 64%, 45%, 100%);
+    --kbq-risk-level-outline-fade-on-success-border: hsla(104, 64%, 20%, 100%);
+    --kbq-risk-level-outline-fade-on-warning-background: transparent;
+    --kbq-risk-level-outline-fade-on-warning-text: hsla(38, 100%, 60%, 100%);
+    --kbq-risk-level-outline-fade-on-warning-border: hsla(38, 100%, 20%, 100%);
+    --kbq-risk-level-outline-fade-on-error-background: transparent;
+    --kbq-risk-level-outline-fade-on-error-text: hsla(7, 97%, 60%, 100%);
+    --kbq-risk-level-outline-fade-on-error-border: hsla(7, 97%, 35%, 100%);
+}

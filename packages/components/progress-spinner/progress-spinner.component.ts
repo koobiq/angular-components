@@ -42,7 +42,7 @@ const MAX_DASH_ARRAY = 295;
 @Component({
     selector: 'kbq-progress-spinner',
     templateUrl: './progress-spinner.component.html',
-    styleUrls: ['./progress-spinner.scss'],
+    styleUrls: ['./progress-spinner.scss', './progress-spinner-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],

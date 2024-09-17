@@ -1,7 +1,6 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/tokens' as *;
+
+@use './risk-level-theme' as *;
 
 .kbq-risk-level {
     box-sizing: border-box;
@@ -18,3 +17,6 @@
         radius: kbq-css-variable(risk-level-size-border-radius);
     }
 }
+
+@include kbq-risk-level-theme();
+@include kbq-risk-level-typography();

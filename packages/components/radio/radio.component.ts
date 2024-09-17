@@ -325,7 +325,7 @@ export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof Kb
 @Component({
     selector: 'kbq-radio-button',
     templateUrl: 'radio.component.html',
-    styleUrls: ['radio.scss'],
+    styleUrls: ['radio.scss', 'radio-tokens.scss'],
     inputs: ['color', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

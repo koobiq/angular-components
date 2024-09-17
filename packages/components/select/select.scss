@@ -1,9 +1,8 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/select' as *;
 
 @use '../core/styles/common/tokens' as *;
+
+@use './select-theme' as *;
 
 .kbq-select {
     @extend %kbq-select-base;
@@ -35,3 +34,6 @@
         cursor: pointer;
     }
 }
+
+@include kbq-select-theme();
+@include kbq-select-typography();
