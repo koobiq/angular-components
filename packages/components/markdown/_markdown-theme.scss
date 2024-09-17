@@ -1,5 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
+@use './markdown-tokens';
+
 @mixin kbq-markdown-theme() {
     .kbq-markdown {
         color: kbq-css-variable(foreground-contrast);
