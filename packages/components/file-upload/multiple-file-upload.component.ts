@@ -49,7 +49,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     templateUrl: './multiple-file-upload.component.html',
-    styleUrls: ['./file-upload.scss', './multiple-file-upload.component.scss'],
+    styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
