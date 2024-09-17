@@ -30,7 +30,7 @@ export default function newIconsPack(options: Schema): Rule {
         const handleDeprecatedIcons = (newContent: string | undefined, path: Path) => {
             if (fix) {
                 data.forEach(({ replace, replaceWith }) => {
-                    newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
+                    newContent = newContent!.replace(new RegExp(`kbq-${replace}`, 'g'), `kbq-${replaceWith}`);
                 });
             } else {
                 const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);

@@ -14,7 +14,7 @@ export const iconReplacements: ReplaceData[] = [
     { replace: 'mc mc-', replaceWith: 'kbq kbq-' },
     { replace: '\\[class\\.mc', replaceWith: '[class.kbq' },
     { replace: "'mc-", replaceWith: "'kbq-" },
-    { replace: `.mc;`, replaceWith: `.kbq;` }
+    { replace: `\\.mc;`, replaceWith: `.kbq;` }
 ];
 
 export const newIconsPackData: ReplaceData[] = [
