@@ -65,6 +65,5 @@
     @include kbq-sidepanel-typography($config);
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
-    @include kbq-textarea-typography($config);
     @include kbq-textarea-typography();
 }
