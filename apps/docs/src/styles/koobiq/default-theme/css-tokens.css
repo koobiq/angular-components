@@ -1403,8 +1403,8 @@
   --kbq-alert-size-normal-icon-margin-left: 12px;
   --kbq-alert-size-normal-icon-padding-top: 4px;
   --kbq-alert-size-normal-title-margin-bottom: 4px;
-  --kbq-alert-size-normal-close-button-margin-top: 8px;
-  --kbq-alert-size-normal-close-button-margin-left: 2px;
+  --kbq-alert-size-normal-close-button-margin-top: 14px;
+  --kbq-alert-size-normal-close-button-margin-left: 6px;
   --kbq-alert-size-normal-button-stack-padding-top: 8px;
   --kbq-alert-size-normal-button-stack-padding-bottom: 2px;
   --kbq-alert-size-normal-no-title-icon-margin-top: 16px;
@@ -1601,8 +1601,8 @@
   --kbq-input-size-padding-vertical: 6px;
   --kbq-link-size-state-focused-outline-offset: 0px;
   --kbq-link-size-state-focused-outline-width: 2px;
-  --kbq-link-size-compact-content-padding: 2px;
-  --kbq-link-size-normal-content-padding: 2px;
+  --kbq-link-size-compact-content-padding: 4px;
+  --kbq-link-size-normal-content-padding: 4px;
   --kbq-link-size-big-content-padding: 4px;
   --kbq-list-size-container-padding-left: 12px;
   --kbq-list-size-container-padding-right: 12px;
@@ -1665,7 +1665,7 @@
   --kbq-markdown-code-size-multiline-padding: 12px 16px;
   --kbq-markdown-code-size-border-radius: 8px;
   --kbq-markdown-code-size-border-width: 1px;
-  --kbq-markdown-link-size-icon-margin: 2px;
+  --kbq-markdown-link-size-icon-margin: 4px;
   --kbq-markdown-link-size-state-focused-outline-offset: 0px;
   --kbq-markdown-link-size-state-focused-outline-width: 2px;
   --kbq-markdown-image-size-max-width: 650px;
