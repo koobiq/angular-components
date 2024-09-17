@@ -223,7 +223,7 @@ export const newIconsPackData: ReplaceData[] = [
     },
     {
         replace: 'file-empty_16',
-        replaceWith: 'file_16'
+        replaceWith: 'file-o_16'
     },
     {
         replace: 'folder-closed_16',
