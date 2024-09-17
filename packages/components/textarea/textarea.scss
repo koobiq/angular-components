@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '../core/styles/common/tokens' as *;
+@use './textarea-tokens' as *;
 
 .kbq-textarea {
     display: inline-block;

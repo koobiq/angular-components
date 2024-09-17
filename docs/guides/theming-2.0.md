@@ -75,6 +75,7 @@
 -   [input](/packages/components/input/input-tokens.scss)
 -   [link](/packages/components/link/link-tokens.scss)
 -   [table](/packages/components/table/table-tokens.scss)
+-   [textarea](/packages/components/textarea/textarea-tokens.scss)
 -   [timezone](/packages/components/timezone/timezone-option-tokens.scss)
 -   [toast](/packages/components/toast/toast-tokens.scss)
 -   [toggle](/packages/components/toggle/toggle-tokens.scss)

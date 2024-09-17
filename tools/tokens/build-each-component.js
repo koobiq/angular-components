@@ -35,6 +35,7 @@ const componentsWithCss = [
     'input',
     'link',
     'table',
+    'textarea',
     'timezone',
     'toast',
     'toggle',
