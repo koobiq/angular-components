@@ -29,7 +29,8 @@ const componentNameMapping = {
     datepicker: 'datepicker__content',
     'description-list': 'dl',
     dropdown: 'dropdown__panel',
-    'timezone-option': 'timezone-select__panel'
+    'timezone-option': 'timezone-select__panel',
+    tree: ['tree', '.kbq-tree-selection']
 };
 
 const applyCustomTransformations = (dictionary) => {

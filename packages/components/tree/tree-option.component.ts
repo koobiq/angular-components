@@ -54,7 +54,7 @@ let uniqueIdCounter: number = 0;
     selector: 'kbq-tree-option',
     exportAs: 'kbqTreeOption',
     templateUrl: './tree-option.html',
-    styleUrls: ['./tree-option.scss'],
+    styleUrls: ['./tree-option.scss', './tree-tokens.scss'],
     host: {
         class: 'kbq-tree-option',
         '[class.kbq-selected]': 'selected',
