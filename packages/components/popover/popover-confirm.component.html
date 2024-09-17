@@ -7,15 +7,17 @@
     (@state.start)="animationStart()"
     [@state]="visibility"
 >
-    <div class="kbq-popover__content">
-        <div>{{ confirmText }}</div>
-        <button
-            kbq-button
-            [color]="'contrast'"
-            (click)="onConfirm.next()"
-        >
-            {{ confirmButtonText }}
-        </button>
+    <div class="kbq-popover__container">
+        <div class="kbq-popover__content">
+            <div>{{ confirmText }}</div>
+            <button
+                kbq-button
+                [color]="'contrast'"
+                (click)="onConfirm.next()"
+            >
+                {{ confirmButtonText }}
+            </button>
+        </div>
     </div>
 
     <div class="kbq-popover__arrow"></div>
