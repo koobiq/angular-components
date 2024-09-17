@@ -61,7 +61,7 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-file-upload-single-default-container-border: hsla(229, 15%, 70%, 100%);
+    --kbq-file-upload-single-default-container-border: hsla(229, 15%, 80%, 100%);
     --kbq-file-upload-single-default-container-background: hsla(0, 0%, 100%, 100%);
     --kbq-file-upload-single-default-upload-icon-color: hsla(229, 15%, 60%, 100%);
     --kbq-file-upload-single-default-left-icon-color: hsla(229, 15%, 60%, 100%);
@@ -76,13 +76,13 @@
     --kbq-file-upload-single-states-error-container-background: hsla(7, 97%, 99%, 100%);
     --kbq-file-upload-single-states-error-left-icon-color: hsla(7, 97%, 45%, 100%);
     --kbq-file-upload-single-states-error-text-block-color: hsla(7, 97%, 40%, 100%);
-    --kbq-file-upload-single-states-disabled-container-border: hsla(229, 15%, 15%, 32%);
+    --kbq-file-upload-single-states-disabled-container-border: hsla(229, 15%, 50%, 32%);
     --kbq-file-upload-single-states-disabled-container-background: hsla(229, 15%, 50%, 16%);
     --kbq-file-upload-single-states-disabled-upload-icon-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-single-states-disabled-left-icon-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-single-states-disabled-text-block-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-single-states-focused-focus-outline-color: hsla(216, 100%, 60%, 100%);
-    --kbq-file-upload-multiple-default-container-border: hsla(229, 15%, 70%, 100%);
+    --kbq-file-upload-multiple-default-container-border: hsla(229, 15%, 80%, 100%);
     --kbq-file-upload-multiple-default-container-background: hsla(0, 0%, 100%, 100%);
     --kbq-file-upload-multiple-default-upload-icon-color: hsla(229, 15%, 60%, 100%);
     --kbq-file-upload-multiple-default-left-icon-color: hsla(229, 15%, 60%, 100%);
@@ -100,12 +100,12 @@
     --kbq-file-upload-multiple-states-error-left-icon-color: hsla(7, 97%, 45%, 100%);
     --kbq-file-upload-multiple-states-error-text-block-color: hsla(7, 97%, 40%, 100%);
     --kbq-file-upload-multiple-states-error-icon-button-color: hsla(7, 97%, 45%, 100%);
-    --kbq-file-upload-multiple-states-disabled-container-border: hsla(229, 15%, 15%, 32%);
+    --kbq-file-upload-multiple-states-disabled-container-border: hsla(229, 15%, 50%, 32%);
     --kbq-file-upload-multiple-states-disabled-container-background: hsla(229, 15%, 50%, 16%);
     --kbq-file-upload-multiple-states-disabled-upload-icon-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-multiple-states-disabled-left-icon-color: hsla(229, 15%, 15%, 32%);
     --kbq-file-upload-multiple-states-disabled-text-block-color: hsla(229, 15%, 15%, 32%);
-    --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 15%, 32%);
+    --kbq-file-upload-multiple-states-disabled-grid-divider-color: hsla(229, 15%, 50%, 32%);
     --kbq-form-field-hint-text: hsla(229, 15%, 50%, 100%);
 }
 

@@ -45,7 +45,7 @@
     --kbq-link-state-active-border-bottom: hsla(216, 100%, 85%, 100%);
     --kbq-link-state-focused-outline: hsla(216, 100%, 60%, 100%);
     --kbq-link-state-disabled-text: hsla(229, 15%, 15%, 32%);
-    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 15%, 32%);
+    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 50%, 32%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
