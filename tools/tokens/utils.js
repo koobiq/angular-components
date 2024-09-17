@@ -29,6 +29,7 @@ const componentNameMapping = {
     datepicker: 'datepicker__content',
     'description-list': 'dl',
     dropdown: 'dropdown__panel',
+    'timezone-option': 'timezone-select__panel',
     tree: ['tree', '.kbq-tree-selection']
 };
 
@@ -51,7 +52,8 @@ const componentAliases = {
     'description-list': 'dl/dl-tokens.scss',
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
-    'icon-item': 'icon/icon-item-tokens.scss'
+    'icon-item': 'icon/icon-item-tokens.scss',
+    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }]
 };
 
 const resolvePath = (componentName) =>

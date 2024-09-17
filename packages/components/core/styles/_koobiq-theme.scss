@@ -23,7 +23,6 @@
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
 @use '../../textarea/textarea-theme' as *;
-@use '../../timezone/timezone-option-theme' as *;
 @use '../forms/forms-theme' as *;
 @use '../option/option-theme' as *;
 @use '../option/optgroup-theme' as *;
@@ -57,7 +56,6 @@
     @include kbq-splitter-theme($theme);
     @include kbq-tabs-theme($theme);
     @include kbq-tag-theme($theme);
-    @include kbq-timezone-option-theme($theme);
 }
 
 @mixin koobiq-typography($tokens, $config: null, $md-config: null) {
@@ -89,7 +87,6 @@
     @include kbq-tabs-typography($config);
     @include kbq-tag-typography($config);
     @include kbq-textarea-typography($config);
-    @include kbq-timezone-option-typography($config);
 
     @include kbq-markdown-typography($md-config);
 }
