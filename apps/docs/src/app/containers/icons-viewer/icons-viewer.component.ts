@@ -91,7 +91,8 @@ export class IconsViewerComponent implements OnDestroy {
                         .filter(
                             (item) =>
                                 item.name.toLowerCase().includes(lowered) ||
-                                item.tags.some((tag) => tag.toLowerCase().includes(lowered))
+                                (Array.isArray(item.tags) &&
+                                    item.tags.some((tag) => tag.toLowerCase().includes(lowered)))
                         );
 
                     return items.length ? items : undefined;

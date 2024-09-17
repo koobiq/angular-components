@@ -59,8 +59,4 @@
     .icon-preview-modal__description .kbq-badge {
         @include typography.kbq-typography-level-to-styles($config, text-big);
     }
-
-    .docs-icons-viewer__table-empty-results {
-        @include typography.kbq-typography-level-to-styles($config, display-3);
-    }
 }

@@ -53,6 +53,10 @@
     }
 
     @if (searchControl.value && !filteredIcons.value) {
-        <div class="docs-icons-viewer__table-empty-results">Ничего не найдено</div>
+        <div class="docs-icons-viewer__table-empty-results">
+            <kbq-empty-state [big]="true">
+                <div kbq-empty-state-title>Нет информации</div>
+            </kbq-empty-state>
+        </div>
     }
 </div>

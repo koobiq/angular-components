@@ -50,7 +50,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
     ) {}
 
     ngAfterViewInit(): void {
-        this.SVGLink = `assets/SVGIcons/${this.iconItem.cssClass}.svg`;
+        this.SVGLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
     }
 
     onTagSelect(tag: string): void {
@@ -87,7 +87,12 @@ export class IconPreviewModalComponent implements AfterViewInit {
     }
 
     getCodeExampleText(): string {
-        return `<i kbq-icon="${this.iconItem.cssClass}"></i>`;
+        const color =
+            this.selectedColorTheme === KbqComponentColors.ContrastFade
+                ? ''
+                : ` [color]="'${this.selectedColorTheme}'"`;
+
+        return `<i kbq-icon="${this.iconItem.cssClass}"${color}></i>`;
     }
 
     getUnicode(): string {

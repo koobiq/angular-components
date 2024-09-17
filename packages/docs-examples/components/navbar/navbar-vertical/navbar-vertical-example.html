@@ -69,13 +69,16 @@
                 <button
                     kbq-button
                     [class.kbq-button-icon]="!verticalNavbar.expanded"
-                    [color]="'contrast'"
+                    [color]="colors.Contrast"
                     [kbqPlacement]="popUpPlacements.Right"
                     [kbqStyle]="'filled'"
                     [kbqTooltip]="'Новый инцидент'"
                     [kbqTooltipDisabled]="verticalNavbar.expanded"
                 >
-                    <i kbq-icon="kbq-info-circle_16"></i>
+                    <i
+                        kbq-icon="kbq-info-circle_16"
+                       [color]="'empty'"
+                    ></i>
                     @if (verticalNavbar.expanded) {
                         <span>Новая задача</span>
                     }
