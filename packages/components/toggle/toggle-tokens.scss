@@ -43,10 +43,10 @@
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-foreground-text-disabled: hsla(229, 15%, 70%, 100%);
-    --kbq-toggle-theme-default-border: hsla(229, 15%, 70%, 100%);
+    --kbq-toggle-theme-default-border: hsla(229, 15%, 80%, 100%);
     --kbq-toggle-theme-default-background: hsla(0, 0%, 100%, 100%);
     --kbq-toggle-theme-default-circle-background: hsla(229, 15%, 15%, 100%);
-    --kbq-toggle-theme-states-hover-border: hsla(229, 15%, 70%, 100%);
+    --kbq-toggle-theme-states-hover-border: hsla(229, 15%, 80%, 100%);
     --kbq-toggle-theme-states-hover-background: hsla(229, 15%, 50%, 8%);
     --kbq-toggle-theme-states-hover-circle-background: hsla(229, 15%, 15%, 100%);
     --kbq-toggle-theme-states-checked-border: transparent;
@@ -63,7 +63,7 @@
     --kbq-toggle-theme-states-checked-focused-background: hsla(216, 100%, 50%, 100%);
     --kbq-toggle-theme-states-checked-focused-circle-background: hsla(0, 0%, 100%, 100%);
     --kbq-toggle-theme-states-checked-focused-focus-outline: hsla(216, 100%, 60%, 100%);
-    --kbq-toggle-theme-states-disabled-border: hsla(229, 15%, 15%, 32%);
+    --kbq-toggle-theme-states-disabled-border: hsla(229, 15%, 50%, 32%);
     --kbq-toggle-theme-states-disabled-background: hsla(229, 15%, 50%, 16%);
     --kbq-toggle-theme-states-disabled-circle-background: hsla(229, 15%, 15%, 32%);
     --kbq-toggle-error-default-border: hsla(7, 97%, 45%, 100%);
@@ -86,7 +86,7 @@
     --kbq-toggle-error-states-checked-focused-background: hsla(7, 97%, 60%, 100%);
     --kbq-toggle-error-states-checked-focused-circle-background: hsla(0, 0%, 100%, 100%);
     --kbq-toggle-error-states-checked-focused-focus-outline: hsla(7, 97%, 45%, 100%);
-    --kbq-toggle-error-states-disabled-border: hsla(229, 15%, 15%, 32%);
+    --kbq-toggle-error-states-disabled-border: hsla(229, 15%, 50%, 32%);
     --kbq-toggle-error-states-disabled-background: hsla(229, 15%, 50%, 16%);
     --kbq-toggle-error-states-disabled-circle-background: hsla(229, 15%, 15%, 32%);
 }

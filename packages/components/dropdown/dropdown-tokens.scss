@@ -51,7 +51,6 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    // TODO: remove after all settled, should be assigned via css-tokens.css (#DS-2846)
     --kbq-foreground-contrast-secondary: hsla(229, 15%, 50%, 100%);
     --kbq-dropdown-container-background: hsla(229, 15%, 100%, 100%);
     --kbq-dropdown-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),

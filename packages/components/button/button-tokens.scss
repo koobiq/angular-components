@@ -15,7 +15,6 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    // TODO: remove after all settled, should be assigned via css-tokens.css (#DS-2846)
     --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
     --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
     --kbq-button-filled-contrast-fade-off-background: hsla(229, 15%, 25%, 100%);
@@ -65,7 +64,7 @@
     --kbq-button-outline-theme-fade-on-states-active-hover-left-icon: hsla(216, 100%, 50%, 100%);
     --kbq-button-outline-theme-fade-on-states-active-hover-right-icon: hsla(216, 100%, 50%, 100%);
     --kbq-button-outline-theme-fade-on-states-disabled-background: transparent;
-    --kbq-button-outline-theme-fade-on-states-disabled-border: hsla(229, 15%, 15%, 32%);
+    --kbq-button-outline-theme-fade-on-states-disabled-border: hsla(229, 15%, 50%, 32%);
     --kbq-button-outline-theme-fade-on-states-disabled-foreground: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-theme-fade-on-states-disabled-left-icon: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-theme-fade-on-states-disabled-right-icon: hsla(229, 15%, 15%, 32%);
@@ -90,7 +89,7 @@
     --kbq-button-outline-contrast-fade-on-states-active-hover-left-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-active-hover-right-icon: hsla(229, 15%, 15%, 100%);
     --kbq-button-outline-contrast-fade-on-states-disabled-background: transparent;
-    --kbq-button-outline-contrast-fade-on-states-disabled-border: hsla(229, 15%, 15%, 32%);
+    --kbq-button-outline-contrast-fade-on-states-disabled-border: hsla(229, 15%, 50%, 32%);
     --kbq-button-outline-contrast-fade-on-states-disabled-foreground: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-contrast-fade-on-states-disabled-left-icon: hsla(229, 15%, 15%, 32%);
     --kbq-button-outline-contrast-fade-on-states-disabled-right-icon: hsla(229, 15%, 15%, 32%);
