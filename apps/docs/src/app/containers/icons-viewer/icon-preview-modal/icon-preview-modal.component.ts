@@ -35,7 +35,8 @@ export class IconPreviewModalComponent implements AfterViewInit {
         KbqComponentColors.Contrast,
         KbqComponentColors.ContrastFade,
         KbqComponentColors.Error,
-        KbqComponentColors.Success
+        KbqComponentColors.Success,
+        KbqComponentColors.Warning
     ];
 
     selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
