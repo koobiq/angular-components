@@ -54,7 +54,6 @@ const applyCustomTransformations = (dictionary) => {
             return unwrapObjectTransformer(token);
         }
         token.name = token.name.replace(/(light|dark)-/, '');
-        console.log(token);
         return token;
     });
 
