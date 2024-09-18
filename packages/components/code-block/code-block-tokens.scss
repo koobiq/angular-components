@@ -1,32 +1,34 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-code-block {
     --kbq-code-block-size-container-border-width: 1px;
-    --kbq-code-block-size-container-border-radius: 12px;
-    --kbq-code-block-size-with-header-content-padding-top: 4px;
-    --kbq-code-block-size-with-header-content-padding-bottom: 16px;
-    --kbq-code-block-size-with-header-content-padding-horizontal: 20px;
-    --kbq-code-block-size-with-header-content-content-gap-horizontal: 12px;
+    --kbq-code-block-size-container-border-radius: var(--kbq-size-m);
+    --kbq-code-block-size-with-header-content-padding-top: var(--kbq-size-xxs);
+    --kbq-code-block-size-with-header-content-padding-bottom: var(--kbq-size-l);
+    --kbq-code-block-size-with-header-content-padding-horizontal: var(--kbq-size-xl);
+    --kbq-code-block-size-with-header-content-content-gap-horizontal: var(--kbq-size-m);
     --kbq-code-block-size-no-header-content-padding-vertical: 14px;
     --kbq-code-block-size-no-header-content-padding-horizontal: 20px;
-    --kbq-code-block-size-no-header-content-content-gap-horizontal: 12px;
-    --kbq-code-block-size-header-padding-vertical: 8px;
-    --kbq-code-block-size-header-padding-left: 12px;
-    --kbq-code-block-size-header-padding-right: 8px;
-    --kbq-code-block-size-header-content-gap-horizontal: 16px;
-    --kbq-code-block-size-actionbar-content-gap-horizontal: 2px;
-    --kbq-code-block-size-actionbar-padding-vertical: 8px;
-    --kbq-code-block-size-actionbar-padding-horizontal: 12px;
-    --kbq-code-block-size-actionbar-fade-gradient-width: 32px;
+    --kbq-code-block-size-no-header-content-content-gap-horizontal: var(--kbq-size-m);
+    --kbq-code-block-size-header-padding-vertical: var(--kbq-size-s);
+    --kbq-code-block-size-header-padding-left: var(--kbq-size-m);
+    --kbq-code-block-size-header-padding-right: var(--kbq-size-s);
+    --kbq-code-block-size-header-content-gap-horizontal: var(--kbq-size-l);
+    --kbq-code-block-size-actionbar-content-gap-horizontal: var(--kbq-size-3xs);
+    --kbq-code-block-size-actionbar-padding-vertical: var(--kbq-size-s);
+    --kbq-code-block-size-actionbar-padding-horizontal: var(--kbq-size-m);
+    --kbq-code-block-size-actionbar-fade-gradient-width: var(--kbq-size-3xl);
     --kbq-code-block-size-collapse-expanded-padding-top: 0;
-    --kbq-code-block-size-collapse-expanded-padding-bottom: 16px;
-    --kbq-code-block-size-collapse-collapsed-padding-top: 32px;
-    --kbq-code-block-size-collapse-collapsed-padding-bottom: 16px;
-    --kbq-code-block-font-default-font-size: 14px;
-    --kbq-code-block-font-default-line-height: 20px;
-    --kbq-code-block-font-default-letter-spacing: normal;
-    --kbq-code-block-font-default-font-weight: normal;
-    --kbq-code-block-font-default-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
-    --kbq-code-block-font-default-text-transform: null;
-    --kbq-code-block-font-default-font-feature-settings: initial;
+    --kbq-code-block-size-collapse-expanded-padding-bottom: var(--kbq-size-l);
+    --kbq-code-block-size-collapse-collapsed-padding-top: var(--kbq-size-3xl);
+    --kbq-code-block-size-collapse-collapsed-padding-bottom: var(--kbq-size-l);
+    --kbq-code-block-font-default-font-size: var(--kbq-typography-mono-codeblock-font-size);
+    --kbq-code-block-font-default-line-height: var(--kbq-typography-mono-codeblock-line-height);
+    --kbq-code-block-font-default-letter-spacing: var(--kbq-typography-mono-codeblock-letter-spacing);
+    --kbq-code-block-font-default-font-weight: var(--kbq-typography-mono-codeblock-font-weight);
+    --kbq-code-block-font-default-font-family: var(--kbq-typography-mono-codeblock-font-family);
+    --kbq-code-block-font-default-text-transform: var(--kbq-typography-mono-codeblock-text-transform);
+    --kbq-code-block-font-default-font-feature-settings: var(--kbq-typography-mono-codeblock-font-feature-settings);
     --kbq-code-block-font-hljs-addition-font-style: null;
     --kbq-code-block-font-hljs-addition-font-weight: null;
     --kbq-code-block-font-hljs-attr-font-style: null;
@@ -132,36 +134,38 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
-    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
-    --kbq-code-block-filled-container-background: hsla(229, 15%, 95%, 100%);
+    --kbq-code-block-filled-container-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-container-border-color: transparent;
-    --kbq-code-block-filled-header-background: hsla(229, 15%, 95%, 100%);
-    --kbq-code-block-filled-header-shadow: 0px 1px 0px 0px hsla(229, 15%, 6%, 12%);
-    --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 95%, 100%));
-    --kbq-code-block-filled-actionbar-background: hsla(229, 15%, 95%, 100%);
+    --kbq-code-block-filled-header-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-filled-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(
+        90deg,
+        transparent,
+        var(--kbq-background-bg-secondary)
+    );
+    --kbq-code-block-filled-actionbar-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-collapse-expanded-background: transparent;
     --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(
         180deg,
         hsla(225, 15%, 95%, 0%) 0%,
         hsla(225, 15%, 95%, 100%) 100%
     );
-    --kbq-code-block-filled-collapse-button-expand-background: hsla(229, 15%, 95%, 100%);
-    --kbq-code-block-outline-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-code-block-outline-container-border-color: hsla(229, 15%, 6%, 12%);
-    --kbq-code-block-outline-header-background: hsla(229, 15%, 100%, 100%);
-    --kbq-code-block-outline-header-shadow: 0px 1px 0px 0px hsla(229, 15%, 6%, 12%);
-    --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 100%, 100%));
-    --kbq-code-block-outline-actionbar-background: hsla(229, 15%, 100%, 100%);
+    --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-outline-container-background: var(--kbq-background-card);
+    --kbq-code-block-outline-container-border-color: var(--kbq-line-contrast-less);
+    --kbq-code-block-outline-header-background: var(--kbq-background-card);
+    --kbq-code-block-outline-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, var(--kbq-background-card));
+    --kbq-code-block-outline-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-outline-collapse-expanded-background: transparent;
     --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(
         180deg,
         hsla(0, 0%, 100%, 0%) 0%,
         hsla(0, 0%, 100%, 100%) 100%
     );
-    --kbq-code-block-outline-collapse-button-expand-background: hsla(229, 15%, 100%, 100%);
-    --kbq-code-block-hljs-addition-background: hsla(104, 64%, 95%, 100%);
-    --kbq-code-block-hljs-addition-color: hsla(104, 64%, 25%, 100%);
+    --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
+    --kbq-code-block-hljs-addition-background: var(--kbq-palette-green-95);
+    --kbq-code-block-hljs-addition-color: var(--kbq-palette-green-25);
     --kbq-code-block-hljs-attr-background: null;
     --kbq-code-block-hljs-attr-color: null;
     --kbq-code-block-hljs-attribute-background: null;
@@ -177,9 +181,9 @@
     --kbq-code-block-hljs-code-background: null;
     --kbq-code-block-hljs-code-color: null;
     --kbq-code-block-hljs-comment-background: null;
-    --kbq-code-block-hljs-comment-color: hsla(229, 15%, 60%, 100%);
-    --kbq-code-block-hljs-deletion-background: hsla(7, 97%, 95%, 100%);
-    --kbq-code-block-hljs-deletion-color: hsla(7, 97%, 35%, 100%);
+    --kbq-code-block-hljs-comment-color: var(--kbq-palette-grey-60);
+    --kbq-code-block-hljs-deletion-background: var(--kbq-palette-red-95);
+    --kbq-code-block-hljs-deletion-color: var(--kbq-palette-red-35);
     --kbq-code-block-hljs-doctag-background: null;
     --kbq-code-block-hljs-doctag-color: null;
     --kbq-code-block-hljs-emphasis-background: null;
@@ -190,23 +194,23 @@
     --kbq-code-block-hljs-function-color: null;
     --kbq-code-block-hljs-keyword-background: null;
     --kbq-code-block-hljs-keyword-color: null;
-    --kbq-code-block-hljs-line-numbers-color: hsla(229, 15%, 50%, 100%);
+    --kbq-code-block-hljs-line-numbers-color: var(--kbq-foreground-contrast-secondary);
     --kbq-code-block-hljs-link-background: null;
     --kbq-code-block-hljs-link-color: null;
     --kbq-code-block-hljs-literal-background: null;
-    --kbq-code-block-hljs-literal-color: hsla(277, 72%, 30%, 100%);
+    --kbq-code-block-hljs-literal-color: var(--kbq-palette-purple-30);
     --kbq-code-block-hljs-meta-background: null;
-    --kbq-code-block-hljs-meta-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-meta-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-meta-keyword-background: null;
     --kbq-code-block-hljs-meta-keyword-color: null;
     --kbq-code-block-hljs-meta-string-background: null;
-    --kbq-code-block-hljs-meta-string-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-meta-string-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-meta-prompt-background: null;
     --kbq-code-block-hljs-meta-prompt-color: null;
     --kbq-code-block-hljs-name-background: null;
-    --kbq-code-block-hljs-name-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-name-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-number-background: null;
-    --kbq-code-block-hljs-number-color: hsla(277, 72%, 30%, 100%);
+    --kbq-code-block-hljs-number-color: var(--kbq-palette-purple-30);
     --kbq-code-block-hljs-operator-background: null;
     --kbq-code-block-hljs-operator-color: null;
     --kbq-code-block-hljs-params-background: null;
@@ -218,7 +222,7 @@
     --kbq-code-block-hljs-quote-background: null;
     --kbq-code-block-hljs-quote-color: null;
     --kbq-code-block-hljs-regexp-background: null;
-    --kbq-code-block-hljs-regexp-color: hsla(104, 64%, 25%, 100%);
+    --kbq-code-block-hljs-regexp-color: var(--kbq-palette-green-25);
     --kbq-code-block-hljs-section-background: null;
     --kbq-code-block-hljs-section-color: null;
     --kbq-code-block-hljs-selector-attr-background: null;
@@ -230,15 +234,15 @@
     --kbq-code-block-hljs-selector-pseudo-background: null;
     --kbq-code-block-hljs-selector-pseudo-color: null;
     --kbq-code-block-hljs-selector-tag-background: null;
-    --kbq-code-block-hljs-selector-tag-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-selector-tag-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-string-background: null;
-    --kbq-code-block-hljs-string-color: hsla(104, 64%, 25%, 100%);
+    --kbq-code-block-hljs-string-color: var(--kbq-palette-green-25);
     --kbq-code-block-hljs-strong-background: null;
     --kbq-code-block-hljs-strong-color: null;
     --kbq-code-block-hljs-subst-background: null;
     --kbq-code-block-hljs-subst-color: null;
     --kbq-code-block-hljs-symbol-background: null;
-    --kbq-code-block-hljs-symbol-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-symbol-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-tag-background: null;
     --kbq-code-block-hljs-tag-color: null;
     --kbq-code-block-hljs-template-tag-background: null;
@@ -246,7 +250,7 @@
     --kbq-code-block-hljs-template-variable-background: null;
     --kbq-code-block-hljs-template-variable-color: null;
     --kbq-code-block-hljs-title-background: null;
-    --kbq-code-block-hljs-title-color: hsla(216, 100%, 35%, 100%);
+    --kbq-code-block-hljs-title-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-title-class-background: null;
     --kbq-code-block-hljs-title-class-color: null;
     --kbq-code-block-hljs-title-class-inherited-background: null;
@@ -266,36 +270,38 @@
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
-    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
-    --kbq-code-block-filled-container-background: hsla(229, 15%, 16%, 100%);
-    --kbq-code-block-filled-container-border-color: hsla(229, 15%, 22%, 100%);
-    --kbq-code-block-filled-header-background: hsla(229, 15%, 16%, 100%);
-    --kbq-code-block-filled-header-shadow: 0px 1px 0px 0px hsla(229, 100%, 85%, 15%);
-    --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 16%, 100%));
-    --kbq-code-block-filled-actionbar-background: hsla(229, 15%, 16%, 100%);
+    --kbq-code-block-filled-container-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-filled-container-border-color: var(--kbq-line-contrast-less);
+    --kbq-code-block-filled-header-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-filled-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(
+        90deg,
+        transparent,
+        var(--kbq-background-bg-secondary)
+    );
+    --kbq-code-block-filled-actionbar-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-collapse-expanded-background: transparent;
     --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(
         180deg,
         hsla(229, 15%, 15%, 0%) 0%,
         hsla(229, 15%, 15%, 1%) 100%
     );
-    --kbq-code-block-filled-collapse-button-expand-background: hsla(229, 15%, 16%, 100%);
-    --kbq-code-block-outline-container-background: hsla(229, 15%, 15%, 100%);
+    --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-outline-container-background: var(--kbq-background-card);
     --kbq-code-block-outline-container-border-color: transparent;
-    --kbq-code-block-outline-header-background: hsla(229, 15%, 15%, 100%);
-    --kbq-code-block-outline-header-shadow: 0px 1px 0px 0px hsla(229, 100%, 85%, 15%);
-    --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, hsla(229, 15%, 15%, 100%));
-    --kbq-code-block-outline-actionbar-background: hsla(229, 15%, 15%, 100%);
+    --kbq-code-block-outline-header-background: var(--kbq-background-card);
+    --kbq-code-block-outline-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, var(--kbq-background-card));
+    --kbq-code-block-outline-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-outline-collapse-expanded-background: transparent;
     --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(
         180deg,
         hsla(229, 15%, 12%, 0%) 0%,
         hsla(229, 15%, 12%, 1%) 100%
     );
-    --kbq-code-block-outline-collapse-button-expand-background: hsla(229, 15%, 15%, 100%);
-    --kbq-code-block-hljs-addition-background: hsla(104, 64%, 95%, 100%);
-    --kbq-code-block-hljs-addition-color: hsla(104, 64%, 25%, 100%);
+    --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
+    --kbq-code-block-hljs-addition-background: var(--kbq-palette-green-95);
+    --kbq-code-block-hljs-addition-color: var(--kbq-palette-green-25);
     --kbq-code-block-hljs-attr-background: null;
     --kbq-code-block-hljs-attr-color: null;
     --kbq-code-block-hljs-attribute-background: null;
@@ -311,9 +317,9 @@
     --kbq-code-block-hljs-code-background: null;
     --kbq-code-block-hljs-code-color: null;
     --kbq-code-block-hljs-comment-background: null;
-    --kbq-code-block-hljs-comment-color: hsla(229, 15%, 60%, 100%);
-    --kbq-code-block-hljs-deletion-background: hsla(7, 97%, 95%, 100%);
-    --kbq-code-block-hljs-deletion-color: hsla(7, 97%, 35%, 100%);
+    --kbq-code-block-hljs-comment-color: var(--kbq-palette-grey-60);
+    --kbq-code-block-hljs-deletion-background: var(--kbq-palette-red-95);
+    --kbq-code-block-hljs-deletion-color: var(--kbq-palette-red-35);
     --kbq-code-block-hljs-doctag-background: null;
     --kbq-code-block-hljs-doctag-color: null;
     --kbq-code-block-hljs-emphasis-background: null;
@@ -324,23 +330,23 @@
     --kbq-code-block-hljs-function-color: null;
     --kbq-code-block-hljs-keyword-background: null;
     --kbq-code-block-hljs-keyword-color: null;
-    --kbq-code-block-hljs-line-numbers-color: hsla(229, 15%, 60%, 100%);
+    --kbq-code-block-hljs-line-numbers-color: var(--kbq-foreground-contrast-secondary);
     --kbq-code-block-hljs-link-background: null;
     --kbq-code-block-hljs-link-color: null;
     --kbq-code-block-hljs-literal-background: null;
-    --kbq-code-block-hljs-literal-color: hsla(277, 72%, 60%, 100%);
+    --kbq-code-block-hljs-literal-color: var(--kbq-palette-purple-60);
     --kbq-code-block-hljs-meta-background: null;
-    --kbq-code-block-hljs-meta-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-meta-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-meta-keyword-background: null;
     --kbq-code-block-hljs-meta-keyword-color: null;
     --kbq-code-block-hljs-meta-string-background: null;
-    --kbq-code-block-hljs-meta-string-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-meta-string-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-meta-prompt-background: null;
     --kbq-code-block-hljs-meta-prompt-color: null;
     --kbq-code-block-hljs-name-background: null;
-    --kbq-code-block-hljs-name-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-name-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-number-background: null;
-    --kbq-code-block-hljs-number-color: hsla(277, 72%, 60%, 100%);
+    --kbq-code-block-hljs-number-color: var(--kbq-palette-purple-60);
     --kbq-code-block-hljs-operator-background: null;
     --kbq-code-block-hljs-operator-color: null;
     --kbq-code-block-hljs-params-background: null;
@@ -352,7 +358,7 @@
     --kbq-code-block-hljs-quote-background: null;
     --kbq-code-block-hljs-quote-color: null;
     --kbq-code-block-hljs-regexp-background: null;
-    --kbq-code-block-hljs-regexp-color: hsla(104, 64%, 40%, 100%);
+    --kbq-code-block-hljs-regexp-color: var(--kbq-palette-green-40);
     --kbq-code-block-hljs-section-background: null;
     --kbq-code-block-hljs-section-color: null;
     --kbq-code-block-hljs-selector-attr-background: null;
@@ -364,15 +370,15 @@
     --kbq-code-block-hljs-selector-pseudo-background: null;
     --kbq-code-block-hljs-selector-pseudo-color: null;
     --kbq-code-block-hljs-selector-tag-background: null;
-    --kbq-code-block-hljs-selector-tag-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-selector-tag-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-string-background: null;
-    --kbq-code-block-hljs-string-color: hsla(104, 64%, 40%, 100%);
+    --kbq-code-block-hljs-string-color: var(--kbq-palette-green-40);
     --kbq-code-block-hljs-strong-background: null;
     --kbq-code-block-hljs-strong-color: null;
     --kbq-code-block-hljs-subst-background: null;
     --kbq-code-block-hljs-subst-color: null;
     --kbq-code-block-hljs-symbol-background: null;
-    --kbq-code-block-hljs-symbol-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-symbol-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-tag-background: null;
     --kbq-code-block-hljs-tag-color: null;
     --kbq-code-block-hljs-template-tag-background: null;
@@ -380,7 +386,7 @@
     --kbq-code-block-hljs-template-variable-background: null;
     --kbq-code-block-hljs-template-variable-color: null;
     --kbq-code-block-hljs-title-background: null;
-    --kbq-code-block-hljs-title-color: hsla(216, 100%, 65%, 100%);
+    --kbq-code-block-hljs-title-color: var(--kbq-palette-blue-65);
     --kbq-code-block-hljs-title-class-background: null;
     --kbq-code-block-hljs-title-class-color: null;
     --kbq-code-block-hljs-title-class-inherited-background: null;

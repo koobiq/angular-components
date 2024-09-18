@@ -1,75 +1,71 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-toast {
     --kbq-toast-size-container-width: 360px;
-    --kbq-toast-size-container-border-radius: 8px;
-    --kbq-toast-size-container-padding-left: 12px;
-    --kbq-toast-size-container-padding-right: 8px;
-    --kbq-toast-size-content-padding-top: 16px;
-    --kbq-toast-size-content-padding-bottom: 16px;
-    --kbq-toast-size-caption-padding-bottom: 4px;
-    --kbq-toast-size-icon-width: 16px;
-    --kbq-toast-size-icon-height: 16px;
-    --kbq-toast-size-icon-margin-right: 8px;
+    --kbq-toast-size-container-border-radius: var(--kbq-size-s);
+    --kbq-toast-size-container-padding-left: var(--kbq-size-m);
+    --kbq-toast-size-container-padding-right: var(--kbq-size-s);
+    --kbq-toast-size-content-padding-top: var(--kbq-size-l);
+    --kbq-toast-size-content-padding-bottom: var(--kbq-size-l);
+    --kbq-toast-size-caption-padding-bottom: var(--kbq-size-xxs);
+    --kbq-toast-size-icon-width: var(--kbq-size-l);
+    --kbq-toast-size-icon-height: var(--kbq-size-l);
+    --kbq-toast-size-icon-margin-right: var(--kbq-size-s);
     --kbq-toast-size-icon-border-radius: 50%;
-    --kbq-toast-size-close-button-margin-top: 12px;
-    --kbq-toast-size-close-button-margin-right: 4px;
-    --kbq-toast-size-button-stack-padding-top: 8px;
-    --kbq-toast-size-button-stack-content-gap-horizontal: 12px;
-    --kbq-toast-font-title-font-size: 14px;
-    --kbq-toast-font-title-line-height: 20px;
-    --kbq-toast-font-title-letter-spacing: -0.006em;
-    --kbq-toast-font-title-font-weight: normal;
-    --kbq-toast-font-title-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-toast-font-title-text-transform: null;
-    --kbq-toast-font-title-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-    --kbq-toast-font-text-font-size: 14px;
-    --kbq-toast-font-text-line-height: 20px;
-    --kbq-toast-font-text-letter-spacing: -0.006em;
-    --kbq-toast-font-text-font-weight: normal;
-    --kbq-toast-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-toast-font-text-text-transform: null;
-    --kbq-toast-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-toast-size-close-button-margin-top: var(--kbq-size-m);
+    --kbq-toast-size-close-button-margin-right: var(--kbq-size-xxs);
+    --kbq-toast-size-button-stack-padding-top: var(--kbq-size-s);
+    --kbq-toast-size-button-stack-content-gap-horizontal: var(--kbq-size-m);
+    --kbq-toast-font-title-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-toast-font-title-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-toast-font-title-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-toast-font-title-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-toast-font-title-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-toast-font-title-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-toast-font-title-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+    --kbq-toast-font-text-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-toast-font-text-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-toast-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-toast-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-toast-font-text-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-toast-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-toast-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-toast-contrast-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-toast-contrast-container-title: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-contrast-container-text: hsla(229, 15%, 50%, 100%);
-    --kbq-toast-contrast-container-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
-    --kbq-toast-error-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-toast-error-container-title: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-error-container-text: hsla(229, 15%, 50%, 100%);
-    --kbq-toast-error-container-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
-    --kbq-toast-warning-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-toast-warning-container-title: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-warning-container-text: hsla(229, 15%, 50%, 100%);
-    --kbq-toast-warning-container-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
-    --kbq-toast-success-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-toast-success-container-title: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-success-container-text: hsla(229, 15%, 50%, 100%);
-    --kbq-toast-success-container-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
+    --kbq-toast-contrast-container-background: var(--kbq-background-card);
+    --kbq-toast-contrast-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-contrast-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-contrast-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-error-container-background: var(--kbq-background-card);
+    --kbq-toast-error-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-error-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-error-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-warning-container-background: var(--kbq-background-card);
+    --kbq-toast-warning-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-warning-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-warning-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-success-container-background: var(--kbq-background-card);
+    --kbq-toast-success-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-success-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-success-container-shadow: var(--kbq-shadow-popup);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-toast-contrast-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-contrast-container-title: hsla(229, 15%, 80%, 100%);
-    --kbq-toast-contrast-container-text: hsla(229, 15%, 60%, 100%);
-    --kbq-toast-contrast-container-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-toast-error-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-error-container-title: hsla(229, 15%, 80%, 100%);
-    --kbq-toast-error-container-text: hsla(229, 15%, 60%, 100%);
-    --kbq-toast-error-container-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-toast-warning-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-warning-container-title: hsla(229, 15%, 80%, 100%);
-    --kbq-toast-warning-container-text: hsla(229, 15%, 60%, 100%);
-    --kbq-toast-warning-container-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-toast-success-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-toast-success-container-title: hsla(229, 15%, 80%, 100%);
-    --kbq-toast-success-container-text: hsla(229, 15%, 60%, 100%);
-    --kbq-toast-success-container-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
+    --kbq-toast-contrast-container-background: var(--kbq-background-card);
+    --kbq-toast-contrast-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-contrast-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-contrast-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-error-container-background: var(--kbq-background-card);
+    --kbq-toast-error-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-error-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-error-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-warning-container-background: var(--kbq-background-card);
+    --kbq-toast-warning-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-warning-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-warning-container-shadow: var(--kbq-shadow-popup);
+    --kbq-toast-success-container-background: var(--kbq-background-card);
+    --kbq-toast-success-container-title: var(--kbq-foreground-contrast);
+    --kbq-toast-success-container-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-toast-success-container-shadow: var(--kbq-shadow-popup);
 }

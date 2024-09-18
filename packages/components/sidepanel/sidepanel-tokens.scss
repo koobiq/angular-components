@@ -1,48 +1,47 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-sidepanel-container {
     --kbq-sidepanel-size-small-width: 400px;
     --kbq-sidepanel-size-medium-width: 640px;
     --kbq-sidepanel-size-large-width: 960px;
-    --kbq-sidepanel-size-header-padding-vertical: 16px;
-    --kbq-sidepanel-size-header-padding-left: 32px;
-    --kbq-sidepanel-size-header-padding-right: 12px;
-    --kbq-sidepanel-size-close-button-margin-left: 8px;
-    --kbq-sidepanel-size-content-padding-horizontal: 32px;
-    --kbq-sidepanel-size-content-padding-bottom: 24px;
-    --kbq-sidepanel-size-footer-padding-top: 8px;
-    --kbq-sidepanel-size-footer-padding-bottom: 32px;
-    --kbq-sidepanel-size-footer-padding-horizontal: 32px;
-    --kbq-sidepanel-size-footer-content-gap-horizontal: 16px;
-    --kbq-sidepanel-font-header-font-size: 20px;
-    --kbq-sidepanel-font-header-line-height: 28px;
-    --kbq-sidepanel-font-header-letter-spacing: normal;
-    --kbq-sidepanel-font-header-font-weight: 700;
-    --kbq-sidepanel-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-sidepanel-font-header-text-transform: null;
-    --kbq-sidepanel-font-header-font-feature-settings: 'calt', 'kern', 'liga';
-    --kbq-sidepanel-font-content-font-size: 14px;
-    --kbq-sidepanel-font-content-line-height: 20px;
-    --kbq-sidepanel-font-content-letter-spacing: -0.006em;
-    --kbq-sidepanel-font-content-font-weight: normal;
-    --kbq-sidepanel-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
-    --kbq-sidepanel-font-content-text-transform: null;
-    --kbq-sidepanel-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-sidepanel-size-header-padding-vertical: var(--kbq-size-l);
+    --kbq-sidepanel-size-header-padding-left: var(--kbq-size-3xl);
+    --kbq-sidepanel-size-header-padding-right: var(--kbq-size-m);
+    --kbq-sidepanel-size-close-button-margin-left: var(--kbq-size-s);
+    --kbq-sidepanel-size-content-padding-horizontal: var(--kbq-size-3xl);
+    --kbq-sidepanel-size-content-padding-bottom: var(--kbq-size-xxl);
+    --kbq-sidepanel-size-footer-padding-top: var(--kbq-size-s);
+    --kbq-sidepanel-size-footer-padding-bottom: var(--kbq-size-3xl);
+    --kbq-sidepanel-size-footer-padding-horizontal: var(--kbq-size-3xl);
+    --kbq-sidepanel-size-footer-content-gap-horizontal: var(--kbq-size-l);
+    --kbq-sidepanel-font-header-font-size: var(--kbq-typography-title-font-size);
+    --kbq-sidepanel-font-header-line-height: var(--kbq-typography-title-line-height);
+    --kbq-sidepanel-font-header-letter-spacing: var(--kbq-typography-title-letter-spacing);
+    --kbq-sidepanel-font-header-font-weight: var(--kbq-typography-title-font-weight);
+    --kbq-sidepanel-font-header-font-family: var(--kbq-typography-title-font-family);
+    --kbq-sidepanel-font-header-text-transform: var(--kbq-typography-title-text-transform);
+    --kbq-sidepanel-font-header-font-feature-settings: var(--kbq-typography-title-font-feature-settings);
+    --kbq-sidepanel-font-content-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-sidepanel-font-content-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-sidepanel-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-sidepanel-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-sidepanel-font-content-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-sidepanel-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-sidepanel-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-sidepanel-overlay-background: hsla(229, 15%, 20%, 32%);
-    --kbq-sidepanel-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-sidepanel-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%),
-        0 4px 32px hsla(229, 15%, 6%, 12%);
-    --kbq-sidepanel-header-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-sidepanel-content-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
+    --kbq-sidepanel-container-background: var(--kbq-background-card);
+    --kbq-sidepanel-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-sidepanel-overlay-background: hsla(229, 15%, 6%, 64%);
-    --kbq-sidepanel-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-sidepanel-container-box-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-sidepanel-header-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-sidepanel-content-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
+    --kbq-sidepanel-container-background: var(--kbq-background-card);
+    --kbq-sidepanel-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
 }

@@ -1,58 +1,62 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-loader-overlay {
-    --kbq-loader-overlay-size-big-overlay-padding-horizontal: 32px;
-    --kbq-loader-overlay-size-big-loader-margin-bottom: 24px;
-    --kbq-loader-overlay-size-big-content-content-gap-vertical: 4px;
-    --kbq-loader-overlay-size-compact-overlay-padding-horizontal: 32px;
-    --kbq-loader-overlay-size-compact-loader-margin-bottom: 8px;
-    --kbq-loader-overlay-size-compact-content-content-gap-vertical: 2px;
-    --kbq-loader-overlay-font-big-text-font-size: 18px;
-    --kbq-loader-overlay-font-big-text-line-height: 26px;
-    --kbq-loader-overlay-font-big-text-letter-spacing: normal;
-    --kbq-loader-overlay-font-big-text-font-weight: 600;
-    --kbq-loader-overlay-font-big-text-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-loader-overlay-font-big-text-text-transform: null;
-    --kbq-loader-overlay-font-big-text-font-feature-settings: 'calt', 'kern', 'liga';
-    --kbq-loader-overlay-font-big-caption-font-size: 14px;
-    --kbq-loader-overlay-font-big-caption-line-height: 20px;
-    --kbq-loader-overlay-font-big-caption-letter-spacing: -0.006em;
-    --kbq-loader-overlay-font-big-caption-font-weight: normal;
-    --kbq-loader-overlay-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-loader-overlay-font-big-caption-text-transform: null;
-    --kbq-loader-overlay-font-big-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-    --kbq-loader-overlay-font-compact-text-font-size: 14px;
-    --kbq-loader-overlay-font-compact-text-line-height: 20px;
-    --kbq-loader-overlay-font-compact-text-letter-spacing: -0.006em;
-    --kbq-loader-overlay-font-compact-text-font-weight: normal;
-    --kbq-loader-overlay-font-compact-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-loader-overlay-font-compact-text-text-transform: null;
-    --kbq-loader-overlay-font-compact-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-    --kbq-loader-overlay-font-compact-caption-font-size: 12px;
-    --kbq-loader-overlay-font-compact-caption-line-height: 16px;
-    --kbq-loader-overlay-font-compact-caption-letter-spacing: normal;
-    --kbq-loader-overlay-font-compact-caption-font-weight: normal;
-    --kbq-loader-overlay-font-compact-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-loader-overlay-font-compact-caption-text-transform: null;
-    --kbq-loader-overlay-font-compact-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-loader-overlay-size-big-overlay-padding-horizontal: var(--kbq-size-3xl);
+    --kbq-loader-overlay-size-big-loader-margin-bottom: var(--kbq-size-xxl);
+    --kbq-loader-overlay-size-big-content-content-gap-vertical: var(--kbq-size-xxs);
+    --kbq-loader-overlay-size-compact-overlay-padding-horizontal: var(--kbq-size-3xl);
+    --kbq-loader-overlay-size-compact-loader-margin-bottom: var(--kbq-size-s);
+    --kbq-loader-overlay-size-compact-content-content-gap-vertical: var(--kbq-size-3xs);
+    --kbq-loader-overlay-font-big-text-font-size: var(--kbq-typography-subheading-font-size);
+    --kbq-loader-overlay-font-big-text-line-height: var(--kbq-typography-subheading-line-height);
+    --kbq-loader-overlay-font-big-text-letter-spacing: var(--kbq-typography-subheading-letter-spacing);
+    --kbq-loader-overlay-font-big-text-font-weight: var(--kbq-typography-subheading-font-weight);
+    --kbq-loader-overlay-font-big-text-font-family: var(--kbq-typography-subheading-font-family);
+    --kbq-loader-overlay-font-big-text-text-transform: var(--kbq-typography-subheading-text-transform);
+    --kbq-loader-overlay-font-big-text-font-feature-settings: var(--kbq-typography-subheading-font-feature-settings);
+    --kbq-loader-overlay-font-big-caption-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-loader-overlay-font-big-caption-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-loader-overlay-font-big-caption-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-loader-overlay-font-big-caption-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-loader-overlay-font-big-caption-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-loader-overlay-font-big-caption-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-loader-overlay-font-big-caption-font-feature-settings: var(
+        --kbq-typography-text-normal-font-feature-settings
+    );
+    --kbq-loader-overlay-font-compact-text-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-loader-overlay-font-compact-text-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-loader-overlay-font-compact-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-loader-overlay-font-compact-text-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-loader-overlay-font-compact-text-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-loader-overlay-font-compact-text-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-loader-overlay-font-compact-text-font-feature-settings: var(
+        --kbq-typography-text-normal-font-feature-settings
+    );
+    --kbq-loader-overlay-font-compact-caption-font-size: var(--kbq-typography-text-compact-font-size);
+    --kbq-loader-overlay-font-compact-caption-line-height: var(--kbq-typography-text-compact-line-height);
+    --kbq-loader-overlay-font-compact-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
+    --kbq-loader-overlay-font-compact-caption-font-weight: var(--kbq-typography-text-compact-font-weight);
+    --kbq-loader-overlay-font-compact-caption-font-family: var(--kbq-typography-text-compact-font-family);
+    --kbq-loader-overlay-font-compact-caption-text-transform: var(--kbq-typography-text-compact-text-transform);
+    --kbq-loader-overlay-font-compact-caption-font-feature-settings: var(
+        --kbq-typography-text-compact-font-feature-settings
+    );
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-loader-overlay-transparent-overlay-background: hsla(229, 15%, 99%, 88%);
-    --kbq-loader-overlay-transparent-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-loader-overlay-transparent-caption-color: hsla(229, 15%, 50%, 100%);
-    --kbq-loader-overlay-filled-overlay-background: hsla(0, 0%, 100%, 100%);
-    --kbq-loader-overlay-filled-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-loader-overlay-filled-caption-color: hsla(229, 15%, 50%, 100%);
+    --kbq-loader-overlay-transparent-overlay-background: var(--kbq-background-overlay-inverse);
+    --kbq-loader-overlay-transparent-text-color: var(--kbq-foreground-contrast);
+    --kbq-loader-overlay-transparent-caption-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-loader-overlay-filled-overlay-background: var(--kbq-background-bg);
+    --kbq-loader-overlay-filled-text-color: var(--kbq-foreground-contrast);
+    --kbq-loader-overlay-filled-caption-color: var(--kbq-foreground-contrast-secondary);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-loader-overlay-transparent-overlay-background: hsla(229, 15%, 12%, 80%);
-    --kbq-loader-overlay-transparent-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-loader-overlay-transparent-caption-color: hsla(229, 15%, 60%, 100%);
-    --kbq-loader-overlay-filled-overlay-background: hsla(229, 15%, 12%, 100%);
-    --kbq-loader-overlay-filled-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-loader-overlay-filled-caption-color: hsla(229, 15%, 60%, 100%);
+    --kbq-loader-overlay-transparent-overlay-background: var(--kbq-background-overlay-inverse);
+    --kbq-loader-overlay-transparent-text-color: var(--kbq-foreground-contrast);
+    --kbq-loader-overlay-transparent-caption-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-loader-overlay-filled-overlay-background: var(--kbq-background-bg);
+    --kbq-loader-overlay-filled-text-color: var(--kbq-foreground-contrast);
+    --kbq-loader-overlay-filled-caption-color: var(--kbq-foreground-contrast-secondary);
 }

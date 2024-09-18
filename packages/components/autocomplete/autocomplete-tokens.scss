@@ -1,16 +1,17 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-autocomplete-panel {
-    --kbq-autocomplete-size-panel-padding: 4px 0;
+    --kbq-autocomplete-size-panel-padding: var(--kbq-size-xxs) 0;
     --kbq-autocomplete-size-panel-max-height: 256px;
-    --kbq-autocomplete-size-panel-border-radius: 8px;
+    --kbq-autocomplete-size-panel-border-radius: var(--kbq-size-border-radius);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-select-panel-dropdown-background: hsla(229, 15%, 100%, 100%);
-    --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
+    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
+    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-select-panel-dropdown-background: hsla(229, 15%, 15%, 100%);
-    --kbq-select-panel-dropdown-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
+    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
+    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }
