@@ -73,10 +73,6 @@ const styleDictionaryConfig = {
             buildPath: `packages/components/`,
             transformGroup: 'kbq/css',
             filter: (token) => !['font', 'size', 'typography', 'md-typography'].includes(token.attributes.category)
-            // FIXME: add when move all components to css vars (#DS-2788)
-            /*options: {
-                outputReferences: true
-            }*/
         }
     }
 };
@@ -97,7 +93,8 @@ StyleDictionary.registerFormat({
             token.name = token.name.replace(/(light|dark)-/, '');
         });
         dictionary.allTokens = dictionary.allProperties = allTokens.filter(
-            (token) => !['light', 'dark'].includes(token.attributes.category) || additionalFilter(token, component)
+            (token) =>
+                !['light', 'dark', 'palette'].includes(token.attributes.category) || additionalFilter(token, component)
         );
 
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
@@ -129,13 +126,17 @@ StyleDictionary.registerFormat({
 function fileFormat(destination, component) {
     return {
         destination,
-        filter: (token) => token.attributes.category === component || additionalFilter(token, component),
+        filter: (token) =>
+            token.attributes.category === component ||
+            ['light', 'dark', 'palette'].includes(token.attributes.category) ||
+            additionalFilter(token, component),
         // give access to light/dark/palette tokens to resolve reference manually
-        // ['light', 'dark', 'palette'].includes(token.attributes.category),
+        // [,
         format: 'kbq-css/component',
         prefix: 'kbq',
         options: {
-            component
+            component,
+            outputReferences: true
         }
     };
 }
