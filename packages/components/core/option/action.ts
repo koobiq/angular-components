@@ -56,7 +56,7 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
             />
         </ng-container>
     `,
-    styleUrls: ['./action.scss'],
+    styleUrls: ['./action.scss', 'option-action-tokens.scss'],
     host: {
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',

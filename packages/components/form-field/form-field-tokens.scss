@@ -16,6 +16,16 @@
         Arial, sans-serif;
     --kbq-form-field-font-text-text-transform: null;
     --kbq-form-field-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-form-field-hint-size-margin-top: 4px;
+    --kbq-form-field-hint-size-gap: 8px;
+    --kbq-form-field-hint-font-text-font-size: 12px;
+    --kbq-form-field-hint-font-text-line-height: 16px;
+    --kbq-form-field-hint-font-text-letter-spacing: normal;
+    --kbq-form-field-hint-font-text-font-weight: normal;
+    --kbq-form-field-hint-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
+    --kbq-form-field-hint-font-text-text-transform: null;
+    --kbq-form-field-hint-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
@@ -41,6 +51,7 @@
     --kbq-form-field-states-disabled-background: hsla(229, 15%, 50%, 16%);
     --kbq-form-field-states-disabled-placeholder: hsla(229, 15%, 15%, 32%);
     --kbq-form-field-states-disabled-text: hsla(229, 15%, 15%, 32%);
+    --kbq-form-field-hint-text: hsla(229, 15%, 50%, 100%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
@@ -66,4 +77,5 @@
     --kbq-form-field-states-disabled-background: hsla(229, 15%, 50%, 16%);
     --kbq-form-field-states-disabled-placeholder: hsla(229, 15%, 40%, 100%);
     --kbq-form-field-states-disabled-text: hsla(229, 15%, 40%, 100%);
+    --kbq-form-field-hint-text: hsla(229, 15%, 60%, 100%);
 }

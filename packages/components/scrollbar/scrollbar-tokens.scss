@@ -1,0 +1,34 @@
+.kbq-scrollbar-component {
+    --kbq-scrollbar-size-track-dimension: 16px;
+    --kbq-scrollbar-size-track-padding-vertical: 2px;
+    --kbq-scrollbar-size-track-padding-horizontal: 2px;
+    --kbq-scrollbar-size-thumb-width: 8px;
+    --kbq-scrollbar-size-thumb-min-size: 20px;
+    --kbq-scrollbar-size-thumb-border-radius: 8px;
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-scrollbar-thumb-default-background: hsla(229, 15%, 60%, 100%);
+    --kbq-scrollbar-thumb-hover-background: hsla(229, 15%, 50%, 100%);
+    --kbq-scrollbar-thumb-active-background: hsla(229, 15%, 40%, 100%);
+    --kbq-scrollbar-thumb-disabled-background: hsla(229, 15%, 15%, 32%);
+    --kbq-scrollbar-track-default-border: transparent;
+    --kbq-scrollbar-track-default-background: transparent;
+    --kbq-scrollbar-track-hover-border: transparent;
+    --kbq-scrollbar-track-hover-background: transparent;
+    --kbq-scrollbar-track-active-border: transparent;
+    --kbq-scrollbar-track-active-background: transparent;
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-scrollbar-thumb-default-background: hsla(229, 15%, 45%, 100%);
+    --kbq-scrollbar-thumb-hover-background: hsla(229, 15%, 50%, 100%);
+    --kbq-scrollbar-thumb-active-background: hsla(229, 15%, 40%, 100%);
+    --kbq-scrollbar-thumb-disabled-background: hsla(229, 15%, 30%, 100%);
+    --kbq-scrollbar-track-default-border: transparent;
+    --kbq-scrollbar-track-default-background: transparent;
+    --kbq-scrollbar-track-hover-border: transparent;
+    --kbq-scrollbar-track-hover-background: transparent;
+    --kbq-scrollbar-track-active-border: transparent;
+    --kbq-scrollbar-track-active-background: transparent;
+}

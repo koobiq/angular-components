@@ -1,37 +1,25 @@
-@use 'sass:map';
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-scrollbar-component-theme($theme) {
-    $scrollbar: map.get(map.get($theme, components), scrollbar);
-
+@mixin kbq-scrollbar-component-theme() {
     .kbq-scrollbar-component {
         .os-scrollbar {
             .os-scrollbar-handle {
                 &::before {
-                    border-color: kbq-css-variable(scrollbar-thumb-default-background, map.get($scrollbar, default));
-                    background-color: kbq-css-variable(
-                        scrollbar-thumb-default-background,
-                        map.get($scrollbar, default)
-                    );
+                    border-color: kbq-css-variable(scrollbar-thumb-default-background);
+                    background-color: kbq-css-variable(scrollbar-thumb-default-background);
                 }
 
                 &:hover {
                     &::before {
-                        border-color: kbq-css-variable(scrollbar-thumb-hover-background, map.get($scrollbar, hover));
-                        background-color: kbq-css-variable(
-                            scrollbar-thumb-hover-background,
-                            map.get($scrollbar, hover)
-                        );
+                        border-color: kbq-css-variable(scrollbar-thumb-hover-background);
+                        background-color: kbq-css-variable(scrollbar-thumb-hover-background);
                     }
                 }
 
                 &:active {
                     &::before {
-                        border-color: kbq-css-variable(scrollbar-thumb-active-background, map.get($scrollbar, active));
-                        background-color: kbq-css-variable(
-                            scrollbar-thumb-active-background,
-                            map.get($scrollbar, active)
-                        );
+                        border-color: kbq-css-variable(scrollbar-thumb-active-background);
+                        background-color: kbq-css-variable(scrollbar-thumb-active-background);
                     }
                 }
             }
@@ -39,23 +27,17 @@
             .os-scrollbar-track,
             .os-scrollbar-handle {
                 border-style: solid;
-                border-color: kbq-css-variable(
-                    scrollbar-track-default-border,
-                    map.get($scrollbar, track, default)
-                ) !important;
-                background-color: kbq-css-variable(
-                    scrollbar-track-default-background,
-                    map.get($scrollbar, track, default)
-                );
+                border-color: kbq-css-variable(scrollbar-track-default-border) !important;
+                background-color: kbq-css-variable(scrollbar-track-default-background);
 
                 &:hover {
-                    border-color: kbq-css-variable(scrollbar-track-hover-border, map.get($scrollbar, track, hover));
-                    background: kbq-css-variable(scrollbar-track-hover-background, map.get($scrollbar, track, hover));
+                    border-color: kbq-css-variable(scrollbar-track-hover-border);
+                    background: kbq-css-variable(scrollbar-track-hover-background);
                 }
 
                 &:active {
-                    border-color: kbq-css-variable(scrollbar-track-active-border, map.get($scrollbar, track, active));
-                    background: kbq-css-variable(scrollbar-track-active-background, map.get($scrollbar, track, active));
+                    border-color: kbq-css-variable(scrollbar-track-active-border);
+                    background: kbq-css-variable(scrollbar-track-active-background);
                 }
             }
         }

@@ -1,7 +1,6 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../styles/common';
+
+@use './option-theme' as *;
 
 .kbq-option {
     @include common.kbq-list-item-base();
@@ -14,3 +13,6 @@
 .kbq-option-text {
     @include common.kbq-list-text();
 }
+
+@include kbq-option-theme();
+@include kbq-option-typography();

@@ -55,6 +55,31 @@ const filter = {
         'kbq-option-size',
         'size-xxs',
         'kbq-size-m'
+    ],
+    'scrollbar-component': 'scrollbar',
+    'form-field': 'form-field-hint',
+    forms: 'form-field-size-height',
+    option: [
+        'kbq-list',
+        'kbq-size-3xs',
+        'kbq-size-xxs',
+        'kbq-size-xs',
+        'kbq-size-s',
+        'kbq-size-m'
+    ],
+    optgroup: [
+        'kbq-foreground-contrast',
+        'kbq-foreground-text-disabled',
+        'kbq-optgroup-font-default',
+        'kbq-size-m'
+    ],
+    'option-action': [
+        'kbq-states-focused-color',
+        'kbq-states-icon-contrast-fade-active',
+        'kbq-states-icon-contrast-fade-hover',
+        'kbq-list-font-text-line-height',
+        'kbq-background-transparent',
+        'kbq-states-icon-disabled'
     ]
 };
 
@@ -69,7 +94,8 @@ const componentNameMapping = {
     tree: ['tree', '.kbq-tree-selection'],
     radio: 'radio-button',
     select: 'select, .kbq-select__panel',
-    sidepanel: 'sidepanel-container'
+    sidepanel: 'sidepanel-container',
+    forms: 'form'
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -92,7 +118,17 @@ const componentAliases = {
     hint: 'form-field/hint-tokens.scss',
     'icon-button': 'icon/icon-button-tokens.scss',
     'icon-item': 'icon/icon-item-tokens.scss',
-    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }]
+    timezone: [{ path: 'timezone/timezone-option-tokens.scss', aliasName: 'timezone-option' }],
+    scrollbars: [
+        { path: 'core/styles/theming/scrollbar-tokens.scss', aliasName: 'scrollbar' },
+        { path: 'scrollbar/scrollbar-tokens.scss', aliasName: 'scrollbar-component' }
+    ],
+    forms: 'core/forms/forms-tokens.scss',
+    option: [
+        { path: 'core/option/option-tokens.scss', aliasName: 'option' },
+        { path: 'core/option/optgroup-tokens.scss', aliasName: 'optgroup' },
+        { path: 'core/option/option-action-tokens.scss', aliasName: 'option-action' }
+    ]
 };
 
 const resolvePath = (componentName) =>
