@@ -1,26 +1,28 @@
-<div class="docs-example__datepicker-minimax kbq-form-vertical">
-    <div class="kbq-form__row">
-        <label class="kbq-form__label">Выберите дату от 14 декабря 2023 до 25 августа 2024</label>
-        <kbq-form-field
-            #tooltip="kbqWarningTooltip"
-            [kbqWarningTooltip]="'Только цифры'"
-            (click)="datepicker.toggle()"
-        >
-            <input
-                [kbqDatepicker]="datepicker"
-                [kbqValidationTooltip]="tooltip"
-                [max]="maxDate"
-                [min]="minDate"
-            />
-            <i
-                kbq-icon="mc-calendar_16"
-                kbqSuffix
-            ></i>
-            <kbq-datepicker
-                #datepicker
-                [maxDate]="maxDate"
-                [minDate]="minDate"
-            />
-        </kbq-form-field>
+<div class="docs-example__datepicker-minimax">
+    <div class="kbq-form-vertical">
+        <div class="kbq-form__row">
+            <label class="kbq-form__label">Выберите дату от 14 декабря 2023 до 25 августа 2024</label>
+            <kbq-form-field
+                #tooltip="kbqWarningTooltip"
+                [kbqWarningTooltip]="'Только цифры'"
+                (click)="datepicker.toggle()"
+            >
+                <input
+                    [kbqDatepicker]="datepicker"
+                    [kbqValidationTooltip]="tooltip"
+                    [max]="maxDate"
+                    [min]="minDate"
+                />
+                <i
+                    kbq-icon="mc-calendar_16"
+                    kbqSuffix
+                ></i>
+                <kbq-datepicker
+                    #datepicker
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
+                />
+            </kbq-form-field>
+        </div>
     </div>
 </div>

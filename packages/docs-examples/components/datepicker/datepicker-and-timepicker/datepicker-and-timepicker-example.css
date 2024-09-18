@@ -1,3 +1,4 @@
-.docs-example__datepicker-minimax .kbq-form-field-type-datepicker {
-    width: 140px;
+.docs-example__datepicker-and-timepicker .kbq-form-field-type-datepicker,
+.docs-example__datepicker-and-timepicker .kbq-form-field-type-timepicker {
+    width: 136px;
 }
