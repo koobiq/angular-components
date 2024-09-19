@@ -20,9 +20,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/common';
-import * as i6 from '@angular/cdk/overlay';
-import * as i7 from '@koobiq/components/icon';
+import * as i5 from '@angular/cdk/overlay';
+import * as i6 from '@koobiq/components/icon';
+import * as i7 from '@angular/common';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
@@ -205,7 +205,7 @@ export class KbqDropdownModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent], [typeof i5.CommonModule, typeof i6.OverlayModule, typeof i7.KbqIconModule], [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent], [typeof i5.OverlayModule, typeof i6.KbqIconModule, typeof i7.NgClass], [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent]>;
 }
 
 // @public

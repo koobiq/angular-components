@@ -8,8 +8,8 @@ import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/platform';
+import * as i2 from '@angular/cdk/platform';
+import * as i3 from '@angular/common';
 
 // @public (undocumented)
 export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements CanColor {
@@ -62,7 +62,7 @@ export class KbqProgressSpinnerModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption], [typeof i2.CommonModule, typeof i3.PlatformModule], [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption], [typeof i2.PlatformModule, typeof i3.NgStyle], [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption]>;
 }
 
 // @public (undocumented)

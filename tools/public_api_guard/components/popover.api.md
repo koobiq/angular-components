@@ -11,12 +11,12 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/common';
-import * as i4 from '@angular/cdk/overlay';
-import * as i5 from '@koobiq/components/button';
-import * as i6 from '@angular/cdk/a11y';
-import * as i7 from '@koobiq/components/icon';
-import * as i8 from '@angular/cdk/observers';
+import * as i3 from '@angular/cdk/overlay';
+import * as i4 from '@koobiq/components/button';
+import * as i5 from '@angular/cdk/a11y';
+import * as i6 from '@koobiq/components/icon';
+import * as i7 from '@angular/cdk/observers';
+import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
@@ -138,7 +138,7 @@ export class KbqPopoverModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqButtonModule, typeof i6.A11yModule, typeof i7.KbqIconModule, typeof i8.CdkObserveContent], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.OverlayModule, typeof i4.KbqButtonModule, typeof i5.A11yModule, typeof i6.KbqIconModule, typeof i7.CdkObserveContent, typeof i8.NgClass, typeof i8.NgTemplateOutlet], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
 }
 
 // @public

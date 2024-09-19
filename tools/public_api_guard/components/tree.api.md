@@ -23,9 +23,8 @@ import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@koobiq/components/core';
-import * as i11 from '@koobiq/components/icon';
-import * as i9 from '@angular/common';
+import * as i10 from '@koobiq/components/icon';
+import * as i9 from '@koobiq/components/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
@@ -267,7 +266,7 @@ export class KbqTreeModule {
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective], [typeof i9.CommonModule, typeof i10.KbqPseudoCheckboxModule, typeof i11.KbqIconModule], [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective], [typeof i9.KbqPseudoCheckboxModule, typeof i10.KbqIconModule], [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)

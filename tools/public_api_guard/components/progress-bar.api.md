@@ -8,8 +8,7 @@ import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/platform';
+import * as i2 from '@angular/cdk/platform';
 
 // @public (undocumented)
 export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor {
@@ -55,7 +54,7 @@ export class KbqProgressBarModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption], [typeof i2.CommonModule, typeof i3.PlatformModule], [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption], [typeof i2.PlatformModule], [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption]>;
 }
 
 // @public (undocumented)

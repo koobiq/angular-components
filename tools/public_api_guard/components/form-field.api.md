@@ -16,8 +16,8 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/common';
-import * as i11 from '@koobiq/components/icon';
+import * as i10 from '@koobiq/components/icon';
+import * as i11 from '@angular/common';
 import { KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -173,7 +173,7 @@ export class KbqFormFieldModule {
     // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, [typeof i1.KbqFormField, typeof i1.KbqFormFieldWithoutBorders, typeof i2.KbqHint, typeof i3.KbqPasswordHint, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqValidateDirective, typeof i1.KbqTrim, typeof i9.KbqPasswordToggle], [typeof i10.CommonModule, typeof i11.KbqIconModule], [typeof i1.KbqFormField, typeof i1.KbqFormFieldWithoutBorders, typeof i2.KbqHint, typeof i3.KbqPasswordHint, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqValidateDirective, typeof i1.KbqTrim, typeof i9.KbqPasswordToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, [typeof i1.KbqFormField, typeof i1.KbqFormFieldWithoutBorders, typeof i2.KbqHint, typeof i3.KbqPasswordHint, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqValidateDirective, typeof i1.KbqTrim, typeof i9.KbqPasswordToggle], [typeof i10.KbqIconModule, typeof i11.NgClass], [typeof i1.KbqFormField, typeof i1.KbqFormFieldWithoutBorders, typeof i2.KbqHint, typeof i3.KbqPasswordHint, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqValidateDirective, typeof i1.KbqTrim, typeof i9.KbqPasswordToggle]>;
 }
 
 // @public (undocumented)

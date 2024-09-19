@@ -11,9 +11,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/common';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@angular/cdk/platform';
+import * as i4 from '@angular/cdk/a11y';
+import * as i5 from '@angular/cdk/platform';
 import { KbqFormFieldRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 
@@ -107,7 +106,7 @@ export class KbqIconModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i4.CommonModule, typeof i5.A11yModule, typeof i6.PlatformModule], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i4.A11yModule, typeof i5.PlatformModule], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
 
 // (No @packageDocumentation comment for this package)

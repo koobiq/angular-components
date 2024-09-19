@@ -6,10 +6,9 @@
 
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/a11y';
-import * as i4 from '@angular/cdk/platform';
-import * as i5 from '@koobiq/components/progress-spinner';
+import * as i2 from '@angular/cdk/a11y';
+import * as i3 from '@angular/cdk/platform';
+import * as i4 from '@koobiq/components/progress-spinner';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -76,7 +75,7 @@ export class KbqLoaderOverlayModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption], [typeof i2.CommonModule, typeof i3.A11yModule, typeof i4.PlatformModule, typeof i5.KbqProgressSpinnerModule], [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.KbqProgressSpinnerModule], [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption]>;
 }
 
 // @public (undocumented)

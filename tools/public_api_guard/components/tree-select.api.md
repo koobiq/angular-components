@@ -23,12 +23,12 @@ import { FormGroupDirective } from '@angular/forms';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@koobiq/components/tree';
-import * as i5 from '@koobiq/components/icon';
-import * as i6 from '@koobiq/components/tags';
-import * as i7 from '@koobiq/components/core';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@koobiq/components/tree';
+import * as i4 from '@koobiq/components/icon';
+import * as i5 from '@koobiq/components/tags';
+import * as i6 from '@koobiq/components/core';
+import * as i7 from '@angular/common';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -230,7 +230,7 @@ export class KbqTreeSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqPseudoCheckboxModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult], [typeof i1.KbqTreeSelect, typeof i2.CommonModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.OverlayModule, typeof i3.KbqTreeModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqPseudoCheckboxModule, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i7.NgClass, typeof i7.NgTemplateOutlet], [typeof i1.KbqTreeSelect, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -12,8 +12,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 
@@ -79,7 +78,7 @@ export class KbqLinkModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, [typeof i1.KbqLink], [typeof i2.CommonModule, typeof i3.A11yModule], [typeof i1.KbqLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, [typeof i1.KbqLink], [typeof i2.A11yModule], [typeof i1.KbqLink]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -15,14 +15,13 @@ import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/cdk/a11y';
-import * as i3 from '@angular/common';
-import * as i4 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/portal';
-import * as i6 from '@koobiq/components/core';
-import * as i7 from '@koobiq/components/button';
-import * as i8 from '@koobiq/components/icon';
-import * as i9 from '@koobiq/components/title';
+import * as i3 from '@angular/cdk/overlay';
+import * as i4 from '@angular/cdk/portal';
+import * as i5 from '@koobiq/components/core';
+import * as i6 from '@koobiq/components/button';
+import * as i7 from '@koobiq/components/icon';
+import * as i8 from '@koobiq/components/title';
+import * as i9 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -161,7 +160,7 @@ export class KbqSidepanelModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.PortalModule, typeof i6.KbqCommonModule, typeof i7.KbqButtonModule, typeof i8.KbqIconModule, typeof i9.KbqTitleModule, typeof i10.A11yModule], [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions], [typeof i3.OverlayModule, typeof i4.PortalModule, typeof i5.KbqCommonModule, typeof i6.KbqButtonModule, typeof i7.KbqIconModule, typeof i8.KbqTitleModule, typeof i9.A11yModule], [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions]>;
 }
 
 // @public (undocumented)

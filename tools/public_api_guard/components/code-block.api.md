@@ -11,12 +11,11 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/common';
-import * as i4 from '@koobiq/components/button';
-import * as i5 from '@koobiq/components/tooltip';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from 'ngx-highlightjs';
-import * as i8 from '@koobiq/components/tabs';
+import * as i3 from '@koobiq/components/button';
+import * as i4 from '@koobiq/components/tooltip';
+import * as i5 from '@koobiq/components/icon';
+import * as i6 from 'ngx-highlightjs';
+import * as i7 from '@koobiq/components/tabs';
 import { InjectionToken } from '@angular/core';
 import { KbqTabChangeEvent } from '@koobiq/components/tabs';
 import { KbqTabGroup } from '@koobiq/components/tabs';
@@ -155,7 +154,7 @@ export class KbqCodeBlockModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, [typeof i1.KbqCodeBlockComponent, typeof i2.KbqActionBarComponent], [typeof i3.CommonModule, typeof i4.KbqButtonModule, typeof i5.KbqToolTipModule, typeof i6.KbqIconModule, typeof i7.HighlightModule, typeof i8.KbqTabsModule], [typeof i1.KbqCodeBlockComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, [typeof i1.KbqCodeBlockComponent, typeof i2.KbqActionBarComponent], [typeof i3.KbqButtonModule, typeof i4.KbqToolTipModule, typeof i5.KbqIconModule, typeof i6.HighlightModule, typeof i7.KbqTabsModule], [typeof i1.KbqCodeBlockComponent]>;
 }
 
 // @public (undocumented)

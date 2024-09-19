@@ -8,8 +8,8 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/overlay';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
@@ -90,7 +90,7 @@ export class KbqToolTipModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger], [typeof i2.CommonModule, typeof i3.OverlayModule], [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger], [typeof i2.OverlayModule, typeof i3.NgClass, typeof i3.NgTemplateOutlet], [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger]>;
 }
 
 // @public
