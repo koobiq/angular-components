@@ -1,11 +1,13 @@
-<kbq-form-field (click)="datepicker.toggle()">
-    <input
-        [kbqDatepicker]="datepicker"
-        [(ngModel)]="date"
-    />
-    <i
-        kbq-icon="mc-calendar_16"
-        kbqSuffix
-    ></i>
-    <kbq-datepicker #datepicker />
-</kbq-form-field>
+<div class="docs-example__datepicker-overview">
+    <kbq-form-field (click)="datepicker.toggle()">
+        <input
+            [kbqDatepicker]="datepicker"
+            [(ngModel)]="date"
+        />
+        <i
+            kbq-icon="mc-calendar_16"
+            kbqSuffix
+        ></i>
+        <kbq-datepicker #datepicker />
+    </kbq-form-field>
+</div>
