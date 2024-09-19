@@ -13,7 +13,7 @@
         "url": "https://github.com/koobiq/angular-components.git"
     },
     "engines": {
-        "node": "^18.13.0"
+        "node": "^18.19.0"
     },
     "packageManager": "yarn@4.1.1",
     "requiredAngularVersion": "^17.0.0",
