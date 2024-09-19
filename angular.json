@@ -78,6 +78,7 @@
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
+
                         ],
                         "scripts": [],
                         "extractLicenses": false,
