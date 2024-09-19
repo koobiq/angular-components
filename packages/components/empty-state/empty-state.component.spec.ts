@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -18,7 +17,6 @@ describe('KbqEmptyState', () => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule,
-                CommonModule,
                 KbqEmptyStateModule
             ],
             declarations: [EmptyStateWithParams]

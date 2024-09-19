@@ -1,7 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
@@ -21,7 +20,6 @@ describe('KbqTabHeader', () => {
         dir = 'ltr';
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
                 PortalModule,
                 ScrollingModule
             ],

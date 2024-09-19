@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -15,7 +14,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [CommonModule, KbqTableModule, KbqButtonModule],
+    imports: [KbqTableModule, KbqButtonModule],
     declarations: EXAMPLES,
     exports: EXAMPLES
 })

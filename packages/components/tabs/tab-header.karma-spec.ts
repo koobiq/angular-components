@@ -1,7 +1,6 @@
 import { Direction } from '@angular/cdk/bidi';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { KbqTabHeader } from './tab-header.component';
@@ -13,7 +12,7 @@ describe('KbqTabHeader', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [CommonModule, PortalModule, ScrollingModule],
+            imports: [PortalModule, ScrollingModule],
             declarations: [KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
         });
 

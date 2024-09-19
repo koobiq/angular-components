@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -12,7 +11,6 @@ import { NavbarComponent } from './navbar.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         RouterModule,
         KbqButtonModule,
         KbqDropdownModule,

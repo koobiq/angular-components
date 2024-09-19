@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqHighlightModule, KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -15,7 +15,6 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
 
 @NgModule({
     imports: [
-        CommonModule,
         OverlayModule,
         KbqFormFieldModule,
         KbqOptionModule,
@@ -23,7 +22,9 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqIconModule,
         KbqTagsModule,
         KbqToolTipModule,
-        KbqHighlightModule
+        KbqHighlightModule,
+        NgClass,
+        KeyValuePipe
     ],
     declarations: [
         UtcOffsetPipe,

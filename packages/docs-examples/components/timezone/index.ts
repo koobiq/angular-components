@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -25,7 +26,8 @@ const EXAMPLES = [
         KbqTimezoneModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqIconModule
+        KbqIconModule,
+        AsyncPipe
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES

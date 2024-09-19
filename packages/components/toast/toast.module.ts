@@ -1,6 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -16,12 +16,13 @@ import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
         KbqToastCloseButton
     ],
     imports: [
-        CommonModule,
         OverlayModule,
         KbqTitleModule,
         A11yModule,
         KbqIconModule,
-        KbqButtonModule
+        KbqButtonModule,
+        NgTemplateOutlet,
+        NgClass
     ],
     exports: [
         KbqToastComponent,

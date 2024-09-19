@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +25,6 @@ export class LoaderOverlayDemoComponent {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        CommonModule,
         KbqButtonModule,
         KbqProgressSpinnerModule,
         KbqLoaderOverlayModule

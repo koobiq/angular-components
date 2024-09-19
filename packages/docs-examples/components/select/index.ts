@@ -1,4 +1,5 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -47,7 +48,8 @@ const EXAMPLES = [
         KbqLinkModule,
         KbqButtonModule,
         ScrollingModule,
-        KbqHighlightModule
+        KbqHighlightModule,
+        AsyncPipe
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES

@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
     KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
@@ -17,7 +17,6 @@ import { KbqTreeSelect } from './tree-select.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         OverlayModule,
         KbqTreeModule,
         KbqIconModule,
@@ -27,11 +26,12 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult
+        KbqSelectSearchEmptyResult,
+        NgClass,
+        NgTemplateOutlet
     ],
     exports: [
         KbqTreeSelect,
-        CommonModule,
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,

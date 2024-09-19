@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject, NgModule, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -115,7 +114,6 @@ export class ExampleSidepanelComponent {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        CommonModule,
         FormsModule,
         KbqSidepanelModule,
         KbqButtonModule,

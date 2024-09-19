@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { MarkdownArticleExample } from './markdown-article/markdown-article-example';
@@ -52,7 +51,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqMarkdownModule,
         KbqMarkdownModule,
         KbqMarkdownModule

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -10,13 +9,12 @@ import { KbqCodeBlockComponent } from './code-block.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
         HighlightModule,
         KbqTabsModule
-    ], // , I18nModule
+    ],
     declarations: [
         KbqCodeBlockComponent,
         KbqActionBarComponent

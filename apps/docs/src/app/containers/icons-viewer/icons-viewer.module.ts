@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -25,7 +25,6 @@ import { IconsViewerComponent } from './icons-viewer.component';
 @NgModule({
     imports: [
         OverlayModule,
-        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
@@ -44,7 +43,10 @@ import { IconsViewerComponent } from './icons-viewer.component';
         SidenavModule,
         NavbarModule,
         KbqButtonModule,
-        AnchorsModule
+        AnchorsModule,
+        NgClass,
+        AsyncPipe,
+        TitleCasePipe
     ],
     exports: [
         IconsViewerComponent,

@@ -1,6 +1,5 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
 import { AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +17,7 @@ describe('KbqTabBody', () => {
     beforeEach(() => {
         dir = 'ltr';
         TestBed.configureTestingModule({
-            imports: [CommonModule, PortalModule, NoopAnimationsModule],
+            imports: [PortalModule, NoopAnimationsModule],
             declarations: [
                 KbqTabBody,
                 KbqTabBodyPortal,

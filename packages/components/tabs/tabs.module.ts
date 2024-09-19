@@ -1,7 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -23,7 +22,6 @@ import { KbqTab } from './tab.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         PortalModule,
         A11yModule,
         CdkScrollableModule,

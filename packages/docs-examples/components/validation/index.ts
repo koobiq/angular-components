@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
@@ -40,7 +39,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         FormsModule,
         KbqInputModule,

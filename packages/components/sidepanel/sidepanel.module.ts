@@ -1,7 +1,6 @@
 import { A11yModule, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCommonModule } from '@koobiq/components/core';
@@ -19,7 +18,6 @@ import { KbqSidepanelService } from './sidepanel.service';
 
 @NgModule({
     imports: [
-        CommonModule,
         OverlayModule,
         PortalModule,
         KbqCommonModule,
