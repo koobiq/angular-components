@@ -94,7 +94,7 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     selector: 'kbq-tab-group',
     exportAs: 'kbqTabGroup',
     templateUrl: 'tab-group.html',
-    styleUrls: ['tab-group.scss'],
+    styleUrls: ['tab-group.scss', 'tabs-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     inputs: ['disabled'],

@@ -80,6 +80,11 @@ const filter = {
         'kbq-list-font-text-line-height',
         'kbq-background-transparent',
         'kbq-states-icon-disabled'
+    ],
+    splitter: 'kbq-background-background-disabled',
+    tag: [
+        'kbq-tag-list',
+        'tag-input-font'
     ]
 };
 
@@ -95,7 +100,10 @@ const componentNameMapping = {
     radio: 'radio-button',
     select: 'select, .kbq-select__panel',
     sidepanel: 'sidepanel-container',
-    forms: 'form'
+    forms: 'form',
+    tabs: 'tab-group, .kbq-tab-nav-bar',
+    tag: 'tag, .kbq-tag-list, .kbq-tag-input',
+    'tag-input': 'form-field-type-tag-list'
 };
 
 const applyCustomTransformations = (dictionary) => {
@@ -128,6 +136,10 @@ const componentAliases = {
         { path: 'core/option/option-tokens.scss', aliasName: 'option' },
         { path: 'core/option/optgroup-tokens.scss', aliasName: 'optgroup' },
         { path: 'core/option/option-action-tokens.scss', aliasName: 'option-action' }
+    ],
+    tag: [
+        { path: 'tags/tag-tokens.scss', aliasName: 'tag' },
+        { path: 'tags/tag-input-tokens.scss', aliasName: 'tag-input' }
     ]
 };
 

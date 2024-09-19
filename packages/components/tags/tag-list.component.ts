@@ -70,7 +70,7 @@ export class KbqTagListChange {
     selector: 'kbq-tag-list',
     exportAs: 'kbqTagList',
     templateUrl: 'tag-list.partial.html',
-    styleUrls: ['tag-list.scss'],
+    styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',

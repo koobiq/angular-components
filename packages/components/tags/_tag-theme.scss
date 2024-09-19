@@ -1,68 +1,59 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/theming/theming' as *;
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-tag-state($component, $type, $style-name) {
-    $style: map.get($component, $type, $style-name);
+@use './tag-tokens';
 
+@mixin kbq-tag-state($type, $style-name) {
     $base: tag-#{$type}-#{$style-name};
 
-    background: kbq-css-variable(#{$base}-background, map.get($style, background));
+    background: kbq-css-variable(#{$base}-background);
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base}-icon, map.get($style, icon));
+        color: kbq-css-variable(#{$base}-icon);
     }
 
     & .kbq-tag__text {
-        color: kbq-css-variable(#{$base}-text, map.get($style, text));
+        color: kbq-css-variable(#{$base}-text);
     }
 }
 
-@mixin kbq-tag-color($component, $type) {
-    @include kbq-tag-state($component, $type, default);
+@mixin kbq-tag-color($type) {
+    @include kbq-tag-state($type, default);
 
     &:hover,
     &.kbq-hovered {
-        @include kbq-tag-state($component, $type, states-hover);
+        @include kbq-tag-state($type, states-hover);
     }
 
     &.kbq-focused {
-        @include kbq-tag-state($component, $type, states-focus);
+        @include kbq-tag-state($type, states-focus);
 
         box-shadow:
-            inset 0 0 0.1px 1px
-                kbq-css-variable(tag-#{$type}-states-focus-outline, map.get($component, $type, focus, outline)),
-            0 0 0.1px 1px
-                kbq-css-variable(tag-#{$type}-states-focus-outline, map.get($component, $type, focus, outline));
+            inset 0 0 0.1px 1px kbq-css-variable(tag-#{$type}-states-focus-outline),
+            0 0 0.1px 1px kbq-css-variable(tag-#{$type}-states-focus-outline);
     }
 
     &.kbq-disabled {
-        @include kbq-tag-state($component, $type, states-disabled);
+        @include kbq-tag-state($type, states-disabled);
     }
 }
 
-@mixin kbq-tag-theme($theme) {
-    $tag: map.get($theme, components, tag);
-
+@mixin kbq-tag-theme() {
     .kbq-tag {
         &.kbq-theme {
-            @include kbq-tag-color($tag, theme-fade-on);
+            @include kbq-tag-color(theme-fade-on);
         }
 
         &.kbq-contrast-fade {
-            @include kbq-tag-color($tag, contrast-fade-on);
+            @include kbq-tag-color(contrast-fade-on);
         }
 
         &.kbq-error {
-            @include kbq-tag-color($tag, error-fade-on);
+            @include kbq-tag-color(error-fade-on);
         }
     }
 }
 
-@mixin kbq-tag-typography($config) {
+@mixin kbq-tag-typography() {
     .kbq-tag {
         @include kbq-typography-css-variables(tag, default);
     }
