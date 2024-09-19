@@ -44,6 +44,8 @@ function buildTokens(themeConfig) {
         delete extendedPlatform.platforms.figma;
 
         extendedPlatform.platforms.css.files[0].options.selector = `.${platform.skin}`;
+        extendedPlatform.platforms.css.files[1].options.selector = `.kbq-theme-light`;
+        extendedPlatform.platforms.css.files[2].options.selector = `.kbq-theme-dark`;
 
         const StyleDictionaryExtended = StyleDictionary.extend(extendedPlatform);
         delete StyleDictionaryExtended.platforms.figma;
@@ -64,7 +66,7 @@ const themeColorNames = ['default-theme'];
 
 for (const skin of [kbq]) {
     const koobiqTokensProps = `node_modules/@koobiq/design-tokens/web/properties/**/*.json5`;
-    const koobiqTokensComponents = `node_modules/@koobiq/design-tokens/web/components/**/*.json5`;
+    // const koobiqTokensComponents = `node_modules/@koobiq/design-tokens/web/components/**/*.json5`;
 
     for (const theme of themeColorNames) {
         themesConfig.push({
@@ -73,7 +75,7 @@ for (const skin of [kbq]) {
             buildPath: [
                 koobiqTokensProps,
                 `apps/docs/src/styles/${skin}/${theme}/properties/**/*.json5`,
-                koobiqTokensComponents
+                // koobiqTokensComponents
             ],
             outputPath: `apps/docs/src/styles/${skin}/${theme}/`
         });
