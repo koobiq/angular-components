@@ -4,6 +4,7 @@
 
 @use '../common/tokens' as *;
 
+// TODO: REMOVE
 @function kbq-typography-config($tokens) {
     $font-family: map.get($tokens, font-family-base);
     $typography: map.get(map.get($tokens, koobiq), typography);

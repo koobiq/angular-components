@@ -1,21 +1,22 @@
 /* stylelint-disable scss/at-extend-no-missing-placeholder */
+/* stylelint-disable no-unknown-custom-properties */
 
 @use '@docsearch/css/dist/style.scss';
 @use 'koobiq/default-theme/variables' as *;
 @use '@koobiq/icons/fonts/kbq-icons';
 
 .DocSearch-Button {
-    padding: 0 $button-size-horizontal-padding;
+    padding: 0 var(--kbq-size-m);
     margin: 0;
-    border-radius: $button-size-border-radius;
-    border-width: $button-size-border-width;
+    border-radius: var(--kbq-size-s);
+    border-width: var(--kbq-size-border-width);
     border-style: solid;
-    border-color: $button-light-outline-contrast-fade-on-border;
+    border-color: var(--kbq-button-outline-contrast-fade-on-border);
     color: inherit;
     font-size: 15px;
-    line-height: $button-font-default-line-height;
-    font-weight: $button-font-default-font-weight;
-    font-family: $button-font-default-font-family;
+    line-height: var(--kbq-typography-text-normal-medium-line-height);
+    font-weight: var(--kbq-typography-text-normal-medium-font-weight);
+    font-family: var(--kbq-typography-text-normal-medium-font-family);
 
     @media (width <= 768px) {
         border: none;
@@ -23,12 +24,12 @@
 }
 
 .DocSearch-Button:hover {
-    background-color: $button-light-outline-contrast-fade-on-states-hover-background;
+    background-color: var(--kbq-states-background-transparent-hover);
 }
 
 .DocSearch-Button-Placeholder {
     font-size: inherit;
-    padding: 0 $size-xs;
+    padding: 0 var(--kbq-size-xs);
 }
 
 .DocSearch-Button-Container::before {
@@ -41,7 +42,7 @@
 }
 
 .DocSearch-Modal {
-    border-radius: $modal-size-border-radius;
+    border-radius: var(--kbq-size-s);
 
     @media (max-width: 768px) {
         height: calc(var(--docsearch-vh, 1vh) * 85);
@@ -59,23 +60,23 @@
     padding: 0;
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: $light-line-contrast-fade;
+    border-bottom-color: var(--kbq-line-contrast-fade);
 }
 
 .DocSearch-Form {
-    border-radius: $modal-size-border-radius $modal-size-border-radius 0 0;
+    border-radius: var(--kbq-size-s) var(--kbq-size-s) 0 0;
 }
 
 .DocSearch-MagnifierLabel::before {
     @extend .kbq;
     @extend .kbq-magnifying-glass_16;
 
-    color: $light-icon-contrast-fade;
+    color: var(--kbq-icon-contrast-fade);
 }
 
 .DocSearch-Input {
     font-size: 15px;
-    padding-left: $size-xs;
+    padding-left: var(--kbq-size-xs);
 
     @media (max-width: 768px) {
         font-size: 16px;
@@ -83,7 +84,7 @@
 }
 
 .DocSearch-Input::placeholder {
-    color: $light-foreground-contrast-tertiary;
+    color: var(--kbq-foreground-contrast-tertiary);
 }
 
 .DocSearch-Reset::before {
@@ -92,7 +93,7 @@
 }
 
 .DocSearch-Reset:hover {
-    color: $icon-button-light-fade-contrast-states-hover;
+    color: var(--kbq-states-icon-contrast-fade-hover);
 }
 
 .DocSearch-Logo a {
@@ -104,7 +105,7 @@
 .DocSearch-Dropdown {
     min-height: 0;
     scrollbar-color: var(--docsearch-icon-color);
-    padding: 0 $size-s $size-xxl $size-s;
+    padding: 0 var(--kbq-size-s) var(--kbq-size-xxl) var(--kbq-size-s);
 
     @media (max-width: 768px) {
         max-height: calc(
@@ -114,29 +115,29 @@
 }
 
 .DocSearch-Dropdown-Container {
-    padding-top: $size-s;
+    padding-top: var(--kbq-size-s);
 }
 
 .DocSearch-Hit {
-    border-radius: $button-size-border-radius;
+    border-radius: var(--kbq-size-s);
     padding-bottom: 0;
 }
 
 .DocSearch-Hit a {
-    padding-left: $size-l;
-    border-radius: $button-size-border-radius;
+    padding-left: var(--kbq-size-l);
+    border-radius: var(--kbq-size-s);
     outline-offset: -1px;
     outline-width: 1px;
 }
 
 .DocSearch-Hit[aria-selected='true'] a {
-    background-color: $light-states-background-transparent-active;
+    background-color: var(--kbq-states-background-transparent-active);
 }
 
 .DocSearch-Hit mark,
 .DocSearch-Hit[aria-selected='true'] mark {
     text-decoration: none;
-    color: $light-foreground-warning !important;
+    color: var(--kbq-foreground-warning) !important;
 }
 
 .DocSearch-Hit-action {
@@ -145,11 +146,11 @@
 }
 
 .DocSearch-Hit .DocSearch-Hit-title mark {
-    background-color: $light-background-warning-fade;
+    background-color: var(--kbq-background-warning-fade);
 }
 
 .DocSearch-Hit-Container {
-    padding-right: $size-l;
+    padding-right: var(--kbq-size-l);
 }
 
 .DocSearch-Hit-content-wrapper {
@@ -157,7 +158,7 @@
     font-weight: 400;
     line-height: 24px;
     width: auto;
-    margin: 0 0 0 $size-l;
+    margin: 0 0 0 var(--kbq-size-l);
 }
 
 .DocSearch-Hit-source {
@@ -166,7 +167,7 @@
     line-height: 20px;
     letter-spacing: -0.14px;
     margin: 0;
-    padding: $size-xs $size-m;
+    padding: var(--kbq-size-xs) var(--kbq-size-m);
 
     // safari bug:
     // https://github.com/algolia/docsearch/issues/1477
@@ -188,22 +189,22 @@
 }
 
 .DocSearch-Footer {
-    border-radius: 0 0 $modal-size-border-radius $modal-size-border-radius;
+    border-radius: 0 0 var(--kbq-size-s) var(--kbq-size-s);
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: $light-line-contrast-fade;
+    border-top-color: var(--kbq-line-contrast-fade);
 }
 
 .DocSearch-Commands li {
-    margin-right: $size-l;
+    margin-right: var(--kbq-size-l);
 }
 
 .DocSearch-Commands-Key {
     border-radius: 6px;
-    width: $size-xxl;
-    height: $size-xxl;
-    padding: $size-3xs $size-xxs;
-    margin-right: $size-xs;
+    width: var(--kbq-size-xxl);
+    height: var(--kbq-size-xxl);
+    padding: var(--kbq-size-3xs) var(--kbq-size-xxs);
+    margin-right: var(--kbq-size-xs);
 }
 
 .DocSearch-Label {
@@ -234,93 +235,93 @@
     display: none !important;
 }
 
-:root {
+body.kbq-theme-light {
     --docsearch-primary-color: inherit;
-    --docsearch-text-color: #{$light-foreground-contrast};
-    --docsearch-spacing: #{$size-xxl};
+    --docsearch-text-color: var(--kbq-foreground-contrast);
+    --docsearch-spacing: var(--kbq-size-xxl);
     --docsearch-highlight-color: inherit;
-    --docsearch-muted-color: #{$light-foreground-contrast-secondary};
-    --docsearch-container-background: #{$light-background-overlay};
-    --docsearch-icon-color: #{$light-icon-contrast-fade};
+    --docsearch-muted-color: var(--kbq-foreground-contrast-secondary);
+    --docsearch-container-background: var(--kbq-background-overlay);
+    --docsearch-icon-color: var(--kbq-icon-contrast-fade);
     --docsearch-modal-width: 640px;
     --docsearch-modal-height: 550px;
-    --docsearch-modal-background: #{$light-background-bg};
+    --docsearch-modal-background: var(--kbq-background-bg);
     --docsearch-modal-shadow: none;
-    --docsearch-searchbox-height: #{$size-5xl};
-    --docsearch-searchbox-background: #{$light-background-card};
-    --docsearch-searchbox-focus-background: #{$light-background-bg};
+    --docsearch-searchbox-height: var(--kbq-size-5xl);
+    --docsearch-searchbox-background: var(--kbq-background-card);
+    --docsearch-searchbox-focus-background: var(--kbq-background-bg);
     --docsearch-searchbox-shadow: none;
-    --docsearch-hit-height: #{$size-6xl};
-    --docsearch-hit-color: #{$light-foreground-contrast};
-    --docsearch-hit-active-color: #{$light-foreground-contrast};
-    --docsearch-hit-background: #{$light-background-card};
+    --docsearch-hit-height: var(--kbq-size-6xl);
+    --docsearch-hit-color: var(--kbq-foreground-contrast);
+    --docsearch-hit-active-color: var(--kbq-foreground-contrast);
+    --docsearch-hit-background: var(--kbq-background-card);
     --docsearch-hit-shadow: none;
-    --docsearch-key-gradient: #{$light-background-contrast-fade};
+    --docsearch-key-gradient: var(--kbq-background-contrast-fade);
     --docsearch-key-shadow: none;
     --docsearch-key-pressed-shadow: none;
-    --docsearch-footer-height: #{$size-5xl};
-    --docsearch-footer-background: #{$light-background-bg};
+    --docsearch-footer-height: var(--kbq-size-5xl);
+    --docsearch-footer-background: var(--kbq-background-bg);
     --docsearch-footer-shadow: none;
 }
 
 body.kbq-theme-dark {
     --docsearch-highlight-color: inherit;
-    --docsearch-icon-color: #{$dark-icon-contrast-fade};
-    --docsearch-text-color: #{$dark-foreground-contrast};
-    --docsearch-container-background: #{$dark-background-overlay};
-    --docsearch-modal-background: #{$dark-background-card};
+    --docsearch-icon-color: var(--kbq-icon-contrast-fade);
+    --docsearch-text-color: var(--kbq-foreground-contrast);
+    --docsearch-container-background: var(--kbq-background-overlay);
+    --docsearch-modal-background: var(--kbq-background-card);
     --docsearch-modal-shadow: none;
-    --docsearch-searchbox-background: #{$dark-background-card};
-    --docsearch-searchbox-focus-background: #{$dark-background-bg};
-    --docsearch-hit-color: #{$dark-foreground-contrast};
+    --docsearch-searchbox-background: var(--kbq-background-card);
+    --docsearch-searchbox-focus-background: var(--kbq-background-bg);
+    --docsearch-hit-color: var(--kbq-foreground-contrast);
     --docsearch-hit-shadow: none;
-    --docsearch-hit-background: #{$dark-background-card};
-    --docsearch-key-gradient: #{$dark-background-contrast-fade};
+    --docsearch-hit-background: var(--kbq-background-card);
+    --docsearch-key-gradient: var(--kbq-background-contrast-fade);
     --docsearch-key-shadow: none;
     --docsearch-key-pressed-shadow: none;
-    --docsearch-footer-background: #{$dark-background-card};
+    --docsearch-footer-background: var(--kbq-background-card);
     --docsearch-footer-shadow: none;
-    --docsearch-muted-color: #{$dark-foreground-contrast-secondary};
-    --docsearch-hit-active-color: #{$dark-foreground-contrast};
+    --docsearch-muted-color: var(--kbq-foreground-contrast-secondary);
+    --docsearch-hit-active-color: var(--kbq-foreground-contrast);
 
     .DocSearch-Button {
-        border-color: $button-dark-outline-contrast-fade-on-border;
+        border-color: var(--kbq-line-contrast-fade);
     }
 
     .DocSearch-Button:hover {
-        background-color: $button-dark-outline-contrast-fade-on-states-hover-background;
+        background-color: var(--kbq-states-background-transparent-hover);
     }
 
     .DocSearch-SearchBar {
-        border-bottom-color: $dark-line-contrast-fade;
+        border-bottom-color: var(--kbq-line-contrast-fade);
     }
 
     .DocSearch-MagnifierLabel {
-        color: $dark-icon-contrast-fade;
+        color: var(--kbq-icon-contrast-fade);
     }
 
     .DocSearch-Input::placeholder {
-        color: $dark-foreground-contrast-tertiary;
+        color: var(--kbq-foreground-contrast-tertiary);
     }
 
     .DocSearch-Reset:hover {
-        color: $icon-button-dark-fade-contrast-states-hover;
+        color: var(--kbq-states-icon-contrast-fade-hover);
     }
 
     .DocSearch-Hit[aria-selected='true'] a {
-        background-color: $dark-states-background-transparent-active;
+        background-color: var(--kbq-states-background-transparent-active);
     }
 
     .DocSearch-Hit mark,
     .DocSearch-Hit[aria-selected='true'] mark {
-        color: $dark-foreground-warning !important;
+        color: var(--kbq-foreground-warning) !important;
     }
 
     .DocSearch-Hit .DocSearch-Hit-title mark {
-        background-color: $dark-background-warning-fade;
+        background-color: var(--kbq-background-warning-fade);
     }
 
     .DocSearch-Footer {
-        border-top-color: $dark-line-contrast-fade;
+        border-top-color: var(--kbq-line-contrast-fade);
     }
 }

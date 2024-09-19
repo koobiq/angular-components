@@ -1,25 +1,25 @@
 @use 'sass:map';
 
 @use '../dist/components/core/styles/theming';
-@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
-@mixin kbq-docs-component-viewer-theme($theme) {
-    $background: map.get($theme, background);
+/* stylelint-disable no-unknown-custom-properties */
 
+@mixin kbq-docs-component-viewer-theme() {
     .docs-component-header {
-        background: map.get($background, bg);
+        background: var(--kbq-background-bg);
     }
 
     .docs-api__section {
-        border-color: map.get($background, contrast-fade);
+        border-color: var(--kbq-background-contrast-fade);
     }
 
     .docs-api__section_directive .docs-api_method-name {
-        color: map.get(map.get($theme, line), warning) !important;
+        color: var(--kbq-line-warning) !important;
     }
 
     .docs-api__input-marker {
-        color: map.get(map.get($theme, line), success) !important;
+        color: var(--kbq-line-success) !important;
     }
 
     .kbq-docs-table {
@@ -33,7 +33,7 @@
     }
 }
 
-@mixin kbq-docs-component-viewer-typography($config) {
+@mixin kbq-docs-component-viewer-typography() {
     // header
     .docs-component-name {
         font-family: Inter;
@@ -102,22 +102,22 @@
     }
 
     .docs-component-navbar .kbq-tab-link {
-        @include typography.kbq-typography-level-to-styles($config, text-big);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 
     .docs-api__class-selector-name,
     .docs-api__input-marker,
     .docs-api_property-name {
-        @include typography.kbq-typography-level-to-styles($config, mono-big);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big);
     }
 
     .docs-api_method-name {
-        @include typography.kbq-typography-level-to-styles($config, mono-big-strong);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big-strong);
     }
 
     .docs-api {
         .kbq-markdown__code {
-            @include typography.kbq-typography-level-to-styles($config, mono-big);
+            @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big);
         }
     }
 }
