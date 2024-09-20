@@ -6,9 +6,10 @@
     --kbq-markdown-h1-font-default-line-height: 44px;
     --kbq-markdown-h1-font-default-letter-spacing: normal;
     --kbq-markdown-h1-font-default-font-weight: 400;
-    --kbq-markdown-h1-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h1-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-h1-font-default-text-transform: null;
-    --kbq-markdown-h1-font-default-font-feature-settings: "calt", "kern", "liga";
+    --kbq-markdown-h1-font-default-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-markdown-h2-size-max-width: 650px;
     --kbq-markdown-h2-size-margin-top: 24px;
     --kbq-markdown-h2-size-margin-bottom: 12px;
@@ -16,9 +17,10 @@
     --kbq-markdown-h2-font-default-line-height: 32px;
     --kbq-markdown-h2-font-default-letter-spacing: normal;
     --kbq-markdown-h2-font-default-font-weight: 700;
-    --kbq-markdown-h2-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h2-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-h2-font-default-text-transform: null;
-    --kbq-markdown-h2-font-default-font-feature-settings: "calt", "kern", "liga";
+    --kbq-markdown-h2-font-default-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-markdown-h3-size-max-width: 650px;
     --kbq-markdown-h3-size-margin-top: 24px;
     --kbq-markdown-h3-size-margin-bottom: 12px;
@@ -26,9 +28,10 @@
     --kbq-markdown-h3-font-default-line-height: 28px;
     --kbq-markdown-h3-font-default-letter-spacing: normal;
     --kbq-markdown-h3-font-default-font-weight: 700;
-    --kbq-markdown-h3-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h3-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-h3-font-default-text-transform: null;
-    --kbq-markdown-h3-font-default-font-feature-settings: "calt", "kern", "liga";
+    --kbq-markdown-h3-font-default-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-markdown-h4-size-max-width: 650px;
     --kbq-markdown-h4-size-margin-top: 24px;
     --kbq-markdown-h4-size-margin-bottom: 12px;
@@ -36,9 +39,10 @@
     --kbq-markdown-h4-font-default-line-height: 26px;
     --kbq-markdown-h4-font-default-letter-spacing: normal;
     --kbq-markdown-h4-font-default-font-weight: 700;
-    --kbq-markdown-h4-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h4-font-default-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-h4-font-default-text-transform: null;
-    --kbq-markdown-h4-font-default-font-feature-settings: "calt", "kern", "liga";
+    --kbq-markdown-h4-font-default-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-markdown-h5-size-max-width: 650px;
     --kbq-markdown-h5-size-margin-top: 24px;
     --kbq-markdown-h5-size-margin-bottom: 8px;
@@ -46,9 +50,10 @@
     --kbq-markdown-h5-font-default-line-height: 24px;
     --kbq-markdown-h5-font-default-letter-spacing: -0.011em;
     --kbq-markdown-h5-font-default-font-weight: 700;
-    --kbq-markdown-h5-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h5-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-h5-font-default-text-transform: null;
-    --kbq-markdown-h5-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-h5-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-h6-size-max-width: 650px;
     --kbq-markdown-h6-size-margin-top: 24px;
     --kbq-markdown-h6-size-margin-bottom: 8px;
@@ -56,9 +61,10 @@
     --kbq-markdown-h6-font-default-line-height: 20px;
     --kbq-markdown-h6-font-default-letter-spacing: 0.08em;
     --kbq-markdown-h6-font-default-font-weight: 500;
-    --kbq-markdown-h6-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-h6-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-h6-font-default-text-transform: uppercase;
-    --kbq-markdown-h6-font-default-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-h6-font-default-font-feature-settings: 'calt', 'case', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-p-size-max-width: 650px;
     --kbq-markdown-p-size-margin-top: 12px;
     --kbq-markdown-p-size-margin-bottom: 12px;
@@ -66,9 +72,10 @@
     --kbq-markdown-p-font-default-line-height: 24px;
     --kbq-markdown-p-font-default-letter-spacing: -0.011em;
     --kbq-markdown-p-font-default-font-weight: normal;
-    --kbq-markdown-p-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-p-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-p-font-default-text-transform: null;
-    --kbq-markdown-p-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-p-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-list-size-max-width: 650px;
     --kbq-markdown-list-size-margin-top: 12px;
     --kbq-markdown-list-size-margin-bottom: 12px;
@@ -80,9 +87,10 @@
     --kbq-markdown-list-font-default-line-height: 24px;
     --kbq-markdown-list-font-default-letter-spacing: -0.011em;
     --kbq-markdown-list-font-default-font-weight: normal;
-    --kbq-markdown-list-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-list-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-list-font-default-text-transform: null;
-    --kbq-markdown-list-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-list-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-blockquote-size-max-width: 650px;
     --kbq-markdown-blockquote-size-margin-top: 12px;
     --kbq-markdown-blockquote-size-margin-bottom: 12px;
@@ -94,9 +102,10 @@
     --kbq-markdown-blockquote-font-default-line-height: 24px;
     --kbq-markdown-blockquote-font-default-letter-spacing: -0.011em;
     --kbq-markdown-blockquote-font-default-font-weight: normal;
-    --kbq-markdown-blockquote-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-blockquote-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-blockquote-font-default-text-transform: null;
-    --kbq-markdown-blockquote-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-blockquote-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-code-size-max-width: 650px;
     --kbq-markdown-code-size-multiline-margin-top: 12px;
     --kbq-markdown-code-size-multiline-margin-bottom: 24px;
@@ -108,7 +117,8 @@
     --kbq-markdown-code-font-default-line-height: 24px;
     --kbq-markdown-code-font-default-letter-spacing: normal;
     --kbq-markdown-code-font-default-font-weight: normal;
-    --kbq-markdown-code-font-default-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
+    --kbq-markdown-code-font-default-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco',
+        monospace;
     --kbq-markdown-code-font-default-text-transform: null;
     --kbq-markdown-code-font-default-font-feature-settings: initial;
     --kbq-markdown-link-size-icon-margin: 2px;
@@ -118,9 +128,10 @@
     --kbq-markdown-link-font-default-line-height: 24px;
     --kbq-markdown-link-font-default-letter-spacing: -0.011em;
     --kbq-markdown-link-font-default-font-weight: normal;
-    --kbq-markdown-link-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-link-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-link-font-default-text-transform: null;
-    --kbq-markdown-link-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-link-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-image-size-max-width: 650px;
     --kbq-markdown-image-size-margin-top: 12px;
     --kbq-markdown-image-size-margin-bottom: 12px;
@@ -130,9 +141,10 @@
     --kbq-markdown-image-font-caption-line-height: 20px;
     --kbq-markdown-image-font-caption-letter-spacing: -0.006em;
     --kbq-markdown-image-font-caption-font-weight: normal;
-    --kbq-markdown-image-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-image-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-markdown-image-font-caption-text-transform: null;
-    --kbq-markdown-image-font-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-image-font-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-markdown-hr-size-width: 1px;
     --kbq-markdown-hr-size-margin-vertical: 24px;
     --kbq-markdown-table-size-border-width: 1px;
@@ -142,24 +154,27 @@
     --kbq-markdown-table-font-header-line-height: 20px;
     --kbq-markdown-table-font-header-letter-spacing: -0.006em;
     --kbq-markdown-table-font-header-font-weight: normal;
-    --kbq-markdown-table-font-header-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-table-font-header-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-table-font-header-text-transform: null;
-    --kbq-markdown-table-font-header-font-feature-settings: "calt", "ss01", "ss04", "tnum";
+    --kbq-markdown-table-font-header-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
     --kbq-markdown-table-font-body-font-size: 16px;
     --kbq-markdown-table-font-body-line-height: 24px;
     --kbq-markdown-table-font-body-letter-spacing: normal;
     --kbq-markdown-table-font-body-font-weight: normal;
-    --kbq-markdown-table-font-body-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-table-font-body-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-table-font-body-text-transform: null;
-    --kbq-markdown-table-font-body-font-feature-settings: "calt", "ss01", "ss04", "tnum";
+    --kbq-markdown-table-font-body-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
     --kbq-markdown-size-max-width: 650px;
     --kbq-markdown-font-default-font-size: 16px;
     --kbq-markdown-font-default-line-height: 24px;
     --kbq-markdown-font-default-letter-spacing: -0.011em;
     --kbq-markdown-font-default-font-weight: normal;
-    --kbq-markdown-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-markdown-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-markdown-font-default-text-transform: null;
-    --kbq-markdown-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-markdown-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

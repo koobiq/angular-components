@@ -21,30 +21,34 @@
     --kbq-list-font-text-line-height: 20px;
     --kbq-list-font-text-letter-spacing: -0.006em;
     --kbq-list-font-text-font-weight: normal;
-    --kbq-list-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-list-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
     --kbq-list-font-text-text-transform: null;
-    --kbq-list-font-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-list-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-list-font-caption-font-size: 12px;
     --kbq-list-font-caption-line-height: 16px;
     --kbq-list-font-caption-letter-spacing: normal;
     --kbq-list-font-caption-font-weight: normal;
-    --kbq-list-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-list-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
     --kbq-list-font-caption-text-transform: null;
-    --kbq-list-font-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-list-font-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-list-font-header-font-size: 16px;
     --kbq-list-font-header-line-height: 24px;
     --kbq-list-font-header-letter-spacing: -0.011em;
     --kbq-list-font-header-font-weight: 600;
-    --kbq-list-font-header-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-list-font-header-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
     --kbq-list-font-header-text-transform: null;
-    --kbq-list-font-header-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-list-font-header-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-list-font-subheading-font-size: 12px;
     --kbq-list-font-subheading-line-height: 16px;
     --kbq-list-font-subheading-letter-spacing: 1px;
     --kbq-list-font-subheading-font-weight: 500;
-    --kbq-list-font-subheading-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-list-font-subheading-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-list-font-subheading-text-transform: uppercase;
-    --kbq-list-font-subheading-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
+    --kbq-list-font-subheading-font-feature-settings: 'calt', 'case', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-option-size-horizontal-padding: 12px;
     --kbq-option-size-height: 32px;
     --kbq-option-size-border-width: 2px;
@@ -52,9 +56,10 @@
     --kbq-option-font-default-line-height: 24px;
     --kbq-option-font-default-letter-spacing: -0.011em;
     --kbq-option-font-default-font-weight: normal;
-    --kbq-option-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-option-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+        sans-serif;
     --kbq-option-font-default-text-transform: null;
-    --kbq-option-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-option-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

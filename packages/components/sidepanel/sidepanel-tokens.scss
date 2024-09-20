@@ -16,22 +16,25 @@
     --kbq-sidepanel-font-header-line-height: 28px;
     --kbq-sidepanel-font-header-letter-spacing: normal;
     --kbq-sidepanel-font-header-font-weight: 700;
-    --kbq-sidepanel-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-sidepanel-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
     --kbq-sidepanel-font-header-text-transform: null;
-    --kbq-sidepanel-font-header-font-feature-settings: "calt", "kern", "liga";
+    --kbq-sidepanel-font-header-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-sidepanel-font-content-font-size: 14px;
     --kbq-sidepanel-font-content-line-height: 20px;
     --kbq-sidepanel-font-content-letter-spacing: -0.006em;
     --kbq-sidepanel-font-content-font-weight: normal;
-    --kbq-sidepanel-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --kbq-sidepanel-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
     --kbq-sidepanel-font-content-text-transform: null;
-    --kbq-sidepanel-font-content-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
+    --kbq-sidepanel-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-sidepanel-overlay-background: hsla(229, 15%, 20%, 32%);
     --kbq-sidepanel-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-sidepanel-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%), 0 4px 32px hsla(229, 15%, 6%, 12%);
+    --kbq-sidepanel-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%),
+        0 4px 32px hsla(229, 15%, 6%, 12%);
     --kbq-sidepanel-header-text-color: hsla(229, 15%, 15%, 100%);
     --kbq-sidepanel-content-text-color: hsla(229, 15%, 15%, 100%);
 }
