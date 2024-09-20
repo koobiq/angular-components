@@ -11,34 +11,30 @@
     --kbq-toggle-font-normal-label-line-height: 20px;
     --kbq-toggle-font-normal-label-letter-spacing: -0.006em;
     --kbq-toggle-font-normal-label-font-weight: normal;
-    --kbq-toggle-font-normal-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-toggle-font-normal-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-toggle-font-normal-label-text-transform: null;
-    --kbq-toggle-font-normal-label-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-toggle-font-normal-label-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-toggle-font-normal-caption-font-size: 12px;
     --kbq-toggle-font-normal-caption-line-height: 16px;
     --kbq-toggle-font-normal-caption-letter-spacing: normal;
     --kbq-toggle-font-normal-caption-font-weight: normal;
-    --kbq-toggle-font-normal-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-toggle-font-normal-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-toggle-font-normal-caption-text-transform: null;
-    --kbq-toggle-font-normal-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-toggle-font-normal-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-toggle-font-big-label-font-size: 16px;
     --kbq-toggle-font-big-label-line-height: 24px;
     --kbq-toggle-font-big-label-letter-spacing: -0.011em;
     --kbq-toggle-font-big-label-font-weight: normal;
-    --kbq-toggle-font-big-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-toggle-font-big-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-toggle-font-big-label-text-transform: null;
-    --kbq-toggle-font-big-label-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-toggle-font-big-label-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-toggle-font-big-caption-font-size: 14px;
     --kbq-toggle-font-big-caption-line-height: 20px;
     --kbq-toggle-font-big-caption-letter-spacing: -0.006em;
     --kbq-toggle-font-big-caption-font-weight: normal;
-    --kbq-toggle-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-toggle-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-toggle-font-big-caption-text-transform: null;
-    --kbq-toggle-font-big-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-toggle-font-big-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

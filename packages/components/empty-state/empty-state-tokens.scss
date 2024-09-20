@@ -19,34 +19,30 @@
     --kbq-empty-state-font-big-title-line-height: 32px;
     --kbq-empty-state-font-big-title-letter-spacing: normal;
     --kbq-empty-state-font-big-title-font-weight: 700;
-    --kbq-empty-state-font-big-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-empty-state-font-big-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-empty-state-font-big-title-text-transform: null;
-    --kbq-empty-state-font-big-title-font-feature-settings: 'calt', 'kern', 'liga';
+    --kbq-empty-state-font-big-title-font-feature-settings: "calt", "kern", "liga";
     --kbq-empty-state-font-big-text-font-size: 14px;
     --kbq-empty-state-font-big-text-line-height: 20px;
     --kbq-empty-state-font-big-text-letter-spacing: -0.006em;
     --kbq-empty-state-font-big-text-font-weight: normal;
-    --kbq-empty-state-font-big-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-empty-state-font-big-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-empty-state-font-big-text-text-transform: null;
-    --kbq-empty-state-font-big-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-empty-state-font-big-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-empty-state-font-normal-title-font-size: 16px;
     --kbq-empty-state-font-normal-title-line-height: 24px;
     --kbq-empty-state-font-normal-title-letter-spacing: -0.011em;
     --kbq-empty-state-font-normal-title-font-weight: 600;
-    --kbq-empty-state-font-normal-title-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-empty-state-font-normal-title-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-empty-state-font-normal-title-text-transform: null;
-    --kbq-empty-state-font-normal-title-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-empty-state-font-normal-title-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-empty-state-font-normal-text-font-size: 14px;
     --kbq-empty-state-font-normal-text-line-height: 20px;
     --kbq-empty-state-font-normal-text-letter-spacing: -0.006em;
     --kbq-empty-state-font-normal-text-font-weight: normal;
-    --kbq-empty-state-font-normal-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-empty-state-font-normal-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-empty-state-font-normal-text-text-transform: null;
-    --kbq-empty-state-font-normal-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-empty-state-font-normal-text-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

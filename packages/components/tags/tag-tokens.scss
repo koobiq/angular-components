@@ -1,14 +1,11 @@
-.kbq-tag,
-.kbq-tag-list,
-.kbq-tag-input {
+.kbq-tag, .kbq-tag-list, .kbq-tag-input {
     --kbq-tag-input-font-default-font-size: 14px;
     --kbq-tag-input-font-default-line-height: 20px;
     --kbq-tag-input-font-default-letter-spacing: -0.006em;
     --kbq-tag-input-font-default-font-weight: normal;
-    --kbq-tag-input-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-tag-input-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-tag-input-font-default-text-transform: null;
-    --kbq-tag-input-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-tag-input-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-tag-list-size-content-gap: 4px;
     --kbq-tag-size-padding-horizontal: 4px;
     --kbq-tag-size-padding-vertical: 2px;
@@ -19,10 +16,9 @@
     --kbq-tag-font-default-line-height: 20px;
     --kbq-tag-font-default-letter-spacing: -0.006em;
     --kbq-tag-font-default-font-weight: 500;
-    --kbq-tag-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
+    --kbq-tag-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-tag-font-default-text-transform: null;
-    --kbq-tag-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-tag-font-default-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

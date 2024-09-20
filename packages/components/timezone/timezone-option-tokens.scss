@@ -8,34 +8,30 @@
     --kbq-timezone-option-font-text-line-height: 20px;
     --kbq-timezone-option-font-text-letter-spacing: -0.006em;
     --kbq-timezone-option-font-text-font-weight: normal;
-    --kbq-timezone-option-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-timezone-option-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-timezone-option-font-text-text-transform: null;
-    --kbq-timezone-option-font-text-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
+    --kbq-timezone-option-font-text-font-feature-settings: "calt", "ss01", "ss04", "tnum";
     --kbq-timezone-option-font-offset-text-font-size: 14px;
     --kbq-timezone-option-font-offset-text-line-height: 20px;
     --kbq-timezone-option-font-offset-text-letter-spacing: -0.006em;
     --kbq-timezone-option-font-offset-text-font-weight: normal;
-    --kbq-timezone-option-font-offset-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-timezone-option-font-offset-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-timezone-option-font-offset-text-text-transform: null;
-    --kbq-timezone-option-font-offset-text-font-feature-settings: 'calt', 'ss01', 'ss04', 'tnum';
+    --kbq-timezone-option-font-offset-text-font-feature-settings: "calt", "ss01", "ss04", "tnum";
     --kbq-timezone-option-font-caption-font-size: 12px;
     --kbq-timezone-option-font-caption-line-height: 16px;
     --kbq-timezone-option-font-caption-letter-spacing: normal;
     --kbq-timezone-option-font-caption-font-weight: normal;
-    --kbq-timezone-option-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-timezone-option-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-timezone-option-font-caption-text-transform: null;
-    --kbq-timezone-option-font-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-timezone-option-font-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-timezone-option-font-optgroup-label-font-size: 12px;
     --kbq-timezone-option-font-optgroup-label-line-height: 16px;
     --kbq-timezone-option-font-optgroup-label-letter-spacing: 1px;
     --kbq-timezone-option-font-optgroup-label-font-weight: 500;
-    --kbq-timezone-option-font-optgroup-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-timezone-option-font-optgroup-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-timezone-option-font-optgroup-label-text-transform: uppercase;
-    --kbq-timezone-option-font-optgroup-label-font-feature-settings: 'calt', 'case', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-timezone-option-font-optgroup-label-font-feature-settings: "calt", "case", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

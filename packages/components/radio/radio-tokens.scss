@@ -15,34 +15,30 @@
     --kbq-radio-font-normal-label-line-height: 20px;
     --kbq-radio-font-normal-label-letter-spacing: -0.006em;
     --kbq-radio-font-normal-label-font-weight: normal;
-    --kbq-radio-font-normal-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-radio-font-normal-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-radio-font-normal-label-text-transform: null;
-    --kbq-radio-font-normal-label-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-radio-font-normal-label-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-radio-font-normal-caption-font-size: 12px;
     --kbq-radio-font-normal-caption-line-height: 16px;
     --kbq-radio-font-normal-caption-letter-spacing: normal;
     --kbq-radio-font-normal-caption-font-weight: normal;
-    --kbq-radio-font-normal-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-radio-font-normal-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-radio-font-normal-caption-text-transform: null;
-    --kbq-radio-font-normal-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-radio-font-normal-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-radio-font-big-label-font-size: 16px;
     --kbq-radio-font-big-label-line-height: 24px;
     --kbq-radio-font-big-label-letter-spacing: -0.011em;
     --kbq-radio-font-big-label-font-weight: normal;
-    --kbq-radio-font-big-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-radio-font-big-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-radio-font-big-label-text-transform: null;
-    --kbq-radio-font-big-label-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-radio-font-big-label-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-radio-font-big-caption-font-size: 14px;
     --kbq-radio-font-big-caption-line-height: 20px;
     --kbq-radio-font-big-caption-letter-spacing: -0.006em;
     --kbq-radio-font-big-caption-font-weight: normal;
-    --kbq-radio-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
+    --kbq-radio-font-big-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-radio-font-big-caption-text-transform: null;
-    --kbq-radio-font-big-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-radio-font-big-caption-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
@@ -62,7 +58,7 @@
     --kbq-radio-theme-states-checked-hover-outer-circle-border: hsla(216, 100%, 45%, 100%);
     --kbq-radio-theme-states-checked-hover-outer-circle-background: hsla(216, 100%, 45%, 100%);
     --kbq-radio-theme-states-checked-hover-inner-circle-background: hsla(0, 0%, 100%, 100%);
-    --kbq-radio-theme-states-checked-disabled-outer-circle-border: hsla(229, 15%, 15%, 32%);
+    --kbq-radio-theme-states-checked-disabled-outer-circle-border: hsla(229, 15%, 50%, 32%);
     --kbq-radio-theme-states-checked-disabled-outer-circle-background: hsla(229, 15%, 50%, 16%);
     --kbq-radio-theme-states-checked-disabled-inner-circle-background: hsla(229, 15%, 15%, 32%);
     --kbq-radio-theme-states-focused-outer-circle-border: transparent;
@@ -73,7 +69,7 @@
     --kbq-radio-theme-states-checked-focused-outer-circle-background: hsla(216, 100%, 50%, 100%);
     --kbq-radio-theme-states-checked-focused-inner-circle-background: hsla(0, 0%, 100%, 100%);
     --kbq-radio-theme-states-checked-focused-outer-circle-shadow: 0 0 0.1px 2px hsla(216, 100%, 60%, 100%);
-    --kbq-radio-theme-states-disabled-outer-circle-border: hsla(229, 15%, 15%, 32%);
+    --kbq-radio-theme-states-disabled-outer-circle-border: hsla(229, 15%, 50%, 32%);
     --kbq-radio-theme-states-disabled-outer-circle-background: hsla(229, 15%, 50%, 16%);
     --kbq-radio-theme-states-disabled-inner-circle-background: transparent;
     --kbq-radio-theme-states-disabled-caption: hsla(229, 15%, 15%, 32%);
@@ -89,7 +85,7 @@
     --kbq-radio-error-states-checked-hover-outer-circle-border: transparent;
     --kbq-radio-error-states-checked-hover-outer-circle-background: hsla(7, 97%, 56%, 100%);
     --kbq-radio-error-states-checked-hover-inner-circle-background: hsla(0, 0%, 100%, 100%);
-    --kbq-radio-error-states-checked-disabled-outer-circle-border: hsla(229, 15%, 15%, 32%);
+    --kbq-radio-error-states-checked-disabled-outer-circle-border: hsla(229, 15%, 50%, 32%);
     --kbq-radio-error-states-checked-disabled-outer-circle-background: hsla(229, 15%, 50%, 16%);
     --kbq-radio-error-states-checked-disabled-inner-circle-background: hsla(229, 15%, 15%, 32%);
     --kbq-radio-error-states-focused-outer-circle-border: transparent;
@@ -100,7 +96,7 @@
     --kbq-radio-error-states-checked-focused-outer-circle-background: hsla(7, 97%, 60%, 100%);
     --kbq-radio-error-states-checked-focused-inner-circle-background: hsla(0, 0%, 100%, 100%);
     --kbq-radio-error-states-checked-focused-outer-circle-shadow: 0 0 0.1px 2px hsla(7, 97%, 45%, 100%);
-    --kbq-radio-error-states-disabled-outer-circle-border: hsla(229, 15%, 15%, 32%);
+    --kbq-radio-error-states-disabled-outer-circle-border: hsla(229, 15%, 50%, 32%);
     --kbq-radio-error-states-disabled-outer-circle-background: hsla(229, 15%, 50%, 16%);
     --kbq-radio-error-states-disabled-inner-circle-background: transparent;
 }

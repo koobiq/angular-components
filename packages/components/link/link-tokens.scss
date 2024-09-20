@@ -8,26 +8,23 @@
     --kbq-link-font-compact-line-height: 16px;
     --kbq-link-font-compact-letter-spacing: normal;
     --kbq-link-font-compact-font-weight: normal;
-    --kbq-link-font-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
+    --kbq-link-font-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-link-font-compact-text-transform: null;
-    --kbq-link-font-compact-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-link-font-compact-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-link-font-normal-font-size: 14px;
     --kbq-link-font-normal-line-height: 20px;
     --kbq-link-font-normal-letter-spacing: -0.006em;
     --kbq-link-font-normal-font-weight: normal;
-    --kbq-link-font-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
+    --kbq-link-font-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-link-font-normal-text-transform: null;
-    --kbq-link-font-normal-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-link-font-normal-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
     --kbq-link-font-big-font-size: 16px;
     --kbq-link-font-big-line-height: 24px;
     --kbq-link-font-big-letter-spacing: -0.011em;
     --kbq-link-font-big-font-weight: normal;
-    --kbq-link-font-big-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
+    --kbq-link-font-big-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-link-font-big-text-transform: null;
-    --kbq-link-font-big-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-link-font-big-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

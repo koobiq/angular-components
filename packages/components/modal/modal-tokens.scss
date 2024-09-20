@@ -19,25 +19,22 @@
     --kbq-modal-font-header-line-height: 28px;
     --kbq-modal-font-header-letter-spacing: normal;
     --kbq-modal-font-header-font-weight: 700;
-    --kbq-modal-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
+    --kbq-modal-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-modal-font-header-text-transform: null;
-    --kbq-modal-font-header-font-feature-settings: 'calt', 'kern', 'liga';
+    --kbq-modal-font-header-font-feature-settings: "calt", "kern", "liga";
     --kbq-modal-font-content-font-size: 14px;
     --kbq-modal-font-content-line-height: 20px;
     --kbq-modal-font-content-letter-spacing: -0.006em;
     --kbq-modal-font-content-font-weight: normal;
-    --kbq-modal-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
+    --kbq-modal-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --kbq-modal-font-content-text-transform: null;
-    --kbq-modal-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-modal-font-content-font-feature-settings: "calt", "kern", "liga", "ss01", "ss04";
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-modal-overlay-background: hsla(229, 15%, 20%, 32%);
     --kbq-modal-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-modal-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%),
-        0 4px 32px hsla(229, 15%, 6%, 12%);
+    --kbq-modal-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%), 0 4px 32px hsla(229, 15%, 6%, 12%);
     --kbq-modal-close-button-color: hsla(229, 15%, 15%, 100%);
     --kbq-modal-header-text-color: hsla(229, 15%, 15%, 100%);
     --kbq-modal-content-text-color: hsla(229, 15%, 15%, 100%);
