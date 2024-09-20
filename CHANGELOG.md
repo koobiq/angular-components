@@ -1,3 +1,14 @@
+# 17.7.0 (2024-09-20)
+
+### Koobiq
+
+ * bug fix  **docs:** docs examples buttons margins incapsulated ([#DS-2887](https://github.com/koobiq/angular-components/issues/issue/DS-2887)) ([#290](https://github.com/koobiq/angular-components/issues/290)) ([58ae7cb](https://github.com/koobiq/angular-components/commit/58ae7cba43f6744f2982270d72471989c411b45d))
+ * bug fix  **select:** throws error when closed in sidepanel ([#DS-2893](https://github.com/koobiq/angular-components/issues/issue/DS-2893)) ([#297](https://github.com/koobiq/angular-components/issues/297)) ([b0f982c](https://github.com/koobiq/angular-components/commit/b0f982cb7d6d3d1acdad26e0c7a475255211ba44))
+ * feature  migrated on new angular control flow ([#DS-2872](https://github.com/koobiq/angular-components/issues/issue/DS-2872)) ([#284](https://github.com/koobiq/angular-components/issues/284)) ([d8e3b90](https://github.com/koobiq/angular-components/commit/d8e3b909d614e046cd2e2c37d723109034348223))
+ * feature  **visual:** components theming with CSS-vars ([#DS-2829](https://github.com/koobiq/angular-components/issues/issue/DS-2829)) ([#286](https://github.com/koobiq/angular-components/issues/286)) ([7be2560](https://github.com/koobiq/angular-components/commit/7be25606e167a360521bab4120c1d2de4bebdf90))
+ * feature  **visual:** components theming with CSS-vars ([#DS-2833](https://github.com/koobiq/angular-components/issues/issue/DS-2833)) ([#295](https://github.com/koobiq/angular-components/issues/295)) ([b4e92b4](https://github.com/koobiq/angular-components/commit/b4e92b4a4b51832907c94640977b79b3336a6cd3))
+ * feature  **visual:** components theming with CSS-vars ([#DS-2845](https://github.com/koobiq/angular-components/issues/issue/DS-2845))  ([#287](https://github.com/koobiq/angular-components/issues/287)) ([960eafe](https://github.com/koobiq/angular-components/commit/960eafe58f2dcd272d845e02550298e9da57c04a))
+
 ## 17.6.1 (2024-09-17)
 
 ### Koobiq
