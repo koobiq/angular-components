@@ -1,4 +1,5 @@
 import { PortalModule } from '@angular/cdk/portal';
+import { NgComponentOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
@@ -21,7 +22,8 @@ import { DocsLiveExample } from './docs-live-example';
         StackblitzButtonModule,
         CopyButtonModule,
         PortalModule,
-        KbqCodeBlockModule
+        KbqCodeBlockModule,
+        NgComponentOutlet
     ],
     declarations: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource],
     exports: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource]
