@@ -72,9 +72,13 @@ export function extractApiToJson(packages: ModuleInfo[]) {
                     {}
                 );
 
+                const privateModules = new Set<string>([]);
                 return {
                     packageName,
-                    entries: updateEntries(program.getApiDocumentation(resolvedPath), classesMetadata)
+                    entries: updateEntries(
+                        program.getApiDocumentation(resolvedPath, privateModules) as any,
+                        classesMetadata
+                    )
                 };
             })
         } as EntryCollection);

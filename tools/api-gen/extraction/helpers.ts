@@ -31,7 +31,7 @@ const metadataMembers = ({ name, memberTags }: MemberEntry) =>
  * Returns an updated array of documentation entries with enriched class information.
  */
 export function updateEntries(entries: DocEntry[], classMetadata: Record<string, ClassEntryMetadata>): DocEntry[] {
-    return entries.reduce((res: DocEntry[], entry: DocEntry, _, arr) => {
+    return Array.from(entries).reduce((res: DocEntry[], entry: DocEntry, _, arr) => {
         if (!isClassEntry(entry)) {
             res.push(entry);
         }
