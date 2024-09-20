@@ -1,3 +1,9 @@
+## 17.7.1 (2024-09-20)
+
+### Koobiq
+
+ * bug fix  **docs:** added required module import ([#299](https://github.com/koobiq/angular-components/issues/299)) ([0300980](https://github.com/koobiq/angular-components/commit/030098082acbcd5b9d89ea05fd3bc73c49d7a31d))
+
 # 17.7.0 (2024-09-20)
 
 ### Koobiq
