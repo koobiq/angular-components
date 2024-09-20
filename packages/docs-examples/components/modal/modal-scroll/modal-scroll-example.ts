@@ -4,7 +4,9 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 @Component({
     selector: 'kbq-long-component',
     template: `
-        <p *ngFor="let item of longText">{{ item }}</p>
+        @for (item of longText; track item) {
+            <p>{{ item }}</p>
+        }
     `
 })
 export class KbqLongComponent {

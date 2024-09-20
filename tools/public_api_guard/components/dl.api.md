@@ -7,9 +7,8 @@
 import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/a11y';
-import * as i4 from '@angular/cdk/platform';
+import * as i2 from '@angular/cdk/a11y';
+import * as i3 from '@angular/cdk/platform';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -55,7 +54,7 @@ export class KbqDlModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent], [typeof i2.CommonModule, typeof i3.A11yModule, typeof i4.PlatformModule], [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent], [typeof i2.A11yModule, typeof i3.PlatformModule], [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent]>;
 }
 
 // @public (undocumented)

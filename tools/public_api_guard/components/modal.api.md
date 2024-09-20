@@ -12,12 +12,12 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/common';
-import * as i5 from '@angular/cdk/overlay';
-import * as i6 from '@angular/cdk/a11y';
-import * as i7 from '@koobiq/components/button';
-import * as i8 from '@koobiq/components/icon';
-import * as i9 from '@koobiq/components/title';
+import * as i4 from '@angular/cdk/overlay';
+import * as i5 from '@angular/cdk/a11y';
+import * as i6 from '@koobiq/components/button';
+import * as i7 from '@koobiq/components/icon';
+import * as i8 from '@koobiq/components/title';
+import * as i9 from '@angular/common';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -271,7 +271,7 @@ export class KbqModalModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, [typeof i1.KbqModalComponent, typeof i2.KbqModalTitle, typeof i2.KbqModalBody, typeof i2.KbqModalFooter, typeof i3.CssUnitPipe, typeof i2.KbqModalMainAction], [typeof i4.CommonModule, typeof i5.OverlayModule, typeof i6.A11yModule, typeof i7.KbqButtonModule, typeof i8.KbqIconModule, typeof i9.KbqTitleModule], [typeof i1.KbqModalComponent, typeof i2.KbqModalTitle, typeof i2.KbqModalBody, typeof i2.KbqModalFooter, typeof i2.KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, [typeof i1.KbqModalComponent, typeof i2.KbqModalTitle, typeof i2.KbqModalBody, typeof i2.KbqModalFooter, typeof i3.CssUnitPipe, typeof i2.KbqModalMainAction], [typeof i4.OverlayModule, typeof i5.A11yModule, typeof i6.KbqButtonModule, typeof i7.KbqIconModule, typeof i8.KbqTitleModule, typeof i9.NgTemplateOutlet, typeof i9.NgStyle, typeof i9.NgClass], [typeof i1.KbqModalComponent, typeof i2.KbqModalTitle, typeof i2.KbqModalBody, typeof i2.KbqModalFooter, typeof i2.KbqModalMainAction]>;
 }
 
 // @public

@@ -1,35 +1,36 @@
 <!-- Create the first row separately so we can include a special spacer cell. -->
-<tr *ngFor="let row of rows; let rowIndex = index">
-    <!--
-      We mark this cell as aria-hidden so it doesn't get read out as one of the days in the week.
-      The aspect ratio of the table cells is maintained by setting the top and bottom padding as a
-      percentage of the width (a variant of the trick described here:
-      https://www.w3schools.com/howto/howto_css_aspect_ratio.asp).
-    -->
-    <td
-        *ngIf="rowIndex === 0 && firstRowOffset"
-        class="kbq-calendar__body-label"
-        [attr.colspan]="firstRowOffset"
-    ></td>
-
-    <td
-        *ngFor="let item of row; let colIndex = index"
-        class="kbq-calendar__body-cell"
-        [class.kbq-calendar__body_active]="isActiveCell(rowIndex, colIndex)"
-        [ngClass]="item.cssClasses!"
-        [style.paddingBottom]="cellPadding"
-        [style.paddingTop]="cellPadding"
-        [style.width]="cellWidth"
-        [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
-        (click)="cellClicked(item)"
-    >
-        <div
-            class="kbq-calendar__body-cell-content"
-            [class.kbq-calendar__body-today]="todayValue === item.value"
-            [class.kbq-disabled]="!item.enabled"
-            [class.kbq-selected]="selectedValue === item.value"
-        >
-            {{ item.displayValue }}
-        </div>
-    </td>
-</tr>
+@for (row of rows; track row; let rowIndex = $index) {
+    <tr>
+        <!--  We mark this cell as aria-hidden so it doesn't get read out as one of the days in the week.
+        The aspect ratio of the table cells is maintained by setting the top and bottom padding as a
+        percentage of the width (a variant of the trick described here:
+        https://www.w3schools.com/howto/howto_css_aspect_ratio.asp). -->
+        @if (rowIndex === 0 && firstRowOffset) {
+            <td
+                class="kbq-calendar__body-label"
+                [attr.colspan]="firstRowOffset"
+            ></td>
+        }
+        @for (item of row; track item; let colIndex = $index) {
+            <td
+                class="kbq-calendar__body-cell"
+                [class.kbq-calendar__body_active]="isActiveCell(rowIndex, colIndex)"
+                [ngClass]="item.cssClasses!"
+                [style.paddingBottom]="cellPadding"
+                [style.paddingTop]="cellPadding"
+                [style.width]="cellWidth"
+                [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
+                (click)="cellClicked(item)"
+            >
+                <div
+                    class="kbq-calendar__body-cell-content"
+                    [class.kbq-calendar__body-today]="todayValue === item.value"
+                    [class.kbq-disabled]="!item.enabled"
+                    [class.kbq-selected]="selectedValue === item.value"
+                >
+                    {{ item.displayValue }}
+                </div>
+            </td>
+        }
+    </tr>
+}

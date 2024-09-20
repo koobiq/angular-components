@@ -4,14 +4,15 @@
     class="example-radio-group"
     (change)="setFormat($event)"
 >
-    <kbq-radio-button
-        *ngFor="let language of languageList"
-        class="example-radio-button"
-        [checked]="language.id === selectedLanguage.id"
-        [value]="language"
-    >
-        {{ language.id }}
-    </kbq-radio-button>
+    @for (language of languageList; track language) {
+        <kbq-radio-button
+            class="example-radio-button"
+            [checked]="language.id === selectedLanguage.id"
+            [value]="language"
+        >
+            {{ language.id }}
+        </kbq-radio-button>
+    }
     <br />
 </kbq-radio-group>
 

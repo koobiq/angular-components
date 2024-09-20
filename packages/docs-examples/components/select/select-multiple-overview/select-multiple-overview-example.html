@@ -3,12 +3,11 @@
         multiple
         [(value)]="selected"
     >
-        <kbq-option
-            *ngFor="let option of options"
-            [value]="option"
-        >
-            <span [innerHTML]="option"></span>
-        </kbq-option>
+        @for (option of options; track option) {
+            <kbq-option [value]="option">
+                <span [innerHTML]="option"></span>
+            </kbq-option>
+        }
 
         <kbq-cleaner #kbqSelectCleaner />
     </kbq-select>

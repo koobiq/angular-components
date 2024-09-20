@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
     KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
@@ -19,7 +19,6 @@ import { KbqSelect } from './select.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         OverlayModule,
         KbqOptionModule,
         KbqIconModule,
@@ -29,14 +28,15 @@ import { KbqSelect } from './select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult
+        KbqSelectSearchEmptyResult,
+        NgClass,
+        NgTemplateOutlet
     ],
     exports: [
         KbqFormFieldModule,
         KbqSelect,
         KbqOptionTooltip,
         KbqOptionModule,
-        CommonModule,
         KbqSelectSearch,
         KbqSelectFooter,
         KbqSelectMatcher,

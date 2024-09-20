@@ -7,12 +7,11 @@
             <label class="layout-padding">'Block 1'</label>
             <kbq-form-field>
                 <kbq-select [(value)]="selectedFirstBlockOrder">
-                    <kbq-option
-                        *ngFor="let flexOrder of flexOrders"
-                        [value]="flexOrder"
-                    >
-                        {{ flexOrder }}
-                    </kbq-option>
+                    @for (flexOrder of flexOrders; track flexOrder) {
+                        <kbq-option [value]="flexOrder">
+                            {{ flexOrder }}
+                        </kbq-option>
+                    }
                 </kbq-select>
             </kbq-form-field>
         </div>
@@ -21,12 +20,11 @@
             <label class="layout-padding">'Block 2'</label>
             <kbq-form-field>
                 <kbq-select [(value)]="selectedSecondBlockOrder">
-                    <kbq-option
-                        *ngFor="let flexOrder of flexOrders"
-                        [value]="flexOrder"
-                    >
-                        {{ flexOrder }}
-                    </kbq-option>
+                    @for (flexOrder of flexOrders; track flexOrder) {
+                        <kbq-option [value]="flexOrder">
+                            {{ flexOrder }}
+                        </kbq-option>
+                    }
                 </kbq-select>
             </kbq-form-field>
         </div>
@@ -35,12 +33,11 @@
             <label class="layout-padding">'Block 3'</label>
             <kbq-form-field>
                 <kbq-select [(value)]="selectedThirdBlockOrder">
-                    <kbq-option
-                        *ngFor="let flexOrder of flexOrders"
-                        [value]="flexOrder"
-                    >
-                        {{ flexOrder }}
-                    </kbq-option>
+                    @for (flexOrder of flexOrders; track flexOrder) {
+                        <kbq-option [value]="flexOrder">
+                            {{ flexOrder }}
+                        </kbq-option>
+                    }
                 </kbq-select>
             </kbq-form-field>
         </div>

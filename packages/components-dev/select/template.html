@@ -19,12 +19,11 @@
             ></i>
         </button>
 
-        <kbq-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-        >
-            <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
-        </kbq-option>
+        @for (option of filteredOptions | async; track option) {
+            <kbq-option [value]="option">
+                <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
+            </kbq-option>
+        }
 
         <div
             kbq-select-footer
@@ -91,12 +90,11 @@
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <kbq-option
-                *ngFor="let option of filteredOptions | async"
-                [value]="option"
-            >
-                <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
-            </kbq-option>
+            @for (option of filteredOptions | async; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -172,12 +170,13 @@
                     [selectable]="false"
                 >
                     {{ option.value.name }}
-                    <i
-                        *ngIf="!option.disabled && !select.disabled"
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                        (click)="select.onRemoveMatcherItem(option, $event)"
-                    ></i>
+                    @if (!option.disabled && !select.disabled) {
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        ></i>
+                    }
                 </kbq-tag>
             </ng-template>
 
@@ -219,12 +218,11 @@
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <kbq-option
-                *ngFor="let option of filteredOptions | async"
-                [value]="option"
-            >
-                <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
-            </kbq-option>
+            @for (option of filteredOptions | async; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -269,13 +267,14 @@
 
             <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-            <kbq-option
-                *ngFor="let option of filteredMultipleOptions | async"
-                [showCheckbox]="false"
-                [value]="option"
-            >
-                <span [innerHTML]="option | mcHighlight: multipleSearchCtrl.value"></span>
-            </kbq-option>
+            @for (option of filteredMultipleOptions | async; track option) {
+                <kbq-option
+                    [showCheckbox]="false"
+                    [value]="option"
+                >
+                    <span [innerHTML]="option | mcHighlight: multipleSearchCtrl.value"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 </div>
@@ -460,12 +459,13 @@
                     [selectable]="false"
                 >
                     CONST VALUE
-                    <i
-                        *ngIf="!option.disabled && !select.disabled"
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                        (click)="select.onRemoveMatcherItem(option, $event)"
-                    ></i>
+                    @if (!option.disabled && !select.disabled) {
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        ></i>
+                    }
                 </kbq-tag>
             </ng-template>
         </kbq-select>
@@ -494,12 +494,13 @@
                     [selectable]="false"
                 >
                     Tag text: {{ option.viewValue }}
-                    <i
-                        *ngIf="!option.disabled && !select.disabled"
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                        (click)="select.onRemoveMatcherItem(option, $event)"
-                    ></i>
+                    @if (!option.disabled && !select.disabled) {
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        ></i>
+                    }
                 </kbq-tag>
             </ng-template>
         </kbq-select>
@@ -543,12 +544,13 @@
                     [selectable]="false"
                 >
                     CONST VALUE
-                    <i
-                        *ngIf="!option.disabled && !select.disabled"
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                        (click)="select.onRemoveMatcherItem(option, $event)"
-                    ></i>
+                    @if (!option.disabled && !select.disabled) {
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        ></i>
+                    }
                 </kbq-tag>
             </ng-template>
 
@@ -596,12 +598,13 @@
                     [selectable]="false"
                 >
                     CONST VALUE
-                    <i
-                        *ngIf="!option.disabled && !select.disabled"
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                        (click)="select.onRemoveMatcherItem(option, $event)"
-                    ></i>
+                    @if (!option.disabled && !select.disabled) {
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                            (click)="select.onRemoveMatcherItem(option, $event)"
+                        ></i>
+                    }
                 </kbq-tag>
             </ng-template>
 

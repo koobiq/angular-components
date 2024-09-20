@@ -24,13 +24,12 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/cdk/portal';
-import * as i11 from '@angular/cdk/a11y';
-import * as i12 from '@angular/cdk/scrolling';
-import * as i13 from '@koobiq/components/core';
-import * as i14 from '@koobiq/components/icon';
-import * as i15 from '@koobiq/components/tooltip';
-import * as i9 from '@angular/common';
+import * as i10 from '@angular/cdk/a11y';
+import * as i11 from '@angular/cdk/scrolling';
+import * as i12 from '@koobiq/components/core';
+import * as i13 from '@koobiq/components/icon';
+import * as i14 from '@koobiq/components/tooltip';
+import * as i9 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
@@ -380,7 +379,7 @@ export class KbqTabsModule {
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, [typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i4.KbqTabLabelWrapper, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i6.KbqTabBody, typeof i6.KbqTabBodyPortal, typeof i7.KbqTabHeader, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler], [typeof i9.CommonModule, typeof i10.PortalModule, typeof i11.A11yModule, typeof i12.CdkScrollableModule, typeof i13.KbqCommonModule, typeof i14.KbqIconModule, typeof i15.KbqToolTipModule], [typeof i13.KbqCommonModule, typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, [typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i4.KbqTabLabelWrapper, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i6.KbqTabBody, typeof i6.KbqTabBodyPortal, typeof i7.KbqTabHeader, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler], [typeof i9.PortalModule, typeof i10.A11yModule, typeof i11.CdkScrollableModule, typeof i12.KbqCommonModule, typeof i13.KbqIconModule, typeof i14.KbqToolTipModule], [typeof i12.KbqCommonModule, typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler]>;
 }
 
 // @public (undocumented)

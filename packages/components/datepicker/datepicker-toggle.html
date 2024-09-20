@@ -10,11 +10,12 @@
     [tabIndex]="tabIndex"
     (click)="open($event)"
 >
-    <i
-        *ngIf="!customIcon"
-        kbq-icon="mc-calendar_16"
-        class="kbq-datepicker-toggle__default-icon"
-    ></i>
+    @if (!customIcon) {
+        <i
+            kbq-icon="mc-calendar_16"
+            class="kbq-datepicker-toggle__default-icon"
+        ></i>
+    }
 
     <ng-content select="[kbqDatepickerToggleIcon]" />
 </button>

@@ -24,12 +24,9 @@
                         (input)="onInput($event, startTooltip, 'start')"
                     />
 
-                    <kbq-hint
-                        *ngIf="compositeFormGroup.controls.start.invalid"
-                        [color]="themePalette.Error"
-                    >
-                        IP-адрес не соответствует стандартам RFC
-                    </kbq-hint>
+                    @if (compositeFormGroup.controls.start.invalid) {
+                        <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                    }
 
                     <kbq-cleaner />
                 </kbq-form-field>
@@ -51,24 +48,22 @@
                         (input)="onInput($event, endTooltip, 'end')"
                     />
 
-                    <kbq-hint
-                        *ngIf="compositeFormGroup.controls.end.invalid"
-                        [color]="themePalette.Error"
-                    >
-                        IP-адрес не соответствует стандартам RFC
-                    </kbq-hint>
+                    @if (compositeFormGroup.controls.end.invalid) {
+                        <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                    }
 
                     <kbq-cleaner />
                 </kbq-form-field>
             </div>
 
-            <kbq-hint
-                *ngIf="compositeFormGroup.errors?.range"
-                style="margin-top: 4px"
-                [color]="themePalette.Error"
-            >
-                IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
-            </kbq-hint>
+            @if (compositeFormGroup.errors?.range) {
+                <kbq-hint
+                    style="margin-top: 4px"
+                    [color]="themePalette.Error"
+                >
+                    IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
+                </kbq-hint>
+            }
         </div>
     </form>
 </div>

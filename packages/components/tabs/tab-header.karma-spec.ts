@@ -1,7 +1,6 @@
 import { Direction } from '@angular/cdk/bidi';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { KbqTabHeader } from './tab-header.component';
@@ -13,7 +12,7 @@ describe('KbqTabHeader', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [CommonModule, PortalModule, ScrollingModule],
+            imports: [PortalModule, ScrollingModule],
             declarations: [KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
         });
 
@@ -56,16 +55,17 @@ interface ITab {
                 (indexFocused)="focusedIndex = $event"
                 (selectFocusedIndex)="selectedIndex = $event"
             >
-                <div
-                    class="label-content"
-                    *ngFor="let tab of tabs; let i = index"
-                    [disabled]="!!tab.disabled"
-                    (click)="selectedIndex = i"
-                    kbqTabLabelWrapper
-                    style="min-width: 30px; width: 30px"
-                >
-                    {{ tab.label }}
-                </div>
+                @for (tab of tabs; track tab; let i = $index) {
+                    <div
+                        class="label-content"
+                        [disabled]="!!tab.disabled"
+                        (click)="selectedIndex = i"
+                        kbqTabLabelWrapper
+                        style="min-width: 30px; width: 30px"
+                    >
+                        {{ tab.label }}
+                    </div>
+                }
             </kbq-tab-header>
         </div>
     `,

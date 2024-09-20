@@ -5,23 +5,21 @@
     <div class="example-controls">
         <kbq-form-field>
             <kbq-select [(value)]="selectedSize">
-                <kbq-option
-                    *ngFor="let flexSize of flexSizes"
-                    [value]="flexSize"
-                >
-                    {{ flexSize }}
-                </kbq-option>
+                @for (flexSize of flexSizes; track flexSize) {
+                    <kbq-option [value]="flexSize">
+                        {{ flexSize }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
 
         <kbq-form-field>
             <kbq-select [(value)]="selectedOffset">
-                <kbq-option
-                    *ngFor="let flexOffset of flexOffsets"
-                    [value]="flexOffset"
-                >
-                    {{ flexOffset }}
-                </kbq-option>
+                @for (flexOffset of flexOffsets; track flexOffset) {
+                    <kbq-option [value]="flexOffset">
+                        {{ flexOffset }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     </div>

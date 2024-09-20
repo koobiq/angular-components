@@ -111,17 +111,18 @@
                 #inputTagList
                 formControlName="reactiveTypeaheadValue"
             >
-                <kbq-tag
-                    *ngFor="let tag of reactiveTypeaheadItems"
-                    [value]="tag"
-                    (removed)="reactiveInputOnRemoveTag(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
+                @for (tag of reactiveTypeaheadItems; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="reactiveInputOnRemoveTag(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
                 <input
                     formControlName="tagInputFormControl"
                     placeholder="New tag..."
@@ -132,21 +133,26 @@
             </kbq-tag-list>
         </kbq-form-field>
 
-        <div
-            *ngIf="reactiveForm.controls.reactiveTypeaheadValue.errors"
-            class="kbq-form-field_error"
-        >
-            <div *ngIf="reactiveForm.controls.reactiveTypeaheadValue.errors?.required">error</div>
-        </div>
+        @if (reactiveForm.controls.reactiveTypeaheadValue.errors) {
+            <div class="kbq-form-field_error">
+                @if (reactiveForm.controls.reactiveTypeaheadValue.errors?.required) {
+                    <div>error</div>
+                }
+            </div>
+        }
 
         <br />
         <br />
 
         <button kbq-button>Submit</button>
 
-        <div *ngIf="reactiveForm.controls.reactiveInputValue.errors">
-            <div *ngIf="reactiveForm.controls.reactiveInputValue.errors?.required">required error</div>
-        </div>
+        @if (reactiveForm.controls.reactiveInputValue.errors) {
+            <div>
+                @if (reactiveForm.controls.reactiveInputValue.errors?.required) {
+                    <div>required error</div>
+                }
+            </div>
+        }
     </form>
 
     <br />
@@ -264,17 +270,18 @@
                 #formControlInputTagList
                 [formControl]="formControlTags"
             >
-                <kbq-tag
-                    *ngFor="let tag of reactiveFormControlTypeaheadItems"
-                    [value]="tag"
-                    (removed)="reactiveFormControlInputOnRemoveTag(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
+                @for (tag of reactiveFormControlTypeaheadItems; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="reactiveFormControlInputOnRemoveTag(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
                 <input
                     placeholder="New tag..."
                     [formControl]="formControlTagInputFormControl"
@@ -285,21 +292,26 @@
             </kbq-tag-list>
         </kbq-form-field>
 
-        <div
-            *ngIf="formControlTags.errors"
-            class="kbq-form-field_error"
-        >
-            <div *ngIf="formControlTags.errors?.required">error</div>
-        </div>
+        @if (formControlTags.errors) {
+            <div class="kbq-form-field_error">
+                @if (formControlTags.errors?.required) {
+                    <div>error</div>
+                }
+            </div>
+        }
 
         <br />
         <br />
 
         <button kbq-button>Submit</button>
 
-        <div *ngIf="formControlTagInputFormControl.errors">
-            <div *ngIf="formControlTagInputFormControl.errors?.required">required error</div>
-        </div>
+        @if (formControlTagInputFormControl.errors) {
+            <div>
+                @if (formControlTagInputFormControl.errors?.required) {
+                    <div>required error</div>
+                }
+            </div>
+        }
     </form>
 
     <br />
@@ -429,17 +441,18 @@
                 [required]="true"
                 [(ngModel)]="typeaheadItems"
             >
-                <kbq-tag
-                    *ngFor="let tag of typeaheadItems"
-                    [value]="tag"
-                    (removed)="inputOnRemoveTag(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="mc-close-S_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
+                @for (tag of typeaheadItems; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="inputOnRemoveTag(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon="mc-close-S_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
                 <input
                     placeholder="New tag..."
                     [kbqTagInputFor]="templateInputTagList"
@@ -491,12 +504,13 @@
 
         <button kbq-button>Submit</button>
 
-        <div
-            *ngIf="formWithCustomValidator.controls.login.errors"
-            class="kbq-form-field_error"
-        >
-            <div *ngIf="formWithCustomValidator.controls.login.errors?.required">error</div>
-        </div>
+        @if (formWithCustomValidator.controls.login.errors) {
+            <div class="kbq-form-field_error">
+                @if (formWithCustomValidator.controls.login.errors?.required) {
+                    <div>error</div>
+                }
+            </div>
+        }
     </form>
 
     <div class="margin">

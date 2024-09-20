@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { IconItemColorExample } from './icon-item-color/icon-item-color-example';
@@ -17,7 +16,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqIconModule
     ],
     declarations: EXAMPLES,

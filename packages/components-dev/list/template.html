@@ -144,12 +144,11 @@
     [(ngModel)]="multipleSelected"
     (selectionChange)="onSelectionChange($event)"
 >
-    <kbq-list-option
-        *ngFor="let shoe of asyncUpdate$ | async"
-        [value]="shoe"
-    >
-        {{ shoe }}
-    </kbq-list-option>
+    @for (shoe of asyncUpdate$ | async; track shoe) {
+        <kbq-list-option [value]="shoe">
+            {{ shoe }}
+        </kbq-list-option>
+    }
 </kbq-list-selection>
 <br />
 <div>multipleSelectedCheckbox: {{ multipleSelected | json }}</div>

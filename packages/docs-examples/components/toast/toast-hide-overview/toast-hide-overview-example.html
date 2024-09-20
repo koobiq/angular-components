@@ -33,18 +33,21 @@
 </ng-template>
 
 <ng-template #toastPermanentContentTemplate>
-    <kbq-progress-bar
-        *ngIf="progress"
-        class="layout-margin-top-m layout-margin-bottom-m"
-        [mode]="'indeterminate'"
-    />
-    <div *ngIf="!progress">
-        <span>Импорт файлов завершен</span>
-        <i
-            kbq-icon="mc-success_16"
-            class="kbq-success"
-        ></i>
-    </div>
+    @if (progress) {
+        <kbq-progress-bar
+            class="layout-margin-top-m layout-margin-bottom-m"
+            [mode]="'indeterminate'"
+        />
+    }
+    @if (!progress) {
+        <div>
+            <span>Импорт файлов завершен</span>
+            <i
+                kbq-icon="mc-success_16"
+                class="kbq-success"
+            ></i>
+        </div>
+    }
 </ng-template>
 
 <ng-template

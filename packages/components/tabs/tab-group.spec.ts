@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -13,7 +12,6 @@ describe('KbqTabGroup', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqTabsModule,
-                CommonModule,
                 NoopAnimationsModule
             ],
             declarations: [
@@ -632,10 +630,12 @@ class SimpleTabsTestApp {
             (focusChange)="handleFocus($event)"
             (selectedTabChange)="handleSelection($event)"
         >
-            <kbq-tab *ngFor="let tab of tabs">
-                <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
-                {{ tab.content }}
-            </kbq-tab>
+            @for (tab of tabs; track tab) {
+                <kbq-tab>
+                    <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
+                    {{ tab.content }}
+                </kbq-tab>
+            }
         </kbq-tab-group>
     `
 })
@@ -664,12 +664,11 @@ class SimpleDynamicTabsTestApp {
             class="tab-group"
             [(selectedIndex)]="selectedIndex"
         >
-            <kbq-tab
-                *ngFor="let tab of tabs"
-                label="{{ tab.label }}"
-            >
-                {{ tab.content }}
-            </kbq-tab>
+            @for (tab of tabs; track tab) {
+                <kbq-tab label="{{ tab.label }}">
+                    {{ tab.content }}
+                </kbq-tab>
+            }
         </kbq-tab-group>
     `
 })
@@ -716,10 +715,12 @@ class DisabledTabsTestApp {
 @Component({
     template: `
         <kbq-tab-group class="tab-group">
-            <kbq-tab *ngFor="let tab of tabs | async">
-                <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
-                {{ tab.content }}
-            </kbq-tab>
+            @for (tab of tabs | async; track tab) {
+                <kbq-tab>
+                    <ng-template kbq-tab-label>{{ tab.label }}</ng-template>
+                    {{ tab.content }}
+                </kbq-tab>
+            }
         </kbq-tab-group>
     `
 })
@@ -798,7 +799,9 @@ class TemplateTabs {}
             <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
         </kbq-tab-group>
 
-        <div *ngIf="pizza.isActive">pizza is active</div>
+        @if (pizza.isActive) {
+            <div>pizza is active</div>
+        }
     `
 })
 class TabGroupWithIsActiveBinding {}

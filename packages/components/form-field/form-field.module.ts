@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqCleaner } from './cleaner';
@@ -25,7 +25,10 @@ import { KbqValidateDirective } from './validate.directive';
         KbqTrim,
         KbqPasswordToggle
     ],
-    imports: [CommonModule, KbqIconModule],
+    imports: [
+        KbqIconModule,
+        NgClass
+    ],
     exports: [
         KbqFormField,
         KbqFormFieldWithoutBorders,

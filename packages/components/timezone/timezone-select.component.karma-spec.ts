@@ -92,17 +92,17 @@ const groupedZones: KbqTimezoneGroup[] = [
                 [panelClass]="panelClass"
                 placeholder="Timezones"
             >
-                <kbq-optgroup
-                    *ngFor="let group of zones"
-                    [label]="group.countryName"
-                >
-                    <kbq-timezone-option
-                        *ngFor="let zone of group.zones"
-                        [value]="zone.id"
-                        [timezone]="zone"
-                        [disabled]="zone.id === disabledFor"
-                    />
-                </kbq-optgroup>
+                @for (group of zones; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (zone of group.zones; track zone) {
+                            <kbq-timezone-option
+                                [value]="zone.id"
+                                [timezone]="zone"
+                                [disabled]="zone.id === disabledFor"
+                            />
+                        }
+                    </kbq-optgroup>
+                }
             </kbq-timezone-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>

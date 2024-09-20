@@ -24,14 +24,15 @@
             ></i>
         </button>
 
-        <kbq-option
-            *ngFor="let month of monthNames"
-            [disabled]="month.disabled"
-            [kbqTooltipDisabled]="true"
-            [value]="month.value"
-        >
-            {{ month.name }}
-        </kbq-option>
+        @for (month of monthNames; track month) {
+            <kbq-option
+                [disabled]="month.disabled"
+                [kbqTooltipDisabled]="true"
+                [value]="month.value"
+            >
+                {{ month.name }}
+            </kbq-option>
+        }
     </kbq-select>
 
     <kbq-select
@@ -57,13 +58,14 @@
             ></i>
         </button>
 
-        <kbq-option
-            *ngFor="let year of years"
-            [kbqTooltipDisabled]="true"
-            [value]="year"
-        >
-            {{ year.value }}
-        </kbq-option>
+        @for (year of years; track year) {
+            <kbq-option
+                [kbqTooltipDisabled]="true"
+                [value]="year"
+            >
+                {{ year.value }}
+            </kbq-option>
+        }
     </kbq-select>
 </div>
 

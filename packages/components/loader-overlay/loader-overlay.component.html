@@ -1,43 +1,30 @@
 <div class="kbq-loader-overlay__container">
-    <ng-container [ngSwitch]="isExternalIndicator">
-        <ng-content
-            *ngSwitchCase="true"
-            select="[kbq-loader-overlay-indicator]"
-        />
+    @if (isExternalIndicator) {
+        <ng-content select="[kbq-loader-overlay-indicator]" />
+    } @else {
         <kbq-progress-spinner
-            *ngSwitchDefault
             [mode]="'indeterminate'"
             [size]="spinnerSize"
         />
-    </ng-container>
+    }
 
-    <ng-container [ngSwitch]="isExternalText">
-        <ng-content
-            *ngSwitchCase="true"
-            select="[kbq-loader-overlay-text]"
-        />
-        <ng-container *ngSwitchDefault>
-            <div
-                *ngIf="text"
-                class="kbq-loader-overlay-text"
-            >
+    @if (isExternalText) {
+        <ng-content select="[kbq-loader-overlay-text]" />
+    } @else {
+        @if (text) {
+            <div class="kbq-loader-overlay-text">
                 {{ text }}
             </div>
-        </ng-container>
-    </ng-container>
+        }
+    }
 
-    <ng-container [ngSwitch]="isExternalCaption">
-        <ng-content
-            *ngSwitchCase="true"
-            select="[kbq-loader-overlay-caption]"
-        />
-        <ng-container *ngSwitchDefault>
-            <div
-                *ngIf="caption"
-                class="kbq-loader-overlay-caption"
-            >
+    @if (isExternalCaption) {
+        <ng-content select="[kbq-loader-overlay-caption]" />
+    } @else {
+        @if (caption) {
+            <div class="kbq-loader-overlay-caption">
                 {{ caption }}
             </div>
-        </ng-container>
-    </ng-container>
+        }
+    }
 </div>

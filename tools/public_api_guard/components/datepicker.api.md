@@ -15,13 +15,13 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/cdk/overlay';
-import * as i11 from '@angular/cdk/a11y';
-import * as i12 from '@angular/cdk/portal';
-import * as i13 from '@koobiq/components/select';
-import * as i14 from '@koobiq/components/icon';
-import * as i8 from '@angular/common';
-import * as i9 from '@koobiq/components/button';
+import * as i10 from '@angular/cdk/a11y';
+import * as i11 from '@angular/cdk/portal';
+import * as i12 from '@koobiq/components/select';
+import * as i13 from '@koobiq/components/icon';
+import * as i14 from '@angular/common';
+import * as i8 from '@koobiq/components/button';
+import * as i9 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqDateFormats } from '@koobiq/components/core';
@@ -406,7 +406,7 @@ export class KbqDatepickerModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.CommonModule, typeof i9.KbqButtonModule, typeof i10.OverlayModule, typeof i11.A11yModule, typeof i12.PortalModule, typeof i9.KbqButtonModule, typeof i13.KbqSelectModule, typeof i14.KbqIconModule], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i8.KbqButtonModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
 }
 
 // @public (undocumented)

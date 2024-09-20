@@ -16,9 +16,8 @@ import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/common';
-import * as i4 from '@angular/cdk/a11y';
-import * as i5 from '@koobiq/components/core';
+import * as i3 from '@angular/cdk/a11y';
+import * as i4 from '@koobiq/components/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqLine } from '@koobiq/components/core';
@@ -84,7 +83,7 @@ export class KbqListModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption], [typeof i3.CommonModule, typeof i4.A11yModule, typeof i5.KbqPseudoCheckboxModule, typeof i5.KbqLineModule, typeof i5.KbqOptionModule], [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption, typeof i5.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption], [typeof i3.A11yModule, typeof i4.KbqPseudoCheckboxModule, typeof i4.KbqLineModule, typeof i4.KbqOptionModule], [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption, typeof i4.KbqOptionModule]>;
 }
 
 // @public

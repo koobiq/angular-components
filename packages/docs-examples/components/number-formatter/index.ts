@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormattersModule } from '@koobiq/components/core';
@@ -12,7 +11,6 @@ const EXAMPLES = [NumberFormatterOverviewExample];
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqFormattersModule,
         KbqInputModule,
         KbqFormFieldModule,

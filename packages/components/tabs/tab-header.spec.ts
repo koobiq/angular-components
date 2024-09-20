@@ -1,7 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
@@ -21,7 +20,6 @@ describe('KbqTabHeader', () => {
         dir = 'ltr';
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
                 PortalModule,
                 ScrollingModule
             ],
@@ -297,16 +295,17 @@ interface ITab {
                 (indexFocused)="focusedIndex = $event"
                 (selectFocusedIndex)="selectedIndex = $event"
             >
-                <div
-                    class="label-content"
-                    *ngFor="let tab of tabs; let i = index"
-                    [disabled]="!!tab.disabled"
-                    (click)="selectedIndex = i"
-                    kbqTabLabelWrapper
-                    style="min-width: 30px; width: 30px"
-                >
-                    {{ tab.label }}
-                </div>
+                @for (tab of tabs; track tab; let i = $index) {
+                    <div
+                        class="label-content"
+                        [disabled]="!!tab.disabled"
+                        (click)="selectedIndex = i"
+                        kbqTabLabelWrapper
+                        style="min-width: 30px; width: 30px"
+                    >
+                        {{ tab.label }}
+                    </div>
+                }
             </kbq-tab-header>
         </div>
     `,

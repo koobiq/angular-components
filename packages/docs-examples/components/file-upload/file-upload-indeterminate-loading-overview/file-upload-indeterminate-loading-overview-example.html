@@ -13,9 +13,6 @@
     <i kbq-icon="mc-file-empty_16"></i>
 </kbq-file-upload>
 
-<p
-    *ngIf="isLoading"
-    class="kbq-body"
->
-    Immediately load to backend...
-</p>
+@if (isLoading) {
+    <p class="kbq-body">Immediately load to backend...</p>
+}

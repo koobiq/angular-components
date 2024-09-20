@@ -1,34 +1,34 @@
 <div class="kbq-code-block__fade-gradient"></div>
 
 <div class="kbq-actionbar-block__button-stack layout-row">
-    <button
-        *ngIf="multiLine"
-        kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
-        (click)="toggleSoftWrap.emit()"
-    >
-        <i
-            *ngIf="!softWrap"
-            kbq-icon="mc-word-wrap_16"
-        ></i>
-        <i
-            *ngIf="softWrap"
-            kbq-icon="mc-word-wrap-slash_16"
-        ></i>
-    </button>
+    @if (multiLine) {
+        <button
+            kbq-button
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            [kbqTooltip]="softWrap ? config.softWrapOffTooltip : config.softWrapOnTooltip"
+            (click)="toggleSoftWrap.emit()"
+        >
+            @if (!softWrap) {
+                <i kbq-icon="mc-word-wrap_16"></i>
+            }
+            @if (softWrap) {
+                <i kbq-icon="mc-word-wrap-slash_16"></i>
+            }
+        </button>
+    }
 
-    <button
-        *ngIf="canLoad"
-        kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        [kbqTooltip]="config.downloadTooltip"
-        (click)="downloadCode.emit()"
-    >
-        <i kbq-icon="mc-download_16"></i>
-    </button>
+    @if (canLoad) {
+        <button
+            kbq-button
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            [kbqTooltip]="config.downloadTooltip"
+            (click)="downloadCode.emit()"
+        >
+            <i kbq-icon="mc-download_16"></i>
+        </button>
+    }
 
     <button
         #copyTooltip="kbqTooltip"
@@ -41,14 +41,15 @@
         <i kbq-icon="mc-copy-o_16"></i>
     </button>
 
-    <button
-        *ngIf="codeFiles[selectedTabIndex].link"
-        kbq-button
-        [color]="'contrast'"
-        [kbqStyle]="'transparent'"
-        [kbqTooltip]="config.openExternalSystemTooltip"
-        (click)="openExternalSystem.emit()"
-    >
-        <i kbq-icon="mc-external-link_16"></i>
-    </button>
+    @if (codeFiles[selectedTabIndex].link) {
+        <button
+            kbq-button
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            [kbqTooltip]="config.openExternalSystemTooltip"
+            (click)="openExternalSystem.emit()"
+        >
+            <i kbq-icon="mc-external-link_16"></i>
+        </button>
+    }
 </div>

@@ -7,39 +7,31 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <div
-        class="kbq-select__matcher"
-        [ngSwitch]="empty"
-    >
-        <span
-            *ngSwitchCase="true"
-            class="kbq-select__placeholder"
-        >
-            {{ placeholder || '\u00A0' }}
-        </span>
-        <span
-            *ngSwitchCase="false"
-            [ngSwitch]="!!customTrigger"
-        >
-            <div
-                *ngSwitchCase="false"
-                class="kbq-select__match-container"
-            >
-                <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
-            </div>
-            <ng-content
-                *ngSwitchCase="true"
-                select="kbq-timezone-select-trigger"
-            />
-        </span>
+    <div class="kbq-select__matcher">
+        @if (empty) {
+            <span class="kbq-select__placeholder">
+                {{ placeholder || '\u00A0' }}
+            </span>
+        } @else {
+            <span>
+                @if (!!customTrigger) {
+                    <ng-content select="kbq-timezone-select-trigger" />
+                } @else {
+                    <div class="kbq-select__match-container">
+                        <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
+                    </div>
+                }
+            </span>
+        }
 
-        <div
-            *ngIf="canShowCleaner"
-            class="kbq-select__cleaner"
-            (click)="clearValue($event)"
-        >
-            <ng-content select="kbq-cleaner" />
-        </div>
+        @if (canShowCleaner) {
+            <div
+                class="kbq-select__cleaner"
+                (click)="clearValue($event)"
+            >
+                <ng-content select="kbq-cleaner" />
+            </div>
+        }
 
         <div class="kbq-select__arrow-wrapper">
             <i
@@ -74,12 +66,11 @@
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"
     >
-        <div
-            *ngIf="search"
-            class="kbq-select__search-container"
-        >
-            <ng-content select="[kbqSelectSearch]" />
-        </div>
+        @if (search) {
+            <div class="kbq-select__search-container">
+                <ng-content select="[kbqSelectSearch]" />
+            </div>
+        }
 
         <div
             #optionsContainer
@@ -87,12 +78,11 @@
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
             [@fadeInContent]="'showing'"
         >
-            <div
-                *ngIf="isEmptySearchResult"
-                class="kbq-select__no-options-message"
-            >
-                <ng-content select="[kbq-select-search-empty-result]" />
-            </div>
+            @if (isEmptySearchResult) {
+                <div class="kbq-select__no-options-message">
+                    <ng-content select="[kbq-select-search-empty-result]" />
+                </div>
+            }
             <ng-content />
         </div>
     </div>

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject, NgModule, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -68,7 +67,9 @@ export class SidepanelDemoComponent {
         <kbq-sidepanel-body class="layout-padding">
             <div class="kbq-subheading">Sidepanel Component Body</div>
 
-            <div *ngFor="let item of array; index as i">{{ i + 1 }}</div>
+            @for (item of array; track item; let i = $index) {
+                <div>{{ i + 1 }}</div>
+            }
         </kbq-sidepanel-body>
 
         <kbq-sidepanel-footer>
@@ -113,7 +114,6 @@ export class ExampleSidepanelComponent {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        CommonModule,
         FormsModule,
         KbqSidepanelModule,
         KbqButtonModule,

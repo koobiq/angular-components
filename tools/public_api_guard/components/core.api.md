@@ -1322,10 +1322,10 @@ export class KbqOptionModule {
     // Warning: (ae-forgotten-export) The symbol "i1_5" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2_3" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, [typeof i1_5.KbqOption, typeof i2_3.KbqOptgroup, typeof i3.KbqOptionActionComponent], [typeof i2_2.CommonModule, typeof i5.KbqPseudoCheckboxModule], [typeof i1_5.KbqOption, typeof i2_3.KbqOptgroup, typeof i3.KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, [typeof i1_5.KbqOption, typeof i2_3.KbqOptgroup, typeof i3.KbqOptionActionComponent], [typeof i4.KbqPseudoCheckboxModule], [typeof i1_5.KbqOption, typeof i2_3.KbqOptgroup, typeof i3.KbqOptionActionComponent]>;
 }
 
 // @public

@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
     KBQ_TOOLTIP_OPEN_TIME_PROVIDER,
@@ -23,7 +23,11 @@ import {
         KbqExtendedTooltipTrigger,
         KbqWarningTooltipTrigger
     ],
-    imports: [CommonModule, OverlayModule],
+    imports: [
+        OverlayModule,
+        NgClass,
+        NgTemplateOutlet
+    ],
     providers: [
         KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
         KBQ_TOOLTIP_OPEN_TIME_PROVIDER

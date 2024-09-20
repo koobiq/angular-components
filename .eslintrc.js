@@ -99,7 +99,8 @@ const config = {
                 '@angular-eslint/template/click-events-have-key-events': 0,
                 '@angular-eslint/template/interactive-supports-focus': 0,
                 '@angular-eslint/template/label-has-associated-control': 0,
-                '@angular-eslint/template/prefer-self-closing-tags': 1
+                '@angular-eslint/template/prefer-self-closing-tags': 1,
+                '@angular-eslint/template/prefer-control-flow': 1
             }
         },
         {

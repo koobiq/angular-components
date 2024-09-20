@@ -3,14 +3,15 @@
         class="example-radio-group"
         (change)="setLocale($event)"
     >
-        <kbq-radio-button
-            *ngFor="let language of languageList"
-            class="example-radio-button"
-            [checked]="language.name === selectedLanguage.name"
-            [value]="language"
-        >
-            {{ language.name }}
-        </kbq-radio-button>
+        @for (language of languageList; track language) {
+            <kbq-radio-button
+                class="example-radio-button"
+                [checked]="language.name === selectedLanguage.name"
+                [value]="language"
+            >
+                {{ language.name }}
+            </kbq-radio-button>
+        }
     </kbq-radio-group>
 
     <div class="kbq-subheading">

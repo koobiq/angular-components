@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -27,7 +26,6 @@ const KBQ_TREE_DIRECTIVES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqPseudoCheckboxModule,
         KbqIconModule
     ],

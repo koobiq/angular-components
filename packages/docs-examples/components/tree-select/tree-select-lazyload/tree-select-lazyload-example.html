@@ -20,10 +20,9 @@
                     kbqTreeNodeToggle
                     [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                 ></i>
-                <kbq-progress-spinner
-                    *ngIf="node.loading"
-                    mode="indeterminate"
-                />
+                @if (node.loading) {
+                    <kbq-progress-spinner mode="indeterminate" />
+                }
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
         </kbq-tree-selection>

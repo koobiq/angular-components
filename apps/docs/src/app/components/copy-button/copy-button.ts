@@ -1,5 +1,4 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -50,7 +49,7 @@ export class CopyButton {
 }
 
 @NgModule({
-    imports: [CommonModule, KbqIconModule, KbqLinkModule],
+    imports: [KbqIconModule, KbqLinkModule],
     exports: [CopyButton],
     declarations: [CopyButton]
 })

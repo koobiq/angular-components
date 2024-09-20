@@ -381,10 +381,9 @@ class KbqButtonTextIconCaseTestApp {}
             kbq-button
             type="button"
         >
-            <i
-                *ngIf="visible"
-                kbq-icon="mc-angle-down-S_16"
-            ></i>
+            @if (visible) {
+                <i kbq-icon="mc-angle-down-S_16"></i>
+            }
             Some text
         </button>
     `
@@ -403,10 +402,9 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
             type="button"
         >
             Some text
-            <i
-                *ngIf="visible"
-                kbq-icon="mc-angle-down-S_16"
-            ></i>
+            @if (visible) {
+                <i kbq-icon="mc-angle-down-S_16"></i>
+            }
         </button>
     `
 })
@@ -422,10 +420,9 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
             type="button"
         >
             Some text
-            <i
-                *ngIf="visible"
-                kbq-icon="mc-angle-down-S_16"
-            ></i>
+            @if (visible) {
+                <i kbq-icon="mc-angle-down-S_16"></i>
+            }
             Some text
         </button>
     `
@@ -444,10 +441,9 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
             <span>Some text</span>
             <span>Some text</span>
             <span>Some text</span>
-            <i
-                *ngIf="visible"
-                kbq-icon="mc-angle-down-S_16"
-            ></i>
+            @if (visible) {
+                <i kbq-icon="mc-angle-down-S_16"></i>
+            }
             <span>Some text</span>
             <span>Some text</span>
             <span>Some text</span>
@@ -485,10 +481,9 @@ class KbqButtonTwoIconsCaseTestApp {}
             kbq-button
             type="button"
         >
-            <i
-                *ngIf="visible"
-                kbq-icon="mc-angle-down-S_16"
-            ></i>
+            @if (visible) {
+                <i kbq-icon="mc-angle-down-S_16"></i>
+            }
         </button>
     `
 })

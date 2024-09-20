@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
     KBQ_LUXON_DATE_ADAPTER_OPTIONS,
@@ -34,7 +33,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqFormattersModule
     ],
     declarations: EXAMPLES,

@@ -17,12 +17,9 @@
                         formControlName="firstName"
                         kbqInput
                     />
-                    <kbq-hint
-                        *ngIf="feedbackFormWithHints.controls.firstName.invalid"
-                        [color]="'error'"
-                    >
-                        Укажите ваше имя
-                    </kbq-hint>
+                    @if (feedbackFormWithHints.controls.firstName.invalid) {
+                        <kbq-hint [color]="'error'">Укажите ваше имя</kbq-hint>
+                    }
                 </kbq-form-field>
             </div>
 
@@ -34,12 +31,9 @@
                         formControlName="lastName"
                         kbqInput
                     />
-                    <kbq-hint
-                        *ngIf="feedbackFormWithHints.controls.lastName.invalid"
-                        [color]="'error'"
-                    >
-                        Укажите вашу фамилию
-                    </kbq-hint>
+                    @if (feedbackFormWithHints.controls.lastName.invalid) {
+                        <kbq-hint [color]="'error'">Укажите вашу фамилию</kbq-hint>
+                    }
                 </kbq-form-field>
             </div>
 
@@ -63,12 +57,9 @@
                         formControlName="email"
                         kbqInput
                     />
-                    <kbq-hint
-                        *ngIf="feedbackFormWithHints.controls.email.invalid"
-                        [color]="'error'"
-                    >
-                        Оставьте свой адрес эл. почты
-                    </kbq-hint>
+                    @if (feedbackFormWithHints.controls.email.invalid) {
+                        <kbq-hint [color]="'error'">Оставьте свой адрес эл. почты</kbq-hint>
+                    }
                 </kbq-form-field>
             </div>
 
@@ -81,12 +72,9 @@
                         <kbq-option [value]="2">2</kbq-option>
                         <kbq-option [value]="3">3</kbq-option>
                     </kbq-select>
-                    <kbq-hint
-                        *ngIf="feedbackFormWithHints.controls.reason.invalid"
-                        [color]="'error'"
-                    >
-                        Укажите причину обращения
-                    </kbq-hint>
+                    @if (feedbackFormWithHints.controls.reason.invalid) {
+                        <kbq-hint [color]="'error'">Укажите причину обращения</kbq-hint>
+                    }
                 </kbq-form-field>
             </div>
 
@@ -100,12 +88,9 @@
                         <kbq-option [value]="3">3</kbq-option>
                     </kbq-select>
 
-                    <kbq-hint
-                        *ngIf="feedbackFormWithHints.controls.rating.invalid"
-                        [color]="'error'"
-                    >
-                        Дайте оценку работы наших специалистов
-                    </kbq-hint>
+                    @if (feedbackFormWithHints.controls.rating.invalid) {
+                        <kbq-hint [color]="'error'">Дайте оценку работы наших специалистов</kbq-hint>
+                    }
                 </kbq-form-field>
             </div>
 

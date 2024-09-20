@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -10,7 +9,6 @@ import {
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqIconModule
     ],
     exports: [

@@ -23,12 +23,12 @@ import { FormGroupDirective } from '@angular/forms';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@koobiq/components/tree';
-import * as i5 from '@koobiq/components/icon';
-import * as i6 from '@koobiq/components/tags';
-import * as i7 from '@koobiq/components/core';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@koobiq/components/tree';
+import * as i4 from '@koobiq/components/icon';
+import * as i5 from '@koobiq/components/tags';
+import * as i6 from '@koobiq/components/core';
+import * as i7 from '@angular/common';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -205,7 +205,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-trigger", "kbq-cleaner", "kbq-select-matcher, [kbq-select-matcher]", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
@@ -230,7 +230,7 @@ export class KbqTreeSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.KbqTreeModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqPseudoCheckboxModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult], [typeof i1.KbqTreeSelect, typeof i2.CommonModule, typeof i7.KbqSelectSearch, typeof i7.KbqSelectFooter, typeof i7.KbqSelectMatcher, typeof i7.KbqSelectTrigger, typeof i7.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.OverlayModule, typeof i3.KbqTreeModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqPseudoCheckboxModule, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i7.NgClass, typeof i7.NgTemplateOutlet], [typeof i1.KbqTreeSelect, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)

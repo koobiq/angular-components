@@ -236,13 +236,14 @@ const OPTIONS = [
                 [panelClass]="panelClass"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                    [disabled]="food.disabled"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option
+                        [value]="food.value"
+                        [disabled]="food.disabled"
+                    >
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -253,12 +254,13 @@ const OPTIONS = [
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -297,13 +299,14 @@ class BasicSelect {
                 (opened)="openedListener()"
                 (closed)="closedListener()"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                    [disabled]="food.disabled"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option
+                        [value]="food.value"
+                        [disabled]="food.disabled"
+                    >
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -314,12 +317,13 @@ class BasicSelect {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -369,12 +373,11 @@ class ManySelects {}
     template: `
         <kbq-form-field>
             <kbq-select (selectionChange)="changeListener($event)">
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food"
-                >
-                    {{ food }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food">
+                        {{ food }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -385,12 +388,13 @@ class ManySelects {}
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -428,12 +432,11 @@ class SelectWithChangeEvent {
                     />
                 </kbq-form-field>
 
-                <kbq-option
-                    *ngFor="let option of options$ | async"
-                    [value]="option"
-                >
-                    {{ option }}
-                </kbq-option>
+                @for (option of options$ | async; track option) {
+                    <kbq-option [value]="option">
+                        {{ option }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -444,12 +447,13 @@ class SelectWithChangeEvent {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -555,12 +559,11 @@ class ThrowsErrorOnInit implements OnInit {
                 [formControl]="control"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -583,12 +586,11 @@ class BasicSelectOnPush {
                 [formControl]="control"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -612,12 +614,11 @@ class BasicSelectOnPushPreselected {
                 multiple
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -628,12 +629,13 @@ class BasicSelectOnPushPreselected {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -669,12 +671,11 @@ class MultiSelect {
                 placeholder="Food"
                 style="width: 100px;"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -685,12 +686,13 @@ class MultiSelect {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -731,7 +733,9 @@ class SelectWithPlainTabindex {}
         <kbq-form-field>
             <kbq-select #select="kbqSelect" />
         </kbq-form-field>
-        <div *ngIf="select.selected"></div>
+        @if (select.selected) {
+            <div></div>
+        }
     `
 })
 class SelectEarlyAccessSibling {}
@@ -760,12 +764,11 @@ class BasicSelectWithTheming {
                 [formControl]="control"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <kbq-option>None</kbq-option>
                 <ng-template
                     #kbqSelectTagContent
@@ -777,12 +780,13 @@ class BasicSelectWithTheming {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -806,12 +810,11 @@ class ResetValuesSelect {
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
 
                 <ng-template
                     #kbqSelectTagContent
@@ -823,12 +826,13 @@ class ResetValuesSelect {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -852,18 +856,18 @@ class FalsyValueSelect {
                 [formControl]="control"
                 placeholder="Pokemon"
             >
-                <kbq-optgroup
-                    *ngFor="let group of pokemonTypes"
-                    [label]="group.name"
-                    [disabled]="group.disabled"
-                >
-                    <kbq-option
-                        *ngFor="let pokemon of group.pokemon"
-                        [value]="pokemon.value"
+                @for (group of pokemonTypes; track group) {
+                    <kbq-optgroup
+                        [label]="group.name"
+                        [disabled]="group.disabled"
                     >
-                        {{ pokemon.viewValue }}
-                    </kbq-option>
-                </kbq-optgroup>
+                        @for (pokemon of group.pokemon; track pokemon) {
+                            <kbq-option [value]="pokemon.value">
+                                {{ pokemon.viewValue }}
+                            </kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
                 <kbq-option [value]="'mime' - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
@@ -918,15 +922,16 @@ class SelectWithGroups {
                 [formControl]="control"
                 placeholder="Pokemon"
             >
-                <kbq-optgroup
-                    *ngFor="let group of pokemonTypes"
-                    [label]="group.name"
-                    [disabled]="group.disabled"
-                >
-                    <ng-container *ngFor="let pokemon of group.pokemon">
-                        <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
-                    </ng-container>
-                </kbq-optgroup>
+                @for (group of pokemonTypes; track group) {
+                    <kbq-optgroup
+                        [label]="group.name"
+                        [disabled]="group.disabled"
+                    >
+                        @for (pokemon of group.pokemon; track pokemon) {
+                            <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -993,12 +998,11 @@ class SelectInsideFormGroup {
                 [(value)]="selectedFood"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1023,12 +1027,11 @@ class BasicSelectWithoutForms {
                 [(value)]="selectedFood"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1051,12 +1054,11 @@ class BasicSelectWithoutFormsPreselected {
                 placeholder="Food"
                 multiple
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1084,12 +1086,11 @@ class BasicSelectWithoutFormsMultiple {
                 <kbq-select__trigger>
                     {{ select.selected?.viewValue.split('').reverse().join('') }}
                 </kbq-select__trigger>
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1111,12 +1112,11 @@ class SelectWithCustomTrigger {
                 [compareWith]="comparator"
                 (ngModelChange)="setFoodByCopy($event)"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
                 <ng-template
                     #kbqSelectTagContent
                     let-option
@@ -1127,12 +1127,13 @@ class SelectWithCustomTrigger {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -1183,12 +1184,11 @@ class NgModelCompareWithSelect {
             [errorStateMatcher]="errorStateMatcher"
             placeholder="Food"
         >
-            <kbq-option
-                *ngFor="let food of foods"
-                [value]="food.value"
-            >
-                {{ food.viewValue }}
-            </kbq-option>
+            @for (food of foods; track food) {
+                <kbq-option [value]="food.value">
+                    {{ food.viewValue }}
+                </kbq-option>
+            }
         </kbq-select>
     `
 })
@@ -1209,12 +1209,11 @@ class CustomErrorBehaviorSelect {
                 [(ngModel)]="selectedFoods"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1240,12 +1239,11 @@ class SingleSelectWithPreselectedArrayValues {
                 [formControl]="control"
                 placeholder="Food"
             >
-                <kbq-option
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
             </kbq-select>
         </kbq-form-field>
     `
@@ -1311,12 +1309,13 @@ class SelectWithFormFieldLabel {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -1359,12 +1358,13 @@ class SelectWithLongOptionText {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.viewValue }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            kbqTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                kbqTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
             </kbq-select>
@@ -1452,12 +1452,13 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         [class.kbq-error]="select.errorState"
                     >
                         {{ option.value.name }}
-                        <i
-                            *ngIf="!option.disabled && !select.disabled"
-                            (click)="select.onRemoveMatcherItem(option, $event)"
-                            kbq-icon="mc-close-S_16"
-                            mcTagRemove
-                        ></i>
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                                kbq-icon="mc-close-S_16"
+                                mcTagRemove
+                            ></i>
+                        }
                     </kbq-tag>
                 </ng-template>
 

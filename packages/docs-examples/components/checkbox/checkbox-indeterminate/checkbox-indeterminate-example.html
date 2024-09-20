@@ -6,12 +6,14 @@
     >
         All fruits
     </kbq-checkbox>
-    <p *ngFor="let fruit of fruits; let i = index">
-        <kbq-checkbox
-            [checked]="fruit.checked"
-            (change)="updateCheckboxes(i)"
-        >
-            {{ fruit.name }}
-        </kbq-checkbox>
-    </p>
+    @for (fruit of fruits; track fruit; let i = $index) {
+        <p>
+            <kbq-checkbox
+                [checked]="fruit.checked"
+                (change)="updateCheckboxes(i)"
+            >
+                {{ fruit.name }}
+            </kbq-checkbox>
+        </p>
+    }
 </div>

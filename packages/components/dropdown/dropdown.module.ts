@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
@@ -9,9 +9,9 @@ import { KbqDropdown } from './dropdown.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         OverlayModule,
-        KbqIconModule
+        KbqIconModule,
+        NgClass
     ],
     exports: [
         KbqDropdown,

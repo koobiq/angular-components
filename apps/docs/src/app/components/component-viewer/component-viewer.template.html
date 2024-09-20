@@ -13,46 +13,35 @@
         {{ docItem.name }}
     </div>
     <div class="docs-component-navbar layout-row layout-padding-top-s">
-        <nav
-            *ngIf="!docItem.isGuide"
-            kbq-tab-nav-bar
-        >
-            <a
-                kbq-tab-link
-                routerLinkActive="kbq-selected"
-                [routerLink]="'overview'"
-            >
-                Обзор
-            </a>
-            <a
-                *ngIf="docItem.hasApi"
-                kbq-tab-link
-                routerLinkActive="kbq-selected"
-                [routerLink]="'api'"
-            >
-                API
-            </a>
-            <a
-                *ngIf="docItem.hasExamples"
-                kbq-tab-link
-                routerLinkActive="kbq-selected"
-                [routerLink]="'examples'"
-            >
-                Примеры
-            </a>
-        </nav>
-        <!--        на будущее-->
-        <!--        <div class="docs-component-navbar__links">-->
-        <!--            <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'">-->
-        <!--                <i kbq-icon="pt-icons-file-code_16"></i>-->
-        <!--                Исходный код-->
-        <!--            </button>-->
-        <!---->
-        <!--            <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'">-->
-        <!--                <i kbq-icon="pt-icons-file-code_16"></i>-->
-        <!--                Изменить страницу-->
-        <!--            </button>-->
-        <!--        </div>-->
+        @if (!docItem.isGuide) {
+            <nav kbq-tab-nav-bar>
+                <a
+                    kbq-tab-link
+                    routerLinkActive="kbq-selected"
+                    [routerLink]="'overview'"
+                >
+                    Обзор
+                </a>
+                @if (docItem.hasApi) {
+                    <a
+                        kbq-tab-link
+                        routerLinkActive="kbq-selected"
+                        [routerLink]="'api'"
+                    >
+                        API
+                    </a>
+                }
+                @if (docItem.hasExamples) {
+                    <a
+                        kbq-tab-link
+                        routerLinkActive="kbq-selected"
+                        [routerLink]="'examples'"
+                    >
+                        Примеры
+                    </a>
+                }
+            </nav>
+        }
     </div>
 </div>
 

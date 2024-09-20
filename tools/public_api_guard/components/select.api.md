@@ -25,12 +25,12 @@ import { FormGroupDirective } from '@angular/forms';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/common';
-import * as i4 from '@angular/cdk/overlay';
-import * as i5 from '@koobiq/components/core';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@koobiq/components/tags';
-import * as i8 from '@koobiq/components/tooltip';
+import * as i3 from '@angular/cdk/overlay';
+import * as i4 from '@koobiq/components/core';
+import * as i5 from '@koobiq/components/icon';
+import * as i6 from '@koobiq/components/tags';
+import * as i7 from '@koobiq/components/tooltip';
+import * as i8 from '@angular/common';
 import * as i9 from '@koobiq/components/form-field';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -231,7 +231,7 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "kbq-select-matcher, [kbq-select-matcher]", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -271,7 +271,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.KbqOptionModule, typeof i6.KbqIconModule, typeof i7.KbqTagsModule, typeof i8.KbqToolTipModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i5.KbqOptionModule, typeof i3.CommonModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet], [typeof i9.KbqFormFieldModule, typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult]>;
 }
 
 // (No @packageDocumentation comment for this package)

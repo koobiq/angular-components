@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
@@ -16,14 +16,14 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         FormsModule,
         KbqAutocompleteModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormFieldModule,
         KbqIconModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AsyncPipe
     ],
     declarations: EXAMPLES,
     exports: EXAMPLES

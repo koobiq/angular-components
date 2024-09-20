@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -36,7 +35,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqButtonModule,
         KbqLinkModule,
         KbqProgressBarModule,

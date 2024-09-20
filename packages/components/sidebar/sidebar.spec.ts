@@ -108,17 +108,19 @@ describe('Sidebar', () => {
 
 @Component({
     template: `
-        <div *ngIf="showContainer">
-            <kbq-sidebar
-                #sidebarRef="kbqSidebar"
-                [position]="position"
-                [opened]="state"
-                (stateChanged)="onStateChanged($event)"
-            >
-                <div kbq-sidebar-opened>kbq-sidebar-opened</div>
-                <div kbq-sidebar-closed>kbq-sidebar-closed</div>
-            </kbq-sidebar>
-        </div>
+        @if (showContainer) {
+            <div>
+                <kbq-sidebar
+                    #sidebarRef="kbqSidebar"
+                    [position]="position"
+                    [opened]="state"
+                    (stateChanged)="onStateChanged($event)"
+                >
+                    <div kbq-sidebar-opened>kbq-sidebar-opened</div>
+                    <div kbq-sidebar-closed>kbq-sidebar-closed</div>
+                </kbq-sidebar>
+            </div>
+        }
     `
 })
 class SimpleSidebar {

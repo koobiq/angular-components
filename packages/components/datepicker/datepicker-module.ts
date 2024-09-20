@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -21,14 +21,15 @@ import { KbqMonthView } from './month-view.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         KbqButtonModule,
         OverlayModule,
         A11yModule,
         PortalModule,
         KbqButtonModule,
         KbqSelectModule,
-        KbqIconModule
+        KbqIconModule,
+        NgClass,
+        TitleCasePipe
     ],
     exports: [
         KbqCalendar,

@@ -8,33 +8,33 @@
     [@state]="visibility"
 >
     <div class="kbq-tooltip__inner">
-        <div
-            *ngIf="arrow"
-            class="kbq-tooltip__arrow"
-        ></div>
+        @if (arrow) {
+            <div class="kbq-tooltip__arrow"></div>
+        }
 
-        <div
-            *ngIf="header"
-            class="kbq-tooltip__header"
-        >
-            <ng-container
-                *ngIf="isTemplateRef(header)"
-                [ngTemplateOutlet]="$any(header)"
-                [ngTemplateOutletContext]="context"
-            />
-            <ng-container *ngIf="!isTemplateRef(header)">
-                <div>{{ header }}</div>
-            </ng-container>
-        </div>
+        @if (header) {
+            <div class="kbq-tooltip__header">
+                @if (isTemplateRef(header)) {
+                    <ng-container
+                        [ngTemplateOutlet]="$any(header)"
+                        [ngTemplateOutletContext]="context"
+                    />
+                }
+                @if (!isTemplateRef(header)) {
+                    <div>{{ header }}</div>
+                }
+            </div>
+        }
         <div class="kbq-tooltip__content">
-            <ng-container
-                *ngIf="isTemplateRef(content)"
-                [ngTemplateOutlet]="$any(content)"
-                [ngTemplateOutletContext]="context"
-            />
-            <ng-container *ngIf="!isTemplateRef(content)">
+            @if (isTemplateRef(content)) {
+                <ng-container
+                    [ngTemplateOutlet]="$any(content)"
+                    [ngTemplateOutletContext]="context"
+                />
+            }
+            @if (!isTemplateRef(content)) {
                 <div>{{ content }}</div>
-            </ng-container>
+            }
         </div>
     </div>
 </div>

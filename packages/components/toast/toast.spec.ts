@@ -1,5 +1,4 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +25,6 @@ describe('ToastService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
                 KbqToastModule,
                 NoopAnimationsModule
             ],

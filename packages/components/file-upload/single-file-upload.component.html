@@ -5,61 +5,53 @@
     [class.kbq-error]="errors?.length"
     (filesDropped)="onFileDropped($event)"
 >
-    <div
-        *ngIf="!file; else fileOutput"
-        class="dropzone"
-    >
-        <i kbq-icon="mc-upload-to-cloud_24"></i>
-        <!-- prettier-ignore -->
-        <span class="dropzone__text">
-            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}
-        </span>
-    </div>
+    @if (!file) {
+        <div class="dropzone">
+            <i kbq-icon="mc-upload-to-cloud_24"></i>
+            <!-- prettier-ignore -->
+            <span class="dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}</span>
+        </div>
+    } @else {
+        @if (file) {
+            <div class="file-item">
+                <div class="file-item__text-wrapper">
+                    @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
+                        @if (!asyncData.loading) {
+                            <ng-content select="[kbq-icon]" />
+                        }
+                        @if (asyncData.loading) {
+                            <kbq-progress-spinner
+                                [mode]="progressMode"
+                                [value]="asyncData.progress || 0"
+                            />
+                        }
+                    }
+                    <div
+                        class="file-item__text"
+                        [kbqEllipsisCenter]="file.file.name"
+                        [minVisibleLength]="10"
+                    ></div>
+                </div>
+                <i
+                    kbq-icon-button="mc-close-circle_16"
+                    [color]="'contrast'"
+                    [disabled]="disabled"
+                    (click)="deleteItem($event)"
+                    (keydown.backspace)="deleteItem()"
+                    (keydown.delete)="deleteItem()"
+                ></i>
+            </div>
+        }
+    }
 </div>
 
 <kbq-hint class="kbq-file-upload__hint">
     <ng-content select="[hint]" />
 </kbq-hint>
-<ng-container *ngIf="errors?.length">
-    <kbq-hint
-        *ngFor="let error of errors"
-        class="kbq-file-upload__hint kbq-error"
-    >
-        {{ error }}
-    </kbq-hint>
-</ng-container>
-
-<ng-template #fileOutput>
-    <div
-        *ngIf="file"
-        class="file-item"
-    >
-        <div class="file-item__text-wrapper">
-            <ng-container *ngIf="{ loading: file.loading | async, progress: file.progress | async } as asyncData">
-                <ng-container *ngIf="!asyncData.loading">
-                    <ng-content select="[kbq-icon]" />
-                </ng-container>
-
-                <kbq-progress-spinner
-                    *ngIf="asyncData.loading"
-                    [mode]="progressMode"
-                    [value]="asyncData.progress || 0"
-                />
-            </ng-container>
-
-            <div
-                class="file-item__text"
-                [kbqEllipsisCenter]="file.file.name"
-                [minVisibleLength]="10"
-            ></div>
-        </div>
-        <i
-            kbq-icon-button="mc-close-circle_16"
-            [color]="'contrast'"
-            [disabled]="disabled"
-            (click)="deleteItem($event)"
-            (keydown.backspace)="deleteItem()"
-            (keydown.delete)="deleteItem()"
-        ></i>
-    </div>
-</ng-template>
+@if (errors?.length) {
+    @for (error of errors; track error) {
+        <kbq-hint class="kbq-file-upload__hint kbq-error">
+            {{ error }}
+        </kbq-hint>
+    }
+}

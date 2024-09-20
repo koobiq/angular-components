@@ -6,100 +6,90 @@
     [class.kbq-select__trigger_empty]="empty"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
-    [ngSwitch]="!!customMatcher"
 >
     <select
         class="cdk-visually-hidden"
         [id]="id"
     ></select>
 
-    <div
-        *ngSwitchCase="false"
-        class="kbq-select__matcher"
-    >
-        <span
-            *ngIf="empty"
-            class="kbq-select__placeholder"
-        >
-            {{ placeholder || '\u00A0' }}
-        </span>
-        <span
-            *ngIf="!empty"
-            [ngSwitch]="!!customTrigger"
-        >
-            <div
-                *ngSwitchDefault
-                class="kbq-select__match-container"
-                [ngSwitch]="multiple"
-            >
-                <span
-                    *ngSwitchCase="false"
-                    class="kbq-select__matcher-text"
-                >
-                    {{ triggerValue }}
+    @if (!!customMatcher) {
+        <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
+    } @else {
+        <div class="kbq-select__matcher">
+            @if (empty) {
+                <span class="kbq-select__placeholder">
+                    {{ placeholder || '\u00A0' }}
                 </span>
+            }
+            @if (!empty) {
+                <span>
+                    @if (!!customTrigger) {
+                        <ng-content select="kbq-select-trigger" />
+                    } @else {
+                        <div class="kbq-select__match-container">
+                            @if (multiple) {
+                                <div class="kbq-select__match-list">
+                                    @if (!customTagTemplateRef) {
+                                        @for (option of triggerValues; track option) {
+                                            <kbq-tag
+                                                [class.kbq-error]="errorState"
+                                                [disabled]="option.disabled || disabled"
+                                                [selectable]="false"
+                                            >
+                                                {{ option.viewValue }}
+                                                @if (!option.disabled && !disabled) {
+                                                    <i
+                                                        kbq-icon="mc-close-S_16"
+                                                        kbqTagRemove
+                                                        (click)="onRemoveSelectedOption(option, $event)"
+                                                    ></i>
+                                                }
+                                            </kbq-tag>
+                                        }
+                                    }
+                                    @if (customTagTemplateRef) {
+                                        @for (option of triggerValues; track option) {
+                                            <ng-container
+                                                [ngTemplateOutlet]="customTagTemplateRef"
+                                                [ngTemplateOutletContext]="{ $implicit: option, select: this }"
+                                            />
+                                        }
+                                    }
+                                </div>
+                            } @else {
+                                <span class="kbq-select__matcher-text">
+                                    {{ triggerValue }}
+                                </span>
+                            }
+                            <div
+                                class="kbq-select__match-hidden-text"
+                                [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                            >
+                                {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
+                            </div>
+                        </div>
+                    }
+                </span>
+            }
+
+            @if (canShowCleaner) {
                 <div
-                    *ngSwitchCase="true"
-                    class="kbq-select__match-list"
+                    class="kbq-select__cleaner"
+                    (click)="clearValue($event)"
                 >
-                    <ng-container *ngIf="!customTagTemplateRef">
-                        <kbq-tag
-                            *ngFor="let option of triggerValues"
-                            [class.kbq-error]="errorState"
-                            [disabled]="option.disabled || disabled"
-                            [selectable]="false"
-                        >
-                            {{ option.viewValue }}
-                            <i
-                                *ngIf="!option.disabled && !disabled"
-                                kbq-icon="mc-close-S_16"
-                                kbqTagRemove
-                                (click)="onRemoveSelectedOption(option, $event)"
-                            ></i>
-                        </kbq-tag>
-                    </ng-container>
-                    <ng-container *ngIf="customTagTemplateRef">
-                        <ng-container
-                            *ngFor="let option of triggerValues"
-                            [ngTemplateOutlet]="customTagTemplateRef"
-                            [ngTemplateOutletContext]="{ $implicit: option, select: this }"
-                        />
-                    </ng-container>
+                    <ng-content select="kbq-cleaner" />
                 </div>
-                <div
-                    class="kbq-select__match-hidden-text"
-                    [style.display]="hiddenItems > 0 ? 'block' : 'none'"
-                >
-                    {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
-                </div>
+            }
+
+            <div class="kbq-select__arrow-wrapper">
+                <i
+                    kbq-icon="mc-angle-down-S_16"
+                    class="kbq-select__arrow"
+                    [color]="'contrast-fade'"
+                ></i>
             </div>
-            <ng-content
-                *ngSwitchCase="true"
-                select="kbq-select-trigger"
-            />
-        </span>
-
-        <div
-            *ngIf="canShowCleaner"
-            class="kbq-select__cleaner"
-            (click)="clearValue($event)"
-        >
-            <ng-content select="kbq-cleaner" />
         </div>
-
-        <div class="kbq-select__arrow-wrapper">
-            <i
-                kbq-icon="mc-angle-down-S_16"
-                class="kbq-select__arrow"
-                [color]="'contrast-fade'"
-            ></i>
-        </div>
-    </div>
-
-    <ng-content
-        *ngSwitchCase="true"
-        select="kbq-select-matcher, [kbq-select-matcher]"
-    />
+    }
 </div>
 
 <ng-template
@@ -125,12 +115,11 @@
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"
     >
-        <div
-            *ngIf="search"
-            class="kbq-select__search-container"
-        >
-            <ng-content select="[kbqSelectSearch]" />
-        </div>
+        @if (search) {
+            <div class="kbq-select__search-container">
+                <ng-content select="[kbqSelectSearch]" />
+            </div>
+        }
 
         <div
             #optionsContainer
@@ -138,12 +127,11 @@
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
             [@fadeInContent]="'showing'"
         >
-            <div
-                *ngIf="isEmptySearchResult"
-                class="kbq-select__no-options-message"
-            >
-                <ng-content select="[kbq-select-search-empty-result]" />
-            </div>
+            @if (isEmptySearchResult) {
+                <div class="kbq-select__no-options-message">
+                    <ng-content select="[kbq-select-search-empty-result]" />
+                </div>
+            }
 
             <ng-content select="kbq-tree-selection" />
         </div>

@@ -10,23 +10,23 @@
     и&nbsp;обеспечивает единообразие их интерфейсов.
 </div>
 
-<div
-    *ngFor="let category of docCategories"
-    class="docs-welcome__category"
->
-    <div class="docs-welcome__category-title">{{ category.name }}</div>
-    <div class="docs-welcome__category-items layout-row layout-margin-top-l">
-        <a
-            *ngFor="let item of category.items"
-            class="docs-welcome__category-item"
-            [routerLink]="[category.id, item.id]"
-        >
-            <img
-                src="./assets/images/welcome/{{ item.svgPreview || 'generic' }}-{{ currentTheme$ | async }}.png"
-                class="docs-welcome__category-item-preview"
-                [alt]="item.id"
-            />
-            <div class="docs-welcome__category-item-title">{{ item.name }}</div>
-        </a>
+@for (category of docCategories; track category) {
+    <div class="docs-welcome__category">
+        <div class="docs-welcome__category-title">{{ category.name }}</div>
+        <div class="docs-welcome__category-items layout-row layout-margin-top-l">
+            @for (item of category.items; track item) {
+                <a
+                    class="docs-welcome__category-item"
+                    [routerLink]="[category.id, item.id]"
+                >
+                    <img
+                        src="./assets/images/welcome/{{ item.svgPreview || 'generic' }}-{{ currentTheme$ | async }}.png"
+                        class="docs-welcome__category-item-preview"
+                        [alt]="item.id"
+                    />
+                    <div class="docs-welcome__category-item-title">{{ item.name }}</div>
+                </a>
+            }
+        </div>
     </div>
-</div>
+}

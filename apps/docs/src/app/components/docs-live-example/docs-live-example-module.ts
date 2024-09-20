@@ -1,5 +1,4 @@
 import { PortalModule } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
@@ -15,7 +14,6 @@ import { DocsLiveExample } from './docs-live-example';
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({
     imports: [
-        CommonModule,
         KbqButtonModule,
         KbqTabsModule,
         KbqLinkModule,

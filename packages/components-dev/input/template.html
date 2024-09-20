@@ -1,11 +1,12 @@
 <div class="container">
-    <button
-        *ngFor="let locale of locales"
-        kbq-button
-        (click)="localeService.setLocale(locale)"
-    >
-        set {{ locale }}
-    </button>
+    @for (locale of locales; track locale) {
+        <button
+            kbq-button
+            (click)="localeService.setLocale(locale)"
+        >
+            set {{ locale }}
+        </button>
+    }
     <header>Selected Locale: {{ localeService.id }}</header>
     <header>Number Value: {{ numberValue }}</header>
     <br />

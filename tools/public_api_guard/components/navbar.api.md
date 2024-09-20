@@ -12,11 +12,10 @@ import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/common';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@angular/cdk/platform';
-import * as i7 from '@koobiq/components/icon';
-import * as i8 from '@koobiq/components/tooltip';
+import * as i4 from '@angular/cdk/a11y';
+import * as i5 from '@angular/cdk/platform';
+import * as i6 from '@koobiq/components/icon';
+import * as i7 from '@koobiq/components/tooltip';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
@@ -265,7 +264,7 @@ export class KbqNavbarModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento], [typeof i4.CommonModule, typeof i5.A11yModule, typeof i6.PlatformModule, typeof i7.KbqIconModule, typeof i8.KbqToolTipModule], [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento], [typeof i4.A11yModule, typeof i5.PlatformModule, typeof i6.KbqIconModule, typeof i7.KbqToolTipModule], [typeof i1.KbqNavbar, typeof i1.KbqNavbarContainer, typeof i2.KbqNavbarTitle, typeof i2.KbqNavbarItem, typeof i2.KbqNavbarBrand, typeof i2.KbqNavbarLogo, typeof i2.KbqNavbarToggle, typeof i3.KbqVerticalNavbar, typeof i2.KbqNavbarDivider, typeof i2.KbqNavbarFocusableItem, typeof i2.KbqNavbarRectangleElement, typeof i2.KbqNavbarBento]>;
 }
 
 // @public (undocumented)

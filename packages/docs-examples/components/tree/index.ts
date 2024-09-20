@@ -1,5 +1,4 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
@@ -54,7 +53,6 @@ const EXAMPLES = [
 
 @NgModule({
     imports: [
-        CommonModule,
         FormsModule,
         KbqFormFieldModule,
         KbqInputModule,

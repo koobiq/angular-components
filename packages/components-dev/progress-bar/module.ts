@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -33,7 +32,6 @@ export class ProgressBarDemoComponent implements OnDestroy {
 @NgModule({
     declarations: [ProgressBarDemoComponent],
     imports: [
-        CommonModule,
         BrowserModule,
         KbqProgressBarModule,
         FormsModule

@@ -2,66 +2,62 @@
     [class.kbq-focused]="hasKeyboardFocus"
     (selectedTabChange)="onSelectTab($event)"
 >
-    <kbq-tab
-        *ngFor="let codeFile of codeFiles; let i = index"
-        [disabled]="singleFile"
-    >
-        <ng-template kbq-tab-label>{{ codeFile.filename }}</ng-template>
-
-        <pre
-            #codeContent
-            class="kbq-code-block__code kbq-scrollbar"
-            [class.kbq-code-block__code_soft-wrap]="softWrap"
-            [class.kbq-code-block__code_view-all]="viewAll"
-            [style.max-height]="getMaxHeight()"
-            (scroll)="checkOverflow(codeContent)"
-        ><kbq-actionbar-block
-            [class.kbq-actionbar-block_floating]="noHeader"
-            [config]="config"
-            [codeFiles]="codeFiles"
-            [selectedTabIndex]="selectedTabIndex"
-            [multiLine]="multiLine"
-            [softWrap]="softWrap"
-            [canLoad]="canLoad"
-            [style.opacity]="actionbarHidden ? 0 : null"
-            (toggleSoftWrap)="toggleSoftWrap()"
-            (downloadCode)="downloadCode()"
-            (copyCode)="copyCode()"
-            (openExternalSystem)="openExternalSystem()" /><code class="hljs"
-               [id]="codeFile.filename + '_' + i"
-               [class.hljs-line-numbers]="lineNumbers"
-               [highlight]="codeFiles[i].content"
-               [lineNumbers]="true"
-               [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
-               (highlighted)="onHighlighted()"
-               (blur)="hasKeyboardFocus = false">
-            </code></pre>
-
-        <div
-            *ngIf="maxHeight"
-            class="kbq-code-block__show-more"
-            [class.kbq-code-block__show-more_collapsed]="!viewAll"
-            [class.kbq-code-block__show-more_expanded]="viewAll"
-        >
-            <span class="bg-wrapper">
-                <button
-                    kbq-button
-                    [color]="'theme'"
-                    [kbqStyle]="'transparent'"
-                    (click)="onShowMoreClick(codeContent)"
-                    (keydown.enter)="onEnter(codeContent)"
+    @for (codeFile of codeFiles; track codeFile; let i = $index) {
+        <kbq-tab [disabled]="singleFile">
+            <ng-template kbq-tab-label>{{ codeFile.filename }}</ng-template>
+            <pre
+                #codeContent
+                class="kbq-code-block__code kbq-scrollbar"
+                [class.kbq-code-block__code_soft-wrap]="softWrap"
+                [class.kbq-code-block__code_view-all]="viewAll"
+                [style.max-height]="getMaxHeight()"
+                (scroll)="checkOverflow(codeContent)"
+            ><kbq-actionbar-block
+        [class.kbq-actionbar-block_floating]="noHeader"
+        [config]="config"
+        [codeFiles]="codeFiles"
+        [selectedTabIndex]="selectedTabIndex"
+        [multiLine]="multiLine"
+        [softWrap]="softWrap"
+        [canLoad]="canLoad"
+        [style.opacity]="actionbarHidden ? 0 : null"
+        (toggleSoftWrap)="toggleSoftWrap()"
+        (downloadCode)="downloadCode()"
+        (copyCode)="copyCode()"
+        (openExternalSystem)="openExternalSystem()" /><code class="hljs"
+        [id]="codeFile.filename + '_' + i"
+        [class.hljs-line-numbers]="lineNumbers"
+        [highlight]="codeFiles[i].content"
+        [lineNumbers]="true"
+        [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
+        (highlighted)="onHighlighted()"
+        (blur)="hasKeyboardFocus = false">
+      </code></pre>
+            @if (maxHeight) {
+                <div
+                    class="kbq-code-block__show-more"
+                    [class.kbq-code-block__show-more_collapsed]="!viewAll"
+                    [class.kbq-code-block__show-more_expanded]="viewAll"
                 >
-                    <i
-                        *ngIf="!viewAll"
-                        kbq-icon="mc-angle-down-L_16"
-                    ></i>
-                    <i
-                        *ngIf="viewAll"
-                        kbq-icon="mc-angle-up-L_16"
-                    ></i>
-                    {{ viewAll ? config.viewLessText : config.viewAllText }}
-                </button>
-            </span>
-        </div>
-    </kbq-tab>
+                    <span class="bg-wrapper">
+                        <button
+                            kbq-button
+                            [color]="'theme'"
+                            [kbqStyle]="'transparent'"
+                            (click)="onShowMoreClick(codeContent)"
+                            (keydown.enter)="onEnter(codeContent)"
+                        >
+                            @if (!viewAll) {
+                                <i kbq-icon="mc-angle-down-L_16"></i>
+                            }
+                            @if (viewAll) {
+                                <i kbq-icon="mc-angle-up-L_16"></i>
+                            }
+                            {{ viewAll ? config.viewLessText : config.viewAllText }}
+                        </button>
+                    </span>
+                </div>
+            }
+        </kbq-tab>
+    }
 </kbq-tab-group>

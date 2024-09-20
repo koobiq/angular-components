@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -17,7 +16,6 @@ describe('KbqLoaderOverlay', () => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule,
-                CommonModule,
                 KbqProgressSpinnerModule,
                 KbqLoaderOverlayModule
             ],

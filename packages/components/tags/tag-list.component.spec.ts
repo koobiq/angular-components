@@ -1224,13 +1224,14 @@ describe('KbqTagList', () => {
             [tabIndex]="tabIndex"
             [selectable]="selectable"
         >
-            <kbq-tag
-                *ngFor="let i of tags"
-                (select)="chipSelect(i)"
-                (deselect)="chipDeselect(i)"
-            >
-                {{ name }} {{ i + 1 }}
-            </kbq-tag>
+            @for (i of tags; track i) {
+                <kbq-tag
+                    (select)="chipSelect(i)"
+                    (deselect)="chipDeselect(i)"
+                >
+                    {{ name }} {{ i + 1 }}
+                </kbq-tag>
+            }
         </kbq-tag-list>
     `
 })
@@ -1248,12 +1249,11 @@ class StandardTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
-                <kbq-tag
-                    *ngFor="let tag of tags"
-                    (removed)="remove(tag)"
-                >
-                    {{ tag }}
-                </kbq-tag>
+                @for (tag of tags; track tag) {
+                    <kbq-tag (removed)="remove(tag)">
+                        {{ tag }}
+                    </kbq-tag>
+                }
                 <input
                     [kbqTagInputFor]="tagList"
                     name="test"
@@ -1285,13 +1285,14 @@ class FormFieldTagList {
                 [selectable]="selectable"
                 placeholder="Food"
             >
-                <kbq-tag
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                    [disabled]="food.disabled"
-                >
-                    {{ food.viewValue }}
-                </kbq-tag>
+                @for (food of foods; track food) {
+                    <kbq-tag
+                        [value]="food.value"
+                        [disabled]="food.disabled"
+                    >
+                        {{ food.viewValue }}
+                    </kbq-tag>
+                }
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1328,13 +1329,14 @@ class BasicTagList {
                 [selectable]="selectable"
                 placeholder="Food"
             >
-                <kbq-tag
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                    [disabled]="food.disabled"
-                >
-                    {{ food.viewValue }}
-                </kbq-tag>
+                @for (food of foods; track food) {
+                    <kbq-tag
+                        [value]="food.value"
+                        [disabled]="food.disabled"
+                    >
+                        {{ food.viewValue }}
+                    </kbq-tag>
+                }
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1370,13 +1372,14 @@ class MultiSelectionTagList {
                 [required]="isRequired"
                 placeholder="Food"
             >
-                <kbq-tag
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                    (removed)="remove(food)"
-                >
-                    {{ food.viewValue }}
-                </kbq-tag>
+                @for (food of foods; track food) {
+                    <kbq-tag
+                        [value]="food.value"
+                        (removed)="remove(food)"
+                    >
+                        {{ food.viewValue }}
+                    </kbq-tag>
+                }
             </kbq-tag-list>
             <input
                 [kbqTagInputFor]="tagList1"
@@ -1439,12 +1442,11 @@ class InputTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list [formControl]="control">
-                <kbq-tag
-                    *ngFor="let food of foods"
-                    [value]="food.value"
-                >
-                    {{ food.viewValue }}
-                </kbq-tag>
+                @for (food of foods; track food) {
+                    <kbq-tag [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-tag>
+                }
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1461,13 +1463,14 @@ class FalsyValueTagList {
 @Component({
     template: `
         <kbq-tag-list>
-            <kbq-tag
-                *ngFor="let food of foods"
-                [value]="food.value"
-                [selected]="food.selected"
-            >
-                {{ food.viewValue }}
-            </kbq-tag>
+            @for (food of foods; track food) {
+                <kbq-tag
+                    [value]="food.value"
+                    [selected]="food.selected"
+                >
+                    {{ food.viewValue }}
+                </kbq-tag>
+            }
         </kbq-tag-list>
     `
 })
@@ -1488,13 +1491,14 @@ class SelectedTagList {
         >
             <kbq-form-field>
                 <kbq-tag-list [formControl]="formControl">
-                    <kbq-tag
-                        *ngFor="let food of foods"
-                        [value]="food.value"
-                        [selected]="food.selected"
-                    >
-                        {{ food.viewValue }}
-                    </kbq-tag>
+                    @for (food of foods; track food) {
+                        <kbq-tag
+                            [value]="food.value"
+                            [selected]="food.selected"
+                        >
+                            {{ food.viewValue }}
+                        </kbq-tag>
+                    }
                 </kbq-tag-list>
                 <kbq-hint>Please select a chip, or type to add a new chip</kbq-hint>
                 <!--                <kbq-error>Should have value</kbq-error>-->
@@ -1519,12 +1523,11 @@ class TagListWithFormErrorMessages {
 @Component({
     template: `
         <kbq-tag-list>
-            <kbq-tag
-                *ngFor="let i of numbers"
-                (removed)="remove(i)"
-            >
-                {{ i }}
-            </kbq-tag>
+            @for (i of numbers; track i) {
+                <kbq-tag (removed)="remove(i)">
+                    {{ i }}
+                </kbq-tag>
+            }
         </kbq-tag-list>
     `,
     animations: [
@@ -1554,14 +1557,15 @@ class StandardTagListWithAnimations {
     template: `
         <kbq-form-field>
             <kbq-tag-list>
-                <kbq-tag
-                    *ngFor="let i of tags"
-                    [value]="i"
-                    (removed)="removeChip($event)"
-                >
-                    Chip {{ i + 1 }}
-                    <span kbqTagRemove>Remove</span>
-                </kbq-tag>
+                @for (i of tags; track i) {
+                    <kbq-tag
+                        [value]="i"
+                        (removed)="removeChip($event)"
+                    >
+                        Chip {{ i + 1 }}
+                        <span kbqTagRemove>Remove</span>
+                    </kbq-tag>
+                }
             </kbq-tag-list>
         </kbq-form-field>
     `

@@ -21,8 +21,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/common';
-import * as i5 from '@angular/cdk/platform';
+import * as i4 from '@angular/cdk/platform';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -364,7 +363,7 @@ export class KbqTagsModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.CommonModule, typeof i5.PlatformModule], [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.PlatformModule], [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove]>;
 }
 
 // @public

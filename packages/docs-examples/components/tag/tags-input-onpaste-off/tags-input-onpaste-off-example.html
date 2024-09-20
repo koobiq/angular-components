@@ -1,16 +1,17 @@
 <kbq-form-field>
     <kbq-tag-list #tagList>
-        <kbq-tag
-            *ngFor="let tag of tags"
-            [value]="tag"
-            (removed)="onRemoveTag(tag)"
-        >
-            {{ tag }}
-            <i
-                kbq-icon="mc-close-S_16"
-                kbqTagRemove
-            ></i>
-        </kbq-tag>
+        @for (tag of tags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="onRemoveTag(tag)"
+            >
+                {{ tag }}
+                <i
+                    kbq-icon="mc-close-S_16"
+                    kbqTagRemove
+                ></i>
+            </kbq-tag>
+        }
 
         <!-- turn off tag add on paste with Input property -->
         <input

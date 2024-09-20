@@ -10,8 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@koobiq/components/icon';
+import * as i2 from '@koobiq/components/icon';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -175,7 +174,7 @@ export class KbqSplitterModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, [typeof i1.KbqGutterDirective, typeof i1.KbqGutterGhostDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent], [typeof i2.CommonModule, typeof i3.KbqIconModule], [typeof i1.KbqGutterDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, [typeof i1.KbqGutterDirective, typeof i1.KbqGutterGhostDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent], [typeof i2.KbqIconModule], [typeof i1.KbqGutterDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

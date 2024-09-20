@@ -276,13 +276,14 @@ describe('KbqAutocomplete', () => {
             (opened)="openedSpy()"
             (closed)="closedSpy()"
         >
-            <kbq-option
-                *ngFor="let state of filteredStates"
-                [value]="state"
-                [style.height.px]="kbqOptionWidth"
-            >
-                <span>{{ state.code }}: {{ state.name }}</span>
-            </kbq-option>
+            @for (state of filteredStates; track state) {
+                <kbq-option
+                    [value]="state"
+                    [style.height.px]="kbqOptionWidth"
+                >
+                    <span>{{ state.code }}: {{ state.name }}</span>
+                </kbq-option>
+            }
         </kbq-autocomplete>
     `
 })

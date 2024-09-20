@@ -6,109 +6,21 @@
     [ngClass]="size"
     (filesDropped)="onFileDropped($event)"
 >
-    <ng-container *ngIf="!files.length; else fileOutput">
+    @if (!files.length) {
         <div class="dropzone">
-            <ng-container *ngIf="size === 'default'; else compactCaption">
+            @if (size === 'default') {
                 <i kbq-icon="mc-upload-to-cloud_32"></i>
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
                         <!-- prettier-ignore -->
-                        <span class="multiple__caption">
-                            {{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}
-                        </span>
+                        <span class="multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}</span>
                     </div>
                 </div>
-            </ng-container>
-        </div>
-    </ng-container>
-</div>
-
-<div class="kbq-file-upload__info-section">
-    <kbq-hint class="kbq-file-upload__hint">
-        <ng-content select="[hint]" />
-    </kbq-hint>
-
-    <ng-container *ngIf="hasErrors">
-        <kbq-hint
-            *ngFor="let error of errors"
-            class="kbq-file-upload__hint kbq-error"
-        >
-            {{ error }}
-        </kbq-hint>
-    </ng-container>
-</div>
-
-<ng-template #fileOutput>
-    <div class="file-upload__dropzone">
-        <div class="kbq-file-upload__grid">
-            <div class="kbq-file-multiple-uploaded__header">
-                <div class="kbq-file-multiple-uploaded__header-inner">
-                    <div
-                        *ngFor="let column of columnDefs"
-                        [class]="'kbq-file-upload__' + column.cssClass"
-                    >
-                        {{ column.header }}
-                    </div>
-                </div>
-            </div>
-
-            <kbq-list-selection
-                [autoSelect]="false"
-                [disabled]="disabled"
-            >
-                <kbq-list-option
-                    *ngFor="let file of files; let index = index"
-                    class="multiple__uploaded-item"
-                    [value]="file.file.name"
-                    (keydown.backspace)="deleteFile(index)"
-                    (keydown.delete)="deleteFile(index)"
-                >
-                    <div
-                        class="kbq-file-upload__row"
-                        [class.error]="file.hasError"
-                    >
-                        <div class="kbq-file-upload__file">
-                            <ng-container
-                                *ngIf="{ loading: file.loading | async, progress: file.progress | async } as asyncData"
-                            >
-                                <ng-container
-                                    *ngIf="!asyncData.loading"
-                                    [ngTemplateOutlet]="$any(customFileIcon)"
-                                    [ngTemplateOutletContext]="{ $implicit: file }"
-                                />
-
-                                <kbq-progress-spinner
-                                    *ngIf="asyncData.loading"
-                                    class="kbq-file-upload-name-cell__icon"
-                                    [mode]="progressMode"
-                                    [value]="asyncData.progress || 0"
-                                />
-                            </ng-container>
-
-                            <span
-                                class="file-item__text"
-                                [kbqEllipsisCenter]="file.file.name"
-                                [minVisibleLength]="10"
-                            ></span>
-                        </div>
-                        <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
-                        <div class="kbq-file-upload__action">
-                            <i
-                                kbq-icon-button="mc-close-circle_16"
-                                (click)="deleteFile(index, $event)"
-                            ></i>
-                        </div>
-                    </div>
-                </kbq-list-option>
-            </kbq-list-selection>
-        </div>
-
-        <div class="btn-upload">
-            <div class="dropzone">
+            } @else {
                 <i kbq-icon="mc-upload-to-cloud_24"></i>
                 <span class="dropzone__text multiple__caption">
-                    {{ separatedCaptionTextWhenSelected[0] }}
+                    {{ separatedCaptionTextForCompactSize[0] }}
                     <label
                         kbq-link
                         pseudo
@@ -119,30 +31,110 @@
                         {{ config.browseLink }}
                         <ng-container *ngTemplateOutlet="inputTemplate" />
                     </label>
-                    {{ separatedCaptionTextWhenSelected[1] }}
+                    {{ separatedCaptionTextForCompactSize[1] }}
                 </span>
+            }
+        </div>
+    } @else {
+        <div class="file-upload__dropzone">
+            <div class="kbq-file-upload__grid">
+                <div class="kbq-file-multiple-uploaded__header">
+                    <div class="kbq-file-multiple-uploaded__header-inner">
+                        @for (column of columnDefs; track column) {
+                            <div [class]="'kbq-file-upload__' + column.cssClass">
+                                {{ column.header }}
+                            </div>
+                        }
+                    </div>
+                </div>
+                <kbq-list-selection
+                    [autoSelect]="false"
+                    [disabled]="disabled"
+                >
+                    @for (file of files; track file; let index = $index) {
+                        <kbq-list-option
+                            class="multiple__uploaded-item"
+                            [value]="file.file.name"
+                            (keydown.backspace)="deleteFile(index)"
+                            (keydown.delete)="deleteFile(index)"
+                        >
+                            <div
+                                class="kbq-file-upload__row"
+                                [class.error]="file.hasError"
+                            >
+                                <div class="kbq-file-upload__file">
+                                    @if (
+                                        { loading: file.loading | async, progress: file.progress | async };
+                                        as asyncData
+                                    ) {
+                                        @if (!asyncData.loading) {
+                                            <ng-container
+                                                [ngTemplateOutlet]="$any(customFileIcon)"
+                                                [ngTemplateOutletContext]="{ $implicit: file }"
+                                            />
+                                        }
+                                        @if (asyncData.loading) {
+                                            <kbq-progress-spinner
+                                                class="kbq-file-upload-name-cell__icon"
+                                                [mode]="progressMode"
+                                                [value]="asyncData.progress || 0"
+                                            />
+                                        }
+                                    }
+                                    <span
+                                        class="file-item__text"
+                                        [kbqEllipsisCenter]="file.file.name"
+                                        [minVisibleLength]="10"
+                                    ></span>
+                                </div>
+                                <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
+                                <div class="kbq-file-upload__action">
+                                    <i
+                                        kbq-icon-button="mc-close-circle_16"
+                                        (click)="deleteFile(index, $event)"
+                                    ></i>
+                                </div>
+                            </div>
+                        </kbq-list-option>
+                    }
+                </kbq-list-selection>
+            </div>
+            <div class="btn-upload">
+                <div class="dropzone">
+                    <i kbq-icon="mc-upload-to-cloud_24"></i>
+                    <span class="dropzone__text multiple__caption">
+                        {{ separatedCaptionTextWhenSelected[0] }}
+                        <label
+                            kbq-link
+                            pseudo
+                            [disabled]="disabled"
+                            [for]="inputId"
+                            [tabIndex]="-1"
+                        >
+                            {{ config.browseLink }}
+                            <ng-container *ngTemplateOutlet="inputTemplate" />
+                        </label>
+                        {{ separatedCaptionTextWhenSelected[1] }}
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-</ng-template>
+    }
+</div>
 
-<ng-template #compactCaption>
-    <i kbq-icon="mc-upload-to-cloud_24"></i>
-    <span class="dropzone__text multiple__caption">
-        {{ separatedCaptionTextForCompactSize[0] }}
-        <label
-            kbq-link
-            pseudo
-            [disabled]="disabled"
-            [for]="inputId"
-            [tabIndex]="-1"
-        >
-            {{ config.browseLink }}
-            <ng-container *ngTemplateOutlet="inputTemplate" />
-        </label>
-        {{ separatedCaptionTextForCompactSize[1] }}
-    </span>
-</ng-template>
+<div class="kbq-file-upload__info-section">
+    <kbq-hint class="kbq-file-upload__hint">
+        <ng-content select="[hint]" />
+    </kbq-hint>
+
+    @if (hasErrors) {
+        @for (error of errors; track error) {
+            <kbq-hint class="kbq-file-upload__hint kbq-error">
+                {{ error }}
+            </kbq-hint>
+        }
+    }
+</div>
 
 <ng-template #inputTemplate>
     <input

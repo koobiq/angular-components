@@ -1,4 +1,4 @@
-import { CommonModule, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -32,12 +32,8 @@ import { APP_ROUTES } from './docs.module-routes';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-
         AnchorsModule,
-
-        CommonModule,
         RouterModule,
-
         KbqFormattersModule,
         KbqTreeModule,
         KbqButtonModule,
@@ -46,19 +42,15 @@ import { APP_ROUTES } from './docs.module-routes';
         KbqLinkModule,
         KbqDividerModule,
         KbqToastModule,
-
         NavbarModule,
         FooterModule,
         WelcomeModule,
-
         FormsModule,
         HttpClientModule,
-
         RouterModule.forRoot(APP_ROUTES, {
             scrollPositionRestoration: 'disabled',
             onSameUrlNavigation: 'reload'
         }),
-
         ComponentViewerModule,
         IconsViewerModule,
         SidenavModule

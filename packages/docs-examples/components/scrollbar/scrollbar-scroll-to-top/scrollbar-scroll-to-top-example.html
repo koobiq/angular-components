@@ -91,12 +91,13 @@
         </div>
     </div>
 
-    <button
-        *ngIf="scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0"
-        kbq-button
-        class="button_scroll-to-top"
-        (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
-    >
-        Scroll To Top
-    </button>
+    @if (scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0) {
+        <button
+            kbq-button
+            class="button_scroll-to-top"
+            (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
+        >
+            Scroll To Top
+        </button>
+    }
 </div>

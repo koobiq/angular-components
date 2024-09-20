@@ -6,12 +6,11 @@
         >
             <kbq-cleaner />
 
-            <kbq-option
-                *ngFor="let option of options"
-                [value]="option"
-            >
-                <span [innerHTML]="option"></span>
-            </kbq-option>
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -22,12 +21,11 @@
         <kbq-select [value]="value">
             <kbq-cleaner />
 
-            <kbq-option
-                *ngFor="let option of options"
-                [value]="option"
-            >
-                <span [innerHTML]="option"></span>
-            </kbq-option>
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -42,12 +40,11 @@
         >
             <kbq-cleaner #kbqSelectCleaner />
 
-            <kbq-option
-                *ngFor="let option of options"
-                [value]="option"
-            >
-                <span [innerHTML]="option"></span>
-            </kbq-option>
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -61,13 +58,14 @@
         >
             <kbq-cleaner #kbqSelectCleaner />
 
-            <kbq-option
-                *ngFor="let option of options"
-                [showCheckbox]="false"
-                [value]="option"
-            >
-                <span [innerHTML]="option"></span>
-            </kbq-option>
+            @for (option of options; track option) {
+                <kbq-option
+                    [showCheckbox]="false"
+                    [value]="option"
+                >
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
         </kbq-select>
     </kbq-form-field>
 
@@ -266,16 +264,15 @@
 
     <kbq-form-field>
         <kbq-tag-list #inputTagList>
-            <kbq-tag
-                *ngFor="let tag of inputTags"
-                [value]="tag"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of inputTags; track tag) {
+                <kbq-tag [value]="tag">
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
 
             <input
                 kbqInput
@@ -293,16 +290,15 @@
 
     <kbq-form-field>
         <kbq-tag-list #inputTagList1>
-            <kbq-tag
-                *ngFor="let tag of inputTags"
-                [value]="tag"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of inputTags; track tag) {
+                <kbq-tag [value]="tag">
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
 
             <input
                 kbqInput
@@ -321,16 +317,15 @@
 
     <kbq-form-field>
         <kbq-tag-list #autocompleteTagList>
-            <kbq-tag
-                *ngFor="let tag of ['tag']"
-                [value]="tag"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of ['tag']; track tag) {
+                <kbq-tag [value]="tag">
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
             <input
                 #autocompleteTagInput
                 placeholder="{{ placeholder }}"
@@ -341,18 +336,16 @@
             />
         </kbq-tag-list>
         <kbq-autocomplete #autocomplete>
-            <kbq-option
-                *ngIf="autocompleteTagInput.value"
-                [value]="{ new: true, value: autocompleteTagInput.value }"
-            >
-                Создать: {{ autocompleteTagInput.value }}
-            </kbq-option>
-            <kbq-option
-                *ngFor="let tag of inputTags"
-                [value]="tag"
-            >
-                {{ tag }}
-            </kbq-option>
+            @if (autocompleteTagInput.value) {
+                <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
+                    Создать: {{ autocompleteTagInput.value }}
+                </kbq-option>
+            }
+            @for (tag of inputTags; track tag) {
+                <kbq-option [value]="tag">
+                    {{ tag }}
+                </kbq-option>
+            }
         </kbq-autocomplete>
     </kbq-form-field>
 
@@ -362,16 +355,15 @@
 
     <kbq-form-field>
         <kbq-tag-list #autocompleteTagList1>
-            <kbq-tag
-                *ngFor="let tag of autocompleteSelectedTags"
-                [value]="tag"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="mc-close-S_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+            @for (tag of autocompleteSelectedTags; track tag) {
+                <kbq-tag [value]="tag">
+                    {{ tag }}
+                    <i
+                        kbq-icon="mc-close-S_16"
+                        kbqTagRemove
+                    ></i>
+                </kbq-tag>
+            }
             <input
                 #autocompleteTagInput1
                 [kbqAutocomplete]="autocomplete1"
@@ -380,18 +372,16 @@
             />
         </kbq-tag-list>
         <kbq-autocomplete #autocomplete1>
-            <kbq-option
-                *ngIf="autocompleteTagInput1.value"
-                [value]="{ new: true, value: autocompleteTagInput1.value }"
-            >
-                Создать: {{ autocompleteTagInput1.value }}
-            </kbq-option>
-            <kbq-option
-                *ngFor="let tag of inputTags"
-                [value]="tag"
-            >
-                {{ tag }}
-            </kbq-option>
+            @if (autocompleteTagInput1.value) {
+                <kbq-option [value]="{ new: true, value: autocompleteTagInput1.value }">
+                    Создать: {{ autocompleteTagInput1.value }}
+                </kbq-option>
+            }
+            @for (tag of inputTags; track tag) {
+                <kbq-option [value]="tag">
+                    {{ tag }}
+                </kbq-option>
+            }
         </kbq-autocomplete>
     </kbq-form-field>
 

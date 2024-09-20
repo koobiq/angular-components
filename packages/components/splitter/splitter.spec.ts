@@ -141,14 +141,15 @@ class KbqSplitterGhost {
             [useGhost]="true"
             style="width: 500px;"
         >
-            <div
-                #areaA
-                *ngIf="isFirstRendered"
-                kbq-splitter-area
-                style="flex: 1"
-            >
-                first
-            </div>
+            @if (isFirstRendered) {
+                <div
+                    #areaA
+                    kbq-splitter-area
+                    style="flex: 1"
+                >
+                    first
+                </div>
+            }
             <div
                 #areaB
                 kbq-splitter-area

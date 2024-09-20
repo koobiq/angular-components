@@ -1,11 +1,9 @@
 import { PlatformModule } from '@angular/cdk/platform';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqProgressBar, KbqProgressBarCaption, KbqProgressBarText } from './progress-bar.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         PlatformModule
     ],
     declarations: [

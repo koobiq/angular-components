@@ -99,14 +99,16 @@ class ListWithOneItem extends BaseTestList {}
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item *ngFor="let item of items">
-                <img
-                    src=""
-                    alt=""
-                />
-                <h3 kbq-line>{{ item.name }}</h3>
-                <p kbq-line>{{ item.description }}</p>
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item>
+                    <img
+                        src=""
+                        alt=""
+                    />
+                    <h3 kbq-line>{{ item.name }}</h3>
+                    <p kbq-line>{{ item.description }}</p>
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
@@ -115,11 +117,13 @@ class ListWithTwoLineItem extends BaseTestList {}
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item *ngFor="let item of items">
-                <h3 kbq-line>{{ item.name }}</h3>
-                <p kbq-line>{{ item.description }}</p>
-                <p kbq-line>Some other text</p>
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item>
+                    <h3 kbq-line>{{ item.name }}</h3>
+                    <p kbq-line>{{ item.description }}</p>
+                    <p kbq-line>Some other text</p>
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
@@ -130,12 +134,14 @@ class ListWithThreeLineItem extends BaseTestList {
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item *ngFor="let item of items">
-                <h3 kbq-line>Line 1</h3>
-                <p kbq-line>Line 2</p>
-                <p kbq-line>Line 3</p>
-                <p kbq-line>Line 4</p>
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item>
+                    <h3 kbq-line>Line 1</h3>
+                    <p kbq-line>Line 2</p>
+                    <p kbq-line>Line 3</p>
+                    <p kbq-line>Line 4</p>
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
@@ -161,13 +167,12 @@ class ListWithAvatar extends BaseTestList {}
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item
-                class="test-class"
-                *ngFor="let item of items"
-            >
-                <h3 kbq-line>{{ item.name }}</h3>
-                <p kbq-line>{{ item.description }}</p>
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item class="test-class">
+                    <h3 kbq-line>{{ item.name }}</h3>
+                    <p kbq-line>{{ item.description }}</p>
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
@@ -176,16 +181,15 @@ class ListWithItemWithCssClass extends BaseTestList {}
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item *ngFor="let item of items">
-                <h3 kbq-line>{{ item.name }}</h3>
-                <p kbq-line>{{ item.description }}</p>
-                <p
-                    *ngIf="showThirdLine"
-                    kbq-line
-                >
-                    Some other text
-                </p>
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item>
+                    <h3 kbq-line>{{ item.name }}</h3>
+                    <p kbq-line>{{ item.description }}</p>
+                    @if (showThirdLine) {
+                        <p kbq-line>Some other text</p>
+                    }
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
@@ -194,9 +198,11 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
 @Component({
     template: `
         <kbq-list>
-            <kbq-list-item *ngFor="let item of items">
-                {{ item.name }}
-            </kbq-list-item>
+            @for (item of items; track item) {
+                <kbq-list-item>
+                    {{ item.name }}
+                </kbq-list-item>
+            }
         </kbq-list>
     `
 })
