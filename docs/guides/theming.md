@@ -1,228 +1,53 @@
 <!-- cspell:disable -->
 
-В этом руководстве дается подробное описание подключения и настройки тем в Angular приложениях с использованием дизайн-системы Koobiq. В нем рассказывается о подключении готовых тем, кастомизации стандартных тем с помощью дизайн-токенов и расширенной кастомизации с использованием кастомных токенов и переменных CSS.
+### Что нового?
 
-Термины:
+Теперь использование компонентов стало проще! Мы движемся к полной изоляции компонентов, что позволит вам легко подключать и использовать их.
 
--   [Миксины](https://sass-lang.com/documentation/at-rules/mixin/) - повторяющиеся участки кода в Sass.
+Было принято решение отказаться от необходимости подключения SCSS-переменных для настройки цветов, геометрии и шрифтов.
+Вместо этого практически для всех компонентов CSS-переменные теперь подключаются прямо внутри их самих.
+Некоторые компоненты настолько малы, что они не способны автоматически подключать стили.
+Следовательно, для этих элементов необходимо подключение стилей на глобальном уровне.
 
-### Базовое подключение темы
+Более того, для каждой CSS-переменной компонента мы используем CSS-переменные глобальных значений дизайн-системы, например, цвета, размеры и параметры шрифтов.
+Это не только улучшает читабельность кода, но и значительно упрощает процесс темизации.
 
-Для быстрого запуска вы можете подключить готовую тему из Koobiq. Данный подход позволит использовать стили по-умолчанию для компонентов дизайн системы Koobiq, а также использовать одну из стандартных тем - светлую или темную.
+### Как использовать?
 
 #### Подготовка
 
-Установите пакет дизайн системы Koobiq. Подробнее про установку [тут](./installation.md).
+1. Установите пакет дизайн системы Koobiq. Подробнее про установку [тут](/main/installation).
+2. Используйте `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` для подключения глобальных значений дизайн-системы, например, цветов, размеров и параметров шрифтов.
 
 #### Применение темы
 
-Для работы только с одним набором тем, подключите файл преднастроенных стилей в свой основной файл стиля.
+1. Для корректной работы оверлеев и компонентов без автоматического подключения стилей, подключите файл преднастроенных стилей в свой основной файл стиля.
 
 ```sass
-@use '@koobiq/components/prebuilt-themes/light-theme.css';
+@use '@koobiq/components/prebuilt-themes/theme.css';
 ```
 
-Возможные темы:
+#### Использование
 
-| Название файла  | описание                 |
-| --------------- | ------------------------ |
-| light-theme.css | стандартная светлая тема |
-| dark-theme.css  | стандартная темная тема  |
+1. Добавьте `kbq-theme-light` селектор к элементу `<body>` вашего HTML-документа для использования светлой темы и `kbq-theme-dark` для темной темы.
+2. Импортируйте компонент
 
-#### Пример на Stackblitz
+### Переключение светлой/темной темы
 
-Пример базового подключения можно найти [тут](https://stackblitz.com/edit/vaffk1?file=src%2Fstyles.scss)
+Мы оптимизировали процесс переключения между темами! Теперь достаточно изменить соответствующий селектор, чтобы перейти от темной к светлой теме (или наоборот). Например, с `kbq-theme-dark` на `kbq-theme-light`.
+Цветовые значения будут автоматически адаптированы под выбранную тему.
+Для переключения тем используйте [ThemeService.](/packages/components/core/services/theme.service.ts)
 
-### Подключение стандартных тем
+#### Доступные селекторы для темной и светлой темы
 
-В этом разделе вы узнаете, как подключить стили Koobiq, подключить светлую и темную темы и настроить переключение тем. Koobiq позволяет подключать стандартные темы оформления (светлую и темную) с помощью дизайн-токенов. Эти токены представляют элементы дизайна, такие как цвета, шрифты и размеры, что позволяет согласованно настраивать переключение тем в вашем приложении.
+Вот таблица доступных селекторов для темной и светлой тем:
 
-#### Описание процесса
+| Тема    | Селекторы                                  |
+| ------- | ------------------------------------------ |
+| Темная  | .kbq-dark, .theme-dark, .kbq-theme-dark    |
+| Светлая | .kbq-light, .theme-light, .kbq-theme-light |
 
-Процесс настройки состоит из 4 основных этапов:
-
-1. **Подключение основных стилей светлой и темной темы**, в рамках которой создается отдельная директория с файлами для каждого типа токенов соответственно - цвета тем и типографика.
-2. **Подключение стилей Koobiq** - создаётся вспомогательный scss-файл для подключения в основной файл стилей. В данном вспомогательном файле подключаются необходимые для компонентов Koobiq и создаются миксины для подключения в основном файле
-3. **Подключение вспомогательного файла стилей в основной файл стилей** - на данном этапе необходимо подключить файлы, где подключили темы на этапе 1 и стили Koobiq на этапе 2. Затем задается подключение типографики и настраиваются стили для переключения тем.
-4. **Настройка переключения тем** - данный этап подразумевает реализацию логики подстановки CSS-классов указанной темы.
-
-#### Подключение основных стилей светлой и темной темы
-
-1 Создайте директорию стандартной темы: организуйте свои стили тем, добавив каталог для стандартных тем в каталоге стилей вашего проекта:
-
-```
-└─ koobiq
-    └─ out-of-the-box-theme ·········· Директория для подключения стилей
-      ├─ _theme.scss ················· Файл для подключенные миксинов темной и светлой темы
-      └─ _typography.scss ············ Типографика для маркдауна и текста
-    └─ _index.scss ··················· Файл, содержащий ссылки на sass-файлы из стандартной темы
-```
-
-2 Подключите необходимые стили в каждом из файлов:
-
--   `_typography.scss`
-
-```scss
-@use 'sass:meta';
-
-@use '@koobiq/components/core/styles/tokens';
-@use '@koobiq/components/core/styles/typography/typography';
-
-$tokens: meta.module-variables(tokens);
-
-$typography-config: typography.kbq-typography-config($tokens);
-$markdown-typography-config: typography.kbq-markdown-typography-config($tokens);
-```
-
--   `_theme.scss`
-
-```scss
-@use 'sass:meta';
-
-@use '@koobiq/components/core/styles/theming/theming';
-@use '@koobiq/components/core/styles/tokens';
-
-@forward 'typography';
-
-$tokens: meta.module-variables(tokens);
-
-$light: theming.kbq-light-theme($tokens);
-$dark: theming.kbq-dark-theme($tokens);
-```
-
-3 Импортируйте стили тем в \_index.scss: для дальнейшего использования и подключения в основной файл стилей, определите файлы стилей стандартной темы в [index файле.](https://sass-lang.com/documentation/at-rules/use/#index-files)
-
-```sass
-@forward 'out-of-the-box-theme/theme' as out-of-the-box-theme-*;
-```
-
-#### Подключение стилей Koobiq
-
--   Создайте файл `_theme.kbq.scss`
-
-Добавьте основные миксины, включая импорты, и подключите базовую типографику:
-
--   Импорты
-
-```scss
-@use '@koobiq/components';
-
-@use '@koobiq/components/core/styles/visual';
-@use '@koobiq/components/core/styles/typography';
-
-@use '@koobiq/components/core/styles/koobiq-theme' as *;
-```
-
--   Использование
-
-```scss
-@include components.kbq-core();
-
-@include visual.body-html();
-@include visual.layouts-for-breakpoint();
-```
-
--   Подключите базовую типографику:
-
-```scss
-@mixin app-typography($tokens, $config, $md-config) {
-    @include typography.kbq-typography-level-to-styles($config, text-normal);
-
-    @include koobiq-typography($tokens, $config, $md-config);
-}
-```
-
--   Подготовьте миксин для подключения в основной файл стилей:
-
-```scss
-@mixin app-theme($theme) {
-    $background: map.get($theme, background);
-    $foreground: map.get($theme, foreground);
-
-    background: components.kbq-color($background, background);
-    color: components.kbq-color($foreground, text);
-
-    @include koobiq-theme($theme);
-}
-```
-
-#### Включение стилей Koobiq в основной файл стилей
-
-Подключите раннее описанные стили в основной файл стилей. Основное здесь - проброс токенов в зависимости от темы.
-
--   Импортируем необходимые зависимости
-
-```scss
-@use './styles/theme.kbq' as theme-kbq; // файл, где подключили стили Koobiq
-@use './styles/out-of-the-box-theme/theme' as tokens; // файл с темами
-```
-
--   Подключите типографику и настройте стили для переключения темы
-
-```scss
-.kbq {
-    @include theme-kbq.app-typography(tokens.$tokens, tokens.$typography-config, tokens.$markdown-typography-config);
-
-    /* selectors the same as in theme.service.ts */
-    &.kbq-theme-light {
-        @include theme-kbq.app-theme(tokens.$light);
-    }
-
-    &.kbq-theme-dark {
-        @include theme-kbq.app-theme(tokens.$dark);
-    }
-}
-```
-
-#### Настройка переключения тем
-
--   CSS-селекторы для темной и светлой темы должны совпадать со значениями тем в инструменте для переключения тем.
--   Каждый CSS-класс темы инкапсулирует настроенные цвета для всех стандартных компонентов Koobiq.
-
-Переключение темы представляет собой логику подстановки CSS-классов с указанной темой, которые инкапсулирует настроенные цвета для всех компонентов.
-
-**Подготовка**
-
-Добавьте необходимые классы тегу body в index.html:
-
--   рутовый CSS-класс
--   CSS класс базовой темы, который вызовется, если сервис переключения тем не установит начальную тему
-
-```html
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Koobiq</title>
-        <base href="/" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1"
-        />
-        <link
-            rel="icon"
-            type="image/x-icon"
-            href="favicon.ico"
-        />
-    </head>
-    <body class="kbq-theme-light kbq">
-        <app-root></app-root>
-    </body>
-</html>
-```
-
-**Описание логики переключения тем с помощью ThemeService**
-
-В рамках данного гайда используется сервис `ThemeService` из пакета `@koobiq/components` для управления переключением тем. Данный сервис реализует следующую логику:
-
-1 При запуске приложения, можно передать сервису кастомные названия тем. Иначе, сервис подставит дефолтные значения для тем:
-
-| Выводимое название темы | Имя CSS-класса  |
-| ----------------------- | --------------- |
-| light                   | kbq-theme-light |
-| dark                    | kbq-theme-dark  |
-
-2 Установка и изменение темы.
+Мы рекомендуем использовать те селекторы, которые указаны в сервисе `ThemeService` (`kbq-theme-dark` для темной и `kbq-theme-light` для светлой).
 
 #### Описание переключения в зависимости от операционной системы
 
@@ -264,121 +89,100 @@ try {
 
 Пример реализации переключения тем в документации Koobiq [тут.](https://github.com/koobiq/angular-components/blob/main/apps/docs/src/app/components/navbar/navbar.component.ts)
 
-#### Пример на StackBlitz
+### Как задать кастомные значения компоненту дизайн-системы
 
-Пример переключения стандартных тем [тут](https://stackblitz.com/edit/vaffk1-qsgx2k?file=src%2Fstyles.scss)
+Изменить цвета, размеры и шрифты можно задав соответствующие значения CSS-переменным компонента.
+Например:
 
-### Кастомизация компонентов с помощью дизайн-токенов
-
-В этом разделе вы узнаете, как создать настраиваемый компонент с использованием дизайн токенов Koobiq. Имея цветовую палитру и предустановленные значения размеров и шрифтов, можно легко создавать и настраивать компоненты. Преимущество данного подхода заключается в том, что один используемый токен будет использовать разные значения для различных тем.
-
-#### Подготовка
-
-Для возможности кастомизации компонентов с помощью дизайн токенов необходимо настроить [подключение стандартных тем](#подключение-стандартных-тем) без логики переключения тем.
-
--   Создайте файл миксина в основном файле темы: подготовьте миксин кастомизируемых компонентов в файле `_theme.kbq.scss` для подключения в основной миксин `app-theme`. Данный миксин принимает информацию о токенах темы как параметр:
-
-```sass
-@mixin app-components-theme($theme) {
-    // Здесь подключайте все стили тем для компонентов.
+```css
+.kbq-theme-dark {
+    --kbq-alert-default-contrast-container-background: custom-color;
+    --kbq-alert-default-contrast-container-title: custom-color;
 }
 ```
 
--   Подключите миксин кастомизируемых компонентов в основной миксин:
+### Совместимость
 
-```sass
-@mixin app-theme($theme) {
-    // ... здесь будет ранее написанный код
-    @include app-components-theme($theme);
-}
-```
+Работает стабильно с `@koobiq/design-tokens@3.5.1`.
 
-#### Описание процесса
+### Как применить уже имеющиеся кастомные дизайн-токены?
 
-Процесс кастомизации компонента с помощью дизайн-токенов Koobiq состоит из 2 основных этапов:
+Темы, где значения дизайн-токенов были перезаписаны с помощью Style-Dictionary,
+применяются аналогично [заданию кастомных значений компонентам.](#как-задать-кастомные-значения-компоненту-дизайн-системы)
 
-1. **Создание и настройка компонента.** Здесь создаётся angular компонент по умолчанию и scss-файл темизации. Обычно, имя файла темизации задаётся в формате `_<component-name>-theme.scss`.
-2. **Импорт файла темизации кастомного компонента в основной файл стилей** - подключение миксина подключения цветов и миксина стилизации типографики в миксин темизации цветов и в миксин базовой типографики соответственно. Необходимо для корректного переключения тем.
+### Нужно ли что-то делать, если уже используются CSS-переменные из пакета @koobiq/design-tokens?
 
-#### Создание компонента и добавление дизайн-токенов
+Да, необходимо удалить CSS-переменные для компонентов, которые уже используют стандартные значения из коробки.
 
--   Создайте новый каталог компонентов со следующей структурой:
+В каких файлы необходимо внести изменения:
 
-```
-customized-component
-  ├── _customized-component-theme.scss (Миксины стилей темы & типографики)
-  ├── customized-component.component.scss (Определение геометрии)
-  ├── customized-component.component.html
-  ├── customized-component.component.spec.ts
-  └── customized-component.component.ts
-```
+-   css-tokens.css - размеры компонента
+-   css-tokens-light.css - цвета компонента для светлой темы
+-   css-tokens-dark.css - цвета компонента для темной темы
+-   css-tokens-font.css - шрифт, его размеры и параметры для компонента. Его можно удалить.
 
-Создайте миксины дизайн-токенов: В \_customized-component-theme.scss импортируйте два миксина (названия может быть любым):
+Удалить CSS-переменные необходимо для всех включенных в дизайн систему компонентов. В них используется значение по умолчанию, они вам больше не нужны.
 
--   для стилей цветов компонента, которые берутся из текущей темы
--   для типографики компонента
+<details>
+  <summary>Более подробный список</summary>
+    <ul>
+        <li><a href="/packages/components/alert/alert-tokens.scss">alert</a></li>
+        <li><a href="/packages/components/autocomplete/autocomplete-tokens.scss">autocomplete</a></li>
+        <li><a href="/packages/components/badge/badge-tokens.scss">badge</a></li>
+        <li><a href="/packages/components/button/button-tokens.scss">button</a></li>
+        <li><a href="/packages/components/button-toggle/button-toggle-tokens.scss">button-toggle</a></li>
+        <li><a href="/packages/components/checkbox/checkbox-tokens.scss">checkbox,pseudo-checkbox</a></li>
+        <li><a href="/packages/components/code-block/code-block-tokens.scss">code-block</a></li>
+        <li><a href="/packages/components/datepicker/datepicker-tokens.scss">datepicker</a></li>
+        <li><a href="/packages/components/dl/dl-tokens.scss">description-list</a></li>
+        <li><a href="/packages/components/divider/divider-tokens.scss">divider</a></li>
+        <li><a href="/packages/components/dropdown/dropdown-tokens.scss">dropdown</a></li>
+        <li><a href="/packages/components/empty-state/empty-state-tokens.scss">empty-state</a></li>
+        <li><a href="/packages/components/file-upload/file-upload-tokens.scss">file-upload</a></li>
+        <li><a href="/packages/components/form-field/form-field-tokens.scss">form-field</a></li>
+        <li><a href="/packages/components/form-field/hint-tokens.scss">hint</a></li>
+        <li><a href="/packages/components/icon/icon-tokens.scss">icon</a></li>
+        <li><a href="/packages/components/icon/icon-button-tokens.scss">icon-button</a></li>
+        <li><a href="/packages/components/icon/icon-item-tokens.scss">icon-item</a></li>
+        <li><a href="/packages/components/input/input-tokens.scss">input</a></li>
+        <li><a href="/packages/components/link/link-tokens.scss">link</a></li>
+        <li><a href="/packages/components/list/list-tokens.scss">list</a></li>
+        <li><a href="/packages/components/loader-overlay/loader-overlay-tokens.scss">loader-overlay</a></li>
+        <li><a href="/packages/components/modal/modal-tokens.scss">modal</a></li>
+        <li><a href="/packages/components/markdown/markdown-tokens.scss">markdown</a></li>
+        <li><a href="/packages/components/navbar/navbar-tokens.scss">navbar</a></li>
+        <li><a href="/packages/components/popover/popover-tokens.scss">popover</a></li>
+        <li><a href="/packages/components/progress-bar/progress-bar-tokens.scss">progress-bar</a></li>
+        <li><a href="/packages/components/progress-spinner/progress-spinner-tokens.scss">progress-spinner</a></li>
+        <li><a href="/packages/components/radio/radio-tokens.scss">radio</a></li>
+        <li><a href="/packages/components/risk-level/risk-level-tokens.scss">risk-level</a></li>
+        <li><a href="/packages/components/select/select-tokens.scss">select</a></li>
+        <li><a href="/packages/components/sidepanel/sidepanel-tokens.scss">sidepanel</a></li>
+        <li><a href="/packages/components/scrollbar/scrollbar-tokens.scss">scrollbar-component</a></li>
+        <li><a href="/packages/components/core/styles/theming/scrollbar-tokens.scss">scrollbar</a></li>
+        <li><a href="/packages/components/core/forms/forms-tokens.scss">forms</a></li>
+        <li><a href="/packages/components/core/option/option-tokens.scss">option</a></li>
+        <li><a href="/packages/components/core/option/optgroup-tokens.scss">optgroup</a></li>
+        <li><a href="/packages/components/core/option/option-action-tokens.scss">option-action</a></li>
+        <li><a href="/packages/components/splitter/splitter-tokens.scss">splitter</a></li>
+        <li><a href="/packages/components/tags/tag-tokens.scss">tag</a></li>
+        <li><a href="/packages/components/tags/tag-input-tokens.scss">tag-input</a></li>
+        <li><a href="/packages/components/table/table-tokens.scss">table</a></li>
+        <li><a href="/packages/components/textarea/textarea-tokens.scss">textarea</a></li>
+        <li><a href="/packages/components/timezone/timezone-option-tokens.scss">timezone</a></li>
+        <li><a href="/packages/components/toast/toast-tokens.scss">toast</a></li>
+        <li><a href="/packages/components/toggle/toggle-tokens.scss">toggle</a></li>
+        <li><a href="/packages/components/tooltip/tooltip-tokens.scss">tooltip</a></li>
+        <li><a href="/packages/components/tree/tree-tokens.scss">tree</a></li>
+        <li><a href="/packages/components/tree-select/tree-select-tokens.scss">tree-select</a></li>
+    </ul>
+</details>
 
-```scss
-@use '@koobiq/components/core/styles/typography';
+### Откуда теперь брать значения дизайн-токенов для компонентов?
 
-@mixin kbq-customized-component($theme) {
-    // ... your component's color styles using tokens from $theme
-}
+Все актуальные значения для компонентов хранятся в репозитории [@koobiq/design-tokens](https://github.com/koobiq/design-tokens).
+Сгенерированные на основе дизайн-токенов CSS-переменные компонентов позволяют сделать их использование более удобным, а также ускорить их разработку, в том числе проведение дизайн-ревью.
 
-@mixin kbq-customized-component-typography($config) {
-    // ... your component's typography styles using $config
-}
-```
+### Что планируется сделать дальше?
 
--   Определите стили компонента: В `_customized-component-theme.scss` определите необходимые стили. Реализация далее в примере.
--   Подключите описанные миксины в `_theme.kbq.scss`:
-
-```scss
-@use '../app/customized-component/customized-component-theme';
-
-@mixin app-components-theme($theme) {
-    // ... здесь будет ранее написанный код
-    @include customized-component-theme.kbq-customized-component-typography($config);
-}
-
-@mixin app-components-theme($theme) {
-    // ... здесь будет ранее написанный код
-    @include customized-component-theme.kbq-customized-component-theme($theme);
-}
-```
-
-#### Пример на StackBlitz
-
-Пример кастомизации компонентов с помощью дизайн-токенов [тут](https://stackblitz.com/edit/vaffk1-xb18np?file=src%2Fapp%2Fapp.component.ts)
-
-### Использование CSS-переменных
-
-В рамках дизайн-системы Koobiq помимо использования SCSS переменных, возможно использование [CSS переменных.](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
-
-**Подготовка**
-Необходимо настроить [подключение стандартных тем](#подключение-стандартных-тем).
-
-#### Описание процесса
-
-Переместите файл с CSS-переменных в вашу директорию со стилями из `@koobiq/design-tokens/web`:
-
--   `css-tokens-dark.css`
--   `css-tokens-light.css`
--   `css-tokens-font.css`
--   `css-tokens.css`
-
-Подключите файлы с CSS-переменными к основному файлу стилей
-
--   Подключите CSS стили к body:
-
-```html
-<body class="kbq-app-background basic-container app kbq-theme-light kbq-font koobiq">
-    <app-root>loading</app-root>
-</body>
-```
-
--   Используйте CSS-переменные вместо объявленных ранее токенов.
-
-#### Пример на Stackblitz
-
-Пример применения CSS-переменных можно найти [тут](https://stackblitz.com/edit/vaffk1-fhhiz7?file=src%2Fstyles.scss)
+Мы планируем провести обновление наших компонентные CSS-переменные и использовать вместо них глобальные CSS-переменные нашей дизайн-системы напрямую.
