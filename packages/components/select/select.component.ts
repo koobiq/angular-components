@@ -899,7 +899,7 @@ export class KbqSelect
         const element = this.overlayDir.overlayRef.hostElement;
 
         return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((node) => {
-            return ((node as HTMLElement).firstChild as HTMLElement).id == (element.firstChild as HTMLElement).id;
+            return node.firstChild?.['id'] === element.firstChild?.['id'];
         });
     }
 
@@ -956,9 +956,9 @@ export class KbqSelect
     private getItemWidth(element: HTMLElement): number {
         const computedStyle = window.getComputedStyle(element);
 
-        const width: number = parseInt(computedStyle.width as string);
-        const marginLeft: number = parseInt(computedStyle.marginLeft as string);
-        const marginRight: number = parseInt(computedStyle.marginRight as string);
+        const width: number = parseInt(computedStyle.width);
+        const marginLeft: number = parseInt(computedStyle.marginLeft);
+        const marginRight: number = parseInt(computedStyle.marginRight);
 
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }
