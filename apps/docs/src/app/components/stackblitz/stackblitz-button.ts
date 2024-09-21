@@ -9,7 +9,6 @@ import { StackblitzWriter } from './stackblitz-writer';
 @Component({
     selector: 'docs-stackblitz-button',
     templateUrl: './stackblitz-button.html',
-    styleUrls: ['./stackblitz-button.scss'],
     host: {
         class: 'docs-stackblitz-button',
         '(click)': 'openStackBlitz()'
