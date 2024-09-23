@@ -2884,14 +2884,44 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-radio"
     }
   },
+  "scrollbar-input-customization": {
+    "packagePath": "components/scrollbar/scrollbar-input-customization",
+    "title": "scrollbar-input-customization-example",
+    "componentName": "ScrollbarInputCustomizationExample",
+    "files": [
+      "scrollbar-input-customization-example.ts"
+    ],
+    "selector": "scrollbar-input-customization-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-input-customization-example.ts",
+    "module": {
+      "name": "ScrollbarExamplesModule",
+      "importSpecifier": "components/scrollbar",
+      "importPath": "koobiq-docs-examples-components-scrollbar"
+    }
+  },
+  "scrollbar-module-customization": {
+    "packagePath": "components/scrollbar/scrollbar-module-customization",
+    "title": "scrollbar-module-customization-example",
+    "componentName": "ScrollbarModuleCustomizationExample",
+    "files": [
+      "scrollbar-module-customization-example.ts"
+    ],
+    "selector": "scrollbar-module-customization-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-module-customization-example.ts",
+    "module": {
+      "name": "ScrollbarExamplesModule",
+      "importSpecifier": "components/scrollbar",
+      "importPath": "koobiq-docs-examples-components-scrollbar"
+    }
+  },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
     "title": "Basic Scrollbar",
     "componentName": "ScrollbarOverviewExample",
     "files": [
-      "scrollbar-overview-example.ts",
-      "scrollbar-overview-example.html",
-      "scrollbar-overview-example.css"
+      "scrollbar-overview-example.ts"
     ],
     "selector": "scrollbar-overview-example",
     "additionalComponents": [],
@@ -2907,9 +2937,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Scrollbar Scroll To Top",
     "componentName": "ScrollbarScrollToTopExample",
     "files": [
-      "scrollbar-scroll-to-top-example.ts",
-      "scrollbar-scroll-to-top-example.html",
-      "scrollbar-scroll-to-top-example.css"
+      "scrollbar-scroll-to-top-example.ts"
     ],
     "selector": "scrollbar-scroll-to-top-example",
     "additionalComponents": [],
