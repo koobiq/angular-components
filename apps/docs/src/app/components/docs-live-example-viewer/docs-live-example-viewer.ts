@@ -161,7 +161,7 @@ export class DocsLiveExampleViewer {
             // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
             // module.importSpecifier
             const moduleExports: any = await import(
-                /* webpackExclude: /\.map$/ */
+                /* @vite-ignore */
                 `@koobiq/docs-examples/fesm2022/${module.importPath}`
             );
             this.exampleComponentType = moduleExports[componentName];
