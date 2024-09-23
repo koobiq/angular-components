@@ -95,9 +95,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     blur(): void;
     // (undocumented)
     checkboxPosition: 'before' | 'after';
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
@@ -116,6 +115,10 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     hasFocus: boolean;
     // (undocumented)
     listSelection: KbqListSelection;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_selected: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -201,6 +204,8 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     get multiple(): boolean;
     // (undocumented)
     multipleMode: MultipleMode | null;
+    // (undocumented)
+    static ngAcceptInputType_horizontal: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)

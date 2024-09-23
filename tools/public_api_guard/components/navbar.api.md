@@ -147,9 +147,8 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     blur(): void;
     // (undocumented)
     button: KbqButton;
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
@@ -161,6 +160,8 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     set hasFocus(value: boolean);
     // (undocumented)
     get nestedElement(): KbqButton | KbqFormField;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
