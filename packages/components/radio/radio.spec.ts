@@ -51,7 +51,7 @@ describe('MсRadio', () => {
         });
 
         it('should coerce the disabled binding on the radio group', () => {
-            (groupInstance as any).disabled = '';
+            groupInstance.disabled = true;
             fixture.detectChanges();
 
             radioLabelElements[0].click();

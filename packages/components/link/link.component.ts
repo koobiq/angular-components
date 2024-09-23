@@ -1,13 +1,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, ContentChild, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectorRef,
+    ContentChild,
+    Directive,
+    ElementRef,
+    Input,
+    OnDestroy
+} from '@angular/core';
 import {
     CanDisable,
     CanDisableCtor,
     HasTabIndex,
     HasTabIndexCtor,
     mixinDisabled,
-    mixinTabIndex,
-    toBoolean
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -42,76 +49,30 @@ export const baseURLRegex = /^http(s)?:\/\//;
     }
 })
 export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
-    @Input()
+    /** Whether the link is disabled. */
+    @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        const newValue = toBoolean(value);
-
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
+    set disabled(value: boolean) {
+        if (value !== this._disabled) {
+            this._disabled = value;
             this.changeDetector.markForCheck();
         }
     }
 
     private _disabled = false;
 
-    @Input()
-    get pseudo() {
-        return this._pseudo;
-    }
+    @Input({ transform: booleanAttribute }) pseudo: boolean = false;
 
-    set pseudo(value: any) {
-        this._pseudo = toBoolean(value);
-    }
+    @Input({ transform: booleanAttribute }) noUnderline: boolean = false;
 
-    private _pseudo = false;
+    @Input({ transform: booleanAttribute }) big: boolean = false;
 
-    @Input()
-    get noUnderline() {
-        return this._noUnderline;
-    }
+    @Input({ transform: booleanAttribute }) compact: boolean = false;
 
-    set noUnderline(value: any) {
-        this._noUnderline = toBoolean(value);
-    }
-
-    private _noUnderline = false;
-
-    @Input()
-    get big() {
-        return this._big;
-    }
-
-    set big(value: any) {
-        this._big = toBoolean(value);
-    }
-
-    private _big = false;
-
-    @Input()
-    get compact() {
-        return this._compact;
-    }
-
-    set compact(value: any) {
-        this._compact = toBoolean(value);
-    }
-
-    private _compact = false;
-
-    @Input()
-    get useVisited() {
-        return this._useVisited;
-    }
-
-    set useVisited(value: any) {
-        this._useVisited = toBoolean(value);
-    }
-
-    private _useVisited = false;
+    @Input({ transform: booleanAttribute }) useVisited: boolean = false;
 
     get hasIcon(): boolean {
         return !!this.icon;

@@ -1,7 +1,12 @@
-export function isBoolean(val: any): val is boolean {
-    return typeof val === 'boolean';
+export function isBoolean(value: unknown): value is boolean {
+    return typeof value === 'boolean';
 }
 
-export function toBoolean(value: any): boolean {
+/**
+ * Will be removed in the next major release
+ *
+ * @deprecated Use `booleanAttribute` instead
+ */
+export function toBoolean(value: unknown): boolean {
     return value != null && `${value}` !== 'false';
 }
