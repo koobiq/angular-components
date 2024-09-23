@@ -66,7 +66,7 @@ const themeColorNames = ['default-theme'];
 
 for (const skin of [kbq]) {
     const koobiqTokensProps = `node_modules/@koobiq/design-tokens/web/properties/**/*.json5`;
-    ``;
+
     for (const theme of themeColorNames) {
         themesConfig.push({
             skin,
