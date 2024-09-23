@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
 
 /**
@@ -15,7 +15,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
         >
             <div
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -26,7 +26,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
             <div
                 [options]="options"
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -36,7 +36,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
             </div>
             <div
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -46,7 +46,8 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
             </div>
         </div>
     `,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollbarInputCustomizationExample {
     options: KbqScrollbarOptions = {

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
 
 const customScrollbarConfig: KbqScrollbarOptions = {
@@ -24,7 +24,7 @@ const customScrollbarConfig: KbqScrollbarOptions = {
         >
             <div
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -34,7 +34,7 @@ const customScrollbarConfig: KbqScrollbarOptions = {
             </div>
             <div
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px;"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -44,7 +44,7 @@ const customScrollbarConfig: KbqScrollbarOptions = {
             </div>
             <div
                 kbq-scrollbar
-                style="height: 300px; max-width: 300px; overflow: auto"
+                style="height: 300px; max-width: 300px"
             >
                 <div [style.width.px]="400">
                     @for (paragraph of text; track paragraph) {
@@ -54,7 +54,8 @@ const customScrollbarConfig: KbqScrollbarOptions = {
             </div>
         </div>
     `,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollbarModuleCustomizationExample {
     text = Array<string>(20).fill(
