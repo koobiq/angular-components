@@ -111,8 +111,8 @@ describe('KbqDropdown', () => {
             const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
             const panelRect = overlay.querySelectorAll('.cdk-overlay-pane')[1].getBoundingClientRect();
 
-            expect(Math.round(triggerRect.left)).toBe(Math.round(panelRect.right) + NESTED_PANEL_LEFT_PADDING);
-            expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + NESTED_PANEL_TOP_PADDING);
+            expect(Math.floor(triggerRect.left)).toBe(Math.floor(panelRect.right) + NESTED_PANEL_LEFT_PADDING);
+            expect(Math.floor(triggerRect.top)).toBe(Math.floor(panelRect.top) + NESTED_PANEL_TOP_PADDING);
         });
 
         it('should fall back to aligning to the right edge of the trigger in rtl', fakeAsync(() => {

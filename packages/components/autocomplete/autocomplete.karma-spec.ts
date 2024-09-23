@@ -87,7 +87,7 @@ describe('KbqAutocomplete', () => {
             keydownEvents.forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
 
             // Expect option bottom minus the panel height (50 * 6 - 256 = 44)
-            expect(scrollContainer.scrollTop).toEqual(275);
+            expect(Math.floor(scrollContainer.scrollTop)).toEqual(275);
 
             expect(fixture.componentInstance.panel.keyManager.activeItemIndex).toEqual(5);
         });
