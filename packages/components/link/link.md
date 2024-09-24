@@ -109,7 +109,7 @@ cvedetails.com/cve/CVE-2019-1020010/
 
 #### Фокус и работа с клавиатурой
 
-| Клавиша                                                                             | Действие                              |
+| <div style="min-width: 110px;">Клавиша</div>                                        | Действие                              |
 | ----------------------------------------------------------------------------------- | ------------------------------------- |
 | <span class="hot-key-button">Space</span> \ <span class="hot-key-button">⏎</span>   | Переход по ссылке                     |
 | <span class="hot-key-button">Shift</span> + <span class="hot-key-button">F10</span> | Открыть контекстное меню (для ссылок) |
