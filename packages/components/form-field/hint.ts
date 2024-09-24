@@ -44,7 +44,7 @@ export class KbqHint extends KbqHintMixinBase {
 
     @Input({ transform: booleanAttribute }) fillTextOff: boolean = false;
 
-    @Input({ transform: booleanAttribute }) compact = false;
+    @Input({ transform: booleanAttribute }) compact: boolean = false;
 
     constructor(elementRef: ElementRef) {
         super(elementRef);

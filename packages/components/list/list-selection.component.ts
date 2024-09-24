@@ -709,7 +709,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** Whether list is disabled. */
     @Input({ transform: booleanAttribute })
-    get disabled() {
+    get disabled(): boolean {
         const listSelectionDisabled = this.listSelection && this.listSelection.disabled;
         const groupDisabled = this.group && this.group.disabled;
 

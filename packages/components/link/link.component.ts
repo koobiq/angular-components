@@ -51,7 +51,7 @@ export const baseURLRegex = /^http(s)?:\/\//;
 export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
-    get disabled() {
+    get disabled(): boolean {
         return this._disabled;
     }
 
