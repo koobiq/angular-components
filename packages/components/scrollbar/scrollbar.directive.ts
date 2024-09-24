@@ -46,6 +46,12 @@ const createDefer = (): Defer => {
     ];
 };
 
+/**
+ *  A directive for adding overlayscrollbars to elements
+ *
+ * It leverages the library to provide customizable and visually appealing scrollbars.
+ * Also, it provides the optimization with `defer` param
+ * */
 @Directive({
     selector: '[kbqScrollbar]'
 })

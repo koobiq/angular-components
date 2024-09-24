@@ -8,6 +8,7 @@ export type KbqScrollbarTarget = InitializationTarget;
 
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions = {
     scrollbars: {
+        /* scrolling behavior when moving the mouse outside the scrollbar area. */
         autoHide: 'leave',
         autoHideDelay: 100
     }
