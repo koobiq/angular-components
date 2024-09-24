@@ -47,8 +47,7 @@ module.exports = [
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
                 'VERSIONS.MARKED': version(pkg.dependencies.marked),
-                // design system scrollbar relies on specific version of lib, stick to it
-                'VERSIONS.OVERLAYSCROLLBARS': JSON.stringify(pkg.dependencies.overlayscrollbars),
+                'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars),
                 'VERSIONS.NGX_HIGHLIGHTJS': version(pkg.devDependencies['ngx-highlightjs'])
             }),
             typescript({

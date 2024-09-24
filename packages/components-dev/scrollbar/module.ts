@@ -87,7 +87,7 @@ export class ScrollbarWithCustomConfig {
         </kbq-scrollbar>
         <button
             [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
-            (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
+            (click)="scrollbarRef.scrollTo({ top: 0, behavior: 'smooth' })"
             kbq-button
         >
             Scroll To Top
