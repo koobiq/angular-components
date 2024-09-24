@@ -1,27 +1,133 @@
-import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
+import {
+    KBQ_SCROLLBAR_CONFIG,
+    KbqScrollbarEvents,
+    KbqScrollbarModule,
+    KbqScrollbarOptions
+} from '@koobiq/components/scrollbar';
 
 @Component({
+    standalone: true,
+    imports: [KbqScrollbarModule],
+    selector: 'scrollbar-with-options',
+    template: `
+        <h4>ScrollbarWithOptions:</h4>
+        <kbq-scrollbar
+            [options]="options"
+            style="width: 200px; height: 200px;"
+        >
+            @for (item of items; track item) {
+                <div>{{ item }}</div>
+                <hr />
+            }
+        </kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollbarWithOptions {
+    readonly options: KbqScrollbarOptions = {
+        scrollbars: {
+            autoHide: 'never'
+        }
+    };
+    readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
+}
+
+@Component({
+    standalone: true,
+    selector: 'scrollbar-with-custom-config',
+    imports: [KbqScrollbarModule],
+    providers: [
+        {
+            provide: KBQ_SCROLLBAR_CONFIG,
+            useValue: {
+                scrollbars: {
+                    autoHide: 'never'
+                }
+            } satisfies KbqScrollbarOptions
+        }
+    ],
+    template: `
+        <h4>ScrollbarWithCustomConfig:</h4>
+        <div
+            kbq-scrollbar
+            style="width: 200px; height: 200px;"
+        >
+            @for (item of items; track item) {
+                <div>{{ item }}</div>
+                <hr />
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollbarWithCustomConfig {
+    readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
+}
+
+@Component({
+    standalone: true,
+    selector: 'scrollbar-scroll-to-top',
+    imports: [
+        KbqScrollbarModule,
+        KbqButtonModule
+    ],
+    template: `
+        <h4>ScrollbarScrollToTop:</h4>
+        <kbq-scrollbar
+            #scrollbarRef="kbqScrollbar"
+            (onScroll)="onScroll($event)"
+            style="width: 200px; height: 200px;"
+        >
+            @for (item of items; track item) {
+                <div>{{ item }}</div>
+                <hr />
+            }
+        </kbq-scrollbar>
+        <button
+            [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
+            (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
+            kbq-button
+        >
+            Scroll To Top
+        </button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollbarScrollToTop {
+    readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
+
+    onScroll(event): void {
+        console.log('onScroll', event);
+    }
+}
+
+@Component({
+    standalone: true,
+    imports: [
+        KbqScrollbarModule,
+        KbqButtonModule,
+
+        // components
+        ScrollbarWithOptions,
+        ScrollbarWithCustomConfig,
+        ScrollbarScrollToTop
+    ],
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class Scrollbar {
     options: KbqScrollbarOptions;
     events: KbqScrollbarEvents = {
         initialized: (...args) => this.onInitialize(args)
     };
 
-    scrollCounter = 0;
-
-    constructor(public cdr: ChangeDetectorRef) {}
-
     onScroll([instance, args]) {
-        console.log(instance, args);
-        this.scrollCounter++;
+        console.log('onScroll', instance, args);
     }
 
     onInitialize($event) {
@@ -45,10 +151,3 @@ export class DemoComponent {
                     Proin eget tortor risus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Proin eget tortor risus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
                     `;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [BrowserModule, KbqScrollbarModule, KbqButtonModule],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

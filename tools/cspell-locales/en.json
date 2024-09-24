@@ -28,6 +28,7 @@
         "stackblitz",
         "stylelintrc",
         "timepicker",
-        "unclickable"
+        "unclickable",
+        "overlayscrollbars"
     ]
 }

@@ -361,8 +361,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: true
                 },
                 {
                     id: 'select',

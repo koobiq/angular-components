@@ -1,20 +1,31 @@
-Используется для кастомизации скроллбара.
+`<kbq-scrollbar>` - это компонент (обертка над библиотекой [`overlayscrollbars`](https://github.com/KingSora/OverlayScrollbars)),
+который используется для настройки параметров скроллбара.
 
-На данный момент возможно применять к простым элементам за исключением textarea.
+**Обрати внимание!** Для работы компонента, необходимо наличие `overlayscrollbars` зависимости, установи её при отсутствии:
 
-### Кастомизация
+```
+npm install overlayscrollbars@2.7.3
+```
 
-1. Доступно установка кастомные поведения скролла:
-    - Для отдельного скролла через `@Input() options`
-    - Для всех скроллбаров в определенной области через токен `KBQ_SCROLLBAR_CONFIG`
-2. Доступна кастомизация цветов и геометрии элементов скроллбара:
-    - Минимальная высота/ширина ползунка
-    - Задний фон ползунка
+## Настройка и передача параметров:
 
-Доступно прослушивание нативного событие scroll.
+-   для определенного скроллбара, при помощи атрибута `options`:
 
-<!-- example(scrollbar-overview) -->
+<!-- example(scrollbar-with-options) -->
 
-### Scroll to top
+-   для всех скроллбаров в модуле, при помощи _Dependency Injection_ c использованием `KBQ_SCROLLBAR_CONFIG` токена:
 
-<!-- example(scrollbar-scroll-to-top) -->
+<!-- example(scrollbar-with-custom-config) -->
+
+### Обработка событий:
+
+```ts
+<kbq-scrollbar
+    (onInitialize)="onInitialize($event)"
+    (onDestroy)="onDestroy($event)"
+    (onScroll)="onScroll($event)"
+    (onUpdate)="onUpdate($event)"
+>
+    ...
+</kbq-scrollbar>
+```
