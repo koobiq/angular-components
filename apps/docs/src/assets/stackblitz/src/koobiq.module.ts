@@ -25,7 +25,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidebarModule } from '@koobiq/components/sidebar';
 import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
@@ -70,7 +69,6 @@ const KBQ_COMPONENTS = [
     KbqSidebarModule,
     KbqSidepanelModule,
     KbqSplitterModule,
-    KbqScrollbarModule,
     KbqTableModule,
     KbqTabsModule,
     KbqTagsModule,

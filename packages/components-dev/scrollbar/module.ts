@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
@@ -7,8 +7,7 @@ import { KbqScrollbarEvents, KbqScrollbarModule, KbqScrollbarOptions } from '@ko
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['../main.scss', './styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
     options: KbqScrollbarOptions;

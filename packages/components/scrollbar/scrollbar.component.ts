@@ -33,12 +33,6 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         {}
     );
 
-/**
- * The component acts as a wrapper for overlayscrollbars with improved functionality,
- * allowing you to configure the scrollbar parameters.
- *
- * It also provides a convenient interface for listening to library events in an Angular style using output parameters.
- */
 @Component({
     selector: 'kbq-scrollbar, [kbq-scrollbar]',
     exportAs: 'kbqScrollbar',
