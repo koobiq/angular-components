@@ -54,7 +54,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
 // @public
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
-// @public
+// @public (undocumented)
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
     contentElement: ElementRef<HTMLDivElement>;
@@ -84,7 +84,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqScrollbarDirective implements OnDestroy {
     constructor(ngZone: NgZone, scrollbarConfig?: {
         paddingAbsolute?: boolean | undefined;
