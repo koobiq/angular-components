@@ -1,3 +1,12 @@
+## 17.7.2 (2024-09-24)
+
+### Koobiq
+
+ * bug fix  **docs,cli,scrolling:** stick to specific scrollbar lib version ([#DS-2899](https://github.com/koobiq/angular-components/issues/issue/DS-2899)) ([#302](https://github.com/koobiq/angular-components/issues/302)) ([2a72788](https://github.com/koobiq/angular-components/commit/2a7278856bb6275d4246c3b66c4b0ff56602f95b))
+ * bug fix  **docs:** stackblitz icon alignment ([#300](https://github.com/koobiq/angular-components/issues/300)) ([539f1b1](https://github.com/koobiq/angular-components/commit/539f1b1c91aeedc35e266211bc7b63e375118970))
+ * bug fix  **docs:** updated kbd styles in table ([#DS-2495](https://github.com/koobiq/angular-components/issues/issue/DS-2495)) ([#303](https://github.com/koobiq/angular-components/issues/303)) ([71825f6](https://github.com/koobiq/angular-components/commit/71825f6a2054b8de4f811095cc506d39be022590))
+ * bug fix  **navbar:** added tokens to vertical navbar ([#304](https://github.com/koobiq/angular-components/issues/304)) ([3adb052](https://github.com/koobiq/angular-components/commit/3adb052a1a9df6d8c9d1cf1848934dbcae12986e))
+
 ## 17.7.1 (2024-09-20)
 
 ### Koobiq
