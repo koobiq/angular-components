@@ -35,7 +35,8 @@ import { KbqFocusableComponent } from './navbar.component';
         './vertical-navbar.scss',
         './navbar-item.scss',
         './navbar-brand.scss',
-        './navbar-divider.scss'
+        './navbar-divider.scss',
+        './navbar-tokens.scss'
     ],
     host: {
         class: 'kbq-vertical-navbar',
