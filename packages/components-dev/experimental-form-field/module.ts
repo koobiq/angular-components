@@ -13,6 +13,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
     standalone: true,
@@ -171,34 +172,52 @@ export class FieldWithPrefixAndSuffix {
     imports: [
         KbqFormFieldModule,
         KbqInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqSelectModule
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Form field with hint</kbq-label>
+            <kbq-label>Article title</kbq-label>
             <input
                 [formControl]="formControl"
                 [maxlength]="maxLength"
                 kbqInput
-                placeholder="Enter {{ maxLength }} characters"
+                placeholder="Enter the title of the article"
             />
-            @if (count < 5) {
-                <kbq-hint>Entered: {{ count }} of {{ maxLength }}</kbq-hint>
-            } @else {
-                <kbq-hint color="success">Success</kbq-hint>
-            }
+            <kbq-hint>Max {{ maxLength }} chars ({{ count }}/{{ maxLength }})</kbq-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FieldWithHint {
     readonly formControl = new FormControl();
-    readonly maxLength = 6;
+    readonly maxLength = 25;
 
     get count(): number {
         return this.formControl.value?.length || 0;
     }
 }
+
+@Component({
+    standalone: true,
+    selector: 'select-field',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Select an option</kbq-label>
+            <kbq-select placeholder="Select an option">
+                <kbq-option [value]="null">None</kbq-option>
+                <kbq-option value="option1">Option 1</kbq-option>
+                <kbq-option value="option2">Option 2</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SelectField {}
 
 @Component({
     standalone: true,
@@ -210,7 +229,7 @@ export class FieldWithHint {
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Form field with error</kbq-label>
+            <kbq-label>Email</kbq-label>
             <input
                 [formControl]="formControl"
                 kbqInput
@@ -288,6 +307,9 @@ export class FieldWithoutBorders {
 
         <field-without-borders />
         <hr />
+
+        <select-field />
+        <hr />
     `,
     styleUrl: './styles.scss',
     imports: [
@@ -297,7 +319,8 @@ export class FieldWithoutBorders {
         FieldWithPrefixAndSuffix,
         FieldWithHint,
         FieldWithError,
-        FieldWithoutBorders
+        FieldWithoutBorders,
+        SelectField
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

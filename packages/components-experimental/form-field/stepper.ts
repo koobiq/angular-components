@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @TODO move into input module
+ * @TODO move into input module (#DS-2910)
  */
 
 @Component({

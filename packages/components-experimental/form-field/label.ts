@@ -12,5 +12,6 @@ let nextUniqueId = 0;
     }
 })
 export class KbqLabel {
+    /** @docs-private */
     @Input() id: string = `kbq-label-${nextUniqueId++}`;
 }

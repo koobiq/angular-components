@@ -2,19 +2,17 @@ import { InjectionToken } from '@angular/core';
 
 export interface KbqFormFieldRef {
     control: any;
-    /** @TODO move into KbqCleaner */
     canCleanerClearByEsc: boolean;
     /**
-     * @TODO should be removed, is private method
-     * @deprecated
+     * @TODO should be removed, is private method (#DS-2915)
+     * @deprecated use `formField.control?.errorState` instead
      */
     shouldForward(str: string): boolean;
     focusViaKeyboard(): void;
 }
 
 /**
- * @TODO move into form-field.ts
- * @TODO add correct type for `InjectionToken<KbqFormField>`
+ * @TODO move into form-field.ts, add correct type for `InjectionToken<KbqFormField>` (#DS-2915)
  */
 
 /**

@@ -46,5 +46,6 @@ export abstract class KbqFormFieldControl<T> {
     /** Handles a click on the control's container. */
     abstract onContainerClick(event: MouseEvent): void;
 
-    abstract focus(): void;
+    /** Focuses the control. */
+    abstract focus(options?: FocusOptions): void;
 }

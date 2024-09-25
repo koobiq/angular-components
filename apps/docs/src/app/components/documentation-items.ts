@@ -260,7 +260,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 {
                     id: 'experimental-form-field',
                     name: 'Form field (experimental)',
-                    hasApi: false,
+                    hasApi: true,
+                    apiId: 'experimental-form-field',
                     hasExamples: false
                 },
                 {

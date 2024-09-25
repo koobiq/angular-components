@@ -16,7 +16,7 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 /**
- * @TODO move into input module
+ * @TODO move into input module (#DS-2910)
  */
 
 @Component({
@@ -40,7 +40,7 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
         '(keydown.SPACE)': 'toggle($event)'
     },
     /**
-     * @TODO Component doesn't work without KbqToolTipModule
+     * @TODO Component doesn't work without KbqToolTipModule (#DS-2910)
      */
     imports: [NgClass, KbqIconModule, KbqToolTipModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

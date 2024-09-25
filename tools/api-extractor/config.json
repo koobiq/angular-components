@@ -45,5 +45,8 @@
         "tooltip",
         "tree",
         "tree-select"
+    ],
+    "components-experimental": [
+        "form-field"
     ]
 }
