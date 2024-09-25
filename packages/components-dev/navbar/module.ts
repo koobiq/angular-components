@@ -8,13 +8,13 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqIconModule } from '../../components/icon';
-import { KbqNavbar, KbqNavbarModule } from '../../components/navbar';
 
 @Component({
     selector: 'app',
