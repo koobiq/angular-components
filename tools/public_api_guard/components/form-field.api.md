@@ -188,12 +188,15 @@ export class KbqFormFieldWithoutBorders {
 export class KbqHint extends KbqHintMixinBase {
     constructor(elementRef: ElementRef);
     // (undocumented)
-    get compact(): any;
-    set compact(value: any);
+    compact: boolean;
     // (undocumented)
     fillTextOff: boolean;
     // (undocumented)
     id: string;
+    // (undocumented)
+    static ngAcceptInputType_compact: unknown;
+    // (undocumented)
+    static ngAcceptInputType_fillTextOff: unknown;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], false, never>;
     // (undocumented)

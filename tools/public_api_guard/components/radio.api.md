@@ -47,6 +47,12 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase implements OnInit, A
     markForCheck(): void;
     name: string;
     // (undocumented)
+    static ngAcceptInputType_checked: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -99,6 +105,10 @@ export class KbqRadioGroup extends KbqRadioGroupMixinBase implements AfterConten
     markRadiosForCheck(): void;
     get name(): string;
     set name(value: string);
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
     ngAfterContentInit(): void;
     onTouched: () => any;
     radios: QueryList<KbqRadioButton>;

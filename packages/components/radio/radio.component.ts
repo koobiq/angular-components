@@ -3,6 +3,7 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -30,8 +31,7 @@ import {
     HasTabIndexCtor,
     mixinColor,
     mixinDisabled,
-    mixinTabIndex,
-    toBoolean
+    mixinTabIndex
 } from '@koobiq/components/core';
 
 // Increasing integer for generating unique ids for radio components.
@@ -134,26 +134,32 @@ export class KbqRadioGroup
     }
 
     /** Whether the radio group is disabled */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value) {
-        this._disabled = toBoolean(value);
+    set disabled(value: boolean) {
+        this._disabled = value;
         this.markRadiosForCheck();
     }
 
+    /** Whether the radio group is disabled. */
+    private _disabled: boolean = false;
+
     /** Whether the radio group is required */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = toBoolean(value);
+        this._required = value;
         this.markRadiosForCheck();
     }
+
+    /** Whether the radio group is required. */
+    private _required: boolean = false;
 
     /**
      * Event emitted when the group value changes.
@@ -185,12 +191,6 @@ export class KbqRadioGroup
 
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     private _labelPosition: 'before' | 'after' = 'after';
-
-    /** Whether the radio group is disabled. */
-    private _disabled: boolean = false;
-
-    /** Whether the radio group is required. */
-    private _required: boolean = false;
 
     constructor(
         elementRef: ElementRef,
@@ -343,26 +343,24 @@ export class KbqRadioButton
     implements OnInit, AfterViewInit, OnDestroy, CanColor, HasTabIndex
 {
     /** Whether this radio button is checked. */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this._checked;
     }
 
     set checked(value: boolean) {
-        const newCheckedState = toBoolean(value);
+        if (this._checked !== value) {
+            this._checked = value;
 
-        if (this._checked !== newCheckedState) {
-            this._checked = newCheckedState;
-
-            if (newCheckedState && this.radioGroup && this.radioGroup.value !== this.value) {
+            if (value && this.radioGroup && this.radioGroup.value !== this.value) {
                 this.radioGroup.selected = this;
-            } else if (!newCheckedState && this.radioGroup && this.radioGroup.value === this.value) {
+            } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
                 // When unchecking the selected radio button, update the selected radio
                 // property on the group.
                 this.radioGroup.selected = null;
             }
 
-            if (newCheckedState) {
+            if (value) {
                 // Notify all radio buttons with the same name to un-check.
                 this.radioDispatcher.notify(this.id, this.name);
             }
@@ -394,27 +392,33 @@ export class KbqRadioButton
     }
 
     /** Whether the radio button is disabled. */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled || (this.radioGroup != null && this.radioGroup.disabled);
     }
-    set disabled(value: boolean) {
-        const newDisabledState = toBoolean(value);
 
-        if (this._disabled !== newDisabledState) {
-            this._disabled = newDisabledState;
+    set disabled(value: boolean) {
+        if (this._disabled !== value) {
+            this._disabled = value;
             this.changeDetector.markForCheck();
         }
     }
 
+    /** Whether this radio is disabled. */
+    private _disabled: boolean;
+
     /** Whether the radio button is required. */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required || (this.radioGroup && this.radioGroup.required);
     }
+
     set required(value: boolean) {
-        this._required = toBoolean(value);
+        this._required = value;
     }
+
+    /** Whether this radio is required. */
+    private _required: boolean;
 
     /** Whether the label should appear after or before the radio button. Defaults to 'after' */
     @Input()
@@ -459,12 +463,6 @@ export class KbqRadioButton
 
     /** Whether this radio is checked. */
     private _checked: boolean = false;
-
-    /** Whether this radio is disabled. */
-    private _disabled: boolean;
-
-    /** Whether this radio is required. */
-    private _required: boolean;
 
     /** Value assigned to this radio. */
     private _value: any = null;

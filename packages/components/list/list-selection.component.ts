@@ -4,6 +4,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     Attribute,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -55,8 +56,7 @@ import {
     KbqTitleTextRef,
     mixinDisabled,
     mixinTabIndex,
-    MultipleMode,
-    toBoolean
+    MultipleMode
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -171,7 +171,7 @@ export class KbqListSelection
         return !!this.multipleMode;
     }
 
-    @Input() horizontal: boolean = false;
+    @Input({ transform: booleanAttribute }) horizontal: boolean = false;
 
     @Input()
     get tabIndex(): any {
@@ -244,8 +244,6 @@ export class KbqListSelection
     @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
 
     ngAfterContentInit(): void {
-        this.horizontal = toBoolean(this.horizontal);
-
         this.keyManager = new FocusKeyManager<KbqListOption>(this.options)
             .withTypeAhead()
             .withVerticalOrientation(!this.horizontal)
@@ -709,19 +707,18 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
     private _value: any;
 
-    @Input()
-    get disabled() {
+    /** Whether list is disabled. */
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         const listSelectionDisabled = this.listSelection && this.listSelection.disabled;
         const groupDisabled = this.group && this.group.disabled;
 
         return listSelectionDisabled || groupDisabled || this._disabled;
     }
 
-    set disabled(value: any) {
-        const newValue = toBoolean(value);
-
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
+    set disabled(value: boolean) {
+        if (value !== this._disabled) {
+            this._disabled = value;
             this.changeDetector.markForCheck();
         }
     }
@@ -739,16 +736,14 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     private _showCheckbox: boolean;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this.listSelection.selectionModel?.isSelected(this) || false;
     }
 
     set selected(value: boolean) {
-        const isSelected = toBoolean(value);
-
-        if (isSelected !== this._selected) {
-            this.setSelected(isSelected);
+        if (value !== this._selected) {
+            this.setSelected(value);
         }
     }
 

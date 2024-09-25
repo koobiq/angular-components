@@ -57,11 +57,12 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
     constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     name: string;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

@@ -443,7 +443,7 @@ export interface HasTabIndex {
 export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
 // @public (undocumented)
-export function isBoolean(val: any): val is boolean;
+export function isBoolean(value: unknown): value is boolean;
 
 // @public (undocumented)
 export function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean;
@@ -2193,8 +2193,8 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
 }
 
-// @public (undocumented)
-export function toBoolean(value: any): boolean;
+// @public @deprecated
+export function toBoolean(value: unknown): boolean;
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];

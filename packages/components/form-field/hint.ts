@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
-import { CanColorCtor, KbqComponentColors, mixinColor, toBoolean } from '@koobiq/components/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
+import { CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
 
 let nextHintUniqueId = 0;
 
@@ -35,18 +42,9 @@ export const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase = mixinColor(Kb
 export class KbqHint extends KbqHintMixinBase {
     @Input() id: string = `kbq-hint-${nextHintUniqueId++}`;
 
-    @Input() fillTextOff: boolean = false;
+    @Input({ transform: booleanAttribute }) fillTextOff: boolean = false;
 
-    @Input()
-    get compact() {
-        return this._compact;
-    }
-
-    set compact(value: any) {
-        this._compact = toBoolean(value);
-    }
-
-    private _compact = false;
+    @Input({ transform: booleanAttribute }) compact: boolean = false;
 
     constructor(elementRef: ElementRef) {
         super(elementRef);
