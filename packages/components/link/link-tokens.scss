@@ -1,8 +1,8 @@
 .kbq-link {
     --kbq-link-size-state-focused-outline-offset: 0px;
     --kbq-link-size-state-focused-outline-width: 2px;
-    --kbq-link-size-compact-content-padding: 2px;
-    --kbq-link-size-normal-content-padding: 2px;
+    --kbq-link-size-compact-content-padding: 4px;
+    --kbq-link-size-normal-content-padding: 4px;
     --kbq-link-size-big-content-padding: 4px;
     --kbq-link-font-compact-font-size: 12px;
     --kbq-link-font-compact-line-height: 16px;
@@ -45,7 +45,7 @@
     --kbq-link-state-active-border-bottom: hsla(216, 100%, 85%, 100%);
     --kbq-link-state-focused-outline: hsla(216, 100%, 60%, 100%);
     --kbq-link-state-disabled-text: hsla(229, 15%, 15%, 32%);
-    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 50%, 32%);
+    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 15%, 32%);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
