@@ -1,3 +1,10 @@
+# 17.8.0 (2024-09-25)
+
+### Koobiq
+
+ * bug fix  **tooltip:** tooltip in navbar ([#DS-2909](https://github.com/koobiq/angular-components/issues/issue/DS-2909)) ([#308](https://github.com/koobiq/angular-components/issues/308)) ([274a67f](https://github.com/koobiq/angular-components/commit/274a67f2e9c0f078e7fe612708abc71b6d8a1e27))
+ * feature  migrate on booleanAttribute ([#DS-2905](https://github.com/koobiq/angular-components/issues/issue/DS-2905)) ([#301](https://github.com/koobiq/angular-components/issues/301)) ([97fc8e1](https://github.com/koobiq/angular-components/commit/97fc8e16d9f99117aff02af29ab2db775f0c98a0))
+
 ## 17.7.2 (2024-09-24)
 
 ### Koobiq
