@@ -19,6 +19,7 @@ let nextUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqError extends KbqHint {
+    /** @docs-private */
     @Input() id: string = `kbq-error-${nextUniqueId++}`;
 
     readonly color = KbqComponentColors.Error;

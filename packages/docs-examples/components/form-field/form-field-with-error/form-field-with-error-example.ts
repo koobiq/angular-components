@@ -14,7 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Form field with error</kbq-label>
+            <kbq-label>Email</kbq-label>
             <input
                 [formControl]="formControl"
                 kbqInput

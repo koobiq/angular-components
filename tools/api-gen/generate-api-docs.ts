@@ -13,6 +13,9 @@ const modules: ModuleInfo[] = [
     {
         /** List of koobiq packages that need to be documented. */
         moduleName: 'components'
+    },
+    {
+        moduleName: 'components-experimental'
     }
 ];
 

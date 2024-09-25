@@ -141,8 +141,7 @@ export abstract class KbqFormFieldControl<T> {
     readonly disabled: boolean;
     readonly empty: boolean;
     readonly errorState: boolean;
-    // (undocumented)
-    abstract focus(): void;
+    abstract focus(options?: FocusOptions): void;
     readonly focused: boolean;
     readonly id: string;
     readonly ngControl: NgControl | null;

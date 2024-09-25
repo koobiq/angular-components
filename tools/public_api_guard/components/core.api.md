@@ -1054,6 +1054,7 @@ export class KbqFormElement implements AfterContentInit {
 
 // @public (undocumented)
 export interface KbqFormFieldRef {
+    // (undocumented)
     canCleanerClearByEsc: boolean;
     // (undocumented)
     control: any;

@@ -34,7 +34,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <kbq-label>Form field with custom ErrorStateMatcher</kbq-label>
+                <kbq-label>Email</kbq-label>
                 <input
                     formControlName="email"
                     kbqInput

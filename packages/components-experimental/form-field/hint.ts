@@ -39,6 +39,7 @@ const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase = mixinColor(KbqHintBa
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqHint extends KbqHintMixinBase {
+    /** @docs-private */
     @Input() id: string = `kbq-hint-${nextUniqueId++}`;
     @Input({ transform: booleanAttribute }) fillTextOff: boolean = false;
     @Input({ transform: booleanAttribute }) compact: boolean = false;

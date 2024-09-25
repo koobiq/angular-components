@@ -19,20 +19,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
     styleUrl: './cleaner.scss',
     host: {
         class: 'kbq-cleaner',
-        '(click)': '_click($event)'
+        '(click)': 'click($event)'
     },
     imports: [KbqIconModule],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCleaner {
-    readonly #formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
+    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
 
-    /** @docs-private */
-    _click(event: MouseEvent): void {
+    /** Click handler. */
+    protected click(event: MouseEvent): void {
         event.stopPropagation();
 
-        this.#formField?.control?.ngControl?.reset();
-        this.#formField?.control?.focus();
+        this.formField?.control?.ngControl?.reset();
+        this.formField?.control?.focus();
     }
 }

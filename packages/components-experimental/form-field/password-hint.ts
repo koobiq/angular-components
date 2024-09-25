@@ -19,7 +19,7 @@ import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
 
 /**
- * @TODO move into input module
+ * @TODO move into input module (#DS-2910)
  */
 
 export enum PasswordRules {

@@ -16,7 +16,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Form field with prefix and suffix</kbq-label>
             <i
                 kbqPrefix
                 kbq-icon="mc-search_16"
