@@ -86,30 +86,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
 
 // @public (undocumented)
 export class KbqScrollbarDirective implements OnDestroy {
-    constructor(ngZone: NgZone, scrollbarConfig?: {
-        paddingAbsolute?: boolean | undefined;
-        showNativeOverlaidScrollbars?: boolean | undefined;
-        update?: {
-            elementEvents?: [elementSelector: string, eventNames: string][] | null | undefined;
-            debounce?: number | [timeout: number, maxWait: number] | null | undefined;
-            attributes?: string[] | null | undefined;
-            ignoreMutation?: ((mutation: MutationRecord) => any) | null | undefined;
-        } | undefined;
-        overflow?: {
-            x?: OverflowBehavior | undefined;
-            y?: OverflowBehavior | undefined;
-        } | undefined;
-        scrollbars?: {
-            theme?: string | null | undefined;
-            visibility?: ScrollbarsVisibilityBehavior | undefined;
-            autoHide?: ScrollbarsAutoHideBehavior | undefined;
-            autoHideDelay?: number | undefined;
-            autoHideSuspend?: boolean | undefined;
-            dragScroll?: boolean | undefined;
-            clickScroll?: boolean | undefined;
-            pointers?: string[] | null | undefined;
-        } | undefined;
-    } | undefined);
+    constructor(ngZone: NgZone, scrollbarConfig?: KbqScrollbarOptions | undefined);
     defer?: boolean | IdleRequestOptions;
     set events(value: KbqScrollbarEvents);
     // (undocumented)

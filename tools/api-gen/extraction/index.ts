@@ -1,6 +1,7 @@
 import { NgtscProgram } from '@angular/compiler-cli';
 import { basename, join } from 'path';
 import ts from 'typescript';
+import { DocEntry } from '../rendering/entities';
 import { ClassEntryMetadata, EntryCollection, ModuleInfo, PackageMetadata } from '../types';
 import { src } from '../utils';
 import { entryHandler, prepareMergedMetadata, updateEntries } from './helpers';
@@ -74,7 +75,10 @@ export function extractApiToJson(packages: ModuleInfo[]) {
 
                 return {
                     packageName,
-                    entries: updateEntries(program.getApiDocumentation(resolvedPath), classesMetadata)
+                    entries: updateEntries(
+                        program.getApiDocumentation(resolvedPath, new Set<string>([])).entries as DocEntry[],
+                        classesMetadata
+                    )
                 };
             })
         } as EntryCollection);

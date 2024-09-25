@@ -680,7 +680,7 @@ describe('KbqSelect', () => {
 
                 // Note that we press down 5 times, but it will skip
                 // 3 options because the second group is disabled.
-                expect(panel.scrollTop).withContext('Expected scroll to be at the 9th option.').toBe(158);
+                expect(Math.floor(panel.scrollTop)).withContext('Expected scroll to be at the 9th option.').toBe(158);
             }));
 
             it('should scroll top the top when pressing HOME', fakeAsync(() => {

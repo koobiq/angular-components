@@ -113,7 +113,7 @@ function addMethodParamsDescription<T extends MemberEntry>(entry: T): T {
     if (isClassMethodEntry(entry)) {
         return {
             ...(entry as T),
-            params: entry.params.map((param) => addHtmlDescription(param))
+            params: entry.params?.map((param) => addHtmlDescription(param))
         };
     }
     return entry;
