@@ -8,7 +8,7 @@
             let-toast
         >
             <i
-                kbq-icon="mc-play_16"
+                kbq-icon="kbq-play_16"
                 [color]="themePalette.Secondary"
             ></i>
         </ng-template>
@@ -114,7 +114,7 @@
             let-toast
         >
             <i
-                kbq-icon-button="mc-close-L_16"
+                kbq-icon-button="kbq-xmark_16"
                 kbq-toast-close-button
                 (click)="toast.close()"
             ></i>
@@ -183,7 +183,7 @@
                 [kbqDropdownTriggerFor]="dropdown"
             >
                 <span class="kbq-link__text">Еще</span>
-                <i kbq-icon="mc-angle-down-S_16"></i>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
             </a>
         </ng-template>
 
@@ -374,7 +374,7 @@
                     [kbqDropdownTriggerFor]="appDropdownWithNested"
                 >
                     nested dropdown
-                    <i kbq-icon="mc-angle-down-S_16"></i>
+                    <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
 
                 <kbq-dropdown #appDropdownWithNested="kbqDropdown">

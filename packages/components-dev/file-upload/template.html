@@ -64,12 +64,12 @@
                 class="layout-margin-bottom-s"
                 [formControl]="control"
             >
-                <i kbq-icon="mc-info_16"></i>
+                <i kbq-icon="kbq-info-circle_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
 
             <kbq-file-upload [formControl]="secondControl">
-                <i kbq-icon="mc-file-empty_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
             </kbq-file-upload>
         </div>
 
@@ -86,7 +86,7 @@
                     class="layout-margin-bottom-s"
                     [disabled]="disabled"
                 >
-                    <i kbq-icon="mc-info_16"></i>
+                    <i kbq-icon="kbq-info-circle_16"></i>
                 </kbq-file-upload>
                 <button
                     kbq-button
@@ -108,7 +108,7 @@
                 [customValidation]="validation"
                 [disabled]="disabled"
             >
-                <i kbq-icon="mc-info_16"></i>
+                <i kbq-icon="kbq-info-circle_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
         </div>
@@ -123,7 +123,7 @@
                 [disabled]="disabled"
                 [errors]="errorMessagesForSingle"
             >
-                <i kbq-icon="mc-info_16"></i>
+                <i kbq-icon="kbq-info-circle_16"></i>
                 <span hint>test</span>
             </kbq-file-upload>
         </div>
@@ -141,7 +141,7 @@
                 (fileQueueChanged)="addFileMultiple($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="mc-file-empty_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 <span hint>Ctest</span>
             </kbq-multiple-file-upload>
@@ -163,7 +163,7 @@
                 (fileQueueChanged)="addFileMultiple($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="mc-file-empty_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 <span hint>Ctest</span>
             </kbq-file-upload>
@@ -181,7 +181,7 @@
                 [progressMode]="'indeterminate'"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="mc-file-empty_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 <span hint>Ctest</span>
             </kbq-file-upload>
@@ -202,7 +202,7 @@
                     [progressMode]="'indeterminate'"
                 >
                     <ng-template #kbqFileIcon>
-                        <i kbq-icon="mc-file-empty_16"></i>
+                        <i kbq-icon="kbq-file-o_16"></i>
                     </ng-template>
                 </kbq-file-upload>
                 <button

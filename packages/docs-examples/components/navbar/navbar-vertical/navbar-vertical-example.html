@@ -27,7 +27,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
             >
-                <i kbq-icon="mc-bento_16"></i>
+                <i kbq-icon="kbq-bento-menu_16"></i>
             </a>
 
             <div
@@ -47,12 +47,12 @@
                 kbq-navbar-item
                 class="kbq-active"
             >
-                <i kbq-icon="mc-stop_16"></i>
+                <i kbq-icon="kbq-stop_16"></i>
                 <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
             </a>
 
             <button kbq-navbar-item>
-                <i kbq-icon="mc-stop_16"></i>
+                <i kbq-icon="kbq-stop_16"></i>
                 <span kbq-navbar-title>Задачи</span>
             </button>
 
@@ -61,7 +61,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
             >
-                <i kbq-icon="mc-ellipsis_16"></i>
+                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                 <kbq-navbar-title>Еще</kbq-navbar-title>
             </kbq-navbar-item>
 
@@ -69,13 +69,16 @@
                 <button
                     kbq-button
                     [class.kbq-button-icon]="!verticalNavbar.expanded"
-                    [color]="'contrast'"
+                    [color]="colors.Contrast"
                     [kbqPlacement]="popUpPlacements.Right"
                     [kbqStyle]="'filled'"
                     [kbqTooltip]="'Новый инцидент'"
                     [kbqTooltipDisabled]="verticalNavbar.expanded"
                 >
-                    <i kbq-icon="mc-info-o_16"></i>
+                    <i
+                        kbq-icon="kbq-plus_16"
+                        [color]="'empty'"
+                    ></i>
                     @if (verticalNavbar.expanded) {
                         <span>Новая задача</span>
                     }
@@ -85,7 +88,7 @@
 
         <kbq-navbar-container>
             <kbq-navbar-item>
-                <i kbq-icon="mc-user_16"></i>
+                <i kbq-icon="kbq-user_16"></i>
                 <kbq-navbar-title>Профиль</kbq-navbar-title>
             </kbq-navbar-item>
 

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 
 /**
  * @title Vertical Navbar
@@ -12,4 +12,5 @@ import { PopUpPlacements } from '@koobiq/components/core';
 })
 export class NavbarVerticalExample {
     popUpPlacements = PopUpPlacements;
+    colors = KbqComponentColors;
 }

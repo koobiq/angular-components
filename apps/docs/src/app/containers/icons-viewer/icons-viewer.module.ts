@@ -7,6 +7,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -44,6 +45,7 @@ import { IconsViewerComponent } from './icons-viewer.component';
         NavbarModule,
         KbqButtonModule,
         AnchorsModule,
+        KbqEmptyStateModule,
         NgClass,
         AsyncPipe,
         TitleCasePipe
