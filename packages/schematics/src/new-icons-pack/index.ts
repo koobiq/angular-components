@@ -14,7 +14,7 @@ const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
-    const breakingIconsVersionRegExp = /^\^|\~?9\.0\.0/;
+    const breakingIconsVersionRegExp = /^\^|\~?9\.1\.0/;
     const pkg = '@koobiq/icons';
 
     return async (tree: Tree, context: SchematicContext) => {

@@ -73,7 +73,7 @@
         "@rollup/plugin-replace": "^5.0.5",
         "@rollup/plugin-typescript": "^11.1.6",
         "@rushstack/node-core-library": "3.66.1",
-        "@schematics/angular": "17.2.0",
+        "@schematics/angular": "18.2.6",
         "@stackblitz/sdk": "^1.9.0",
         "@types/chalk": "^2.2.0",
         "@types/conventional-changelog": "^3.1.5",

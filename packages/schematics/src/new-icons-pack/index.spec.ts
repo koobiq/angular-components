@@ -26,11 +26,11 @@ describe('new-icons-pack', () => {
         appTree = await createTestApp(runner, { style: 'scss' });
         const pkgPath = '/package.json';
         const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        pkg.dependencies['@koobiq/icons'] = '^9.0.0';
+        pkg.dependencies['@koobiq/icons'] = '^9.1.0';
         appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
         const workspace = await getWorkspace(appTree);
-        projects = workspace.projects;
+        projects = workspace.projects as unknown as ProjectDefinitionCollection;
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
             const stylesPath = `/${project.root}/src/styles.scss`;
