@@ -31,7 +31,7 @@
         "@koobiq/tokens-builder": "3.6.0",
         "@koobiq/design-tokens": "3.6.0",
         "marked": "^9.0.0",
-        "overlayscrollbars": "^2.2.0",
+        "overlayscrollbars": "2.7.3",
         "ngx-highlightjs": "^10.0.0"
     },
     "dependencies": {

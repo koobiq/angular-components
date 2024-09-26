@@ -1,24 +1,19 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER, KbqScrollbarModule } from '@koobiq/components/scrollbar';
-import { ScrollbarOverviewExample } from './scrollbar-overview/scrollbar-overview-example';
+import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from '@koobiq/components/scrollbar';
 import { ScrollbarScrollToTopExample } from './scrollbar-scroll-to-top/scrollbar-scroll-to-top-example';
+import { ScrollbarWithCustomConfigExample } from './scrollbar-with-custom-config/scrollbar-with-custom-config-example';
+import { ScrollbarWithOptionsExample } from './scrollbar-with-options/scrollbar-with-options-example';
 
-export { ScrollbarOverviewExample, ScrollbarScrollToTopExample };
+export { ScrollbarScrollToTopExample, ScrollbarWithCustomConfigExample, ScrollbarWithOptionsExample };
 
 const EXAMPLES = [
-    ScrollbarOverviewExample,
-    ScrollbarScrollToTopExample
+    ScrollbarScrollToTopExample,
+    ScrollbarWithOptionsExample,
+    ScrollbarWithCustomConfigExample
 ];
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        KbqButtonModule,
-        KbqScrollbarModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES,
     providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
 })
