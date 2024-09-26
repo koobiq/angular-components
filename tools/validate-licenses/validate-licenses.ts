@@ -53,7 +53,7 @@ const ignoredPackages: PackageID[] = [
     'gitconfiglocal@1.0.0',
 
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.0.2'
+    '@cspell/dict-en-common-misspellings@2.0.4'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
