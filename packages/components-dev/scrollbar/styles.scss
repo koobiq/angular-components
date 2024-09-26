@@ -1,3 +1,5 @@
+@use '../main';
+
 .dev-container {
     padding: 24px;
 }
@@ -15,10 +17,4 @@ textarea {
 .with-buttons {
     white-space: nowrap;
     overflow: visible;
-}
-
-.kbq-button.button_scroll-top {
-    position: absolute;
-    bottom: 5px;
-    right: 24px;
 }

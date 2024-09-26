@@ -2884,36 +2884,48 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-radio"
     }
   },
-  "scrollbar-overview": {
-    "packagePath": "components/scrollbar/scrollbar-overview",
-    "title": "Basic Scrollbar",
-    "componentName": "ScrollbarOverviewExample",
+  "scrollbar-scroll-to-top": {
+    "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
+    "title": "Scrollbar scroll to top",
+    "componentName": "ScrollbarScrollToTopExample",
     "files": [
-      "scrollbar-overview-example.ts",
-      "scrollbar-overview-example.html",
-      "scrollbar-overview-example.css"
+      "scrollbar-scroll-to-top-example.ts"
     ],
-    "selector": "scrollbar-overview-example",
+    "selector": "scrollbar-scroll-to-top-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-overview-example.ts",
+    "primaryFile": "scrollbar-scroll-to-top-example.ts",
     "module": {
       "name": "ScrollbarExamplesModule",
       "importSpecifier": "components/scrollbar",
       "importPath": "koobiq-docs-examples-components-scrollbar"
     }
   },
-  "scrollbar-scroll-to-top": {
-    "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
-    "title": "Scrollbar Scroll To Top",
-    "componentName": "ScrollbarScrollToTopExample",
+  "scrollbar-with-custom-config": {
+    "packagePath": "components/scrollbar/scrollbar-with-custom-config",
+    "title": "Scrollbar with custom KBQ_SCROLLBAR_CONFIG",
+    "componentName": "ScrollbarWithCustomConfigExample",
     "files": [
-      "scrollbar-scroll-to-top-example.ts",
-      "scrollbar-scroll-to-top-example.html",
-      "scrollbar-scroll-to-top-example.css"
+      "scrollbar-with-custom-config-example.ts"
     ],
-    "selector": "scrollbar-scroll-to-top-example",
+    "selector": "scrollbar-with-custom-config-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-scroll-to-top-example.ts",
+    "primaryFile": "scrollbar-with-custom-config-example.ts",
+    "module": {
+      "name": "ScrollbarExamplesModule",
+      "importSpecifier": "components/scrollbar",
+      "importPath": "koobiq-docs-examples-components-scrollbar"
+    }
+  },
+  "scrollbar-with-options": {
+    "packagePath": "components/scrollbar/scrollbar-with-options",
+    "title": "Scrollbar with options",
+    "componentName": "ScrollbarWithOptionsExample",
+    "files": [
+      "scrollbar-with-options-example.ts"
+    ],
+    "selector": "scrollbar-with-options-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-with-options-example.ts",
     "module": {
       "name": "ScrollbarExamplesModule",
       "importSpecifier": "components/scrollbar",
