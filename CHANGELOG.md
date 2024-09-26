@@ -1,3 +1,9 @@
+## 17.8.1 (2024-09-26)
+
+### Koobiq
+
+ * bug fix  **list:** multiple selection by keyboard on macos ([#DS-2908](https://github.com/koobiq/angular-components/issues/issue/DS-2908)) ([#314](https://github.com/koobiq/angular-components/issues/314)) ([8013f07](https://github.com/koobiq/angular-components/commit/8013f07669ac954b9efc64b3b359e733e875af4b))
+
 # 17.8.0 (2024-09-25)
 
 ### Koobiq
