@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export { CanColor, CanColorCtor, KbqComponentColors, ThemePalette, mixinColor } from './color';
+export { CanColor, CanColorCtor, KbqComponentColors, mixinColor, ThemePalette } from './color';
 export { KBQ_SANITY_CHECKS, KbqCommonModule } from './common-module';
 export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
 export { CanUpdateErrorState, CanUpdateErrorStateCtor, mixinErrorState } from './error-state';
