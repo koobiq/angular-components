@@ -109,8 +109,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     getLabel(): any;
     // (undocumented)
     readonly group: KbqOptgroup;
-    // (undocumented)
-    handleClick($event: any): void;
+    handleClick($event: MouseEvent): void;
     // (undocumented)
     hasFocus: boolean;
     // (undocumented)
@@ -215,7 +214,6 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     set noUnselectLast(value: boolean);
     // (undocumented)
     readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption>>;
-    // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     readonly onSelectAll: EventEmitter<KbqListSelectAllEvent<KbqListOption>>;
