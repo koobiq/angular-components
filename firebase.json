@@ -2,7 +2,7 @@
     "hosting": [
         {
             "target": "stable",
-            "public": "dist/releases/koobiq-docs",
+            "public": "dist/releases/koobiq-docs/browser",
             "cleanUrls": true,
             "rewrites": [
                 {
@@ -87,7 +87,7 @@
         },
         {
             "target": "next",
-            "public": "dist/releases/koobiq-docs",
+            "public": "dist/releases/koobiq-docs/browser",
             "cleanUrls": true,
             "rewrites": [
                 {
