@@ -15,26 +15,23 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "sourceMap": true,
-                        "outputPath": {
-                            "base": "./dist/releases/koobiq-docs"
-                        },
+                        "outputPath": "./dist/releases/koobiq-docs",
                         "index": "apps/docs/src/index.html",
-                        "polyfills": [
-                            "apps/docs/src/polyfills.ts"
-                        ],
+                        "main": "apps/docs/src/main.ts",
+                        "polyfills": "apps/docs/src/polyfills.ts",
                         "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/svg",
+                                "input": "node_modules/@koobiq/icons/dist/svg",
                                 "output": "/assets/SVGIcons"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/info",
+                                "input": "node_modules/@koobiq/icons/dist/info",
                                 "output": "/assets/SVGIcons"
                             },
                             {
@@ -77,15 +74,16 @@
                             }
                         ],
                         "scripts": [],
+                        "vendorChunk": true,
                         "extractLicenses": false,
+                        "buildOptimizer": false,
                         "optimization": false,
                         "namedChunks": true,
                         "allowedCommonJsDependencies": [
                             "highlight.js",
                             "@messageformat/core",
                             "ua-parser-js"
-                        ],
-                        "browser": "apps/docs/src/main.ts"
+                        ]
                     },
                     "configurations": {
                         "development": {
@@ -100,7 +98,7 @@
                                 {
                                     "type": "initial",
                                     "maximumWarning": "2mb",
-                                    "maximumError": "7mb"
+                                    "maximumError": "5mb"
                                 }
                             ]
                         },
@@ -121,12 +119,14 @@
                             "sourceMap": false,
                             "namedChunks": false,
                             "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
                             "aot": true,
                             "budgets": [
                                 {
                                     "type": "initial",
                                     "maximumWarning": "2mb",
-                                    "maximumError": "6mb"
+                                    "maximumError": "5mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
