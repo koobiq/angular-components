@@ -465,7 +465,8 @@ export class KbqListSelection
         }
     }
 
-    onKeyDown(event: KeyboardEvent) {
+    /** Handles keydown events on the list. */
+    onKeyDown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
 
         if ([SPACE, ENTER, LEFT_ARROW, RIGHT_ARROW].includes(keyCode) || isVerticalMovement(event)) {
@@ -508,7 +509,8 @@ export class KbqListSelection
             this.setSelectedOptionsByKey(
                 this.keyManager.activeItem as KbqListOption,
                 hasModifierKey(event, 'shiftKey'),
-                hasModifierKey(event, 'ctrlKey')
+                // ctrlKey is for Windows, metaKey is for MacOS
+                hasModifierKey(event, 'ctrlKey') || hasModifierKey(event, 'metaKey')
             );
         }
     }
@@ -825,7 +827,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         return clientRects.length ? clientRects[0].height : 0;
     }
 
-    handleClick($event) {
+    /** Handles click events on the list option. */
+    handleClick($event: MouseEvent): void {
         if (this.disabled) {
             return;
         }
@@ -833,7 +836,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         this.listSelection.setSelectedOptionsByClick(
             this,
             hasModifierKey($event, 'shiftKey'),
-            hasModifierKey($event, 'ctrlKey')
+            // ctrlKey is for Windows, metaKey is for MacOS
+            hasModifierKey($event, 'ctrlKey') || hasModifierKey($event, 'metaKey')
         );
     }
 
