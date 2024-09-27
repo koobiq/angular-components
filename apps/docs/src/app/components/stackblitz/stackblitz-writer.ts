@@ -19,6 +19,7 @@ const PROJECT_TAGS = ['angular', 'koobiq', 'cdk', 'web', 'example'];
 const PROJECT_TEMPLATE = 'node';
 
 export const TEMPLATE_FILES = [
+    '.editorconfig',
     '.gitignore',
     '.stackblitzrc',
     'angular.json',
@@ -28,7 +29,6 @@ export const TEMPLATE_FILES = [
     'src/index.html',
     'src/main.ts',
     'src/koobiq.module.ts',
-    'src/polyfills.ts',
     'src/styles.scss',
     'src/app/app.module.ts',
     'src/environments/environment.prod.ts',
