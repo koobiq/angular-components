@@ -3,7 +3,6 @@ name: Deploy to Hosting on PR
 on:
   pull_request_target:
     branches:
-      - main
       - 17.*.*
 
 permissions:
