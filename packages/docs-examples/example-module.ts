@@ -4018,8 +4018,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TooltipRelativeToPointerExample",
     "files": [
       "tooltip-relative-to-pointer-example.ts",
-      "tooltip-relative-to-pointer-example.html",
-      "tooltip-relative-to-pointer-example.css"
+      "tooltip-relative-to-pointer-example.html"
     ],
     "selector": "tooltip-relative-to-pointer-example",
     "additionalComponents": [],

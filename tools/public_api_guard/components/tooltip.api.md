@@ -100,7 +100,7 @@ export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollS
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
     constructor();
     // (undocumented)
-    applyRelativeToPointer(): void;
+    protected applyRelativeToPointer(): void;
     // (undocumented)
     arrow: boolean;
     // (undocumented)
