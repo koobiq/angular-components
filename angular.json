@@ -21,7 +21,7 @@
                         "outputPath": "./dist/releases/koobiq-docs",
                         "index": "apps/docs/src/index.html",
                         "main": "apps/docs/src/main.ts",
-                        "polyfills": "apps/docs/src/polyfills.ts",
+                        "polyfills": ["zone.js"],
                         "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
                             {
