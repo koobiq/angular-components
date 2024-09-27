@@ -1,17 +1,19 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-icon-theme-color: hsla(216, 100%, 50%, 100%);
-    --kbq-icon-contrast-color: hsla(229, 15%, 15%, 100%);
-    --kbq-icon-fade-contrast-color: hsla(229, 15%, 60%, 100%);
-    --kbq-icon-error-color: hsla(7, 97%, 45%, 100%);
-    --kbq-icon-success-color: hsla(104, 64%, 40%, 100%);
-    --kbq-icon-warning-color: hsla(38, 100%, 42%, 100%);
+    --kbq-icon-theme-color: var(--kbq-icon-theme);
+    --kbq-icon-contrast-color: var(--kbq-icon-contrast);
+    --kbq-icon-fade-contrast-color: var(--kbq-icon-contrast-fade);
+    --kbq-icon-error-color: var(--kbq-icon-error);
+    --kbq-icon-success-color: var(--kbq-icon-success);
+    --kbq-icon-warning-color: var(--kbq-icon-warning);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-icon-theme-color: hsla(216, 100%, 65%, 100%);
-    --kbq-icon-contrast-color: hsla(229, 15%, 80%, 100%);
-    --kbq-icon-fade-contrast-color: hsla(229, 15%, 45%, 100%);
-    --kbq-icon-error-color: hsla(7, 97%, 60%, 100%);
-    --kbq-icon-success-color: hsla(104, 64%, 45%, 100%);
-    --kbq-icon-warning-color: hsla(38, 100%, 60%, 100%);
+    --kbq-icon-theme-color: var(--kbq-icon-theme);
+    --kbq-icon-contrast-color: var(--kbq-icon-contrast);
+    --kbq-icon-fade-contrast-color: var(--kbq-icon-contrast-fade);
+    --kbq-icon-error-color: var(--kbq-icon-error);
+    --kbq-icon-success-color: var(--kbq-icon-success);
+    --kbq-icon-warning-color: var(--kbq-icon-warning);
 }

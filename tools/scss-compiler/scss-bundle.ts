@@ -61,6 +61,7 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
 
     copyPrebuiltThemes(distPrebuiltThemes, 'dist/components/prebuilt-themes', 'dark-theme.css');
     copyPrebuiltThemes(distPrebuiltThemes, 'dist/components/prebuilt-themes', 'light-theme.css');
+    copyPrebuiltThemes(distPrebuiltThemes, 'dist/components/prebuilt-themes', 'theme.css');
 
     const end = performance.now();
     console.log(`End time: ${(end - start) / 1000} seconds.`);

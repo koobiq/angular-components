@@ -13,8 +13,8 @@
 @use '../forms/forms-theme' as *;
 @use '../highlight/highlight-theme' as *;
 
-@mixin koobiq-theme($theme) {
-    @include kbq-core-theme($theme);
+@mixin koobiq-theme($theme: null) {
+    @include kbq-core-theme();
 
     @include kbq-forms-theme();
     @include kbq-highlight-theme();
@@ -26,11 +26,7 @@
     @include kbq-tag-theme();
 }
 
-@mixin koobiq-typography($tokens, $config: null, $md-config: null) {
-    @if not $config {
-        $config: kbq-typography-config($tokens);
-    }
-
+@mixin koobiq-typography($tokens: null, $config: null, $md-config: null) {
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();

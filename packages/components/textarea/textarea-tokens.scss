@@ -1,14 +1,15 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-textarea {
     --kbq-textarea-size-min-height: 64px;
     --kbq-textarea-size-max-height: 96px;
-    --kbq-textarea-size-padding-vertical: 6px;
-    --kbq-textarea-size-padding-horizontal: 12px;
-    --kbq-textarea-font-default-font-size: 14px;
-    --kbq-textarea-font-default-line-height: 20px;
-    --kbq-textarea-font-default-letter-spacing: -0.006em;
-    --kbq-textarea-font-default-font-weight: normal;
-    --kbq-textarea-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
-    --kbq-textarea-font-default-text-transform: null;
-    --kbq-textarea-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-textarea-size-padding-vertical: var(--kbq-size-xs);
+    --kbq-textarea-size-padding-horizontal: var(--kbq-size-m);
+    --kbq-textarea-font-default-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-textarea-font-default-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-textarea-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-textarea-font-default-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-textarea-font-default-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-textarea-font-default-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-textarea-font-default-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }

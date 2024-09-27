@@ -42,13 +42,11 @@
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
-@mixin kbq-core-theme($theme) {
+/* stylelint-disable no-unknown-custom-properties */
+@mixin kbq-core-theme($theme: null) {
     .kbq-app-background {
-        $background: map.get($theme, background);
-        $foreground: map.get($theme, foreground);
-
-        background-color: kbq-color($background, bg);
-        color: kbq-color($foreground, contrast);
+        background: var(--kbq-background-bg);
+        color: var(--kbq-foreground-contrast);
     }
 
     .kbq-theme-loaded-marker {

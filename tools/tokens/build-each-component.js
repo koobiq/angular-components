@@ -12,6 +12,9 @@ const {
 
 const TOKEN_FILE_EXT = 'json5';
 const BASE_PATH = 'node_modules/@koobiq/design-tokens/web';
+const customHeader = `/* stylelint-disable no-unknown-custom-properties */`;
+
+const manuallyResolvedCategories = ['light', 'dark', 'palette', 'shadow'];
 
 const componentsWithCss = [
     'alert',
@@ -50,6 +53,7 @@ const componentsWithCss = [
     'forms',
     'option',
     'splitter',
+    'tag',
     'tabs',
     'tag',
     'tabs',
@@ -72,10 +76,6 @@ const styleDictionaryConfig = {
             buildPath: `packages/components/`,
             transformGroup: 'kbq/css',
             filter: (token) => !['font', 'size', 'typography', 'md-typography'].includes(token.attributes.category)
-            // FIXME: add when move all components to css vars (#DS-2788)
-            /*options: {
-                outputReferences: true
-            }*/
         }
     }
 };
@@ -96,7 +96,8 @@ StyleDictionary.registerFormat({
             token.name = token.name.replace(/(light|dark)-/, '');
         });
         dictionary.allTokens = dictionary.allProperties = allTokens.filter(
-            (token) => !['light', 'dark'].includes(token.attributes.category) || additionalFilter(token, component)
+            (token) =>
+                !manuallyResolvedCategories.includes(token.attributes.category) || additionalFilter(token, component)
         );
 
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
@@ -112,29 +113,35 @@ StyleDictionary.registerFormat({
         const lightDictionary = filterTokens(dictionary, (token) => token.attributes.light);
         const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);
 
-        return Object.entries({
-            [`.kbq-${resolveComponentName(component)}`]: baseDictionary,
-            [lightThemeSelector]: lightDictionary,
-            [darkThemeSelector]: darkDictionary
-        })
-            .filter(([, currentDictionary]) => currentDictionary.allTokens.length)
-            .map(([key, currentDictionary]) => {
-                return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
+        return (
+            `${customHeader}\n\n` +
+            Object.entries({
+                [`.kbq-${resolveComponentName(component)}`]: baseDictionary,
+                [lightThemeSelector]: lightDictionary,
+                [darkThemeSelector]: darkDictionary
             })
-            .join('\n');
+                .filter(([, currentDictionary]) => currentDictionary.allTokens.length)
+                .map(([key, currentDictionary]) => {
+                    return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
+                })
+                .join('\n')
+        );
     }
 });
 
 function fileFormat(destination, component) {
     return {
         destination,
-        filter: (token) => token.attributes.category === component || additionalFilter(token, component),
-        // give access to light/dark/palette tokens to resolve reference manually
-        // ['light', 'dark', 'palette'].includes(token.attributes.category),
+        filter: (token) =>
+            token.attributes.category === component ||
+            // give access to these tokens to resolve reference manually
+            manuallyResolvedCategories.includes(token.attributes.category) ||
+            additionalFilter(token, component),
         format: 'kbq-css/component',
         prefix: 'kbq',
         options: {
-            component
+            component,
+            outputReferences: true
         }
     };
 }

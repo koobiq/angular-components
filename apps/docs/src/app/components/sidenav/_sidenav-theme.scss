@@ -1,51 +1,49 @@
 @use 'sass:map';
 
 @use '../dist/components/core/styles/theming';
-@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
-@mixin kbq-docs-sidenav-theme($theme) {
-    $background: map.get($theme, background);
-    $foreground: map.get($theme, foreground);
-    $states-background: map.get(map.get($theme, states), background);
+/* stylelint-disable no-unknown-custom-properties */
 
+@mixin kbq-docs-sidenav-theme() {
     .docs-sidenav {
-        background-color: map.get($background, bg-secondary);
+        background-color: var(--kbq-background-bg-secondary);
 
         .docs-sidenav__header-text path {
-            fill: map.get($foreground, contrast);
+            fill: var(--kbq-foreground-contrast);
         }
 
         .kbq-tree-option:hover {
-            background: map.get($states-background, transparent-hover);
+            background: var(--kbq-states-background-transparent-hover);
         }
 
         .kbq-tree-option.kbq-selected,
         .kbq-tree-option.kbq-selected:hover {
-            background: map.get($states-background, transparent-active);
+            background: var(--kbq-states-background-transparent-active);
         }
     }
 
     @media (width <= 768px) {
         .docs-sidenav {
-            background-color: map.get($background, bg);
+            background-color: var(--kbq-background-bg);
         }
     }
 }
 
-@mixin kbq-docs-sidenav-typography($config) {
+@mixin kbq-docs-sidenav-typography() {
     .docs-sidenav {
         .docs-sidenav__category-text {
-            @include typography.kbq-typography-level-to-styles($config, subheading);
+            @include tokens.kbq-typography-level-to-styles_css-variables(typography, subheading);
         }
     }
 
     .docs-navbar__anchor .kbq-button {
-        @include typography.kbq-typography-level-to-styles($config, text-big);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 
     @media (width <= 768px) {
         .docs-sidenav__category {
-            @include typography.kbq-typography-level-to-styles($config, title);
+            @include tokens.kbq-typography-level-to-styles_css-variables(typography, title);
         }
     }
 }

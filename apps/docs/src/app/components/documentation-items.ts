@@ -86,15 +86,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: []
                 },
                 {
-                    id: 'customization',
-                    name: 'Кастомизация тем',
-                    svgPreview: 'themes',
-                    isGuide: true,
-                    hasApi: false,
-                    hasExamples: false,
-                    examples: []
-                },
-                {
                     id: 'typography',
                     name: 'Типографика',
                     svgPreview: 'typography',

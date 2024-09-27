@@ -4,6 +4,7 @@
 
 @use '../dist/components/core/styles/visual';
 @use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
 @use '../dist/components/core/styles/koobiq-theme' as *;
 
@@ -22,50 +23,49 @@
 
 @use '../styles/hot-keys';
 
+/* stylelint-disable no-unknown-custom-properties */
+
 @include components.kbq-core();
 
 @include visual.body-html();
 @include visual.layouts-for-breakpoint();
 
 // Include all typography for the components.
-@mixin docs-typography($tokens, $config, $md-config) {
-    @include typography.kbq-typography-level-to-styles($config, text-normal);
+@mixin docs-typography() {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-    @include koobiq-typography($tokens, $config, $md-config);
+    @include koobiq-typography();
 
-    @include component-viewer-theme.kbq-docs-component-viewer-typography($config);
-    @include footer-theme.kbq-docs-footer-typography($config);
-    @include sidenav-theme.kbq-docs-sidenav-typography($config);
-    @include navbar-theme.kbq-docs-navbar-typography($config);
-    @include docs-example-source-theme.kbq-docs-example-source-typography($config);
-    @include icons-viewer-theme.kbq-docs-icons-viewer-typography($config);
-    @include welcome-theme.kbq-docs-welcome-typography($config);
-    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-typography($config);
+    @include component-viewer-theme.kbq-docs-component-viewer-typography();
+    @include footer-theme.kbq-docs-footer-typography();
+    @include sidenav-theme.kbq-docs-sidenav-typography();
+    @include navbar-theme.kbq-docs-navbar-typography();
+    @include docs-example-source-theme.kbq-docs-example-source-typography();
+    @include icons-viewer-theme.kbq-docs-icons-viewer-typography();
+    @include welcome-theme.kbq-docs-welcome-typography();
+    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-typography();
 }
 
 // Include all theme styles for the components.
-@mixin docs-components-theme($theme) {
-    @include docs-app-theme.kbq-docs-app-theme($theme);
-    @include component-viewer-theme.kbq-docs-component-viewer-theme($theme);
-    @include anchors-theme.kbq-docs-anchors-theme($theme);
-    @include footer-theme.kbq-docs-footer-theme($theme);
-    @include sidenav-theme.kbq-docs-sidenav-theme($theme);
-    @include navbar-theme.kbq-docs-navbar-theme($theme);
-    @include icons-viewer-theme.kbq-docs-icons-viewer-theme($theme);
-    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-theme($theme);
-    @include docs-example-source-theme.kbq-docs-example-source-theme($theme);
-    @include hot-keys.hot-key-button-theme($theme);
-    @include page-not-found-theme.kbq-docs-page-not-found-theme($theme);
-    @include welcome-theme.kbq-docs-welcome-theme($theme);
+@mixin docs-components-theme() {
+    @include docs-app-theme.kbq-docs-app-theme();
+    @include component-viewer-theme.kbq-docs-component-viewer-theme();
+    @include anchors-theme.kbq-docs-anchors-theme();
+    @include footer-theme.kbq-docs-footer-theme();
+    @include sidenav-theme.kbq-docs-sidenav-theme();
+    @include navbar-theme.kbq-docs-navbar-theme();
+    @include icons-viewer-theme.kbq-docs-icons-viewer-theme();
+    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
+    @include docs-example-source-theme.kbq-docs-example-source-theme();
+    @include hot-keys.hot-key-button-theme();
+    @include page-not-found-theme.kbq-docs-page-not-found-theme();
+    @include welcome-theme.kbq-docs-welcome-theme();
 }
 
-@mixin kbq-docs-theme($theme) {
-    $background: map.get($theme, background);
-    $foreground: map.get($theme, foreground);
+@mixin kbq-docs-theme() {
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
 
-    background: components.kbq-color($background, bg);
-    color: components.kbq-color($foreground, contrast);
-
-    @include koobiq-theme($theme);
-    @include docs-components-theme($theme);
+    @include koobiq-theme();
+    @include docs-components-theme();
 }

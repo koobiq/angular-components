@@ -1,60 +1,55 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-popover {
-    --kbq-size-s: 8px;
-    --kbq-size-4xl: 40px;
-    --kbq-button-size-border-radius: 8px;
+    --kbq-button-size-border-radius: var(--kbq-size-s);
     --kbq-popover-size-container-width-small: 200px;
     --kbq-popover-size-container-width-medium: 400px;
     --kbq-popover-size-container-width-large: 640px;
-    --kbq-popover-size-container-border-radius: 12px;
+    --kbq-popover-size-container-border-radius: var(--kbq-size-m);
     --kbq-popover-size-container-max-height: 480px;
     --kbq-popover-size-close-button-width: 32px;
     --kbq-popover-size-close-button-margin-right: -16px;
     --kbq-popover-size-close-button-margin-top: -10px;
-    --kbq-popover-size-header-padding-horizontal: 24px;
-    --kbq-popover-size-header-padding-top: 16px;
-    --kbq-popover-size-header-padding-bottom: 6px;
-    --kbq-popover-size-content-padding-top: 24px;
-    --kbq-popover-size-content-padding-bottom: 32px;
-    --kbq-popover-size-content-padding-horizontal: 24px;
-    --kbq-popover-size-content-padding-with-header-top: 8px;
-    --kbq-popover-size-content-padding-with-footer-bottom: 8px;
-    --kbq-popover-size-footer-padding-vertical: 16px;
-    --kbq-popover-size-footer-padding-horizontal: 24px;
-    --kbq-popover-font-header-font-size: 18px;
-    --kbq-popover-font-header-line-height: 26px;
-    --kbq-popover-font-header-letter-spacing: normal;
-    --kbq-popover-font-header-font-weight: 600;
-    --kbq-popover-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-popover-font-header-text-transform: null;
-    --kbq-popover-font-header-font-feature-settings: 'calt', 'kern', 'liga';
-    --kbq-popover-font-content-font-size: 14px;
-    --kbq-popover-font-content-line-height: 20px;
-    --kbq-popover-font-content-letter-spacing: -0.006em;
-    --kbq-popover-font-content-font-weight: normal;
-    --kbq-popover-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
-    --kbq-popover-font-content-text-transform: null;
-    --kbq-popover-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-popover-size-header-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-popover-size-header-padding-top: var(--kbq-size-l);
+    --kbq-popover-size-header-padding-bottom: var(--kbq-size-xs);
+    --kbq-popover-size-content-padding-top: var(--kbq-size-xxl);
+    --kbq-popover-size-content-padding-bottom: var(--kbq-size-3xl);
+    --kbq-popover-size-content-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-popover-size-content-padding-with-header-top: var(--kbq-size-s);
+    --kbq-popover-size-content-padding-with-footer-bottom: var(--kbq-size-s);
+    --kbq-popover-size-footer-padding-vertical: var(--kbq-size-l);
+    --kbq-popover-size-footer-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-popover-font-header-font-size: var(--kbq-typography-subheading-font-size);
+    --kbq-popover-font-header-line-height: var(--kbq-typography-subheading-line-height);
+    --kbq-popover-font-header-letter-spacing: var(--kbq-typography-subheading-letter-spacing);
+    --kbq-popover-font-header-font-weight: var(--kbq-typography-subheading-font-weight);
+    --kbq-popover-font-header-font-family: var(--kbq-typography-subheading-font-family);
+    --kbq-popover-font-header-text-transform: var(--kbq-typography-subheading-text-transform);
+    --kbq-popover-font-header-font-feature-settings: var(--kbq-typography-subheading-font-feature-settings);
+    --kbq-popover-font-content-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-popover-font-content-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-popover-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-popover-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-popover-font-content-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-popover-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-popover-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-background-overlay-inverse: hsla(229, 15%, 99%, 88%);
-    --kbq-popover-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-popover-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 2px 8px hsla(229, 15%, 6%, 6%),
-        0 3px 8px hsla(229, 15%, 6%, 12%);
-    --kbq-popover-header-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-popover-header-scroll-shadow: 9px 0 -8px -12px hsla(229, 15%, 60%, 100%);
-    --kbq-popover-content-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-popover-footer-scroll-shadow: 0px 9px 8px -12px hsla(229, 15%, 60%, 100%);
+    --kbq-popover-container-background: var(--kbq-background-card);
+    --kbq-popover-container-box-shadow: var(--kbq-shadow-popup);
+    --kbq-popover-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-popover-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
+    --kbq-popover-content-text-color: var(--kbq-foreground-contrast);
+    --kbq-popover-footer-scroll-shadow: var(--kbq-shadow-overflow-normal-top);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-background-overlay-inverse: hsla(229, 15%, 12%, 80%);
-    --kbq-popover-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-popover-container-box-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-popover-header-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-popover-header-scroll-shadow: 0px 1px 0px 0px hsla(229, 100%, 85%, 15%);
-    --kbq-popover-content-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-popover-footer-scroll-shadow: 0px -1px 0px 0px hsla(229, 100%, 85%, 15%);
+    --kbq-popover-container-background: var(--kbq-background-card);
+    --kbq-popover-container-box-shadow: var(--kbq-shadow-popup);
+    --kbq-popover-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-popover-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
+    --kbq-popover-content-text-color: var(--kbq-foreground-contrast);
+    --kbq-popover-footer-scroll-shadow: var(--kbq-shadow-overflow-normal-top);
 }

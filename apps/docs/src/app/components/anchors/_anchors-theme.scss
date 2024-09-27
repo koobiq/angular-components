@@ -4,14 +4,13 @@
 @use '../dist/components/core/styles/typography';
 @use '../dist/components/core/styles/common';
 
-@mixin kbq-docs-anchors-theme($theme) {
-    $foreground: map.get($theme, foreground);
-    $background: map.get($theme, background);
+/* stylelint-disable no-unknown-custom-properties */
 
-    $shadow: theming.kbq-color($foreground, text-less-contrast);
+@mixin kbq-docs-anchors-theme() {
+    $shadow: var(--kbq-foreground-text-less-contrast);
 
     .docs-anchors {
-        background-color: theming.kbq-color($background, bg);
+        background-color: var(--kbq-background-bg);
     }
 
     .docs-anchors__link {

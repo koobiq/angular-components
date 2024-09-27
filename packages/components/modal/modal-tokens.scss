@@ -1,53 +1,52 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-modal {
     --kbq-modal-size-small-width: 400px;
     --kbq-modal-size-medium-width: 640px;
     --kbq-modal-size-large-width: 960px;
-    --kbq-modal-size-border-radius: 8px;
-    --kbq-modal-size-header-padding-vertical: 16px;
-    --kbq-modal-size-header-padding-left: 24px;
-    --kbq-modal-size-header-padding-right: 48px;
-    --kbq-modal-size-close-button-margin-left: 8px;
-    --kbq-modal-size-content-padding-horizontal: 24px;
+    --kbq-modal-size-border-radius: var(--kbq-size-s);
+    --kbq-modal-size-header-padding-vertical: var(--kbq-size-l);
+    --kbq-modal-size-header-padding-left: var(--kbq-size-xxl);
+    --kbq-modal-size-header-padding-right: var(--kbq-size-5xl);
+    --kbq-modal-size-close-button-margin-left: var(--kbq-size-s);
+    --kbq-modal-size-content-padding-horizontal: var(--kbq-size-xxl);
     --kbq-modal-size-content-padding-top: 0;
-    --kbq-modal-size-content-padding-bottom: 8px;
-    --kbq-modal-size-content-padding-top-without-header: 24px;
-    --kbq-modal-size-content-padding-bottom-without-footer: 40px;
-    --kbq-modal-size-footer-padding-horizontal: 24px;
-    --kbq-modal-size-footer-padding-vertical: 20px;
-    --kbq-modal-size-footer-content-gap-horizontal: 16px;
-    --kbq-modal-font-header-font-size: 20px;
-    --kbq-modal-font-header-line-height: 28px;
-    --kbq-modal-font-header-letter-spacing: normal;
-    --kbq-modal-font-header-font-weight: 700;
-    --kbq-modal-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
-    --kbq-modal-font-header-text-transform: null;
-    --kbq-modal-font-header-font-feature-settings: 'calt', 'kern', 'liga';
-    --kbq-modal-font-content-font-size: 14px;
-    --kbq-modal-font-content-line-height: 20px;
-    --kbq-modal-font-content-letter-spacing: -0.006em;
-    --kbq-modal-font-content-font-weight: normal;
-    --kbq-modal-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-modal-font-content-text-transform: null;
-    --kbq-modal-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-modal-size-content-padding-bottom: var(--kbq-size-s);
+    --kbq-modal-size-content-padding-top-without-header: var(--kbq-size-xxl);
+    --kbq-modal-size-content-padding-bottom-without-footer: var(--kbq-size-4xl);
+    --kbq-modal-size-footer-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-modal-size-footer-padding-vertical: var(--kbq-size-xl);
+    --kbq-modal-size-footer-content-gap-horizontal: var(--kbq-size-l);
+    --kbq-modal-font-header-font-size: var(--kbq-typography-title-font-size);
+    --kbq-modal-font-header-line-height: var(--kbq-typography-title-line-height);
+    --kbq-modal-font-header-letter-spacing: var(--kbq-typography-title-letter-spacing);
+    --kbq-modal-font-header-font-weight: var(--kbq-typography-title-font-weight);
+    --kbq-modal-font-header-font-family: var(--kbq-typography-title-font-family);
+    --kbq-modal-font-header-text-transform: var(--kbq-typography-title-text-transform);
+    --kbq-modal-font-header-font-feature-settings: var(--kbq-typography-title-font-feature-settings);
+    --kbq-modal-font-content-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-modal-font-content-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-modal-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-modal-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-modal-font-content-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-modal-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-modal-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-modal-overlay-background: hsla(229, 15%, 20%, 32%);
-    --kbq-modal-container-background: hsla(229, 15%, 100%, 100%);
-    --kbq-modal-container-box-shadow: 0 0 0 1px hsla(229, 15%, 6%, 3%), 0 3px 16px hsla(229, 15%, 6%, 6%),
-        0 4px 32px hsla(229, 15%, 6%, 12%);
-    --kbq-modal-close-button-color: hsla(229, 15%, 15%, 100%);
-    --kbq-modal-header-text-color: hsla(229, 15%, 15%, 100%);
-    --kbq-modal-content-text-color: hsla(229, 15%, 15%, 100%);
+    --kbq-modal-overlay-background: var(--kbq-background-overlay);
+    --kbq-modal-container-background: var(--kbq-background-card);
+    --kbq-modal-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-modal-close-button-color: var(--kbq-icon-contrast);
+    --kbq-modal-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-modal-content-text-color: var(--kbq-foreground-contrast);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-modal-overlay-background: hsla(229, 15%, 6%, 64%);
-    --kbq-modal-container-background: hsla(229, 15%, 15%, 100%);
-    --kbq-modal-container-box-shadow: 0 0 0 1px hsla(229, 100%, 85%, 15%);
-    --kbq-modal-close-button-color: hsla(229, 15%, 80%, 100%);
-    --kbq-modal-header-text-color: hsla(229, 15%, 80%, 100%);
-    --kbq-modal-content-text-color: hsla(229, 15%, 80%, 100%);
+    --kbq-modal-overlay-background: var(--kbq-background-overlay);
+    --kbq-modal-container-background: var(--kbq-background-card);
+    --kbq-modal-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-modal-close-button-color: var(--kbq-icon-contrast);
+    --kbq-modal-header-text-color: var(--kbq-foreground-contrast);
+    --kbq-modal-content-text-color: var(--kbq-foreground-contrast);
 }
