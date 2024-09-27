@@ -25,4 +25,4 @@ jobs:
       - uses: ./.github/workflows/actions/build-docs
 
       - name: Deploy
-        run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+        run: npx firebase deploy --only hosting:v17 --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
