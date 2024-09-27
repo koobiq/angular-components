@@ -1,4 +1,4 @@
-name: Deploy Stable Docs
+name: Deploy Stable Docs to v17
 
 on:
   push:
