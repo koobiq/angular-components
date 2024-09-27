@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - 17.*.*
   pull_request:
 
 permissions: read-all
