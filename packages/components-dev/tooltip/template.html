@@ -314,8 +314,8 @@
                         kbq-button
                         [kbqPlacement]="selectedPlacement"
                         [kbqPlacementPriority]="multipleSelected"
+                        [kbqRelativeToPointer]="true"
                         [kbqTooltip]="inputText"
-                        [kbqTooltipArrow]="false"
                         [kbqTooltipColor]="selectedColor"
                         [kbqTrigger]="selectedTrigger"
                         (kbqPlacementChange)="onPlacementChange($event)"

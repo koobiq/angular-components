@@ -80,6 +80,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly availablePositions: { [key: string]: ConnectionPositionPair } = POSITION_MAP;
     protected readonly destroyed = new Subject<void>();
     protected triggerName: string;
+    protected mouseEvent?: MouseEvent;
+    protected strategy: FlexibleConnectedPositionStrategy;
 
     abstract updateClassMap(newPlacement?: string): void;
 
@@ -203,7 +205,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         }
 
         // Create connected position strategy that listens for scroll events to reposition.
-        const strategy = this.overlay
+        this.strategy = this.overlay
             .position()
             .flexibleConnectedTo(this.elementRef)
             .withTransformOriginOn(this.originSelector)
@@ -212,12 +214,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
             .withLockedPosition()
             .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
 
-        strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
+        this.strategy.positionChanges.pipe(takeUntil(this.destroyed)).subscribe(this.onPositionChange);
 
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
             direction: this.direction || undefined,
-            positionStrategy: strategy,
+            positionStrategy: this.strategy,
             scrollStrategy: this.scrollStrategy()
         });
 
@@ -226,6 +228,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.overlayRef.detachments().pipe(takeUntil(this.destroyed)).subscribe(this.detach);
 
         return this.overlayRef;
+    }
+
+    resetOrigin() {
+        this.strategy.setOrigin(this.elementRef);
     }
 
     onPositionChange = ($event: ConnectedOverlayPositionChange): void => {
@@ -335,16 +341,23 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.listeners.clear();
     }
 
-    private createListener(name: string, listener: () => void): [string, () => void] {
+    private createListener(name: string, listener: () => void): [string, (event: unknown) => void] {
         return [
             name,
-            () => {
+            (event: unknown) => {
                 this.triggerName = name;
+                this.saveMouseEvent(event as MouseEvent);
 
                 return listener.call(this);
             }
 
         ];
+    }
+
+    private saveMouseEvent(event: MouseEvent) {
+        if (this.triggerName === 'mouseenter') {
+            this.mouseEvent = event;
+        }
     }
 
     private addEventListener = (listener: EventListener, event: string) => {

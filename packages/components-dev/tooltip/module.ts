@@ -47,8 +47,8 @@ export class DemoComponent {
 
     selectedElement: string = 'button';
     selectedColor: KbqComponentColors = KbqComponentColors.Contrast;
-    selectedPlacement: PopUpPlacements = PopUpPlacements.Left;
-    selectedTrigger: string = 'click';
+    selectedPlacement: PopUpPlacements = PopUpPlacements.Top;
+    selectedTrigger: string = 'hover';
     layoutClass: string = 'layout-row layout-align-center-center';
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];

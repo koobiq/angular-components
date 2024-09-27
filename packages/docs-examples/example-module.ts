@@ -4012,6 +4012,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tooltip"
     }
   },
+  "tooltip-relative-to-pointer": {
+    "packagePath": "components/tooltip/tooltip-relative-to-pointer",
+    "title": "tooltip relative to pointer",
+    "componentName": "TooltipRelativeToPointerExample",
+    "files": [
+      "tooltip-relative-to-pointer-example.ts",
+      "tooltip-relative-to-pointer-example.html",
+      "tooltip-relative-to-pointer-example.css"
+    ],
+    "selector": "tooltip-relative-to-pointer-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-relative-to-pointer-example.ts",
+    "module": {
+      "name": "TooltipExamplesModule",
+      "importSpecifier": "components/tooltip",
+      "importPath": "koobiq-docs-examples-components-tooltip"
+    }
+  },
   "tooltip-style": {
     "packagePath": "components/tooltip/tooltip-style",
     "title": "Tooltip Style",
