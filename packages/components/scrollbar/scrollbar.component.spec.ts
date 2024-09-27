@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqScrollbar } from './scrollbar.component';
 import { KbqScrollbarModule } from './scrollbar.module';
@@ -13,10 +12,7 @@ import {
 
 const configureTestingModule = (declarations?: any[]) => {
     TestBed.configureTestingModule({
-        imports: [
-            KbqScrollbarModule,
-            BrowserTestingModule
-        ],
+        imports: [KbqScrollbarModule],
         declarations,
         providers: [
             {
@@ -27,7 +23,7 @@ const configureTestingModule = (declarations?: any[]) => {
     }).compileComponents();
 };
 
-describe('KbqScrollbar', () => {
+describe(KbqScrollbarModule.name, () => {
     describe('core', () => {
         let component: KbqScrollbar;
         let fixture: ComponentFixture<KbqScrollbar>;
@@ -41,7 +37,7 @@ describe('KbqScrollbar', () => {
         });
 
         beforeEach(() => {
-            configureTestingModule([KbqScrollbar]);
+            configureTestingModule();
 
             fixture = TestBed.createComponent(KbqScrollbar);
             component = fixture.componentInstance;

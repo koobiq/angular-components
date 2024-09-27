@@ -33,7 +33,12 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         {}
     );
 
+/**
+ * The component-wrapper for `overlayscrollbars` library.
+ */
 @Component({
+    standalone: true,
+    imports: [KbqScrollbarDirective],
     selector: 'kbq-scrollbar, [kbq-scrollbar]',
     exportAs: 'kbqScrollbar',
     host: {

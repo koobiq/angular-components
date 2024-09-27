@@ -27,6 +27,7 @@
         "stylelintrc",
         "Repobeats",
         "timepicker",
-        "unclickable"
+        "unclickable",
+        "overlayscrollbars"
     ]
 }
