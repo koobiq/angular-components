@@ -1,31 +1,39 @@
-# firebase artifacts
-.firebase
+# compiled output
+/dist
+/tmp
+/out-tsc
 
-package-lock.json
+# dependencies
+/node_modules
 
-.env
-
-# folders
-node_modules/
-coverage/
-dist/
-tmp/
-temp/
-
-# Example module file will be auto-generated.
-/packages/docs-examples/example-module.ts
-
-# IDEs
+# IDEs and editors
 /.idea
-/.vscode
-/.awcache
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
 
 # misc
+/.angular/cache
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
 .DS_Store
 Thumbs.db
-npm-debug.log
-*~
-*.sw[mnpcod]
-*.log
-*.tmp
-*.tmp.*
