@@ -1,3 +1,16 @@
+# 18.0.0 (2024-09-27)
+
+### Koobiq
+
+ * bug fix  **list:** multiple selection by keyboard on macos ([#DS-2908](https://github.com/koobiq/angular-components/issues/issue/DS-2908)) ([#309](https://github.com/koobiq/angular-components/issues/309)) ([722886f](https://github.com/koobiq/angular-components/commit/722886fcd12d0ac2cdd08b006373afad917819ac))
+ * bug fix  **navbar:** kbq-vertical-navbar does not apply design-tokens ([#DS-2911](https://github.com/koobiq/angular-components/issues/issue/DS-2911)) ([#318](https://github.com/koobiq/angular-components/issues/318)) ([0bff8d0](https://github.com/koobiq/angular-components/commit/0bff8d01bdb1cdc13da4a68e97e7b5bd8072942c))
+ * feature  angular 18 ([#DS-2894](https://github.com/koobiq/angular-components/issues/issue/DS-2894)) ([#298](https://github.com/koobiq/angular-components/issues/298)) ([9974ebf](https://github.com/koobiq/angular-components/commit/9974ebf0a88a7dd81b9176ff0726a106a3444aa1))
+ * feature  **icons:** new icons pack ([#DS-2567](https://github.com/koobiq/angular-components/issues/issue/DS-2567)) ([#86](https://github.com/koobiq/angular-components/issues/86)) ([b392539](https://github.com/koobiq/angular-components/commit/b39253915bbc13919e460c7bdb8df3ddccf8a137))
+ * feature  **scrollbar:** updated docs and migrated to standalone ([#DS-2899](https://github.com/koobiq/angular-components/issues/issue/DS-2899)) ([#307](https://github.com/koobiq/angular-components/issues/307)) ([b9c6695](https://github.com/koobiq/angular-components/commit/b9c6695b2210981d51d755b39389200215ff0a12))
+ * feature  updated CI dependencies ([#313](https://github.com/koobiq/angular-components/issues/313)) ([528ef95](https://github.com/koobiq/angular-components/commit/528ef95bbaf3a07fa167f953360dc2df2bb74702))
+ * feature  updated Koobiq icons to 9.1 ([0e86c64](https://github.com/koobiq/angular-components/commit/0e86c64f4d764fc9cd65f36a17bcfa202bccb7c5))
+ * feature  **visual,docs:** moved from sass vars to css-vars ([#296](https://github.com/koobiq/angular-components/issues/296)) ([fbb9756](https://github.com/koobiq/angular-components/commit/fbb97562ed757a359b22a337d546dddc0eb457bc))
+
 # 17.8.0 (2024-09-25)
 
 ### Koobiq
