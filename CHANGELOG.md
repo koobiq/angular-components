@@ -1,3 +1,10 @@
+## 17.8.2 (2024-09-27)
+
+### Koobiq
+
+ * bug fix  **navbar:** kbq-vertical-navbar does not apply design-tokens ([#DS-2911](https://github.com/koobiq/angular-components/issues/issue/DS-2911)) ([#320](https://github.com/koobiq/angular-components/issues/320)) ([1962d46](https://github.com/koobiq/angular-components/commit/1962d4640373265c3cbf5c9a7e8aa5ced2333078))
+ * feature  **scrollbar:** updated docs and migrated to standalone ([#DS-2899](https://github.com/koobiq/angular-components/issues/issue/DS-2899)) ([#317](https://github.com/koobiq/angular-components/issues/317)) ([e112c8c](https://github.com/koobiq/angular-components/commit/e112c8c761a25243989f3b2e2a36e6caa6069455))
+
 ## 17.8.1 (2024-09-26)
 
 ### Koobiq
