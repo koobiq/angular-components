@@ -14692,7 +14692,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.16.1"
     "@typescript-eslint/parser": "npm:^7.16.1"
     autoprefixer: "npm:^10.4.19"
-    chalk: "npm:^4.0.0"
+    chalk: "npm:^5.3.0"
     commander: "npm:^11.1.0"
     conventional-changelog: "npm:^3.1.10"
     conventional-changelog-angular: "npm:5.0.13"
