@@ -257,7 +257,7 @@ const OPTIONS = [
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -320,7 +320,7 @@ class BasicSelect {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -391,7 +391,7 @@ class ManySelects {}
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -450,7 +450,7 @@ class SelectWithChangeEvent {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -632,7 +632,7 @@ class BasicSelectOnPushPreselected {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -689,7 +689,7 @@ class MultiSelect {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -783,7 +783,7 @@ class BasicSelectWithTheming {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -829,7 +829,7 @@ class ResetValuesSelect {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -1130,7 +1130,7 @@ class SelectWithCustomTrigger {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -1312,7 +1312,7 @@ class SelectWithFormFieldLabel {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -1361,7 +1361,7 @@ class SelectWithLongOptionText {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
                             ></i>
                         }
@@ -1455,7 +1455,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 (click)="select.onRemoveMatcherItem(option, $event)"
-                                kbq-icon="mc-close-S_16"
+                                kbq-icon="kbq-xmark-s_16"
                                 mcTagRemove
                             ></i>
                         }

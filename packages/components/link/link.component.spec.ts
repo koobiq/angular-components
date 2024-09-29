@@ -113,7 +113,7 @@ class KbqLinkPrintTestApp {
             kbq-link
         >
             <span class="kbq-link__text">Отчет сканирования</span>
-            <i kbq-icon="mc-new-tab_16"></i>
+            <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </a>
     `
 })

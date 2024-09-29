@@ -10,6 +10,32 @@
 $trigger-margin: 8px;
 $trigger-margin_without-arrow: 4px;
 
+.kbq-tooltip-panel_horizontal-navbar {
+    &:has(.kbq-tooltip_placement-top),
+    &:has(.kbq-tooltip_placement-top-left),
+    &:has(.kbq-tooltip_placement-top-right) {
+        margin-bottom: 9px;
+    }
+
+    &:has(.kbq-tooltip_placement-right),
+    &:has(.kbq-tooltip_placement-right-top),
+    &:has(.kbq-tooltip_placement-right-bottom) {
+        margin-left: 9px;
+    }
+
+    &:has(.kbq-tooltip_placement-bottom),
+    &:has(.kbq-tooltip_placement-bottom-left),
+    &:has(.kbq-tooltip_placement-bottom-right) {
+        margin-top: 9px;
+    }
+
+    &:has(.kbq-tooltip_placement-left),
+    &:has(.kbq-tooltip_placement-left-top),
+    &:has(.kbq-tooltip_placement-left-bottom) {
+        margin-right: 9px;
+    }
+}
+
 .kbq-tooltip__inner {
     border-radius: kbq-css-variable(tooltip-size-border-radius);
     word-break: break-word;

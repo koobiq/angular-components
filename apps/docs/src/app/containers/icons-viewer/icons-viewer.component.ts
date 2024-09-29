@@ -54,7 +54,7 @@ export class IconsViewerComponent implements OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef
     ) {
-        this.http.get('assets/SVGIcons/mc-icons-info.json', { responseType: 'json' }).subscribe((data) => {
+        this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
             this.iconItems = new IconItems(data);
 
             this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
@@ -91,7 +91,8 @@ export class IconsViewerComponent implements OnDestroy {
                         .filter(
                             (item) =>
                                 item.name.toLowerCase().includes(lowered) ||
-                                item.tags.some((tag) => tag.toLowerCase().includes(lowered))
+                                (Array.isArray(item.tags) &&
+                                    item.tags.some((tag) => tag.toLowerCase().includes(lowered)))
                         );
 
                     return items.length ? items : undefined;

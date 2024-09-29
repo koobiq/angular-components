@@ -56,7 +56,7 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
     selector: 'kbq-tree-node-toggle',
     exportAs: 'kbqTreeNodeToggle',
     template: `
-        <i kbq-icon="mc-angle-down-S_16"></i>
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],
     host: {

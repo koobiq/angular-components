@@ -1,22 +1,10 @@
-@use 'sass:map';
+/* stylelint-disable no-unknown-custom-properties */
 
-@use '../dist/components/core/styles/theming';
-
-@mixin hot-key-button-theme($theme) {
-    $foreground: map.get($theme, foreground);
-
+@mixin hot-key-button-theme() {
     .hot-key-button {
-        @if (map.get($theme, is-dark)) {
-            color: theming.kbq-color($foreground, contrast);
-            border-color: #808080;
-
-            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
-        } @else {
-            color: theming.kbq-color($foreground, contrast);
-            border-color: #d8d9db;
-
-            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04);
-        }
+        color: var(--kbq-foreground-contrast);
+        border-color: var(--kbq-foreground-border);
+        box-shadow: var(--kbq-shadow-card);
     }
 }
 

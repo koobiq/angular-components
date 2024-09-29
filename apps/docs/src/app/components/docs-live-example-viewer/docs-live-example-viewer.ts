@@ -160,10 +160,7 @@ export class DocsLiveExampleViewer {
             // source maps (which would never be loaded), we instruct Webpack to exclude source map
             // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
             // module.importSpecifier
-            const moduleExports: any = await import(
-                /* webpackExclude: /\.map$/ */
-                `@koobiq/docs-examples/fesm2022/${module.importPath}`
-            );
+            const moduleExports = await import(`@koobiq/docs-examples/fesm2022/${module.importPath}.mjs`);
             this.exampleComponentType = moduleExports[componentName];
             // The components examples package is built with Ivy. This means that no factory files are
             // generated. To retrieve the factory of the AOT compiled module, we simply pass the module

@@ -54,7 +54,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
 // @public
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
-// @public (undocumented)
+// @public
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
     contentElement: ElementRef<HTMLDivElement>;
@@ -79,37 +79,14 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     options: KbqScrollbarOptions;
     scrollTo(options?: ScrollToOptions): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar, [kbq-scrollbar]", ["kbqScrollbar"], { "initializationTarget": { "alias": "initializationTarget"; "required": false; }; "options": { "alias": "options"; "required": false; }; "events": { "alias": "events"; "required": false; }; "defer": { "alias": "defer"; "required": false; }; }, { "onInitialize": "onInitialize"; "onUpdate": "onUpdate"; "onDestroy": "onDestroy"; "onScroll": "onScroll"; }, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar, [kbq-scrollbar]", ["kbqScrollbar"], { "initializationTarget": { "alias": "initializationTarget"; "required": false; }; "options": { "alias": "options"; "required": false; }; "events": { "alias": "events"; "required": false; }; "defer": { "alias": "defer"; "required": false; }; }, { "onInitialize": "onInitialize"; "onUpdate": "onUpdate"; "onDestroy": "onDestroy"; "onScroll": "onScroll"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqScrollbarDirective implements OnDestroy {
-    constructor(ngZone: NgZone, scrollbarConfig?: {
-        paddingAbsolute?: boolean | undefined;
-        showNativeOverlaidScrollbars?: boolean | undefined;
-        update?: {
-            elementEvents?: [elementSelector: string, eventNames: string][] | null | undefined;
-            debounce?: number | [timeout: number, maxWait: number] | null | undefined;
-            attributes?: string[] | null | undefined;
-            ignoreMutation?: ((mutation: MutationRecord) => any) | null | undefined;
-        } | undefined;
-        overflow?: {
-            x?: OverflowBehavior | undefined;
-            y?: OverflowBehavior | undefined;
-        } | undefined;
-        scrollbars?: {
-            theme?: string | null | undefined;
-            visibility?: ScrollbarsVisibilityBehavior | undefined;
-            autoHide?: ScrollbarsAutoHideBehavior | undefined;
-            autoHideDelay?: number | undefined;
-            autoHideSuspend?: boolean | undefined;
-            dragScroll?: boolean | undefined;
-            clickScroll?: boolean | undefined;
-            pointers?: string[] | null | undefined;
-        } | undefined;
-    } | undefined);
+    constructor(ngZone: NgZone, scrollbarConfig?: KbqScrollbarOptions | undefined);
     defer?: boolean | IdleRequestOptions;
     set events(value: KbqScrollbarEvents);
     // (undocumented)
@@ -123,7 +100,7 @@ export class KbqScrollbarDirective implements OnDestroy {
     // (undocumented)
     scrollbarInstance?: OverlayScrollbars;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarDirective, "[kbqScrollbar]", never, { "options": { "alias": "options"; "required": false; }; "events": { "alias": "events"; "required": false; }; "defer": { "alias": "defer"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarDirective, "[kbqScrollbar]", never, { "options": { "alias": "options"; "required": false; }; "events": { "alias": "events"; "required": false; }; "defer": { "alias": "defer"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarDirective, never>;
 }
@@ -144,7 +121,7 @@ export class KbqScrollbarModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, [typeof i1.KbqScrollbar, typeof i2.KbqScrollbarDirective], never, [typeof i1.KbqScrollbar, typeof i2.KbqScrollbarDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof i1.KbqScrollbar, typeof i2.KbqScrollbarDirective], [typeof i1.KbqScrollbar, typeof i2.KbqScrollbarDirective]>;
 }
 
 // @public (undocumented)

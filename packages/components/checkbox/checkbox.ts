@@ -13,6 +13,7 @@ import {
     Output,
     ViewChild,
     ViewEncapsulation,
+    booleanAttribute,
     forwardRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -26,8 +27,7 @@ import {
     KbqComponentColors,
     mixinColor,
     mixinDisabled,
-    mixinTabIndex,
-    toBoolean
+    mixinTabIndex
 } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
@@ -139,16 +139,7 @@ export class KbqCheckbox
     }
 
     /** Whether the checkbox is required. */
-    @Input()
-    get required(): boolean {
-        return this._required;
-    }
-
-    set required(value: boolean) {
-        this._required = toBoolean(value);
-    }
-
-    private _required: boolean;
+    @Input({ transform: booleanAttribute }) required: boolean | undefined;
 
     /**
      * Whether the checkbox is checked.

@@ -8,7 +8,7 @@
 
     <kbq-form-field>
         <i
-            kbq-icon="mc-search_16"
+            kbq-icon="kbq-magnifying-glass_16"
             kbqPrefix
             [color]="themePalette.Secondary"
         ></i>
@@ -53,6 +53,10 @@
     }
 
     @if (searchControl.value && !filteredIcons.value) {
-        <div class="docs-icons-viewer__table-empty-results">Ничего не найдено</div>
+        <div class="docs-icons-viewer__table-empty-results">
+            <kbq-empty-state [big]="true">
+                <div kbq-empty-state-title>Ничего не найдено</div>
+            </kbq-empty-state>
+        </div>
     }
 </div>

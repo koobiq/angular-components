@@ -7,14 +7,14 @@
         [disabled]="true"
         [value]="'Disabled'"
     >
-        <i kbq-icon="mc-play_16"></i>
+        <i kbq-icon="kbq-play_16"></i>
         Disabled
     </kbq-list-option>
     <kbq-list-option
         [showCheckbox]="true"
         [value]="'Normal'"
     >
-        <i kbq-icon="mc-play_16"></i>
+        <i kbq-icon="kbq-play_16"></i>
         Normal
         <kbq-option-action
             [kbqDropdownTriggerFor]="dropdown"
@@ -54,7 +54,7 @@
     multiple="keyboard"
     style="height: 100px; overflow-y: scroll"
     [autoSelect]="true"
-    [disabled]="true"
+    [disabled]="false"
     [(ngModel)]="multipleSelected"
     (selectionChange)="onSelectionChange($event)"
 >

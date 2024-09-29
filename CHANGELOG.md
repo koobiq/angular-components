@@ -1,3 +1,32 @@
+# 18.0.0 (2024-09-27)
+
+### Koobiq
+
+ * bug fix  **list:** multiple selection by keyboard on macos ([#DS-2908](https://github.com/koobiq/angular-components/issues/issue/DS-2908)) ([#309](https://github.com/koobiq/angular-components/issues/309)) ([722886f](https://github.com/koobiq/angular-components/commit/722886fcd12d0ac2cdd08b006373afad917819ac))
+ * bug fix  **navbar:** kbq-vertical-navbar does not apply design-tokens ([#DS-2911](https://github.com/koobiq/angular-components/issues/issue/DS-2911)) ([#318](https://github.com/koobiq/angular-components/issues/318)) ([0bff8d0](https://github.com/koobiq/angular-components/commit/0bff8d01bdb1cdc13da4a68e97e7b5bd8072942c))
+ * feature  angular 18 ([#DS-2894](https://github.com/koobiq/angular-components/issues/issue/DS-2894)) ([#298](https://github.com/koobiq/angular-components/issues/298)) ([9974ebf](https://github.com/koobiq/angular-components/commit/9974ebf0a88a7dd81b9176ff0726a106a3444aa1))
+ * feature  **icons:** new icons pack ([#DS-2567](https://github.com/koobiq/angular-components/issues/issue/DS-2567)) ([#86](https://github.com/koobiq/angular-components/issues/86)) ([b392539](https://github.com/koobiq/angular-components/commit/b39253915bbc13919e460c7bdb8df3ddccf8a137))
+ * feature  **scrollbar:** updated docs and migrated to standalone ([#DS-2899](https://github.com/koobiq/angular-components/issues/issue/DS-2899)) ([#307](https://github.com/koobiq/angular-components/issues/307)) ([b9c6695](https://github.com/koobiq/angular-components/commit/b9c6695b2210981d51d755b39389200215ff0a12))
+ * feature  updated CI dependencies ([#313](https://github.com/koobiq/angular-components/issues/313)) ([528ef95](https://github.com/koobiq/angular-components/commit/528ef95bbaf3a07fa167f953360dc2df2bb74702))
+ * feature  updated Koobiq icons to 9.1 ([0e86c64](https://github.com/koobiq/angular-components/commit/0e86c64f4d764fc9cd65f36a17bcfa202bccb7c5))
+ * feature  **visual,docs:** moved from sass vars to css-vars ([#296](https://github.com/koobiq/angular-components/issues/296)) ([fbb9756](https://github.com/koobiq/angular-components/commit/fbb97562ed757a359b22a337d546dddc0eb457bc))
+
+# 17.8.0 (2024-09-25)
+
+### Koobiq
+
+ * bug fix  **tooltip:** tooltip in navbar ([#DS-2909](https://github.com/koobiq/angular-components/issues/issue/DS-2909)) ([#308](https://github.com/koobiq/angular-components/issues/308)) ([274a67f](https://github.com/koobiq/angular-components/commit/274a67f2e9c0f078e7fe612708abc71b6d8a1e27))
+ * feature  migrate on booleanAttribute ([#DS-2905](https://github.com/koobiq/angular-components/issues/issue/DS-2905)) ([#301](https://github.com/koobiq/angular-components/issues/301)) ([97fc8e1](https://github.com/koobiq/angular-components/commit/97fc8e16d9f99117aff02af29ab2db775f0c98a0))
+
+## 17.7.2 (2024-09-24)
+
+### Koobiq
+
+ * bug fix  **docs,cli,scrolling:** stick to specific scrollbar lib version ([#DS-2899](https://github.com/koobiq/angular-components/issues/issue/DS-2899)) ([#302](https://github.com/koobiq/angular-components/issues/302)) ([2a72788](https://github.com/koobiq/angular-components/commit/2a7278856bb6275d4246c3b66c4b0ff56602f95b))
+ * bug fix  **docs:** stackblitz icon alignment ([#300](https://github.com/koobiq/angular-components/issues/300)) ([539f1b1](https://github.com/koobiq/angular-components/commit/539f1b1c91aeedc35e266211bc7b63e375118970))
+ * bug fix  **docs:** updated kbd styles in table ([#DS-2495](https://github.com/koobiq/angular-components/issues/issue/DS-2495)) ([#303](https://github.com/koobiq/angular-components/issues/303)) ([71825f6](https://github.com/koobiq/angular-components/commit/71825f6a2054b8de4f811095cc506d39be022590))
+ * bug fix  **navbar:** added tokens to vertical navbar ([#304](https://github.com/koobiq/angular-components/issues/304)) ([3adb052](https://github.com/koobiq/angular-components/commit/3adb052a1a9df6d8c9d1cf1848934dbcae12986e))
+
 ## 17.7.1 (2024-09-20)
 
 ### Koobiq

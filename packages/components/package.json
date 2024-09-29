@@ -27,11 +27,11 @@
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@koobiq/date-formatter": "^3.1.2",
-        "@koobiq/icons": "^7.1.0",
-        "@koobiq/tokens-builder": "3.5.1",
-        "@koobiq/design-tokens": "3.5.1",
+        "@koobiq/icons": "^9.0.0",
+        "@koobiq/tokens-builder": "3.6.0",
+        "@koobiq/design-tokens": "3.6.0",
         "marked": "^9.0.0",
-        "overlayscrollbars": "^2.2.0",
+        "overlayscrollbars": "2.7.3",
         "ngx-highlightjs": "^10.0.0"
     },
     "dependencies": {
@@ -51,6 +51,9 @@
         },
         "./prebuilt-themes/dark-theme.css": {
             "style": "./prebuilt-themes/dark-theme.css"
+        },
+        "./prebuilt-themes/theme.css": {
+            "style": "./prebuilt-themes/theme.css"
         },
         "./prebuilt-visual/default-visual.css": {
             "style": "./prebuilt-visual/default-visual.css"

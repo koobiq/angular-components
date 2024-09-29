@@ -23,14 +23,11 @@ export const baseURLRegex: RegExp;
 export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
     // (undocumented)
-    get big(): any;
-    set big(value: any);
+    big: boolean;
     // (undocumented)
-    get compact(): any;
-    set compact(value: any);
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    compact: boolean;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -40,10 +37,21 @@ export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex,
     // (undocumented)
     icon: KbqIcon;
     // (undocumented)
+    static ngAcceptInputType_big: unknown;
+    // (undocumented)
+    static ngAcceptInputType_compact: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_noUnderline: unknown;
+    // (undocumented)
+    static ngAcceptInputType_pseudo: unknown;
+    // (undocumented)
+    static ngAcceptInputType_useVisited: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    get noUnderline(): any;
-    set noUnderline(value: any);
+    noUnderline: boolean;
     // (undocumented)
     set print(value: any);
     // (undocumented)
@@ -51,11 +59,9 @@ export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex,
     // (undocumented)
     printUrl: string;
     // (undocumented)
-    get pseudo(): any;
-    set pseudo(value: any);
+    pseudo: boolean;
     // (undocumented)
-    get useVisited(): any;
-    set useVisited(value: any);
+    useVisited: boolean;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon"], never, false, never>;
     // (undocumented)

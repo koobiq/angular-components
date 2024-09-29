@@ -46,7 +46,11 @@ const createDefer = (): Defer => {
     ];
 };
 
+/**
+ * A directive for adding `overlayscrollbars` to an element.
+ */
 @Directive({
+    standalone: true,
     selector: '[kbqScrollbar]'
 })
 export class KbqScrollbarDirective implements OnDestroy {

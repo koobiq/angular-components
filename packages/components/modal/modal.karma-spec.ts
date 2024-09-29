@@ -65,7 +65,7 @@ describe('KbqModal', () => {
 });
 
 @Component({
-    selector: 'mc-modal-by-service-from-dropdown',
+    selector: 'kbq-modal-by-service-from-dropdown',
     template: `
         <kbq-modal
             [(kbqVisible)]="nonServiceModalVisible"

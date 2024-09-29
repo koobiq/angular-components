@@ -4,84 +4,26 @@ const { formatHelpers } = require('style-dictionary');
 // provide additional tokens for component
 const filter = {
     autocomplete: 'select-panel-dropdown',
-    button: 'kbq-states-focused-color',
-    'code-block': 'kbq-states-focused-color',
-    datepicker: 'states-foreground-disabled',
-    dropdown: ['kbq-list', 'foreground-contrast-secondary'],
-    markdown: ['foreground-contrast', 'background-bg'],
-    'empty-state': 'foreground-error',
+    dropdown: ['kbq-list'],
     'file-upload': ['form-field-hint-text', 'form-field-hint-font-text'],
-    'icon-button': 'states-focused-color',
     'pseudo-checkbox': 'checkbox',
-    table: ['states-background-transparent-hover', 'line-contrast-less', 'foreground-contrast'],
-    toggle: 'foreground-text-disabled',
-    'tree-select': [
-        'select-panel',
-        'kbq-divider-color',
-        'foreground-contrast',
-        'error-default',
-        'foreground-text-disabled'
-    ],
-    navbar: [
-        'states-line-focus-theme',
-        'line-contrast-less',
-        'typography-text-normal-medium',
-        'navbar-item',
-        'kbq-size-xxs',
-        'kbq-size-xs',
-        'kbq-size-s',
-        'kbq-size-l',
-        'kbq-size-m',
-        'kbq-size-xl',
-        'kbq-size-xxl',
-        'kbq-size-3xl',
-        'kbq-size-4xl',
-        'kbq-size-5xl'
-    ],
+    'tree-select': ['select-panel'],
+    navbar: 'navbar-item',
     popover: [
-        'kbq-size-s',
-        'kbq-size-4xl',
-        'button-size-border-radius',
-        'background-overlay-inverse'
+        'button-size-border-radius'
     ],
-    radio: 'foreground-contrast',
     select: [
-        'kbq-foreground-contrast',
-        'kbq-foreground-text-less-contrast',
-        'kbq-error-default',
-        'foreground-text-disabled',
         'select-panel',
-        'kbq-divider-color',
-        'kbq-option-size',
-        'size-xxs',
-        'kbq-size-m'
+        'kbq-option-size'
     ],
     'scrollbar-component': 'scrollbar',
     'form-field': 'form-field-hint',
     forms: 'form-field-size-height',
-    option: [
-        'kbq-list',
-        'kbq-size-3xs',
-        'kbq-size-xxs',
-        'kbq-size-xs',
-        'kbq-size-s',
-        'kbq-size-m'
-    ],
-    optgroup: [
-        'kbq-foreground-contrast',
-        'kbq-foreground-text-disabled',
-        'kbq-optgroup-font-default',
-        'kbq-size-m'
-    ],
+    option: 'kbq-list',
+    optgroup: 'kbq-optgroup-font-default',
     'option-action': [
-        'kbq-states-focused-color',
-        'kbq-states-icon-contrast-fade-active',
-        'kbq-states-icon-contrast-fade-hover',
-        'kbq-list-font-text-line-height',
-        'kbq-background-transparent',
-        'kbq-states-icon-disabled'
+        'kbq-list-font-text-line-height'
     ],
-    splitter: 'kbq-background-background-disabled',
     tag: [
         'kbq-tag-list',
         'tag-input-font'
@@ -111,6 +53,7 @@ const applyCustomTransformations = (dictionary) => {
         if (typeof token.value === 'object' && token.type === 'font') {
             return unwrapObjectTransformer(token);
         }
+        token.name = token.name.replace(/(light|dark)-/, '');
         return token;
     });
 

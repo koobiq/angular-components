@@ -16,12 +16,13 @@ import {
     OnDestroy,
     Optional,
     TemplateRef,
-    ViewEncapsulation
+    ViewEncapsulation,
+    booleanAttribute
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { PopUpPlacements, PopUpTriggers, toBoolean } from '@koobiq/components/core';
+import { PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -187,16 +188,15 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
 
     private _hasFocus: boolean = false;
 
-    @Input()
+    /** Whether the item is disabled. */
+    @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        const newValue = toBoolean(value);
-
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
+    set disabled(value: boolean) {
+        if (value !== this._disabled) {
+            this._disabled = value;
             this.changeDetector.markForCheck();
         }
     }
@@ -454,7 +454,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         public navbarFocusableItem: KbqNavbarFocusableItem,
         private changeDetectorRef: ChangeDetectorRef,
         @Optional() private dropdownTrigger: KbqDropdownTrigger,
-        @Optional() private bento: KbqNavbarBento
+        @Optional() private bento: KbqNavbarBento,
+        @Optional() private tooltip: KbqTooltipTrigger
     ) {
         super();
 
@@ -471,6 +472,13 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         this._trigger = `${PopUpTriggers.Hover}`;
 
         this.navbarFocusableItem.setTooltip(this);
+
+        if (this.tooltip) {
+            this.tooltip.arrow = false;
+            this.tooltip.offset = 0;
+
+            this.tooltip['overlayConfig'].panelClass = 'kbq-tooltip-panel_horizontal-navbar';
+        }
     }
 
     ngAfterContentInit(): void {
@@ -526,8 +534,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     template: `
         @if (!customIcon) {
             <i
-                [class.mc-angle-left-M_16]="navbar.expanded"
-                [class.mc-angle-right-M_16]="!navbar.expanded"
+                [class.kbq-chevron-left_16]="navbar.expanded"
+                [class.kbq-chevron-right_16]="!navbar.expanded"
                 kbq-icon
             ></i>
         }

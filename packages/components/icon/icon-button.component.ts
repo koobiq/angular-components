@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     Attribute,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -11,7 +12,7 @@ import {
     Optional,
     ViewEncapsulation
 } from '@angular/core';
-import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef, toBoolean } from '@koobiq/components/core';
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -22,7 +23,7 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'mc kbq-icon kbq-icon-button',
+        class: 'kbq kbq-icon kbq-icon-button',
 
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled',
@@ -45,16 +46,15 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
 
     private _tabindex = 0;
 
-    @Input()
+    /** Whether the button is disabled. */
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
 
     set disabled(value: boolean) {
-        const newDisabledState = toBoolean(value);
-
-        if (this._disabled !== newDisabledState) {
-            this._disabled = newDisabledState;
+        if (this._disabled !== value) {
+            this._disabled = value;
 
             this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
         }

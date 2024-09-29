@@ -54,6 +54,8 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
     labelPosition: 'before' | 'after';
     name: string | null;
     // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -66,8 +68,7 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: any): void;
-    get required(): boolean;
-    set required(value: boolean);
+    required: boolean | undefined;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     toggle(): void;
