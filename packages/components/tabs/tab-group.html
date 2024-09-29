@@ -2,6 +2,7 @@
     #tabHeader
     [selectedIndex]="selectedIndex"
     [vertical]="vertical"
+    [withBorder]="withBorder"
     (indexFocused)="focusChanged($event)"
     (selectFocusedIndex)="onSelectFocusedIndex($event)"
 >
@@ -15,6 +16,7 @@
             [class.kbq-tab-label_empty]="tab.empty"
             [class.kbq-tab-label_horizontal]="!vertical"
             [class.kbq-tab-label_vertical]="vertical"
+            [class.kbq-tab-label_with-border]="withBorder"
             [disabled]="tab.disabled"
             [id]="getTabLabelId(i)"
             [kbqPlacement]="tab.tooltipPlacement"

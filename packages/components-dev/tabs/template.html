@@ -1,4 +1,47 @@
 <div>
+    <h4>Bordered tabs</h4>
+    <kbq-tab-group withBorder>
+        <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
+        <kbq-tab [label]="'Miscellaneous'">Miscellaneous Content</kbq-tab>
+        <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
+        <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    </kbq-tab-group>
+
+    <h4>Bordered tabs with icons</h4>
+    <kbq-tab-group withBorder>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="mc-play_16"></i>
+                <span>Spam Attack</span>
+            </ng-template>
+            Spam Attack Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <span>Miscellaneous</span>
+                <i kbq-icon="mc-play_16"></i>
+            </ng-template>
+            Miscellaneous Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="mc-play_16"></i>
+                <span>DDoS</span>
+                <i kbq-icon="mc-play_16"></i>
+            </ng-template>
+            DDoS Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="mc-play_16"></i>
+                <span>IDS/IPS</span>
+                <i kbq-icon="mc-play_16"></i>
+                <span>Alert</span>
+            </ng-template>
+            IDS/IPS Alert Content
+        </kbq-tab>
+    </kbq-tab-group>
+
     <h4>Default tabs (filled)</h4>
     <kbq-tab-group>
         <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
@@ -73,13 +116,14 @@
     <kbq-tab-group
         style="height: 100px"
         vertical
+        withBorder
         class="docs-vertical-tabs"
         (selectedTabChange)="selectedTabChange($event)"
     >
         <kbq-tab [tabId]="'firstTab'">
             <ng-template kbq-tab-label>
                 <i kbq-icon="mc-play_16"></i>
-                First long long long long long long long long tab name
+                <span>First long long long long long long long long tab name</span>
                 <i kbq-icon="mc-play_16"></i>
             </ng-template>
             Content 1
@@ -90,7 +134,7 @@
             [tooltipTitle]="'Text for empty tab'"
         >
             <ng-template kbq-tab-label>
-                Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty
+                <span>Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty</span>
                 <i kbq-icon="mc-play_16"></i>
             </ng-template>
             Empty Content
