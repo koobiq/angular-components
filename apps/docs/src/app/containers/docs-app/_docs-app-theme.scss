@@ -1,15 +1,13 @@
-@use 'sass:map';
+/* stylelint-disable no-unknown-custom-properties */
 
-@mixin kbq-docs-app-theme($theme) {
-    $background: map.get($theme, background);
-
+@mixin kbq-docs-app-theme() {
     .docs-overlay {
-        background: map.get($background, overlay);
+        background: var(--kbq-background-overlay);
     }
 
     .kbq-markdown__code,
     .kbq-markdown__pre {
-        background: map.get($background, bg-secondary) !important;
+        background: var(--kbq-background-bg-secondary) !important;
     }
 
     .docs-top-overflown {

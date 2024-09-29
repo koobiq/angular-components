@@ -1,53 +1,46 @@
-@use 'sass:map';
-
 @use '../dist/components/core/styles/theming';
-@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
-@mixin kbq-docs-icons-viewer-theme($theme) {
-    $foreground: map.get($theme, foreground);
-    $background: map.get($theme, background);
-    $states-background: map.get(map.get($theme, states), background);
-    $line: map.get($theme, line);
+/* stylelint-disable no-unknown-custom-properties */
 
-    $theme: map.get($theme, theme);
-
+@mixin kbq-docs-icons-viewer-theme() {
     .docs-icons-viewer__header {
-        background: map.get($background, bg);
+        background: var(--kbq-background-bg);
     }
 
     .docs-icons-viewer__header-text {
-        color: theming.kbq-color($foreground, contrast);
+        color: var(--kbq-foreground-contrast);
     }
 
     .docs-icons-viewer__table-cell {
-        background: map.get($background, bg);
-        border-color: map.get($line, contrast-less);
+        background: var(--kbq-background-bg);
+        border-color: var(--kbq-line-contrast-less);
 
         > .docs-icons-viewer__table-cell-name {
-            color: map.get($foreground, text-less-contrast);
+            color: var(--kbq-foreground-text-less-contrast);
         }
 
         &:focus {
-            outline: 2px solid theming.kbq-color($theme, default);
+            outline: 2px solid var(--kbq-theme-default);
         }
 
         &:hover {
-            background: map.get($states-background, transparent-hover);
+            background: var(--kbq-states-background-transparent-hover);
         }
 
         &:active {
-            background: map.get($states-background, transparent-active);
+            background: var(--kbq-states-background-transparent-active);
         }
     }
 
     .icon-preview-modal__preview-area {
-        background: map.get($background, background-under);
+        background: var(--kbq-background-background-under);
     }
 }
 
-@mixin kbq-docs-icons-viewer-typography($config) {
+@mixin kbq-docs-icons-viewer-typography() {
     .icon-preview-modal .kbq-modal-header.kbq-modal-title {
-        @include typography.kbq-typography-level-to-styles($config, title);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, title);
     }
 
     .docs-icons-viewer__header .kbq-input,
@@ -57,10 +50,10 @@
     .kbq-select-overlay .icon-preview-modal__select-option,
     .icon-preview-modal__description .kbq-dd,
     .icon-preview-modal__description .kbq-badge {
-        @include typography.kbq-typography-level-to-styles($config, text-big);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 
     .docs-icons-viewer__table-empty-results {
-        @include typography.kbq-typography-level-to-styles($config, display-3);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, display-3);
     }
 }

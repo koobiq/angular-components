@@ -24,7 +24,7 @@ import {
         <kbq-form-field>
             <i
                 kbqPrefix
-                kbq-icon="mc-clock_16"
+                kbq-icon="kbq-clock_16"
             ></i>
             <input
                 #ngModel="ngModel"
@@ -576,7 +576,7 @@ describe('KbqTimepicker', () => {
         <kbq-form-field>
             <i
                 kbqPrefix
-                kbq-icon="mc-clock_16"
+                kbq-icon="kbq-clock_16"
             ></i>
             <input
                 [format]="timeFormat"
@@ -660,7 +660,7 @@ describe('KbqTimepicker with null formControl value', () => {
         <kbq-form-field>
             <i
                 kbqPrefix
-                kbq-icon="mc-clock_16"
+                kbq-icon="kbq-clock_16"
             ></i>
             <input
                 [(ngModel)]="model"
@@ -743,7 +743,7 @@ describe('KbqTimepicker with null model value', () => {
         <kbq-form-field>
             <i
                 kbqPrefix
-                kbq-icon="mc-clock_16"
+                kbq-icon="kbq-clock_16"
             ></i>
             <input
                 [(ngModel)]="model"

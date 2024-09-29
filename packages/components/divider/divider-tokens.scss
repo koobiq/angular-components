@@ -1,14 +1,16 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-divider {
     --kbq-divider-size-horizontal-width: 1px;
-    --kbq-divider-size-horizontal-margin-vertical: 4px;
+    --kbq-divider-size-horizontal-margin-vertical: var(--kbq-size-xxs);
     --kbq-divider-size-vertical-width: 1px;
-    --kbq-divider-size-vertical-margin-horizontal: 4px;
+    --kbq-divider-size-vertical-margin-horizontal: var(--kbq-size-xxs);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-divider-color: hsla(229, 15%, 6%, 12%);
+    --kbq-divider-color: var(--kbq-line-contrast-less);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-divider-color: hsla(229, 15%, 22%, 100%);
+    --kbq-divider-color: var(--kbq-line-contrast-less);
 }

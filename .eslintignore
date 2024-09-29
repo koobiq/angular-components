@@ -9,3 +9,6 @@ node_modules
 
 # ignore nunjuck templates
 /tools/api-gen/rendering/templates
+
+# ignore index.html
+**/index.html

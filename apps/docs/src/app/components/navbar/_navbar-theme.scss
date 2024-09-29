@@ -1,23 +1,22 @@
 @use 'sass:map';
 
 @use '../dist/components/core/styles/theming';
-@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
-@mixin kbq-docs-navbar-theme($theme) {
-    $background: map.get($theme, background);
-    $foreground: map.get($theme, foreground);
+/* stylelint-disable no-unknown-custom-properties */
 
+@mixin kbq-docs-navbar-theme() {
     .docs-navbar {
-        background: map.get($background, bg);
+        background: var(--kbq-background-bg);
 
         .docs-navbar__github-icon svg {
-            fill: map.get($foreground, contrast);
+            fill: var(--kbq-foreground-contrast);
         }
     }
 }
 
-@mixin kbq-docs-navbar-typography($config) {
+@mixin kbq-docs-navbar-typography() {
     .docs-sidenav {
-        @include typography.kbq-typography-level-to-styles($config, subheading);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, subheading);
     }
 }

@@ -31,7 +31,7 @@ const config = {
             {
                 ignoreFontFamilies: [
                     'Inter',
-                    'PT Mosaic Icons',
+                    'Koobiq Icons',
                     'JetBrains Mono'
                 ]
             }

@@ -21,17 +21,17 @@
                         "outputPath": "./dist/releases/koobiq-docs",
                         "index": "apps/docs/src/index.html",
                         "main": "apps/docs/src/main.ts",
-                        "polyfills": "apps/docs/src/polyfills.ts",
+                        "polyfills": ["zone.js"],
                         "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/dist/svg",
+                                "input": "node_modules/@koobiq/icons/svg",
                                 "output": "/assets/SVGIcons"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/dist/info",
+                                "input": "node_modules/@koobiq/icons/info",
                                 "output": "/assets/SVGIcons"
                             },
                             {
@@ -71,7 +71,11 @@
                         "styles": [
                             {
                                 "input": "apps/docs/src/main.scss"
-                            }
+                            },
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
+
                         ],
                         "scripts": [],
                         "vendorChunk": true,
@@ -372,19 +376,21 @@
             "sourceRoot": "packages/components-dev/alert",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/alert",
+                        "outputPath": {
+                            "base": "dist/components-dev/alert"
+                        },
                         "tsConfig": "packages/components-dev/alert/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/alert/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/alert/main.ts"
                     }
                 },
                 "serve": {
@@ -401,19 +407,21 @@
             "sourceRoot": "packages/components-dev/all",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/all",
+                        "outputPath": {
+                            "base": "dist/components-dev/all"
+                        },
                         "tsConfig": "packages/components-dev/all/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/all/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/all/main.ts"
                     }
                 },
                 "serve": {
@@ -430,19 +438,21 @@
             "sourceRoot": "packages/components-dev/autocomplete",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/autocomplete",
+                        "outputPath": {
+                            "base": "dist/components-dev/autocomplete"
+                        },
                         "tsConfig": "packages/components-dev/autocomplete/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/autocomplete/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/autocomplete/main.ts"
                     }
                 },
                 "serve": {
@@ -459,19 +469,21 @@
             "sourceRoot": "packages/components-dev/badge",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/badge",
+                        "outputPath": {
+                            "base": "dist/components-dev/badge"
+                        },
                         "tsConfig": "packages/components-dev/badge/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/badge/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/badge/main.ts"
                     }
                 },
                 "serve": {
@@ -488,19 +500,21 @@
             "sourceRoot": "packages/components-dev/button",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/button",
+                        "outputPath": {
+                            "base": "dist/components-dev/button"
+                        },
                         "tsConfig": "packages/components-dev/button/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/button/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/button/main.ts"
                     }
                 },
                 "serve": {
@@ -517,19 +531,21 @@
             "sourceRoot": "packages/components-dev/button-toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/button-toggle",
+                        "outputPath": {
+                            "base": "dist/components-dev/button-toggle"
+                        },
                         "tsConfig": "packages/components-dev/button-toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/button-toggle/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/button-toggle/main.ts"
                     }
                 },
                 "serve": {
@@ -546,19 +562,21 @@
             "sourceRoot": "packages/components-dev/checkbox",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/checkbox",
+                        "outputPath": {
+                            "base": "dist/components-dev/checkbox"
+                        },
                         "tsConfig": "packages/components-dev/checkbox/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/checkbox/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/checkbox/main.ts"
                     }
                 },
                 "serve": {
@@ -575,19 +593,21 @@
             "sourceRoot": "packages/components-dev/code-block",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/code-block",
+                        "outputPath": {
+                            "base": "dist/components-dev/code-block"
+                        },
                         "tsConfig": "packages/components-dev/code-block/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/code-block/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/code-block/main.ts"
                     }
                 },
                 "serve": {
@@ -604,19 +624,21 @@
             "sourceRoot": "packages/components-dev/date-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/date-formatter",
+                        "outputPath": {
+                            "base": "dist/components-dev/date-formatter"
+                        },
                         "tsConfig": "packages/components-dev/date-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/date-formatter/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/date-formatter/main.ts"
                     }
                 },
                 "serve": {
@@ -633,19 +655,21 @@
             "sourceRoot": "packages/components-dev/date-pipes",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/date-pipes",
+                        "outputPath": {
+                            "base": "dist/components-dev/date-pipes"
+                        },
                         "tsConfig": "packages/components-dev/date-pipes/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/date-pipes/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/date-pipes/main.ts"
                     }
                 },
                 "serve": {
@@ -662,19 +686,21 @@
             "sourceRoot": "packages/components-dev/datepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/datepicker",
+                        "outputPath": {
+                            "base": "dist/components-dev/datepicker"
+                        },
                         "tsConfig": "packages/components-dev/datepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/datepicker/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/datepicker/main.ts"
                     }
                 },
                 "serve": {
@@ -691,19 +717,21 @@
             "sourceRoot": "packages/components-dev/divider",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/divider",
+                        "outputPath": {
+                            "base": "dist/components-dev/divider"
+                        },
                         "tsConfig": "packages/components-dev/divider/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/divider/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/divider/main.ts"
                     }
                 },
                 "serve": {
@@ -720,19 +748,21 @@
             "sourceRoot": "packages/components-dev/dl",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/dl",
+                        "outputPath": {
+                            "base": "dist/components-dev/dl"
+                        },
                         "tsConfig": "packages/components-dev/dl/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/dl/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/dl/main.ts"
                     }
                 },
                 "serve": {
@@ -749,19 +779,21 @@
             "sourceRoot": "packages/components-dev/dropdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/dropdown",
+                        "outputPath": {
+                            "base": "dist/components-dev/dropdown"
+                        },
                         "tsConfig": "packages/components-dev/dropdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/dropdown/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/dropdown/main.ts"
                     }
                 },
                 "serve": {
@@ -778,19 +810,21 @@
             "sourceRoot": "packages/components-dev/empty-state",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/empty-state",
+                        "outputPath": {
+                            "base": "dist/components-dev/empty-state"
+                        },
                         "tsConfig": "packages/components-dev/empty-state/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/empty-state/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/empty-state/main.ts"
                     }
                 },
                 "serve": {
@@ -807,19 +841,21 @@
             "sourceRoot": "packages/components-dev/form-field",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/form-field",
+                        "outputPath": {
+                            "base": "dist/components-dev/form-field"
+                        },
                         "tsConfig": "packages/components-dev/form-field/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/form-field/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/form-field/main.ts"
                     }
                 },
                 "serve": {
@@ -836,19 +872,21 @@
             "sourceRoot": "packages/components-dev/forms",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/forms",
+                        "outputPath": {
+                            "base": "dist/components-dev/forms"
+                        },
                         "tsConfig": "packages/components-dev/forms/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/forms/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/forms/main.ts"
                     }
                 },
                 "serve": {
@@ -865,19 +903,21 @@
             "sourceRoot": "packages/components-dev/flex-layout",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/flex-layout",
+                        "outputPath": {
+                            "base": "dist/components-dev/flex-layout"
+                        },
                         "tsConfig": "packages/components-dev/flex-layout/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/flex-layout/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/flex-layout/main.ts"
                     }
                 },
                 "serve": {
@@ -894,19 +934,21 @@
             "sourceRoot": "packages/components-dev/file-upload",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/file-upload",
+                        "outputPath": {
+                            "base": "dist/components-dev/file-upload"
+                        },
                         "tsConfig": "packages/components-dev/file-upload/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/file-upload/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/file-upload/main.ts"
                     }
                 },
                 "serve": {
@@ -923,19 +965,21 @@
             "sourceRoot": "packages/components-dev/icon",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/icon",
+                        "outputPath": {
+                            "base": "dist/components-dev/icon"
+                        },
                         "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/icon/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/icon/main.ts"
                     }
                 },
                 "serve": {
@@ -952,19 +996,21 @@
             "sourceRoot": "packages/components-dev/icon-item",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/icon-item",
+                        "outputPath": {
+                            "base": "dist/components-dev/icon-item"
+                        },
                         "tsConfig": "packages/components-dev/icon-item/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/icon-item/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/icon-item/main.ts"
                     }
                 },
                 "serve": {
@@ -981,19 +1027,21 @@
             "sourceRoot": "packages/components-dev/hint",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/hint",
+                        "outputPath": {
+                            "base": "dist/components-dev/hint"
+                        },
                         "tsConfig": "packages/components-dev/hint/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/hint/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/hint/main.ts"
                     }
                 },
                 "serve": {
@@ -1010,19 +1058,21 @@
             "sourceRoot": "packages/components-dev/input",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/input",
+                        "outputPath": {
+                            "base": "dist/components-dev/input"
+                        },
                         "tsConfig": "packages/components-dev/input/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/input/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/input/main.ts"
                     }
                 },
                 "serve": {
@@ -1039,19 +1089,21 @@
             "sourceRoot": "packages/components-dev/link",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/link",
+                        "outputPath": {
+                            "base": "dist/components-dev/link"
+                        },
                         "tsConfig": "packages/components-dev/link/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/link/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/link/main.ts"
                     }
                 },
                 "serve": {
@@ -1068,19 +1120,21 @@
             "sourceRoot": "packages/components-dev/list",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/list",
+                        "outputPath": {
+                            "base": "dist/components-dev/list"
+                        },
                         "tsConfig": "packages/components-dev/list/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/list/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/list/main.ts"
                     }
                 },
                 "serve": {
@@ -1097,19 +1151,21 @@
             "sourceRoot": "packages/components-dev/loader-overlay",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/loader-overlay",
+                        "outputPath": {
+                            "base": "dist/components-dev/loader-overlay"
+                        },
                         "tsConfig": "packages/components-dev/loader-overlay/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/loader-overlay/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/loader-overlay/main.ts"
                     }
                 },
                 "serve": {
@@ -1126,19 +1182,21 @@
             "sourceRoot": "packages/components-dev/locale",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/locale",
+                        "outputPath": {
+                            "base": "dist/components-dev/locale"
+                        },
                         "tsConfig": "packages/components-dev/locale/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/locale/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/locale/main.ts"
                     }
                 },
                 "serve": {
@@ -1155,19 +1213,21 @@
             "sourceRoot": "packages/markdown-dev/markdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/markdown",
+                        "outputPath": {
+                            "base": "dist/components-dev/markdown"
+                        },
                         "tsConfig": "packages/components-dev/markdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/markdown/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/markdown/main.ts"
                     }
                 },
                 "serve": {
@@ -1184,19 +1244,21 @@
             "sourceRoot": "packages/components-dev/modal",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/modal",
+                        "outputPath": {
+                            "base": "dist/components-dev/modal"
+                        },
                         "tsConfig": "packages/components-dev/modal/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/modal/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/modal/main.ts"
                     }
                 },
                 "serve": {
@@ -1213,19 +1275,21 @@
             "sourceRoot": "packages/components-dev/navbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/navbar",
+                        "outputPath": {
+                            "base": "dist/components-dev/navbar"
+                        },
                         "tsConfig": "packages/components-dev/navbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/navbar/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/navbar/main.ts"
                     }
                 },
                 "serve": {
@@ -1242,19 +1306,21 @@
             "sourceRoot": "packages/components-dev/number-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/number-formatter",
+                        "outputPath": {
+                            "base": "dist/components-dev/number-formatter"
+                        },
                         "tsConfig": "packages/components-dev/number-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/number-formatter/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/number-formatter/main.ts"
                     }
                 },
                 "serve": {
@@ -1271,19 +1337,21 @@
             "sourceRoot": "packages/components-dev/panel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/panel",
+                        "outputPath": {
+                            "base": "dist/components-dev/panel"
+                        },
                         "tsConfig": "packages/components-dev/panel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/panel/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/panel/main.ts"
                     }
                 },
                 "serve": {
@@ -1300,19 +1368,21 @@
             "sourceRoot": "packages/components-dev/popover",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/popover",
+                        "outputPath": {
+                            "base": "dist/components-dev/popover"
+                        },
                         "tsConfig": "packages/components-dev/popover/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/popover/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/popover/main.ts"
                     }
                 },
                 "serve": {
@@ -1329,19 +1399,21 @@
             "sourceRoot": "packages/components-dev/progress-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/progress-bar",
+                        "outputPath": {
+                            "base": "dist/components-dev/progress-bar"
+                        },
                         "tsConfig": "packages/components-dev/progress-bar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/progress-bar/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/progress-bar/main.ts"
                     }
                 },
                 "serve": {
@@ -1358,19 +1430,21 @@
             "sourceRoot": "packages/components-dev/progress-spinner",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/progress-spinner",
+                        "outputPath": {
+                            "base": "dist/components-dev/progress-spinner"
+                        },
                         "tsConfig": "packages/components-dev/progress-spinner/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/progress-spinner/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/progress-spinner/main.ts"
                     }
                 },
                 "serve": {
@@ -1387,19 +1461,21 @@
             "sourceRoot": "packages/components-dev/radio",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/radio",
+                        "outputPath": {
+                            "base": "dist/components-dev/radio"
+                        },
                         "tsConfig": "packages/components-dev/radio/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/radio/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/radio/main.ts"
                     }
                 },
                 "serve": {
@@ -1416,19 +1492,21 @@
             "sourceRoot": "packages/components-dev/risk-level",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/risk-level",
+                        "outputPath": {
+                            "base": "dist/components-dev/risk-level"
+                        },
                         "tsConfig": "packages/components-dev/risk-level/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/risk-level/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/risk-level/main.ts"
                     }
                 },
                 "serve": {
@@ -1445,19 +1523,21 @@
             "sourceRoot": "packages/components-dev/scrollbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/scrollbar",
+                        "outputPath": {
+                            "base": "dist/components-dev/scrollbar"
+                        },
                         "tsConfig": "packages/components-dev/scrollbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/scrollbar/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/scrollbar/main.ts"
                     }
                 },
                 "serve": {
@@ -1474,19 +1554,21 @@
             "sourceRoot": "packages/components-dev/select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/select",
+                        "outputPath": {
+                            "base": "dist/components-dev/select"
+                        },
                         "tsConfig": "packages/components-dev/select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/select/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/select/main.ts"
                     }
                 },
                 "serve": {
@@ -1503,19 +1585,21 @@
             "sourceRoot": "packages/components-dev/sidebar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/sidebar",
+                        "outputPath": {
+                            "base": "dist/components-dev/sidebar"
+                        },
                         "tsConfig": "packages/components-dev/sidebar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/sidebar/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/sidebar/main.ts"
                     }
                 },
                 "serve": {
@@ -1532,19 +1616,21 @@
             "sourceRoot": "packages/components-dev/sidepanel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/sidepanel",
+                        "outputPath": {
+                            "base": "dist/components-dev/sidepanel"
+                        },
                         "tsConfig": "packages/components-dev/sidepanel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/sidepanel/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/sidepanel/main.ts"
                     }
                 },
                 "serve": {
@@ -1561,19 +1647,21 @@
             "sourceRoot": "packages/components-dev/splitter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/splitter",
+                        "outputPath": {
+                            "base": "dist/components-dev/splitter"
+                        },
                         "tsConfig": "packages/components-dev/splitter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/splitter/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/splitter/main.ts"
                     }
                 },
                 "serve": {
@@ -1590,19 +1678,21 @@
             "sourceRoot": "packages/components-dev/table",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/table",
+                        "outputPath": {
+                            "base": "dist/components-dev/table"
+                        },
                         "tsConfig": "packages/components-dev/table/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/table/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/table/main.ts"
                     }
                 },
                 "serve": {
@@ -1619,19 +1709,21 @@
             "sourceRoot": "packages/components-dev/tabs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/tabs",
+                        "outputPath": {
+                            "base": "dist/components-dev/tabs"
+                        },
                         "tsConfig": "packages/components-dev/tabs/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tabs/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/tabs/main.ts"
                     }
                 },
                 "serve": {
@@ -1648,19 +1740,21 @@
             "sourceRoot": "packages/components-dev/tag",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/tag",
+                        "outputPath": {
+                            "base": "dist/components-dev/tag"
+                        },
                         "tsConfig": "packages/components-dev/tag/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tag/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/tag/main.ts"
                     }
                 },
                 "serve": {
@@ -1677,19 +1771,21 @@
             "sourceRoot": "packages/components-dev/textarea",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/textarea",
+                        "outputPath": {
+                            "base": "dist/components-dev/textarea"
+                        },
                         "tsConfig": "packages/components-dev/textarea/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/textarea/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/textarea/main.ts"
                     }
                 },
                 "serve": {
@@ -1706,19 +1802,21 @@
             "sourceRoot": "packages/components-dev/timepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/timepicker",
+                        "outputPath": {
+                            "base": "dist/components-dev/timepicker"
+                        },
                         "tsConfig": "packages/components-dev/timepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/timepicker/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/timepicker/main.ts"
                     }
                 },
                 "serve": {
@@ -1735,19 +1833,21 @@
             "sourceRoot": "packages/components-dev/timezone",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/timezone",
+                        "outputPath": {
+                            "base": "dist/components-dev/timezone"
+                        },
                         "tsConfig": "packages/components-dev/timezone/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/timezone/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/timezone/main.ts"
                     }
                 },
                 "serve": {
@@ -1764,19 +1864,21 @@
             "sourceRoot": "packages/components-dev/toast",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/toast",
+                        "outputPath": {
+                            "base": "dist/components-dev/toast"
+                        },
                         "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/toast/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/toast/main.ts"
                     }
                 },
                 "serve": {
@@ -1793,19 +1895,21 @@
             "sourceRoot": "packages/components-dev/toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/toggle",
+                        "outputPath": {
+                            "base": "dist/components-dev/toggle"
+                        },
                         "tsConfig": "packages/components-dev/toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/toggle/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/toggle/main.ts"
                     }
                 },
                 "serve": {
@@ -1822,19 +1926,21 @@
             "sourceRoot": "packages/components-dev/tooltip",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/tooltip",
+                        "outputPath": {
+                            "base": "dist/components-dev/tooltip"
+                        },
                         "tsConfig": "packages/components-dev/tooltip/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tooltip/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/tooltip/main.ts"
                     }
                 },
                 "serve": {
@@ -1851,19 +1957,21 @@
             "sourceRoot": "packages/components-dev/tree",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/tree",
+                        "outputPath": {
+                            "base": "dist/components-dev/tree"
+                        },
                         "tsConfig": "packages/components-dev/tree/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tree/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/tree/main.ts"
                     }
                 },
                 "serve": {
@@ -1880,19 +1988,21 @@
             "sourceRoot": "packages/components-dev/tree-select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/tree-select",
+                        "outputPath": {
+                            "base": "dist/components-dev/tree-select"
+                        },
                         "tsConfig": "packages/components-dev/tree-select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/tree-select/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/tree-select/main.ts"
                     }
                 },
                 "serve": {
@@ -1909,19 +2019,21 @@
             "sourceRoot": "packages/components-dev/typography",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/typography",
+                        "outputPath": {
+                            "base": "dist/components-dev/typography"
+                        },
                         "tsConfig": "packages/components-dev/typography/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/typography/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/typography/main.ts"
                     }
                 },
                 "serve": {
@@ -1938,19 +2050,21 @@
             "sourceRoot": "packages/components-dev/title",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/title",
+                        "outputPath": {
+                            "base": "dist/components-dev/title"
+                        },
                         "tsConfig": "packages/components-dev/title/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/title/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/title/main.ts"
                     }
                 },
                 "serve": {
@@ -1967,19 +2081,21 @@
             "sourceRoot": "packages/components-dev/validation",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/validation",
+                        "outputPath": {
+                            "base": "dist/components-dev/validation"
+                        },
                         "tsConfig": "packages/components-dev/validation/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/validation/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/validation/main.ts"
                     }
                 },
                 "serve": {
@@ -1996,19 +2112,21 @@
             "sourceRoot": "packages/components-dev/z-index",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/components-dev/z-index",
+                        "outputPath": {
+                            "base": "dist/components-dev/z-index"
+                        },
                         "tsConfig": "packages/components-dev/z-index/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/z-index/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
-                        "vendorChunk": true,
+                        "polyfills": [
+                            "packages/components-dev/polyfills.ts"
+                        ],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/z-index/main.ts"
                     }
                 },
                 "serve": {

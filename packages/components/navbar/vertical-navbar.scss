@@ -1,5 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
+@use './navbar-theme' as *;
+
 .kbq-vertical-navbar {
     min-width: 48px;
     height: 100%;
@@ -37,3 +39,6 @@
         }
     }
 }
+
+@include kbq-navbar-theme();
+@include kbq-navbar-typography();

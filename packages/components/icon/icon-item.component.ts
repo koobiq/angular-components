@@ -20,7 +20,7 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'mc kbq-icon kbq-icon-item kbq-icon-item_filled',
+        class: 'kbq kbq-icon kbq-icon-item kbq-icon-item_filled',
         '[class.kbq-icon-item_normal]': '!big',
         '[class.kbq-icon-item_big]': 'big',
         '[class.kbq-icon-item_fade-off]': '!fade',

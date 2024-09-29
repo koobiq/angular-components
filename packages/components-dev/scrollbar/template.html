@@ -1,3 +1,12 @@
+<scrollbar-with-options />
+<hr />
+
+<scrollbar-with-custom-config />
+<hr />
+
+<scrollbar-scroll-to-top />
+<hr />
+
 <div class="dev-container kbq-body">
     <div class="layout-row layout-align-space-between">
         <div>
@@ -14,33 +23,12 @@
                 <div style="width: 400px">{{ longText }}</div>
             </div>
 
-            <div>Scrolls count: {{ scrollCounter }}</div>
-
-            <div style="position: relative">
-                <div
-                    #scrollbarRef="kbqScrollbar"
-                    kbq-scrollbar
-                    style="height: 300px; max-width: 400px"
-                    (onScroll)="cdr.markForCheck()"
-                >
-                    <div style="width: 400px">{{ longText }}</div>
-                </div>
-                @if (scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0) {
-                    <button
-                        kbq-button
-                        class="button_scroll-top"
-                        (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
-                    >
-                        Scroll To Top
-                    </button>
-                }
-            </div>
-
             <div dir="rtl">
                 <h4>Bidi support</h4>
                 <div
                     kbq-scrollbar
                     style="height: 300px; max-width: 400px"
+                    (onScroll)="onScroll($event)"
                 >
                     <div style="width: 400px">{{ longText }}</div>
                 </div>

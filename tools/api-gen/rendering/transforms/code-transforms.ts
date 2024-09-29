@@ -194,7 +194,7 @@ function getMethodCodeLine(
     };
 
     return `${memberTags.join(' ')} ${member.name}(${displayParamsInNewLines ? '\n  ' : ''}${member.params
-        .map((param) => mapParamEntry(param))
+        ?.map((param) => mapParamEntry(param))
         .join(`,${displayParamsInNewLines ? '\n  ' : ' '}`)}${
         displayParamsInNewLines ? '\n' : ''
     }): ${member.returnType};`.trim();

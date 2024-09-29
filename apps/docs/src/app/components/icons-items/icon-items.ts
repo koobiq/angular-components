@@ -4,10 +4,10 @@ export interface IconItem {
     id: string;
     name: string;
     cssClass: string;
-    code: string;
+    code: number;
     description: string;
     size: number;
-    tags: string[];
+    tags: string | string[];
 }
 
 @Injectable()
@@ -17,18 +17,18 @@ export class IconItems {
 
     constructor(ICONS) {
         this.allIcons = Object.keys(ICONS).map((id) => {
-            const { code, tags, description } = ICONS[id];
+            const { codepoint, tags, description } = ICONS[id];
 
             const size = parseInt(id.split('_')[1]);
             this.sizes.add(size);
 
-            const cssClass = 'mc-'.concat(id);
+            const cssClass = 'kbq-'.concat(id);
 
             let name = id.replace(/_\d+/, '').replace(/-/g, ' ');
 
             name = name.charAt(0).toUpperCase() + name.slice(1);
 
-            return { id, name, cssClass, code, size, tags, description } as IconItem;
+            return { id, name, cssClass, code: parseInt(codepoint), size, tags, description } as IconItem;
         });
     }
 

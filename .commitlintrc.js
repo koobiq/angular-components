@@ -43,7 +43,7 @@ const scope_types = [
     'pop-up',
     'radio',
     'schematics',
-    'scrolling',
+    'scrollbar',
     'select',
     'security',
     'sidepanel',

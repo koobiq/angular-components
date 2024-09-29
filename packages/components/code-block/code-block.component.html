@@ -48,10 +48,10 @@
                             (keydown.enter)="onEnter(codeContent)"
                         >
                             @if (!viewAll) {
-                                <i kbq-icon="mc-angle-down-L_16"></i>
+                                <i kbq-icon="kbq-chevron-down_16"></i>
                             }
                             @if (viewAll) {
-                                <i kbq-icon="mc-angle-up-L_16"></i>
+                                <i kbq-icon="kbq-chevron-up_16"></i>
                             }
                             {{ viewAll ? config.viewLessText : config.viewAllText }}
                         </button>

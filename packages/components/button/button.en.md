@@ -19,7 +19,7 @@ Basic button's states
 #### Icon buttons
 
 Icon buttons consist of an icon and can contain text.
-To create an icon button, add the `<i kbq-icon="icon_name"></i>` element within `<button mc-icon-button>` where `"icon_name"` is the name of a Koobiq icon. For example:
+To create an icon button, add the `<i kbq-icon="icon_name"></i>` element within `<button kbq-icon-button>` where `"icon_name"` is the name of a Koobiq icon. For example:
 
 Add any text before or after the `<i>` element to place a button label to the right or to the left of the icon.
 

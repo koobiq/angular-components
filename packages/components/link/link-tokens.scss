@@ -1,67 +1,66 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-link {
     --kbq-link-size-state-focused-outline-offset: 0px;
     --kbq-link-size-state-focused-outline-width: 2px;
-    --kbq-link-size-compact-content-padding: 2px;
-    --kbq-link-size-normal-content-padding: 2px;
-    --kbq-link-size-big-content-padding: 4px;
-    --kbq-link-font-compact-font-size: 12px;
-    --kbq-link-font-compact-line-height: 16px;
-    --kbq-link-font-compact-letter-spacing: normal;
-    --kbq-link-font-compact-font-weight: normal;
-    --kbq-link-font-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-link-font-compact-text-transform: null;
-    --kbq-link-font-compact-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-    --kbq-link-font-normal-font-size: 14px;
-    --kbq-link-font-normal-line-height: 20px;
-    --kbq-link-font-normal-letter-spacing: -0.006em;
-    --kbq-link-font-normal-font-weight: normal;
-    --kbq-link-font-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-link-font-normal-text-transform: null;
-    --kbq-link-font-normal-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
-    --kbq-link-font-big-font-size: 16px;
-    --kbq-link-font-big-line-height: 24px;
-    --kbq-link-font-big-letter-spacing: -0.011em;
-    --kbq-link-font-big-font-weight: normal;
-    --kbq-link-font-big-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
-    --kbq-link-font-big-text-transform: null;
-    --kbq-link-font-big-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-link-size-compact-content-padding: var(--kbq-size-xxs);
+    --kbq-link-size-normal-content-padding: var(--kbq-size-xxs);
+    --kbq-link-size-big-content-padding: var(--kbq-size-xxs);
+    --kbq-link-font-compact-font-size: var(--kbq-typography-text-compact-font-size);
+    --kbq-link-font-compact-line-height: var(--kbq-typography-text-compact-line-height);
+    --kbq-link-font-compact-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
+    --kbq-link-font-compact-font-weight: var(--kbq-typography-text-compact-font-weight);
+    --kbq-link-font-compact-font-family: var(--kbq-typography-text-compact-font-family);
+    --kbq-link-font-compact-text-transform: var(--kbq-typography-text-compact-text-transform);
+    --kbq-link-font-compact-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
+    --kbq-link-font-normal-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-link-font-normal-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-link-font-normal-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-link-font-normal-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-link-font-normal-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-link-font-normal-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-link-font-normal-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+    --kbq-link-font-big-font-size: var(--kbq-typography-text-big-font-size);
+    --kbq-link-font-big-line-height: var(--kbq-typography-text-big-line-height);
+    --kbq-link-font-big-letter-spacing: var(--kbq-typography-text-big-letter-spacing);
+    --kbq-link-font-big-font-weight: var(--kbq-typography-text-big-font-weight);
+    --kbq-link-font-big-font-family: var(--kbq-typography-text-big-font-family);
+    --kbq-link-font-big-text-transform: var(--kbq-typography-text-big-text-transform);
+    --kbq-link-font-big-font-feature-settings: var(--kbq-typography-text-big-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-link-text: hsla(216, 100%, 50%, 100%);
-    --kbq-link-border-bottom: hsla(216, 100%, 85%, 100%);
-    --kbq-link-state-visited-text: hsla(277, 72%, 45%, 100%);
-    --kbq-link-state-visited-border-bottom: hsla(277, 72%, 80%, 100%);
-    --kbq-link-state-visited-hover-text: hsla(277, 72%, 40%, 100%);
-    --kbq-link-state-visited-hover-border-bottom: hsla(277, 72%, 80%, 100%);
-    --kbq-link-state-visited-active-text: hsla(277, 72%, 35%, 100%);
-    --kbq-link-state-visited-active-border-bottom: hsla(277, 72%, 80%, 100%);
-    --kbq-link-state-hover-text: hsla(216, 100%, 45%, 100%);
-    --kbq-link-state-hover-border-bottom: hsla(216, 100%, 85%, 100%);
-    --kbq-link-state-active-text: hsla(216, 100%, 40%, 100%);
-    --kbq-link-state-active-border-bottom: hsla(216, 100%, 85%, 100%);
-    --kbq-link-state-focused-outline: hsla(216, 100%, 60%, 100%);
-    --kbq-link-state-disabled-text: hsla(229, 15%, 15%, 32%);
-    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 50%, 32%);
+    --kbq-link-text: var(--kbq-foreground-theme);
+    --kbq-link-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-visited-text: var(--kbq-foreground-visited);
+    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-visited-hover-text: var(--kbq-states-foreground-visited-hover);
+    --kbq-link-state-visited-hover-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-visited-active-text: var(--kbq-states-foreground-visited-active);
+    --kbq-link-state-visited-active-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-hover-text: var(--kbq-states-foreground-theme-hover);
+    --kbq-link-state-hover-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-active-text: var(--kbq-states-foreground-theme-active);
+    --kbq-link-state-active-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-focused-outline: var(--kbq-states-line-focus-theme);
+    --kbq-link-state-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-link-state-disabled-border-bottom: var(--kbq-states-line-disabled);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-link-text: hsla(216, 100%, 65%, 100%);
-    --kbq-link-border-bottom: hsla(216, 100%, 27%, 100%);
-    --kbq-link-state-visited-text: hsla(277, 72%, 50%, 100%);
-    --kbq-link-state-visited-border-bottom: hsla(277, 72%, 30%, 100%);
-    --kbq-link-state-visited-hover-text: hsla(277, 72%, 55%, 100%);
-    --kbq-link-state-visited-hover-border-bottom: hsla(277, 72%, 30%, 100%);
-    --kbq-link-state-visited-active-text: hsla(277, 72%, 60%, 100%);
-    --kbq-link-state-visited-active-border-bottom: hsla(277, 72%, 30%, 100%);
-    --kbq-link-state-hover-text: hsla(216, 100%, 65%, 100%);
-    --kbq-link-state-hover-border-bottom: hsla(216, 100%, 27%, 100%);
-    --kbq-link-state-active-text: hsla(216, 100%, 70%, 100%);
-    --kbq-link-state-active-border-bottom: hsla(216, 100%, 27%, 100%);
-    --kbq-link-state-focused-outline: hsla(216, 100%, 60%, 100%);
-    --kbq-link-state-disabled-text: hsla(229, 15%, 40%, 100%);
-    --kbq-link-state-disabled-border-bottom: hsla(229, 15%, 50%, 32%);
+    --kbq-link-text: var(--kbq-foreground-theme);
+    --kbq-link-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-visited-text: var(--kbq-foreground-visited);
+    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-visited-hover-text: var(--kbq-states-foreground-visited-hover);
+    --kbq-link-state-visited-hover-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-visited-active-text: var(--kbq-states-foreground-visited-active);
+    --kbq-link-state-visited-active-border-bottom: var(--kbq-line-visited);
+    --kbq-link-state-hover-text: var(--kbq-states-foreground-theme-hover);
+    --kbq-link-state-hover-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-active-text: var(--kbq-states-foreground-theme-active);
+    --kbq-link-state-active-border-bottom: var(--kbq-line-theme-less);
+    --kbq-link-state-focused-outline: var(--kbq-states-line-focus-theme);
+    --kbq-link-state-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-link-state-disabled-border-bottom: var(--kbq-states-line-disabled);
 }

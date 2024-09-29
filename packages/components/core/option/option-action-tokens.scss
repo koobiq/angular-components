@@ -1,21 +1,5 @@
+/* stylelint-disable no-unknown-custom-properties */
+
 .kbq-option-action {
-    --kbq-list-font-text-line-height: 20px;
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-background-transparent: transparent;
-    --kbq-states-icon-disabled: hsla(229, 15%, 15%, 32%);
-    --kbq-states-icon-contrast-fade-hover: hsla(229, 15%, 50%, 100%);
-    --kbq-states-icon-contrast-fade-active: hsla(229, 15%, 40%, 100%);
-    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
-    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-background-transparent: transparent;
-    --kbq-states-icon-contrast-fade-hover: hsla(229, 15%, 50%, 100%);
-    --kbq-states-icon-contrast-fade-active: hsla(229, 15%, 40%, 100%);
-    --kbq-states-icon-disabled: hsla(229, 15%, 30%, 100%);
-    --kbq-states-focused-color: hsla(216, 100%, 50%, 100%);
-    --kbq-states-focused-color-error: hsla(7, 97%, 50%, 100%);
+    --kbq-list-font-text-line-height: var(--kbq-typography-text-normal-line-height);
 }

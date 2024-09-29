@@ -11,7 +11,7 @@
 @for (language of locales; track language) {
     <button
         kbq-dropdown-item
-        [class.mc-selected]="language.selected"
+        [class.kbq-selected]="language.selected"
         (click)="selectLanguage(language)"
     >
         {{ language.name }}

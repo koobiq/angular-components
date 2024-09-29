@@ -1,22 +1,22 @@
 @use 'sass:map';
 
-@use '../dist/components/core/styles/typography';
+@use '../dist/components/core/styles/common/tokens';
 
-@mixin kbq-docs-live-example-viewer-theme($theme) {
-    $background: map.get($theme, background);
+/* stylelint-disable no-unknown-custom-properties */
 
+@mixin kbq-docs-live-example-viewer-theme() {
     .docs-live-example__container {
-        border: 1px solid map.get($background, contrast-fade);
+        border: 1px solid var(--kbq-background-contrast-fade);
     }
 
     .docs-live-example__footer {
-        border-top: 1px solid map.get($background, contrast-fade);
+        border-top: 1px solid var(--kbq-background-contrast-fade);
     }
 }
 
-@mixin kbq-docs-live-example-viewer-typography($config) {
+@mixin kbq-docs-live-example-viewer-typography() {
     .docs-live-example__footer,
     .docs-live-example__footer .kbq-link {
-        @include typography.kbq-typography-level-to-styles($config, text-big);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 }

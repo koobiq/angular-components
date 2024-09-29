@@ -1,12 +1,10 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../../components/core/styles/tokens';
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
 
-$tokens: meta.module-variables(tokens);
-$theme: theming.kbq-light-theme($tokens);
+/* stylelint-disable no-unknown-custom-properties */
 
 .kbq-tooltip.kbq-tooltip_extended.tooltip-485 {
     width: 485px;
@@ -37,7 +35,7 @@ app {
     }
 
     .red {
-        color: map.get(map.get($theme, error), default);
+        color: var(--kbq-error-default);
     }
 
     .container {

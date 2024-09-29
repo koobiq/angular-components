@@ -239,7 +239,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -305,7 +305,7 @@ class BasicTreeSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -361,7 +361,7 @@ class BasicEvents {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -388,7 +388,7 @@ class BasicEvents {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -428,7 +428,7 @@ class ManySelects {
                 >
                     <i
                         kbqPrefix
-                        kbq-icon="mc-search_16"
+                        kbq-icon="kbq-magnifying-glass_16"
                     ></i>
                     <input
                         [formControl]="searchControl"
@@ -500,7 +500,7 @@ class SelectWithSearch implements OnInit {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -556,7 +556,7 @@ class SelectWithChangeEvent {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -680,7 +680,7 @@ class ThrowsErrorOnInit implements OnInit {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -736,7 +736,7 @@ class BasicSelectOnPush {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -792,7 +792,7 @@ class BasicSelectOnPushPreselected {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -867,7 +867,7 @@ class SelectEarlyAccessSibling {}
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -920,7 +920,7 @@ class BasicSelectWithTheming {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -973,7 +973,7 @@ class ResetValuesSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1046,7 +1046,7 @@ class InvalidSelectInForm {
                             kbqTreeNodePadding
                         >
                             <i
-                                kbq-icon="mc-angle-S_16"
+                                kbq-icon="kbq-angle-S_16"
                                 kbqTreeNodeToggle
                             ></i>
                             {{ treeControl.getViewValue(node) }}
@@ -1113,7 +1113,7 @@ class SelectInsideFormGroup {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1169,7 +1169,7 @@ class BasicSelectWithoutForms {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1228,7 +1228,7 @@ class BasicSelectWithoutFormsPreselected {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1289,7 +1289,7 @@ class BasicSelectWithoutFormsMultiple {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1345,7 +1345,7 @@ class SelectWithCustomTrigger {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1428,7 +1428,7 @@ class NgModelCompareWithSelect {
                     kbqTreeNodePadding
                 >
                     <i
-                        kbq-icon="mc-angle-S_16"
+                        kbq-icon="kbq-angle-S_16"
                         kbqTreeNodeToggle
                     ></i>
                     {{ treeControl.getViewValue(node) }}
@@ -1485,7 +1485,7 @@ class CustomErrorBehaviorSelect {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-S_16"
+                            kbq-icon="kbq-angle-S_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1573,7 +1573,7 @@ class SelectWithFormFieldLabel {
                         <kbq-pseudo-checkbox [state]="pseudoCheckboxState(option)" />
                         <i
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
@@ -1690,7 +1690,7 @@ class ChildSelection {
                         kbqTreeNodePadding
                     >
                         <i
-                            kbq-icon="mc-angle-down-S_16"
+                            kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
                         ></i>
                         {{ treeControl.getViewValue(node) }}
