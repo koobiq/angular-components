@@ -32,14 +32,6 @@
 
     outline: none;
 
-    .kbq-tab-label__content > *:first-child.kbq-icon {
-        margin-left: -4px;
-    }
-
-    .kbq-tab-label__content > *:last-child.kbq-icon {
-        margin-right: -4px;
-    }
-
     &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical) {
         padding-left: 16px;
         padding-right: 16px;
