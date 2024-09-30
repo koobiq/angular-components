@@ -22,14 +22,14 @@
     &.kbq-selected {
         @include kbq-tab-item-state($type, $sub-type, states-selected);
 
-        &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical) {
+        &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
             background: none;
         }
 
         &:hover {
             @include kbq-tab-item-state($type, $sub-type, states-selected-hover);
 
-            &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical) {
+            &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
                 background: none;
             }
         }

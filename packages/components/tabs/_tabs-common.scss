@@ -32,19 +32,19 @@
 
     outline: none;
 
-    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical) {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
         padding-left: 14px;
         padding-right: 14px;
     }
 
-    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
         padding-left: kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-horizontal,
             tabs-size-tab-item-focus-outline-width]
         );
     }
 
-    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
         padding-right: kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-horizontal,
             tabs-size-tab-item-focus-outline-width]
@@ -70,7 +70,7 @@
         gap: kbq-css-variable(tabs-size-tab-item-content-gap-horizontal);
     }
 
-    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical):before {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
         content: '';
         position: absolute;
         left: 0;
@@ -79,7 +79,7 @@
         bottom: -8px;
     }
 
-    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical).kbq-selected:after {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-selected:after {
         content: '';
         position: absolute;
         left: 0;

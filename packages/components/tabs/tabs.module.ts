@@ -12,8 +12,8 @@ import {
     KbqAlignTabsEndCssStyler,
     KbqStretchTabsCssStyler,
     KbqTabGroup,
-    KbqVerticalTabsCssStyler,
-    KbqWithBorderTabsCssStyler
+    KbqUnderlinedTabsCssStyler,
+    KbqVerticalTabsCssStyler
 } from './tab-group.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -42,8 +42,8 @@ import { KbqTab } from './tab.component';
         KbqAlignTabsCenterCssStyler,
         KbqAlignTabsEndCssStyler,
         KbqStretchTabsCssStyler,
-        KbqVerticalTabsCssStyler,
-        KbqWithBorderTabsCssStyler
+        KbqUnderlinedTabsCssStyler,
+        KbqVerticalTabsCssStyler
     ],
     declarations: [
         KbqTabGroup,
@@ -59,8 +59,8 @@ import { KbqTab } from './tab.component';
         KbqAlignTabsCenterCssStyler,
         KbqAlignTabsEndCssStyler,
         KbqStretchTabsCssStyler,
-        KbqVerticalTabsCssStyler,
-        KbqWithBorderTabsCssStyler
+        KbqUnderlinedTabsCssStyler,
+        KbqVerticalTabsCssStyler
     ]
 })
 export class KbqTabsModule {}

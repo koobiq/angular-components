@@ -44,7 +44,7 @@ export type ScrollDirection = 'after' | 'before';
     host: {
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',
-        '[class.kbq-tab-header_with-border]': 'withBorder',
+        '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
     }
@@ -52,7 +52,7 @@ export type ScrollDirection = 'after' | 'before';
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** The index of the active tab. */
     @Input() vertical: boolean = false;
-    @Input() withBorder: boolean = false;
+    @Input() underlined: boolean = false;
 
     @ContentChildren(KbqTabLabelWrapper, { descendants: false }) items: QueryList<KbqTabLabelWrapper>;
     @ViewChild('tabListContainer', { static: true }) tabListContainer: ElementRef;
