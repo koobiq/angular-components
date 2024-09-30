@@ -8,8 +8,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/overlay';
-import * as i3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
@@ -57,7 +55,7 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     updateData(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqExtendedTooltipTrigger, "[kbqExtendedTooltip]", ["kbqExtendedTooltip"], { "content": { "alias": "kbqExtendedTooltip"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqExtendedTooltipTrigger, "[kbqExtendedTooltip]", ["kbqExtendedTooltip"], { "content": { "alias": "kbqExtendedTooltip"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqExtendedTooltipTrigger, never>;
 }
@@ -76,7 +74,7 @@ export class KbqTooltipComponent extends KbqPopUp {
         modifier: any;
     }): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTooltipComponent, "kbq-tooltip-component", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTooltipComponent, "kbq-tooltip-component", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipComponent, never>;
 }
@@ -90,7 +88,7 @@ export class KbqToolTipModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger], [typeof i2.OverlayModule, typeof i3.NgClass, typeof i3.NgTemplateOutlet], [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, never, [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger], [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger, typeof i1.KbqExtendedTooltipTrigger, typeof i1.KbqWarningTooltipTrigger]>;
 }
 
 // @public
@@ -185,7 +183,7 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     protected modifier: TooltipModifier;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqWarningTooltipTrigger, "[kbqWarningTooltip]", ["kbqWarningTooltip"], { "content": { "alias": "kbqWarningTooltip"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqWarningTooltipTrigger, "[kbqWarningTooltip]", ["kbqWarningTooltip"], { "content": { "alias": "kbqWarningTooltip"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqWarningTooltipTrigger, never>;
 }
