@@ -11,8 +11,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/cdk/a11y';
-import * as i5 from '@angular/cdk/platform';
 import { KbqFormFieldRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 
@@ -40,7 +38,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "autoColor": { "alias": "autoColor"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "autoColor": { "alias": "autoColor"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIcon, [null, { attribute: "kbq-icon"; }, { optional: true; }, null]>;
 }
@@ -71,7 +69,7 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, [null, { attribute: "kbq-icon-button"; }, { optional: true; }, null, null]>;
 }
@@ -88,7 +86,7 @@ export class KbqIconItem extends KbqIcon implements CanColor {
     // (undocumented)
     name: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconItem, [null, { attribute: "kbq-icon-item"; }, { optional: true; }, null]>;
 }
@@ -107,7 +105,7 @@ export class KbqIconModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i4.A11yModule, typeof i5.PlatformModule], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
 
 // (No @packageDocumentation comment for this package)
