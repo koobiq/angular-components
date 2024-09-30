@@ -37,6 +37,20 @@
         padding-right: 14px;
     }
 
+    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
+        padding-left: kbq-difference-series-css-variables(
+            [tabs-size-tab-item-padding-horizontal,
+            tabs-size-tab-item-focus-outline-width]
+        );
+    }
+
+    &.kbq-tab-label_with-border:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
+        padding-right: kbq-difference-series-css-variables(
+            [tabs-size-tab-item-padding-horizontal,
+            tabs-size-tab-item-focus-outline-width]
+        );
+    }
+
     &.kbq-selected {
         cursor: default;
     }
@@ -70,7 +84,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: -11px; // 8 + 3
+        bottom: -11px;
         height: 3px;
         border-radius: 2px 2px 0 0;
         background: rgba(33, 34, 44, 1);
