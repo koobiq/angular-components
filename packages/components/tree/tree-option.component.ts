@@ -138,6 +138,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     private _showCheckbox: boolean;
 
     @Output() readonly onSelectionChange = new EventEmitter<KbqTreeOptionChange>();
+    readonly userInteraction = new EventEmitter<void>();
 
     get selected(): boolean {
         return this._selected;
@@ -359,7 +360,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         }
 
         this.markForCheck();
-        this.emitSelectionChangeEvent(true);
+
+        this.userInteraction.emit();
 
         const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
         const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey') : false;

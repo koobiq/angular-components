@@ -296,6 +296,21 @@ export class KbqTreeSelect
         );
     }) as Observable<KbqTreeSelectChange>;
 
+    /** Combined stream of all of the child options' userInteraction events. */
+    readonly userInteractionChanges: Observable<void> = defer(() => {
+        if (this.options) {
+            return this.options.changes.pipe(
+                startWith(this.options),
+                switchMap(() => merge(...this.options.map((option) => option.userInteraction)))
+            );
+        }
+
+        return this.ngZone.onStable.asObservable().pipe(
+            take(1),
+            switchMap(() => this.userInteractionChanges)
+        );
+    });
+
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -549,8 +564,8 @@ export class KbqTreeSelect
             this.tempValues = null;
         }
 
-        this.optionSelectionChanges.pipe(takeUntil(this.destroy)).subscribe((event) => {
-            if (!this.multiple && this.panelOpen && event.isUserInput) {
+        this.userInteractionChanges.pipe(takeUntil(this.destroy)).subscribe(() => {
+            if (!this.multiple && this.panelOpen) {
                 this.close();
 
                 Promise.resolve().then(() => this.focus());
