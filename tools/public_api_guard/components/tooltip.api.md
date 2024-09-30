@@ -146,7 +146,6 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected overlayConfig: OverlayConfig;
     // (undocumented)
     placementChange: EventEmitter<any>;
-    // (undocumented)
     relativeToPointer: boolean;
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;

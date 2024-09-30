@@ -137,6 +137,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         return this.placement;
     }
 
+    /**
+     * Positions the tooltip relative to the mouse cursor. Only available for top and bottom kbqPlacement.
+     * Does not work with kbqPlacementPriority.
+     */
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
 
     set tooltipPlacement(value: PopUpPlacements) {
