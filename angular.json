@@ -383,9 +383,7 @@
                         },
                         "tsConfig": "packages/components-dev/alert/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -414,9 +412,7 @@
                         },
                         "tsConfig": "packages/components-dev/all/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -445,9 +441,7 @@
                         },
                         "tsConfig": "packages/components-dev/autocomplete/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -476,9 +470,7 @@
                         },
                         "tsConfig": "packages/components-dev/badge/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -507,9 +499,7 @@
                         },
                         "tsConfig": "packages/components-dev/button/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -538,9 +528,7 @@
                         },
                         "tsConfig": "packages/components-dev/button-toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -569,9 +557,7 @@
                         },
                         "tsConfig": "packages/components-dev/checkbox/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -600,9 +586,7 @@
                         },
                         "tsConfig": "packages/components-dev/code-block/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -631,9 +615,7 @@
                         },
                         "tsConfig": "packages/components-dev/date-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -662,9 +644,7 @@
                         },
                         "tsConfig": "packages/components-dev/date-pipes/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -693,9 +673,7 @@
                         },
                         "tsConfig": "packages/components-dev/datepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -724,9 +702,7 @@
                         },
                         "tsConfig": "packages/components-dev/divider/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -755,9 +731,7 @@
                         },
                         "tsConfig": "packages/components-dev/dl/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -786,9 +760,7 @@
                         },
                         "tsConfig": "packages/components-dev/dropdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -817,9 +789,7 @@
                         },
                         "tsConfig": "packages/components-dev/empty-state/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -848,9 +818,7 @@
                         },
                         "tsConfig": "packages/components-dev/form-field/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -879,9 +847,7 @@
                         },
                         "tsConfig": "packages/components-dev/forms/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -910,9 +876,7 @@
                         },
                         "tsConfig": "packages/components-dev/flex-layout/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -941,9 +905,7 @@
                         },
                         "tsConfig": "packages/components-dev/file-upload/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -972,9 +934,7 @@
                         },
                         "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1003,9 +963,7 @@
                         },
                         "tsConfig": "packages/components-dev/icon-item/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1034,9 +992,7 @@
                         },
                         "tsConfig": "packages/components-dev/hint/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1065,9 +1021,7 @@
                         },
                         "tsConfig": "packages/components-dev/input/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1096,9 +1050,7 @@
                         },
                         "tsConfig": "packages/components-dev/link/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1127,9 +1079,7 @@
                         },
                         "tsConfig": "packages/components-dev/list/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1158,9 +1108,7 @@
                         },
                         "tsConfig": "packages/components-dev/loader-overlay/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1189,9 +1137,7 @@
                         },
                         "tsConfig": "packages/components-dev/locale/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1220,9 +1166,7 @@
                         },
                         "tsConfig": "packages/components-dev/markdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1251,9 +1195,7 @@
                         },
                         "tsConfig": "packages/components-dev/modal/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1282,9 +1224,7 @@
                         },
                         "tsConfig": "packages/components-dev/navbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1313,9 +1253,7 @@
                         },
                         "tsConfig": "packages/components-dev/number-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1344,9 +1282,7 @@
                         },
                         "tsConfig": "packages/components-dev/panel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1375,9 +1311,7 @@
                         },
                         "tsConfig": "packages/components-dev/popover/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1406,9 +1340,7 @@
                         },
                         "tsConfig": "packages/components-dev/progress-bar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1437,9 +1369,7 @@
                         },
                         "tsConfig": "packages/components-dev/progress-spinner/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1468,9 +1398,7 @@
                         },
                         "tsConfig": "packages/components-dev/radio/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1499,9 +1427,7 @@
                         },
                         "tsConfig": "packages/components-dev/risk-level/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1530,9 +1456,7 @@
                         },
                         "tsConfig": "packages/components-dev/scrollbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1561,9 +1485,7 @@
                         },
                         "tsConfig": "packages/components-dev/select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1592,9 +1514,7 @@
                         },
                         "tsConfig": "packages/components-dev/sidebar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1623,9 +1543,7 @@
                         },
                         "tsConfig": "packages/components-dev/sidepanel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1654,9 +1572,7 @@
                         },
                         "tsConfig": "packages/components-dev/splitter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1685,9 +1601,7 @@
                         },
                         "tsConfig": "packages/components-dev/table/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1716,9 +1630,7 @@
                         },
                         "tsConfig": "packages/components-dev/tabs/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1747,9 +1659,7 @@
                         },
                         "tsConfig": "packages/components-dev/tag/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1778,9 +1688,7 @@
                         },
                         "tsConfig": "packages/components-dev/textarea/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1809,9 +1717,7 @@
                         },
                         "tsConfig": "packages/components-dev/timepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1840,9 +1746,7 @@
                         },
                         "tsConfig": "packages/components-dev/timezone/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1871,9 +1775,7 @@
                         },
                         "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1902,9 +1804,7 @@
                         },
                         "tsConfig": "packages/components-dev/toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1933,9 +1833,7 @@
                         },
                         "tsConfig": "packages/components-dev/tooltip/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1964,9 +1862,7 @@
                         },
                         "tsConfig": "packages/components-dev/tree/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1995,9 +1891,7 @@
                         },
                         "tsConfig": "packages/components-dev/tree-select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2026,9 +1920,7 @@
                         },
                         "tsConfig": "packages/components-dev/typography/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2057,9 +1949,7 @@
                         },
                         "tsConfig": "packages/components-dev/title/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2088,9 +1978,7 @@
                         },
                         "tsConfig": "packages/components-dev/validation/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2119,9 +2007,7 @@
                         },
                         "tsConfig": "packages/components-dev/z-index/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "polyfills": [
-                            "packages/components-dev/polyfills.ts"
-                        ],
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
