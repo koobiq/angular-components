@@ -3310,6 +3310,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-disabled": {
+    "packagePath": "components/tabs/tabs-disabled",
+    "title": "Tabs disabled",
+    "componentName": "TabsDisabledExample",
+    "files": [
+      "tabs-disabled-example.ts",
+      "tabs-disabled-example.html",
+      "tabs-disabled-example.css"
+    ],
+    "selector": "tabs-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-disabled-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-empty": {
     "packagePath": "components/tabs/tabs-empty",
     "title": "Tabs empty",
@@ -3322,24 +3340,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-empty-example",
     "additionalComponents": [],
     "primaryFile": "tabs-empty-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
-  },
-  "tabs-old": {
-    "packagePath": "components/tabs/tabs-old",
-    "title": "Navbar",
-    "componentName": "TabsOldExample",
-    "files": [
-      "tabs-old-example.ts",
-      "tabs-old-example.html",
-      "tabs-old-example.css"
-    ],
-    "selector": "tabs-old-example",
-    "additionalComponents": [],
-    "primaryFile": "tabs-old-example.ts",
     "module": {
       "name": "TabsExamplesModule",
       "importSpecifier": "components/tabs",
