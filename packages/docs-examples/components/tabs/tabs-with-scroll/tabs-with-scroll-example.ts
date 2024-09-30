@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 /**
- * @title Navbar
+ * @title Tabs with scroll
  */
 @Component({
     selector: 'tabs-with-scroll-example',
@@ -9,12 +9,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['tabs-with-scroll-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class TabsWithScrollExample {
-    tabs: number[];
-
-    constructor() {
-        this.tabs = Array(20)
-            .fill(null)
-            .map((_, i) => i);
-    }
-}
+export class TabsWithScrollExample {}

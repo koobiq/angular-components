@@ -3348,7 +3348,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tabs-overview": {
     "packagePath": "components/tabs/tabs-overview",
-    "title": "Tabs",
+    "title": "Tabs overview",
     "componentName": "TabsOverviewExample",
     "files": [
       "tabs-overview-example.ts",
@@ -3366,7 +3366,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tabs-stretch": {
     "packagePath": "components/tabs/tabs-stretch",
-    "title": "Navbar",
+    "title": "Tabs stretch",
     "componentName": "TabsStretchExample",
     "files": [
       "tabs-stretch-example.ts",
@@ -3382,9 +3382,27 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-vertical-icons": {
+    "packagePath": "components/tabs/tabs-vertical-icons",
+    "title": "Tabs vertical icons",
+    "componentName": "TabsVerticalIconsExample",
+    "files": [
+      "tabs-vertical-icons-example.ts",
+      "tabs-vertical-icons-example.html",
+      "tabs-vertical-icons-example.css"
+    ],
+    "selector": "tabs-vertical-icons-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-vertical-icons-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-vertical": {
     "packagePath": "components/tabs/tabs-vertical",
-    "title": "Navbar",
+    "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
       "tabs-vertical-example.ts",
@@ -3402,7 +3420,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tabs-with-scroll": {
     "packagePath": "components/tabs/tabs-with-scroll",
-    "title": "Navbar",
+    "title": "Tabs with scroll",
     "componentName": "TabsWithScrollExample",
     "files": [
       "tabs-with-scroll-example.ts",

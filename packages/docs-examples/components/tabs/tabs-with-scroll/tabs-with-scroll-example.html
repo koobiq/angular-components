@@ -1,11 +1,14 @@
 <kbq-tab-group>
-    @for (tab of tabs; track tab) {
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-play_16"></i>
-                Tab {{ tab }}
-            </ng-template>
-            Contents for {{ tab }} tab
-        </kbq-tab>
-    }
+    <kbq-tab [label]="'Bruteforce'"></kbq-tab>
+    <kbq-tab [label]="'Complex Attack'"></kbq-tab>
+    <kbq-tab [label]="'DDoS'"></kbq-tab>
+    <kbq-tab [label]="'DoS'"></kbq-tab>
+    <kbq-tab [label]="'HIPS Alert'"></kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'"></kbq-tab>
+    <kbq-tab [label]="'Bruteforce'"></kbq-tab>
+    <kbq-tab [label]="'Complex Attack'"></kbq-tab>
+    <kbq-tab [label]="'DDoS'"></kbq-tab>
+    <kbq-tab [label]="'DoS'"></kbq-tab>
+    <kbq-tab [label]="'HIPS Alert'"></kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'"></kbq-tab>
 </kbq-tab-group>

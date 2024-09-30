@@ -1,0 +1,9 @@
+.tabs-vertical-icons-example {
+    .kbq-tab-group_vertical {
+        height: 220px;
+    }
+
+    .kbq-tab-body__wrapper {
+        padding-left: 20px;
+    }
+}

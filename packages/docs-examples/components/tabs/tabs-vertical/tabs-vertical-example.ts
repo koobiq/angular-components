@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 /**
- * @title Navbar
+ * @title Tabs vertical
  */
 @Component({
     selector: 'tabs-vertical-example',
