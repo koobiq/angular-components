@@ -1523,6 +1523,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-file-upload"
     }
   },
+  "form-field-password-overview": {
+    "packagePath": "components/form-field/form-field-password-overview",
+    "title": "Form field password overview",
+    "componentName": "FormFieldPasswordOverviewExample",
+    "files": [
+      "form-field-password-overview-example.ts"
+    ],
+    "selector": "form-field-password-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "form-field-password-overview-example.ts",
+    "module": {
+      "name": "FormFieldExamplesModule",
+      "importSpecifier": "components/form-field",
+      "importPath": "koobiq-docs-examples-components-form-field"
+    }
+  },
   "form-field-with-cleaner": {
     "packagePath": "components/form-field/form-field-with-cleaner",
     "title": "Form field with kbq-cleaner",

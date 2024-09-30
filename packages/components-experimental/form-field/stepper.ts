@@ -1,64 +1,72 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInput, KbqNumberInput } from '@koobiq/components/input';
+import { KbqFormField } from './form-field';
 
-/**
- * @TODO move into input module (#DS-2910)
- */
+/** @docs-private */
+const getKbqStepperToggleMissingControlError = (): Error => {
+    return Error('kbq-stepper should use with kbqNumberInput');
+};
 
+/** Component which allow to increment or decrement number value. */
 @Component({
     standalone: true,
     selector: 'kbq-stepper',
+    exportAs: 'kbqStepper',
+    imports: [KbqIconModule],
     template: `
         <i
-            class="kbq-stepper-step-up"
+            class="kbq-stepper_step-up"
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
-            (mousedown)="onStepUp($event)"
-            kbq-icon-button="mc-angle-down-L_16"
+            (click)="stepUp($event)"
+            kbq-icon-button="kbq-chevron-down_16"
         ></i>
         <i
-            class="kbq-stepper-step-down"
+            class="kbq-stepper_step-down"
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
-            (mousedown)="onStepDown($event)"
-            kbq-icon-button="mc-angle-down-L_16"
+            (mousedown)="stepDown($event)"
+            kbq-icon-button="kbq-chevron-down_16"
         ></i>
     `,
     styleUrl: './stepper.scss',
     host: {
-        class: 'kbq-stepper'
+        class: 'kbq-stepper',
+        '[style.visibility]': 'visible ? "visible" : "hidden"',
+        '[attr.aria-hidden]': '!visible'
     },
-    imports: [KbqIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqStepper {
-    @Output() readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
-    @Output() readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+    // @TODO fix types (#DS-2915)
+    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
-    connectTo(numberInput: any) {
-        if (!numberInput) {
-            return;
+    /** Whether the stepper is visible. */
+    get visible(): boolean {
+        return !!((this.formField?.focused || this.formField?.hovered) && !this.formField?.disabled);
+    }
+
+    /** Form field number control. */
+    protected get control(): KbqNumberInput {
+        const control = this.formField?.control;
+        if (!(control instanceof KbqInput && control.numberInput)) {
+            throw getKbqStepperToggleMissingControlError();
         }
-
-        this.stepUp.subscribe(() => {
-            numberInput.stepUp(numberInput.step);
-        });
-
-        this.stepDown.subscribe(() => {
-            numberInput.stepDown(numberInput.step);
-        });
+        return control.numberInput;
     }
 
-    onStepUp($event: MouseEvent) {
-        this.stepUp.emit();
-        $event.preventDefault();
+    protected stepUp(event: MouseEvent) {
+        event.stopPropagation();
+        this.control.stepUp(this.control.step);
     }
 
-    onStepDown($event: MouseEvent) {
-        this.stepDown.emit();
-        $event.preventDefault();
+    protected stepDown(event: MouseEvent) {
+        event.stopPropagation();
+        this.control.stepDown(this.control.step);
     }
 }

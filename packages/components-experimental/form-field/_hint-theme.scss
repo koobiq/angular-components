@@ -27,33 +27,35 @@
         &.kbq-error {
             @include kbq-hint-color(fill-text-on, error);
         }
-    }
 
-    .kbq-hint.kbq-hint_fill-text-off {
-        &.kbq-contrast-fade {
-            @include kbq-hint-color(fill-text-off, fade-contrast);
-        }
+        &.kbq-hint_fill-text-off {
+            &.kbq-contrast-fade {
+                @include kbq-hint-color(fill-text-off, fade-contrast);
+            }
 
-        &.kbq-success {
-            @include kbq-hint-color(fill-text-off, success);
-        }
+            &.kbq-success {
+                @include kbq-hint-color(fill-text-off, success);
+            }
 
-        &.kbq-warning {
-            @include kbq-hint-color(fill-text-off, warning);
-        }
+            &.kbq-warning {
+                @include kbq-hint-color(fill-text-off, warning);
+            }
 
-        &.kbq-error {
-            @include kbq-hint-color(fill-text-off, error);
+            &.kbq-error {
+                @include kbq-hint-color(fill-text-off, error);
+            }
         }
     }
 }
 
 @mixin kbq-hint-typography() {
-    .kbq-hint .kbq-hint__text {
-        @include kbq-typography-css-variables(hint, normal-text);
-    }
+    .kbq-hint {
+        .kbq-hint_text {
+            @include kbq-typography-css-variables(hint, normal-text);
+        }
 
-    .kbq-hint.kbq-hint_compact .kbq-hint__text {
-        @include kbq-typography-css-variables(hint, compact-text);
+        &.kbq-hint_compact .kbq-hint_text {
+            @include kbq-typography-css-variables(hint, compact-text);
+        }
     }
 }

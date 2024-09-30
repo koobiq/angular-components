@@ -870,15 +870,14 @@
             "sourceRoot": "packages/components-dev/experimental-form-field",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser-esbuild",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
                         "outputPath": "dist/components-dev/experimental-form-field",
-                        "tsConfig": "packages/components-dev/experimental-form-field/tsconfig.json",
+                        "tsConfig": "packages/components-dev/experimental-form-field/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
-                        "main": "packages/components-dev/experimental-form-field/main.ts",
-                        "polyfills": "packages/components-dev/polyfills.ts",
+                        "browser": "packages/components-dev/experimental-form-field/main.ts",
+                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true

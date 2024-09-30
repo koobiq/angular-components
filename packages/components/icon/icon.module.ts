@@ -8,6 +8,7 @@ const COMPONENTS = [
     KbqIconButton,
     KbqIconItem
 ];
+
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS

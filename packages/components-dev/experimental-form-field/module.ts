@@ -5,9 +5,10 @@ import {
     KbqFormFieldDefaultOptions,
     KbqFormFieldModule
 } from '@koobiq/components-experimental/form-field';
-import { KbqButtonModule } from '@koobiq/components/button';
 import {
     ErrorStateMatcher,
+    KbqLocaleServiceModule,
+    PasswordValidators,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
@@ -18,6 +19,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     selector: 'validate-on-form-submit',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
     template: `
         <h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher</h3>
 
@@ -39,20 +45,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 </kbq-error>
             </kbq-form-field>
 
-            <button
-                kbq-button
-                type="submit"
-            >
-                Submit form
-            </button>
+            <button type="submit">Submit form</button>
         </form>
     `,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        ReactiveFormsModule,
-        KbqButtonModule
-    ],
+
     providers: [{ provide: ErrorStateMatcher, useClass: ShowOnFormSubmitErrorStateMatcher }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -140,7 +136,7 @@ export class FieldWithCleaner {
             <kbq-label>Form field with prefix and suffix</kbq-label>
             <i
                 kbqPrefix
-                kbq-icon="mc-search_16"
+                kbq-icon="kbq-magnifying-glass_16"
             ></i>
             <input
                 [formControl]="formControl"
@@ -148,9 +144,10 @@ export class FieldWithCleaner {
                 placeholder="Search"
             />
             <i
-                kbq-icon="mc-info-o_16"
                 kbqSuffix
+                kbq-icon="kbq-info-circle_16"
             ></i>
+
             <kbq-cleaner />
         </kbq-form-field>
     `,
@@ -285,30 +282,129 @@ export class FieldWithoutBorders {
 
 @Component({
     standalone: true,
+    selector: 'password-field',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input
+                [formControl]="formControl"
+                [maxLength]="20"
+                placeholder="password"
+                kbqInputPassword
+            />
+
+            <kbq-password-toggle />
+
+            <kbq-password-hint [hasError]="formControl.hasError('minLength')">
+                Min length
+                @let minLength = formControl.getError('minLength');
+                @if (minLength) {
+                    ({{ minLength.actual }}/{{ minLength.min }})
+                }
+            </kbq-password-hint>
+
+            <kbq-password-hint [hasError]="formControl.hasError('minUppercase')">
+                Uppercase characters
+                @let minUppercaseError = formControl.getError('minUppercase');
+                @if (minUppercaseError) {
+                    ({{ minUppercaseError.actual }}/{{ minUppercaseError.min }})
+                }
+            </kbq-password-hint>
+
+            <kbq-password-hint [hasError]="formControl.hasError('minLowercase')">
+                Lowercase characters
+                @let minLowercaseError = formControl.getError('minLowercase');
+                @if (minLowercaseError) {
+                    ({{ minLowercaseError?.actual }}/{{ minLowercaseError?.min }})
+                }
+            </kbq-password-hint>
+
+            <kbq-password-hint [hasError]="formControl.hasError('minNumber')">
+                Number characters
+                @let minNumberError = formControl.getError('minNumber');
+                @if (minNumberError) {
+                    ({{ minNumberError.actual }}/{{ minNumberError.min }})
+                }
+            </kbq-password-hint>
+
+            <kbq-password-hint [hasError]="formControl.hasError('minSpecial')">
+                Special characters
+                @let minSpecialError = formControl.getError('minSpecial');
+                @if (minSpecialError) {
+                    ({{ minSpecialError.actual }}/{{ minSpecialError.min }})
+                }
+            </kbq-password-hint>
+
+            @if (formControl.hasError('required')) {
+                <kbq-error>Should enter password</kbq-error>
+            }
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PasswordField {
+    readonly formControl = new FormControl('', [
+        Validators.required,
+        PasswordValidators.minLength(8),
+        PasswordValidators.minUppercase(2),
+        PasswordValidators.minLowercase(2),
+        PasswordValidators.minNumber(2),
+        PasswordValidators.minSpecial(2)]);
+}
+
+@Component({
+    standalone: true,
+    selector: 'field-with-stepper',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        KbqLocaleServiceModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input
+                [formControl]="formControl"
+                [step]="0.5"
+                kbqNumberInput
+                placeholder="type number"
+            />
+            <kbq-stepper />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FieldWithStepper {
+    readonly formControl = new FormControl();
+}
+
+@Component({
+    standalone: true,
     selector: 'app',
     template: `
         <validate-on-form-submit />
         <hr />
-
         <validate-on-control-dirty />
         <hr />
-
         <field-with-cleaner />
         <hr />
-
         <field-with-prefix-and-suffix />
         <hr />
-
         <field-with-hint />
         <hr />
-
         <field-with-error />
         <hr />
-
         <field-without-borders />
         <hr />
-
         <select-field />
+        <hr />
+        <password-field />
+        <hr />
+        <field-with-stepper />
         <hr />
     `,
     styleUrl: './styles.scss',
@@ -320,7 +416,9 @@ export class FieldWithoutBorders {
         FieldWithHint,
         FieldWithError,
         FieldWithoutBorders,
-        SelectField
+        SelectField,
+        PasswordField,
+        FieldWithStepper
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

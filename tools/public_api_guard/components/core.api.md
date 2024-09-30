@@ -51,6 +51,7 @@ import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
@@ -933,7 +934,7 @@ export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: {
 // @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
@@ -1756,6 +1757,16 @@ export enum MultipleMode {
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
+
+// @public
+export class PasswordValidators {
+    static maxLength(max: number): ValidatorFn;
+    static minLength(min: number): ValidatorFn;
+    static minLowercase(min: number): ValidatorFn;
+    static minNumber(min: number): ValidatorFn;
+    static minSpecial(min: number): ValidatorFn;
+    static minUppercase(min: number): ValidatorFn;
+}
 
 // @public (undocumented)
 export enum PopUpPlacements {

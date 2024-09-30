@@ -5,30 +5,23 @@
 -   удалена поддержка `KbqTrim`;
 -   удалена поддержка `KbqValidateDirective` директивы, вместо этого предлагается использовать `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
 -   удалена директива `KbqFormFieldWithoutBorders`, вместо нее предлагается использовать `<kbq-form-field noBorders>` атрибут ([см.](#отключение-рамок));
--   удалена стилизация поля ввода при помощи селектора `.ng-invalid`, вместо этого предлагается использовать селектор `.kbq-form-field_invalid`, который зависит от `ErrorStateMatcher`;
--   компонент `KbqPasswordHint` оставлен для обратной совместимости, но будет переработан и перенесен в `KbqInputModule`;
--   компонент `KbqPasswordToggle` оставлен для обратной совместимости, но будет перенесен в `KbqInputModule`;
--   компонент `KbqStepper` оставлен для обратной совместимости, но будет перенесен в `KbqInputModule`;
+-   удалена стилизация поля ввода при помощи селектора `.ng-invalid`, вместо этого предлагается использовать селектор `.kbq-form-field_invalid`, который зависит от `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
 
 ---
 
 `<kbq-form-field>` - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных
-функций, таких как [лейбл](#лейбл), [подсказки](#подсказки), [сообщения об ошибке](#сообщения-об-ошибке), [префикс и суффикс](#префикс-и-суффикс),
-[очистка поля](#очистка-поля), [отключение рамок](#отключение-рамок).
+функций.
 
 Следующие компоненты предназначены для работы внутри `<kbq-form-field>`:
 
 -   [Autocomplete](https://koobiq.io/components/autocomplete/overview);
--   [Checkbox](https://koobiq.io/components/checkbox/overview);
 -   [Input](https://koobiq.io/components/input/overview);
--   [Radio](https://koobiq.io/components/radio/overview);
 -   [Select](https://koobiq.io/components/select/overview);
 -   [Tag autocomplete](https://koobiq.io/components/tag-autocomplete/overview);
 -   [Tag input](https://koobiq.io/components/tag-input/overview);
 -   [Textarea](https://koobiq.io/components/textarea/overview);
 -   [Timepicker](https://koobiq.io/components/timepicker/overview);
 -   [Timezone](https://koobiq.io/components/timezone/overview);
--   [Toggle](https://koobiq.io/components/toggle/overview);
 -   [Tree select](https://koobiq.io/components/tree-select/overview);
 
 ### Лейбл
@@ -78,7 +71,7 @@ import { ErrorStateMatcher, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/co
 ### Очистка поля
 
 `<kbq-cleaner />` - это компонент, который добавляет кнопку очистки для **заполненного** поля формы внутри `<kbq-form-field>`
-компонента. При одновременном добавлении `kbqSuffix` и `<kbq-cleaner />`, [суффикс](#префикс-и-суффикс) будет скрываться при отображении кнопки очистки.
+компонента.
 
 <!-- example(form-field-with-cleaner) -->
 
@@ -113,10 +106,28 @@ import { KBQ_FORM_FIELD_DEFAULT_OPTIONS, KbqFormFieldDefaultOptions } from '@koo
 })
 ```
 
+### Поле для ввода пароля
+
+`<kbq-password-toggle>` - это компонент, который добавляет кнопку _"Показать пароль"_ для **заполненного** поля
+`<input kbqInputPassword />` внутри `<kbq-form-field>` компонента.
+
+`<kbq-password-hint>` - это компонент, который используется для добавления подсказок к полю `<input kbqInputPassword />`
+внутри `<kbq-form-field>` компонента.
+
+В примере используется `PasswordValidators` - это набор статических методов для валидации пароля.
+
+<!-- example(form-field-password-overview) -->
+
 ### Устранение неисправностей
 
--   `Error: kbq-form-field must contain a KbqFormFieldControl`
+-   `Error: kbq-form-field must contain a KbqFormFieldControl`;
 
-Эта ошибка возникает, когда используется `<kbq-form-field>` компонент, без добавления в него поля формы. Если `<kbq-form-field>`
-компонент содержит нативный `<input>` или `<textarea>` элемент, убедись, что используется `kbqInput` директива из `KbqInputModule`
-модуля.
+Эта ошибка возникает, когда `<kbq-form-field>` не содержит поле формы, например: `<input kbqInput />` или его импорт `KbqInputModule`.
+
+-   `Error: kbq-password-toggle should use with kbqInputPassword`;
+
+Эта ошибка возникает, когда `<kbq-password-toggle>` не может найти поле `<input kbqInputPassword />` или его импорт `KbqInputModule`.
+
+-   `Error: kbq-stepper should use with kbqNumberInput`;
+
+Эта ошибка возникает, когда `<kbq-stepper>` не может найти поле `<input kbqNumberInput />` или его импорт `KbqInputModule`.

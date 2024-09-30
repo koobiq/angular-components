@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { KbqCleaner } from './cleaner';
-import { KbqError } from './error';
 import { KbqFormField } from './form-field';
-import { KbqHint } from './hint';
+import { KbqError, KbqHint, KbqPasswordHint } from './hint';
 import { KbqLabel } from './label';
-import { KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
@@ -19,8 +17,8 @@ const COMPONENTS = [
     KbqCleaner,
     KbqStepper,
     KbqPasswordToggle,
-    KbqPasswordHint,
-    KbqLabel
+    KbqLabel,
+    KbqPasswordHint
 ];
 
 @NgModule({

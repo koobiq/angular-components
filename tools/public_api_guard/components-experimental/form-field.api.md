@@ -5,29 +5,18 @@
 ```ts
 
 import { AbstractControlDirective } from '@angular/forms';
-import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqFormFieldRef } from '@koobiq/components/core';
-import { KbqIconButton } from '@koobiq/components/icon';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
-import { TemplateRef } from '@angular/core';
+import { KbqInputPassword } from '@koobiq/components/input';
+import { KbqNumberInput } from '@koobiq/components/input';
 
 // @public
-export function getKbqFormFieldMissingControlError(): Error;
-
-// @public (undocumented)
-export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint>) => boolean;
+export const getKbqFormFieldMissingControlError: () => Error;
 
 // @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
@@ -36,7 +25,8 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 
 // @public
 export class KbqCleaner {
-    protected click(event: MouseEvent): void;
+    protected clean(event: MouseEvent): void;
+    get visible(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -45,28 +35,22 @@ export class KbqCleaner {
 
 // @public
 export class KbqError extends KbqHint {
+    set color(_color: null);
+    get color(): KbqComponentColors.Error;
+    set fillTextOff(_fillTextOff: null);
+    get fillTextOff(): boolean;
     // (undocumented)
-    readonly color = KbqComponentColors.Error;
-    id: string;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqError, "kbq-error", ["kbqError"], { "id": { "alias": "id"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqError, "kbq-error", ["kbqError"], { "color": { "alias": "color"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqError, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqFormFieldMixinBase" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy {
-    constructor(elementRef: ElementRef);
+export class KbqFormField implements AfterContentInit, AfterViewInit {
     // (undocumented)
     canCleanerClearByEsc: boolean;
-    get canShowStepper(): boolean;
-    // (undocumented)
-    protected readonly control: KbqFormFieldControl<unknown>;
+    get control(): KbqFormFieldControl<unknown>;
     get disabled(): boolean;
-    // (undocumented)
-    readonly elementRef: ElementRef;
     focus(options?: FocusOptions): void;
     get focused(): boolean;
     getConnectedOverlayOrigin(): ElementRef;
@@ -79,27 +63,23 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get hasPrefix(): boolean;
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
+    get hovered(): boolean;
     get invalid(): boolean;
+    protected mouseenter(_event: MouseEvent): void;
+    protected mouseleave(_event: MouseEvent): void;
     // (undocumented)
     static ngAcceptInputType_noBorders: unknown;
-    // (undocumented)
-    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     noBorders: boolean | undefined;
     protected onContainerClick(event: MouseEvent): void;
-    protected onHoverChanged(isHovered: boolean): void;
     protected onKeyDown(event: KeyboardEvent): void;
-    protected shouldBeForwarded(prop: keyof AbstractControlDirective): boolean;
+    protected shouldBeForwarded(property: keyof AbstractControlDirective): boolean;
     get shouldDisableBorders(): boolean;
-    get shouldDisplayCleaner(): boolean;
-    get shouldDisplayError(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; "noBorders": { "alias": "noBorders"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "label", "passwordToggle", "hint", "passwordHints", "suffix", "prefix", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "[kbqSuffix]", "kbq-password-toggle", "kbq-stepper", "kbq-error", "kbq-hint, kbq-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; }; }, {}, ["_control", "stepper", "cleaner", "label", "passwordToggle", "hint", "passwordHint", "suffix", "prefix", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "[kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -123,31 +103,28 @@ export class KbqFormFieldModule {
     // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqFormField, typeof i2.KbqHint, typeof i3.KbqError, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqPasswordToggle, typeof i9.KbqPasswordHint, typeof i10.KbqLabel], [typeof i1.KbqFormField, typeof i2.KbqHint, typeof i3.KbqError, typeof i4.KbqPrefix, typeof i5.KbqSuffix, typeof i6.KbqCleaner, typeof i7.KbqStepper, typeof i8.KbqPasswordToggle, typeof i9.KbqPasswordHint, typeof i10.KbqLabel]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqFormField, typeof i2.KbqHint, typeof i2.KbqError, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqCleaner, typeof i6.KbqStepper, typeof i7.KbqPasswordToggle, typeof i8.KbqLabel, typeof i2.KbqPasswordHint], [typeof i1.KbqFormField, typeof i2.KbqHint, typeof i2.KbqError, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqCleaner, typeof i6.KbqStepper, typeof i7.KbqPasswordToggle, typeof i8.KbqLabel, typeof i2.KbqPasswordHint]>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqHintMixinBase" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class KbqHint extends KbqHintMixinBase {
-    constructor(elementRef: ElementRef);
+export class KbqHint {
+    set color(color: KbqComponentColors);
     // (undocumented)
+    get color(): KbqComponentColors | undefined;
+    protected colors: typeof KbqComponentColors;
     compact: boolean;
+    set fillTextOff(fillTextOff: boolean);
     // (undocumented)
-    readonly elementRef: ElementRef;
-    // (undocumented)
-    fillTextOff: boolean;
+    get fillTextOff(): boolean;
     id: string;
     // (undocumented)
     static ngAcceptInputType_compact: unknown;
     // (undocumented)
     static ngAcceptInputType_fillTextOff: unknown;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "id": { "alias": "id"; "required": false; }; "color": { "alias": "color"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHint, never>;
 }
@@ -161,61 +138,30 @@ export class KbqLabel {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLabel, never>;
 }
 
-// @public (undocumented)
-export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, formField: KbqFormFieldRef);
-    // (undocumented)
-    checked: boolean;
-    // (undocumented)
-    customCheckRule: (value: string) => boolean;
-    // (undocumented)
-    readonly elementRef: ElementRef;
-    // (undocumented)
-    fillTextOff: boolean;
-    // (undocumented)
+// @public
+export class KbqPasswordHint extends KbqHint {
+    set color(_color: null);
+    get color(): KbqComponentColors;
+    set fillTextOff(_fillTextOff: null);
+    get fillTextOff(): boolean;
     hasError: boolean;
+    protected get icon(): string;
     // (undocumented)
-    get icon(): string;
+    static ngAcceptInputType_hasError: unknown;
     // (undocumented)
-    max: number;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordHint, "kbq-password-hint", never, { "hasError": { "alias": "hasError"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    min: number;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    regex: RegExp | null;
-    // (undocumented)
-    rule: PasswordRules | any;
-    // (undocumented)
-    viewFormField?: KbqFormField;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordHint, "kbq-password-hint", ["kbqPasswordHint"], { "rule": { "alias": "rule"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "regex": { "alias": "regex"; "required": false; }; "customCheckRule": { "alias": "checkRule"; "required": false; }; "viewFormField": { "alias": "viewFormField"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; }, {}, never, ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, never>;
 }
 
 // @public
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-    constructor(formField: KbqFormFieldRef, changeDetector: ChangeDetectorRef);
+export class KbqPasswordToggle {
+    protected get control(): KbqInputPassword;
+    protected get icon(): string;
+    protected toggleType(event: KeyboardEvent | MouseEvent): void;
+    get visible(): boolean;
     // (undocumented)
-    get content(): string | TemplateRef<any>;
-    set content(content: string | TemplateRef<any>);
-    // (undocumented)
-    get hidden(): boolean;
-    // (undocumented)
-    icon: KbqIconButton;
-    // (undocumented)
-    get iconClass(): string;
-    // (undocumented)
-    kbqTooltipHidden: string | TemplateRef<any>;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    toggle(event: KeyboardEvent): void;
-    // (undocumented)
-    get visibility(): string;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, never>;
 }
@@ -230,18 +176,14 @@ export class KbqPrefix {
 
 // @public
 export class KbqStepper {
+    protected get control(): KbqNumberInput;
     // (undocumented)
-    connectTo(numberInput: any): void;
+    protected stepDown(event: MouseEvent): void;
     // (undocumented)
-    onStepDown($event: MouseEvent): void;
+    protected stepUp(event: MouseEvent): void;
+    get visible(): boolean;
     // (undocumented)
-    onStepUp($event: MouseEvent): void;
-    // (undocumented)
-    readonly stepDown: EventEmitter<void>;
-    // (undocumented)
-    readonly stepUp: EventEmitter<void>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqStepper, "kbq-stepper", never, {}, { "stepUp": "stepUp"; "stepDown": "stepDown"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqStepper, "kbq-stepper", ["kbqStepper"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqStepper, never>;
 }
@@ -253,30 +195,6 @@ export class KbqSuffix {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSuffix, never>;
 }
-
-// @public
-export enum PasswordRules {
-    // (undocumented)
-    Custom = 5,
-    // (undocumented)
-    Digit = 3,
-    // (undocumented)
-    LatinAndSpecialSymbols = 4,
-    // (undocumented)
-    Length = 0,
-    // (undocumented)
-    LowerLatin = 2,
-    // (undocumented)
-    UpperLatin = 1
-}
-
-// @public (undocumented)
-export const regExpPasswordValidator: {
-    2: RegExp;
-    1: RegExp;
-    3: RegExp;
-    4: RegExp;
-};
 
 // (No @packageDocumentation comment for this package)
 
