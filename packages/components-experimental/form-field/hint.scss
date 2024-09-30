@@ -1,20 +1,17 @@
 @use '../../components/core/styles/common/tokens' as *;
-
 @use './hint-theme' as *;
 
 .kbq-hint {
     display: flex;
+    align-items: center;
+    justify-content: start;
 
-    & .kbq-icon {
-        margin-top: kbq-css-variable(hint-size-normal-margin-top);
+    .kbq-icon {
         margin-right: kbq-css-variable(hint-size-normal-content-padding);
     }
 
-    &.kbq-hint_compact {
-        & .kbq-icon {
-            margin-top: kbq-css-variable(hint-size-compact-margin-top);
-            margin-right: kbq-css-variable(hint-size-compact-content-padding);
-        }
+    &.kbq-hint_compact .kbq-icon {
+        margin-right: kbq-css-variable(hint-size-compact-content-padding);
     }
 }
 

@@ -1,6 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -14,7 +12,6 @@ import {
     inject,
     InjectionToken,
     Input,
-    OnDestroy,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -22,15 +19,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControlDirective } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
-import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, mixinColor } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
-import { KbqError } from './error';
-import { KbqHint } from './hint';
+import { KbqError, KbqHint, KbqPasswordHint } from './hint';
 import { KbqLabel } from './label';
-import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
@@ -50,17 +44,9 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDef
 );
 
 /** @docs-private */
-export function getKbqFormFieldMissingControlError(): Error {
+export const getKbqFormFieldMissingControlError = (): Error => {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
-}
-
-/** @docs-private */
-class KbqFormFieldBase {
-    constructor(public readonly elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mixinColor(KbqFormFieldBase);
+};
 
 /** Container for form controls that applies styling and behavior. */
 @Component({
@@ -77,9 +63,12 @@ const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mixinColor
          * @TODO should be refactored (#DS-2910)
          */
         './../../components/input/input.scss',
+        './../../components/input/input-tokens.scss',
+        './../../components/tags/tag-input-tokens.scss',
         './../../components/timepicker/timepicker.scss',
         './../../components/datepicker/datepicker-input.scss',
-        './../../components/textarea/textarea.scss'
+        './../../components/textarea/textarea.scss',
+        './../../components/textarea/textarea-tokens.scss'
     ],
     host: {
         class: 'kbq-form-field',
@@ -87,14 +76,6 @@ const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mixinColor
         '[class.kbq-form-field_focused]': 'focused',
         '[class.kbq-form-field_disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'shouldDisableBorders',
-
-        '[class.kbq-form-field_has-prefix]': 'hasPrefix',
-        '[class.kbq-form-field_has-suffix]': 'hasSuffix',
-        '[class.kbq-form-field_has-label]': 'hasLabel',
-        '[class.kbq-form-field_has-cleaner]': 'shouldDisplayCleaner',
-
-        '[class.kbq-form-field_has-password-toggle]': 'hasPasswordToggle',
-        '[class.kbq-form-field_has-stepper]': 'canShowStepper',
 
         '[class.ng-untouched]': 'shouldBeForwarded("untouched")',
         '[class.ng-touched]': 'shouldBeForwarded("touched")',
@@ -105,55 +86,62 @@ const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mixinColor
         '[class.ng-pending]': 'shouldBeForwarded("pending")',
 
         '(keydown)': 'onKeyDown($event)',
-        '(mouseenter)': 'onHoverChanged(true)',
-        '(mouseleave)': 'onHoverChanged(false)'
+        '(mouseenter)': 'mouseenter($event)',
+        '(mouseleave)': 'mouseleave($event)'
     },
-    inputs: ['color'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField
-    extends KbqFormFieldMixinBase
-    implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy
-{
+export class KbqFormField implements AfterContentInit, AfterViewInit {
     /** Disables form field borders and shadows. */
     @Input({ transform: booleanAttribute }) noBorders: boolean | undefined;
 
+    @ContentChild(KbqFormFieldControl) private readonly _control: KbqFormFieldControl<unknown>;
     @ViewChild('connectionContainer') private readonly connectionContainerRef: ElementRef;
-    @ContentChild(KbqFormFieldControl) protected readonly control: KbqFormFieldControl<unknown>;
     @ContentChild(KbqStepper) private readonly stepper: KbqStepper;
     @ContentChild(KbqCleaner) private readonly cleaner: KbqCleaner | null;
     @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
     @ContentChild(KbqPasswordToggle) private readonly passwordToggle: KbqPasswordToggle | null;
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
-    @ContentChildren(KbqPasswordHint) private readonly passwordHints: QueryList<KbqPasswordHint>;
+    @ContentChildren(KbqPasswordHint) private readonly passwordHint: QueryList<KbqPasswordHint>;
     @ContentChildren(KbqSuffix) private readonly suffix: QueryList<KbqSuffix>;
     @ContentChildren(KbqPrefix) private readonly prefix: QueryList<KbqPrefix>;
     @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
 
-    private hovered: boolean = false;
-
     canCleanerClearByEsc: boolean = true;
 
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly elementRef = inject(ElementRef);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+
+    /** The form field's control. */
+    get control() {
+        if (!this._control) {
+            throw getKbqFormFieldMissingControlError();
+        }
+        return this._control;
+    }
 
     /** Determines if borders and shadows should be disabled. */
     get shouldDisableBorders(): boolean {
         return this.noBorders || !!this.defaultOptions?.noBorders;
     }
 
-    /** Whether the form field is focused. */
+    /** Whether the form field control is focused. */
     get focused(): boolean {
-        return this.control.focused;
+        return !!this.control?.focused;
+    }
+
+    /** Whether the form field is hovered. */
+    get hovered(): boolean {
+        return !!this._hovered;
     }
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
-        return this.control.errorState;
+        return !!this.control?.errorState;
     }
 
     /** Checks whether the form-field contains kbq-hint */
@@ -163,7 +151,12 @@ export class KbqFormField
 
     /** Checks whether the form-field contains kbq-password-hint */
     get hasPasswordHint(): boolean {
-        return this.passwordHints?.length > 0;
+        return this.passwordHint?.length > 0;
+    }
+
+    /** Checks whether the form-field contains kbq-password-toggle */
+    get hasPasswordToggle(): boolean {
+        return !!this.passwordToggle;
     }
 
     /** Checks whether the form-field contains kbq-label */
@@ -191,76 +184,28 @@ export class KbqFormField
         return !!this.stepper;
     }
 
-    /** Checks whether the form-field contains kbq-password-toggle */
-    get hasPasswordToggle(): boolean {
-        return !!this.passwordToggle;
-    }
-
     /** Checks whether the form-field contains kbq-error */
     get hasError(): boolean {
         return this.error.length > 0;
     }
 
-    /** Determines whether to display kbq-cleaner */
-    get shouldDisplayCleaner(): boolean {
-        return this.hasCleaner && this.control?.ngControl ? this.control.ngControl.value && !this.disabled : false;
-    }
-
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return this.control?.disabled;
+        return !!this.control?.disabled;
     }
 
-    /** Determines whether to display kbq-stepper */
-    get canShowStepper(): boolean {
-        return this.hasStepper && !this.disabled && (this.focused || this.hovered);
-    }
-
-    /** Determines whether to display kbq-error */
-    get shouldDisplayError(): boolean {
-        return this.hasError && this.control.errorState;
-    }
-
-    constructor(public readonly elementRef: ElementRef) {
-        super(elementRef);
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
-    }
+    private _hovered: boolean = false;
 
     ngAfterContentInit(): void {
-        this.checkFormFieldControl();
         this.initializeControl();
         this.initializePrefixAndSuffix();
-
-        // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control.stateChanges.pipe(startWith()).subscribe((state: any) => {
-            if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                this.control.ngControl?.control?.setErrors({ passwordStrength: true });
-            }
-
-            this.changeDetectorRef.markForCheck();
-        });
-
-        if (this.hasStepper) {
-            this.stepper.connectTo((this.control as any).numberInput);
-        }
-
-        this.passwordHints.changes
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.changeDetectorRef.markForCheck());
-    }
-
-    ngAfterContentChecked(): void {
-        this.checkFormFieldControl();
+        this.initializeHint();
     }
 
     ngAfterViewInit(): void {
         // Because the above changes a value used in the template after it was checked, we need
         // to trigger CD or the change might not be reflected if there is no other CD scheduled.
         this.changeDetectorRef.detectChanges();
-    }
-
-    ngOnDestroy(): void {
-        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 
     /** Focuses the control. */
@@ -275,24 +220,27 @@ export class KbqFormField
         }
     }
 
-    /** @docs-private */
+    /** Handles keydown events. */
     protected onKeyDown(event: KeyboardEvent): void {
+        // @TODO should move into KbqPasswordToggle (#DS-2910)
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
             (this.control as unknown as { toggleType(): void }).toggleType();
         }
+        // @TODO should move into KbqCleaner (#DS-2910)
         if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && this.focused && this.hasCleaner) {
             this.control?.ngControl?.reset();
-
             event.preventDefault();
         }
     }
 
-    /** @docs-private */
-    protected onHoverChanged(isHovered: boolean): void {
-        if (isHovered !== this.hovered) {
-            this.hovered = isHovered;
-            this.changeDetectorRef.markForCheck();
-        }
+    /** Handles mouseenter events. */
+    protected mouseenter(_event: MouseEvent): void {
+        this._hovered = true;
+    }
+
+    /** Handles mouseleave events. */
+    protected mouseleave(_event: MouseEvent): void {
+        this._hovered = false;
     }
 
     /**
@@ -304,18 +252,9 @@ export class KbqFormField
 
     /**
      * Determines whether a class from the AbstractControlDirective should be forwarded to the host element.
-     * @docs-private
      */
-    protected shouldBeForwarded(prop: keyof AbstractControlDirective): boolean {
-        const control = this.control ? this.control.ngControl : null;
-        return control && control[prop];
-    }
-
-    /** Throws an error if the form field's control is missing. */
-    private checkFormFieldControl() {
-        if (!this.control) {
-            throw getKbqFormFieldMissingControlError();
-        }
+    protected shouldBeForwarded(property: keyof AbstractControlDirective): boolean {
+        return this.control.ngControl?.[property];
     }
 
     /** Initializes the kbqPrefix and kbqSuffix containers. */
@@ -323,6 +262,15 @@ export class KbqFormField
         // Mark the form field as dirty whenever the prefix or suffix children change. This is necessary because we
         // conditionally display the prefix/suffix containers based on whether there is projected content.
         merge(this.prefix.changes, this.suffix.changes)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            });
+    }
+
+    /** Initializes the KbqHint, KbqError and KbqPasswordHint containers. */
+    private initializeHint(): void {
+        merge(this.hint.changes, this.error.changes, this.passwordHint.changes)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.changeDetectorRef.markForCheck();

@@ -1,31 +1,25 @@
 import { NgClass } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Inject,
-    Input,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-    forwardRef
-} from '@angular/core';
-import { KBQ_FORM_FIELD_REF, KbqFormFieldRef, PopUpTriggers } from '@koobiq/components/core';
-import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
-import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputPassword } from '@koobiq/components/input';
+import { KbqFormField } from './form-field';
 
-/**
- * @TODO move into input module (#DS-2910)
- */
+/** @docs-private */
+const getKbqPasswordToggleMissingControlError = (): Error => {
+    return Error('kbq-password-toggle should use with kbqInputPassword');
+};
 
+/** Component which changes password visibility. */
 @Component({
     standalone: true,
+    imports: [NgClass, KbqIconModule],
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `
         <i
-            [ngClass]="iconClass"
+            [ngClass]="icon"
+            [autoColor]="true"
             kbq-icon-button=""
         ></i>
     `,
@@ -33,74 +27,43 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
     host: {
         class: 'kbq-password-toggle',
 
-        '[style.visibility]': 'visibility',
+        '[style.visibility]': 'visible ? "visible" : "hidden"',
+        '[attr.aria-hidden]': '!visible',
 
-        '(click)': 'toggle($event)',
-        '(keydown.ENTER)': 'toggle($event)',
-        '(keydown.SPACE)': 'toggle($event)'
+        '(click)': 'toggleType($event)',
+        '(keydown.ENTER)': 'toggleType($event)',
+        '(keydown.SPACE)': 'toggleType($event)'
     },
-    /**
-     * @TODO Component doesn't work without KbqToolTipModule (#DS-2910)
-     */
-    imports: [NgClass, KbqIconModule, KbqToolTipModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-    @ViewChild(KbqIconButton) icon: KbqIconButton;
-    @Input('kbqTooltipNotHidden')
-    get content(): string | TemplateRef<any> {
-        return (this.formField.control as any).elementType === 'password' ? this.kbqTooltipHidden : this._content;
+export class KbqPasswordToggle {
+    // @TODO fix types (#DS-2915)
+    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+
+    /** Form field password control. */
+    protected get control(): KbqInputPassword {
+        const control = this.formField?.control;
+        if (!(control instanceof KbqInputPassword)) {
+            throw getKbqPasswordToggleMissingControlError();
+        }
+        return control;
     }
 
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
+    /** The icon selector. */
+    protected get icon(): string {
+        return this.control.elementType === 'password' ? 'kbq-eye_16' : 'kbq-eye-slash_16';
     }
 
-    @Input() kbqTooltipHidden: string | TemplateRef<any>;
-
-    get hidden(): boolean {
-        return (this.formField.control as any).elementType === 'password';
+    /** Whether to display the password toggle. */
+    get visible(): boolean {
+        return !this.formField?.disabled && !!this.control?.ngControl?.value;
     }
 
-    get iconClass(): string {
-        return this.hidden ? 'mc-eye_16' : 'mc-eye-crossed_16';
+    /** Toggles the password visibility. */
+    protected toggleType(event: KeyboardEvent | MouseEvent): void {
+        event.stopPropagation();
+
+        this.control.toggleType();
     }
-
-    get visibility(): string {
-        return this.disabled && this.formField.control.empty ? 'hidden' : 'visible';
-    }
-
-    constructor(
-        @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: KbqFormFieldRef,
-        private changeDetector: ChangeDetectorRef
-    ) {
-        super();
-
-        this.trigger = `${PopUpTriggers.Hover}`;
-    }
-
-    ngAfterViewInit(): void {
-        this.formField.control?.stateChanges.subscribe(this.updateState);
-    }
-
-    toggle(event: KeyboardEvent) {
-        this.hide();
-
-        const input = this.formField.control as any;
-
-        input.toggleType();
-
-        this.updateData();
-
-        event.preventDefault();
-    }
-
-    private updateState = () => {
-        this.icon.hasError = this.formField.control.errorState;
-
-        this.changeDetector.markForCheck();
-    };
 }

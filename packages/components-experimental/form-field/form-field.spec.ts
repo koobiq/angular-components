@@ -13,7 +13,6 @@ import { By } from '@angular/platform-browser';
 import { ErrorStateMatcher, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqCleaner } from './cleaner';
-import { KbqError } from './error';
 import {
     KBQ_FORM_FIELD_DEFAULT_OPTIONS,
     KbqFormField,
@@ -21,7 +20,7 @@ import {
     getKbqFormFieldMissingControlError
 } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
-import { KbqHint } from './hint';
+import { KbqError, KbqHint } from './hint';
 import { KbqLabel } from './label';
 import { KbqPrefix } from './prefix';
 import { KbqSuffix } from './suffix';
@@ -132,29 +131,6 @@ export class InputFormFieldWithPrefixAndSuffix {}
     `
 })
 export class InputFormFieldWithCleaner {
-    readonly control = new FormControl();
-}
-
-@Component({
-    selector: 'input-form-field-with-cleaner-and-suffix',
-    standalone: true,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        ReactiveFormsModule
-    ],
-    template: `
-        <kbq-form-field>
-            <input
-                [formControl]="control"
-                kbqInput
-            />
-            <span kbqSuffix>suffix</span>
-            <kbq-cleaner />
-        </kbq-form-field>
-    `
-})
-export class InputFormFieldWithCleanerAndSuffix {
     readonly control = new FormControl();
 }
 
@@ -281,7 +257,7 @@ describe(KbqFormField.name, () => {
 
     it('should hide kbq-cleaner', async () => {
         const { debugElement } = await createComponent(InputFormFieldWithCleaner);
-        expect(getCleanerDebugElement(debugElement)).toBeNull();
+        expect(getCleanerDebugElement(debugElement)).toMatchSnapshot();
     });
 
     it('should display kbq-cleaner', async () => {
@@ -301,21 +277,6 @@ describe(KbqFormField.name, () => {
         const cleaner = getCleanerDebugElement(debugElement);
         cleaner?.nativeElement.click();
         expect(componentInstance.control.value).toBeNull();
-    });
-
-    it('should display kbq-cleaner and hide kbqSuffix', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithCleanerAndSuffix);
-        const input = getInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
-        expect(getCleanerDebugElement(debugElement)).toBeTruthy();
-        expect(getSuffixDebugElement(debugElement)).toBeNull();
-    });
-
-    it('should display kbqSuffix and hide kbq-cleaner', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithCleanerAndSuffix);
-        expect(getCleanerDebugElement(debugElement)).toBeNull();
-        expect(getSuffixDebugElement(debugElement)).toBeTruthy();
     });
 
     it('should throw Error for kbq-form-field without KbqFormFieldControl', async () => {

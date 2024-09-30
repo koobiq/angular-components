@@ -3,11 +3,13 @@
 exports[`KbqFormField should display kbq-cleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
+    aria-hidden="false"
     class="kbq-cleaner"
+    style="visibility: visible;"
   >
     <i
-      class="mc kbq-icon kbq-icon-button kbq-contrast-fade mc-close-circle_16"
-      kbq-icon-button="mc-close-circle_16"
+      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-xmark-circle_16"
+      kbq-icon-button="kbq-xmark-circle_16"
       tabindex="0"
     />
   </kbq-cleaner>,
@@ -17,11 +19,11 @@ DebugElement {
 exports[`KbqFormField should display kbq-error 1`] = `
 DebugElement {
   "nativeNode": <kbq-error
-    class="kbq-error kbq-hint"
-    id="kbq-error-1"
+    class="kbq-hint kbq-error"
+    id="kbq-hint-3"
   >
     <span
-      class="kbq-hint__text"
+      class="kbq-hint_text"
     >
       Error
     </span>
@@ -36,7 +38,7 @@ DebugElement {
     id="kbq-hint-0"
   >
     <span
-      class="kbq-hint__text"
+      class="kbq-hint_text"
     >
       Hint
     </span>
@@ -74,5 +76,21 @@ DebugElement {
   >
     Suffix
   </span>,
+}
+`;
+
+exports[`KbqFormField should hide kbq-cleaner 1`] = `
+DebugElement {
+  "nativeNode": <kbq-cleaner
+    aria-hidden="true"
+    class="kbq-cleaner"
+    style="visibility: hidden;"
+  >
+    <i
+      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-xmark-circle_16"
+      kbq-icon-button="kbq-xmark-circle_16"
+      tabindex="0"
+    />
+  </kbq-cleaner>,
 }
 `;

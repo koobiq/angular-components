@@ -1,3 +1,3 @@
 /**
- * Uses the original FormFieldControl
+ * Uses the original KbqFormFieldControl
  */

@@ -3,7 +3,7 @@
 @use '../../components/core/styles/common/tokens' as *;
 
 @mixin kbq-form-field-state($state-name) {
-    .kbq-form-field__container {
+    .kbq-form-field_container {
         border-color: kbq-css-variable(form-field-#{$state-name}-border-color);
         background-color: kbq-css-variable(form-field-#{$state-name}-background);
     }
@@ -42,10 +42,10 @@
             }
         }
 
-        &.cdk-focused {
+        &.kbq-form-field_focused {
             @include kbq-form-field-state(states-focused);
 
-            & .kbq-form-field__container {
+            & .kbq-form-field_container {
                 box-shadow: 0 0 0.1px 1px kbq-css-variable(form-field-states-focused-focus-outline);
             }
         }
@@ -53,7 +53,7 @@
         &.kbq-form-field_invalid {
             @include kbq-form-field-state(states-error);
 
-            &.cdk-focused .kbq-form-field__container {
+            &.kbq-form-field_focused .kbq-form-field_container {
                 box-shadow: 0 0 0.1px 1px kbq-css-variable(form-field-states-error-focused-focus-outline);
             }
         }
@@ -68,8 +68,8 @@
         }
     }
 
-    .kbq-form-field__hint {
-        & > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
+    .kbq-form-field_hint {
+        .kbq-hint {
             color: kbq-css-variable(form-field-hint-text);
         }
     }
@@ -80,7 +80,7 @@
         @include kbq-typography-css-variables(form-field, text);
     }
 
-    .kbq-form-field__hint > .kbq-hint:not(.kbq-password-hint) .kbq-hint__text {
+    .kbq-form-field_hint .kbq-hint .kbq-hint_text {
         @include kbq-typography-css-variables(form-field-hint, text);
     }
 }
