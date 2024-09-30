@@ -1,7 +1,9 @@
-.kbq-tab-group_vertical {
-    height: 240px;
-}
+.tabs-vertical-example {
+    .kbq-tab-group_vertical {
+        height: 220px;
+    }
 
-.docs-vertical-tabs .kbq-tab-header {
-    max-width: 30%;
+    .kbq-tab-body__wrapper {
+        padding-left: 20px;
+    }
 }
