@@ -200,6 +200,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     get triggerValue(): string;
     // (undocumented)
     triggerValues: ITriggerValue[];
+    readonly userInteractionChanges: Observable<void>;
     // (undocumented)
     get value(): any;
     readonly valueChange: EventEmitter<any>;

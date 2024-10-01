@@ -514,6 +514,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     updateParentsCheckboxState(node: any): void;
     // (undocumented)
+    readonly userInteraction: EventEmitter<void>;
+    // (undocumented)
     get value(): any;
     set value(value: any);
     // (undocumented)

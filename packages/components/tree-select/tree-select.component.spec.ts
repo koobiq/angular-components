@@ -67,7 +67,6 @@ import {
     KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 import { Observable, Subject, Subscription, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from './index';
 
 const TREE_DATA = {
@@ -2216,12 +2215,12 @@ describe('KbqTreeSelect', () => {
                 it('should consider the selection a result of a user action when closed', fakeAsync(() => {
                     const option = fixture.componentInstance.options.first;
                     const spy = jest.fn();
-                    const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
+                    const subscription = option.userInteraction.subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     tick(10);
 
-                    expect(spy).toHaveBeenCalledWith(true);
+                    expect(spy).toHaveBeenCalled();
 
                     subscription.unsubscribe();
                 }));
@@ -2322,6 +2321,8 @@ describe('KbqTreeSelect', () => {
                 trigger.click();
                 fixture.detectChanges();
                 flush();
+
+                expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
                 option.click();
