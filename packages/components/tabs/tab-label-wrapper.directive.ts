@@ -71,19 +71,19 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
             const COMMENT_NODE = 8;
 
             if (firstIconElement.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {
-                this.elementRef.nativeElement.classList.add('kbq-tab-label_with-icon-left');
                 this.renderer.addClass(firstIconElement, 'kbq-icon_left');
+                this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-left');
             }
 
             if (firstIconElement.previousSibling && firstIconElement.previousSibling.nodeType !== COMMENT_NODE) {
-                this.elementRef.nativeElement.classList.add('kbq-tab-label_with-icon-right');
                 this.renderer.addClass(firstIconElement, 'kbq-icon_right');
+                this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-right');
             }
         } else if (icons.length === twoIcons) {
-            this.elementRef.nativeElement.classList.add('kbq-tab-label_with-icon-left');
-            this.elementRef.nativeElement.classList.add('kbq-tab-label_with-icon-right');
             this.renderer.addClass(firstIconElement, 'kbq-icon_left');
             this.renderer.addClass(secondIconElement, 'kbq-icon_right');
+            this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-left');
+            this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-right');
         }
     }
 }
