@@ -296,7 +296,7 @@ export class KbqTreeSelect
         );
     }) as Observable<KbqTreeSelectChange>;
 
-    /** Combined stream of all of the child options' userInteraction events. */
+    /** Combined stream of all of the child options userInteraction events. */
     readonly userInteractionChanges: Observable<void> = defer(() => {
         if (this.options) {
             return this.options.changes.pipe(
