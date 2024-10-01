@@ -9,8 +9,6 @@ $tokens: meta.module-variables(tokens);
 @use '../theming';
 @use '../../koobiq-theme' as koobiq-theme;
 
-@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css';
-
 @include core.kbq-core();
 
 // Include all theme styles for the components.
