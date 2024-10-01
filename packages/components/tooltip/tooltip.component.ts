@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
@@ -136,6 +137,12 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         return this.placement;
     }
 
+    /**
+     * Positions the tooltip relative to the mouse cursor. Only available for top and bottom kbqPlacement.
+     * Does not work with kbqPlacementPriority.
+     */
+    @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
+
     set tooltipPlacement(value: PopUpPlacements) {
         super.updatePlacement(value);
     }
@@ -268,6 +275,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         super.show(delay);
+
+        if (this.relativeToPointer) {
+            this.applyRelativeToPointer();
+        }
     }
 
     updateData() {
@@ -302,6 +313,33 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
             modifier: this.modifier
         });
         this.instance.markForCheck();
+    }
+
+    protected applyRelativeToPointer() {
+        if (
+            !this.strategy ||
+            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement) ||
+            this.triggerName !== 'mouseenter'
+        ) {
+            this.resetOrigin();
+
+            return;
+        }
+
+        const triggerRects = this.elementRef.nativeElement.getBoundingClientRect();
+        const point: Point = { x: 0, y: 0 };
+
+        this.placementPriority = null;
+
+        if (this.placement === PopUpPlacements.Top) {
+            point.x = this.mouseEvent!.x;
+            point.y = triggerRects.y;
+        } else if (this.placement === PopUpPlacements.Bottom) {
+            point.x = this.mouseEvent!.x;
+            point.y = triggerRects.y + triggerRects.height;
+        }
+
+        this.strategy.setOrigin(point);
     }
 }
 

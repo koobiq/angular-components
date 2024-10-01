@@ -21,6 +21,7 @@ import { DateTimeOptions } from '@koobiq/date-formatter';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
@@ -1462,6 +1463,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected listeners: Map<string, EventListener>;
     // (undocumented)
+    protected mouseEvent?: MouseEvent;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
@@ -1486,11 +1489,15 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected portal: ComponentPortal<T>;
     // (undocumented)
+    resetOrigin(): void;
+    // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)
     protected abstract scrollStrategy: () => ScrollStrategy;
     // (undocumented)
     show(delay?: number): void;
+    // (undocumented)
+    protected strategy: FlexibleConnectedPositionStrategy;
     // (undocumented)
     abstract trigger: string;
     // (undocumented)
