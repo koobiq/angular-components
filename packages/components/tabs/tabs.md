@@ -1,4 +1,4 @@
-#### Default tabs
+### Default tabs
 
 <!-- example(tabs-overview) -->
 
