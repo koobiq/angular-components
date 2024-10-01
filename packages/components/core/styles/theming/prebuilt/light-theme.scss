@@ -13,7 +13,6 @@ $tokens: meta.module-variables(tokens);
 
 // Include all theme styles for the components.
 $theme: theming.kbq-light-theme($tokens);
-
 @include koobiq-theme.koobiq-theme($theme);
 
 // Include all typography for the components.
