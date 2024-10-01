@@ -13,6 +13,7 @@ import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/component
 import { KbqIcon } from './icon.component';
 
 @Component({
+    standalone: true,
     selector: `[kbq-icon-item]`,
     template: '<ng-content />',
     styleUrls: ['icon-item.scss', 'icon-item-tokens.scss'],
