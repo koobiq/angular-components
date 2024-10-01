@@ -185,7 +185,7 @@ export class KbqTabContent {
 
 // @public
 export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, vertical: string, defaultConfig?: IKbqTabsConfig);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, vertical: string, underlined: string, defaultConfig?: IKbqTabsConfig);
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
@@ -230,11 +230,13 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     // (undocumented)
     transparent: boolean;
     // (undocumented)
+    underlined: boolean;
+    // (undocumented)
     vertical: boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "disabled": { "alias": "disabled"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, null, { attribute: "vertical"; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, null, { attribute: "vertical"; }, { attribute: "underlined"; }, { optional: true; }]>;
 }
 
 // @public
@@ -268,9 +270,11 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     tabList: ElementRef;
     // (undocumented)
     tabListContainer: ElementRef;
+    // (undocumented)
+    underlined: boolean;
     vertical: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabHeader, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -379,7 +383,15 @@ export class KbqTabsModule {
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, [typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i4.KbqTabLabelWrapper, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i6.KbqTabBody, typeof i6.KbqTabBodyPortal, typeof i7.KbqTabHeader, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler], [typeof i9.PortalModule, typeof i10.A11yModule, typeof i11.CdkScrollableModule, typeof i12.KbqCommonModule, typeof i13.KbqIconModule, typeof i14.KbqToolTipModule], [typeof i12.KbqCommonModule, typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, [typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i4.KbqTabLabelWrapper, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i6.KbqTabBody, typeof i6.KbqTabBodyPortal, typeof i7.KbqTabHeader, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqUnderlinedTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler], [typeof i9.PortalModule, typeof i10.A11yModule, typeof i11.CdkScrollableModule, typeof i12.KbqCommonModule, typeof i13.KbqIconModule, typeof i14.KbqToolTipModule], [typeof i12.KbqCommonModule, typeof i1.KbqTabGroup, typeof i2.KbqTabLabel, typeof i3.KbqTab, typeof i5.KbqTabNav, typeof i5.KbqTabLink, typeof i8.KbqTabContent, typeof i1.KbqAlignTabsCenterCssStyler, typeof i1.KbqAlignTabsEndCssStyler, typeof i1.KbqStretchTabsCssStyler, typeof i1.KbqUnderlinedTabsCssStyler, typeof i1.KbqVerticalTabsCssStyler]>;
+}
+
+// @public (undocumented)
+export class KbqUnderlinedTabsCssStyler {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqUnderlinedTabsCssStyler, "kbq-tab-group[underlined], [kbq-tab-nav-bar][underlined]", never, {}, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUnderlinedTabsCssStyler, never>;
 }
 
 // @public (undocumented)

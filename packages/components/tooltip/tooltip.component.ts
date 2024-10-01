@@ -1,6 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -49,6 +51,11 @@ export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
 export const MIN_TIME_FOR_DELAY = 2000;
 
 @Component({
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet
+    ],
     selector: 'kbq-tooltip-component',
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
@@ -109,6 +116,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 @Directive({
+    standalone: true,
     selector: '[kbqTooltip]',
     exportAs: 'kbqTooltip',
     host: {
@@ -135,6 +143,12 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     get tooltipPlacement(): PopUpPlacements {
         return this.placement;
     }
+
+    /**
+     * Positions the tooltip relative to the mouse cursor. Only available for top and bottom kbqPlacement.
+     * Does not work with kbqPlacementPriority.
+     */
+    @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
 
     set tooltipPlacement(value: PopUpPlacements) {
         super.updatePlacement(value);
@@ -268,6 +282,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         super.show(delay);
+
+        if (this.relativeToPointer) {
+            this.applyRelativeToPointer();
+        }
     }
 
     updateData() {
@@ -303,9 +321,37 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         });
         this.instance.markForCheck();
     }
+
+    protected applyRelativeToPointer() {
+        if (
+            !this.strategy ||
+            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement) ||
+            this.triggerName !== 'mouseenter'
+        ) {
+            this.resetOrigin();
+
+            return;
+        }
+
+        const triggerRects = this.elementRef.nativeElement.getBoundingClientRect();
+        const point: Point = { x: 0, y: 0 };
+
+        this.placementPriority = null;
+
+        if (this.placement === PopUpPlacements.Top) {
+            point.x = this.mouseEvent!.x;
+            point.y = triggerRects.y;
+        } else if (this.placement === PopUpPlacements.Bottom) {
+            point.x = this.mouseEvent!.x;
+            point.y = triggerRects.y + triggerRects.height;
+        }
+
+        this.strategy.setOrigin(point);
+    }
 }
 
 @Directive({
+    standalone: true,
     selector: '[kbqWarningTooltip]',
     exportAs: 'kbqWarningTooltip',
     host: {
@@ -331,6 +377,7 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
 }
 
 @Directive({
+    standalone: true,
     selector: '[kbqExtendedTooltip]',
     exportAs: 'kbqExtendedTooltip',
     host: {

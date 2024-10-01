@@ -72,14 +72,18 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
 
             if (firstIconElement.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {
                 this.renderer.addClass(firstIconElement, 'kbq-icon_left');
+                this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-left');
             }
 
             if (firstIconElement.previousSibling && firstIconElement.previousSibling.nodeType !== COMMENT_NODE) {
                 this.renderer.addClass(firstIconElement, 'kbq-icon_right');
+                this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-right');
             }
         } else if (icons.length === twoIcons) {
             this.renderer.addClass(firstIconElement, 'kbq-icon_left');
             this.renderer.addClass(secondIconElement, 'kbq-icon_right');
+            this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-left');
+            this.renderer.addClass(this.elementRef.nativeElement, 'kbq-tab-label_with-icon-right');
         }
     }
 }

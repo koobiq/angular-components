@@ -1,4 +1,42 @@
 <div>
+    <h4>Underlined tabs</h4>
+    <kbq-tab-group underlined>
+        <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
+        <kbq-tab [label]="'Miscellaneous'">Miscellaneous Content</kbq-tab>
+        <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
+        <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    </kbq-tab-group>
+
+    <h4>Underlined tabs with icons</h4>
+    <kbq-tab-group underlined>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-play_16"></i>
+                Spam Attack
+            </ng-template>
+            Spam Attack Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                Miscellaneous
+                <i kbq-icon="kbq-play_16"></i>
+            </ng-template>
+            Miscellaneous Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-play_16"></i>
+                DDoS
+                <i kbq-icon="kbq-play_16"></i>
+            </ng-template>
+            DDoS Content
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>IDS/IPS Alert</ng-template>
+            IDS/IPS Alert Content
+        </kbq-tab>
+    </kbq-tab-group>
+
     <h4>Default tabs (filled)</h4>
     <kbq-tab-group>
         <kbq-tab [label]="'label 3'">Content 3</kbq-tab>

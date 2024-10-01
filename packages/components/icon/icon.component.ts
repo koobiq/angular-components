@@ -31,6 +31,7 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
 );
 
 @Component({
+    standalone: true,
     selector: '[kbq-icon]',
     template: '<ng-content />',
     styleUrls: ['icon.scss', 'icon-tokens.scss'],

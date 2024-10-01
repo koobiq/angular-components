@@ -1,6 +1,7 @@
 <kbq-tab-header
     #tabHeader
     [selectedIndex]="selectedIndex"
+    [underlined]="underlined"
     [vertical]="vertical"
     (indexFocused)="focusChanged($event)"
     (selectFocusedIndex)="onSelectFocusedIndex($event)"
@@ -14,6 +15,7 @@
             [class.kbq-selected]="selectedIndex === i"
             [class.kbq-tab-label_empty]="tab.empty"
             [class.kbq-tab-label_horizontal]="!vertical"
+            [class.kbq-tab-label_underlined]="underlined"
             [class.kbq-tab-label_vertical]="vertical"
             [disabled]="tab.disabled"
             [id]="getTabLabelId(i)"

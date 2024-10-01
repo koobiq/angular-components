@@ -52,6 +52,12 @@ export class KbqStretchTabsCssStyler {}
 })
 export class KbqVerticalTabsCssStyler {}
 
+@Directive({
+    selector: 'kbq-tab-group[underlined], [kbq-tab-nav-bar][underlined]',
+    host: { class: 'kbq-tab-group_underlined' }
+})
+export class KbqUnderlinedTabsCssStyler {}
+
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
 
@@ -117,6 +123,7 @@ export class KbqTabGroup
     readonly resizeStream = new Subject<Event>();
 
     vertical: boolean;
+    underlined: boolean;
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
 
@@ -215,11 +222,13 @@ export class KbqTabGroup
         elementRef: ElementRef,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Attribute('vertical') vertical: string,
+        @Attribute('underlined') underlined: string,
         @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: IKbqTabsConfig
     ) {
         super(elementRef);
 
         this.vertical = coerceBooleanProperty(vertical);
+        this.underlined = coerceBooleanProperty(underlined);
 
         this.groupId = nextId++;
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
