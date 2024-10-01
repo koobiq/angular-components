@@ -3382,6 +3382,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-underlined": {
+    "packagePath": "components/tabs/tabs-underlined",
+    "title": "Tabs underlined",
+    "componentName": "TabsUnderlinedExample",
+    "files": [
+      "tabs-underlined-example.ts",
+      "tabs-underlined-example.html",
+      "tabs-underlined-example.css"
+    ],
+    "selector": "tabs-underlined-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-underlined-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-vertical-icons": {
     "packagePath": "components/tabs/tabs-vertical-icons",
     "title": "Tabs vertical icons",

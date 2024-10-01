@@ -14,9 +14,9 @@
 
 <!-- example(tabs-vertical-icons) -->
 
-[//]: # '#### Вкладки с полоской'
-[//]: #
-[//]: # '<!-- example(tabs-with-border) -->'
+#### Вкладки с полоской
+
+<!-- example(tabs-underlined) -->
 
 #### Disabled
 

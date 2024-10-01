@@ -9,6 +9,7 @@ import { TabsDisabledExample } from './tabs-disabled/tabs-disabled-example';
 import { TabsEmptyExample } from './tabs-empty/tabs-empty-example';
 import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
 import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
+import { TabsUnderlinedExample } from './tabs-underlined/tabs-underlined-example';
 import { TabsVerticalIconsExample } from './tabs-vertical-icons/tabs-vertical-icons-example';
 import { TabsVerticalExample } from './tabs-vertical/tabs-vertical-example';
 import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-example';
@@ -20,6 +21,7 @@ export {
     TabsEmptyExample,
     TabsOverviewExample,
     TabsStretchExample,
+    TabsUnderlinedExample,
     TabsVerticalExample,
     TabsVerticalIconsExample,
     TabsWithScrollExample
@@ -29,6 +31,7 @@ const EXAMPLES = [
     TabsOverviewExample,
     TabsDisabledExample,
     TabsStretchExample,
+    TabsUnderlinedExample,
     TabsVerticalExample,
     TabsVerticalIconsExample,
     TabsWithScrollExample,
