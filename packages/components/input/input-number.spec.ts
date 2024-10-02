@@ -44,8 +44,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <input
                 [(ngModel)]="value"
-                kbqInput
-                type="number"
+                kbqNumberInput
             />
             <kbq-stepper />
         </kbq-form-field>
@@ -60,8 +59,7 @@ class KbqNumberInputTestComponent {
         <kbq-form-field>
             <input
                 [formControl]="formControl"
-                kbqInput
-                type="number"
+                kbqNumberInput
             />
             <kbq-stepper />
         </kbq-form-field>
@@ -79,9 +77,8 @@ class KbqNumberInputWithFormControl {
         >
             <kbq-form-field>
                 <input
-                    kbqInput
+                    kbqNumberInput
                     formControlName="reactiveInputValue"
-                    type="number"
                 />
                 <kbq-stepper />
             </kbq-form-field>
@@ -103,8 +100,7 @@ class KbqNumberInputWithFormControlName {
         <kbq-form-field>
             <input
                 [(ngModel)]="value"
-                kbqInput
-                type="number"
+                kbqNumberInput
                 max="10"
                 min="3"
                 step="0.5"
@@ -127,8 +123,7 @@ class KbqNumberInputMaxMinStep {
                 [min]="min"
                 [step]="step"
                 [bigStep]="bigStep"
-                kbqInput
-                type="number"
+                kbqNumberInput
             />
             <kbq-stepper />
         </kbq-form-field>
@@ -147,8 +142,7 @@ class KbqNumberInputMaxMinStepInput {
         <kbq-form-field>
             <input
                 [(ngModel)]="value"
-                kbqInput
-                type="number"
+                kbqNumberInput
             />
             <kbq-cleaner />
         </kbq-form-field>
@@ -168,8 +162,7 @@ class KbqNumberInputWithCleaner {
                 [step]="step"
                 [bigStep]="bigStep"
                 [withThousandSeparator]="withMask"
-                kbqInput
-                type="number"
+                kbqNumberInput
             />
             <kbq-stepper />
         </kbq-form-field>
