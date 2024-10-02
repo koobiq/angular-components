@@ -1,12 +1,30 @@
-import { AfterViewInit, Component, ElementRef, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    NgModule,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import {
+    AbstractControl,
+    FormControl,
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KBQ_VALIDATION, KbqComponentColors, KbqValidationOptions } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
     KbqTag,
@@ -233,6 +251,101 @@ export class DemoComponent implements AfterViewInit {
 })
 export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
 
+const customMaxLengthValidator = (max: number): ValidatorFn => {
+    return ({ value }: AbstractControl): ValidationErrors | null => {
+        if (!value) {
+            return null;
+        }
+        return value.length <= max ? null : { customMaxLengthValidator: true };
+    };
+};
+
+@Component({
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        KbqIconModule
+    ],
+    providers: [
+        // Disables KbqValidateDirective
+        {
+            provide: KBQ_VALIDATION,
+            useValue: {
+                useValidation: false
+            } satisfies KbqValidationOptions
+        }
+    ],
+    selector: 'tag-input-validation',
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list
+                #inputTagList
+                [formControl]="formControl"
+            >
+                @for (tag of formControl.value; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="removeTag(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon-button="kbq-xmark-s_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
+
+                <input
+                    [kbqTagInputFor]="inputTagList"
+                    (kbqTagInputTokenEnd)="createTag($event)"
+                    kbqInput
+                    placeholder="New keyword..."
+                />
+            </kbq-tag-list>
+
+            @if (formControl.invalid) {
+                <kbq-hint color="error">
+                    @if (formControl.hasError('required')) {
+                        Field is required
+                    }
+
+                    @if (formControl.hasError('customMaxLengthValidator')) {
+                        Max keywords count is 3
+                    }
+                </kbq-hint>
+            }
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TagInputValidation {
+    readonly formControl = new FormControl(
+        ['Koobiq', 'Angular', 'Design'],
+        [Validators.required, customMaxLengthValidator(3)]
+    );
+
+    removeTag(tag: string): void {
+        const tags = this.formControl.value || [];
+        const index = tags.indexOf(tag);
+        if (index >= 0) {
+            tags.splice(index, 1);
+            this.formControl.setValue(tags);
+        }
+    }
+
+    createTag({ value, input }: KbqTagInputEvent): void {
+        if (value) {
+            const tags = this.formControl.value || [];
+            tags.push(value);
+            this.formControl.setValue(tags);
+        }
+        input.value = '';
+    }
+}
+
 @NgModule({
     declarations: [DemoComponent, TagInputDefaultOptionsOverrideComponent],
     imports: [
@@ -244,7 +357,8 @@ export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
         KbqAutocompleteModule,
         KbqTagsModule,
         KbqIconModule,
-        KbqTitleModule
+        KbqTitleModule,
+        TagInputValidation
     ],
     bootstrap: [DemoComponent]
 })
