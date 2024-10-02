@@ -60,7 +60,7 @@ export class KbqInputBase {
 export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = mixinErrorState(KbqInputBase);
 
 @Directive({
-    selector: `input[kbqInput]`,
+    selector: `input[kbqInput],input[kbqNumberInput]`,
     exportAs: 'kbqInput',
     host: {
         class: 'kbq-input',

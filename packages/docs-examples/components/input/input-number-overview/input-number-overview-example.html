@@ -4,9 +4,8 @@
             <label class="kbq-form__label flex-40">With min value, max value and localized thousand separator</label>
             <kbq-form-field class="kbq-form__control flex-60">
                 <input
-                    kbqInput
+                    kbqNumberInput
                     placeholder="Allowed number from -7 to 7"
-                    type="number"
                     [bigStep]="1.5"
                     [max]="7"
                     [min]="-7"
@@ -21,8 +20,7 @@
             <label class="kbq-form__label flex-40">With localized thousand separator</label>
             <kbq-form-field class="kbq-form__control flex-60">
                 <input
-                    kbqInput
-                    type="number"
+                    kbqNumberInput
                     [(ngModel)]="value"
                 />
                 <kbq-stepper />
@@ -33,8 +31,7 @@
             <label class="kbq-form__label flex-40">Without localized thousand separator</label>
             <kbq-form-field class="kbq-form__control flex-60">
                 <input
-                    kbqInput
-                    type="number"
+                    kbqNumberInput
                     [withThousandSeparator]="false"
                     [(ngModel)]="value"
                 />
