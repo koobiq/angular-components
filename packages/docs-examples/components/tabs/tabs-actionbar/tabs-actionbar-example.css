@@ -1,0 +1,26 @@
+.tabs-actionbar-example {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(13, 14, 18, 0.12);
+    }
+
+    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content:after {
+        background: none;
+    }
+}
+
+.tabs-actionbar-example__controls {
+    button + button {
+        margin-left: 8px;
+    }
+}

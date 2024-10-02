@@ -5,6 +5,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { TabActiveTabIndexExample } from './tab-active-tab-index/tab-active-tab-index-example';
 import { TabActiveTabExample } from './tab-active-tab/tab-active-tab-example';
+import { TabsActionbarExample } from './tabs-actionbar/tabs-actionbar-example';
 import { TabsDisabledExample } from './tabs-disabled/tabs-disabled-example';
 import { TabsEmptyExample } from './tabs-empty/tabs-empty-example';
 import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
@@ -17,6 +18,7 @@ import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-examp
 export {
     TabActiveTabExample,
     TabActiveTabIndexExample,
+    TabsActionbarExample,
     TabsDisabledExample,
     TabsEmptyExample,
     TabsOverviewExample,
@@ -28,6 +30,7 @@ export {
 };
 
 const EXAMPLES = [
+    TabsActionbarExample,
     TabsOverviewExample,
     TabsDisabledExample,
     TabsStretchExample,

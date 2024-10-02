@@ -3310,6 +3310,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-actionbar": {
+    "packagePath": "components/tabs/tabs-actionbar",
+    "title": "Tabs actionbar",
+    "componentName": "TabsActionbarExample",
+    "files": [
+      "tabs-actionbar-example.ts",
+      "tabs-actionbar-example.html",
+      "tabs-actionbar-example.css"
+    ],
+    "selector": "tabs-actionbar-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-actionbar-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-disabled": {
     "packagePath": "components/tabs/tabs-disabled",
     "title": "Tabs disabled",

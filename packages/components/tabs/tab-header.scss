@@ -25,8 +25,18 @@
 }
 
 .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
+    position: relative;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(13, 14, 18, 0.12);
+}
+
+.kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(13, 14, 18, 0.12);
 }
 
 .kbq-tab-header__pagination {
