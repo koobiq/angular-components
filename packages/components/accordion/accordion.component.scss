@@ -1,0 +1,12 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+@use './accordion-theme' as *;
+
+.kbq-accordion {
+}
+
+@include kbq-accordion-theme();
+@include kbq-accordion-typography();
