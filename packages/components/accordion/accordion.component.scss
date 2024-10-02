@@ -6,6 +6,7 @@
 @use './accordion-theme' as *;
 
 .kbq-accordion {
+    display: block;
 }
 
 @include kbq-accordion-theme();

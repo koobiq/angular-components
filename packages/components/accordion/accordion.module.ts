@@ -1,18 +1,24 @@
-import { A11yModule } from '@angular/cdk/a11y';
-import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
+import { KbqAccordionContent } from './accordion-content.component';
+import { KbqAccordionHeader } from './accordion-header.component';
+import { KbqAccordionItem } from './accordion-item.component';
+import { KbqAccordionTrigger } from './accordion-trigger.component';
 import { KbqAccordion } from './accordion.component';
 
 @NgModule({
-    imports: [
-        A11yModule,
-        PlatformModule
-    ],
     exports: [
-        KbqAccordion
+        KbqAccordion,
+        KbqAccordionContent,
+        KbqAccordionHeader,
+        KbqAccordionItem,
+        KbqAccordionTrigger
     ],
     declarations: [
-        KbqAccordion
+        KbqAccordion,
+        KbqAccordionContent,
+        KbqAccordionHeader,
+        KbqAccordionItem,
+        KbqAccordionTrigger
     ]
 })
 export class KbqAccordionModule {}

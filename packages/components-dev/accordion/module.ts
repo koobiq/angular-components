@@ -1,6 +1,7 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqAccordionModule } from '../../components/accordion';
 import { KbqIconModule } from '../../components/icon';
 
 @Component({
@@ -16,7 +17,8 @@ export class DemoComponent {}
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqAccordionModule
     ],
     bootstrap: [DemoComponent]
 })

@@ -1,0 +1,8 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+.kbq-accordion-item {
+    display: block;
+}

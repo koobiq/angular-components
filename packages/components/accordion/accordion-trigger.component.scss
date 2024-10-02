@@ -1,0 +1,12 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+.kbq-accordion-trigger {
+    display: block;
+
+    &[data-state='open'] > .kbq-icon {
+        transform: rotate(180deg);
+    }
+}
