@@ -20,6 +20,7 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTabLabel } from './tab-label.directive';
 import { KbqTabLink, KbqTabNav } from './tab-nav-bar';
 import { KbqTab } from './tab.component';
+import { NgStyle } from '@angular/common';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { KbqTab } from './tab.component';
         CdkScrollableModule,
         KbqCommonModule,
         KbqIconModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        NgStyle
     ],
     // Don't export all components because some are only to be used internally.
     exports: [
