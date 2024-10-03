@@ -1,6 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { NgStyle } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -20,7 +21,6 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTabLabel } from './tab-label.directive';
 import { KbqTabLink, KbqTabNav } from './tab-nav-bar';
 import { KbqTab } from './tab.component';
-import { NgStyle } from '@angular/common';
 
 @NgModule({
     imports: [
