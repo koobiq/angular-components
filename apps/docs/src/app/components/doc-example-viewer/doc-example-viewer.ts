@@ -52,7 +52,7 @@ export class DocExampleFetcher {
         </ng-template>
     `,
     host: {
-        class: 'docs-live-example'
+        class: 'docs-live-example kbq-markdown'
     }
 })
 export class DocExampleViewer implements OnDestroy {
