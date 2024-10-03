@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { KbqAccordionContent } from './accordion-content.component';
-import { KbqAccordionHeader } from './accordion-header.component';
-import { KbqAccordionItem } from './accordion-item.component';
+import { KbqIcon } from '../icon';
+import { KbqAccordionContent } from './accordion-content';
+import { KbqAccordionHeader } from './accordion-header';
+import { KbqAccordionItem } from './accordion-item';
 import { KbqAccordionTrigger } from './accordion-trigger.component';
 import { KbqAccordion } from './accordion.component';
 
@@ -12,6 +13,9 @@ import { KbqAccordion } from './accordion.component';
         KbqAccordionHeader,
         KbqAccordionItem,
         KbqAccordionTrigger
+    ],
+    imports: [
+        KbqIcon
     ],
     declarations: [
         KbqAccordion,

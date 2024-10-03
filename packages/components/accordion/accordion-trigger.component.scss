@@ -4,9 +4,32 @@
 @use '../core/styles/common/tokens' as *;
 
 .kbq-accordion-trigger {
-    display: block;
+    display: flex;
+    flex-direction: row;
+
+    background: transparent;
+    border: none;
+    outline: none;
 
     &[data-state='open'] > .kbq-icon {
-        transform: rotate(180deg);
+        transform: rotate(90deg);
+    }
+
+    &.kbq-accordion-trigger_fill {
+        padding: kbq-css-variable(accordion-size-item-header-variant-fill-padding)
+    }
+
+    &.kbq-accordion-trigger_hug {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+
+        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding)
+    }
+
+    &.kbq-accordion-trigger_hug-space-between {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+
+        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding)
     }
 }

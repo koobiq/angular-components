@@ -17,6 +17,7 @@ const customHeader = `/* stylelint-disable no-unknown-custom-properties */`;
 const manuallyResolvedCategories = ['light', 'dark', 'palette', 'shadow'];
 
 const componentsWithCss = [
+    'accordion',
     'alert',
     'autocomplete',
     'badge',

@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { RdxAccordionRootDirective } from '@radix-ng/primitives/accordion';
+
+export enum KbqAccordionVariant {
+    fill = 'fill',
+    hug = 'hug',
+    hugSpaceBetween = 'hugSpaceBetween'
+}
 
 @Component({
     selector: 'kbq-accordion, [kbq-accordion]',
@@ -18,4 +24,6 @@ import { RdxAccordionRootDirective } from '@radix-ng/primitives/accordion';
         class: 'kbq-accordion'
     }
 })
-export class KbqAccordion {}
+export class KbqAccordion {
+    @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
+}

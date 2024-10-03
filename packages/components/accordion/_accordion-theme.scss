@@ -9,4 +9,11 @@
 }
 
 @mixin kbq-accordion-typography() {
+    .kbq-accordion-header {
+        @include kbq-typography-css-variables(accordion-item-header, text);
+    }
+
+    .kbq-accordion-content {
+        @include kbq-typography-css-variables(accordion-item-content, text);
+    }
 }
