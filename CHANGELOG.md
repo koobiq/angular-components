@@ -1,3 +1,10 @@
+## 17.8.3 (2024-10-03)
+
+### Koobiq
+
+ * bug fix  **input:** fractional value not displayed after initialization ([#DS-2633](https://github.com/koobiq/angular-components/issues/issue/DS-2633)) ([#337](https://github.com/koobiq/angular-components/issues/337)) ([e7bcbdc](https://github.com/koobiq/angular-components/commit/e7bcbdcd052b95a0fbbd18bec80b66844c5f9628))
+ * bug fix  **tree:** mouse click selection generates extra event ([#DS-2900](https://github.com/koobiq/angular-components/issues/issue/DS-2900)) ([#332](https://github.com/koobiq/angular-components/issues/332)) ([#335](https://github.com/koobiq/angular-components/issues/335)) ([3a38fa8](https://github.com/koobiq/angular-components/commit/3a38fa82256ffedd305a5d1d764626e117bd2d90))
+
 ## 17.8.2 (2024-09-27)
 
 ### Koobiq
