@@ -3562,6 +3562,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tag"
     }
   },
+  "tag-input-with-form-control-validators": {
+    "packagePath": "components/tag/tag-input-with-form-control-validators",
+    "title": "Tag input with form control validators.",
+    "componentName": "TagInputWithFormControlValidatorsExample",
+    "files": [
+      "tag-input-with-form-control-validators-example.ts"
+    ],
+    "selector": "tag-input-with-form-control-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-with-form-control-validators-example.ts",
+    "module": {
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
+    }
+  },
   "tag-input": {
     "packagePath": "components/tag/tag-input",
     "title": "Basic tag input",

@@ -51,7 +51,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
             <ng-content />
         </span>
     `,
-    styleUrls: ['hint.scss'],
+    styleUrls: ['hint.scss', 'hint-tokens.scss'],
     host: {
         '[attr.id]': 'id',
         class: 'kbq-hint kbq-password-hint',

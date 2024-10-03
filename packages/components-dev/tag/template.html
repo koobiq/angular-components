@@ -1,346 +1,335 @@
-<div class="example-container">
-    <div class="dev-container">
-        <h1 class="kbq-headline">Tag-inputs without add tags on Paste</h1>
-        <h2 class="kbq-subheading">Provided with InjectionToken param addOnPaste=false</h2>
-        <tag-input-default-options-override />
-    </div>
+<div class="dev-container">
+    <h1 class="kbq-headline">Tag-inputs without add tags on Paste</h1>
+    <h2 class="kbq-subheading">Provided with InjectionToken param addOnPaste=false</h2>
+    <tag-input-default-options-override />
+</div>
 
-    <br />
-    <br />
-    <br />
+<hr />
 
-    <h4 class="kbq-title">Tag list</h4>
-    <kbq-tag-list>
+<h4 class="kbq-title">Tag list</h4>
+<kbq-tag-list>
+    <kbq-tag
+        value="Test"
+        [selectable]="false"
+        (removed)="onRemoveTag('Test')"
+    >
+        Test
+    </kbq-tag>
+    <kbq-tag>
+        name
+        <i
+            kbq-icon="kbq-xmark-s_16"
+            kbqTagRemove
+        ></i>
+    </kbq-tag>
+</kbq-tag-list>
+
+<hr />
+
+<h4 class="kbq-title">Tag list, selectable=false</h4>
+
+<kbq-tag-list [selectable]="false">
+    @for (tag of simpleTags; track tag) {
         <kbq-tag
-            value="Test"
-            [selectable]="false"
-            (removed)="onRemoveTag('Test')"
+            [value]="tag"
+            (removed)="onRemoveTag(tag)"
         >
-            Test
-        </kbq-tag>
-        <kbq-tag>
-            name
+            {{ tag }}
             <i
                 kbq-icon="kbq-xmark-s_16"
                 kbqTagRemove
             ></i>
         </kbq-tag>
-    </kbq-tag-list>
+    }
+</kbq-tag-list>
 
-    <br />
-    <br />
-    <br />
-    <h4 class="kbq-title">Tag list, selectable=false</h4>
+<hr />
 
-    <kbq-tag-list [selectable]="false">
-        @for (tag of simpleTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="onRemoveTag(tag)"
-            >
-                {{ tag }}
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-        }
-    </kbq-tag-list>
-
-    <br />
-    <br />
-    <br />
-    <h4 class="kbq-title">Tags with icons</h4>
-    <kbq-tag-list>
-        @for (tag of simpleTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="onRemoveTag(tag)"
-            >
-                <i kbq-icon="kbq-magnifying-glass_16"></i>
-                {{ tag }}
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-        }
-    </kbq-tag-list>
-    <br />
-    <br />
-    <br />
-
-    <h4 class="kbq-title">Without remove</h4>
-    <kbq-tag-list>
-        @for (tag of simpleTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="onRemoveTag(tag)"
-            >
-                {{ tag }}
-            </kbq-tag>
-        }
-        @for (tag of simpleTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="onRemoveTag(tag)"
-            >
-                <i kbq-icon="kbq-magnifying-glass_16"></i>
-                {{ tag }}
-            </kbq-tag>
-        }
-    </kbq-tag-list>
-
-    <br />
-    <br />
-    <br />
-
-    <h4 class="kbq-title">Tags with input</h4>
-    <kbq-form-field>
-        <kbq-tag-list #inputTagList>
-            @for (tag of inputTags; track tag) {
-                <kbq-tag
-                    [value]="tag"
-                    (removed)="inputOnRemoveTag(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
-            }
-
-            <input
-                #inputTagInput
-                kbqInput
-                placeholder="New tag..."
-                [distinct]="true"
-                [formControl]="tagCtrl"
-                [kbqTagInputFor]="inputTagList"
-                [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                (kbqTagInputTokenEnd)="inputOnCreate($event)"
-            />
-            <kbq-cleaner
-                #kbqTagListCleaner
-                (click)="onClear()"
-            />
-        </kbq-tag-list>
-    </kbq-form-field>
-
-    <br />
-    <br />
-    <br />
-
-    <h4 class="kbq-title">Tags with autocomplete</h4>
-    <kbq-form-field>
-        <kbq-tag-list #autocompleteTagList>
-            @for (tag of autocompleteSelectedTags; track tag) {
-                <kbq-tag
-                    [value]="tag"
-                    (removed)="autocompleteOnRemove(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
-            }
-            <input
-                #autocompleteTagInput
-                placeholder="Новый тег..."
-                [distinct]="true"
-                [formControl]="tagCtrl"
-                [kbqAutocomplete]="autocomplete"
-                [kbqTagInputAddOnBlur]="false"
-                [kbqTagInputFor]="autocompleteTagList"
-                (blur)="addOnBlurFunc($event)"
-                (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
-            />
-        </kbq-tag-list>
-        <kbq-autocomplete
-            #autocomplete
-            (optionSelected)="autocompleteOnSelect($event)"
+<h4 class="kbq-title">Tags with icons</h4>
+<kbq-tag-list>
+    @for (tag of simpleTags; track tag) {
+        <kbq-tag
+            [value]="tag"
+            (removed)="onRemoveTag(tag)"
         >
-            @if (canCreate) {
-                <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
-                    Создать: {{ autocompleteTagInput.value }}
-                </kbq-option>
-            }
-            @if (hasDuplicates) {
-                <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
-            }
-            @for (tag of autocompleteFilteredTags | async; track tag) {
-                <kbq-option [value]="tag">
-                    {{ tag }}
-                </kbq-option>
-            }
-        </kbq-autocomplete>
-    </kbq-form-field>
+            <i kbq-icon="kbq-magnifying-glass_16"></i>
+            {{ tag }}
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+    }
+</kbq-tag-list>
 
-    <br />
-    <br />
-    <br />
+<hr />
 
-    <h4 class="kbq-title">Tags with tag adding on blur disabled</h4>
-    <kbq-form-field>
-        <kbq-tag-list #enterInputTagList>
-            @for (tag of enterTags; track tag) {
-                <kbq-tag
-                    [value]="tag"
-                    (removed)="enterOnRemoveTag(tag)"
-                >
-                    {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
-                </kbq-tag>
-            }
-            <input
-                #enterTagInput
-                placeholder="New tag..."
-                [formControl]="tagCtrl"
-                [kbqTagInputAddOnBlur]="addOnBlur"
-                [kbqTagInputFor]="enterInputTagList"
-                [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                (kbqTagInputTokenEnd)="enterOnCreate($event)"
-            />
-        </kbq-tag-list>
-    </kbq-form-field>
+<h4 class="kbq-title">Without remove</h4>
+<kbq-tag-list>
+    @for (tag of simpleTags; track tag) {
+        <kbq-tag
+            [value]="tag"
+            (removed)="onRemoveTag(tag)"
+        >
+            {{ tag }}
+        </kbq-tag>
+    }
+    @for (tag of simpleTags; track tag) {
+        <kbq-tag
+            [value]="tag"
+            (removed)="onRemoveTag(tag)"
+        >
+            <i kbq-icon="kbq-magnifying-glass_16"></i>
+            {{ tag }}
+        </kbq-tag>
+    }
+</kbq-tag-list>
 
-    <br />
-    <br />
-    <br />
+<hr />
 
-    <h4 class="kbq-title">simple Tags</h4>
-
-    <br />
-
-    <div class="layout-column">
-        <div class="simple-tags-example-row">
-            <kbq-tag [tabindex]="0">
-                Normal
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+<h4 class="kbq-title">Tags with input</h4>
+<kbq-form-field>
+    <kbq-tag-list #inputTagList>
+        @for (tag of inputTags; track tag) {
             <kbq-tag
-                class="kbq-hovered"
-                [tabindex]="0"
+                [value]="tag"
+                (removed)="inputOnRemoveTag(tag)"
             >
-                Hovered
+                {{ tag }}
                 <i
                     kbq-icon="kbq-xmark-s_16"
                     kbqTagRemove
                 ></i>
             </kbq-tag>
-            <kbq-tag
-                class="kbq-focused"
-                [tabindex]="0"
-            >
-                Focused
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-            <kbq-tag
-                [disabled]="true"
-                [tabindex]="0"
-            >
-                Disabled
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-        </div>
+        }
 
-        <br />
+        <input
+            #inputTagInput
+            kbqInput
+            placeholder="New tag..."
+            [distinct]="true"
+            [formControl]="tagCtrl"
+            [kbqTagInputFor]="inputTagList"
+            [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+            (kbqTagInputTokenEnd)="inputOnCreate($event)"
+        />
+        <kbq-cleaner
+            #kbqTagListCleaner
+            (click)="onClear()"
+        />
+    </kbq-tag-list>
+</kbq-form-field>
 
-        <div class="simple-tags-example-row">
-            <kbq-tag [color]="colors.Theme">
-                Normal
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-            <kbq-tag
-                class="kbq-hovered"
-                [color]="colors.Theme"
-            >
-                Hovered
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-            <kbq-tag
-                class="kbq-focused"
-                [color]="colors.Theme"
-            >
-                Focused
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-            <kbq-tag
-                [color]="colors.Theme"
-                [disabled]="true"
-            >
-                Disabled
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-        </div>
+<hr />
 
-        <br />
+<h4 class="kbq-title">Tags with autocomplete</h4>
+<kbq-form-field>
+    <kbq-tag-list #autocompleteTagList>
+        @for (tag of autocompleteSelectedTags; track tag) {
+            <kbq-tag
+                [value]="tag"
+                (removed)="autocompleteOnRemove(tag)"
+            >
+                {{ tag }}
+                <i
+                    kbq-icon="kbq-xmark-s_16"
+                    kbqTagRemove
+                ></i>
+            </kbq-tag>
+        }
+        <input
+            #autocompleteTagInput
+            placeholder="Новый тег..."
+            [distinct]="true"
+            [formControl]="tagCtrl"
+            [kbqAutocomplete]="autocomplete"
+            [kbqTagInputAddOnBlur]="false"
+            [kbqTagInputFor]="autocompleteTagList"
+            (blur)="addOnBlurFunc($event)"
+            (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
+        />
+    </kbq-tag-list>
+    <kbq-autocomplete
+        #autocomplete
+        (optionSelected)="autocompleteOnSelect($event)"
+    >
+        @if (canCreate) {
+            <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
+                Создать: {{ autocompleteTagInput.value }}
+            </kbq-option>
+        }
+        @if (hasDuplicates) {
+            <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
+        }
+        @for (tag of autocompleteFilteredTags | async; track tag) {
+            <kbq-option [value]="tag">
+                {{ tag }}
+            </kbq-option>
+        }
+    </kbq-autocomplete>
+</kbq-form-field>
 
-        <div class="simple-tags-example-row">
-            <kbq-tag [color]="colors.Error">
-                Normal
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
+<hr />
+
+<h4 class="kbq-title">Tags with tag adding on blur disabled</h4>
+<kbq-form-field>
+    <kbq-tag-list #enterInputTagList>
+        @for (tag of enterTags; track tag) {
             <kbq-tag
-                class="kbq-hovered"
-                [color]="colors.Error"
+                [value]="tag"
+                (removed)="enterOnRemoveTag(tag)"
             >
-                Hovered
+                {{ tag }}
                 <i
                     kbq-icon="kbq-xmark-s_16"
                     kbqTagRemove
                 ></i>
             </kbq-tag>
-            <kbq-tag
-                class="kbq-focused"
-                [color]="colors.Error"
-            >
-                Focused
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-            <kbq-tag
-                [color]="colors.Error"
-                [disabled]="true"
-            >
-                Disabled
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
-            </kbq-tag>
-        </div>
+        }
+        <input
+            #enterTagInput
+            placeholder="New tag..."
+            [formControl]="tagCtrl"
+            [kbqTagInputAddOnBlur]="addOnBlur"
+            [kbqTagInputFor]="enterInputTagList"
+            [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+            (kbqTagInputTokenEnd)="enterOnCreate($event)"
+        />
+    </kbq-tag-list>
+</kbq-form-field>
+
+<hr />
+
+<h4 class="kbq-title">simple Tags</h4>
+
+<div class="layout-column">
+    <div class="simple-tags-example-row">
+        <kbq-tag [tabindex]="0">
+            Normal
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-hovered"
+            [tabindex]="0"
+        >
+            Hovered
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-focused"
+            [tabindex]="0"
+        >
+            Focused
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            [disabled]="true"
+            [tabindex]="0"
+        >
+            Disabled
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+    </div>
+
+    <hr />
+
+    <div class="simple-tags-example-row">
+        <kbq-tag [color]="colors.Theme">
+            Normal
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-hovered"
+            [color]="colors.Theme"
+        >
+            Hovered
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-focused"
+            [color]="colors.Theme"
+        >
+            Focused
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            [color]="colors.Theme"
+            [disabled]="true"
+        >
+            Disabled
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+    </div>
+
+    <hr />
+
+    <div class="simple-tags-example-row">
+        <kbq-tag [color]="colors.Error">
+            Normal
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-hovered"
+            [color]="colors.Error"
+        >
+            Hovered
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            class="kbq-focused"
+            [color]="colors.Error"
+        >
+            Focused
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+        <kbq-tag
+            [color]="colors.Error"
+            [disabled]="true"
+        >
+            Disabled
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
     </div>
 </div>
+
+<hr />
+
+<tag-input-validation />
+
+<hr />

@@ -85,7 +85,7 @@ interface NumberLocaleConfig {
 }
 
 @Directive({
-    selector: `input[kbqInput][type="number"]`,
+    selector: `input[kbqNumberInput]`,
     exportAs: 'kbqNumericalInput',
     providers: [KBQ_NUMBER_INPUT_VALUE_ACCESSOR],
     host: {
