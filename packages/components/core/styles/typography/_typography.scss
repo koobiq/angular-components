@@ -45,10 +45,13 @@
         display-compact-strong: map.get($typography, display-compact-strong),
         text-big: map.get($typography, text-big),
         text-big-strong: map.get($typography, text-big-strong),
+        text-big-medium: map.get($typography, text-big-medium),
         text-normal: map.get($typography, text-normal),
         text-normal-strong: map.get($typography, text-normal-strong),
+        text-normal-medium: map.get($typography, text-normal-medium),
         text-compact: map.get($typography, text-compact),
         text-compact-strong: map.get($typography, text-compact-strong),
+        text-compact-medium: map.get($typography, text-compact-medium),
         caps-big: map.get($typography, caps-big),
         caps-big-strong: map.get($typography, caps-big-strong),
         caps-normal: map.get($typography, caps-normal),
@@ -280,6 +283,10 @@
         @include kbq-typography-level-to-styles_css-variables(typography, text-big-strong);
     }
 
+    .kbq-text-big-medium {
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big-medium);
+    }
+
     .kbq-text-normal {
         @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
@@ -288,12 +295,20 @@
         @include kbq-typography-level-to-styles_css-variables(typography, text-normal-strong);
     }
 
+    .kbq-text-normal-medium {
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
+    }
+
     .kbq-text-compact {
         @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 
     .kbq-text-compact-strong {
         @include kbq-typography-level-to-styles_css-variables(typography, text-compact-strong);
+    }
+
+    .kbq-text-compact-medium {
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact-medium);
     }
 
     .kbq-caps-big {
