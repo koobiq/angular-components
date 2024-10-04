@@ -1,4 +1,4 @@
-import { Directive, inject } from '@angular/core';
+import { Directive } from '@angular/core';
 import { RdxAccordionItemDirective } from '@radix-ng/primitives/accordion';
 
 @Directive({
@@ -11,13 +11,7 @@ import { RdxAccordionItemDirective } from '@radix-ng/primitives/accordion';
         }
     ],
     host: {
-        class: 'kbq-accordion-item',
-        // '[attr.tabindex]': 'tabIndex',
+        class: 'kbq-accordion-item'
     }
 })
-export class KbqAccordionItem {
-    protected itemDirective: RdxAccordionItemDirective = inject(RdxAccordionItemDirective);
-    get tabIndex(): number {
-        return this.itemDirective.disabled ? -1 : 0;
-    }
-}
+export class KbqAccordionItem {}

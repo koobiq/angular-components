@@ -15,29 +15,12 @@
     border-width: 2px;
     border-style: solid;
     border-color: transparent;
-
-    background: kbq-css-variable(accordion-item-default-background);
-    color: kbq-css-variable(accordion-item-default-text);
-
-    &:hover {
-        & .kbq-accordion-trigger__icon {
-            color: kbq-css-variable(accordion-item-states-hover-icon) !important;
-        }
-    }
-
-    &:focus-within {
-        border-color: kbq-css-variable(accordion-item-states-focus-border-color);
-    }
 }
 
 .kbq-accordion-header {
-    display: block;
+    display: flex;
 
     height: kbq-css-variable(accordion-size-item-header-height);
-
-    & .kbq-accordion-trigger__icon {
-        color: kbq-css-variable(accordion-item-default-icon);
-    }
 }
 
 .kbq-accordion-content {

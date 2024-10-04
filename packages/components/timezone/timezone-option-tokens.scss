@@ -19,9 +19,7 @@
     --kbq-timezone-option-font-offset-text-font-weight: var(--kbq-typography-tabular-normal-font-weight);
     --kbq-timezone-option-font-offset-text-font-family: var(--kbq-typography-tabular-normal-font-family);
     --kbq-timezone-option-font-offset-text-text-transform: var(--kbq-typography-tabular-normal-text-transform);
-    --kbq-timezone-option-font-offset-text-font-feature-settings: var(
-        --kbq-typography-tabular-normal-font-feature-settings
-    );
+    --kbq-timezone-option-font-offset-text-font-feature-settings: var(--kbq-typography-tabular-normal-font-feature-settings);
     --kbq-timezone-option-font-caption-font-size: var(--kbq-typography-text-compact-font-size);
     --kbq-timezone-option-font-caption-line-height: var(--kbq-typography-text-compact-line-height);
     --kbq-timezone-option-font-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
@@ -35,9 +33,7 @@
     --kbq-timezone-option-font-optgroup-label-font-weight: var(--kbq-typography-caps-compact-strong-font-weight);
     --kbq-timezone-option-font-optgroup-label-font-family: var(--kbq-typography-caps-compact-strong-font-family);
     --kbq-timezone-option-font-optgroup-label-text-transform: var(--kbq-typography-caps-compact-strong-text-transform);
-    --kbq-timezone-option-font-optgroup-label-font-feature-settings: var(
-        --kbq-typography-caps-compact-strong-font-feature-settings
-    );
+    --kbq-timezone-option-font-optgroup-label-font-feature-settings: var(--kbq-typography-caps-compact-strong-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

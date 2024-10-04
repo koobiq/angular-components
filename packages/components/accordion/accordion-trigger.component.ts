@@ -5,7 +5,10 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
     template: `
-        <i class="kbq-accordion-trigger__icon" kbq-icon="kbq-chevron-right-s_16"></i>
+        <i
+            class="kbq-accordion-trigger__icon"
+            kbq-icon="kbq-chevron-right-s_16"
+        ></i>
 
         <ng-content />
     `,

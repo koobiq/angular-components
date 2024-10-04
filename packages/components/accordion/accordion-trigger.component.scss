@@ -6,30 +6,65 @@
 .kbq-accordion-trigger {
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     background: transparent;
     border: none;
     outline: none;
 
-    &[data-state='open'] > .kbq-icon {
-        transform: rotate(90deg);
+    & .kbq-accordion-trigger__icon {
+        padding: kbq-css-variable(size-xxs);
+    }
+
+    &:hover:not([data-disabled="true"]) {
+        cursor: pointer;
+
+        & .kbq-accordion-trigger__icon {
+            color: kbq-css-variable(accordion-item-states-hover-icon);
+        }
     }
 
     &.kbq-accordion-trigger_fill {
-        padding: kbq-css-variable(accordion-size-item-header-variant-fill-padding)
+        padding: kbq-css-variable(accordion-size-item-header-variant-fill-padding);
+
+        &[data-state='open'] > .kbq-accordion-trigger__icon {
+            transform: rotate(90deg);
+        }
     }
 
     &.kbq-accordion-trigger_hug {
         flex-direction: row-reverse;
         justify-content: flex-end;
 
-        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding)
+        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding);
+
+        &[data-state='open'] > .kbq-accordion-trigger__icon {
+            transform: rotate(90deg);
+        }
     }
 
     &.kbq-accordion-trigger_hug-space-between {
         flex-direction: row-reverse;
         justify-content: space-between;
 
-        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding)
+        padding: kbq-css-variable(accordion-size-item-header-variant-hug-padding);
+
+        & > .kbq-accordion-trigger__icon {
+            transform: rotate(90deg);
+        }
+
+        &[data-state='open'] > .kbq-accordion-trigger__icon {
+            transform: rotate(-90deg);
+        }
     }
+
+    &[data-disabled="true"] {
+        & .kbq-accordion-trigger__icon {
+            color: kbq-css-variable(accordion-item-states-disabled-icon) !important;
+        }
+    }
+}
+
+button.kbq-accordion-trigger {
+    flex: 1;
 }

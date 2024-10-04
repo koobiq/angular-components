@@ -6,14 +6,46 @@
 
 
 @mixin kbq-accordion-theme() {
+    .kbq-accordion-item {
+        background: kbq-css-variable(accordion-item-default-background);
+        color: kbq-css-variable(accordion-item-default-text);
+
+        &:focus-within {
+            border-color: kbq-css-variable(accordion-item-states-focus-border-color);
+        }
+
+        & .kbq-accordion-trigger__icon {
+            color: kbq-css-variable(accordion-item-default-icon);
+        }
+    }
+
+    .kbq-accordion-trigger {
+        background: transparent;
+        border: none;
+        outline: none;
+
+        &:hover:not([data-disabled="true"]) {
+            cursor: pointer;
+
+            & .kbq-accordion-trigger__icon {
+                color: kbq-css-variable(accordion-item-states-hover-icon);
+            }
+        }
+
+        &[data-disabled="true"] {
+            & .kbq-accordion-trigger__icon {
+                color: kbq-css-variable(accordion-item-states-disabled-icon) !important;
+            }
+        }
+    }
 }
 
 @mixin kbq-accordion-typography() {
     .kbq-accordion-header {
-        @include kbq-typography-css-variables(accordion-item-header, text);
+        @include kbq-typography-css-variables(accordion, item-header-text);
     }
 
     .kbq-accordion-content {
-        @include kbq-typography-css-variables(accordion-item-content, text);
+        @include kbq-typography-css-variables(accordion, item-content-text);
     }
 }
