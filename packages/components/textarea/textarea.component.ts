@@ -55,7 +55,7 @@ export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaB
     exportAs: 'kbqTextarea',
     host: {
         class: 'kbq-textarea kbq-scrollbar',
-        '[class.kbq-textarea-resizable]': '!canGrow',
+        '[class.kbq-textarea-resizable]': 'canGrow',
 
         '[attr.id]': 'id',
         '[attr.placeholder]': 'placeholder',
@@ -72,7 +72,7 @@ export class KbqTextarea
     extends KbqTextareaMixinBase
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
-    @Input() canGrow: boolean = true;
+    @Input() canGrow: boolean = false;
 
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
