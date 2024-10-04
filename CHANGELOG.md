@@ -1,3 +1,9 @@
+## 17.8.4 (2024-10-04)
+
+### Koobiq
+
+ * bug fix  **typography:** added .text-big-medium, .text-normal-medium and .text-compact-medium ([#345](https://github.com/koobiq/angular-components/issues/345)) ([95a9d3a](https://github.com/koobiq/angular-components/commit/95a9d3a15611dbd0bb5f9feda4023f707eeb5632))
+
 ## 17.8.3 (2024-10-03)
 
 ### Koobiq
