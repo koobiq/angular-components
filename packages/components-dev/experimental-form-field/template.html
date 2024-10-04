@@ -145,6 +145,30 @@
 
 <hr />
 
+<h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher by errorStateMatcher attribute</h3>
+<form [formGroup]="formGroup1">
+    <kbq-form-field>
+        <input
+            formControlName="email"
+            kbqInput
+            placeholder="mail@koobiq.io"
+            [errorStateMatcher]="errorStateMatcher1"
+        />
+        <kbq-hint>Enter email</kbq-hint>
+        <kbq-error>
+            @if (formGroup1.get('email')?.hasError('required')) {
+                Should enter a value
+            } @else {
+                Invalid email
+            }
+        </kbq-error>
+    </kbq-form-field>
+
+    <button type="submit">Submit form</button>
+</form>
+
+<hr />
+
 <validate-on-control-dirty />
 
 <hr />

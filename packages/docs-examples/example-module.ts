@@ -1555,16 +1555,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-form-field"
     }
   },
-  "form-field-with-custom-error-state-matcher": {
-    "packagePath": "components/form-field/form-field-with-custom-error-state-matcher",
-    "title": "Form field with custom ErrorStateMatcher",
-    "componentName": "FormFieldWithCustomErrorStateMatcher",
+  "form-field-with-custom-error-state-matcher-set-by-attribute": {
+    "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-attribute",
+    "title": "Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute",
+    "componentName": "FormFieldWithCustomErrorStateMatcherSetByAttributeExample",
     "files": [
-      "form-field-with-custom-error-state-matcher-example.ts"
+      "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts"
     ],
-    "selector": "form-field-with-custom-error-state-matcher-example",
+    "selector": "form-field-with-custom-error-state-matcher-set-by-attribute-example",
     "additionalComponents": [],
-    "primaryFile": "form-field-with-custom-error-state-matcher-example.ts",
+    "primaryFile": "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts",
+    "module": {
+      "name": "FormFieldExamplesModule",
+      "importSpecifier": "components/form-field",
+      "importPath": "koobiq-docs-examples-components-form-field"
+    }
+  },
+  "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider": {
+    "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider",
+    "title": "Form field with CustomErrorStateMatcher which set by DI provider",
+    "componentName": "FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample",
+    "files": [
+      "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts"
+    ],
+    "selector": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
+    "additionalComponents": [],
+    "primaryFile": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts",
     "module": {
       "name": "FormFieldExamplesModule",
       "importSpecifier": "components/form-field",
