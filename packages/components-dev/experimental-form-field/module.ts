@@ -24,8 +24,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqInputModule,
         ReactiveFormsModule
     ],
+    providers: [{ provide: ErrorStateMatcher, useClass: ShowOnFormSubmitErrorStateMatcher }],
     template: `
-        <h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher</h3>
+        <h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher by DI provider</h3>
 
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -48,8 +49,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <button type="submit">Submit form</button>
         </form>
     `,
-
-    providers: [{ provide: ErrorStateMatcher, useClass: ShowOnFormSubmitErrorStateMatcher }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowValidationErrorOnFormSubmit {
@@ -170,4 +169,8 @@ export class ExperimentalFormField {
     readonly formControl4 = new FormControl();
     readonly formControl5 = new FormControl();
     readonly formControl6 = new FormControl('This field can be cleaned');
+    readonly formGroup1 = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email])
+    });
+    errorStateMatcher1 = new ShowOnControlDirtyErrorStateMatcher();
 }

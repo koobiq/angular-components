@@ -44,29 +44,38 @@
 
 <!-- example(form-field-with-error) -->
 
-### Изменение поведения отображения сообщения об ошибке
+### Изменение поведения отображения подсветки и сообщения об ошибке
 
-По умолчанию сообщения об ошибках отображаются, когда поле формы невалидно и пользователь взаимодействовал с элементом
-(коснулся) или родительская форма была отправлена ([см. `ErrorStateMatcher`](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts)).
+По умолчанию подсветка и сообщения об ошибках отображаются для **невалидных** полей после взаимодействия пользователя (коснулся или отправил форму)
+с элементом формы. Это поведение можно переопределить при помощи [`ErrorStateMatcher`](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts),
+который предоставляет возможность гибко настраивать логику подсветки и отображения ошибок валидации, что позволяет
+адаптировать поведение полей ввода под конкретные требования приложения.
 
-Если необходимо переопределить это поведение, например показывать сообщение об ошибки после отправки формы, воспользуйся примером:
+Можно использовать один из встроенных [`ErrorStateMatcher`](<(https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts)>),
+либо написать свою собственную реализацию:
 
 ```ts
-import { ErrorStateMatcher, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-
-@NgModule({
-    providers: [
-        {
-            provide: ErrorStateMatcher,
-            useClass: ShowOnFormSubmitErrorStateMatcher
-        }
-    ]
-})
+/**
+ * Подсветит и отобразит ошибку для невалидного поля после отправки формы
+ * Копия: https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts
+ * @see ShowOnFormSubmitErrorStateMatcher
+ */
+class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control?.invalid && form?.submitted);
+    }
+}
 ```
 
-Либо напиши свою собственную реализацию `ErrorStateMatcher`:
+Переопределение:
 
-<!-- example(form-field-with-custom-error-state-matcher) -->
+-   для определенного поля, при помощи `[errorStateMatcher]` атрибута:
+
+<!-- example(form-field-with-custom-error-state-matcher-set-by-attribute) -->
+
+-   для всех полей, при помощи _Dependency Injection_ c использованием `ErrorStateMatcher` токена:
+
+<!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
 ### Очистка поля
 
