@@ -37,6 +37,24 @@ export interface NgModuleInfo {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
+  "accordion-overview": {
+    "packagePath": "components/accordion/accordion-overview",
+    "title": "accordion-overview",
+    "componentName": "AccordionOverviewExample",
+    "files": [
+      "accordion-overview-example.ts",
+      "accordion-overview-example.html",
+      "accordion-overview-example.css"
+    ],
+    "selector": "accordion-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-overview-example.ts",
+    "module": {
+      "name": "AlertExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
     "title": "Alert Close",
