@@ -1,6 +1,7 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-tab-group, .kbq-tab-nav-bar {
+.kbq-tab-group,
+.kbq-tab-nav-bar {
     --kbq-tabs-size-tab-item-padding-horizontal: var(--kbq-size-m);
     --kbq-tabs-size-tab-item-padding-vertical: var(--kbq-size-xs);
     --kbq-tabs-size-tab-item-content-gap-horizontal: var(--kbq-size-xxs);
@@ -23,9 +24,15 @@
     --kbq-tabs-tab-item-filled-on-background-default-icon-color: var(--kbq-icon-contrast);
     --kbq-tabs-tab-item-filled-on-background-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-filled-on-background-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
+    --kbq-tabs-tab-item-filled-on-background-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-background-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
     --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-filled-on-background-states-disabled-background: transparent;
@@ -37,8 +44,12 @@
     --kbq-tabs-tab-item-filled-on-surface-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-filled-on-surface-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
     --kbq-tabs-tab-item-filled-on-surface-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-surface-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
+    --kbq-tabs-tab-item-filled-on-surface-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
     --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-filled-on-surface-states-disabled-background: transparent;
@@ -47,12 +58,24 @@
     --kbq-tabs-tab-item-transparent-on-background-default-background: transparent;
     --kbq-tabs-tab-item-transparent-on-background-default-text-color: var(--kbq-foreground-contrast);
     --kbq-tabs-tab-item-transparent-on-background-default-icon-color: var(--kbq-icon-contrast);
-    --kbq-tabs-tab-item-transparent-on-background-states-hover-background: var(--kbq-states-background-transparent-hover);
-    --kbq-tabs-tab-item-transparent-on-background-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
+    --kbq-tabs-tab-item-transparent-on-background-states-hover-background: var(
+        --kbq-states-background-transparent-hover
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-focused-focus-outline-color: var(
+        --kbq-states-line-focus-theme
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-text-color: var(
+        --kbq-states-foreground-disabled
+    );
     --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-transparent-on-background-states-disabled-background: transparent;
     --kbq-tabs-tab-item-transparent-on-background-states-disabled-text-color: var(--kbq-states-foreground-disabled);
@@ -62,10 +85,18 @@
     --kbq-tabs-tab-item-transparent-on-surface-default-icon-color: var(--kbq-icon-contrast);
     --kbq-tabs-tab-item-transparent-on-surface-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-transparent-on-surface-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-text-color: var(
+        --kbq-states-foreground-disabled
+    );
     --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-transparent-on-surface-states-disabled-background: transparent;
     --kbq-tabs-tab-item-transparent-on-surface-states-disabled-text-color: var(--kbq-states-foreground-disabled);
@@ -82,9 +113,15 @@
     --kbq-tabs-tab-item-filled-on-background-default-icon-color: var(--kbq-icon-contrast);
     --kbq-tabs-tab-item-filled-on-background-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-filled-on-background-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
+    --kbq-tabs-tab-item-filled-on-background-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-background-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
     --kbq-tabs-tab-item-filled-on-background-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-filled-on-background-states-disabled-background: transparent;
@@ -96,8 +133,12 @@
     --kbq-tabs-tab-item-filled-on-surface-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-filled-on-surface-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
     --kbq-tabs-tab-item-filled-on-surface-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-surface-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
+    --kbq-tabs-tab-item-filled-on-surface-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
     --kbq-tabs-tab-item-filled-on-surface-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-filled-on-surface-states-disabled-background: transparent;
@@ -106,12 +147,24 @@
     --kbq-tabs-tab-item-transparent-on-background-default-background: transparent;
     --kbq-tabs-tab-item-transparent-on-background-default-text-color: var(--kbq-foreground-contrast);
     --kbq-tabs-tab-item-transparent-on-background-default-icon-color: var(--kbq-icon-contrast);
-    --kbq-tabs-tab-item-transparent-on-background-states-hover-background: var(--kbq-states-background-transparent-hover);
-    --kbq-tabs-tab-item-transparent-on-background-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
+    --kbq-tabs-tab-item-transparent-on-background-states-hover-background: var(
+        --kbq-states-background-transparent-hover
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-focused-focus-outline-color: var(
+        --kbq-states-line-focus-theme
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-text-color: var(
+        --kbq-states-foreground-disabled
+    );
     --kbq-tabs-tab-item-transparent-on-background-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-transparent-on-background-states-disabled-background: transparent;
     --kbq-tabs-tab-item-transparent-on-background-states-disabled-text-color: var(--kbq-states-foreground-disabled);
@@ -121,10 +174,18 @@
     --kbq-tabs-tab-item-transparent-on-surface-default-icon-color: var(--kbq-icon-contrast);
     --kbq-tabs-tab-item-transparent-on-surface-states-hover-background: var(--kbq-states-background-transparent-hover);
     --kbq-tabs-tab-item-transparent-on-surface-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-hover-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-background: var(--kbq-states-background-transparent-active);
-    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-text-color: var(--kbq-states-foreground-disabled);
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-background: var(
+        --kbq-states-background-transparent-active
+    );
+    --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-text-color: var(
+        --kbq-states-foreground-disabled
+    );
     --kbq-tabs-tab-item-transparent-on-surface-states-selected-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-tabs-tab-item-transparent-on-surface-states-disabled-background: transparent;
     --kbq-tabs-tab-item-transparent-on-surface-states-disabled-text-color: var(--kbq-states-foreground-disabled);

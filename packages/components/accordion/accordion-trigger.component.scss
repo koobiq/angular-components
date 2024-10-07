@@ -16,7 +16,7 @@
         padding: kbq-css-variable(size-xxs);
     }
 
-    &:hover:not([data-disabled="true"]) {
+    &:hover:not([data-disabled='true']) {
         cursor: pointer;
 
         & .kbq-accordion-trigger__icon {
@@ -58,7 +58,7 @@
         }
     }
 
-    &[data-disabled="true"] {
+    &[data-disabled='true'] {
         & .kbq-accordion-trigger__icon {
             color: kbq-css-variable(accordion-item-states-disabled-icon) !important;
         }

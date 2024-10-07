@@ -3,7 +3,8 @@
 .kbq-accordion {
     --kbq-accordion-size-item-header-height: 36px;
     --kbq-accordion-size-item-header-variant-fill-padding: var(--kbq-size-xs) var(--kbq-size-s);
-    --kbq-accordion-size-item-header-variant-hug-padding: var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-m);
+    --kbq-accordion-size-item-header-variant-hug-padding: var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xs)
+        var(--kbq-size-m);
     --kbq-accordion-size-item-content-padding: 0px var(--kbq-size-m) var(--kbq-size-s) var(--kbq-size-m);
     --kbq-accordion-font-item-header-text-font-size: var(--kbq-typography-text-big-font-size);
     --kbq-accordion-font-item-header-text-line-height: var(--kbq-typography-text-big-line-height);
@@ -18,7 +19,9 @@
     --kbq-accordion-font-item-content-text-font-weight: var(--kbq-typography-text-normal-font-weight);
     --kbq-accordion-font-item-content-text-font-family: var(--kbq-typography-text-normal-font-family);
     --kbq-accordion-font-item-content-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-accordion-font-item-content-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+    --kbq-accordion-font-item-content-text-font-feature-settings: var(
+        --kbq-typography-text-normal-font-feature-settings
+    );
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

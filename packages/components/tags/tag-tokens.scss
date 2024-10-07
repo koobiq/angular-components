@@ -1,6 +1,8 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-tag, .kbq-tag-list, .kbq-tag-input {
+.kbq-tag,
+.kbq-tag-list,
+.kbq-tag-input {
     --kbq-tag-input-font-default-font-size: var(--kbq-typography-text-normal-font-size);
     --kbq-tag-input-font-default-line-height: var(--kbq-typography-text-normal-line-height);
     --kbq-tag-input-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);

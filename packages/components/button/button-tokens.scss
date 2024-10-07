@@ -36,7 +36,9 @@
     --kbq-button-filled-contrast-fade-on-right-icon: var(--kbq-icon-contrast);
     --kbq-button-filled-contrast-fade-on-states-hover-background: var(--kbq-states-background-contrast-fade-hover);
     --kbq-button-filled-contrast-fade-on-states-active-background: var(--kbq-states-background-contrast-fade-active);
-    --kbq-button-filled-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-contrast-fade-active);
+    --kbq-button-filled-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-contrast-fade-active
+    );
     --kbq-button-filled-contrast-fade-on-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-button-filled-contrast-fade-on-states-disabled-border: transparent;
     --kbq-button-filled-contrast-fade-on-states-disabled-foreground: var(--kbq-states-foreground-disabled);
@@ -82,7 +84,9 @@
     --kbq-button-outline-contrast-fade-on-states-active-foreground: var(--kbq-foreground-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-left-icon: var(--kbq-icon-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-right-icon: var(--kbq-icon-contrast);
-    --kbq-button-outline-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-outline-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-outline-contrast-fade-on-states-active-hover-border: var(--kbq-line-contrast-fade);
     --kbq-button-outline-contrast-fade-on-states-active-hover-foreground: var(--kbq-foreground-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-hover-left-icon: var(--kbq-icon-contrast);
@@ -109,7 +113,9 @@
     --kbq-button-transparent-theme-fade-on-states-active-right-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-active-hover-border: transparent;
     --kbq-button-transparent-theme-fade-on-states-active-hover-foreground: var(--kbq-foreground-theme);
-    --kbq-button-transparent-theme-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-transparent-theme-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-transparent-theme-fade-on-states-active-hover-left-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-active-hover-right-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-disabled-border: transparent;
@@ -134,7 +140,9 @@
     --kbq-button-transparent-contrast-fade-on-states-active-right-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-active-hover-border: transparent;
     --kbq-button-transparent-contrast-fade-on-states-active-hover-foreground: var(--kbq-foreground-contrast);
-    --kbq-button-transparent-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-transparent-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-transparent-contrast-fade-on-states-active-hover-left-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-active-hover-right-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-disabled-border: transparent;
@@ -165,7 +173,9 @@
     --kbq-button-filled-contrast-fade-on-right-icon: var(--kbq-icon-contrast);
     --kbq-button-filled-contrast-fade-on-states-hover-background: var(--kbq-states-background-contrast-fade-hover);
     --kbq-button-filled-contrast-fade-on-states-active-background: var(--kbq-states-background-contrast-fade-active);
-    --kbq-button-filled-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-contrast-fade-active);
+    --kbq-button-filled-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-contrast-fade-active
+    );
     --kbq-button-filled-contrast-fade-on-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-button-filled-contrast-fade-on-states-disabled-border: transparent;
     --kbq-button-filled-contrast-fade-on-states-disabled-foreground: var(--kbq-states-foreground-disabled);
@@ -211,7 +221,9 @@
     --kbq-button-outline-contrast-fade-on-states-active-foreground: var(--kbq-foreground-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-left-icon: var(--kbq-icon-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-right-icon: var(--kbq-icon-contrast);
-    --kbq-button-outline-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-outline-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-outline-contrast-fade-on-states-active-hover-border: var(--kbq-line-contrast-fade);
     --kbq-button-outline-contrast-fade-on-states-active-hover-foreground: var(--kbq-foreground-contrast);
     --kbq-button-outline-contrast-fade-on-states-active-hover-left-icon: var(--kbq-icon-contrast);
@@ -238,7 +250,9 @@
     --kbq-button-transparent-theme-fade-on-states-active-right-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-active-hover-border: transparent;
     --kbq-button-transparent-theme-fade-on-states-active-hover-foreground: var(--kbq-foreground-theme);
-    --kbq-button-transparent-theme-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-transparent-theme-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-transparent-theme-fade-on-states-active-hover-left-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-active-hover-right-icon: var(--kbq-icon-theme);
     --kbq-button-transparent-theme-fade-on-states-disabled-border: transparent;
@@ -263,7 +277,9 @@
     --kbq-button-transparent-contrast-fade-on-states-active-right-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-active-hover-border: transparent;
     --kbq-button-transparent-contrast-fade-on-states-active-hover-foreground: var(--kbq-foreground-contrast);
-    --kbq-button-transparent-contrast-fade-on-states-active-hover-background: var(--kbq-states-background-transparent-active);
+    --kbq-button-transparent-contrast-fade-on-states-active-hover-background: var(
+        --kbq-states-background-transparent-active
+    );
     --kbq-button-transparent-contrast-fade-on-states-active-hover-left-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-active-hover-right-icon: var(--kbq-icon-contrast);
     --kbq-button-transparent-contrast-fade-on-states-disabled-border: transparent;

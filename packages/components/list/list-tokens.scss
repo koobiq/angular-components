@@ -1,6 +1,7 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-list, .kbq-list-selection {
+.kbq-list,
+.kbq-list-selection {
     --kbq-list-size-container-padding-left: var(--kbq-size-m);
     --kbq-list-size-container-padding-right: var(--kbq-size-m);
     --kbq-list-size-container-padding-vertical: var(--kbq-size-xs);

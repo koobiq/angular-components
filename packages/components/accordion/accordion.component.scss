@@ -26,11 +26,11 @@
 .kbq-accordion-content {
     padding: kbq-css-variable(accordion-size-item-content-padding);
 
-    &[data-state="open"] {
+    &[data-state='open'] {
         display: flex;
     }
 
-    &[data-state="closed"] {
+    &[data-state='closed'] {
         display: none;
     }
 }
