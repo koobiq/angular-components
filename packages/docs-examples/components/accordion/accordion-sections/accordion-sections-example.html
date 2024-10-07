@@ -1,5 +1,5 @@
 <div class="layout-column layout-fill layout-align-center-center">
-    <kbq-accordion style="width: 300px">
+    <kbq-accordion [type]="toggle.value" style="width: 300px">
         <kbq-accordion-item>
             <button type="button" kbq-accordion-trigger>Text</button>
             <kbq-accordion-content>
@@ -31,4 +31,14 @@
             </kbq-accordion-content>
         </kbq-accordion-item>
     </kbq-accordion>
+
+    <div>
+        <div class="kbq-text-normal layout-margin-top-4xl layout-margin-bottom-s layout-row layout-align-center">
+            Openning
+        </div>
+        <kbq-button-toggle-group class="layout-margin-s" [value]="'single'" #toggle="kbqButtonToggleGroup">
+            <kbq-button-toggle [value]="'single'">Single</kbq-button-toggle>
+            <kbq-button-toggle [value]="'multiple'">Multiple</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    </div>
 </div>

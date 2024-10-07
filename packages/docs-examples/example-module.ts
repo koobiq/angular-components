@@ -37,20 +37,138 @@ export interface NgModuleInfo {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
+  "accordion-content": {
+    "packagePath": "components/accordion/accordion-content",
+    "title": "accordion-content",
+    "componentName": "AccordionContentExample",
+    "files": [
+      "accordion-content-example.ts",
+      "accordion-content-example.html"
+    ],
+    "selector": "accordion-content-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-content-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-header": {
+    "packagePath": "components/accordion/accordion-header",
+    "title": "accordion-header",
+    "componentName": "AccordionHeaderExample",
+    "files": [
+      "accordion-header-example.ts",
+      "accordion-header-example.html"
+    ],
+    "selector": "accordion-header-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-header-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-in-panel": {
+    "packagePath": "components/accordion/accordion-in-panel",
+    "title": "accordion-in-panel",
+    "componentName": "AccordionInPanelExample",
+    "files": [
+      "accordion-in-panel-example.ts",
+      "accordion-in-panel-example.html"
+    ],
+    "selector": "accordion-in-panel-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-in-panel-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-in-section": {
+    "packagePath": "components/accordion/accordion-in-section",
+    "title": "accordion-in-section",
+    "componentName": "AccordionInSectionExample",
+    "files": [
+      "accordion-in-section-example.ts",
+      "accordion-in-section-example.html"
+    ],
+    "selector": "accordion-in-section-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-in-section-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-inactive-section": {
+    "packagePath": "components/accordion/accordion-inactive-section",
+    "title": "accordion-inactive-section",
+    "componentName": "AccordionInactiveSectionExample",
+    "files": [
+      "accordion-inactive-section-example.ts",
+      "accordion-inactive-section-example.html"
+    ],
+    "selector": "accordion-inactive-section-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-inactive-section-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
   "accordion-overview": {
     "packagePath": "components/accordion/accordion-overview",
     "title": "accordion-overview",
     "componentName": "AccordionOverviewExample",
     "files": [
       "accordion-overview-example.ts",
-      "accordion-overview-example.html",
-      "accordion-overview-example.css"
+      "accordion-overview-example.html"
     ],
     "selector": "accordion-overview-example",
     "additionalComponents": [],
     "primaryFile": "accordion-overview-example.ts",
     "module": {
-      "name": "AlertExamplesModule",
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-sections": {
+    "packagePath": "components/accordion/accordion-sections",
+    "title": "accordion-sections",
+    "componentName": "AccordionSectionsExample",
+    "files": [
+      "accordion-sections-example.ts",
+      "accordion-sections-example.html"
+    ],
+    "selector": "accordion-sections-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-sections-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
+      "importSpecifier": "components/accordion",
+      "importPath": "koobiq-docs-examples-components-accordion"
+    }
+  },
+  "accordion-states": {
+    "packagePath": "components/accordion/accordion-states",
+    "title": "accordion-states",
+    "componentName": "AccordionStatesExample",
+    "files": [
+      "accordion-states-example.ts",
+      "accordion-states-example.html"
+    ],
+    "selector": "accordion-states-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-states-example.ts",
+    "module": {
+      "name": "AccordionExamplesModule",
       "importSpecifier": "components/accordion",
       "importPath": "koobiq-docs-examples-components-accordion"
     }

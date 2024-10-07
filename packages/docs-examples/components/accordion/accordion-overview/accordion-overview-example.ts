@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { KbqAccordionModule } from '@koobiq/components/accordion';
 
 /**
  * @title accordion-overview
@@ -7,6 +8,6 @@ import { Component } from '@angular/core';
     standalone: true,
     selector: 'accordion-overview-example',
     templateUrl: 'accordion-overview-example.html',
-    styleUrls: ['accordion-overview-example.css']
+    imports: [KbqAccordionModule]
 })
 export class AccordionOverviewExample {}

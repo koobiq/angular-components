@@ -1,0 +1,42 @@
+<button kbq-button (click)="openPanel()">
+    Open panel with accordion
+</button>
+
+<ng-template #template>
+    <kbq-sidepanel-header [closeable]="true">Панель</kbq-sidepanel-header>
+
+    <kbq-sidepanel-body class="layout-padding-left-l">
+        <kbq-accordion class="docs-accordion-in-section">
+            <kbq-accordion-item>
+                <button type="button" kbq-accordion-trigger>Профиль</button>
+                <kbq-accordion-content>
+                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <button type="button" kbq-accordion-trigger>Характеристики</button>
+                <kbq-accordion-content>
+                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <button type="button" kbq-accordion-trigger>Сервера</button>
+                <kbq-accordion-content>
+                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <button type="button" kbq-accordion-trigger>Данные</button>
+                <kbq-accordion-content>
+                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <button type="button" kbq-accordion-trigger>Заметка</button>
+                <kbq-accordion-content>
+                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    </kbq-sidepanel-body>
+</ng-template>
