@@ -24,7 +24,6 @@
     --kbq-code-block-font-default-line-height: 20px;
     --kbq-code-block-font-default-letter-spacing: normal;
     --kbq-code-block-font-default-font-weight: normal;
-    --kbq-code-block-font-default-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
     --kbq-code-block-font-default-text-transform: null;
     --kbq-code-block-font-default-font-feature-settings: initial;
     --kbq-code-block-font-hljs-addition-font-style: null;
@@ -129,6 +128,12 @@
     --kbq-code-block-font-hljs-variable-constant-font-weight: null;
     --kbq-code-block-font-hljs-variable-language-font-style: null;
     --kbq-code-block-font-hljs-variable-language-font-weight: null;
+    --kbq-code-block-font-default-font-family: var(--kbq-typography-mono-codeblock-font-family);
+}
+
+:root {
+    --kbq-typography-mono-codeblock-font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', 'Menlo', 'Monaco',
+        monospace;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

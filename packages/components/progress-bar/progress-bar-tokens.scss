@@ -7,18 +7,23 @@
     --kbq-progress-bar-font-label-line-height: 20px;
     --kbq-progress-bar-font-label-letter-spacing: -0.006em;
     --kbq-progress-bar-font-label-font-weight: normal;
-    --kbq-progress-bar-font-label-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
     --kbq-progress-bar-font-label-text-transform: null;
     --kbq-progress-bar-font-label-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-progress-bar-font-caption-font-size: 12px;
     --kbq-progress-bar-font-caption-line-height: 16px;
     --kbq-progress-bar-font-caption-letter-spacing: normal;
     --kbq-progress-bar-font-caption-font-weight: normal;
-    --kbq-progress-bar-font-caption-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
     --kbq-progress-bar-font-caption-text-transform: null;
     --kbq-progress-bar-font-caption-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-progress-bar-font-label-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-progress-bar-font-caption-font-family: var(--kbq-typography-text-compact-font-family);
+}
+
+:root {
+    --kbq-typography-text-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
+    --kbq-typography-text-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

@@ -43,26 +43,32 @@
     --kbq-alert-font-title-line-height: 26px;
     --kbq-alert-font-title-letter-spacing: normal;
     --kbq-alert-font-title-font-weight: 600;
-    --kbq-alert-font-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
     --kbq-alert-font-title-text-transform: null;
     --kbq-alert-font-title-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-alert-font-title-compact-font-size: 16px;
     --kbq-alert-font-title-compact-line-height: 24px;
     --kbq-alert-font-title-compact-letter-spacing: -0.011em;
     --kbq-alert-font-title-compact-font-weight: 600;
-    --kbq-alert-font-title-compact-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
     --kbq-alert-font-title-compact-text-transform: null;
     --kbq-alert-font-title-compact-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-alert-font-text-font-size: 14px;
     --kbq-alert-font-text-line-height: 20px;
     --kbq-alert-font-text-letter-spacing: -0.006em;
     --kbq-alert-font-text-font-weight: normal;
-    --kbq-alert-font-text-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
     --kbq-alert-font-text-text-transform: null;
     --kbq-alert-font-text-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-alert-font-title-font-family: var(--kbq-typography-subheading-font-family);
+    --kbq-alert-font-title-compact-font-family: var(--kbq-typography-text-big-strong-font-family);
+    --kbq-alert-font-text-font-family: var(--kbq-typography-text-normal-font-family);
+}
+
+:root {
+    --kbq-typography-subheading-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-typography-text-big-strong-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
+    --kbq-typography-text-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

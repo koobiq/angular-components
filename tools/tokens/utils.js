@@ -159,6 +159,7 @@ const additionalFilter = (token, componentName) => {
 
 const dictionaryMapper = (dictionary, outputReferences) => {
     const formatProperty = formatHelpers.createPropertyFormatter({ outputReferences, dictionary, format: 'css' });
+    if (!dictionary.allTokens.length) return '';
     return '  ' + dictionary.allTokens.map(formatProperty).join('\n  ');
 };
 

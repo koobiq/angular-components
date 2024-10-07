@@ -7,10 +7,14 @@
     --kbq-risk-level-font-text-line-height: 26px;
     --kbq-risk-level-font-text-letter-spacing: normal;
     --kbq-risk-level-font-text-font-weight: 600;
-    --kbq-risk-level-font-text-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
     --kbq-risk-level-font-text-text-transform: null;
     --kbq-risk-level-font-text-font-feature-settings: 'calt', 'kern', 'liga';
+    --kbq-risk-level-font-text-font-family: var(--kbq-typography-subheading-font-family);
+}
+
+:root {
+    --kbq-typography-subheading-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

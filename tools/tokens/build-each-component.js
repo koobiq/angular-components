@@ -100,28 +100,53 @@ StyleDictionary.registerFormat({
         );
 
         // formatting function expects dictionary as input, so here initialize a copy to work with different tokens
+        const rootDictionary = filterTokens(
+            dictionary,
+            (token) => token.attributes.font && token.name.includes('font-family')
+        );
+        const referencedDictionary = {
+            ...rootDictionary,
+            allTokens: rootDictionary.allTokens.flatMap((token) => rootDictionary.getReferences(token.original.value)),
+            allProperties: rootDictionary.allTokens.flatMap((token) =>
+                rootDictionary.getReferences(token.original.value)
+            )
+        };
+        referencedDictionary.allTokens = referencedDictionary.allProperties = [
+            ...new Set(referencedDictionary.allTokens)];
+
         const baseDictionary = filterTokens(
             dictionary,
             (token) =>
                 [token.attributes.type, token.attributes.category, token.attributes.item].some(
                     (attr) => attr === 'size'
                 ) ||
-                token.attributes.font ||
+                (token.attributes.font && !token.name.includes('font-family')) ||
                 token.attributes.category === 'typography'
         );
         const lightDictionary = filterTokens(dictionary, (token) => token.attributes.light);
         const darkDictionary = filterTokens(dictionary, (token) => token.attributes.dark);
 
-        return Object.entries({
-            [`.kbq-${resolveComponentName(component)}`]: baseDictionary,
+        const sizesAndRefsTokens = !(baseDictionary.allTokens.length || rootDictionary.allTokens.length)
+            ? ''
+            : `.kbq-${resolveComponentName(component)} {\n` +
+              [
+                  dictionaryMapper(baseDictionary, outputReferences),
+                  dictionaryMapper(rootDictionary, true)]
+                  .filter(Boolean)
+                  .join('\n') +
+              `\n}\n`;
+
+        const coreTokens = Object.entries({
+            [':root']: referencedDictionary,
             [lightThemeSelector]: lightDictionary,
             [darkThemeSelector]: darkDictionary
         })
             .filter(([, currentDictionary]) => currentDictionary.allTokens.length)
             .map(([key, currentDictionary]) => {
                 return `${key} {\n` + dictionaryMapper(currentDictionary, outputReferences) + `\n}\n`;
-            })
-            .join('\n');
+            });
+
+        return [sizesAndRefsTokens, ...coreTokens].filter(Boolean).join('\n');
     }
 });
 

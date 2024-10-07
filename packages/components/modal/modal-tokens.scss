@@ -19,18 +19,23 @@
     --kbq-modal-font-header-line-height: 28px;
     --kbq-modal-font-header-letter-spacing: normal;
     --kbq-modal-font-header-font-weight: 700;
-    --kbq-modal-font-header-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        'Helvetica Neue', Arial, sans-serif;
     --kbq-modal-font-header-text-transform: null;
     --kbq-modal-font-header-font-feature-settings: 'calt', 'kern', 'liga';
     --kbq-modal-font-content-font-size: 14px;
     --kbq-modal-font-content-line-height: 20px;
     --kbq-modal-font-content-letter-spacing: -0.006em;
     --kbq-modal-font-content-font-weight: normal;
-    --kbq-modal-font-content-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
     --kbq-modal-font-content-text-transform: null;
     --kbq-modal-font-content-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-modal-font-header-font-family: var(--kbq-typography-title-font-family);
+    --kbq-modal-font-content-font-family: var(--kbq-typography-text-normal-font-family);
+}
+
+:root {
+    --kbq-typography-title-font-family: 'TT-Positive', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+    --kbq-typography-text-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
