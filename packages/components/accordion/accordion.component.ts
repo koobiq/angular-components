@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { RdxAccordionRootDirective } from '@radix-ng/primitives/accordion';
+import { RdxAccordionRootDirective, RdxAccordionType } from '@radix-ng/primitives/accordion';
+
+export type KbqAccordionType = RdxAccordionType;
 
 export enum KbqAccordionVariant {
     fill = 'fill',
@@ -14,7 +16,7 @@ export enum KbqAccordionVariant {
     hostDirectives: [
         {
             directive: RdxAccordionRootDirective,
-            inputs: ['orientation', 'disabled', 'type', 'defaultValue', 'collapsible', 'value'],
+            inputs: ['type', 'collapsible', 'disabled', 'defaultValue', 'value'],
             outputs: ['onValueChange']
         }
     ],
