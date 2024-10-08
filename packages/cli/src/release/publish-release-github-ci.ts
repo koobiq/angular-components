@@ -53,7 +53,7 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
 
         this.checkReleaseOutput();
 
-        const npmDistTag = 'latest';
+        const npmDistTag = this.config.tagName;
 
         for (const packageName of this.packageJson.release.packages) {
             this.publishPackageToNpm(packageName, npmDistTag);
@@ -84,7 +84,7 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
 
     /** Publishes the specified package within the given NPM dist tag. */
     private publishPackageToNpm(packageName: string, npmDistTag: string) {
-        console.info(green(`  ⭮   Publishing "${packageName}"..`));
+        console.info(green(`  ⭮   Publishing "${packageName}" with tag ${npmDistTag}..`));
 
         const errorOutput = npmPublish(join(this.releaseOutputPath, packageName), npmDistTag);
 

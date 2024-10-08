@@ -29,7 +29,7 @@ jobs:
       - name: Publish package
         run: |
           rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc
-          npm run release:publish:ci-github
+          npm run release:publish:ci-github -- -t v17-lts
         env:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_ENDPOINT_URL: ${{ secrets.MM_WEBHOOK_URL }}
