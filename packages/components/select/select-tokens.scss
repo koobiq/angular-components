@@ -17,8 +17,6 @@
     --kbq-select-font-default-line-height: 20px;
     --kbq-select-font-default-letter-spacing: -0.006em;
     --kbq-select-font-default-font-weight: normal;
-    --kbq-select-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
     --kbq-select-font-default-text-transform: null;
     --kbq-select-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
     --kbq-select-panel-size-border-radius: 8px;
@@ -27,10 +25,15 @@
     --kbq-select-panel-font-default-line-height: 20px;
     --kbq-select-panel-font-default-letter-spacing: -0.006em;
     --kbq-select-panel-font-default-font-weight: normal;
-    --kbq-select-panel-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
-        Arial, sans-serif;
     --kbq-select-panel-font-default-text-transform: null;
     --kbq-select-panel-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-select-font-default-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-select-panel-font-default-font-family: var(--kbq-typography-text-normal-font-family);
+}
+
+:root {
+    --kbq-typography-text-normal-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

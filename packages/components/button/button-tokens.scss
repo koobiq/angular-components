@@ -8,10 +8,14 @@
     --kbq-button-font-default-line-height: 20px;
     --kbq-button-font-default-letter-spacing: -0.006em;
     --kbq-button-font-default-font-weight: 500;
-    --kbq-button-font-default-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-        sans-serif;
     --kbq-button-font-default-text-transform: null;
     --kbq-button-font-default-font-feature-settings: 'calt', 'kern', 'liga', 'ss01', 'ss04';
+    --kbq-button-font-default-font-family: var(--kbq-typography-text-normal-medium-font-family);
+}
+
+:root {
+    --kbq-typography-text-normal-medium-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
