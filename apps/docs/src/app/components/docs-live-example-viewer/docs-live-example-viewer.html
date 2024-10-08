@@ -1,6 +1,6 @@
 <div class="docs-live-example__container">
     @if (exampleData) {
-        <div class="docs-live-example__example">
+        <div class="docs-live-example__example docs-live-example__example_{{ exampleId }}">
             @if (exampleComponentType && exampleModuleFactory) {
                 <ng-template
                     [ngComponentOutlet]="exampleComponentType"
