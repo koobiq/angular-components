@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 
 /**
  * @title Tabs vertical icons
@@ -9,4 +10,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['tabs-vertical-icons-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class TabsVerticalIconsExample {}
+export class TabsVerticalIconsExample {
+    protected readonly PopUpPlacements = PopUpPlacements;
+}
