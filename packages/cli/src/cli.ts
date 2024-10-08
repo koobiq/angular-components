@@ -27,6 +27,7 @@ export const runCliCommands = () => {
         .option('-p, --project-dir <string>', 'project root directory', process.env['RELEASE_PROJECT'] ?? ROOT_DIR)
         .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? DIST_DIR)
         .option('-c, --changelog-scope <string>', 'default changelog scope', process.env['CHANGELOG_SCOPE'] ?? 'koobiq')
+        .option('-t, --tag-name <string>', 'Name of the NPM dist tag.', 'latest')
         .option('-n, --without-references', 'exclude changelog links', false)
         .option('-n, --without-notification', 'cancel mattermost notifications', false)
         .option('-o, --repo-owner <string>', 'github owner name', process.env['REPO_OWNER'] ?? 'koobiq')
