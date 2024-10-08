@@ -1,3 +1,9 @@
+## 17.8.5 (2024-10-08)
+
+### Koobiq
+
+ * bug fix  **visual:** added css-vars for font-family tokens and added default value for global tokens in ([#346](https://github.com/koobiq/angular-components/issues/346)) ([e448286](https://github.com/koobiq/angular-components/commit/e4482867242772c35c6dba664b292e25871d08f6))
+
 ## 17.8.4 (2024-10-04)
 
 ### Koobiq
