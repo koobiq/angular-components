@@ -19,6 +19,10 @@
         @include kbq-tab-item-state($type, $sub-type, states-hover);
     }
 
+    &.kbq-tab-label_empty {
+        color: kbq-css-variable(foreground-contrast-secondary);
+    }
+
     &.kbq-selected {
         @include kbq-tab-item-state($type, $sub-type, states-selected);
 
