@@ -1,7 +1,6 @@
 <div class="tabs-empty-example">
     <kbq-tab-group>
         <kbq-tab
-            [empty]="true"
             [label]="'Bruteforce'"
         >
             <div class="empty-tab-content">Зарегистрировано 1005 инцидентов</div>
@@ -22,9 +21,13 @@
             </p>
         </kbq-tab>
         <kbq-tab
-            [disabled]="true"
+            [empty]="true"
             [label]="'DDoS'"
-        />
+            [tooltipPlacement]="PopUpPlacements.Top"
+            [tooltipTitle]="'Нет инцидентов'"
+        >
+            <div class="empty-tab-content">DDoS-атак не зарегистрированов</div>
+        </kbq-tab>
         <kbq-tab [label]="'DoS'">
             <p>
                 Потому воспользоваться или разъясню некоей бы возжаждал умеет истину некоей, такого - немалое возникают

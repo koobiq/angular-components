@@ -20,6 +20,9 @@
 }
 
 .tabs-actionbar-example__controls {
+    display: flex;
+    margin-left: 16px;
+
     button + button {
         margin-left: 8px;
     }
