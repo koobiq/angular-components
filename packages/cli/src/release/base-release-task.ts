@@ -15,6 +15,7 @@ export interface IReleaseTaskConfig {
     projectDir: string;
     repoToken: string;
     distDir: string;
+    tagName: string;
     repoOwner: string;
     repoName: string;
     repoUrl: string;
