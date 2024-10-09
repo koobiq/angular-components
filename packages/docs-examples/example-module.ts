@@ -3310,6 +3310,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-actionbar": {
+    "packagePath": "components/tabs/tabs-actionbar",
+    "title": "Tabs actionbar",
+    "componentName": "TabsActionbarExample",
+    "files": [
+      "tabs-actionbar-example.ts",
+      "tabs-actionbar-example.html",
+      "tabs-actionbar-example.css"
+    ],
+    "selector": "tabs-actionbar-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-actionbar-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
+  "tabs-disabled": {
+    "packagePath": "components/tabs/tabs-disabled",
+    "title": "Tabs disabled",
+    "componentName": "TabsDisabledExample",
+    "files": [
+      "tabs-disabled-example.ts",
+      "tabs-disabled-example.html",
+      "tabs-disabled-example.css"
+    ],
+    "selector": "tabs-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-disabled-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-empty": {
     "packagePath": "components/tabs/tabs-empty",
     "title": "Tabs empty",
@@ -3328,27 +3364,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
-  "tabs-old": {
-    "packagePath": "components/tabs/tabs-old",
-    "title": "Navbar",
-    "componentName": "TabsOldExample",
-    "files": [
-      "tabs-old-example.ts",
-      "tabs-old-example.html",
-      "tabs-old-example.css"
-    ],
-    "selector": "tabs-old-example",
-    "additionalComponents": [],
-    "primaryFile": "tabs-old-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
-  },
   "tabs-overview": {
     "packagePath": "components/tabs/tabs-overview",
-    "title": "Tabs",
+    "title": "Tabs overview",
     "componentName": "TabsOverviewExample",
     "files": [
       "tabs-overview-example.ts",
@@ -3366,7 +3384,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tabs-stretch": {
     "packagePath": "components/tabs/tabs-stretch",
-    "title": "Navbar",
+    "title": "Tabs stretch",
     "componentName": "TabsStretchExample",
     "files": [
       "tabs-stretch-example.ts",
@@ -3382,9 +3400,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-underlined": {
+    "packagePath": "components/tabs/tabs-underlined",
+    "title": "Tabs underlined",
+    "componentName": "TabsUnderlinedExample",
+    "files": [
+      "tabs-underlined-example.ts",
+      "tabs-underlined-example.html",
+      "tabs-underlined-example.css"
+    ],
+    "selector": "tabs-underlined-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-underlined-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
+  "tabs-vertical-icons": {
+    "packagePath": "components/tabs/tabs-vertical-icons",
+    "title": "Tabs vertical icons",
+    "componentName": "TabsVerticalIconsExample",
+    "files": [
+      "tabs-vertical-icons-example.ts",
+      "tabs-vertical-icons-example.html",
+      "tabs-vertical-icons-example.css"
+    ],
+    "selector": "tabs-vertical-icons-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-vertical-icons-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-vertical": {
     "packagePath": "components/tabs/tabs-vertical",
-    "title": "Navbar",
+    "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
       "tabs-vertical-example.ts",
@@ -3402,7 +3456,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tabs-with-scroll": {
     "packagePath": "components/tabs/tabs-with-scroll",
-    "title": "Navbar",
+    "title": "Tabs with scroll",
     "componentName": "TabsWithScrollExample",
     "files": [
       "tabs-with-scroll-example.ts",
@@ -3502,6 +3556,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-hug-content-example",
     "additionalComponents": [],
     "primaryFile": "tag-hug-content-example.ts",
+    "module": {
+      "name": "TagExamplesModule",
+      "importSpecifier": "components/tag",
+      "importPath": "koobiq-docs-examples-components-tag"
+    }
+  },
+  "tag-input-with-form-control-validators": {
+    "packagePath": "components/tag/tag-input-with-form-control-validators",
+    "title": "Tag input with form control validators.",
+    "componentName": "TagInputWithFormControlValidatorsExample",
+    "files": [
+      "tag-input-with-form-control-validators-example.ts"
+    ],
+    "selector": "tag-input-with-form-control-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-with-form-control-validators-example.ts",
     "module": {
       "name": "TagExamplesModule",
       "importSpecifier": "components/tag",

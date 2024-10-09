@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 /**
- * @title Tabs
+ * @title Tabs overview
  */
 @Component({
     selector: 'tabs-overview-example',

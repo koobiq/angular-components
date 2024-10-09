@@ -11,6 +11,7 @@ import { TagAutocompleteExample } from './tag-autocomplete/tag-autocomplete-exam
 import { TagContentExample } from './tag-content/tag-content-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
 import { TagHugContentExample } from './tag-hug-content/tag-hug-content-example';
+import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
 import { TagListExample } from './tag-list/tag-list-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
@@ -24,6 +25,7 @@ export {
     TagFillAndStyleExample,
     TagHugContentExample,
     TagInputExample,
+    TagInputWithFormControlValidatorsExample,
     TagListExample,
     TagOverviewExample,
     TagsAutocompleteOnpasteOffExample,
@@ -43,8 +45,13 @@ const EXAMPLES = [
     TagsAutocompleteOnpasteOffExample
 ];
 
+const STANDALONE_EXAMPLES = [
+    TagInputWithFormControlValidatorsExample
+];
+
 @NgModule({
     imports: [
+        ...STANDALONE_EXAMPLES,
         FormsModule,
         KbqFormFieldModule,
         ReactiveFormsModule,
@@ -55,6 +62,6 @@ const EXAMPLES = [
         AsyncPipe
     ],
     declarations: EXAMPLES,
-    exports: EXAMPLES
+    exports: [...EXAMPLES, ...STANDALONE_EXAMPLES]
 })
 export class TagExamplesModule {}

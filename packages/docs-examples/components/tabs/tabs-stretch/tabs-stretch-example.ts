@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 /**
- * @title Navbar
+ * @title Tabs stretch
  */
 @Component({
     selector: 'tabs-stretch-example',
