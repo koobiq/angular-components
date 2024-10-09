@@ -82,6 +82,12 @@ const filter = {
         'kbq-states-icon-disabled'
     ],
     splitter: 'kbq-background-background-disabled',
+    'timezone-option': [
+        'kbq-select-size',
+        'kbq-select-panel',
+        'kbq-option-size',
+        'kbq-divider-color'
+    ],
     tag: [
         'kbq-tag-list',
         'tag-input-font'
