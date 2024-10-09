@@ -3,6 +3,10 @@
         height: 220px;
     }
 
+    .kbq-tab-header {
+        max-width: 160px;
+    }
+
     .kbq-tab-body__wrapper {
         padding-left: 20px;
 
