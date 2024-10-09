@@ -322,6 +322,9 @@ export class KbqModalService {
 
 // @public (undocumented)
 export class KbqModalTitle {
+    constructor(modal: KbqModalComponent);
+    // (undocumented)
+    protected modal: KbqModalComponent;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], false, never>;
     // (undocumented)

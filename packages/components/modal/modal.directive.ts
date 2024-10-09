@@ -1,4 +1,5 @@
 import { Component, Directive } from '@angular/core';
+import { KbqModalComponent } from './modal.component';
 
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
@@ -9,12 +10,29 @@ import { Component, Directive } from '@angular/core';
         >
             <ng-content />
         </div>
+
+        @if (modal.kbqClosable) {
+            <button
+                class="kbq-modal-close kbq-button_transparent"
+                [color]="'contrast'"
+                (click)="modal.onClickCloseBtn()"
+                kbq-button
+            >
+                <i
+                    [color]="modal.componentColors.Contrast"
+                    kbq-icon="kbq-xmark_16"
+                ></i>
+            </button>
+        }
     `,
     host: {
-        class: 'kbq-modal-header'
+        class: 'kbq-modal-header',
+        '[class.kbq-modal-header_closable]': 'modal.kbqClosable'
     }
 })
-export class KbqModalTitle {}
+export class KbqModalTitle {
+    constructor(protected modal: KbqModalComponent) {}
+}
 
 @Directive({
     selector: `[kbq-modal-body], kbq-modal-body, [kbqModalBody]`,
