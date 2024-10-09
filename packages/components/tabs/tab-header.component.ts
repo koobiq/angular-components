@@ -60,6 +60,14 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ViewChild('nextPaginator') nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') previousPaginator: ElementRef<HTMLElement>;
 
+    get activeTabOffsetWidth() {
+        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth + 'px';
+    }
+
+    get activeTabOffsetLeft() {
+        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft + 'px';
+    }
+
     constructor(
         readonly elementRef: ElementRef,
         readonly changeDetectorRef: ChangeDetectorRef,

@@ -1,6 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { NgStyle } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -28,7 +29,8 @@ import { KbqTab } from './tab.component';
         CdkScrollableModule,
         KbqCommonModule,
         KbqIconModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        NgStyle
     ],
     // Don't export all components because some are only to be used internally.
     exports: [

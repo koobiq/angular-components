@@ -79,17 +79,6 @@
         bottom: -10px;
     }
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-selected:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -10px;
-        height: 3px;
-        border-radius: 2px 2px 0 0;
-        background: rgba(33, 34, 44, 1);
-    }
-
     &.kbq-tab-label_vertical {
         justify-content: flex-start;
 
