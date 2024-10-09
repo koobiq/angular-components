@@ -1,10 +1,10 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 
-@use '../components/core/styles/theming/prebuilt/light-theme';
-//@use '../components/core/styles/theming/prebuilt/dark-theme';
+@use '../components/core/styles/theming/prebuilt/theme';
 
 @use '../components/core/styles/visual/layout';
 
+@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens.css';
 @use 'apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css';
 //@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css';
 

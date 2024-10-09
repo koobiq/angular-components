@@ -24,6 +24,11 @@ const filter = {
     'option-action': [
         'kbq-list-font-text-line-height'
     ],
+    'timezone-option': [
+        'kbq-select-size',
+        'kbq-select-panel',
+        'kbq-option-size'
+    ],
     tag: [
         'kbq-tag-list',
         'tag-input-font'
