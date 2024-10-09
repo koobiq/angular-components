@@ -7,6 +7,29 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
+}
+
+.tabs-actionbar-example__center {
+    position: relative;
+    width: 100%;
+    height: 48px;
+    min-width: 16px;
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(13, 14, 18, 0.12);
+    }
+}
+
+.tabs-actionbar-example__controls {
+    position: relative;
+    display: flex;
+    padding: 8px 20px 8px 0;
 
     &:after {
         content: '';
@@ -17,16 +40,6 @@
         height: 1px;
         background: rgba(13, 14, 18, 0.12);
     }
-
-    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content:after {
-        background: none;
-    }
-}
-
-.tabs-actionbar-example__controls {
-    display: flex;
-    padding: 8px 20px 8px 0;
-    margin-left: 16px;
 
     button + button {
         margin-left: 8px;

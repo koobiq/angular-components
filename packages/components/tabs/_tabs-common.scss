@@ -94,7 +94,7 @@
         justify-content: flex-start;
 
         & .kbq-tab-label__content {
-            display: inline-block;
+            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
