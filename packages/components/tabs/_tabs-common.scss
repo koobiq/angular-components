@@ -75,8 +75,8 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: -8px;
-        bottom: -8px;
+        top: -10px;
+        bottom: -10px;
     }
 
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-selected:after {
@@ -84,7 +84,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: -11px;
+        bottom: -10px;
         height: 3px;
         border-radius: 2px 2px 0 0;
         background: rgba(33, 34, 44, 1);
@@ -94,6 +94,7 @@
         justify-content: flex-start;
 
         & .kbq-tab-label__content {
+            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
