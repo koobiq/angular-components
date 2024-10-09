@@ -25,11 +25,10 @@
 }
 
 .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
-    position: relative;
     padding: 8px 0;
 }
 
-.kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content:after {
+.kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
     content: '';
     position: absolute;
     left: 0;
