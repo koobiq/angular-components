@@ -1,6 +1,26 @@
 /* stylelint-disable no-unknown-custom-properties */
 
 .kbq-timezone-select__panel {
+    --kbq-option-size-horizontal-padding: var(--kbq-size-m);
+    --kbq-option-size-height: var(--kbq-size-3xl);
+    --kbq-option-size-border-width: 2px;
+    --kbq-select-size-single-padding-left: var(--kbq-size-m);
+    --kbq-select-size-single-padding-right: var(--kbq-size-xxs);
+    --kbq-select-size-single-padding-vertical: var(--kbq-size-xs);
+    --kbq-select-size-single-content-gap: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-padding-left: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-padding-right: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-padding-vertical: var(--kbq-size-xxs);
+    --kbq-select-size-multiple-content-gap: var(--kbq-size-xxs);
+    --kbq-select-panel-size-border-radius: var(--kbq-size-s);
+    --kbq-select-panel-size-max-height: 256px;
+    --kbq-select-panel-font-default-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-select-panel-font-default-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-select-panel-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-select-panel-font-default-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-select-panel-font-default-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-select-panel-font-default-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-select-panel-font-default-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
     --kbq-timezone-option-size-padding: 6px 10px;
     --kbq-timezone-option-size-column-gap: 16px;
     --kbq-timezone-option-size-height: auto;
@@ -41,12 +61,16 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
+    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
     --kbq-timezone-option-text: var(--kbq-foreground-contrast);
     --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
 }
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
+    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
     --kbq-timezone-option-text: var(--kbq-foreground-contrast);
     --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
