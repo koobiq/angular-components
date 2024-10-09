@@ -1,3 +1,27 @@
+# 18.1.0 (2024-10-09)
+
+### Koobiq
+
+ * bug fix  **docs:** corrected system-dependent theme selection on startup ([#DS-2952](https://github.com/koobiq/angular-components/issues/issue/DS-2952)) ([#349](https://github.com/koobiq/angular-components/issues/349)) ([6481970](https://github.com/koobiq/angular-components/commit/64819707c123406ac3b4e218974a5662e36b7515))
+ * bug fix  **docs:** menu tab icon fixed ([#DS-2926](https://github.com/koobiq/angular-components/issues/issue/DS-2926))  ([#331](https://github.com/koobiq/angular-components/issues/331)) ([b70a5fd](https://github.com/koobiq/angular-components/commit/b70a5fdab9ffdfd4783253b7ffff363873426c63))
+ * bug fix  **hint:** password hints fixes ([#DS-2914](https://github.com/koobiq/angular-components/issues/issue/DS-2914)) ([#339](https://github.com/koobiq/angular-components/issues/339)) ([1d69a7b](https://github.com/koobiq/angular-components/commit/1d69a7b2d73e5b41a7a869154023b87a1e0fab37))
+ * bug fix  **input:** fractional value not displayed after initialization ([#DS-2633](https://github.com/koobiq/angular-components/issues/issue/DS-2633)) ([#337](https://github.com/koobiq/angular-components/issues/337)) ([6cb89f6](https://github.com/koobiq/angular-components/commit/6cb89f6972f16ca131532f681d1173d8a9c773e0))
+ * bug fix  **modal:** close button in kbq-modal-title ([#DS-2931](https://github.com/koobiq/angular-components/issues/issue/DS-2931)) ([#355](https://github.com/koobiq/angular-components/issues/355)) ([7d09ca9](https://github.com/koobiq/angular-components/commit/7d09ca9283c4c52363882938d3626cc4220ea0db))
+ * bug fix  sandbox polyfills and tsconfigs ([#330](https://github.com/koobiq/angular-components/issues/330)) ([732e371](https://github.com/koobiq/angular-components/commit/732e3712f514cd26cb2e29c39a7740172ee2891b))
+ * bug fix  **stackblitz:** corrected styles of examples  ([#DS-2933](https://github.com/koobiq/angular-components/issues/issue/DS-2933)) ([#348](https://github.com/koobiq/angular-components/issues/348)) ([44c38b8](https://github.com/koobiq/angular-components/commit/44c38b85c7b8b35b3cc3a8c84bdac30c7a26a97f))
+ * bug fix  **timezone:** added missing tokens ([#353](https://github.com/koobiq/angular-components/issues/353)) ([f6c5eed](https://github.com/koobiq/angular-components/commit/f6c5eed50907e43bbe9124b95b2d2a6517db353c))
+ * bug fix  **tree:** mouse click selection generates extra event ([#DS-2900](https://github.com/koobiq/angular-components/issues/issue/DS-2900)) ([#332](https://github.com/koobiq/angular-components/issues/332)) ([c5b07a3](https://github.com/koobiq/angular-components/commit/c5b07a3953300edc7ba7d1fd09ae48a755061e43))
+ * bug fix  **typography:** added .text-big-medium, .text-normal-medium and .text-compact-medium ([#345](https://github.com/koobiq/angular-components/issues/345)) ([a515f08](https://github.com/koobiq/angular-components/commit/a515f082ee7ec540bf4f2a6d3c075bfc11da3d37))
+ * bug fix  updated stackblitz files ([#323](https://github.com/koobiq/angular-components/issues/323)) ([f8937ea](https://github.com/koobiq/angular-components/commit/f8937eacc56df00aed16cad7fa0e57f505b84094))
+ * feature  **docs:** removed core-js polyfills ([#325](https://github.com/koobiq/angular-components/issues/325)) ([2589267](https://github.com/koobiq/angular-components/commit/2589267eea553a1df15ce40081bce2f45e25d2a7))
+ * feature  **docs:** tabs examples ([#DS-2907](https://github.com/koobiq/angular-components/issues/issue/DS-2907)) ([#329](https://github.com/koobiq/angular-components/issues/329)) ([f4e8bad](https://github.com/koobiq/angular-components/commit/f4e8badf28c088ecaff203457f38aaf85c7bb139))
+ * feature  **icon:** migrated to standalone ([#333](https://github.com/koobiq/angular-components/issues/333)) ([53457cb](https://github.com/koobiq/angular-components/commit/53457cb51f95995c4fb2c31836ebfba60d0616e9))
+ * feature  **tabs:** active tab underline transition ([#DS-2935](https://github.com/koobiq/angular-components/issues/issue/DS-2935))  ([#343](https://github.com/koobiq/angular-components/issues/343)) ([3e41a1d](https://github.com/koobiq/angular-components/commit/3e41a1de1bdf7cd7501bdd59265594e3a4c4d1eb))
+ * feature  **tabs:** new bordered tabs ([#DS-2904](https://github.com/koobiq/angular-components/issues/issue/DS-2904))  ([#328](https://github.com/koobiq/angular-components/issues/328)) ([5414245](https://github.com/koobiq/angular-components/commit/5414245b70e2c490e6d89e5dfceca0f361e9688b))
+ * feature  **tooltip:** added parameter kbqRelativeToPointer ([#DS-2864](https://github.com/koobiq/angular-components/issues/issue/DS-2864)) ([#326](https://github.com/koobiq/angular-components/issues/326)) ([3b09b96](https://github.com/koobiq/angular-components/commit/3b09b9621527591e7af3248e8a183d12cb9f48b9))
+ * feature  **tooltip:** migrated to standalone ([#334](https://github.com/koobiq/angular-components/issues/334)) ([97721d6](https://github.com/koobiq/angular-components/commit/97721d62b2a32e7eeeee23d0a3060ada9208a565))
+ * feature  updated angular dependencies to 18.2.6, updated stackblitz configs ([#322](https://github.com/koobiq/angular-components/issues/322)) ([d1c7e22](https://github.com/koobiq/angular-components/commit/d1c7e22aa4e8699c021897cea00c0ebc460d6623))
+
 # 18.0.0 (2024-09-27)
 
 ### Koobiq
