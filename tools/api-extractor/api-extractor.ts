@@ -71,4 +71,8 @@ for (const component of buildConfig.components) {
     logErrors(runExtractor('components', component), component);
 }
 
+for (const component of buildConfig['components-experimental']) {
+    logErrors(runExtractor('components-experimental', component), component);
+}
+
 process.exitCode = hasErrors ? 1 : 0;

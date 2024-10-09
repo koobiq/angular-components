@@ -39,6 +39,7 @@ jobs:
           yarn run unit:schematics
           yarn run unit:koobiq-docs
           yarn run unit:api-gen
+          yarn run unit:components-experimental
 
       - name: License validation
         run: yarn run validate:license

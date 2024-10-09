@@ -1,6 +1,6 @@
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { ErrorStateMatcher } from '../error/error-options';
+import { ErrorStateMatcher } from '../error/error-state-matcher';
 import { AbstractConstructor, Constructor } from './constructor';
 
 /** @docs-private */

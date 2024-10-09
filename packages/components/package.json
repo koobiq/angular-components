@@ -22,6 +22,7 @@
     "homepage": "https://github.com/koobiq/angular-components#readme",
     "peerDependencies": {
         "@angular/cdk": "{{NG_VERSION}}",
+        "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
         "@koobiq/cdk": "{{VERSION}}",
         "@koobiq/angular-moment-adapter": "{{VERSION}}",

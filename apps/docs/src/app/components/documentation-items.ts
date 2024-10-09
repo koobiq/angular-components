@@ -249,6 +249,13 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['file-upload-types']
                 },
                 {
+                    id: 'experimental-form-field',
+                    name: 'Form field (experimental)',
+                    hasApi: true,
+                    apiId: 'experimental-form-field',
+                    hasExamples: false
+                },
+                {
                     id: 'layout-flex',
                     name: 'Layout flex',
                     svgPreview: 'layout flex',
@@ -636,12 +643,15 @@ export class DocumentationItems {
 
     getItems(section: string): DocItem[] {
         switch (section) {
-            case COMPONENTS:
+            case COMPONENTS: {
                 return ALL_COMPONENTS;
-            case CDK:
+            }
+            case CDK: {
                 return ALL_CDK;
-            default:
+            }
+            default: {
                 return [];
+            }
         }
     }
 
