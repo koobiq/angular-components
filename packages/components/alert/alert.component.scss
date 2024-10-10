@@ -69,6 +69,11 @@
     & .kbq-alert__close-button {
         margin-top: kbq-css-variable(alert-size-normal-close-button-margin-top);
         margin-left: kbq-css-variable(alert-size-normal-close-button-margin-left);
+
+        .kbq-icon-button {
+            --kbq-icon-button-size-normal-horizontal-padding: 4px;
+            --kbq-icon-button-size-normal-vertical-padding: 4px;
+        }
     }
 }
 
@@ -119,6 +124,11 @@
     & .kbq-alert__close-button {
         margin-top: kbq-css-variable(alert-size-compact-close-button-margin-top);
         margin-left: kbq-css-variable(alert-size-compact-close-button-margin-left);
+
+        .kbq-icon-button {
+            --kbq-icon-button-size-normal-horizontal-padding: 4px;
+            --kbq-icon-button-size-normal-vertical-padding: 4px;
+        }
     }
 }
 
