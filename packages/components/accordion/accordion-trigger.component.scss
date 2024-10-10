@@ -20,7 +20,7 @@
         cursor: pointer;
 
         & .kbq-accordion-trigger__icon {
-            color: kbq-css-variable(accordion-item-states-hover-icon);
+            color: kbq-css-variable(accordion-item-states-hover-icon-color);
         }
     }
 
@@ -60,7 +60,7 @@
 
     &[data-disabled='true'] {
         & .kbq-accordion-trigger__icon {
-            color: kbq-css-variable(accordion-item-states-disabled-icon) !important;
+            color: kbq-css-variable(accordion-item-states-disabled-icon-color) !important;
         }
     }
 }

@@ -13,10 +13,10 @@
 
     .kbq-accordion-item {
         background: kbq-css-variable(accordion-item-default-background);
-        color: kbq-css-variable(accordion-item-default-text);
+        color: kbq-css-variable(accordion-item-default-text-color);
 
         & .kbq-accordion-trigger__icon {
-            color: kbq-css-variable(accordion-item-default-icon);
+            color: kbq-css-variable(accordion-item-default-icon-color);
         }
     }
 
@@ -26,17 +26,19 @@
         border: none;
         outline: none;
 
+        color: kbq-css-variable(accordion-item-default-text-color);
+
         &:hover:not([data-disabled='true']) {
             cursor: pointer;
 
             & .kbq-accordion-trigger__icon {
-                color: kbq-css-variable(accordion-item-states-hover-icon);
+                color: kbq-css-variable(accordion-item-states-hover-icon-color);
             }
         }
 
         &[data-disabled='true'] {
             & .kbq-accordion-trigger__icon {
-                color: kbq-css-variable(accordion-item-states-disabled-icon) !important;
+                color: kbq-css-variable(accordion-item-states-disabled-icon-color) !important;
             }
         }
     }
