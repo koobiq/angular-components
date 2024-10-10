@@ -3,7 +3,7 @@
 .kbq-markdown {
     --kbq-markdown-h1-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-h1-size-margin-top: 0;
-    --kbq-markdown-h1-size-margin-bottom: var(--kbq-size-l);
+    --kbq-markdown-h1-size-margin-bottom: var(--kbq-size-m);
     --kbq-markdown-h1-font-default-font-size: var(--kbq-md-typography-md-h1-font-size);
     --kbq-markdown-h1-font-default-line-height: var(--kbq-md-typography-md-h1-line-height);
     --kbq-markdown-h1-font-default-letter-spacing: var(--kbq-md-typography-md-h1-letter-spacing);
@@ -12,7 +12,7 @@
     --kbq-markdown-h1-font-default-text-transform: var(--kbq-md-typography-md-h1-text-transform);
     --kbq-markdown-h1-font-default-font-feature-settings: var(--kbq-md-typography-md-h1-font-feature-settings);
     --kbq-markdown-h2-size-max-width: var(--kbq-markdown-size-max-width);
-    --kbq-markdown-h2-size-margin-top: var(--kbq-size-xxl);
+    --kbq-markdown-h2-size-margin-top: var(--kbq-size-3xl);
     --kbq-markdown-h2-size-margin-bottom: var(--kbq-size-m);
     --kbq-markdown-h2-font-default-font-size: var(--kbq-md-typography-md-h2-font-size);
     --kbq-markdown-h2-font-default-line-height: var(--kbq-md-typography-md-h2-line-height);
@@ -22,7 +22,7 @@
     --kbq-markdown-h2-font-default-text-transform: var(--kbq-md-typography-md-h2-text-transform);
     --kbq-markdown-h2-font-default-font-feature-settings: var(--kbq-md-typography-md-h2-font-feature-settings);
     --kbq-markdown-h3-size-max-width: var(--kbq-markdown-size-max-width);
-    --kbq-markdown-h3-size-margin-top: var(--kbq-size-xxl);
+    --kbq-markdown-h3-size-margin-top: 28px;
     --kbq-markdown-h3-size-margin-bottom: var(--kbq-size-m);
     --kbq-markdown-h3-font-default-font-size: var(--kbq-md-typography-md-h3-font-size);
     --kbq-markdown-h3-font-default-line-height: var(--kbq-md-typography-md-h3-line-height);
@@ -43,7 +43,7 @@
     --kbq-markdown-h4-font-default-font-feature-settings: var(--kbq-md-typography-md-h4-font-feature-settings);
     --kbq-markdown-h5-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-h5-size-margin-top: var(--kbq-size-xxl);
-    --kbq-markdown-h5-size-margin-bottom: var(--kbq-size-s);
+    --kbq-markdown-h5-size-margin-bottom: var(--kbq-size-m);
     --kbq-markdown-h5-font-default-font-size: var(--kbq-md-typography-md-h5-font-size);
     --kbq-markdown-h5-font-default-line-height: var(--kbq-md-typography-md-h5-line-height);
     --kbq-markdown-h5-font-default-letter-spacing: var(--kbq-md-typography-md-h5-letter-spacing);
@@ -53,7 +53,7 @@
     --kbq-markdown-h5-font-default-font-feature-settings: var(--kbq-md-typography-md-h5-font-feature-settings);
     --kbq-markdown-h6-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-h6-size-margin-top: var(--kbq-size-xxl);
-    --kbq-markdown-h6-size-margin-bottom: var(--kbq-size-s);
+    --kbq-markdown-h6-size-margin-bottom: var(--kbq-size-m);
     --kbq-markdown-h6-font-default-font-size: var(--kbq-md-typography-md-h6-font-size);
     --kbq-markdown-h6-font-default-line-height: var(--kbq-md-typography-md-h6-line-height);
     --kbq-markdown-h6-font-default-letter-spacing: var(--kbq-md-typography-md-h6-letter-spacing);
@@ -77,7 +77,7 @@
     --kbq-markdown-list-size-margin-top-after-paragraph: -var(--kbq-size-s);
     --kbq-markdown-list-size-ol-number-padding-right: var(--kbq-size-xxs);
     --kbq-markdown-list-size-ul-padding: 0 0 0 var(--kbq-size-xxl);
-    --kbq-markdown-list-size-item-margin-bottom: var(--kbq-size-xxs);
+    --kbq-markdown-list-size-item-margin-bottom: var(--kbq-size-s);
     --kbq-markdown-list-font-default-font-size: var(--kbq-md-typography-md-body-font-size);
     --kbq-markdown-list-font-default-line-height: var(--kbq-md-typography-md-body-line-height);
     --kbq-markdown-list-font-default-letter-spacing: var(--kbq-md-typography-md-body-letter-spacing);
@@ -86,9 +86,9 @@
     --kbq-markdown-list-font-default-text-transform: var(--kbq-md-typography-md-body-text-transform);
     --kbq-markdown-list-font-default-font-feature-settings: var(--kbq-md-typography-md-body-font-feature-settings);
     --kbq-markdown-blockquote-size-max-width: var(--kbq-markdown-size-max-width);
-    --kbq-markdown-blockquote-size-margin-top: var(--kbq-size-m);
-    --kbq-markdown-blockquote-size-margin-bottom: var(--kbq-size-m);
-    --kbq-markdown-blockquote-size-padding: var(--kbq-size-3xs) var(--kbq-size-m);
+    --kbq-markdown-blockquote-size-margin-top: var(--kbq-size-xl);
+    --kbq-markdown-blockquote-size-margin-bottom: var(--kbq-size-xxl);
+    --kbq-markdown-blockquote-size-padding: var(--kbq-size-m) var(--kbq-size-l);
     --kbq-markdown-blockquote-size-line-width: var(--kbq-size-xxs);
     --kbq-markdown-blockquote-size-border-radius: 0;
     --kbq-markdown-blockquote-size-border-width: 0;
@@ -102,10 +102,10 @@
         --kbq-md-typography-md-body-font-feature-settings
     );
     --kbq-markdown-code-size-max-width: var(--kbq-markdown-size-max-width);
-    --kbq-markdown-code-size-multiline-margin-top: var(--kbq-size-m);
+    --kbq-markdown-code-size-multiline-margin-top: var(--kbq-size-s);
     --kbq-markdown-code-size-multiline-margin-bottom: var(--kbq-size-xxl);
     --kbq-markdown-code-size-inline-padding: 0 var(--kbq-size-xxs);
-    --kbq-markdown-code-size-multiline-padding: var(--kbq-size-m) var(--kbq-size-l);
+    --kbq-markdown-code-size-multiline-padding: 14px var(--kbq-size-xl);
     --kbq-markdown-code-size-border-radius: var(--kbq-size-border-radius);
     --kbq-markdown-code-size-border-width: var(--kbq-size-border-width);
     --kbq-markdown-code-font-default-font-size: var(--kbq-md-typography-md-body-mono-font-size);
@@ -126,8 +126,8 @@
     --kbq-markdown-link-font-default-text-transform: var(--kbq-md-typography-md-body-text-transform);
     --kbq-markdown-link-font-default-font-feature-settings: var(--kbq-md-typography-md-body-font-feature-settings);
     --kbq-markdown-image-size-max-width: var(--kbq-markdown-size-max-width);
-    --kbq-markdown-image-size-margin-top: var(--kbq-size-m);
-    --kbq-markdown-image-size-margin-bottom: var(--kbq-size-m);
+    --kbq-markdown-image-size-margin-top: var(--kbq-size-s);
+    --kbq-markdown-image-size-margin-bottom: var(--kbq-size-s);
     --kbq-markdown-image-size-caption-margin-top: -var(--kbq-size-s);
     --kbq-markdown-image-size-caption-margin-bottom: var(--kbq-size-xxl);
     --kbq-markdown-image-font-caption-font-size: var(--kbq-md-typography-md-caption-font-size);
@@ -138,10 +138,10 @@
     --kbq-markdown-image-font-caption-text-transform: var(--kbq-md-typography-md-caption-text-transform);
     --kbq-markdown-image-font-caption-font-feature-settings: var(--kbq-md-typography-md-caption-font-feature-settings);
     --kbq-markdown-hr-size-width: 1px;
-    --kbq-markdown-hr-size-margin-vertical: var(--kbq-size-xxl);
+    --kbq-markdown-hr-size-margin-vertical: var(--kbq-size-l);
     --kbq-markdown-table-size-border-width: var(--kbq-size-border-width);
     --kbq-markdown-table-size-padding: var(--kbq-size-s);
-    --kbq-markdown-table-size-margin-bottom: var(--kbq-size-m);
+    --kbq-markdown-table-size-margin-bottom: var(--kbq-size-l);
     --kbq-markdown-table-font-header-font-size: var(--kbq-md-typography-md-table-header-font-size);
     --kbq-markdown-table-font-header-line-height: var(--kbq-md-typography-md-table-header-line-height);
     --kbq-markdown-table-font-header-letter-spacing: var(--kbq-md-typography-md-table-header-letter-spacing);
@@ -179,7 +179,7 @@
     --kbq-markdown-list-color: var(--kbq-foreground-contrast);
     --kbq-markdown-blockquote-text: var(--kbq-foreground-contrast);
     --kbq-markdown-blockquote-line: var(--kbq-foreground-border);
-    --kbq-markdown-blockquote-background: transparent;
+    --kbq-markdown-blockquote-background: var(--kbq-background-contrast-fade);
     --kbq-markdown-blockquote-border: transparent;
     --kbq-markdown-code-text: var(--kbq-foreground-contrast);
     --kbq-markdown-code-background: var(--kbq-background-background-less-contrast);
@@ -210,7 +210,7 @@
     --kbq-markdown-list-color: var(--kbq-foreground-contrast);
     --kbq-markdown-blockquote-text: var(--kbq-foreground-contrast);
     --kbq-markdown-blockquote-line: var(--kbq-foreground-border);
-    --kbq-markdown-blockquote-background: transparent;
+    --kbq-markdown-blockquote-background: var(--kbq-background-contrast-fade);
     --kbq-markdown-blockquote-border: transparent;
     --kbq-markdown-code-text: var(--kbq-foreground-contrast);
     --kbq-markdown-code-background: var(--kbq-background-background-less-contrast);

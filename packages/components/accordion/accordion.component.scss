@@ -1,0 +1,66 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+@use './accordion-theme' as *;
+
+@keyframes slideDown {
+    from {
+        height: 0;
+        padding-bottom: 0;
+    }
+
+    to {
+        height: var(--radix-accordion-content-height);
+        padding-bottom: 0;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        height: var(--radix-accordion-content-height);
+        padding-bottom: 0;
+    }
+
+    to {
+        height: 0;
+        padding-bottom: 0;
+    }
+}
+
+.kbq-accordion {
+    display: block;
+}
+
+.kbq-accordion-item {
+    box-sizing: border-box;
+    display: block;
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+}
+
+.kbq-accordion-header {
+    display: flex;
+
+    height: kbq-css-variable(accordion-size-item-header-height);
+}
+
+.kbq-accordion-content {
+    display: block;
+    overflow: hidden;
+    padding: kbq-css-variable(accordion-size-item-content-padding);
+
+    &[data-state='open'] {
+        animation: slideDown 300ms ease-out;
+    }
+
+    &[data-state='closed'] {
+        animation: slideUp 300ms ease-out;
+    }
+}
+
+@include kbq-accordion-theme();
+@include kbq-accordion-typography();

@@ -61,7 +61,7 @@
     --kbq-checkbox-theme-states-checked-focused-border: var(--kbq-states-line-focus-theme);
     --kbq-checkbox-theme-states-checked-focused-background: var(--kbq-background-theme);
     --kbq-checkbox-theme-states-checked-focused-outline: 1px solid var(--kbq-states-line-focus-theme);
-    --kbq-checkbox-theme-states-disabled-border: var(--kbq-line-contrast-fade);
+    --kbq-checkbox-theme-states-disabled-border: var(--kbq-states-line-disabled);
     --kbq-checkbox-theme-states-disabled-color: var(--kbq-states-icon-disabled);
     --kbq-checkbox-theme-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-checkbox-theme-states-disabled-background: var(--kbq-states-background-disabled);
@@ -83,7 +83,7 @@
     --kbq-checkbox-error-states-checked-focused-border: var(--kbq-states-line-focus-error);
     --kbq-checkbox-error-states-checked-focused-background: var(--kbq-background-error);
     --kbq-checkbox-error-states-checked-focused-outline: 1px solid var(--kbq-states-line-focus-error);
-    --kbq-checkbox-error-states-disabled-border: var(--kbq-line-contrast-fade);
+    --kbq-checkbox-error-states-disabled-border: var(--kbq-states-line-disabled);
     --kbq-checkbox-error-states-disabled-color: var(--kbq-states-icon-disabled);
     --kbq-checkbox-error-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-checkbox-error-states-disabled-background: var(--kbq-states-background-disabled);

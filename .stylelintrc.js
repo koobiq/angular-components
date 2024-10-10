@@ -17,7 +17,8 @@ const config = {
                 ignore: ['after-comment']
             }
         ],
-        'no-unknown-custom-properties': true,
+        // todo set to null, because errors appear when use css-variable (var(--kbq-size-s))
+        'no-unknown-custom-properties': null,
         'no-descending-specificity': null,
         'selector-type-no-unknown': [
             true,

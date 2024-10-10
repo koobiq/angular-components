@@ -112,6 +112,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['alert-types']
                 },
                 {
+                    id: 'accordion',
+                    name: 'Accordion',
+                    svgPreview: 'accordion',
+                    hasApi: true,
+                    apiId: 'accordion',
+                    hasExamples: false,
+                    examples: ['accordion-types']
+                },
+                {
                     id: 'autocomplete',
                     name: 'Autocomplete',
                     svgPreview: 'autocomplete',
