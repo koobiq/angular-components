@@ -37,6 +37,8 @@
         }
 
         &[data-disabled='true'] {
+            color: kbq-css-variable(accordion-item-states-disabled-text-color);
+
             & .kbq-accordion-trigger__icon {
                 color: kbq-css-variable(accordion-item-states-disabled-icon-color) !important;
             }
