@@ -39,8 +39,10 @@
         </a>
 
         <button
+            #themeDropdownTrigger="kbqDropdownTrigger"
             kbq-button
             class="kbq-button-icon"
+            [class.kbq-active]="themeDropdownTrigger.opened"
             [color]="'contrast'"
             [kbqDropdownTriggerFor]="themeDropdown"
             [kbqStyle]="'transparent'"
