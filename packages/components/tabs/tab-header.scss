@@ -1,5 +1,6 @@
 @use '../core/styles/common/vendor-prefixes';
 @use 'tabs-common' as *;
+@use '../core/styles/common/tokens' as *;
 
 .kbq-tab-header {
     display: flex;
@@ -35,7 +36,7 @@
     bottom: 0;
     right: 0;
     height: 1px;
-    background: rgba(13, 14, 18, 0.12);
+    background: kbq-css-variable(line-contrast-less);
 }
 
 .kbq-tab-list__active-tab-underline {
@@ -48,7 +49,7 @@
     bottom: 0;
     height: 3px;
     border-radius: 2px 2px 0 0;
-    background: rgba(33, 34, 44, 1);
+    background: kbq-css-variable(line-contrast);
     transition: all 0.2s ease-in-out;
 }
 
