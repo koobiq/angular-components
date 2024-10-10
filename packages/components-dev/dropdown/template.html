@@ -46,11 +46,10 @@
     <br />
 
     <button
+        #dropdownTrigger="kbqDropdownTrigger"
         kbq-button
+        [class.kbq-active]="dropdownTrigger.opened"
         [kbqDropdownTriggerFor]="appDropdown"
-        [ngClass]="{ 'kbq-active': isDropdownOpen }"
-        (dropdownClosed)="dropdownClosed()"
-        (dropdownOpened)="dropdownOpened()"
     >
         dropdown
         <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -60,9 +59,10 @@
     <br />
 
     <button
+        #dropdownTrigger1="kbqDropdownTrigger"
         kbq-button
+        [class.kbq-active]="dropdownTrigger1.opened"
         [kbqDropdownTriggerFor]="appDropdown"
-        [ngClass]="{ 'kbq-active': isDropdownOpen }"
         (dropdownClosed)="dropdownClosed()"
         (dropdownOpened)="dropdownOpened()"
     >
@@ -74,7 +74,9 @@
     <br />
 
     <button
+        #dropdownTrigger2="kbqDropdownTrigger"
         kbq-button
+        [class.kbq-active]="dropdownTrigger2.opened"
         [color]="colors.Contrast"
         [kbqDropdownTriggerFor]="appDropdown"
         [kbqStyle]="styles.Transparent"
@@ -173,7 +175,9 @@
     <br />
 
     <button
+        #dropdownTrigger3="kbqDropdownTrigger"
         kbq-button
+        [class.kbq-active]="dropdownTrigger3.opened"
         [kbqDropdownTriggerData]="{ someValue: someValue }"
         [kbqDropdownTriggerFor]="appDropdownLazy"
     >
@@ -195,7 +199,9 @@
     </kbq-dropdown>
 
     <button
+        #dropdownTrigger4="kbqDropdownTrigger"
         kbq-button
+        [class.kbq-active]="dropdownTrigger4.opened"
         [color]="colors.Contrast"
         [kbqDropdownTriggerFor]="kbqTitleAppDropdown"
         [kbqStyle]="styles.Transparent"
@@ -229,7 +235,9 @@
 <br />
 
 <button
+    #dropdownTrigger5="kbqDropdownTrigger"
     kbq-button
+    [class.kbq-active]="dropdownTrigger5.opened"
     [kbqDropdownTriggerFor]="appDropdownWithNested"
 >
     nested dropdown

@@ -178,8 +178,10 @@
                 Восстановить
             </a>
             <a
+                #dropdownTrigger1="kbqDropdownTrigger"
                 kbq-link
                 pseudo
+                [class.kbq-active]="dropdownTrigger1.opened"
                 [kbqDropdownTriggerFor]="dropdown"
             >
                 <span class="kbq-link__text">Еще</span>
@@ -370,8 +372,10 @@
             <kbq-modal-body>
                 <p>z index test</p>
                 <button
+                    #dropdownTrigger="kbqDropdownTrigger"
                     kbq-button
                     [kbqDropdownTriggerFor]="appDropdownWithNested"
+                    [ngClass]="{ 'kbq-active': dropdownTrigger.opened }"
                 >
                     nested dropdown
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
