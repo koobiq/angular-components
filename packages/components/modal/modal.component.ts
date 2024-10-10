@@ -278,19 +278,17 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     checkOverflow(): void {
-        const nativeElement = this.modalBody?.nativeElement;
+        const nativeElement: HTMLElement = this.modalBody?.nativeElement;
 
         if (!nativeElement) {
             return;
         }
 
-        const scrollTop: number = nativeElement.scrollTop;
-        const offsetHeight: number = nativeElement.offsetHeight;
-        const scrollHeight: number = nativeElement.scrollHeight;
+        const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
 
         this.isTopOverflow = scrollTop > 0;
 
-        this.isBottomOverflow = (((scrollTop as number) + offsetHeight) as number) < scrollHeight;
+        this.isBottomOverflow = scrollTop + offsetHeight < scrollHeight;
     }
 
     open() {

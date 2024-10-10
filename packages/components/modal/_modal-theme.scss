@@ -1,7 +1,7 @@
-@use 'sass:meta';
+/* stylelint-disable no-unknown-custom-properties */
+
 @use 'sass:map';
 
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-modal-theme() {
@@ -23,13 +23,12 @@
             color: kbq-css-variable(modal-content-text-color);
         }
 
-        // FIXME: default token doesn't exist
         .kbq-modal-header.kbq-modal-body_top-overflow {
-            box-shadow: kbq-css-variable(modal-body-top-shadow);
+            box-shadow: var(--kbq-shadow-overflow-normal-bottom);
         }
-        // FIXME: default token doesn't exist
+
         .kbq-modal-footer.kbq-modal-body_bottom-overflow {
-            box-shadow: kbq-css-variable(modal-body-bottom-shadow);
+            box-shadow: var(--kbq-shadow-overflow-normal-top);
         }
     }
 
