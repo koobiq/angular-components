@@ -5434,15 +5434,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ng/primitives@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "@radix-ng/primitives@npm:0.13.0"
+"@radix-ng/primitives@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@radix-ng/primitives@npm:0.14.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     "@angular/cdk": ^18.0.0
     "@angular/core": ^18.0.0
-  checksum: 10c0/d42c2954a6c4ddc349aff0505982564acfa7ab0aaf8687d6dd59580dd0df8d97b6420aa18470e661ac7536e68394b16b829ca3a865732d17de63dc6847999d55
+  checksum: 10c0/70d3defc1dd006e10f2dfbc54ef6d3a37896b645419e2d0bbd2763666856cc056e94cd18a80d1e9292b9d6fa642bf8665711044bf4f7882460edb13030f5691c
   languageName: node
   linkType: hard
 
@@ -14651,7 +14651,7 @@ __metadata:
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
     "@prettier/plugin-xml": "npm:^3.4.1"
-    "@radix-ng/primitives": "npm:^0.13.0"
+    "@radix-ng/primitives": "npm:^0.14.0"
     "@rollup/plugin-commonjs": "npm:^24.0.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.2"

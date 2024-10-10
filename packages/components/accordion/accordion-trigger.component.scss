@@ -14,6 +14,8 @@
 
     & .kbq-accordion-trigger__icon {
         padding: kbq-css-variable(size-xxs);
+
+        transition: transform 300ms ease-out;
     }
 
     &:hover:not([data-disabled='true']) {
