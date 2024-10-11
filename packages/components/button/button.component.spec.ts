@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqButtonCssStyler,
@@ -15,8 +18,8 @@ import {
 describe('KbqButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule],
-            declarations: [TestApp]
+            imports: [KbqButtonModule, KbqDropdownModule, NoopAnimationsModule],
+            declarations: [TestApp, ButtonDropdownTrigger]
         }).compileComponents();
     });
 
@@ -123,6 +126,16 @@ describe('KbqButton', () => {
             fixture.detectChanges();
             expect(buttonDebugElement.nativeElement.getAttribute('tabIndex')).toBe('-1');
         });
+    });
+
+    it('should set .kbq-active class when button with associated dropdown clicked', () => {
+        const fixture: ComponentFixture<ButtonDropdownTrigger> = TestBed.createComponent(ButtonDropdownTrigger);
+        fixture.detectChanges();
+        const buttonDebugElement = fixture.componentInstance;
+
+        dispatchFakeEvent(buttonDebugElement.trigger.nativeElement, 'click');
+        fixture.detectChanges();
+        expect(buttonDebugElement.trigger.nativeElement.classList.contains('kbq-active')).toBeTruthy();
     });
 
     it('should handle a click on the button', () => {
@@ -489,4 +502,28 @@ class KbqButtonTwoIconsCaseTestApp {}
 })
 class KbqButtonIconNgIfCaseTestApp {
     visible = true;
+}
+
+@Component({
+    template: `
+        <button
+            #triggerEl
+            [kbqDropdownTriggerFor]="dropdown"
+            kbq-button
+        >
+            Toggle dropdown
+        </button>
+        <kbq-dropdown
+            class="custom-one custom-two"
+            #dropdown="kbqDropdown"
+            [backdropClass]="backdropClass"
+            [hasBackdrop]="true"
+        >
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class ButtonDropdownTrigger {
+    @ViewChild('triggerEl', { static: false, read: ElementRef }) trigger: ElementRef;
+    backdropClass: string;
 }
