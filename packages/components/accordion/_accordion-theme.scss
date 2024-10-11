@@ -1,0 +1,58 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/typography/typography-utils' as *;
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-accordion-theme() {
+    .kbq-accordion.cdk-keyboard-focused {
+        & .kbq-accordion-item:focus-within {
+            border-color: kbq-css-variable(accordion-item-states-focus-border-color);
+        }
+    }
+
+    .kbq-accordion-item {
+        background: kbq-css-variable(accordion-item-default-background);
+        color: kbq-css-variable(accordion-item-default-text-color);
+
+        & .kbq-accordion-trigger__icon {
+            color: kbq-css-variable(accordion-item-default-icon-color);
+        }
+    }
+
+    .kbq-accordion-trigger {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+
+        color: kbq-css-variable(accordion-item-default-text-color);
+
+        &:hover:not([data-disabled='true']) {
+            cursor: pointer;
+
+            & .kbq-accordion-trigger__icon {
+                color: kbq-css-variable(accordion-item-states-hover-icon-color);
+            }
+        }
+
+        &[data-disabled='true'] {
+            color: kbq-css-variable(accordion-item-states-disabled-text-color);
+
+            & .kbq-accordion-trigger__icon {
+                color: kbq-css-variable(accordion-item-states-disabled-icon-color) !important;
+            }
+        }
+    }
+}
+
+@mixin kbq-accordion-typography() {
+    .kbq-accordion-header,
+    .kbq-accordion-trigger {
+        @include kbq-typography-css-variables(accordion, item-header-text);
+    }
+
+    .kbq-accordion-content {
+        @include kbq-typography-css-variables(accordion, item-content-text);
+    }
+}

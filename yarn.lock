@@ -4763,10 +4763,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "@koobiq/design-tokens@npm:3.6.0"
-  checksum: 10c0/b8021d643cb846759dbd56dfd09d53254b6b1ba54bfba1fcfb3ae67b32bf1572119aaa8862e55d7e8c03dd5d571a84669eea72190d656bf2b95376c20dc8aaaf
+"@koobiq/design-tokens@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@koobiq/design-tokens@npm:3.7.0"
+  checksum: 10c0/4e5d89dd62f5a217c9cb4dd28ac5f1048c905e12256da04a9bd0bb43b31f2b83ace9411cce38b56e4a3c48f47af66aed3876457ea2c6cc99c3e9bd24d2bbd8cd
   languageName: node
   linkType: hard
 
@@ -5431,6 +5431,18 @@ __metadata:
   version: 1.1.0
   resolution: "@protobufjs/utf8@npm:1.1.0"
   checksum: 10c0/a3fe31fe3fa29aa3349e2e04ee13dc170cc6af7c23d92ad49e3eeaf79b9766264544d3da824dba93b7855bd6a2982fb40032ef40693da98a136d835752beb487
+  languageName: node
+  linkType: hard
+
+"@radix-ng/primitives@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@radix-ng/primitives@npm:0.14.0"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/cdk": ^18.0.0
+    "@angular/core": ^18.0.0
+  checksum: 10c0/70d3defc1dd006e10f2dfbc54ef6d3a37896b645419e2d0bbd2763666856cc056e94cd18a80d1e9292b9d6fa642bf8665711044bf4f7882460edb13030f5691c
   languageName: node
   linkType: hard
 
@@ -14630,7 +14642,7 @@ __metadata:
     "@docsearch/js": "npm:^3.6.0"
     "@koobiq/date-adapter": "npm:^3.1.2"
     "@koobiq/date-formatter": "npm:^3.1.2"
-    "@koobiq/design-tokens": "npm:^3.6.0"
+    "@koobiq/design-tokens": "npm:^3.7.0"
     "@koobiq/icons": "npm:9.1.0"
     "@koobiq/luxon-date-adapter": "npm:^3.1.2"
     "@koobiq/moment-date-adapter": "npm:^3.1.2"
@@ -14639,6 +14651,7 @@ __metadata:
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
     "@prettier/plugin-xml": "npm:^3.4.1"
+    "@radix-ng/primitives": "npm:^0.14.0"
     "@rollup/plugin-commonjs": "npm:^24.0.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.2"

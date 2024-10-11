@@ -370,6 +370,35 @@
                 }
             }
         },
+        "dev-accordion": {
+            "projectType": "application",
+            "root": "packages/components-dev/accordion",
+            "sourceRoot": "packages/components-dev/accordion",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/accordion"
+                        },
+                        "tsConfig": "packages/components-dev/accordion/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/accordion/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-accordion:build"
+                    }
+                }
+            }
+        },
         "dev-alert": {
             "projectType": "application",
             "root": "packages/components-dev/alert",

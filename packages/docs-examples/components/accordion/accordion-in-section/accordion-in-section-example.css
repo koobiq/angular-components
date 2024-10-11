@@ -1,0 +1,7 @@
+.docs-accordion-in-section {
+    width: 316px;
+
+    border: 1px solid var(--kbq-line-contrast-fade);
+
+    border-radius: 16px;
+}
