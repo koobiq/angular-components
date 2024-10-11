@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqBadgeColors } from '@koobiq/components/badge';
 
 /**
- * @title Size
+ * @title Badge size
  */
 @Component({
     selector: 'badge-size-example',

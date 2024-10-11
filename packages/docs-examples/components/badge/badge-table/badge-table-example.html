@@ -1,0 +1,47 @@
+<table
+    kbq-table
+    class="docs-table-example badge-table-example"
+>
+    <thead>
+        <tr>
+            <th>Столбец 1</th>
+            <th>Столбец 2</th>
+            <th>Столобец 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Значение</td>
+            <td><kbq-badge [badgeColor]="colors.FadeContrast">Badge</kbq-badge></td>
+            <td>EXT. Использование фишинговых ресурсов (phishingAttacks)</td>
+        </tr>
+        <tr>
+            <td>
+                <span
+                    kbq-link
+                    pseudo
+                >
+                    Ссылка
+                </span>
+                <kbq-badge
+                    [badgeColor]="colors.FadeContrast"
+                    [compact]="true"
+                >
+                    Badge
+                </kbq-badge>
+            </td>
+            <td>
+                Обнаружена попытка получить список процессов, запущенных в системе, на узле
+                qa-kolobok.mpqa.rd.ptsecurity.ru
+            </td>
+            <td>
+                <kbq-badge
+                    [badgeColor]="colors.FadeSuccess"
+                    [outline]="true"
+                >
+                    Badge
+                </kbq-badge>
+            </td>
+        </tr>
+    </tbody>
+</table>

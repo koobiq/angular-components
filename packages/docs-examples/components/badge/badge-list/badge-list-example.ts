@@ -2,14 +2,14 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqBadgeColors } from '@koobiq/components/badge';
 
 /**
- * @title Corner Cases
+ * @title Badge list
  */
 @Component({
-    selector: 'badge-hug-content-example',
-    templateUrl: 'badge-hug-content-example.html',
-    styleUrls: ['badge-hug-content-example.css'],
+    selector: 'badge-list-example',
+    templateUrl: 'badge-list-example.html',
+    styleUrls: ['badge-list-example.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class BadgeHugContentExample {
+export class BadgeListExample {
     colors = KbqBadgeColors;
 }
