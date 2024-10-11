@@ -27,15 +27,15 @@
         align-items: flex-start;
         gap: 0;
     }
+}
 
-    &_with-icons .kbq-tab-label__content.kbq-tab-label__template {
-        align-items: center;
-    }
+.custom-underlined-tabs__subtitle {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    color: rgba(108, 115, 147, 1);
+}
 
-    &__subtitle {
-        font-size: 12px;
-        line-height: 16px;
-        font-weight: 400;
-        color: rgba(108, 115, 147, 1);
-    }
+.custom-underlined-tabs_with-icons .kbq-tab-label__content.kbq-tab-label__template {
+    align-items: center;
 }
