@@ -16,3 +16,26 @@
 .docs-vertical-tabs .kbq-tab-header {
     max-width: 30%;
 }
+
+.custom-underlined-tabs {
+    .kbq-icon {
+        margin-bottom: 4px;
+    }
+
+    .kbq-tab-label__content.kbq-tab-label__template {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+    }
+
+    &_with-icons .kbq-tab-label__content.kbq-tab-label__template {
+        align-items: center;
+    }
+
+    &__subtitle {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 400;
+        color: rgba(108, 115, 147, 1);
+    }
+}
