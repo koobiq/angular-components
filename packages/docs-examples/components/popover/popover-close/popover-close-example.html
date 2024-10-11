@@ -75,10 +75,8 @@
                         <div class="popover-share-content__list-item-name">{{ member.name }}</div>
                     </div>
                     <button
-                        #dropdownTrigger="kbqDropdownTrigger"
                         kbq-button
                         class="kbq-button_transparent"
-                        [class.kbq-active]="dropdownTrigger.opened"
                         [color]="componentColors.Contrast"
                         [kbqDropdownTriggerFor]="appDropdown"
                     >

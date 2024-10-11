@@ -13,10 +13,8 @@
     </kbq-checkbox>
 
     <button
-        #dropdownTrigger1="kbqDropdownTrigger"
         kbq-button
         class="layout-margin-bottom-3xl"
-        [class.kbq-active]="dropdownTrigger1.opened"
         [disabled]="disabled"
         [kbqDropdownTriggerFor]="appDropdown"
         [openByArrowDown]="openByArrowDown"
@@ -109,9 +107,7 @@
     </kbq-form-field>
 
     <button
-        #dropdownTrigger2="kbqDropdownTrigger"
         kbq-button
-        [class.kbq-active]="dropdownTrigger2.opened"
         [disabled]="disabled"
         [kbqDropdownTriggerData]="{ someValue: someValue }"
         [kbqDropdownTriggerFor]="appDropdownLazy"

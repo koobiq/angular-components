@@ -188,10 +188,8 @@
     <br />
 
     <button
-        #dropdownTrigger1="kbqDropdownTrigger"
         kbq-button
         class="kbq-button_transparent"
-        [class.kbq-active]="dropdownTrigger1.opened"
         [kbqDropdownTriggerFor]="appDropdown"
     >
         dropdown
@@ -241,10 +239,8 @@
     </kbq-dropdown>
 
     <button
-        #dropdownTrigger="kbqDropdownTrigger"
         kbq-button
         [kbqDropdownTriggerFor]="appDropdownWithNested"
-        [ngClass]="{ 'kbq-active': dropdownTrigger.opened }"
     >
         nested dropdown
         <i kbq-icon="kbq-chevron-down-s_16"></i>

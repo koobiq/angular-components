@@ -3,16 +3,19 @@ import { ObserversModule } from '@angular/cdk/observers';
 import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from './button.component';
+import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
 
 @NgModule({
     imports: [
         A11yModule,
         PlatformModule,
-        ObserversModule
+        ObserversModule,
+        KbqButtonDropdownTrigger
     ],
     exports: [
         KbqButton,
-        KbqButtonCssStyler
+        KbqButtonCssStyler,
+        KbqButtonDropdownTrigger
     ],
     declarations: [
         KbqButton,
