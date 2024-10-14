@@ -1,3 +1,9 @@
+## 17.8.7 (2024-10-14)
+
+### Koobiq
+
+ * bug fix  **modal:** icon in close button ([978a372](https://github.com/koobiq/angular-components/commit/978a37204e33443e57544e9ba57d530f010be383))
+
 ## 17.8.6 (2024-10-14)
 
 ### Koobiq
