@@ -14,7 +14,7 @@ import { KbqSelect } from '@koobiq/components/select';
 @Directive({ selector: 'kbq-timezone-select-trigger' })
 export class KbqTimezoneSelectTrigger {}
 
-const defaultSearchPlaceholder = ruRULocaleData.timezone.placeholder;
+const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
 
 @Component({
     selector: 'kbq-timezone-select',
