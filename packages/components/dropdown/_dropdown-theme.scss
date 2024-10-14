@@ -6,18 +6,18 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-dropdown-item-state($style-name) {
-    background: kbq-css-variable(list-#{$style-name}-container-background);
-    color: kbq-css-variable(list-#{$style-name}-text-color);
+    background: var(--kbq-list-#{$style-name}-container-background);
+    color: var(--kbq-list-#{$style-name}-text-color);
 
     .kbq-dropdown-item__caption {
-        color: kbq-css-variable(list-#{$style-name}-caption-color);
+        color: var(--kbq-list-#{$style-name}-caption-color);
     }
 }
 
 @mixin kbq-dropdown-theme() {
     .kbq-dropdown__panel {
-        box-shadow: kbq-css-variable(dropdown-container-box-shadow);
-        background: kbq-css-variable(dropdown-container-background);
+        box-shadow: var(--kbq-dropdown-container-box-shadow);
+        background: var(--kbq-dropdown-container-background);
     }
 
     .kbq-dropdown-item {
@@ -29,7 +29,7 @@
         }
 
         &.cdk-keyboard-focused {
-            border-color: kbq-css-variable(list-states-focused-focus-outline-color);
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
@@ -47,7 +47,7 @@
 
     .kbq-dropdown__group-header {
         &.kbq-dropdown__group-header_small {
-            color: kbq-css-variable(foreground-contrast-secondary);
+            color: var(--kbq-foreground-contrast-secondary);
         }
     }
 

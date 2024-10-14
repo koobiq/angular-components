@@ -6,11 +6,11 @@
 
 @mixin kbq-dl-theme() {
     .kbq-dt {
-        color: kbq-css-variable(description-list-term-color);
+        color: var(--kbq-description-list-term-color);
     }
 
     .kbq-dd {
-        color: kbq-css-variable(description-list-description-color);
+        color: var(--kbq-description-list-description-color);
     }
 }
 

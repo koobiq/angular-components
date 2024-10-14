@@ -14,11 +14,11 @@
     padding-right: kbq-sum-series-css-variables([button-size-horizontal-padding, 4px]);
 
     &.kbq-button-icon_left {
-        padding-left: kbq-css-variable(button-size-horizontal-padding);
+        padding-left: var(--kbq-button-size-horizontal-padding);
     }
 
     &.kbq-button-icon_right {
-        padding-right: kbq-css-variable(button-size-horizontal-padding);
+        padding-right: var(--kbq-button-size-horizontal-padding);
     }
 }
 
@@ -29,18 +29,18 @@
 .kbq-button-icon {
     @extend %kbq-button-base;
 
-    padding-left: kbq-css-variable(button-icon-size-horizontal-padding);
+    padding-left: var(--kbq-button-icon-size-horizontal-padding);
 
-    padding-right: kbq-css-variable(button-icon-size-horizontal-padding);
+    padding-right: var(--kbq-button-icon-size-horizontal-padding);
 }
 
 .kbq-button-overlay {
     position: absolute;
 
-    top: calc(-1 * #{kbq-css-variable(button-size-border-width)});
-    left: calc(-1 * #{kbq-css-variable(button-size-border-width)});
-    right: calc(-1 * #{kbq-css-variable(button-size-border-width)});
-    bottom: calc(-1 * #{kbq-css-variable(button-size-border-width)});
+    top: calc(-1 * #{var(--kbq-button-size-border-width)});
+    left: calc(-1 * #{var(--kbq-button-size-border-width)});
+    right: calc(-1 * #{var(--kbq-button-size-border-width)});
+    bottom: calc(-1 * #{var(--kbq-button-size-border-width)});
 
     border-radius: inherit;
 }

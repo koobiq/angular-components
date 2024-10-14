@@ -53,12 +53,12 @@
             radius: 8px;
         }
 
-        height: kbq-css-variable(toggle-size-normal-height);
-        width: kbq-css-variable(toggle-size-normal-width);
+        height: var(--kbq-toggle-size-normal-height);
+        width: var(--kbq-toggle-size-normal-width);
     }
 
     .kbq-hint {
-        margin-top: kbq-css-variable(toggle-size-normal-vertical-content-padding);
+        margin-top: var(--kbq-toggle-size-normal-vertical-content-padding);
     }
 }
 
@@ -69,22 +69,22 @@
     flex: 1;
 
     &.left {
-        margin-right: kbq-css-variable(toggle-size-normal-horizontal-content-padding);
+        margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
     }
 
     &.right {
-        margin-left: kbq-css-variable(toggle-size-normal-horizontal-content-padding);
+        margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
     }
 }
 
 .kbq-toggle.kbq-toggle_big {
     & .kbq-toggle-bar {
-        height: kbq-css-variable(toggle-size-big-height);
-        width: kbq-css-variable(toggle-size-big-width);
+        height: var(--kbq-toggle-size-big-height);
+        width: var(--kbq-toggle-size-big-width);
     }
 
     & .kbq-hint {
-        margin-top: kbq-css-variable(toggle-size-big-vertical-content-padding);
+        margin-top: var(--kbq-toggle-size-big-vertical-content-padding);
     }
 
     .kbq-toggle-layout {

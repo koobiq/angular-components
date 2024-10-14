@@ -4,7 +4,7 @@
 @use './optgroup-theme' as *;
 
 .kbq-optgroup-label {
-    padding-left: kbq-css-variable(size-m);
+    padding-left: var(--kbq-size-m);
 
     @include vendor-prefixes.user-select(none);
     cursor: default;

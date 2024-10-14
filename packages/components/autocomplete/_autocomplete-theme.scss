@@ -6,7 +6,7 @@
 
 @mixin kbq-autocomplete-theme {
     .kbq-autocomplete-panel {
-        box-shadow: kbq-css-variable(select-panel-dropdown-shadow);
-        background: kbq-css-variable(select-panel-dropdown-background);
+        box-shadow: var(--kbq-select-panel-dropdown-shadow);
+        background: var(--kbq-select-panel-dropdown-background);
     }
 }

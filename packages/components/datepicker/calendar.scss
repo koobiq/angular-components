@@ -8,9 +8,9 @@
 }
 
 .kbq-calendar__content {
-    padding-right: kbq-css-variable(datepicker-size-grid-padding-horizontal);
+    padding-right: var(--kbq-datepicker-size-grid-padding-horizontal);
 
-    padding-left: kbq-css-variable(datepicker-size-grid-padding-horizontal);
+    padding-left: var(--kbq-datepicker-size-grid-padding-horizontal);
 
     outline: none;
 }
@@ -29,7 +29,7 @@
         position: relative;
 
         box-sizing: border-box;
-        height: kbq-css-variable(datepicker-size-grid-content-gap-vertical);
+        height: var(--kbq-datepicker-size-grid-content-gap-vertical);
 
         // We use an absolutely positioned pseudo-element as the divider line for the table header so we
         // can extend it all the way to the edge of the calendar.
@@ -38,10 +38,10 @@
 
             position: absolute;
             top: 0;
-            left: calc(-1 * #{kbq-css-variable(datepicker-size-grid-padding-horizontal)});
-            right: calc(-1 * #{kbq-css-variable(datepicker-size-grid-padding-horizontal)});
+            left: calc(-1 * #{var(--kbq-datepicker-size-grid-padding-horizontal)});
+            right: calc(-1 * #{var(--kbq-datepicker-size-grid-padding-horizontal)});
 
-            height: kbq-css-variable(datepicker-size-grid-divider-height);
+            height: var(--kbq-datepicker-size-grid-divider-height);
         }
     }
 }

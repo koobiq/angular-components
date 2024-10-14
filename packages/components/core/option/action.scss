@@ -14,8 +14,8 @@
 
     margin-right: -2px;
 
-    width: kbq-css-variable(list-font-text-line-height);
-    height: kbq-css-variable(list-font-text-line-height);
+    width: var(--kbq-list-font-text-line-height);
+    height: var(--kbq-list-font-text-line-height);
 
     cursor: pointer;
 

@@ -7,12 +7,12 @@
     $base: toggle-#{$type}-#{$state-name};
 
     .kbq-toggle-bar {
-        border-color: kbq-css-variable(#{$base}-border);
-        background: kbq-css-variable(#{$base}-background);
+        border-color: var(--kbq-#{$base}-border);
+        background: var(--kbq-#{$base}-background);
     }
 
     .kbq-toggle__circle {
-        background: kbq-css-variable(#{$base}-circle-background);
+        background: var(--kbq-#{$base}-circle-background);
     }
 }
 
@@ -35,8 +35,8 @@
         @include kbq-toggle-state($type, states-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(toggle-#{$type}-states-focused-focus-outline);
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-focused-focus-outline);
+            border-color: var(--kbq-toggle-#{$type}-states-focused-focus-outline);
+            box-shadow: 0 0 0.1px 1px var(--kbq-toggle-#{$type}-states-focused-focus-outline);
         }
     }
 
@@ -44,8 +44,8 @@
         @include kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {
-            border-color: kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline);
-            box-shadow: 0 0 0.1px 1px kbq-css-variable(toggle-#{$type}-states-checked-focused-focus-outline);
+            border-color: var(--kbq-toggle-#{$type}-states-checked-focused-focus-outline);
+            box-shadow: 0 0 0.1px 1px var(--kbq-toggle-#{$type}-states-checked-focused-focus-outline);
         }
     }
 
@@ -64,7 +64,7 @@
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(foreground-text-disabled);
+            color: var(--kbq-foreground-text-disabled);
         }
     }
 }

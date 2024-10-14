@@ -32,7 +32,7 @@ $tokens: meta.module-variables(tokens) !default;
     // Prevents text being off-center on Android.
     line-height: 1;
 
-    border-radius: kbq-css-variable(datepicker-size-grid-cell-border-radius);
+    border-radius: var(--kbq-datepicker-size-grid-cell-border-radius);
 
-    margin-bottom: kbq-css-variable(datepicker-size-grid-content-gap-vertical);
+    margin-bottom: var(--kbq-datepicker-size-grid-content-gap-vertical);
 }

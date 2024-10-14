@@ -1,22 +1,22 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-list-item($state-name) {
-    background: kbq-css-variable(list-#{$state-name}-container-background);
+    background: var(--kbq-list-#{$state-name}-container-background);
 
     .kbq-list-text {
-        color: kbq-css-variable(list-#{$state-name}-text-color);
+        color: var(--kbq-list-#{$state-name}-text-color);
     }
 
     .kbq-icon {
-        color: kbq-css-variable(list-#{$state-name}-icon-color);
+        color: var(--kbq-list-#{$state-name}-icon-color);
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(list-#{$state-name}-icon-button-color);
+        color: var(--kbq-list-#{$state-name}-icon-button-color);
     }
 
     .kbq-list-option-caption {
-        color: kbq-css-variable(list-#{$state-name}-caption-color);
+        color: var(--kbq-list-#{$state-name}-caption-color);
     }
 }
 
@@ -29,7 +29,7 @@
         }
 
         &.kbq-focused {
-            border-color: kbq-css-variable(list-states-focused-focus-outline-color);
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {

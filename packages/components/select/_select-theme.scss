@@ -4,38 +4,38 @@
 
 @mixin kbq-select-theme() {
     .kbq-select {
-        color: kbq-css-variable(foreground-contrast);
+        color: var(--kbq-foreground-contrast);
 
         &.ng-invalid {
-            color: kbq-css-variable(error-default);
+            color: var(--kbq-error-default);
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(foreground-text-disabled);
+            color: var(--kbq-foreground-text-disabled);
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: kbq-css-variable(foreground-text-disabled);
+        color: var(--kbq-foreground-text-disabled);
     }
 
     .kbq-select__panel {
-        box-shadow: kbq-css-variable(select-panel-dropdown-shadow);
-        background: kbq-css-variable(select-panel-dropdown-background);
+        box-shadow: var(--kbq-select-panel-dropdown-shadow);
+        background: var(--kbq-select-panel-dropdown-background);
 
         & .kbq-select__footer {
-            border-color: kbq-css-variable(divider-color);
+            border-color: var(--kbq-divider-color);
         }
     }
 
     .kbq-select__search-container {
-        border-bottom-color: kbq-css-variable(divider-color);
+        border-bottom-color: var(--kbq-divider-color);
     }
 
     .kbq-select__no-options-message {
-        color: kbq-css-variable(foreground-text-less-contrast);
+        color: var(--kbq-foreground-text-less-contrast);
     }
 }
 

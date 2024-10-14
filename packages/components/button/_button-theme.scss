@@ -21,29 +21,29 @@
 @mixin kbq-button-type($type, $sub-type) {
     $base-path: button-#{$type}-#{$sub-type};
 
-    border-color: kbq-css-variable(#{$base-path}-border);
-    color: kbq-css-variable(#{$base-path}-foreground);
-    background: kbq-css-variable(#{$base-path}-background);
+    border-color: var(--kbq-#{$base-path}-border);
+    color: var(--kbq-#{$base-path}-foreground);
+    background: var(--kbq-#{$base-path}-background);
 
-    @include _icon(kbq-css-variable(#{$base-path}-left-icon), kbq-css-variable(#{$base-path}-right-icon));
+    @include _icon(var(--kbq-#{$base-path}-left-icon), var(--kbq-#{$base-path}-right-icon));
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
-        background: kbq-css-variable(#{$base-path}-states-hover-background);
+        background: var(--kbq-#{$base-path}-states-hover-background);
     }
 
     &:active:not(.kbq-disabled),
     &.kbq-active:not(.kbq-disabled) {
-        background: kbq-css-variable(#{$base-path}-states-active-background);
+        background: var(--kbq-#{$base-path}-states-active-background);
     }
 
     &.kbq-disabled {
-        color: kbq-css-variable(#{$base-path}-states-disabled-foreground);
-        background: kbq-css-variable(#{$base-path}-states-disabled-background);
+        color: var(--kbq-#{$base-path}-states-disabled-foreground);
+        background: var(--kbq-#{$base-path}-states-disabled-background);
 
         @include _icon(
-            kbq-css-variable(#{$base-path}-states-disabled-left-icon),
-            kbq-css-variable(#{$base-path}-states-disabled-right-icon)
+            var(--kbq-#{$base-path}-states-disabled-left-icon),
+            var(--kbq-#{$base-path}-states-disabled-right-icon)
         );
     }
 }
@@ -91,7 +91,7 @@
         &.kbq-button_outline,
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
-                $focused-color: kbq-css-variable(states-focused-color);
+                $focused-color: var(--kbq-states-focused-color);
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }

@@ -2,11 +2,11 @@
 
 @mixin kbq-optgroup-theme() {
     .kbq-optgroup-label {
-        color: kbq-css-variable(foreground-contrast);
+        color: var(--kbq-foreground-contrast);
     }
 
     .kbq-disabled .kbq-optgroup-label {
-        color: kbq-css-variable(foreground-text-disabled);
+        color: var(--kbq-foreground-text-disabled);
     }
 }
 

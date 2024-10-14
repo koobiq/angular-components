@@ -45,13 +45,13 @@
 .kbq-accordion-header {
     display: flex;
 
-    height: kbq-css-variable(accordion-size-item-header-height);
+    height: var(--kbq-accordion-size-item-header-height);
 }
 
 .kbq-accordion-content {
     display: block;
     overflow: hidden;
-    padding: kbq-css-variable(accordion-size-item-content-padding);
+    padding: var(--kbq-accordion-size-item-content-padding);
 
     &[data-state='open'] {
         animation: slideDown 300ms ease-out;

@@ -5,16 +5,16 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-toast($style-name) {
-    box-shadow: kbq-css-variable(toast-#{$style-name}-container-shadow);
+    box-shadow: var(--kbq-toast-#{$style-name}-container-shadow);
 
-    background: kbq-css-variable(toast-#{$style-name}-container-background);
+    background: var(--kbq-toast-#{$style-name}-container-background);
 
     .kbq-toast__title {
-        color: kbq-css-variable(toast-#{$style-name}-container-title);
+        color: var(--kbq-toast-#{$style-name}-container-title);
     }
 
     .kbq-toast__text {
-        color: kbq-css-variable(toast-#{$style-name}-container-text);
+        color: var(--kbq-toast-#{$style-name}-container-text);
     }
 }
 

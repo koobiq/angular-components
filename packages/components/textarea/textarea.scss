@@ -19,7 +19,7 @@
 
     box-sizing: border-box;
 
-    padding: kbq-css-variable(textarea-size-padding-vertical) kbq-css-variable(textarea-size-padding-horizontal);
+    padding: var(--kbq-textarea-size-padding-vertical) var(--kbq-textarea-size-padding-horizontal);
 
     -webkit-appearance: none; // Chrome textarea height sizing fix
     vertical-align: bottom; // Chrome textarea height sizing fix
@@ -31,7 +31,7 @@
 
     &.kbq-textarea-resizable {
         resize: vertical;
-        min-height: kbq-css-variable(textarea-size-min-height);
+        min-height: var(--kbq-textarea-size-min-height);
     }
 }
 

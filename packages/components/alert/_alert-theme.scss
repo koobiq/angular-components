@@ -5,14 +5,14 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-alert-style($type, $style-name) {
-    background: kbq-css-variable(alert-#{$type}-#{$style-name}-container-background);
+    background: var(--kbq-alert-#{$type}-#{$style-name}-container-background);
 
     .kbq-alert__title {
-        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-title);
+        color: var(--kbq-alert-#{$type}-#{$style-name}-container-title);
     }
 
     .kbq-alert__text {
-        color: kbq-css-variable(alert-#{$type}-#{$style-name}-container-text);
+        color: var(--kbq-alert-#{$type}-#{$style-name}-container-text);
     }
 }
 

@@ -2,22 +2,22 @@
 
 // todo нужно рефакторить со стилями тут сложно
 .kbq-multiple-file-upload .kbq-file-upload {
-    border-radius: kbq-css-variable(file-upload-size-multiple-big-container-border-radius);
-    border-width: kbq-css-variable(file-upload-size-multiple-big-container-border-width);
+    border-radius: var(--kbq-file-upload-size-multiple-big-container-border-radius);
+    border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
     &.default:not(.selected) {
         justify-content: center;
 
-        padding: kbq-css-variable(file-upload-size-multiple-big-container-padding-vertical)
-            kbq-css-variable(file-upload-size-multiple-big-container-padding-vertical);
+        padding: var(--kbq-file-upload-size-multiple-big-container-padding-vertical)
+            var(--kbq-file-upload-size-multiple-big-container-padding-vertical);
 
-        min-height: kbq-css-variable(file-upload-size-multiple-big-container-min-height);
+        min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
 
-        min-width: kbq-css-variable(file-upload-size-multiple-big-container-min-width);
+        min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
 
         & .dropzone {
-            gap: kbq-css-variable(file-upload-size-multiple-big-container-content-gap-horizontal);
+            gap: var(--kbq-file-upload-size-multiple-big-container-content-gap-horizontal);
         }
 
         & .dropzone__text {
@@ -27,26 +27,26 @@
 
             & .multiple__caption {
                 display: block;
-                padding-top: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-vertical);
+                padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
                 // гап не применяется тк не флекс. в целом гап не нужен, тк по логике дизайна ссылка от текста отделяется пробелом
-                gap: kbq-css-variable(file-upload-size-multiple-big-text-block-content-gap-horizontal);
+                gap: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal);
             }
         }
     }
 
     &.compact:not(.selected) {
-        padding: kbq-css-variable(file-upload-size-single-container-padding-vertical)
-            kbq-css-variable(file-upload-size-single-container-padding-horizontal);
+        padding: var(--kbq-file-upload-size-single-container-padding-vertical)
+            var(--kbq-file-upload-size-single-container-padding-horizontal);
 
         & .dropzone {
-            gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
+            gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
             & .dropzone__text.multiple__caption {
-                padding-top: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
+                padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
-                padding-bottom: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
+                padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
-                gap: kbq-css-variable(file-upload-size-single-text-block-content-gap-horizontal);
+                gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
             }
         }
     }
@@ -83,12 +83,12 @@
             width: 65%;
             max-width: 65%;
 
-            gap: kbq-css-variable(file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
+            gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
         }
 
         .kbq-file-upload__size {
-            width: kbq-css-variable(size-7xl);
-            min-width: kbq-css-variable(size-7xl);
+            width: var(--kbq-size-7xl);
+            min-width: var(--kbq-size-7xl);
             text-align: left;
             flex-grow: 1;
         }
@@ -132,21 +132,21 @@
                 [ file-upload-size-single-container-padding-horizontal,
                 file-upload-size-single-container-border-width]
             );
-        border-top-left-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
+        border-top-left-radius: var(--kbq-file-upload-size-single-container-border-radius);
 
-        border-top-right-radius: kbq-css-variable(file-upload-size-single-container-border-radius);
-        border-top-width: kbq-css-variable(file-upload-size-single-container-border-width);
+        border-top-right-radius: var(--kbq-file-upload-size-single-container-border-radius);
+        border-top-width: var(--kbq-file-upload-size-single-container-border-width);
         border-top-style: dashed;
 
         & .dropzone {
-            gap: kbq-css-variable(file-upload-size-single-container-content-gap-horizontal);
+            gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
             & .dropzone__text.multiple__caption {
-                padding-top: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
+                padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
-                padding-bottom: kbq-css-variable(file-upload-size-single-text-block-padding-vertical);
+                padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
-                gap: kbq-css-variable(file-upload-size-single-text-block-content-gap-horizontal);
+                gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
             }
         }
     }
@@ -158,5 +158,5 @@
 }
 
 .kbq-file-upload__hint {
-    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
+    margin-top: var(--kbq-form-field-hint-size-margin-top);
 }

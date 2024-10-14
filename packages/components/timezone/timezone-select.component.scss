@@ -8,7 +8,7 @@
 .kbq-timezone-select__panel.kbq-select__panel {
     .kbq-optgroup-label {
         display: block;
-        padding: kbq-css-variable(timezone-option-size-optgroup-label-padding);
+        padding: var(--kbq-timezone-option-size-optgroup-label-padding);
     }
 }
 

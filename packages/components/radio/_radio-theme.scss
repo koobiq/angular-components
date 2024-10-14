@@ -4,14 +4,14 @@
     $base-path: radio-#{$type}-#{$state-name};
 
     & .kbq-radio-button__outer-circle {
-        border-color: kbq-css-variable(#{$base-path}-outer-circle-border);
-        background: kbq-css-variable(#{$base-path}-outer-circle-background);
+        border-color: var(--kbq-#{$base-path}-outer-circle-border);
+        background: var(--kbq-#{$base-path}-outer-circle-background);
         // FIXME: move under &.cdk-keyboard-focused, because used only for focused state.
-        box-shadow: kbq-css-variable(#{$base-path}-outer-circle-shadow);
+        box-shadow: var(--kbq-#{$base-path}-outer-circle-shadow);
     }
 
     & .kbq-radio-button__inner-circle {
-        background: kbq-css-variable(#{$base-path}-inner-circle-background);
+        background: var(--kbq-#{$base-path}-inner-circle-background);
     }
 }
 
@@ -19,7 +19,7 @@
     @include kbq-radio-state($type-name, default);
 
     & .kbq-hint .kbq-hint__text {
-        color: kbq-css-variable(radio-#{$type-name}-default-caption);
+        color: var(--kbq-radio-#{$type-name}-default-caption);
     }
 
     &:hover {
@@ -43,11 +43,11 @@
 
         & .kbq-radio-label {
             cursor: default;
-            color: kbq-css-variable(radio-#{$type-name}-states-disabled-caption);
+            color: var(--kbq-radio-#{$type-name}-states-disabled-caption);
         }
 
         & .kbq-hint .kbq-hint__text {
-            color: kbq-css-variable(radio-#{$type-name}-states-disabled-caption);
+            color: var(--kbq-radio-#{$type-name}-states-disabled-caption);
         }
     }
 }
@@ -60,12 +60,12 @@
 
         @include kbq-radio-color(theme);
 
-        color: kbq-css-variable(foreground-contrast);
+        color: var(--kbq-foreground-contrast);
 
         &.kbq-error {
             @include kbq-radio-color(error);
 
-            color: kbq-css-variable(foreground-contrast);
+            color: var(--kbq-foreground-contrast);
         }
     }
 }

@@ -8,7 +8,7 @@
     text-decoration: none;
     cursor: pointer;
 
-    outline-offset: kbq-css-variable(link-size-state-focused-outline-offset);
+    outline-offset: var(--kbq-link-size-state-focused-outline-offset);
 
     &:focus {
         outline: none;
@@ -23,22 +23,22 @@
 
     &.kbq-text-with-icon .kbq-link__text {
         &:not(:first-child) {
-            margin-left: kbq-css-variable(link-size-normal-content-padding);
+            margin-left: var(--kbq-link-size-normal-content-padding);
         }
 
         &:not(:last-child) {
-            margin-right: kbq-css-variable(link-size-normal-content-padding);
+            margin-right: var(--kbq-link-size-normal-content-padding);
         }
     }
 
     &.kbq-link_compact {
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
-                margin-left: kbq-css-variable(link-size-compact-content-padding);
+                margin-left: var(--kbq-link-size-compact-content-padding);
             }
 
             &:not(:last-child) {
-                margin-right: kbq-css-variable(link-size-compact-content-padding);
+                margin-right: var(--kbq-link-size-compact-content-padding);
             }
         }
     }
@@ -46,11 +46,11 @@
     &.kbq-link_big {
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
-                margin-left: kbq-css-variable(link-size-big-content-padding);
+                margin-left: var(--kbq-link-size-big-content-padding);
             }
 
             &:not(:last-child) {
-                margin-right: kbq-css-variable(link-size-big-content-padding);
+                margin-right: var(--kbq-link-size-big-content-padding);
             }
         }
     }
@@ -72,16 +72,16 @@
         $base-path: link-#{$state-name};
     }
 
-    color: kbq-css-variable(#{$base-path}-text);
+    color: var(--kbq-#{$base-path}-text);
 
     &.kbq-text-only,
     &.kbq-text-with-icon .kbq-link__text,
     &.kbq-text-with-dot .kbq-link__text {
-        border-bottom-color: kbq-css-variable(#{$base-path}-border-bottom);
+        border-bottom-color: var(--kbq-#{$base-path}-border-bottom);
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base-path}-text) !important;
+        color: var(--kbq-#{$base-path}-text) !important;
     }
 }
 
@@ -118,7 +118,7 @@
         }
 
         &.cdk-keyboard-focused {
-            outline: kbq-css-variable(link-state-focused-outline) solid;
+            outline: var(--kbq-link-state-focused-outline) solid;
         }
 
         &.kbq-disabled {

@@ -7,47 +7,47 @@
 
 @mixin kbq-datepicker-theme() {
     .kbq-datepicker__content {
-        background: kbq-css-variable(datepicker-container-background);
-        box-shadow: kbq-css-variable(datepicker-container-box-shadow);
+        background: var(--kbq-datepicker-container-background);
+        box-shadow: var(--kbq-datepicker-container-box-shadow);
     }
 
     .kbq-calendar__table-header {
-        color: kbq-css-variable(datepicker-header-text);
+        color: var(--kbq-datepicker-header-text);
     }
 
     .kbq-calendar__table-header-divider::after {
-        background: kbq-css-variable(datepicker-header-divider);
+        background: var(--kbq-datepicker-header-divider);
     }
 
     .kbq-calendar__body-cell-content {
-        background: kbq-css-variable(datepicker-grid-cell-default-background);
-        color: kbq-css-variable(datepicker-grid-cell-default-text);
+        background: var(--kbq-datepicker-grid-cell-default-background);
+        color: var(--kbq-datepicker-grid-cell-default-text);
 
         &.kbq-calendar__body-today {
-            background: kbq-css-variable(datepicker-grid-cell-today-background);
-            color: kbq-css-variable(datepicker-grid-cell-today-text);
+            background: var(--kbq-datepicker-grid-cell-today-background);
+            color: var(--kbq-datepicker-grid-cell-today-text);
         }
 
         &:hover:not(.kbq-disabled) {
-            background: kbq-css-variable(datepicker-grid-cell-states-hover-background);
+            background: var(--kbq-datepicker-grid-cell-states-hover-background);
         }
 
         &:active:not(.kbq-disabled) {
-            background: kbq-css-variable(datepicker-grid-cell-states-active-background);
+            background: var(--kbq-datepicker-grid-cell-states-active-background);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
-            background: kbq-css-variable(datepicker-grid-cell-states-selected-background);
-            color: kbq-css-variable(datepicker-grid-cell-states-selected-text);
+            background: var(--kbq-datepicker-grid-cell-states-selected-background);
+            color: var(--kbq-datepicker-grid-cell-states-selected-text);
 
             &:hover {
-                background: kbq-css-variable(datepicker-grid-cell-states-selected-hover-background);
+                background: var(--kbq-datepicker-grid-cell-states-selected-hover-background);
             }
         }
 
         &.kbq-disabled {
-            color: kbq-css-variable(states-foreground-disabled);
-            background: kbq-css-variable(datepicker-grid-cell-states-disabled-background);
+            color: var(--kbq-states-foreground-disabled);
+            background: var(--kbq-datepicker-grid-cell-states-disabled-background);
         }
     }
 }

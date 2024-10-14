@@ -19,12 +19,12 @@
     width: 100%;
     max-width: none;
 
-    max-height: kbq-css-variable(autocomplete-size-panel-max-height);
+    max-height: var(--kbq-autocomplete-size-panel-max-height);
 
-    border-bottom-left-radius: kbq-css-variable(autocomplete-size-panel-border-radius);
-    border-bottom-right-radius: kbq-css-variable(autocomplete-size-panel-border-radius);
+    border-bottom-left-radius: var(--kbq-autocomplete-size-panel-border-radius);
+    border-bottom-right-radius: var(--kbq-autocomplete-size-panel-border-radius);
 
-    padding: kbq-css-variable(autocomplete-size-panel-padding);
+    padding: var(--kbq-autocomplete-size-panel-padding);
 
     &.kbq-autocomplete_visible {
         visibility: visible;
@@ -35,8 +35,8 @@
     }
 
     .kbq-autocomplete-panel-above & {
-        border-radius: kbq-css-variable(autocomplete-size-panel-border-radius)
-            kbq-css-variable(autocomplete-size-panel-border-radius) 0 0;
+        border-radius: var(--kbq-autocomplete-size-panel-border-radius) var(--kbq-autocomplete-size-panel-border-radius)
+            0 0;
     }
 
     // We need to offset horizontal dividers by their height, because

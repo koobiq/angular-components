@@ -15,10 +15,10 @@
             & > th,
             & > td {
                 padding: {
-                    top: kbq-css-variable(table-size-row-padding-vertical);
-                    right: kbq-css-variable(table-size-row-padding-horizontal);
-                    bottom: kbq-css-variable(table-size-row-padding-vertical);
-                    left: kbq-css-variable(table-size-row-padding-horizontal);
+                    top: var(--kbq-table-size-row-padding-vertical);
+                    right: var(--kbq-table-size-row-padding-horizontal);
+                    bottom: var(--kbq-table-size-row-padding-vertical);
+                    left: var(--kbq-table-size-row-padding-horizontal);
                 }
 
                 vertical-align: baseline;
@@ -29,14 +29,14 @@
 
     & > thead {
         & > tr > th {
-            border-bottom-width: kbq-css-variable(table-size-border-width);
+            border-bottom-width: var(--kbq-table-size-border-width);
             border-bottom-style: solid;
         }
     }
 
     .kbq-table-cell_has-button {
-        padding-top: kbq-css-variable(size-xxs);
-        padding-bottom: kbq-css-variable(size-xxs);
+        padding-top: var(--kbq-size-xxs);
+        padding-bottom: var(--kbq-size-xxs);
     }
 }
 
@@ -44,7 +44,7 @@
     & > tbody > tr {
         & th,
         & td {
-            border-bottom-width: kbq-css-variable(table-size-border-width);
+            border-bottom-width: var(--kbq-table-size-border-width);
             border-bottom-style: solid;
         }
     }
@@ -53,13 +53,13 @@
 .kbq-table:not(.kbq-table_bordered) {
     & > tbody > tr {
         & > td:first-child {
-            border-top-left-radius: kbq-css-variable(size-m);
-            border-bottom-left-radius: kbq-css-variable(size-m);
+            border-top-left-radius: var(--kbq-size-m);
+            border-bottom-left-radius: var(--kbq-size-m);
         }
 
         & > td:last-child {
-            border-top-right-radius: kbq-css-variable(size-m);
-            border-bottom-right-radius: kbq-css-variable(size-m);
+            border-top-right-radius: var(--kbq-size-m);
+            border-bottom-right-radius: var(--kbq-size-m);
         }
 
         &:first-child {

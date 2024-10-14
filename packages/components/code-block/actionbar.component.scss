@@ -4,8 +4,8 @@
 @use '../core/styles/common/tokens' as *;
 
 $tokens: meta.module-variables(tokens) !default;
-$actionbar-indents: kbq-css-variable(code-block-size-actionbar-padding-vertical)
-    kbq-css-variable(code-block-size-actionbar-padding-horizontal);
+$actionbar-indents: var(--kbq-code-block-size-actionbar-padding-vertical)
+    var(--kbq-code-block-size-actionbar-padding-horizontal);
 
 .kbq-code-block-actionbar {
     display: flex;
@@ -21,13 +21,13 @@ $actionbar-indents: kbq-css-variable(code-block-size-actionbar-padding-vertical)
     margin: $actionbar-indents;
 
     .kbq-actionbar-block__button-stack {
-        gap: kbq-css-variable(code-block-size-actionbar-content-gap-horizontal);
+        gap: var(--kbq-code-block-size-actionbar-content-gap-horizontal);
     }
 
     .kbq-code-block__fade-gradient {
         display: none;
 
-        width: kbq-css-variable(code-block-size-actionbar-fade-gradient-width);
+        width: var(--kbq-code-block-size-actionbar-fade-gradient-width);
     }
 
     &.kbq-actionbar-block_floating {

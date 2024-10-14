@@ -8,17 +8,17 @@
     $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
     border: transparent;
 
-    color: kbq-css-variable(#{$base}-color);
-    background: kbq-css-variable(#{$base}-background);
+    color: var(--kbq-#{$base}-color);
+    background: var(--kbq-#{$base}-background);
 }
 
 @mixin kbq-risk-level-outline-color($type, $sub-type, $style-name) {
     $base: risk-level-#{$type}-#{$sub-type}-#{$style-name};
 
-    border-color: kbq-css-variable(#{$base}-border);
+    border-color: var(--kbq-#{$base}-border);
 
-    color: kbq-css-variable(#{$base}-color);
-    background: kbq-css-variable(#{$base}-background);
+    color: var(--kbq-#{$base}-color);
+    background: var(--kbq-#{$base}-background);
 }
 
 @mixin kbq-risk-level-theme() {

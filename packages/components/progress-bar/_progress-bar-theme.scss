@@ -3,20 +3,20 @@
 @mixin kbq-progress-bar-theme() {
     .kbq-progress-bar.kbq-theme {
         .kbq-progress-bar__inner {
-            background-color: kbq-css-variable(progress-bar-bar-background);
+            background-color: var(--kbq-progress-bar-bar-background);
         }
 
         .kbq-progress-bar__line {
-            background-color: kbq-css-variable(progress-bar-bar-foreground);
+            background-color: var(--kbq-progress-bar-bar-foreground);
         }
     }
 
     .kbq-progress-bar-text {
-        color: kbq-css-variable(progress-bar-text-color);
+        color: var(--kbq-progress-bar-text-color);
     }
 
     .kbq-progress-bar-caption {
-        color: kbq-css-variable(progress-bar-caption-color);
+        color: var(--kbq-progress-bar-caption-color);
     }
 }
 

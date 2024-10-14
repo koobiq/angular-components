@@ -21,13 +21,13 @@
     & > .kbq-icon:first-child:before {
         align-self: center;
         display: flex;
-        height: kbq-css-variable(size-xl);
+        height: var(--kbq-size-xl);
         width: 16px;
         align-items: center;
     }
 
     & .kbq-dropdown-item__caption {
-        padding-top: kbq-css-variable(size-3xs);
+        padding-top: var(--kbq-size-3xs);
     }
 }
 

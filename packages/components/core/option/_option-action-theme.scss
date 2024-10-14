@@ -3,28 +3,28 @@
 @mixin kbq-option-action-theme() {
     .kbq-option-action {
         &.cdk-keyboard-focused {
-            border-color: kbq-css-variable(states-focused-color);
+            border-color: var(--kbq-states-focused-color);
         }
 
         &:active,
         &.kbq-pressed {
             & .kbq-icon {
-                color: kbq-css-variable(states-icon-contrast-fade-active);
+                color: var(--kbq-states-icon-contrast-fade-active);
             }
 
-            background-color: kbq-css-variable(background-transparent);
+            background-color: var(--kbq-background-transparent);
         }
 
         &:hover .kbq-icon {
-            color: kbq-css-variable(states-icon-contrast-fade-hover);
+            color: var(--kbq-states-icon-contrast-fade-hover);
         }
 
         &.kbq-disabled {
             & .kbq-icon {
-                color: kbq-css-variable(states-icon-disabled);
+                color: var(--kbq-states-icon-disabled);
             }
 
-            background-color: kbq-css-variable(background-transparent);
+            background-color: var(--kbq-background-transparent);
         }
     }
 }

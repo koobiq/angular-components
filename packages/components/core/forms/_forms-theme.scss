@@ -7,11 +7,11 @@
     @include kbq-form-geometry();
 
     .kbq-form__label {
-        color: kbq-css-variable(forms-label);
+        color: var(--kbq-forms-label);
     }
 
     .kbq-form__legend {
-        color: kbq-css-variable(forms-legend);
+        color: var(--kbq-forms-legend);
     }
 }
 

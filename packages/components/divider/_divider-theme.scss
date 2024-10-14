@@ -4,6 +4,6 @@
 
 @mixin kbq-divider-theme() {
     .kbq-divider {
-        background: kbq-css-variable(divider-color);
+        background: var(--kbq-divider-color);
     }
 }

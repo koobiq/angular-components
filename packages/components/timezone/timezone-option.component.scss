@@ -10,8 +10,8 @@
     flex-direction: row;
     align-items: flex-start;
 
-    padding: kbq-css-variable(timezone-option-size-padding);
-    column-gap: kbq-css-variable(timezone-option-size-column-gap);
+    padding: var(--kbq-timezone-option-size-padding);
+    column-gap: var(--kbq-timezone-option-size-column-gap);
 }
 
 .kbq-timezone-option__label {
@@ -29,12 +29,12 @@
 .kbq-timezone-option__cities {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    max-height: kbq-css-variable(timezone-option-size-max-height);
+    max-height: var(--kbq-timezone-option-size-max-height);
     overflow: hidden;
 }
 
 .kbq-select__panel .kbq-timezone-option {
-    height: kbq-css-variable(timezone-option-size-height);
+    height: var(--kbq-timezone-option-size-height);
 }
 
 @include kbq-timezone-option-theme();

@@ -3,11 +3,11 @@
 @use './scrollbar-component-theme' as *;
 
 .kbq-scrollbar-component {
-    $scrollbar-size-thumb-width: kbq-css-variable(scrollbar-size-thumb-width);
-    $padding-vertical: kbq-css-variable(scrollbar-size-track-padding-vertical);
-    $padding-horizontal: kbq-css-variable(scrollbar-size-track-padding-horizontal);
-    $kbq-scrollbar-track-width: kbq-css-variable(scrollbar-size-track-dimension);
-    $thumb-min-height: kbq-css-variable(scrollbar-size-thumb-min-size);
+    $scrollbar-size-thumb-width: var(--kbq-scrollbar-size-thumb-width);
+    $padding-vertical: var(--kbq-scrollbar-size-track-padding-vertical);
+    $padding-horizontal: var(--kbq-scrollbar-size-track-padding-horizontal);
+    $kbq-scrollbar-track-width: var(--kbq-scrollbar-size-track-dimension);
+    $thumb-min-height: var(--kbq-scrollbar-size-thumb-min-size);
     $border-width: calc(($kbq-scrollbar-track-width - $scrollbar-size-thumb-width) / 4);
 
     .os-scrollbar-vertical {
@@ -59,7 +59,7 @@
         .os-scrollbar-handle::before,
         .os-scrollbar-track {
             box-sizing: border-box;
-            border-radius: kbq-css-variable(scrollbar-size-thumb-border-radius);
+            border-radius: var(--kbq-scrollbar-size-thumb-border-radius);
         }
 
         .os-scrollbar-track {

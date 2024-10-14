@@ -6,7 +6,7 @@
 @use './datepicker-theme' as *;
 
 $kbq-datepicker-non-touch-calendar-cell-size: 40px;
-$kbq-datepicker-size-grid-padding-horizontal: kbq-css-variable(datepicker-size-grid-padding-horizontal);
+$kbq-datepicker-size-grid-padding-horizontal: var(--kbq-datepicker-size-grid-padding-horizontal);
 
 $kbq-datepicker-non-touch-calendar-width: calc(
     $kbq-datepicker-non-touch-calendar-cell-size * 7 + $kbq-datepicker-size-grid-padding-horizontal * 2
@@ -18,15 +18,15 @@ $kbq-datepicker-non-touch-calendar-height: 270px;
 .kbq-datepicker__content {
     display: block;
 
-    border-radius: kbq-css-variable(datepicker-size-container-border-radius);
+    border-radius: var(--kbq-datepicker-size-container-border-radius);
 
     .kbq-calendar {
         width: $kbq-datepicker-non-touch-calendar-width;
         height: $kbq-datepicker-non-touch-calendar-height;
 
-        padding-top: kbq-css-variable(datepicker-size-container-padding-vertical);
+        padding-top: var(--kbq-datepicker-size-container-padding-vertical);
 
-        padding-bottom: kbq-css-variable(datepicker-size-container-padding-vertical);
+        padding-bottom: var(--kbq-datepicker-size-container-padding-vertical);
     }
 }
 

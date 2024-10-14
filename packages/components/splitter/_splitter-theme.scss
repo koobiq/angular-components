@@ -14,7 +14,7 @@
         }
 
         &[disabled] {
-            background-color: kbq-css-variable(background-background-disabled);
+            background-color: var(--kbq-background-background-disabled);
 
             cursor: default;
         }

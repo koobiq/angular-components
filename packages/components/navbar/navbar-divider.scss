@@ -7,7 +7,7 @@
 .kbq-navbar-divider.kbq-vertical {
     height: 1px;
 
-    margin: kbq-css-variable(size-s) kbq-css-variable(size-l);
+    margin: var(--kbq-size-s) var(--kbq-size-l);
 }
 
 .kbq-navbar-divider.kbq-horizontal {
@@ -15,6 +15,6 @@
 
     height: 12px;
 
-    margin-left: kbq-css-variable(size-m);
-    margin-right: kbq-css-variable(size-m);
+    margin-left: var(--kbq-size-m);
+    margin-right: var(--kbq-size-m);
 }

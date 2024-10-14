@@ -6,18 +6,18 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-button-toggle-state($state-name) {
-    background: kbq-css-variable(button-toggle-item-#{$state-name}-background);
+    background: var(--kbq-button-toggle-item-#{$state-name}-background);
 
-    color: kbq-css-variable(button-toggle-item-#{$state-name}-text);
+    color: var(--kbq-button-toggle-item-#{$state-name}-text);
 
     & .kbq-icon {
-        color: kbq-css-variable(button-toggle-item-#{$state-name}-icon);
+        color: var(--kbq-button-toggle-item-#{$state-name}-icon);
     }
 }
 
 @mixin kbq-button-toggle-theme() {
     .kbq-button-toggle-group {
-        background: kbq-css-variable(button-toggle-container-background);
+        background: var(--kbq-button-toggle-container-background);
 
         .kbq-button-toggle {
             & > .kbq-button,
@@ -53,7 +53,7 @@
                 }
 
                 &.cdk-keyboard-focused {
-                    border-color: kbq-css-variable(button-toggle-item-states-focused-outline);
+                    border-color: var(--kbq-button-toggle-item-states-focused-outline);
                 }
             }
         }

@@ -14,7 +14,7 @@
 
     top: 48px;
 
-    border-radius: kbq-css-variable(modal-size-border-radius);
+    border-radius: var(--kbq-modal-size-border-radius);
 
     width: auto;
 
@@ -31,15 +31,15 @@
     }
 
     &.kbq-modal_small {
-        width: kbq-css-variable(modal-size-small-width);
+        width: var(--kbq-modal-size-small-width);
     }
 
     &.kbq-modal_medium {
-        width: kbq-css-variable(modal-size-medium-width);
+        width: var(--kbq-modal-size-medium-width);
     }
 
     &.kbq-modal_large {
-        width: kbq-css-variable(modal-size-large-width);
+        width: var(--kbq-modal-size-large-width);
     }
 
     // todo реализуем когда будем делать 2.0, пока нет возможности отслеживать наличие/отсутствие футера
@@ -75,7 +75,7 @@
 .kbq-modal-content {
     position: relative;
 
-    border-radius: kbq-css-variable(modal-size-border-radius);
+    border-radius: var(--kbq-modal-size-border-radius);
 
     background-clip: padding-box;
 }
@@ -85,11 +85,11 @@
     align-items: center;
     justify-content: space-between;
 
-    padding: kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-right)
-        kbq-css-variable(modal-size-header-padding-vertical) kbq-css-variable(modal-size-header-padding-left);
+    padding: var(--kbq-modal-size-header-padding-vertical) var(--kbq-modal-size-header-padding-right)
+        var(--kbq-modal-size-header-padding-vertical) var(--kbq-modal-size-header-padding-left);
 
     & + .kbq-modal-body {
-        padding-top: kbq-css-variable(modal-size-content-padding-top);
+        padding-top: var(--kbq-modal-size-content-padding-top);
     }
 }
 
@@ -106,9 +106,8 @@
 
     max-height: calc(100vh - 260px);
 
-    padding: kbq-css-variable(modal-size-content-padding-top-without-header)
-        kbq-css-variable(modal-size-content-padding-horizontal) kbq-css-variable(modal-size-content-padding-bottom)
-        kbq-css-variable(modal-size-content-padding-horizontal);
+    padding: var(--kbq-modal-size-content-padding-top-without-header) var(--kbq-modal-size-content-padding-horizontal)
+        var(--kbq-modal-size-content-padding-bottom) var(--kbq-modal-size-content-padding-horizontal);
 
     word-wrap: break-word;
 
@@ -122,9 +121,9 @@
     display: flex;
     align-items: center;
 
-    padding: kbq-css-variable(modal-size-footer-padding-vertical) kbq-css-variable(modal-size-footer-padding-horizontal);
+    padding: var(--kbq-modal-size-footer-padding-vertical) var(--kbq-modal-size-footer-padding-horizontal);
 
-    gap: kbq-css-variable(modal-size-footer-content-gap-horizontal);
+    gap: var(--kbq-modal-size-footer-content-gap-horizontal);
 }
 
 .kbq-modal-mask {

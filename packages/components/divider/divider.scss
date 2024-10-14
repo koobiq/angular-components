@@ -10,23 +10,23 @@
     margin: 0;
 
     &.kbq-divider_horizontal {
-        height: kbq-css-variable(divider-size-horizontal-width);
+        height: var(--kbq-divider-size-horizontal-width);
 
         &.kbq-divider_paddings {
-            margin-top: kbq-css-variable(divider-size-horizontal-margin-vertical);
+            margin-top: var(--kbq-divider-size-horizontal-margin-vertical);
 
-            margin-bottom: kbq-css-variable(divider-size-horizontal-margin-vertical);
+            margin-bottom: var(--kbq-divider-size-horizontal-margin-vertical);
         }
     }
 
     &.kbq-divider_vertical {
-        width: kbq-css-variable(divider-size-vertical-width);
+        width: var(--kbq-divider-size-vertical-width);
         height: 100%;
 
         &.kbq-divider_paddings {
-            margin-left: kbq-css-variable(divider-size-vertical-margin-horizontal);
+            margin-left: var(--kbq-divider-size-vertical-margin-horizontal);
 
-            margin-right: kbq-css-variable(divider-size-vertical-margin-horizontal);
+            margin-right: var(--kbq-divider-size-vertical-margin-horizontal);
         }
     }
 }

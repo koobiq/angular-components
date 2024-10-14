@@ -9,30 +9,30 @@
     display: flex;
     box-sizing: border-box;
 
-    width: kbq-css-variable(toast-size-container-width);
+    width: var(--kbq-toast-size-container-width);
 
     height: auto;
 
-    border-radius: kbq-css-variable(toast-size-container-border-radius);
+    border-radius: var(--kbq-toast-size-container-border-radius);
 
-    padding-left: kbq-css-variable(toast-size-container-padding-left);
-    padding-right: kbq-css-variable(toast-size-container-padding-right);
+    padding-left: var(--kbq-toast-size-container-padding-left);
+    padding-right: var(--kbq-toast-size-container-padding-right);
 }
 
 .kbq-toast__icon-container {
     flex-shrink: 0;
-    width: kbq-css-variable(toast-size-icon-width);
-    max-width: kbq-css-variable(toast-size-icon-width);
-    height: kbq-css-variable(toast-size-icon-height);
-    max-height: kbq-css-variable(toast-size-icon-height);
+    width: var(--kbq-toast-size-icon-width);
+    max-width: var(--kbq-toast-size-icon-width);
+    height: var(--kbq-toast-size-icon-height);
+    max-height: var(--kbq-toast-size-icon-height);
 
-    border-radius: kbq-css-variable(toast-size-container-border-radius);
+    border-radius: var(--kbq-toast-size-container-border-radius);
 
-    margin-right: kbq-css-variable(toast-size-icon-margin-right);
+    margin-right: var(--kbq-toast-size-icon-margin-right);
 
-    $padding-top: kbq-css-variable(toast-size-content-padding-top);
-    $toast-font-title-line-height: kbq-css-variable(toast-font-title-line-height);
-    $toast-size-icon-height: kbq-css-variable(toast-size-icon-height);
+    $padding-top: var(--kbq-toast-size-content-padding-top);
+    $toast-font-title-line-height: var(--kbq-toast-font-title-line-height);
+    $toast-size-icon-height: var(--kbq-toast-size-icon-height);
     padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 }
 
@@ -42,9 +42,9 @@
 
     flex: 1;
 
-    padding-top: kbq-css-variable(toast-size-content-padding-top);
-    padding-right: kbq-css-variable(size-s);
-    padding-bottom: kbq-css-variable(toast-size-content-padding-bottom);
+    padding-top: var(--kbq-toast-size-content-padding-top);
+    padding-right: var(--kbq-size-s);
+    padding-bottom: var(--kbq-toast-size-content-padding-bottom);
 
     overflow: hidden;
 }
@@ -61,7 +61,7 @@
 }
 
 .kbq-toast__title_with-content {
-    padding-bottom: kbq-css-variable(toast-size-caption-padding-bottom);
+    padding-bottom: var(--kbq-toast-size-caption-padding-bottom);
 }
 
 .kbq-toast__text {
@@ -78,9 +78,9 @@
 .kbq-toast__actions {
     display: flex;
 
-    padding-top: kbq-css-variable(toast-size-button-stack-padding-top);
+    padding-top: var(--kbq-toast-size-button-stack-padding-top);
 
-    gap: kbq-css-variable(toast-size-button-stack-content-gap-horizontal);
+    gap: var(--kbq-toast-size-button-stack-content-gap-horizontal);
 }
 
 .kbq-toast__close-button {
@@ -89,14 +89,14 @@
         calc(
                 kbq-difference-series-css-variables(
                         [kbq-sum-series-css-variables(
-                            [calc(kbq-css-variable(icon-button-size-small-vertical-padding) * 2),
+                            [calc(var(--kbq-icon-button-size-small-vertical-padding) * 2),
                             16px]
                         ),
                         toast-font-title-line-height]
                     ) / 2
             )]
     );
-    margin-right: kbq-css-variable(toast-size-close-button-margin-right);
+    margin-right: var(--kbq-toast-size-close-button-margin-right);
 }
 
 @include kbq-toast-theme();

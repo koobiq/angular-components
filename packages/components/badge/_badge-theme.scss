@@ -7,21 +7,21 @@
 @mixin kbq-badge-style($type, $sub-type, $style-name) {
     $base-path: badge-#{$type}-#{$sub-type}-#{$style-name};
 
-    color: kbq-css-variable(#{$base-path}-color);
-    background: kbq-css-variable(#{$base-path}-background);
+    color: var(--kbq-#{$base-path}-color);
+    background: var(--kbq-#{$base-path}-background);
 
     & .kbq-badge-caption {
-        color: kbq-css-variable(#{$base-path}-caption);
+        color: var(--kbq-#{$base-path}-caption);
     }
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base-path}-icon) !important;
+        color: var(--kbq-#{$base-path}-icon) !important;
     }
 
     @if $type == filled {
         border: transparent;
     } @else {
-        border-color: kbq-css-variable(#{$base-path}-border);
+        border-color: var(--kbq-#{$base-path}-border);
     }
 }
 

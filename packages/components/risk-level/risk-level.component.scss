@@ -10,11 +10,11 @@
 
     border-style: solid;
 
-    padding: kbq-css-variable(risk-level-size-padding-vertical) kbq-css-variable(risk-level-size-padding-horizontal);
+    padding: var(--kbq-risk-level-size-padding-vertical) var(--kbq-risk-level-size-padding-horizontal);
 
     border: {
-        width: kbq-css-variable(risk-level-size-border-width);
-        radius: kbq-css-variable(risk-level-size-border-radius);
+        width: var(--kbq-risk-level-size-border-width);
+        radius: var(--kbq-risk-level-size-border-radius);
     }
 }
 

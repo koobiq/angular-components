@@ -6,10 +6,10 @@
 @mixin kbq-table-theme() {
     .kbq-table {
         & > thead {
-            color: kbq-css-variable(foreground-contrast-secondary);
+            color: var(--kbq-foreground-contrast-secondary);
 
             & > tr > th {
-                border-bottom-color: kbq-css-variable(line-contrast-less);
+                border-bottom-color: var(--kbq-line-contrast-less);
             }
         }
 
@@ -17,11 +17,11 @@
             & > tr {
                 & > th,
                 & > td {
-                    color: kbq-css-variable(foreground-contrast);
+                    color: var(--kbq-foreground-contrast);
                 }
 
                 &:hover td {
-                    background-color: kbq-css-variable(states-background-transparent-hover);
+                    background-color: var(--kbq-states-background-transparent-hover);
                 }
             }
         }
@@ -30,7 +30,7 @@
             & > tbody > tr {
                 & th,
                 & td {
-                    border-bottom-color: kbq-css-variable(line-contrast-less);
+                    border-bottom-color: var(--kbq-line-contrast-less);
                 }
             }
         }

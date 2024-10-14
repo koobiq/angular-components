@@ -12,7 +12,7 @@
     }
 
     & .kbq-navbar-container + .kbq-navbar-container {
-        padding-top: kbq-css-variable(size-xxl);
+        padding-top: var(--kbq-size-xxl);
     }
 
     & .kbq-vertical-navbar__container {
@@ -22,7 +22,7 @@
         height: 100%;
 
         &.kbq-collapsed {
-            width: kbq-css-variable(size-5xl);
+            width: var(--kbq-size-5xl);
         }
 
         &.kbq-expanded {

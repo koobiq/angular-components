@@ -6,21 +6,21 @@
 @mixin kbq-empty-state-theme() {
     .kbq-empty-state_normal-color {
         .kbq-empty-state-title {
-            color: kbq-css-variable(empty-state-title);
+            color: var(--kbq-empty-state-title);
         }
 
         .kbq-empty-state-text {
-            color: kbq-css-variable(empty-state-title);
+            color: var(--kbq-empty-state-title);
         }
     }
 
     .kbq-empty-state_error-color {
         .kbq-empty-state-title {
-            color: kbq-css-variable(foreground-error);
+            color: var(--kbq-foreground-error);
         }
 
         .kbq-empty-state-text {
-            color: kbq-css-variable(foreground-error);
+            color: var(--kbq-foreground-error);
         }
     }
 }

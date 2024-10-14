@@ -7,8 +7,8 @@
 
 .kbq-dl {
     display: grid;
-    column-gap: kbq-css-variable(description-list-size-horizontal-content-gap-horizontal);
-    row-gap: kbq-css-variable(description-list-size-horizontal-gap-vertical);
+    column-gap: var(--kbq-description-list-size-horizontal-content-gap-horizontal);
+    row-gap: var(--kbq-description-list-size-horizontal-gap-vertical);
 
     grid-template-columns: repeat(4, 1fr);
 
@@ -35,7 +35,7 @@
     &.kbq-dl_vertical {
         grid-template-columns: repeat(1, 1fr);
 
-        row-gap: kbq-css-variable(description-list-size-vertical-content-gap-vertical);
+        row-gap: var(--kbq-description-list-size-vertical-content-gap-vertical);
 
         .kbq-dt,
         .kbq-dd {
@@ -43,7 +43,7 @@
         }
 
         .kbq-dd {
-            margin-bottom: kbq-css-variable(description-list-size-vertical-gap-vertical);
+            margin-bottom: var(--kbq-description-list-size-vertical-gap-vertical);
         }
     }
 }

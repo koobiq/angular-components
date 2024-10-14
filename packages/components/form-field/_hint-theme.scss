@@ -6,10 +6,10 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-hint-color($type, $style-name) {
-    color: kbq-css-variable(hint-#{$type}-#{$style-name}-text);
+    color: var(--kbq-hint-#{$type}-#{$style-name}-text);
 
     & .kbq-icon {
-        color: kbq-css-variable(hint-#{$type}-#{$style-name}-icon) !important;
+        color: var(--kbq-hint-#{$type}-#{$style-name}-icon) !important;
     }
 }
 

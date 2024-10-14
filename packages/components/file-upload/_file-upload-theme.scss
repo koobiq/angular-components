@@ -8,41 +8,41 @@
     .kbq-file-upload {
         .kbq-focused,
         .kbq-link.kbq-focused {
-            border: 2px solid kbq-css-variable(file-upload-single-states-focused-focus-outline);
+            border: 2px solid var(--kbq-file-upload-single-states-focused-focus-outline);
         }
     }
 
     .kbq-single-file-upload {
         .kbq-file-upload {
             // FIXME: move to mixin kbq-file-upload-state
-            background-color: kbq-css-variable(file-upload-single-default-container-background);
-            border-color: kbq-css-variable(file-upload-single-default-container-border) !important;
+            background-color: var(--kbq-file-upload-single-default-container-background);
+            border-color: var(--kbq-file-upload-single-default-container-border) !important;
 
             &.dragover {
-                background-color: kbq-css-variable(file-upload-single-states-on-drag-container-background);
-                border-color: kbq-css-variable(file-upload-single-states-on-drag-container-border) !important;
+                background-color: var(--kbq-file-upload-single-states-on-drag-container-background);
+                border-color: var(--kbq-file-upload-single-states-on-drag-container-border) !important;
             }
 
             &.kbq-error:not(.kbq-disabled) {
                 &:not(.dragover) {
-                    background-color: kbq-css-variable(file-upload-single-states-error-container-background);
-                    border-color: kbq-css-variable(file-upload-single-states-error-container-border) !important;
+                    background-color: var(--kbq-file-upload-single-states-error-container-background);
+                    border-color: var(--kbq-file-upload-single-states-error-container-border) !important;
                 }
 
                 *,
                 .kbq-icon {
-                    color: kbq-css-variable(file-upload-single-states-error-text-block-color);
+                    color: var(--kbq-file-upload-single-states-error-text-block-color);
                 }
             }
 
             &.kbq-disabled {
-                background-color: kbq-css-variable(file-upload-single-states-disabled-container-background);
-                border-color: kbq-css-variable(file-upload-single-states-disabled-container-border) !important;
+                background-color: var(--kbq-file-upload-single-states-disabled-container-background);
+                border-color: var(--kbq-file-upload-single-states-disabled-container-border) !important;
 
                 &,
                 .kbq-icon,
                 .kbq-link {
-                    color: kbq-css-variable(file-upload-single-states-disabled-container-border);
+                    color: var(--kbq-file-upload-single-states-disabled-container-border);
                 }
             }
         }
@@ -50,47 +50,45 @@
 
     .kbq-multiple-file-upload {
         .kbq-file-upload {
-            background-color: kbq-css-variable(file-upload-multiple-default-container-background);
-            border-color: kbq-css-variable(file-upload-multiple-default-container-border) !important;
+            background-color: var(--kbq-file-upload-multiple-default-container-background);
+            border-color: var(--kbq-file-upload-multiple-default-container-border) !important;
 
             .btn-upload {
-                border-top-color: kbq-css-variable(file-upload-multiple-default-container-border);
+                border-top-color: var(--kbq-file-upload-multiple-default-container-border);
             }
 
             .kbq-file-multiple-uploaded__header {
-                border-bottom-color: kbq-css-variable(file-upload-multiple-default-grid-divider-color);
+                border-bottom-color: var(--kbq-file-upload-multiple-default-grid-divider-color);
             }
 
             &.dragover {
-                background-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-background);
-                border-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-border) !important;
+                background-color: var(--kbq-file-upload-multiple-states-on-drag-container-background);
+                border-color: var(--kbq-file-upload-multiple-states-on-drag-container-border) !important;
 
                 .kbq-file-multiple-uploaded__header {
-                    border-bottom-color: kbq-css-variable(
-                        file-upload-multiple-states-on-drag-container-background
-                    ) !important;
+                    border-bottom-color: var(--kbq-file-upload-multiple-states-on-drag-container-background) !important;
                 }
 
                 &.selected {
                     .dropzone {
-                        border-top-color: kbq-css-variable(file-upload-multiple-states-on-drag-container-border);
+                        border-top-color: var(--kbq-file-upload-multiple-states-on-drag-container-border);
                     }
                 }
             }
 
             &.kbq-disabled {
-                background-color: kbq-css-variable(file-upload-multiple-states-disabled-container-background);
-                border-color: kbq-css-variable(file-upload-multiple-states-disabled-container-border) !important;
+                background-color: var(--kbq-file-upload-multiple-states-disabled-container-background);
+                border-color: var(--kbq-file-upload-multiple-states-disabled-container-border) !important;
 
                 &,
                 .kbq-icon,
                 .kbq-link {
-                    color: kbq-css-variable(file-upload-multiple-states-disabled-container-border);
+                    color: var(--kbq-file-upload-multiple-states-disabled-container-border);
                 }
 
                 &.selected {
                     .dropzone {
-                        border-top-color: kbq-css-variable(file-upload-multiple-states-disabled-container-border);
+                        border-top-color: var(--kbq-file-upload-multiple-states-disabled-container-border);
                     }
                 }
             }
@@ -99,18 +97,18 @@
                 .kbq-file-upload__row.error {
                     *,
                     .kbq-icon {
-                        color: kbq-css-variable(file-upload-multiple-states-error-text-block-color);
+                        color: var(--kbq-file-upload-multiple-states-error-text-block-color);
                     }
                 }
             }
 
             .multiple__uploaded-item {
                 & .kbq-file-upload__file .kbq-icon {
-                    color: kbq-css-variable(file-upload-multiple-default-left-icon-color);
+                    color: var(--kbq-file-upload-multiple-default-left-icon-color);
                 }
 
                 & .kbq-file-upload__action .kbq-icon {
-                    color: kbq-css-variable(file-upload-multiple-default-icon-button-color);
+                    color: var(--kbq-file-upload-multiple-default-icon-button-color);
                 }
             }
         }
@@ -119,7 +117,7 @@
     .kbq-single-file-upload,
     .kbq-multiple-file-upload {
         .kbq-file-upload__hint:not(.kbq-error) {
-            color: kbq-css-variable(form-field-hint-text);
+            color: var(--kbq-form-field-hint-text);
         }
     }
 }

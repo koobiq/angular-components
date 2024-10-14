@@ -6,24 +6,24 @@
 
 .kbq-navbar-item.kbq-vertical {
     & .kbq-navbar-item__container {
-        gap: kbq-css-variable(size-m);
+        gap: var(--kbq-size-m);
     }
 
     &.kbq-expanded {
-        height: kbq-css-variable(size-5xl);
+        height: var(--kbq-size-5xl);
 
         align-items: center;
 
-        padding-right: kbq-css-variable(size-xl);
-        padding-left: kbq-css-variable(size-xl);
+        padding-right: var(--kbq-size-xl);
+        padding-left: var(--kbq-size-xl);
 
-        gap: kbq-css-variable(size-m);
+        gap: var(--kbq-size-m);
 
         &:after {
-            top: kbq-css-variable(size-xxs);
-            right: kbq-css-variable(size-s);
-            bottom: kbq-css-variable(size-xxs);
-            left: kbq-css-variable(size-s);
+            top: var(--kbq-size-xxs);
+            right: var(--kbq-size-s);
+            bottom: var(--kbq-size-xxs);
+            left: var(--kbq-size-s);
         }
 
         &.kbq-navbar-bento {
@@ -34,44 +34,44 @@
             justify-content: center;
             align-items: center;
 
-            top: kbq-css-variable(size-xxs);
-            right: kbq-css-variable(size-xxs);
+            top: var(--kbq-size-xxs);
+            right: var(--kbq-size-xxs);
 
             z-index: 1;
 
-            padding: kbq-css-variable(size-s);
+            padding: var(--kbq-size-s);
 
-            height: kbq-css-variable(size-5xl);
-            width: kbq-css-variable(size-5xl);
+            height: var(--kbq-size-5xl);
+            width: var(--kbq-size-5xl);
 
             &:after {
-                top: kbq-css-variable(size-s);
-                right: kbq-css-variable(size-s);
-                bottom: kbq-css-variable(size-s);
-                left: kbq-css-variable(size-s);
+                top: var(--kbq-size-s);
+                right: var(--kbq-size-s);
+                bottom: var(--kbq-size-s);
+                left: var(--kbq-size-s);
             }
         }
 
         &.kbq-navbar-item_has-nested {
             align-items: center;
 
-            padding: 0 kbq-css-variable(size-m);
+            padding: 0 var(--kbq-size-m);
         }
     }
 
     &.kbq-collapsed {
-        height: kbq-css-variable(size-5xl);
-        width: kbq-css-variable(size-5xl);
+        height: var(--kbq-size-5xl);
+        width: var(--kbq-size-5xl);
 
-        padding: kbq-css-variable(size-l);
+        padding: var(--kbq-size-l);
 
         justify-content: center;
 
         &:after {
-            top: kbq-css-variable(size-s);
-            right: kbq-css-variable(size-s);
-            bottom: kbq-css-variable(size-s);
-            left: kbq-css-variable(size-s);
+            top: var(--kbq-size-s);
+            right: var(--kbq-size-s);
+            bottom: var(--kbq-size-s);
+            left: var(--kbq-size-s);
         }
 
         & .kbq-badge {
@@ -79,8 +79,8 @@
 
             z-index: 1;
 
-            top: kbq-css-variable(size-xs);
-            right: kbq-css-variable(size-xs);
+            top: var(--kbq-size-xs);
+            right: var(--kbq-size-xs);
         }
 
         & .kbq-navbar-item__container {

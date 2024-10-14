@@ -20,8 +20,8 @@
 
     min-height: unset;
 
-    padding-top: kbq-css-variable(tag-size-padding-vertical);
-    padding-bottom: kbq-css-variable(tag-size-padding-vertical);
+    padding-top: var(--kbq-tag-size-padding-vertical);
+    padding-bottom: var(--kbq-tag-size-padding-vertical);
     padding-left: 4px;
     padding-right: unset;
 }
@@ -35,7 +35,7 @@
 
     min-width: 0;
 
-    gap: kbq-css-variable(tag-list-size-content-gap);
+    gap: var(--kbq-tag-list-size-content-gap);
 
     & .kbq-tag-input {
         max-width: 100%;
@@ -53,8 +53,8 @@
 .kbq-form-field-type-tag-list {
     & .kbq-form-field__container {
         padding: kbq-difference-series-css-variables([tag-input-size-padding-vertical, form-field-size-border-width])
-            kbq-css-variable(tag-input-size-padding-right)
+            var(--kbq-tag-input-size-padding-right)
             kbq-difference-series-css-variables([tag-input-size-padding-vertical, form-field-size-border-width])
-            kbq-css-variable(tag-input-size-padding-left);
+            var(--kbq-tag-input-size-padding-left);
     }
 }

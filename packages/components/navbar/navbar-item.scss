@@ -13,17 +13,17 @@
     display: flex;
     align-items: center;
 
-    border-radius: kbq-css-variable(navbar-item-size-content-border-radius);
+    border-radius: var(--kbq-navbar-item-size-content-border-radius);
 
     & .kbq-icon {
-        min-width: kbq-css-variable(size-l);
-        min-height: kbq-css-variable(size-l);
+        min-width: var(--kbq-size-l);
+        min-height: var(--kbq-size-l);
     }
 
     & .kbq-button-icon {
         position: absolute;
-        padding-left: kbq-css-variable(size-xs);
-        padding-right: kbq-css-variable(size-xs);
+        padding-left: var(--kbq-size-xs);
+        padding-right: var(--kbq-size-xs);
         top: 50%;
         transform: translateY(-50%);
     }
@@ -39,7 +39,7 @@
 
         display: none;
 
-        border-radius: kbq-css-variable(navbar-item-size-content-border-radius);
+        border-radius: var(--kbq-navbar-item-size-content-border-radius);
     }
 
     &.kbq-horizontal {

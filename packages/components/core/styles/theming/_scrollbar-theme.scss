@@ -20,29 +20,29 @@
         cursor: default;
 
         &:vertical {
-            width: kbq-css-variable(scrollbar-size-track-dimension);
+            width: var(--kbq-scrollbar-size-track-dimension);
         }
 
         &:horizontal {
-            height: kbq-css-variable(scrollbar-size-track-dimension);
+            height: var(--kbq-scrollbar-size-track-dimension);
         }
     }
 
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
-        width: kbq-css-variable(scrollbar-size-thumb-width);
+        width: var(--kbq-scrollbar-size-thumb-width);
         border-style: solid;
         border-width: kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
 
-        border-radius: kbq-css-variable(scrollbar-size-thumb-border-radius);
+        border-radius: var(--kbq-scrollbar-size-thumb-border-radius);
 
         // these props are used to set the user-friendly thumb for long content.
         &:vertical {
-            min-height: kbq-css-variable(scrollbar-size-thumb-min-size);
+            min-height: var(--kbq-scrollbar-size-thumb-min-size);
         }
 
         &:horizontal {
-            min-width: kbq-css-variable(scrollbar-size-thumb-min-size);
+            min-width: var(--kbq-scrollbar-size-thumb-min-size);
         }
     }
 
@@ -58,7 +58,7 @@
 
         // firefox
         @supports not selector(::-webkit-scrollbar) {
-            scrollbar-color: kbq-css-variable(scrollbar-thumb-default-background) transparent;
+            scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
         }
 
         // webkit
@@ -72,18 +72,18 @@
             border-color: transparent;
 
             background-clip: content-box;
-            background-color: kbq-css-variable(scrollbar-thumb-default-background);
+            background-color: var(--kbq-scrollbar-thumb-default-background);
 
             &:hover {
-                background-color: kbq-css-variable(scrollbar-thumb-hover-background);
+                background-color: var(--kbq-scrollbar-thumb-hover-background);
             }
 
             &:disabled {
-                background-color: kbq-css-variable(scrollbar-thumb-disabled-background);
+                background-color: var(--kbq-scrollbar-thumb-disabled-background);
             }
 
             &:active {
-                background-color: kbq-css-variable(scrollbar-thumb-active-background);
+                background-color: var(--kbq-scrollbar-thumb-active-background);
             }
         }
     }

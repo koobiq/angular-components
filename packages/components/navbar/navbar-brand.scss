@@ -15,7 +15,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     display: flex;
 
-    border-radius: kbq-css-variable(size-s);
+    border-radius: var(--kbq-size-s);
 
     &:after {
         position: absolute;
@@ -23,7 +23,7 @@ $tokens: meta.module-variables(tokens) !default;
 
         display: none;
 
-        border-radius: kbq-css-variable(navbar-item-size-content-border-radius);
+        border-radius: var(--kbq-navbar-item-size-content-border-radius);
     }
 
     & .kbq-navbar-title {
@@ -36,21 +36,21 @@ a.kbq-navbar-brand {
 }
 
 .kbq-navbar-brand.kbq-horizontal {
-    padding: kbq-css-variable(size-s) kbq-css-variable(size-xs) kbq-css-variable(size-s) kbq-css-variable(size-xxs);
+    padding: var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xxs);
 
     align-items: center;
 
-    gap: kbq-css-variable(size-s);
+    gap: var(--kbq-size-s);
 
     &:after {
-        top: kbq-css-variable(size-xxs);
-        right: kbq-css-variable(size-xxs);
-        bottom: kbq-css-variable(size-xxs);
+        top: var(--kbq-size-xxs);
+        right: var(--kbq-size-xxs);
+        bottom: var(--kbq-size-xxs);
         left: 0;
     }
 
     & .kbq-navbar-title {
-        padding-right: kbq-css-variable(size-m);
+        padding-right: var(--kbq-size-m);
     }
 }
 
@@ -63,10 +63,10 @@ a.kbq-navbar-brand {
         display: block;
         align-items: center;
 
-        padding-top: kbq-css-variable(size-xxs);
-        padding-bottom: kbq-css-variable(size-xxs);
+        padding-top: var(--kbq-size-xxs);
+        padding-bottom: var(--kbq-size-xxs);
 
-        height: kbq-css-variable(size-3xl);
+        height: var(--kbq-size-3xl);
 
         padding-left: 0;
 
@@ -78,10 +78,10 @@ a.kbq-navbar-brand {
     &.kbq-expanded {
         position: relative;
 
-        height: kbq-css-variable(size-4xl);
-        width: kbq-css-variable(size-4xl);
+        height: var(--kbq-size-4xl);
+        width: var(--kbq-size-4xl);
 
-        margin: kbq-css-variable(size-l) kbq-css-variable(size-l) kbq-css-variable(size-4xl);
+        margin: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-4xl);
 
         flex-direction: column;
 
@@ -93,7 +93,7 @@ a.kbq-navbar-brand {
         }
 
         & .kbq-navbar-logo {
-            min-height: kbq-css-variable(size-4xl);
+            min-height: var(--kbq-size-4xl);
 
             justify-content: center;
         }
@@ -101,21 +101,21 @@ a.kbq-navbar-brand {
         & .kbq-navbar-title {
             position: absolute;
 
-            left: kbq-css-variable(size-xxs);
-            top: kbq-css-variable(size-4xl);
+            left: var(--kbq-size-xxs);
+            top: var(--kbq-size-4xl);
             max-width: 200px;
         }
     }
 
     &.kbq-collapsed {
-        height: kbq-css-variable(size-5xl);
-        width: kbq-css-variable(size-5xl);
+        height: var(--kbq-size-5xl);
+        width: var(--kbq-size-5xl);
 
         &:after {
-            top: kbq-css-variable(size-xxs);
-            right: kbq-css-variable(size-xxs);
-            bottom: kbq-css-variable(size-xxs);
-            left: kbq-css-variable(size-xxs);
+            top: var(--kbq-size-xxs);
+            right: var(--kbq-size-xxs);
+            bottom: var(--kbq-size-xxs);
+            left: var(--kbq-size-xxs);
         }
 
         & .kbq-navbar-title {

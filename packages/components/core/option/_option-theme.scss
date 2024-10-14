@@ -1,18 +1,18 @@
 @use '../styles/common/tokens' as *;
 
 @mixin kbq-option($style-name) {
-    background: kbq-css-variable(list-#{$style-name}-container-background);
+    background: var(--kbq-list-#{$style-name}-container-background);
 
     .kbq-option-text {
-        color: kbq-css-variable(list-#{$style-name}-text-color);
+        color: var(--kbq-list-#{$style-name}-text-color);
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(list-#{$style-name}-icon-button-color);
+        color: var(--kbq-list-#{$style-name}-icon-button-color);
     }
 
     .kbq-option-caption {
-        color: kbq-css-variable(list-#{$style-name}-caption-color);
+        color: var(--kbq-list-#{$style-name}-caption-color);
     }
 }
 
@@ -26,7 +26,7 @@
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: kbq-css-variable(list-states-focused-focus-outline-color);
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
