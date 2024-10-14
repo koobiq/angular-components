@@ -36,6 +36,6 @@
 
 ### Рекомендации
 
--   Бейджи могут использоваться сами по себе, в то время как [теги](/components/tag) чаще входят в состав других контролов: [Select](/components/select/overview#multiple-select), [Tag autocomplete](/components/tag-autocomplete/), [Tag input](/components/tag-input/).  
+-   Бейджи могут использоваться сами по себе, в то время как [теги](/components/tag) чаще входят в состав других контролов: [Select](/components/select/overview#multiple-select), [Tag autocomplete](/components/tag-autocomplete/), [Tag input](/components/tag-input/).
 -   Не злоупотребляйте бейджами: экран быстро превращается в «разноцветную гирлянду», а акценты теряются.
 -   Список тегов может привлекать излишнее внимание. Элементы можно показать через запятую или c другим текстовым разделителем.
