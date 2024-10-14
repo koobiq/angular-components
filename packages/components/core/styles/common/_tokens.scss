@@ -7,14 +7,6 @@
 
 $tokens: meta.module-variables(tokens) !default;
 
-@function kbq-css-variable($name, $value: null) {
-    @if $value {
-        @return var(--kbq-#{$name}, $value);
-    } @else {
-        @return var(--kbq-#{$name}, map.get($tokens, $name));
-    }
-}
-
 @function getToken($name) {
     @return map.get($tokens, $name);
 }

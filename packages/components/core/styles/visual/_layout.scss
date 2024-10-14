@@ -463,19 +463,19 @@
 
 @mixin layout-indents() {
     $sizes: (
-        '3xs': kbq-css-variable(size-3xs),
-        'xxs': kbq-css-variable(size-xxs),
-        'xs': kbq-css-variable(size-xs),
-        's': kbq-css-variable(size-s),
-        'm': kbq-css-variable(size-m),
-        'l': kbq-css-variable(size-l),
-        'xl': kbq-css-variable(size-xl),
-        'xxl': kbq-css-variable(size-xxl),
-        '3xl': kbq-css-variable(size-3xl),
-        '4xl': kbq-css-variable(size-4xl),
-        '5xl': kbq-css-variable(size-5xl),
-        '6xl': kbq-css-variable(size-6xl),
-        '7xl': kbq-css-variable(size-7xl)
+        '3xs': var(--kbq-size-3xs),
+        'xxs': var(--kbq-size-xxs),
+        'xs': var(--kbq-size-xs),
+        's': var(--kbq-size-s),
+        'm': var(--kbq-size-m),
+        'l': var(--kbq-size-l),
+        'xl': var(--kbq-size-xl),
+        'xxl': var(--kbq-size-xxl),
+        '3xl': var(--kbq-size-3xl),
+        '4xl': var(--kbq-size-4xl),
+        '5xl': var(--kbq-size-5xl),
+        '6xl': var(--kbq-size-6xl),
+        '7xl': var(--kbq-size-7xl)
     );
 
     $indents: 'padding', 'margin';
