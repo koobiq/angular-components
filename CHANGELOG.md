@@ -1,3 +1,11 @@
+## 17.8.6 (2024-10-14)
+
+### Koobiq
+
+ * bug fix  **alert:** aligned close button according to design ([#DS-2886](https://github.com/koobiq/angular-components/issues/issue/DS-2886)) ([#357](https://github.com/koobiq/angular-components/issues/357)) ([43e56a7](https://github.com/koobiq/angular-components/commit/43e56a755bdce4275af3f351bd03f086396b9f26))
+ * bug fix  **modal:** close button in kbq-modal-title ([#DS-2931](https://github.com/koobiq/angular-components/issues/issue/DS-2931)) ([1f6b116](https://github.com/koobiq/angular-components/commit/1f6b116d60e65353ec85b6408f9c9f376fefa065))
+ * bug fix  **timezone:** added missing tokens ([#354](https://github.com/koobiq/angular-components/issues/354)) ([fd8c56f](https://github.com/koobiq/angular-components/commit/fd8c56f41b12da8f10ec8562140b95c8fe14488e))
+
 ## 17.8.5 (2024-10-08)
 
 ### Koobiq
