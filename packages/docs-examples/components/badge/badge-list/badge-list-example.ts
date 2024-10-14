@@ -13,7 +13,7 @@ import { KbqBadgeColors } from '@koobiq/components/badge';
 export class BadgeListExample {
     colors = KbqBadgeColors;
 
-    badges = [
+    badges: { name: string; color: string }[] = [
         { name: 'Bruteforce', color: this.colors.FadeContrast },
         { name: 'Complex Attack', color: this.colors.FadeContrast },
         { name: 'DDoS', color: this.colors.FadeContrast },
