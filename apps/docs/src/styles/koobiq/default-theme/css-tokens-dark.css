@@ -156,6 +156,13 @@
   --kbq-shadow-card: 0 0 0 1px hsla(229, 100%, 85%, 15%);
   --kbq-shadow-popup: 0 0 0 1px hsla(229, 100%, 85%, 15%);
   --kbq-shadow-overlay: 0 0 0 1px hsla(229, 100%, 85%, 15%);
+  --kbq-accordion-item-default-background: transparent;
+  --kbq-accordion-item-default-text-color: hsla(229, 15%, 80%, 100%);
+  --kbq-accordion-item-default-icon-color: hsla(229, 15%, 45%, 100%);
+  --kbq-accordion-item-states-hover-icon-color: hsla(229, 15%, 80%, 100%);
+  --kbq-accordion-item-states-focus-border-color: hsla(216, 100%, 65%, 100%);
+  --kbq-accordion-item-states-disabled-text-color: hsla(229, 15%, 60%, 100%);
+  --kbq-accordion-item-states-disabled-icon-color: hsla(229, 15%, 30%, 100%);
   --kbq-alert-default-contrast-container-background: hsla(229, 15%, 25%, 100%);
   --kbq-alert-default-contrast-container-title: hsla(229, 15%, 80%, 100%);
   --kbq-alert-default-contrast-container-text: hsla(229, 15%, 80%, 100%);
@@ -776,7 +783,7 @@
   --kbq-markdown-list-color: hsla(229, 15%, 80%, 100%);
   --kbq-markdown-blockquote-text: hsla(229, 15%, 80%, 100%);
   --kbq-markdown-blockquote-line: hsla(229, 15%, 30%, 100%);
-  --kbq-markdown-blockquote-background: transparent;
+  --kbq-markdown-blockquote-background: hsla(229, 15%, 25%, 100%);
   --kbq-markdown-blockquote-border: transparent;
   --kbq-markdown-code-text: hsla(229, 15%, 80%, 100%);
   --kbq-markdown-code-background: hsla(229, 15%, 95%, 100%);

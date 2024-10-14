@@ -27,7 +27,7 @@
         "@koobiq/moment-date-adapter": "^3.1.2",
         "@koobiq/luxon-date-adapter": "^3.1.2",
         "@koobiq/date-formatter": "^3.1.2",
-        "@koobiq/design-tokens": "^3.6.0",
+        "@koobiq/design-tokens": "3.7.3",
         "marked": "^9.0.0",
         "overlayscrollbars": "2.7.3",
         "@messageformat/core": "^3.0.0",
