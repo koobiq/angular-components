@@ -15,6 +15,8 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
 import { Subject, Subscription, fromEvent, merge, pairwise } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
@@ -43,16 +45,7 @@ export const LANGUAGES_EXTENSIONS = {
 
 export const KBQ_CODE_BLOCK_CONFIGURATION = new InjectionToken<any>('KbqCodeBlockConfiguration');
 
-export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
-    softWrapOnTooltip: 'Включить перенос по словам',
-    softWrapOffTooltip: 'Выключить перенос по словам',
-    downloadTooltip: 'Скачать',
-    copiedTooltip: '✓ Скопировано',
-    copyTooltip: 'Скопировать',
-    viewAllText: 'Показать все',
-    viewLessText: 'Свернуть',
-    openExternalSystemTooltip: 'Открыть во внешней системе'
-};
+export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = ruRULocaleData.codeBlock;
 
 const actionBarBlockLeftMargin = 24;
 
@@ -133,9 +126,14 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         private clipboard: Clipboard,
         private renderer: Renderer2,
         private focusMonitor: FocusMonitor,
-        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) public config: KbqCodeBlockConfiguration
+        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) protected config: KbqCodeBlockConfiguration,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
     ) {
-        this.config = config || KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
@@ -282,6 +280,16 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         }
 
         this.actionbarHidden = this.noHeader;
+    }
+
+    private updateLocaleParams = () => {
+        this.config = this.config || this.localeService?.getParams('codeBlock');
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.config = this.config ?? KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
     }
 
     private updateMultiline = () => {

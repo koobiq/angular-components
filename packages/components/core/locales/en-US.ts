@@ -26,5 +26,18 @@ export const enUSLocaleData = {
                 size: 'Size'
             }
         }
+    },
+    codeBlock: {
+        softWrapOnTooltip: 'Включить перенос по словам',
+        softWrapOffTooltip: 'Выключить перенос по словам',
+        downloadTooltip: 'Скачать',
+        copiedTooltip: '✓ Скопировано',
+        copyTooltip: 'Скопировать',
+        viewAllText: 'Показать все',
+        viewLessText: 'Свернуть',
+        openExternalSystemTooltip: 'Открыть во внешней системе'
+    },
+    timezone: {
+        searchPlaceholder: 'Город или часовой пояс'
     }
 };
