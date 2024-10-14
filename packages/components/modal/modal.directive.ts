@@ -20,7 +20,7 @@ import { KbqModalComponent } from './modal.component';
             >
                 <i
                     [color]="modal.componentColors.Contrast"
-                    kbq-icon="kbq-xmark_16"
+                    kbq-icon="mc-close-L_16"
                 ></i>
             </button>
         }
