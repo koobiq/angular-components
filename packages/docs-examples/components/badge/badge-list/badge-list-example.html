@@ -1,28 +1,14 @@
 <div class="badge-list-example">
     <div class="badge-list-example__label kbq-extra-small-text">Horizontal</div>
     <div class="badge-list-example__list">
-        <kbq-badge [badgeColor]="colors.FadeContrast">Bruteforce</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Complex Attack</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">DDoS</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">DoS</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">HIPS Alert</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">IDS/IPS Alert</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Identity Theft</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Miscellaneous</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Network Attack</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Post Compromise</kbq-badge>
+        @for (badge of badges; track badge) {
+            <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
+        }
     </div>
     <div class="badge-list-example__label badge-list-example__label_vertical kbq-extra-small-text">Vertical</div>
     <div class="badge-list-example__list badge-list-example__list_vertical">
-        <kbq-badge [badgeColor]="colors.FadeContrast">Bruteforce</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Complex Attack</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">DDoS</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">DoS</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">HIPS Alert</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">IDS/IPS Alert</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Identity Theft</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Miscellaneous</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Network Attack</kbq-badge>
-        <kbq-badge [badgeColor]="colors.FadeContrast">Post Compromise</kbq-badge>
+        @for (badge of badges; track badge) {
+            <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
+        }
     </div>
 </div>
