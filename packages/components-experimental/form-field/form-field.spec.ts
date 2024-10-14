@@ -10,8 +10,8 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ErrorStateMatcher, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { ErrorStateMatcher, PasswordValidators, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqCleaner } from './cleaner';
 import {
     KBQ_FORM_FIELD_DEFAULT_OPTIONS,
@@ -20,8 +20,9 @@ import {
     getKbqFormFieldMissingControlError
 } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
-import { KbqError, KbqHint } from './hint';
+import { KbqError, KbqHint, KbqPasswordHint } from './hint';
 import { KbqLabel } from './label';
+import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqSuffix } from './suffix';
 
@@ -56,6 +57,14 @@ const getSuffixDebugElement = (debugElement: DebugElement): DebugElement | null 
     return debugElement.query(By.directive(KbqSuffix));
 };
 
+const getPasswordToggleDebugElement = (debugElement: DebugElement): DebugElement | null => {
+    return debugElement.query(By.directive(KbqPasswordToggle));
+};
+
+const getPasswordHintDebugElement = (debugElement: DebugElement): DebugElement | null => {
+    return debugElement.query(By.directive(KbqPasswordHint));
+};
+
 const getLabelNativeElement = (debugElement: DebugElement): HTMLLabelElement | null => {
     return debugElement.query(By.css('label')).nativeElement;
 };
@@ -66,6 +75,10 @@ const getPrefixDebugElement = (debugElement: DebugElement): DebugElement | null 
 
 const getInputNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
     return debugElement.query(By.directive(KbqInput)).nativeElement;
+};
+
+const getPasswordInputNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
+    return debugElement.query(By.directive(KbqInputPassword)).nativeElement;
 };
 
 const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
@@ -224,6 +237,35 @@ export class FormGroupWithCustomErrorStateMatcher {
 })
 export class InputFormFieldWithBorderCustomization {
     noBorders: boolean = true;
+}
+
+@Component({
+    selector: 'password-form-field',
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        ReactiveFormsModule,
+        KbqInputModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input
+                [formControl]="formControl"
+                kbqInputPassword
+            />
+            <kbq-password-toggle />
+            <kbq-password-hint [hasError]="formControl.hasError('minLength')">
+                Min length
+                @let minLength = formControl.getError('minLength');
+                @if (minLength) {
+                    ({{ minLength.actual }}/{{ minLength.min }})
+                }
+            </kbq-password-hint>
+        </kbq-form-field>
+    `
+})
+export class PasswordFormField {
+    readonly formControl = new FormControl('', [PasswordValidators.minLength(8)]);
 }
 
 describe(KbqFormField.name, () => {
@@ -439,5 +481,61 @@ describe(KbqFormField.name, () => {
             }
         ]);
         expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_no-borders']).toBeTruthy();
+    });
+
+    it('should hide kbq-password-toggle initially', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        expect(getPasswordToggleDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should display kbq-password-toggle by input', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(debugElement);
+        input!.value = 'koobiq';
+        input?.dispatchEvent(new Event('input'));
+        expect(getPasswordToggleDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should display password by click on kbq-password-toggle', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(debugElement);
+        input!.value = 'koobiq';
+        input?.dispatchEvent(new Event('input'));
+        expect(input!.type).toBe('password');
+        getPasswordToggleDebugElement(debugElement)?.nativeElement.click();
+        expect(input!.type).toBe('text');
+    });
+
+    it('should change kbq-password-toggle icon by click', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(debugElement);
+        input!.value = 'koobiq';
+        input?.dispatchEvent(new Event('input'));
+        const passwordToggle = getPasswordToggleDebugElement(debugElement);
+        passwordToggle?.nativeElement.click();
+        expect(passwordToggle).toMatchSnapshot();
+    });
+
+    it('should display kbq-password-hint initially', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should display kbq-password-hint error for invalid password', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(debugElement);
+        input!.value = 'koobiq';
+        input?.dispatchEvent(new Event('input'));
+        input?.dispatchEvent(new Event('blur'));
+        expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should display kbq-password-hint success for valid password', async () => {
+        const { debugElement } = await createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(debugElement);
+        input!.value = 'koobiq-is-awesome';
+        input?.dispatchEvent(new Event('input'));
+        input?.dispatchEvent(new Event('blur'));
+        expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 });

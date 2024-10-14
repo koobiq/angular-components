@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`KbqFormField should change kbq-password-toggle icon by click 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="false"
+    class="kbq-password-toggle"
+    style="visibility: visible;"
+  >
+    <i
+      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye-slash_16"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
+}
+`;
+
 exports[`KbqFormField should display kbq-cleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
@@ -57,6 +73,84 @@ DebugElement {
 }
 `;
 
+exports[`KbqFormField should display kbq-password-hint error for invalid password 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-hint
+    class="kbq-hint kbq-hint_fill-text-off kbq-error"
+    id="kbq-hint-34"
+  >
+    <i
+      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint_text"
+    >
+       Min length 
+       (6/8) 
+      
+    </span>
+  </kbq-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display kbq-password-hint initially 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-hint
+    class="kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    id="kbq-hint-33"
+  >
+    <i
+      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint_text"
+    >
+       Min length 
+       (0/8) 
+      
+    </span>
+  </kbq-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display kbq-password-hint success for valid password 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-hint
+    class="kbq-hint kbq-hint_fill-text-off kbq-success"
+    id="kbq-hint-35"
+  >
+    <i
+      class="kbq kbq-icon kbq-contrast-fade kbq-check-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint_text"
+    >
+       Min length 
+      
+    </span>
+  </kbq-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display kbq-password-toggle by input 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="false"
+    class="kbq-password-toggle"
+    style="visibility: visible;"
+  >
+    <i
+      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye_16"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
+}
+`;
+
 exports[`KbqFormField should display kbqPrefix 1`] = `
 DebugElement {
   "nativeNode": <span
@@ -92,5 +186,21 @@ DebugElement {
       tabindex="0"
     />
   </kbq-cleaner>,
+}
+`;
+
+exports[`KbqFormField should hide kbq-password-toggle initially 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="true"
+    class="kbq-password-toggle"
+    style="visibility: hidden;"
+  >
+    <i
+      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye_16"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
 }
 `;
