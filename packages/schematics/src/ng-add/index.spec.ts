@@ -26,6 +26,7 @@ describe(`ng add '@koobiq/components'`, () => {
         expect(dependencies['@koobiq/design-tokens']).toBeDefined();
         expect(dependencies['@koobiq/icons']).toBeDefined();
         expect(dependencies['@messageformat/core']).toBeDefined();
+        expect(dependencies['@radix-ng/primitives']).toBeDefined();
         expect(dependencies['luxon']).toBeDefined();
         expect(dependencies['marked']).toBeDefined();
         expect(dependencies['overlayscrollbars']).toBeDefined();
