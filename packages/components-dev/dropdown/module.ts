@@ -49,16 +49,6 @@ export class DemoComponent {
 
     someValue = 'Lazy Value';
 
-    isDropdownOpen: boolean = false;
-
-    dropdownOpened() {
-        this.isDropdownOpen = true;
-    }
-
-    dropdownClosed() {
-        this.isDropdownOpen = false;
-    }
-
     selectDomain(id: string): void {
         console.log('selected domain id', id);
     }

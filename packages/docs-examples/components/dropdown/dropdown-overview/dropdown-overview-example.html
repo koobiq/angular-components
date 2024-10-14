@@ -1,146 +1,137 @@
-<kbq-checkbox
-    [checked]="disabled"
-    (change)="toggleDisabled()"
->
-    toggle disabled state
-</kbq-checkbox>
-<br />
-<br />
-<kbq-checkbox
-    [checked]="openByArrowDown"
-    (change)="toggleOpenByArrowDown()"
->
-    toggleOpenByArrowDown
-</kbq-checkbox>
-
-<br />
-<br />
-
-<button
-    kbq-button
-    [disabled]="disabled"
-    [kbqDropdownTriggerFor]="appDropdown"
-    [openByArrowDown]="openByArrowDown"
->
-    dropdown
-    <i kbq-icon="kbq-chevron-down-s_16"></i>
-</button>
-
-<kbq-dropdown
-    #appDropdown="kbqDropdown"
-    [class]="'max-width'"
->
-    <button kbq-dropdown-item>Text Normal</button>
-
-    <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
-        Text Normal
-    </button>
-
-    <button kbq-dropdown-item>
-        Text Normal
-        <div class="kbq-dropdown-item__caption">Caption</div>
-    </button>
-
-    <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
-        Text Normal
-        <div class="kbq-dropdown-item__caption">Caption</div>
-    </button>
-
-    <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-circle-xs_16"
-            [color]="'contrast'"
-        ></i>
-        Text Normal
-    </button>
+<div class="layout-flex layout-align-start-start layout-column">
+    <kbq-checkbox
+        class="layout-margin-bottom-l"
+        [(ngModel)]="disabled"
+    >
+        toggle disabled state
+    </kbq-checkbox>
+    <kbq-checkbox
+        class="layout-margin-bottom-l"
+        [(ngModel)]="openByArrowDown"
+    >
+        toggle openByArrowDown
+    </kbq-checkbox>
 
     <button
-        kbq-dropdown-item
-        kbq-title
+        kbq-button
+        class="layout-margin-bottom-3xl"
+        [disabled]="disabled"
+        [kbqDropdownTriggerFor]="appDropdown"
+        [openByArrowDown]="openByArrowDown"
     >
-        Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
-        very long text
+        dropdown
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
     </button>
 
-    <kbq-divider />
-
-    <div class="kbq-dropdown__group-header">Header</div>
-
-    <button
-        disabled
-        kbq-dropdown-item
+    <kbq-dropdown
+        #appDropdown="kbqDropdown"
+        [class]="'max-width'"
     >
-        Disabled
-    </button>
+        <button kbq-dropdown-item>Text Normal</button>
 
-    <kbq-divider />
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="kbq-info-circle_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+        </button>
 
-    <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
+        <button kbq-dropdown-item>
+            Text Normal
+            <div class="kbq-dropdown-item__caption">Caption</div>
+        </button>
 
-    <button
-        disabled
-        kbq-dropdown-item
-    >
-        Disabled
-    </button>
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="kbq-info-circle_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+            <div class="kbq-dropdown-item__caption">Caption</div>
+        </button>
 
-    <kbq-divider />
+        <button kbq-dropdown-item>
+            <i
+                kbq-icon="kbq-circle-xs_16"
+                [color]="'contrast'"
+            ></i>
+            Text Normal
+        </button>
 
-    <button kbq-dropdown-item>Point 2</button>
-
-    <button kbq-dropdown-item>Point 3</button>
-
-    <button kbq-dropdown-item>Link</button>
-</kbq-dropdown>
-
-<br />
-<br />
-<br />
-
-<kbq-form-field class="max-width">
-    <input
-        kbqInput
-        type="text"
-        [(ngModel)]="someValue"
-    />
-</kbq-form-field>
-
-<br />
-<br />
-
-<button
-    kbq-button
-    [disabled]="disabled"
-    [kbqDropdownTriggerData]="{ someValue: someValue }"
-    [kbqDropdownTriggerFor]="appDropdownLazy"
->
-    dropdown lazy
-    <i kbq-icon="kbq-chevron-down-s_16"></i>
-</button>
-
-<kbq-dropdown #appDropdownLazy="kbqDropdown">
-    <ng-template
-        kbqDropdownContent
-        let-someValue="someValue"
-    >
         <button
             kbq-dropdown-item
-            [disabled]="disabled"
+            kbq-title
         >
-            dropdown
+            Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
+            very long text
         </button>
-        <button kbq-dropdown-item>
-            Point 1
-            <span class="kbq-dropdown-item__caption">Some info</span>
+
+        <kbq-divider />
+
+        <div class="kbq-dropdown__group-header">Header</div>
+
+        <button
+            disabled
+            kbq-dropdown-item
+        >
+            Disabled
         </button>
-        <button kbq-dropdown-item>Value: {{ someValue }}</button>
-    </ng-template>
-</kbq-dropdown>
+
+        <kbq-divider />
+
+        <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
+
+        <button
+            disabled
+            kbq-dropdown-item
+        >
+            Disabled
+        </button>
+
+        <kbq-divider />
+
+        <button kbq-dropdown-item>Point 2</button>
+
+        <button kbq-dropdown-item>Point 3</button>
+
+        <button kbq-dropdown-item>Link</button>
+    </kbq-dropdown>
+
+    <kbq-form-field class="max-width layout-margin-bottom-l">
+        <input
+            kbqInput
+            type="text"
+            [(ngModel)]="someValue"
+        />
+    </kbq-form-field>
+
+    <button
+        kbq-button
+        [disabled]="disabled"
+        [kbqDropdownTriggerData]="{ someValue: someValue }"
+        [kbqDropdownTriggerFor]="appDropdownLazy"
+    >
+        dropdown lazy
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+
+    <kbq-dropdown #appDropdownLazy="kbqDropdown">
+        <ng-template
+            kbqDropdownContent
+            let-someValue="someValue"
+        >
+            <button
+                kbq-dropdown-item
+                [disabled]="disabled"
+            >
+                dropdown
+            </button>
+            <button kbq-dropdown-item>
+                Point 1
+                <span class="kbq-dropdown-item__caption">Some info</span>
+            </button>
+            <button kbq-dropdown-item>Value: {{ someValue }}</button>
+        </ng-template>
+    </kbq-dropdown>
+</div>

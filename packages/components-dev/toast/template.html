@@ -178,8 +178,10 @@
                 Восстановить
             </a>
             <a
+                #dropdownTrigger1="kbqDropdownTrigger"
                 kbq-link
                 pseudo
+                [class.kbq-active]="dropdownTrigger1.opened"
                 [kbqDropdownTriggerFor]="dropdown"
             >
                 <span class="kbq-link__text">Еще</span>

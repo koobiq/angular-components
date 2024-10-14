@@ -16,6 +16,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/platform';
 import * as i4 from '@angular/cdk/observers';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
@@ -93,6 +94,16 @@ export class KbqButtonCssStyler implements AfterContentInit {
 }
 
 // @public
+export class KbqButtonDropdownTrigger {
+    // (undocumented)
+    dropdownTrigger: KbqDropdownTrigger;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonDropdownTrigger, "[kbq-button][kbqDropdownTriggerFor]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonDropdownTrigger, never>;
+}
+
+// @public
 export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButtonBase;
 
 // @public (undocumented)
@@ -102,9 +113,10 @@ export class KbqButtonModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonModule>;
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.ObserversModule], [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.ObserversModule, typeof i5.KbqButtonDropdownTrigger], [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler, typeof i5.KbqButtonDropdownTrigger]>;
 }
 
 // @public (undocumented)
