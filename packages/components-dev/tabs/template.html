@@ -1,4 +1,70 @@
 <div>
+    <h4>Custom underlined tabs</h4>
+    <kbq-tab-group
+        underlined
+        class="custom-underlined-tabs"
+    >
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <div>Заголовок</div>
+                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <div>Заголовок</div>
+                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <div>Заголовок</div>
+                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <div>Заголовок</div>
+                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
+            </ng-template>
+        </kbq-tab>
+    </kbq-tab-group>
+
+    <h4>Custom underlined tabs with icons</h4>
+    <kbq-tab-group
+        underlined
+        class="custom-underlined-tabs custom-underlined-tabs_with-icons"
+    >
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-apple_24"></i>
+                <div>macOS</div>
+                <div class="custom-underlined-tabs__subtitle">14.5+</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-windows_24"></i>
+                <div>Windows</div>
+                <div class="custom-underlined-tabs__subtitle">XP+</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-linux_24"></i>
+                <div>Linux</div>
+                <div class="custom-underlined-tabs__subtitle">Ununtu 10+</div>
+            </ng-template>
+        </kbq-tab>
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <i kbq-icon="kbq-bsd_24"></i>
+                <div>FreeBSD</div>
+                <div class="custom-underlined-tabs__subtitle">14.1+</div>
+            </ng-template>
+        </kbq-tab>
+    </kbq-tab-group>
+
     <h4>Underlined tabs</h4>
     <kbq-tab-group underlined>
         <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
