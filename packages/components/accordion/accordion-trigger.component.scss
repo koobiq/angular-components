@@ -18,6 +18,17 @@
         transition: transform 300ms ease-out;
     }
 
+    & .kbq-accordion-trigger__badge,
+    & .kbq-accordion-trigger__caption {
+        margin-top: var(--kbq-size-xxs);
+        margin-right: var(--kbq-size-s);
+    }
+
+    & .kbq-accordion-trigger__action {
+        padding: var(--kbq-size-xxs) var(--kbq-size-xxs) var(--kbq-size-3xs);
+        margin-bottom: calc(-1 * #{var(--kbq-size-3xs)});
+    }
+
     &:hover:not([data-disabled='true']) {
         cursor: pointer;
 
@@ -51,12 +62,8 @@
 
         padding: var(--kbq-accordion-size-item-header-variant-hug-padding);
 
-        & > .kbq-accordion-trigger__icon {
-            transform: rotate(90deg);
-        }
-
         &[data-state='open'] > .kbq-accordion-trigger__icon {
-            transform: rotate(-90deg);
+            transform: rotate(-180deg);
         }
     }
 

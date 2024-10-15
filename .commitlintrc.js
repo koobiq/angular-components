@@ -2,6 +2,7 @@
 
 const scope_types = [
     'alert',
+    'accordion',
     'autocomplete',
     'badge',
     'build',
