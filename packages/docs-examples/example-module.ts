@@ -283,7 +283,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "badge-content": {
     "packagePath": "components/badge/badge-content",
-    "title": "Content",
+    "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
       "badge-content-example.ts",
@@ -301,7 +301,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "badge-fill-and-style": {
     "packagePath": "components/badge/badge-fill-and-style",
-    "title": "Fill and Style",
+    "title": "Badge fill and style",
     "componentName": "BadgeFillAndStyleExample",
     "files": [
       "badge-fill-and-style-example.ts",
@@ -317,36 +317,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-badge"
     }
   },
-  "badge-hug-content": {
-    "packagePath": "components/badge/badge-hug-content",
-    "title": "Corner Cases",
-    "componentName": "BadgeHugContentExample",
+  "badge-list": {
+    "packagePath": "components/badge/badge-list",
+    "title": "Badge list",
+    "componentName": "BadgeListExample",
     "files": [
-      "badge-hug-content-example.ts",
-      "badge-hug-content-example.html",
-      "badge-hug-content-example.css"
+      "badge-list-example.ts",
+      "badge-list-example.html",
+      "badge-list-example.css"
     ],
-    "selector": "badge-hug-content-example",
+    "selector": "badge-list-example",
     "additionalComponents": [],
-    "primaryFile": "badge-hug-content-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
-  },
-  "badge-overview": {
-    "packagePath": "components/badge/badge-overview",
-    "title": "Badge",
-    "componentName": "BadgeOverviewExample",
-    "files": [
-      "badge-overview-example.ts",
-      "badge-overview-example.html",
-      "badge-overview-example.css"
-    ],
-    "selector": "badge-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "badge-overview-example.ts",
+    "primaryFile": "badge-list-example.ts",
     "module": {
       "name": "BadgeExamplesModule",
       "importSpecifier": "components/badge",
@@ -355,7 +337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "badge-size": {
     "packagePath": "components/badge/badge-size",
-    "title": "Size",
+    "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
       "badge-size-example.ts",
@@ -365,6 +347,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "badge-size-example",
     "additionalComponents": [],
     "primaryFile": "badge-size-example.ts",
+    "module": {
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
+    }
+  },
+  "badge-table": {
+    "packagePath": "components/badge/badge-table",
+    "title": "Badge table",
+    "componentName": "BadgeTableExample",
+    "files": [
+      "badge-table-example.ts",
+      "badge-table-example.html",
+      "badge-table-example.css"
+    ],
+    "selector": "badge-table-example",
+    "additionalComponents": [],
+    "primaryFile": "badge-table-example.ts",
+    "module": {
+      "name": "BadgeExamplesModule",
+      "importSpecifier": "components/badge",
+      "importPath": "koobiq-docs-examples-components-badge"
+    }
+  },
+  "badge-tooltip": {
+    "packagePath": "components/badge/badge-tooltip",
+    "title": "Badge tooltip",
+    "componentName": "BadgeTooltipExample",
+    "files": [
+      "badge-tooltip-example.ts",
+      "badge-tooltip-example.html",
+      "badge-tooltip-example.css"
+    ],
+    "selector": "badge-tooltip-example",
+    "additionalComponents": [],
+    "primaryFile": "badge-tooltip-example.ts",
     "module": {
       "name": "BadgeExamplesModule",
       "importSpecifier": "components/badge",

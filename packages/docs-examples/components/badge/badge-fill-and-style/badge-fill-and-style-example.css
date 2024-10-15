@@ -1,22 +1,20 @@
-.fill-and-style__example-badge-group {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 24px;
-    flex-wrap: wrap;
-    max-width: 504px;
-}
-
-.fill-and-style__example-badge-group .example-label {
-    color: #73738c;
-    margin-bottom: 12px;
-}
-
-.fill-and-style__example-badge-group .example-badge {
-    width: 96px;
-}
-
-.fill-and-style__example-badge-group .fill-and-style__example-badge-row {
-    gap: 24px;
-    flex-wrap: wrap;
+.badge-fill-and-style-example {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: calc(100px * 5 + 16px * 4);
+}
+
+.badge-fill-and-style-example__badge-label {
+    color: var(--kbq-foreground-contrast-secondary);
+    margin-bottom: 8px;
+}
+
+.badge-fill-and-style-example__badge {
+    width: 100px;
+}
+
+.badge-fill-and-style-example__row {
+    display: flex;
+    gap: 16px;
 }

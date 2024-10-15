@@ -1,0 +1,8 @@
+.badge-tooltip-example {
+    display: flex;
+    justify-content: center;
+
+    kbq-badge {
+        cursor: help;
+    }
+}
