@@ -42,7 +42,7 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     private updateLocaleParamsForSearch = () => {
         const placeholder = this.localeService?.getParams('timezone').searchPlaceholder || defaultSearchPlaceholder;
 
-        if (!this.search.hasPlaceholder()) {
+        if (this.search && !this.search.hasPlaceholder()) {
             this.search.setPlaceholder(placeholder);
         }
     };
