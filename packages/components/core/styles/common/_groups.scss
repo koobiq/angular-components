@@ -45,7 +45,7 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-group-item + .kbq-group-item {
-        margin-left: calc(-1 * #{kbq-css-variable(button-size-border-width)});
+        margin-left: calc(-1 * #{var(--kbq-button-size-border-width)});
     }
 
     & > .kbq-group-item:first-child:not(:last-child) {
@@ -81,7 +81,7 @@ $tokens: meta.module-variables(tokens) !default;
         &:first-child:not(:last-child) {
             @include border-bottom-radius(0);
 
-            border-top-right-radius: kbq-css-variable(button-size-border-radius);
+            border-top-right-radius: var(--kbq-button-size-border-radius);
 
             > .kbq-form-field__container {
                 @include border-bottom-radius(0);
@@ -91,7 +91,7 @@ $tokens: meta.module-variables(tokens) !default;
         &:last-child:not(:first-child) {
             @include border-top-radius(0);
 
-            border-bottom-left-radius: kbq-css-variable(button-size-border-radius);
+            border-bottom-left-radius: var(--kbq-button-size-border-radius);
 
             > .kbq-form-field__container {
                 @include border-top-radius(0);
@@ -108,6 +108,6 @@ $tokens: meta.module-variables(tokens) !default;
     }
 
     .kbq-group-item + .kbq-group-item {
-        margin-top: calc(-1 * #{kbq-css-variable(button-size-border-width)});
+        margin-top: calc(-1 * #{var(--kbq-button-size-border-width)});
     }
 }

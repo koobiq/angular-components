@@ -12,11 +12,11 @@
     }
 
     .kbq-form-horizontal {
-        $line-height: kbq-css-variable(forms-font-label-line-height);
-        $form-field-size-height: kbq-css-variable(form-field-size-height);
+        $line-height: var(--kbq-forms-font-label-line-height);
+        $form-field-size-height: var(--kbq-form-field-size-height);
 
         & .kbq-form-row_margin {
-            margin-bottom: kbq-css-variable(forms-size-horizontal-row-margin-bottom);
+            margin-bottom: var(--kbq-forms-size-horizontal-row-margin-bottom);
         }
 
         & .kbq-form__label {
@@ -26,12 +26,12 @@
         }
 
         & .kbq-form__control {
-            padding-left: kbq-css-variable(forms-size-horizontal-control-padding-left);
+            padding-left: var(--kbq-forms-size-horizontal-control-padding-left);
         }
 
         & .kbq-form__legend {
-            margin-top: kbq-css-variable(forms-size-horizontal-legend-margin-top);
-            margin-bottom: kbq-css-variable(forms-size-horizontal-legend-margin-bottom);
+            margin-top: var(--kbq-forms-size-horizontal-legend-margin-top);
+            margin-bottom: var(--kbq-forms-size-horizontal-legend-margin-bottom);
         }
     }
 
@@ -41,12 +41,12 @@
         }
 
         & .kbq-form-row_margin {
-            margin-bottom: kbq-css-variable(forms-size-vertical-row-margin-bottom);
+            margin-bottom: var(--kbq-forms-size-vertical-row-margin-bottom);
         }
 
         & .kbq-form__label {
-            padding-top: kbq-css-variable(forms-size-vertical-label-padding-top);
-            padding-bottom: kbq-css-variable(forms-size-vertical-label-padding-bottom);
+            padding-top: var(--kbq-forms-size-vertical-label-padding-top);
+            padding-bottom: var(--kbq-forms-size-vertical-label-padding-bottom);
 
             text-align: start;
         }
@@ -56,8 +56,8 @@
         }
 
         & .kbq-form__legend {
-            margin-top: kbq-css-variable(forms-size-vertical-legend-margin-top);
-            margin-bottom: kbq-css-variable(forms-size-vertical-legend-margin-bottom);
+            margin-top: var(--kbq-forms-size-vertical-legend-margin-top);
+            margin-bottom: var(--kbq-forms-size-vertical-legend-margin-bottom);
         }
     }
 
@@ -70,7 +70,7 @@
         flex-direction: row;
 
         & .kbq-form__row:not(:first-child) {
-            padding-left: kbq-css-variable(forms-size-vertical-control-padding-left);
+            padding-left: var(--kbq-forms-size-vertical-control-padding-left);
         }
     }
 }

@@ -18,8 +18,8 @@
 
     margin: 0; /* Safari */
 
-    height: kbq-css-variable(button-size-height);
-    min-height: kbq-css-variable(button-size-height);
+    height: var(--kbq-button-size-height);
+    min-height: var(--kbq-button-size-height);
 
     white-space: nowrap;
 
@@ -28,8 +28,8 @@
 
     vertical-align: baseline;
 
-    border: kbq-css-variable(button-size-border-width) solid transparent;
-    border-radius: kbq-css-variable(button-size-border-radius);
+    border: var(--kbq-button-size-border-width) solid transparent;
+    border-radius: var(--kbq-button-size-border-radius);
 
     &::-moz-focus-inner {
         border: 0;
@@ -53,10 +53,10 @@
     }
 
     & .kbq-icon_left {
-        margin-right: kbq-css-variable(button-size-content-padding);
+        margin-right: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-icon_right {
-        margin-left: kbq-css-variable(button-size-content-padding);
+        margin-left: var(--kbq-button-size-content-padding);
     }
 }

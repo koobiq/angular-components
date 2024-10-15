@@ -13,12 +13,12 @@
     flex-direction: row;
     align-items: center;
 
-    gap: kbq-css-variable(button-toggle-size-container-content-gap-horizontal);
+    gap: var(--kbq-button-toggle-size-container-content-gap-horizontal);
 
-    border-radius: kbq-css-variable(button-toggle-size-container-border-radius);
+    border-radius: var(--kbq-button-toggle-size-container-border-radius);
 
-    padding: kbq-css-variable(button-toggle-size-container-padding-vertical)
-        kbq-css-variable(button-toggle-size-container-padding-horizontal);
+    padding: var(--kbq-button-toggle-size-container-padding-vertical)
+        var(--kbq-button-toggle-size-container-padding-horizontal);
 
     .kbq-button-toggle {
         display: flex;
@@ -26,16 +26,16 @@
         justify-content: flex-start;
         align-items: center;
 
-        height: kbq-css-variable(button-toggle-size-item-height);
-        min-height: kbq-css-variable(button-toggle-size-item-height);
+        height: var(--kbq-button-toggle-size-item-height);
+        min-height: var(--kbq-button-toggle-size-item-height);
 
-        border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
+        border-radius: var(--kbq-button-toggle-size-item-border-radius);
 
         > .kbq-button,
         > .kbq-button-icon {
             height: inherit;
             min-height: inherit;
-            border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
+            border-radius: var(--kbq-button-toggle-size-item-border-radius);
 
             padding: kbq-difference-series-css-variables(
                     [ button-toggle-size-item-padding-vertical,
@@ -60,7 +60,7 @@
 
                 width: 100%;
 
-                gap: kbq-css-variable(button-toggle-size-item-content-gap-horizontal);
+                gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
             }
         }
     }
@@ -71,7 +71,7 @@
             > .kbq-button-icon {
                 max-width: 100%;
 
-                height: kbq-css-variable(button-toggle-size-item-height);
+                height: var(--kbq-button-toggle-size-item-height);
             }
         }
     }
@@ -87,7 +87,7 @@
         > .kbq-button-icon {
             width: 100%;
 
-            border-radius: kbq-css-variable(button-toggle-size-item-border-radius);
+            border-radius: var(--kbq-button-toggle-size-item-border-radius);
         }
     }
 }

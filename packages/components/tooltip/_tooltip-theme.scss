@@ -1,17 +1,17 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-tooltip-color($style-name) {
-    box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow);
+    box-shadow: var(--kbq-tooltip-#{$style-name}-shadow);
 
     & .kbq-tooltip__inner {
-        color: kbq-css-variable(tooltip-#{$style-name}-text);
+        color: var(--kbq-tooltip-#{$style-name}-text);
 
-        background-color: kbq-css-variable(tooltip-#{$style-name}-background);
+        background-color: var(--kbq-tooltip-#{$style-name}-background);
     }
 
     & .kbq-tooltip__arrow {
-        background-color: kbq-css-variable(tooltip-#{$style-name}-background);
-        box-shadow: kbq-css-variable(tooltip-#{$style-name}-shadow);
+        background-color: var(--kbq-tooltip-#{$style-name}-background);
+        box-shadow: var(--kbq-tooltip-#{$style-name}-shadow);
     }
 }
 

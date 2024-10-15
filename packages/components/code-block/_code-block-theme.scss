@@ -6,21 +6,21 @@
 @use '../core/styles/common/tokens' as *;
 
 @function kbq-code-block-hljs-attr($attr) {
-    @return kbq-css-variable(code-block-hljs-#{$attr});
+    @return var(--kbq-code-block-hljs-#{$attr});
 }
 
 @mixin kbq-code-block-style($style-name) {
     $base: code-block-#{$style-name};
 
-    background: kbq-css-variable(#{$base}-container-background);
+    background: var(--kbq-#{$base}-container-background);
 
     & .kbq-tab-header {
-        background: kbq-css-variable(#{$base}-header-background) !important;
-        border-color: kbq-css-variable(#{$base}-container-border-color);
+        background: var(--kbq-#{$base}-header-background) !important;
+        border-color: var(--kbq-#{$base}-container-border-color);
     }
 
     .kbq-tab-body__wrapper {
-        border-color: kbq-css-variable(#{$base}-container-border-color);
+        border-color: var(--kbq-#{$base}-container-border-color);
     }
 
     &:not(.kbq-code-block_no-header) {
@@ -30,40 +30,40 @@
     }
 
     & .kbq-code-block-actionbar {
-        background: kbq-css-variable(#{$base}-actionbar-background);
+        background: var(--kbq-#{$base}-actionbar-background);
 
         &.kbq-actionbar-block_floating {
             .kbq-actionbar-block__button-stack {
-                background: kbq-css-variable(#{$base}-actionbar-background);
+                background: var(--kbq-#{$base}-actionbar-background);
             }
         }
     }
 
     &.kbq-code-block_header-with-shadow {
         & .kbq-tab-header {
-            box-shadow: kbq-css-variable(#{$base}-header-shadow);
+            box-shadow: var(--kbq-#{$base}-header-shadow);
         }
     }
 
     &.kbq-code-block_no-header {
         & .kbq-code-block__fade-gradient {
-            background: kbq-css-variable(#{$base}-actionbar-fade-gradient);
+            background: var(--kbq-#{$base}-actionbar-fade-gradient);
         }
     }
 
     .kbq-code-block__show-more {
         .bg-wrapper {
-            background: kbq-css-variable(#{$base}-collapse-button-expand-background);
+            background: var(--kbq-#{$base}-collapse-button-expand-background);
             opacity: 90%;
         }
     }
 
     & .kbq-code-block__show-more_expanded {
-        background: kbq-css-variable(#{$base}-collapse-expanded-background);
+        background: var(--kbq-#{$base}-collapse-expanded-background);
     }
 
     & .kbq-code-block__show-more_collapsed {
-        background: kbq-css-variable(#{$base}-collapse-collapsed-background);
+        background: var(--kbq-#{$base}-collapse-collapsed-background);
     }
 }
 
@@ -351,12 +351,12 @@
         .kbq-tab-group.kbq-focused {
             // paint focus border from the top since because of border constraints
             .kbq-tab-header {
-                box-shadow: 0 2px 0 -1px kbq-css-variable(states-focused-color);
+                box-shadow: 0 2px 0 -1px var(--kbq-states-focused-color);
             }
 
             .kbq-tab-body__wrapper {
-                border-color: kbq-css-variable(states-focused-color);
-                box-shadow: inset 0 0 0.1 1px kbq-css-variable(states-focused-color);
+                border-color: var(--kbq-states-focused-color);
+                box-shadow: inset 0 0 0.1 1px var(--kbq-states-focused-color);
             }
         }
     }

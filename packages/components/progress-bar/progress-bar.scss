@@ -21,25 +21,25 @@
     overflow: hidden;
 
     .kbq-progress-bar-text {
-        margin-bottom: kbq-css-variable(progress-bar-size-container-content-gap);
+        margin-bottom: var(--kbq-progress-bar-size-container-content-gap);
     }
 
     .kbq-progress-bar-caption {
-        margin-top: kbq-css-variable(progress-bar-size-container-content-gap);
+        margin-top: var(--kbq-progress-bar-size-container-content-gap);
     }
 
     & .kbq-progress-bar__inner {
         overflow: hidden;
 
-        height: kbq-css-variable(progress-bar-size-bar-height);
-        border-radius: kbq-css-variable(progress-bar-size-container-border-radius);
+        height: var(--kbq-progress-bar-size-bar-height);
+        border-radius: var(--kbq-progress-bar-size-container-border-radius);
     }
 
     & .kbq-progress-bar__line {
         height: 100%;
         transform-origin: top left;
 
-        border-radius: kbq-css-variable(progress-bar-size-bar-border-radius);
+        border-radius: var(--kbq-progress-bar-size-bar-border-radius);
     }
 
     &.kbq-progress-bar_determinate .kbq-progress-bar__line {

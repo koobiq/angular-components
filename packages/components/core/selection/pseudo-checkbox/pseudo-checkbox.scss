@@ -13,12 +13,12 @@
     align-items: center;
     justify-content: center;
 
-    width: kbq-css-variable(checkbox-size-normal-width);
-    height: kbq-css-variable(checkbox-size-normal-width);
+    width: var(--kbq-checkbox-size-normal-width);
+    height: var(--kbq-checkbox-size-normal-width);
 
     border: {
-        radius: kbq-css-variable(checkbox-size-normal-border-radius);
-        width: kbq-css-variable(checkbox-size-normal-border-width);
+        radius: var(--kbq-checkbox-size-normal-border-radius);
+        width: var(--kbq-checkbox-size-normal-border-width);
         style: solid;
     }
 
@@ -55,12 +55,12 @@
 }
 
 .kbq-pseudo-checkbox.kbq-pseudo-checkbox_big {
-    width: kbq-css-variable(checkbox-size-big-width);
-    height: kbq-css-variable(checkbox-size-big-width);
+    width: var(--kbq-checkbox-size-big-width);
+    height: var(--kbq-checkbox-size-big-width);
 
     border: {
-        radius: kbq-css-variable(checkbox-size-big-border-radius);
-        width: kbq-css-variable(checkbox-size-big-border-width);
+        radius: var(--kbq-checkbox-size-big-border-radius);
+        width: var(--kbq-checkbox-size-big-border-width);
     }
 }
 

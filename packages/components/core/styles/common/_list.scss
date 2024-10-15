@@ -64,21 +64,21 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
     min-height: 32px;
-    gap: kbq-css-variable(size-s);
+    gap: var(--kbq-size-s);
 
-    border: kbq-css-variable(size-3xs) solid transparent;
+    border: var(--kbq-size-3xs) solid transparent;
 
-    padding-top: kbq-css-variable(size-xxs);
-    padding-left: kbq-css-variable(size-m);
-    padding-right: kbq-css-variable(size-m);
-    padding-bottom: kbq-css-variable(size-xxs);
+    padding-top: var(--kbq-size-xxs);
+    padding-left: var(--kbq-size-m);
+    padding-right: var(--kbq-size-m);
+    padding-bottom: var(--kbq-size-xxs);
 
     .kbq-list-text {
         @include kbq-list-text();
     }
 
     .kbq-list-option-caption {
-        padding-top: kbq-css-variable(size-3xs);
+        padding-top: var(--kbq-size-3xs);
     }
 }
 
@@ -89,13 +89,13 @@
     box-sizing: border-box;
     min-height: 32px;
 
-    border-left: kbq-css-variable(size-3xs) solid transparent;
-    border-right: kbq-css-variable(size-3xs) solid transparent;
+    border-left: var(--kbq-size-3xs) solid transparent;
+    border-right: var(--kbq-size-3xs) solid transparent;
 
-    padding-top: kbq-css-variable(size-xs);
-    padding-left: kbq-css-variable(size-m);
-    padding-right: kbq-css-variable(size-m);
-    padding-bottom: kbq-css-variable(size-3xs);
+    padding-top: var(--kbq-size-xs);
+    padding-left: var(--kbq-size-m);
+    padding-right: var(--kbq-size-m);
+    padding-bottom: var(--kbq-size-3xs);
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -109,13 +109,13 @@
     box-sizing: border-box;
     min-height: 32px;
 
-    border-left: kbq-css-variable(size-3xs) solid transparent;
-    border-right: kbq-css-variable(size-3xs) solid transparent;
+    border-left: var(--kbq-size-3xs) solid transparent;
+    border-right: var(--kbq-size-3xs) solid transparent;
 
-    padding-top: kbq-css-variable(size-m);
-    padding-left: kbq-css-variable(size-m);
-    padding-right: kbq-css-variable(size-m);
-    padding-bottom: kbq-css-variable(size-xxs);
+    padding-top: var(--kbq-size-m);
+    padding-left: var(--kbq-size-m);
+    padding-right: var(--kbq-size-m);
+    padding-bottom: var(--kbq-size-xxs);
 
     .kbq-list-text {
         @include kbq-list-text();

@@ -10,7 +10,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: kbq-css-variable(badge-size-normal-height);
+    height: var(--kbq-badge-size-normal-height);
     text-align: center;
     white-space: nowrap;
 
@@ -18,47 +18,47 @@
 
     box-sizing: border-box;
 
-    padding-right: kbq-css-variable(badge-size-normal-horizontal-padding);
-    padding-left: kbq-css-variable(badge-size-normal-horizontal-padding);
+    padding-right: var(--kbq-badge-size-normal-horizontal-padding);
+    padding-left: var(--kbq-badge-size-normal-horizontal-padding);
 
     border: {
-        width: kbq-css-variable(badge-size-normal-border-width);
-        radius: kbq-css-variable(badge-size-normal-border-radius);
+        width: var(--kbq-badge-size-normal-border-width);
+        radius: var(--kbq-badge-size-normal-border-radius);
     }
 
     & .kbq-badge-caption {
-        padding-left: kbq-css-variable(badge-size-normal-content-padding);
+        padding-left: var(--kbq-badge-size-normal-content-padding);
     }
 
     & .kbq-icon_left {
-        margin-right: kbq-css-variable(badge-size-normal-icon-left-margin-right);
+        margin-right: var(--kbq-badge-size-normal-icon-left-margin-right);
     }
 
     & .kbq-icon_right {
-        margin-left: kbq-css-variable(badge-size-normal-icon-right-margin-left);
+        margin-left: var(--kbq-badge-size-normal-icon-right-margin-left);
     }
 
     &.kbq-badge_compact {
-        height: kbq-css-variable(badge-size-compact-height);
+        height: var(--kbq-badge-size-compact-height);
 
-        padding-right: kbq-css-variable(badge-size-compact-horizontal-padding);
-        padding-left: kbq-css-variable(badge-size-compact-horizontal-padding);
+        padding-right: var(--kbq-badge-size-compact-horizontal-padding);
+        padding-left: var(--kbq-badge-size-compact-horizontal-padding);
 
         border: {
-            width: kbq-css-variable(badge-size-compact-border-width);
-            radius: kbq-css-variable(badge-size-compact-border-radius);
+            width: var(--kbq-badge-size-compact-border-width);
+            radius: var(--kbq-badge-size-compact-border-radius);
         }
 
         & .kbq-badge-caption {
-            padding-left: kbq-css-variable(badge-size-compact-content-padding);
+            padding-left: var(--kbq-badge-size-compact-content-padding);
         }
 
         & .kbq-icon_left {
-            margin-right: kbq-css-variable(badge-size-compact-icon-left-margin-right);
+            margin-right: var(--kbq-badge-size-compact-icon-left-margin-right);
         }
 
         & .kbq-icon_right {
-            margin-left: kbq-css-variable(badge-size-compact-icon-right-margin-left);
+            margin-left: var(--kbq-badge-size-compact-icon-right-margin-left);
         }
     }
 }

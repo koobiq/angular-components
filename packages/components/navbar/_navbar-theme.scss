@@ -4,31 +4,31 @@
     &:not(.kbq-navbar-item_has-nested) {
         &:after {
             display: block;
-            background: kbq-css-variable(navbar-item-#{$state-name}-content-background);
+            background: var(--kbq-navbar-item-#{$state-name}-content-background);
         }
     }
 
     .kbq-navbar-title {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-text);
+        color: var(--kbq-navbar-item-#{$state-name}-content-text);
     }
 
     & > .kbq-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-left) !important;
+        color: var(--kbq-navbar-item-#{$state-name}-content-icon-left) !important;
     }
 
     .kbq-navbar-item__arrow-icon {
-        color: kbq-css-variable(navbar-item-#{$state-name}-content-icon-right) !important;
+        color: var(--kbq-navbar-item-#{$state-name}-content-icon-right) !important;
     }
 }
 
 @mixin kbq-navbar-theme() {
     .kbq-navbar,
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        background-color: kbq-css-variable(navbar-background);
+        background-color: var(--kbq-navbar-background);
     }
 
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
-        border-right: 1px solid kbq-css-variable(navbar-border);
+        border-right: 1px solid var(--kbq-navbar-border);
     }
 
     .kbq-navbar-item,
@@ -47,7 +47,7 @@
 
             &:after {
                 display: block;
-                box-shadow: inset 0 0 0 2px kbq-css-variable(states-line-focus-theme);
+                box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
             }
         }
 
@@ -81,7 +81,7 @@
     }
 
     .kbq-navbar-divider {
-        background: kbq-css-variable(line-contrast-less);
+        background: var(--kbq-line-contrast-less);
     }
 }
 

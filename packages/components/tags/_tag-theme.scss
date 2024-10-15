@@ -5,14 +5,14 @@
 @mixin kbq-tag-state($type, $style-name) {
     $base: tag-#{$type}-#{$style-name};
 
-    background: kbq-css-variable(#{$base}-background);
+    background: var(--kbq-#{$base}-background);
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base}-icon);
+        color: var(--kbq-#{$base}-icon);
     }
 
     & .kbq-tag__text {
-        color: kbq-css-variable(#{$base}-text);
+        color: var(--kbq-#{$base}-text);
     }
 }
 
@@ -28,8 +28,8 @@
         @include kbq-tag-state($type, states-focus);
 
         box-shadow:
-            inset 0 0 0.1px 1px kbq-css-variable(tag-#{$type}-states-focus-outline),
-            0 0 0.1px 1px kbq-css-variable(tag-#{$type}-states-focus-outline);
+            inset 0 0 0.1px 1px var(--kbq-tag-#{$type}-states-focus-outline),
+            0 0 0.1px 1px var(--kbq-tag-#{$type}-states-focus-outline);
     }
 
     &.kbq-disabled {

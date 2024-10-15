@@ -11,111 +11,111 @@
 
         // FIXME: move to unified mixin
         &.kbq-theme {
-            color: kbq-css-variable(icon-button-theme-default);
+            color: var(--kbq-icon-button-theme-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-theme-states-active);
+                color: var(--kbq-icon-button-theme-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-theme-states-hover);
+                color: var(--kbq-icon-button-theme-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-theme-states-disabled);
+                color: var(--kbq-icon-button-theme-states-disabled);
             }
         }
 
         &.kbq-contrast {
-            color: kbq-css-variable(icon-button-contrast-default);
+            color: var(--kbq-icon-button-contrast-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-contrast-states-active);
+                color: var(--kbq-icon-button-contrast-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-contrast-states-hover);
+                color: var(--kbq-icon-button-contrast-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-contrast-states-disabled);
+                color: var(--kbq-icon-button-contrast-states-disabled);
             }
         }
 
         &.kbq-contrast-fade {
-            color: kbq-css-variable(icon-button-fade-contrast-default);
+            color: var(--kbq-icon-button-fade-contrast-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-fade-contrast-states-active);
+                color: var(--kbq-icon-button-fade-contrast-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-fade-contrast-states-hover);
+                color: var(--kbq-icon-button-fade-contrast-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-fade-contrast-states-disabled);
+                color: var(--kbq-icon-button-fade-contrast-states-disabled);
             }
         }
 
         &.kbq-error {
-            color: kbq-css-variable(icon-button-error-default);
+            color: var(--kbq-icon-button-error-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-error-states-active);
+                color: var(--kbq-icon-button-error-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-error-states-hover);
+                color: var(--kbq-icon-button-error-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-error-states-disabled);
+                color: var(--kbq-icon-button-error-states-disabled);
             }
         }
 
         &.kbq-success {
-            color: kbq-css-variable(icon-button-success-default);
+            color: var(--kbq-icon-button-success-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-success-states-active);
+                color: var(--kbq-icon-button-success-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-success-states-hover);
+                color: var(--kbq-icon-button-success-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-success-states-disabled);
+                color: var(--kbq-icon-button-success-states-disabled);
             }
         }
 
         &.kbq-warning {
-            color: kbq-css-variable(icon-button-warning-default);
+            color: var(--kbq-icon-button-warning-default);
 
             &:active,
             &.kbq-active {
-                color: kbq-css-variable(icon-button-warning-states-active);
+                color: var(--kbq-icon-button-warning-states-active);
             }
 
             &:not(.kbq-disabled):hover {
-                color: kbq-css-variable(icon-button-warning-states-hover);
+                color: var(--kbq-icon-button-warning-states-hover);
             }
 
             &.kbq-disabled {
-                color: kbq-css-variable(icon-button-warning-states-disabled);
+                color: var(--kbq-icon-button-warning-states-disabled);
             }
         }
 
         &.cdk-keyboard-focused {
             box-shadow:
-                inset 0 0 0.1px 1px kbq-css-variable(states-focused-color),
-                0 0 0.1px 1px kbq-css-variable(states-focused-color);
+                inset 0 0 0.1px 1px var(--kbq-states-focused-color),
+                0 0 0.1px 1px var(--kbq-states-focused-color);
         }
     }
 }

@@ -5,7 +5,7 @@
 
 .kbq-timepicker {
     // FIXME: default token doesn't exist
-    padding-right: kbq-css-variable(timepicker-size-padding-right);
+    padding-right: var(--kbq-timepicker-size-padding-right);
 }
 
 .kbq-form-field-type-timepicker {

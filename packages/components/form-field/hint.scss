@@ -9,14 +9,14 @@
     display: flex;
 
     & .kbq-icon {
-        margin-top: kbq-css-variable(hint-size-normal-margin-top);
-        margin-right: kbq-css-variable(hint-size-normal-content-padding);
+        margin-top: var(--kbq-hint-size-normal-margin-top);
+        margin-right: var(--kbq-hint-size-normal-content-padding);
     }
 
     &.kbq-hint_compact {
         & .kbq-icon {
-            margin-top: kbq-css-variable(hint-size-compact-margin-top);
-            margin-right: kbq-css-variable(hint-size-compact-content-padding);
+            margin-top: var(--kbq-hint-size-compact-margin-top);
+            margin-right: var(--kbq-hint-size-compact-content-padding);
         }
     }
 }

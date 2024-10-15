@@ -8,8 +8,8 @@
     flex-direction: column;
     align-items: flex-end;
 
-    margin-top: kbq-css-variable(toast-stack-size-margin-top);
-    margin-right: kbq-css-variable(toast-stack-size-margin-right);
+    margin-top: var(--kbq-toast-stack-size-margin-top);
+    margin-right: var(--kbq-toast-stack-size-margin-right);
 
-    gap: kbq-css-variable(toast-stack-size-gap);
+    gap: var(--kbq-toast-stack-size-gap);
 }

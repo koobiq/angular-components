@@ -7,11 +7,11 @@
     flex-direction: column;
 
     &.kbq-radio-group_normal {
-        gap: kbq-css-variable(radio-size-normal-vertical-gap);
+        gap: var(--kbq-radio-size-normal-vertical-gap);
     }
 
     &.kbq-radio-group_big {
-        gap: kbq-css-variable(radio-size-big-vertical-gap);
+        gap: var(--kbq-radio-size-big-vertical-gap);
     }
 }
 
@@ -69,16 +69,16 @@
 
         top: kbq-css-half-difference(radio-font-normal-label-line-height, radio-size-normal-outer-size, 1px);
 
-        width: kbq-css-variable(radio-size-normal-outer-size);
-        height: kbq-css-variable(radio-size-normal-outer-size);
+        width: var(--kbq-radio-size-normal-outer-size);
+        height: var(--kbq-radio-size-normal-outer-size);
     }
 
     .kbq-radio-button__inner-circle {
         position: relative;
         margin: auto;
 
-        width: kbq-css-variable(radio-size-normal-inner-size);
-        height: kbq-css-variable(radio-size-normal-inner-size);
+        width: var(--kbq-radio-size-normal-inner-size);
+        height: var(--kbq-radio-size-normal-inner-size);
     }
 
     .kbq-radio__text-container {
@@ -87,11 +87,11 @@
     }
 
     & .kbq-hint {
-        margin-top: kbq-css-variable(radio-size-normal-vertical-content-padding);
+        margin-top: var(--kbq-radio-size-normal-vertical-content-padding);
     }
 
     [dir='rtl'] & {
-        padding-right: kbq-css-variable(radio-size-normal-horizontal-content-padding);
+        padding-right: var(--kbq-radio-size-normal-horizontal-content-padding);
         padding-left: 0;
     }
 }
@@ -112,21 +112,21 @@
         .kbq-radio-button__outer-circle {
             top: kbq-css-half-difference(radio-font-big-label-line-height, radio-size-big-outer-size, 1px);
 
-            width: kbq-css-variable(radio-size-big-outer-size);
-            height: kbq-css-variable(radio-size-big-outer-size);
+            width: var(--kbq-radio-size-big-outer-size);
+            height: var(--kbq-radio-size-big-outer-size);
         }
 
         .kbq-radio-button__inner-circle {
-            width: kbq-css-variable(radio-size-big-inner-size);
-            height: kbq-css-variable(radio-size-big-inner-size);
+            width: var(--kbq-radio-size-big-inner-size);
+            height: var(--kbq-radio-size-big-inner-size);
         }
 
         & .kbq-hint {
-            margin-top: kbq-css-variable(radio-size-big-vertical-content-padding);
+            margin-top: var(--kbq-radio-size-big-vertical-content-padding);
         }
 
         [dir='rtl'] & {
-            padding-right: kbq-css-variable(radio-size-big-horizontal-content-padding);
+            padding-right: var(--kbq-radio-size-big-horizontal-content-padding);
         }
     }
 }

@@ -4,8 +4,8 @@
 
 @use './code-block-theme' as *;
 
-$border-radius: kbq-css-variable(code-block-size-container-border-radius);
-$border-width: kbq-css-variable(code-block-size-container-border-width);
+$border-radius: var(--kbq-code-block-size-container-border-radius);
+$border-width: var(--kbq-code-block-size-container-border-width);
 
 .kbq-code-block {
     display: block;
@@ -26,10 +26,9 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         // 4 buttons + margin
         $buttons-margin: calc(32 * 4) + 24px;
 
-        padding: calc(kbq-css-variable(code-block-size-header-padding-vertical) - $border-width)
+        padding: calc(var(--kbq-code-block-size-header-padding-vertical) - $border-width)
             kbq-sum-series-css-variables([code-block-size-header-padding-right, $buttons-margin])
-            kbq-css-variable(code-block-size-header-padding-vertical)
-            kbq-css-variable(code-block-size-header-padding-left);
+            var(--kbq-code-block-size-header-padding-vertical) var(--kbq-code-block-size-header-padding-left);
 
         border-width: $border-width $border-width 0 $border-width;
         border-style: solid;
@@ -39,7 +38,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     &:has(.kbq-code-block__show-more) {
         .kbq-code-block__code {
             & > code {
-                padding-bottom: kbq-css-variable(size-3xl) !important;
+                padding-bottom: var(--kbq-size-3xl) !important;
                 overflow-x: scroll;
             }
         }
@@ -55,10 +54,10 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
 
     .kbq-code-block__code {
         > code {
-            padding: kbq-css-variable(code-block-size-with-header-content-padding-top)
-                kbq-css-variable(code-block-size-with-header-content-padding-horizontal)
-                kbq-css-variable(code-block-size-with-header-content-padding-bottom)
-                kbq-css-variable(code-block-size-with-header-content-padding-horizontal);
+            padding: var(--kbq-code-block-size-with-header-content-padding-top)
+                var(--kbq-code-block-size-with-header-content-padding-horizontal)
+                var(--kbq-code-block-size-with-header-content-padding-bottom)
+                var(--kbq-code-block-size-with-header-content-padding-horizontal);
 
             border-radius: $border-radius;
 
@@ -68,7 +67,7 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
         }
 
         .hljs-ln-numbers {
-            padding-right: kbq-css-variable(code-block-size-with-header-content-content-gap-horizontal);
+            padding-right: var(--kbq-code-block-size-with-header-content-content-gap-horizontal);
         }
     }
 
@@ -110,12 +109,12 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
             position: relative;
 
             & > code {
-                padding: kbq-css-variable(code-block-size-no-header-content-padding-vertical)
-                    kbq-css-variable(code-block-size-no-header-content-padding-horizontal);
+                padding: var(--kbq-code-block-size-no-header-content-padding-vertical)
+                    var(--kbq-code-block-size-no-header-content-padding-horizontal);
             }
 
             .hljs-ln-numbers {
-                padding-right: kbq-css-variable(code-block-size-no-header-content-content-gap-horizontal);
+                padding-right: var(--kbq-code-block-size-no-header-content-content-gap-horizontal);
             }
         }
     }
@@ -183,19 +182,19 @@ $border-width: kbq-css-variable(code-block-size-container-border-width);
     border-radius: $border-radius;
 
     &.kbq-code-block__show-more_collapsed {
-        padding-top: kbq-css-variable(code-block-size-collapse-collapsed-padding-top);
+        padding-top: var(--kbq-code-block-size-collapse-collapsed-padding-top);
 
-        padding-bottom: kbq-css-variable(code-block-size-collapse-collapsed-padding-bottom);
+        padding-bottom: var(--kbq-code-block-size-collapse-collapsed-padding-bottom);
     }
 
     &.kbq-code-block__show-more_expanded {
-        padding-top: kbq-css-variable(code-block-size-collapse-expanded-padding-top);
+        padding-top: var(--kbq-code-block-size-collapse-expanded-padding-top);
 
-        margin-bottom: kbq-css-variable(code-block-size-collapse-expanded-padding-bottom);
+        margin-bottom: var(--kbq-code-block-size-collapse-expanded-padding-bottom);
     }
 
     .bg-wrapper {
-        border-radius: kbq-css-variable(button-size-border-radius);
+        border-radius: var(--kbq-button-size-border-radius);
     }
 }
 

@@ -13,8 +13,8 @@
 
     height: 100%;
     // FIXME: default token doesn't exist
-    padding-left: kbq-css-variable(tree-size-toggle-padding);
-    padding-right: kbq-css-variable(tree-size-toggle-padding);
+    padding-left: var(--kbq-tree-size-toggle-padding);
+    padding-right: var(--kbq-tree-size-toggle-padding);
 
     cursor: pointer;
 

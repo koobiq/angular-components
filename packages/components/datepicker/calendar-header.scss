@@ -11,11 +11,11 @@ $tokens: meta.module-variables(tokens) !default;
     flex-direction: row;
     justify-content: space-between;
 
-    padding-right: kbq-css-variable(datepicker-size-header-padding-horizontal);
+    padding-right: var(--kbq-datepicker-size-header-padding-horizontal);
 
-    padding-left: kbq-css-variable(datepicker-size-header-padding-horizontal);
+    padding-left: var(--kbq-datepicker-size-header-padding-horizontal);
 
-    margin-bottom: kbq-css-variable(datepicker-size-header-margin-bottom);
+    margin-bottom: var(--kbq-datepicker-size-header-margin-bottom);
 }
 
 .kbq-calendar-header__select {

@@ -8,6 +8,6 @@
     .kbq-confirm-footer {
         display: flex;
 
-        gap: kbq-css-variable(modal-size-footer-content-gap-horizontal);
+        gap: var(--kbq-modal-size-footer-content-gap-horizontal);
     }
 }

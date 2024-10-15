@@ -9,14 +9,14 @@
     justify-content: center;
     align-items: center;
 
-    width: kbq-css-variable(form-field-size-icon-button-size);
-    margin-right: kbq-css-variable(form-field-size-icon-button-margin-right);
+    width: var(--kbq-form-field-size-icon-button-size);
+    margin-right: var(--kbq-form-field-size-icon-button-margin-right);
     height: 100%;
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
         cursor: pointer;
-        width: kbq-css-variable(form-field-size-icon-button-size);
+        width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
     }
 

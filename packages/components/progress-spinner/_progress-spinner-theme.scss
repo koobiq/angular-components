@@ -3,16 +3,16 @@
 @mixin kbq-progress-spinner-theme() {
     .kbq-progress-spinner {
         .kbq-progress-spinner__circle {
-            stroke: kbq-css-variable(progress-spinner-circle-background);
+            stroke: var(--kbq-progress-spinner-circle-background);
         }
     }
 
     .kbq-progress-spinner-text {
-        color: kbq-css-variable(progress-spinner-text-color);
+        color: var(--kbq-progress-spinner-text-color);
     }
 
     .kbq-progress-spinner-caption {
-        color: kbq-css-variable(progress-spinner-caption-color);
+        color: var(--kbq-progress-spinner-caption-color);
     }
 }
 

@@ -11,7 +11,7 @@ $trigger-margin: 9px;
 .kbq-popover {
     position: relative;
 
-    border-radius: kbq-css-variable(popover-size-container-border-radius);
+    border-radius: var(--kbq-popover-size-container-border-radius);
 
     box-sizing: border-box;
 
@@ -21,15 +21,15 @@ $trigger-margin: 9px;
     z-index: 1;
 
     &.kbq-popover_small {
-        max-width: kbq-css-variable(popover-size-container-width-small);
+        max-width: var(--kbq-popover-size-container-width-small);
     }
 
     &.kbq-popover_medium {
-        max-width: kbq-css-variable(popover-size-container-width-medium);
+        max-width: var(--kbq-popover-size-container-width-medium);
     }
 
     &.kbq-popover_large {
-        max-width: kbq-css-variable(popover-size-container-width-large);
+        max-width: var(--kbq-popover-size-container-width-large);
     }
 
     @include pop-up.popup-margins(kbq-popover, 8px);
@@ -38,8 +38,8 @@ $trigger-margin: 9px;
 .kbq-popover__content {
     overflow-y: auto;
 
-    padding: kbq-css-variable(popover-size-content-padding-top)
-        kbq-css-variable(popover-size-content-padding-horizontal) kbq-css-variable(popover-size-content-padding-bottom);
+    padding: var(--kbq-popover-size-content-padding-top) var(--kbq-popover-size-content-padding-horizontal)
+        var(--kbq-popover-size-content-padding-bottom);
 }
 
 .kbq-popover__container {
@@ -48,19 +48,19 @@ $trigger-margin: 9px;
     display: flex;
     flex-direction: column;
 
-    max-height: kbq-css-variable(popover-size-container-max-height);
+    max-height: var(--kbq-popover-size-container-max-height);
 
-    border-radius: kbq-css-variable(popover-size-container-border-radius);
+    border-radius: var(--kbq-popover-size-container-border-radius);
 
     &.kbq-popover__container_with-header {
         .kbq-popover__content {
-            padding-top: kbq-css-variable(size-s);
+            padding-top: var(--kbq-size-s);
         }
     }
 
     &.kbq-popover__container_with-footer {
         .kbq-popover__content {
-            padding-bottom: kbq-css-variable(size-s);
+            padding-bottom: var(--kbq-size-s);
         }
     }
 }
@@ -83,8 +83,8 @@ $trigger-margin: 9px;
 
     overflow: hidden;
 
-    padding: kbq-css-variable(popover-size-header-padding-top) kbq-css-variable(popover-size-header-padding-horizontal)
-        kbq-css-variable(popover-size-header-padding-bottom) kbq-css-variable(popover-size-header-padding-horizontal);
+    padding: var(--kbq-popover-size-header-padding-top) var(--kbq-popover-size-header-padding-horizontal)
+        var(--kbq-popover-size-header-padding-bottom) var(--kbq-popover-size-header-padding-horizontal);
 
     & .kbq-popover__header-text {
         @include common.kbq-truncate-line();
@@ -96,12 +96,11 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__header_with-close-button {
-    padding-right: kbq-css-variable(size-4xl);
+    padding-right: var(--kbq-size-4xl);
 }
 
 .kbq-popover__footer {
-    padding: kbq-css-variable(popover-size-footer-padding-vertical)
-        kbq-css-variable(popover-size-footer-padding-horizontal);
+    padding: var(--kbq-popover-size-footer-padding-vertical) var(--kbq-popover-size-footer-padding-horizontal);
 }
 
 .kbq-popover__footer_bottom-overflow {
@@ -127,9 +126,9 @@ $arrow-padding: calc(18px - $trigger-margin);
 .kbq-popover__close {
     position: absolute;
     z-index: 2;
-    top: kbq-css-variable(size-s);
-    right: kbq-css-variable(size-s);
-    border-radius: kbq-css-variable(button-size-border-radius);
+    top: var(--kbq-size-s);
+    right: var(--kbq-size-s);
+    border-radius: var(--kbq-button-size-border-radius);
 }
 
 @include kbq-popover-theme();

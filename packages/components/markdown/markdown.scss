@@ -14,8 +14,8 @@
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .kbq-markdown__h#{$i} {
-            margin-top: kbq-css-variable(markdown-h#{$i}-size-margin-top);
-            margin-bottom: kbq-css-variable(markdown-h#{$i}-size-margin-bottom);
+            margin-top: var(--kbq-markdown-h#{$i}-size-margin-top);
+            margin-bottom: var(--kbq-markdown-h#{$i}-size-margin-bottom);
 
             @for $i from 1 through 6 {
                 & + .kbq-markdown__h#{$i} {
@@ -37,24 +37,24 @@
     }
 
     .kbq-markdown__p {
-        margin-top: kbq-css-variable(markdown-p-size-margin-top);
-        margin-bottom: kbq-css-variable(markdown-p-size-margin-bottom);
+        margin-top: var(--kbq-markdown-p-size-margin-top);
+        margin-bottom: var(--kbq-markdown-p-size-margin-bottom);
     }
 
     .kbq-markdown__ul,
     .kbq-markdown__ol {
-        margin-top: kbq-css-variable(markdown-list-size-margin-top);
-        margin-bottom: kbq-css-variable(markdown-list-size-margin-bottom);
+        margin-top: var(--kbq-markdown-list-size-margin-top);
+        margin-bottom: var(--kbq-markdown-list-size-margin-bottom);
 
         > li {
-            margin-bottom: kbq-css-variable(markdown-list-size-item-margin-bottom);
+            margin-bottom: var(--kbq-markdown-list-size-item-margin-bottom);
         }
     }
 
     .kbq-markdown__ul {
         position: relative;
         list-style: none;
-        padding: kbq-css-variable(markdown-list-size-ul-padding);
+        padding: var(--kbq-markdown-list-size-ul-padding);
     }
 
     .kbq-markdown__ul > li:before {
@@ -75,7 +75,7 @@
             &:before {
                 content: counter(li) '.';
                 counter-increment: li;
-                padding-right: kbq-css-variable(markdown-list-size-ol-number-padding-right);
+                padding-right: var(--kbq-markdown-list-size-ol-number-padding-right);
             }
 
             > * {
@@ -86,20 +86,20 @@
 
     .kbq-markdown__p + .kbq-markdown__ul,
     .kbq-markdown__p + .kbq-markdown__ol {
-        margin-top: kbq-css-variable(markdown-list-size-margin-top-after-paragraph);
+        margin-top: var(--kbq-markdown-list-size-margin-top-after-paragraph);
     }
 
     .kbq-markdown__blockquote {
-        margin-top: kbq-css-variable(markdown-blockquote-size-margin-top);
+        margin-top: var(--kbq-markdown-blockquote-size-margin-top);
         margin-left: 0;
-        margin-bottom: kbq-css-variable(markdown-blockquote-size-margin-bottom);
+        margin-bottom: var(--kbq-markdown-blockquote-size-margin-bottom);
         margin-right: 0;
 
-        border-left-width: kbq-css-variable(markdown-blockquote-size-line-width);
+        border-left-width: var(--kbq-markdown-blockquote-size-line-width);
 
         border-left-style: solid;
 
-        padding: kbq-css-variable(markdown-blockquote-size-padding);
+        padding: var(--kbq-markdown-blockquote-size-padding);
     }
 
     .kbq-markdown__blockquote > .kbq-markdown__p {
@@ -111,32 +111,32 @@
         position: relative;
         overflow-x: auto;
 
-        margin-top: kbq-css-variable(markdown-code-size-multiline-margin-top);
-        margin-bottom: kbq-css-variable(markdown-code-size-multiline-margin-bottom);
+        margin-top: var(--kbq-markdown-code-size-multiline-margin-top);
+        margin-bottom: var(--kbq-markdown-code-size-multiline-margin-bottom);
 
-        padding: kbq-css-variable(markdown-code-size-multiline-padding);
+        padding: var(--kbq-markdown-code-size-multiline-padding);
     }
 
     .kbq-markdown__pre,
     .kbq-markdown__p > .kbq-markdown__code {
-        border-radius: kbq-css-variable(markdown-code-size-border-radius);
-        border-width: kbq-css-variable(markdown-code-size-border-width);
+        border-radius: var(--kbq-markdown-code-size-border-radius);
+        border-width: var(--kbq-markdown-code-size-border-width);
         border-style: solid;
     }
 
     .kbq-markdown__p > .kbq-markdown__code {
-        padding: kbq-css-variable(markdown-code-size-inline-padding);
+        padding: var(--kbq-markdown-code-size-inline-padding);
     }
 
     .kbq-markdown__img {
         max-width: 100%;
-        margin-top: kbq-css-variable(markdown-image-size-margin-top);
-        margin-bottom: kbq-css-variable(markdown-image-size-margin-bottom);
+        margin-top: var(--kbq-markdown-image-size-margin-top);
+        margin-bottom: var(--kbq-markdown-image-size-margin-bottom);
 
         + em {
             display: block;
-            margin-top: kbq-css-variable(markdown-image-size-caption-margin-top);
-            margin-bottom: kbq-css-variable(markdown-image-size-caption-margin-bottom);
+            margin-top: var(--kbq-markdown-image-size-caption-margin-top);
+            margin-bottom: var(--kbq-markdown-image-size-caption-margin-bottom);
         }
     }
 
@@ -145,8 +145,8 @@
         border-left: none;
         border-right: none;
         border-bottom-style: solid;
-        border-bottom-width: kbq-css-variable(markdown-hr-size-width);
-        margin: kbq-css-variable(markdown-hr-size-margin-vertical) 0;
+        border-bottom-width: var(--kbq-markdown-hr-size-width);
+        margin: var(--kbq-markdown-hr-size-margin-vertical) 0;
     }
 
     .kbq-markdown__table {
@@ -154,7 +154,7 @@
         overflow-x: auto;
         display: table;
         border-collapse: collapse;
-        margin-bottom: kbq-css-variable(markdown-table-size-margin-bottom);
+        margin-bottom: var(--kbq-markdown-table-size-margin-bottom);
 
         td {
             vertical-align: top;
@@ -162,14 +162,14 @@
 
         th,
         td {
-            padding: kbq-css-variable(markdown-table-size-padding);
+            padding: var(--kbq-markdown-table-size-padding);
             font-weight: 400;
         }
     }
 
     .kbq-markdown__table > .kbq-markdown__thead {
         border-bottom-style: solid;
-        border-bottom-width: kbq-css-variable(markdown-table-size-border-width);
+        border-bottom-width: var(--kbq-markdown-table-size-border-width);
 
         text-align: left;
 

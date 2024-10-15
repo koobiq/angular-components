@@ -33,6 +33,6 @@
     &.kbq-tab-group_vertical {
         flex-direction: column;
         flex-grow: 0;
-        gap: kbq-css-variable(tabs-size-tab-stack-vertical-content-gap-vertical) 0;
+        gap: var(--kbq-tabs-size-tab-stack-vertical-content-gap-vertical) 0;
     }
 }

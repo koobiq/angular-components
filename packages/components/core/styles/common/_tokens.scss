@@ -7,23 +7,12 @@
 
 $tokens: meta.module-variables(tokens) !default;
 
-@function kbq-css-variable($name, $value: null) {
-    @if $value {
-        @return var(--kbq-#{$name}, $value);
-    } @else {
-        @return var(--kbq-#{$name}, map.get($tokens, $name));
-    }
-}
-
 @function getToken($name) {
     @return map.get($tokens, $name);
 }
 
 @mixin kbq-css-font-variable($component, $component-property, $font-property, $font) {
-    #{$font-property}: var(
-        --kbq-#{$component}-#{$font}#{$component-property}-#{$font-property},
-        map.get($tokens, #{$component}-#{$font}#{$component-property}-#{$font-property})
-    );
+    #{$font-property}: var(--kbq-#{$component}-#{$font}#{$component-property}-#{$font-property});
 }
 
 @mixin kbq-typography-css-variables($component, $property) {
@@ -53,13 +42,13 @@ $tokens: meta.module-variables(tokens) !default;
             @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $sum: $variable;
             } @else {
-                $sum: kbq-css-variable($variable);
+                $sum: var(--kbq-#{$variable});
             }
         } @else {
             @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $sum: calc($sum + $variable);
             } @else {
-                $sum: calc($sum + kbq-css-variable($variable));
+                $sum: calc($sum + var(--kbq-#{$variable}));
             }
         }
     }
@@ -73,13 +62,13 @@ $tokens: meta.module-variables(tokens) !default;
             @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $difference: $variable;
             } @else {
-                $difference: kbq-css-variable($variable);
+                $difference: var(--kbq-#{$variable});
             }
         } @else {
             @if (meta.type-of($variable) == number or meta.type-of($variable) == calculation) {
                 $difference: calc($difference - $variable);
             } @else {
-                $difference: calc($difference - kbq-css-variable($variable));
+                $difference: calc($difference - var(--kbq-#{$variable}));
             }
         }
     }
@@ -89,11 +78,11 @@ $tokens: meta.module-variables(tokens) !default;
 @function kbq-css-half-difference($outer, $inner, $border: null) {
     @if $border {
         @if (meta.type-of($border) == number or meta.type-of($border) == calculation) {
-            @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - $border * 2) / 2);
+            @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner}) - $border * 2) / 2);
         } @else {
-            @return calc((kbq-css-variable($outer) - kbq-css-variable($inner) - kbq-css-variable($border * 2)) / 2);
+            @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner}) - var(--kbq-#{$border} * 2)) / 2);
         }
     } @else {
-        @return calc((kbq-css-variable($outer) - kbq-css-variable($inner)) / 2);
+        @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner})) / 2);
     }
 }

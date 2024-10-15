@@ -18,7 +18,7 @@
     flex-direction: row;
 
     .kbq-tab-list__content {
-        gap: kbq-css-variable(tabs-size-tab-stack-vertical-content-gap-vertical) 0;
+        gap: var(--kbq-tabs-size-tab-stack-vertical-content-gap-vertical) 0;
     }
 
     & .kbq-tab-header__content {

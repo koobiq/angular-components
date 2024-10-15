@@ -1,26 +1,24 @@
-/* stylelint-disable no-unknown-custom-properties */
-
 @use 'sass:map';
 
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-modal-theme() {
     .kbq-modal {
-        background: kbq-css-variable(modal-container-background);
-        box-shadow: kbq-css-variable(modal-container-box-shadow);
+        background: var(--kbq-modal-container-background);
+        box-shadow: var(--kbq-modal-container-box-shadow);
 
         .kbq-modal-header {
             & .kbq-modal-title {
-                color: kbq-css-variable(modal-header-text-color);
+                color: var(--kbq-modal-header-text-color);
             }
 
             & .kbq-modal-close {
-                color: kbq-css-variable(modal-close-button-color);
+                color: var(--kbq-modal-close-button-color);
             }
         }
 
         .kbq-modal-content {
-            color: kbq-css-variable(modal-content-text-color);
+            color: var(--kbq-modal-content-text-color);
         }
 
         .kbq-modal-header.kbq-modal-body_top-overflow {
@@ -33,7 +31,7 @@
     }
 
     .kbq-modal-mask {
-        background-color: kbq-css-variable(modal-overlay-background);
+        background-color: var(--kbq-modal-overlay-background);
     }
 }
 

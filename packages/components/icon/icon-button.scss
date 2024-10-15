@@ -10,12 +10,10 @@
         cursor: pointer;
     }
 
-    padding: kbq-css-variable(icon-button-size-normal-vertical-padding)
-        kbq-css-variable(icon-button-size-normal-horizontal-padding);
+    padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
 
     &.kbq-icon-button_small {
-        padding: kbq-css-variable(icon-button-size-small-vertical-padding)
-            kbq-css-variable(icon-button-size-small-horizontal-padding);
+        padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
     }
 }
 

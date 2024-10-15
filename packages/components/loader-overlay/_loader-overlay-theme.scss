@@ -4,29 +4,29 @@
     // FIXME: move to unified mixin if necessary
     .kbq-loader-overlay_filled {
         &.kbq-loader-overlay {
-            background: kbq-css-variable(loader-overlay-filled-overlay-background);
+            background: var(--kbq-loader-overlay-filled-overlay-background);
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-filled-text-color);
+            color: var(--kbq-loader-overlay-filled-text-color);
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(loader-overlay-filled-caption-color);
+            color: var(--kbq-loader-overlay-filled-caption-color);
         }
     }
 
     .kbq-loader-overlay_transparent {
         &.kbq-loader-overlay {
-            background: kbq-css-variable(loader-overlay-transparent-overlay-background);
+            background: var(--kbq-loader-overlay-transparent-overlay-background);
         }
 
         & .kbq-loader-overlay-text {
-            color: kbq-css-variable(loader-overlay-transparent-text-color);
+            color: var(--kbq-loader-overlay-transparent-text-color);
         }
 
         & .kbq-loader-overlay-caption {
-            color: kbq-css-variable(loader-overlay-transparent-caption-color);
+            color: var(--kbq-loader-overlay-transparent-caption-color);
         }
     }
 }

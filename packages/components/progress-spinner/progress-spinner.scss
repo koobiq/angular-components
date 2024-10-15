@@ -14,7 +14,7 @@
     display: flex;
     flex-direction: row;
 
-    gap: kbq-css-variable(progress-spinner-size-compact-content-gap-horizontal);
+    gap: var(--kbq-progress-spinner-size-compact-content-gap-horizontal);
 }
 
 .kbq-progress-spinner__circle {
@@ -27,8 +27,8 @@
 }
 
 .kbq-progress-spinner__inner {
-    width: kbq-css-variable(progress-spinner-size-compact-size);
-    height: kbq-css-variable(progress-spinner-size-compact-size);
+    width: var(--kbq-progress-spinner-size-compact-size);
+    height: var(--kbq-progress-spinner-size-compact-size);
 
     transform: rotateZ(-90deg);
 
@@ -37,16 +37,16 @@
 
 .kbq-progress-spinner__content {
     .kbq-progress-spinner-text {
-        margin-bottom: kbq-css-variable(progress-spinner-size-compact-content-gap-vertical);
+        margin-bottom: var(--kbq-progress-spinner-size-compact-content-gap-vertical);
     }
 }
 
 .kbq-progress-spinner_big {
-    gap: kbq-css-variable(progress-spinner-size-big-content-gap-horizontal);
+    gap: var(--kbq-progress-spinner-size-big-content-gap-horizontal);
 
     & .kbq-progress-spinner__inner {
-        width: kbq-css-variable(progress-spinner-size-big-size);
-        height: kbq-css-variable(progress-spinner-size-big-size);
+        width: var(--kbq-progress-spinner-size-big-size);
+        height: var(--kbq-progress-spinner-size-big-size);
     }
 
     & .kbq-progress-spinner__circle {

@@ -16,7 +16,7 @@
 
     word-wrap: break-word;
 
-    border-width: kbq-css-variable(tree-size-container-focus-outline-width);
+    border-width: var(--kbq-tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
 
@@ -33,7 +33,7 @@
         tree-size-container-focus-outline-width]
     );
 
-    gap: kbq-css-variable(tree-size-container-content-gap-horizontal);
+    gap: var(--kbq-tree-size-container-content-gap-horizontal);
 
     & .kbq-option-text {
         @include common.kbq-line-wrapper-base();
@@ -41,8 +41,8 @@
 
         @include common.kbq-truncate-line();
 
-        padding-top: kbq-css-variable(list-size-text-padding-vertical);
-        padding-bottom: kbq-css-variable(list-size-text-padding-vertical);
+        padding-top: var(--kbq-list-size-text-padding-vertical);
+        padding-bottom: var(--kbq-list-size-text-padding-vertical);
     }
 
     &:focus {

@@ -4,11 +4,11 @@
 @mixin kbq-tab-item-state($type, $sub-type, $style-name) {
     $base: tabs-tab-item-#{$type}-#{$sub-type}-#{$style-name};
 
-    background: kbq-css-variable(#{$base}-background);
-    color: kbq-css-variable(#{$base}-text-color);
+    background: var(--kbq-#{$base}-background);
+    color: var(--kbq-#{$base}-text-color);
 
     & .kbq-icon {
-        color: kbq-css-variable(#{$base}-icon-color);
+        color: var(--kbq-#{$base}-icon-color);
     }
 }
 
@@ -20,7 +20,7 @@
     }
 
     &.kbq-tab-label_empty {
-        color: kbq-css-variable(foreground-contrast-secondary);
+        color: var(--kbq-foreground-contrast-secondary);
     }
 
     &.kbq-selected {
@@ -40,7 +40,7 @@
     }
 
     &.cdk-keyboard-focused {
-        border-color: kbq-css-variable(tabs-tab-item-#{$type}-#{$sub-type}-states-focused-focus-outline-color);
+        border-color: var(--kbq-tabs-tab-item-#{$type}-#{$sub-type}-states-focused-focus-outline-color);
     }
 
     &.kbq-disabled {
@@ -58,7 +58,7 @@
         &.kbq-tab-group_filled {
             &.kbq-tab-group_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-background-background);
+                    background: var(--kbq-tabs-tab-stack-filled-on-background-background);
                 }
 
                 & .kbq-tab-label {
@@ -68,7 +68,7 @@
 
             &.kbq-tab-group_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-surface-background);
+                    background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
                 }
 
                 // FIXME: need check, tab-group has different subtype
@@ -81,7 +81,7 @@
         &.kbq-tab-group_transparent {
             &.kbq-tab-group_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-background-background);
+                    background: var(--kbq-tabs-tab-stack-transparent-on-background-background);
                 }
 
                 & .kbq-tab-label {
@@ -91,7 +91,7 @@
 
             &.kbq-tab-group_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-surface-background);
+                    background: var(--kbq-tabs-tab-stack-transparent-on-surface-background);
                 }
 
                 & .kbq-tab-label {
@@ -105,7 +105,7 @@
         &.kbq-tab-nav-bar_filled {
             &.kbq-tab-nav-bar_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-background-background);
+                    background: var(--kbq-tabs-tab-stack-filled-on-background-background);
                 }
 
                 & .kbq-tab-link {
@@ -115,7 +115,7 @@
 
             &.kbq-tab-nav-bar_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-filled-on-surface-background);
+                    background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
                 }
 
                 & .kbq-tab-link {
@@ -127,7 +127,7 @@
         &.kbq-tab-nav-bar_transparent {
             &.kbq-tab-nav-bar_on-background {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-background-background);
+                    background: var(--kbq-tabs-tab-stack-transparent-on-background-background);
                 }
 
                 & .kbq-tab-link {
@@ -137,7 +137,7 @@
 
             &.kbq-tab-nav-bar_on-surface {
                 .kbq-tab-header {
-                    background: kbq-css-variable(tabs-tab-stack-transparent-on-surface-background);
+                    background: var(--kbq-tabs-tab-stack-transparent-on-surface-background);
                 }
 
                 & .kbq-tab-link {

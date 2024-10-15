@@ -12,8 +12,8 @@ $tokens: meta.module-variables(tokens) !default;
 
 .kbq-datepicker-toggle__button.kbq-button-icon {
     // FIXME: no such tokens in design-tokens, component needs to be reviewed
-    width: kbq-css-variable(datepicker-toggle-size-width);
-    height: kbq-css-variable(datepicker-toggle-size-height);
+    width: var(--kbq-datepicker-toggle-size-width);
+    height: var(--kbq-datepicker-toggle-size-height);
     margin-left: 2px;
 }
 

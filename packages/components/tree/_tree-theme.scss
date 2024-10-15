@@ -6,22 +6,22 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-tree-option($state-name) {
-    background: kbq-css-variable(tree-#{$state-name}-container-background);
+    background: var(--kbq-tree-#{$state-name}-container-background);
 
     .kbq-option-text {
-        color: kbq-css-variable(tree-#{$state-name}-text-color);
+        color: var(--kbq-tree-#{$state-name}-text-color);
     }
 
     .kbq-tree-node-toggle .kbq-icon {
-        color: kbq-css-variable(tree-#{$state-name}-tree-toggle-color);
+        color: var(--kbq-tree-#{$state-name}-tree-toggle-color);
     }
 
     .kbq-option-action .kbq-icon {
-        color: kbq-css-variable(tree-#{$state-name}-action-button-color);
+        color: var(--kbq-tree-#{$state-name}-action-button-color);
     }
 
     .kbq-option-caption {
-        color: kbq-css-variable(tree-#{$state-name}-caption-color);
+        color: var(--kbq-tree-#{$state-name}-caption-color);
     }
 }
 
@@ -39,7 +39,7 @@
 
         &.kbq-focused,
         &.kbq-active {
-            border-color: kbq-css-variable(tree-states-focused-focus-outline-color);
+            border-color: var(--kbq-tree-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {

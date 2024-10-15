@@ -11,7 +11,7 @@
     box-sizing: border-box;
 
     & .kbq-alert__content_title {
-        margin-bottom: kbq-css-variable(size-xxs);
+        margin-bottom: var(--kbq-size-xxs);
     }
 }
 
@@ -24,22 +24,19 @@
 }
 
 .kbq-alert.kbq-alert_normal {
-    border-radius: kbq-css-variable(alert-size-normal-container-border-radius);
+    border-radius: var(--kbq-alert-size-normal-container-border-radius);
 
-    padding: kbq-css-variable(alert-size-normal-container-padding-top)
-        kbq-css-variable(alert-size-normal-container-padding-right)
-        kbq-css-variable(alert-size-normal-container-padding-bottom)
-        kbq-css-variable(alert-size-normal-container-padding-left);
+    padding: var(--kbq-alert-size-normal-container-padding-top) var(--kbq-alert-size-normal-container-padding-right)
+        var(--kbq-alert-size-normal-container-padding-bottom) var(--kbq-alert-size-normal-container-padding-left);
 
     & .kbq-alert__icon {
-        margin: kbq-css-variable(alert-size-normal-no-title-icon-margin-top)
-            kbq-css-variable(alert-size-normal-icon-margin-right) kbq-css-variable(alert-size-normal-icon-margin-bottom)
-            kbq-css-variable(alert-size-normal-icon-margin-left);
+        margin: var(--kbq-alert-size-normal-no-title-icon-margin-top) var(--kbq-alert-size-normal-icon-margin-right)
+            var(--kbq-alert-size-normal-icon-margin-bottom) var(--kbq-alert-size-normal-icon-margin-left);
 
         &.kbq-alert__icon_title {
-            margin-top: kbq-css-variable(alert-size-normal-icon-margin-top);
+            margin-top: var(--kbq-alert-size-normal-icon-margin-top);
 
-            padding-top: kbq-css-variable(alert-size-normal-no-title-icon-padding-top);
+            padding-top: var(--kbq-alert-size-normal-no-title-icon-padding-top);
         }
 
         display: inline-flex;
@@ -47,19 +44,17 @@
     }
 
     & .kbq-alert__content {
-        padding: kbq-css-variable(alert-size-normal-content-padding-top)
-            kbq-css-variable(alert-size-normal-content-padding-right)
-            kbq-css-variable(alert-size-normal-content-padding-bottom)
-            kbq-css-variable(alert-size-normal-content-padding-left);
+        padding: var(--kbq-alert-size-normal-content-padding-top) var(--kbq-alert-size-normal-content-padding-right)
+            var(--kbq-alert-size-normal-content-padding-bottom) var(--kbq-alert-size-normal-content-padding-left);
     }
 
     & .kbq-alert__title {
-        margin-bottom: kbq-css-variable(alert-size-normal-title-margin-bottom);
+        margin-bottom: var(--kbq-alert-size-normal-title-margin-bottom);
     }
 
     & .kbq-alert__button-stack {
-        padding-top: kbq-css-variable(alert-size-normal-button-stack-padding-top);
-        padding-bottom: kbq-css-variable(alert-size-normal-button-stack-padding-bottom);
+        padding-top: var(--kbq-alert-size-normal-button-stack-padding-top);
+        padding-bottom: var(--kbq-alert-size-normal-button-stack-padding-bottom);
     }
 
     & .kbq-alert__button-stack_has-button {
@@ -67,8 +62,8 @@
     }
 
     & .kbq-alert__close-button {
-        margin-top: kbq-css-variable(alert-size-normal-close-button-margin-top);
-        margin-left: kbq-css-variable(alert-size-normal-close-button-margin-left);
+        margin-top: var(--kbq-alert-size-normal-close-button-margin-top);
+        margin-left: var(--kbq-alert-size-normal-close-button-margin-left);
 
         .kbq-icon-button {
             --kbq-icon-button-size-normal-horizontal-padding: 4px;
@@ -78,23 +73,21 @@
 }
 
 .kbq-alert.kbq-alert_compact {
-    border-radius: kbq-css-variable(alert-size-compact-container-border-radius);
+    border-radius: var(--kbq-alert-size-compact-container-border-radius);
 
-    padding: kbq-css-variable(alert-size-compact-container-padding-top)
-        kbq-css-variable(alert-size-compact-container-padding-right)
-        kbq-css-variable(alert-size-compact-container-padding-bottom)
-        kbq-css-variable(alert-size-compact-container-padding-left);
+    padding: var(--kbq-alert-size-compact-container-padding-top) var(--kbq-alert-size-compact-container-padding-right)
+        var(--kbq-alert-size-compact-container-padding-bottom) var(--kbq-alert-size-compact-container-padding-left);
 
     & .kbq-alert__icon {
-        margin-top: kbq-css-variable(alert-size-compact-no-title-icon-margin-top);
-        margin-right: kbq-css-variable(alert-size-compact-icon-margin-right);
+        margin-top: var(--kbq-alert-size-compact-no-title-icon-margin-top);
+        margin-right: var(--kbq-alert-size-compact-icon-margin-right);
 
-        padding-top: kbq-css-variable(alert-size-compact-no-title-icon-padding-top);
+        padding-top: var(--kbq-alert-size-compact-no-title-icon-padding-top);
 
         &.kbq-alert__icon_title {
-            margin-top: kbq-css-variable(alert-size-compact-icon-margin-top);
+            margin-top: var(--kbq-alert-size-compact-icon-margin-top);
 
-            padding-top: kbq-css-variable(alert-size-compact-icon-padding-top);
+            padding-top: var(--kbq-alert-size-compact-icon-padding-top);
         }
 
         display: inline-flex;
@@ -102,19 +95,17 @@
     }
 
     & .kbq-alert__content {
-        padding: kbq-css-variable(alert-size-compact-content-padding-top)
-            kbq-css-variable(alert-size-compact-content-padding-right)
-            kbq-css-variable(alert-size-compact-content-padding-bottom)
-            kbq-css-variable(alert-size-compact-content-padding-left);
+        padding: var(--kbq-alert-size-compact-content-padding-top) var(--kbq-alert-size-compact-content-padding-right)
+            var(--kbq-alert-size-compact-content-padding-bottom) var(--kbq-alert-size-compact-content-padding-left);
     }
 
     & .kbq-alert__title {
-        margin-bottom: kbq-css-variable(alert-size-compact-title-margin-bottom);
+        margin-bottom: var(--kbq-alert-size-compact-title-margin-bottom);
     }
 
     & .kbq-alert__button-stack {
-        padding-top: kbq-css-variable(alert-size-compact-button-stack-padding-top);
-        padding-bottom: kbq-css-variable(alert-size-compact-button-stack-padding-bottom);
+        padding-top: var(--kbq-alert-size-compact-button-stack-padding-top);
+        padding-bottom: var(--kbq-alert-size-compact-button-stack-padding-bottom);
     }
 
     & .kbq-alert__button-stack_has-button {
@@ -122,8 +113,8 @@
     }
 
     & .kbq-alert__close-button {
-        margin-top: kbq-css-variable(alert-size-compact-close-button-margin-top);
-        margin-left: kbq-css-variable(alert-size-compact-close-button-margin-left);
+        margin-top: var(--kbq-alert-size-compact-close-button-margin-top);
+        margin-left: var(--kbq-alert-size-compact-close-button-margin-left);
 
         .kbq-icon-button {
             --kbq-icon-button-size-normal-horizontal-padding: 4px;

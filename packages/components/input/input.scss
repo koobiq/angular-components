@@ -14,11 +14,11 @@
     width: 100%;
     min-height: kbq-difference-series-css-variables(
         [form-field-size-height,
-        calc(kbq-css-variable(form-field-size-border-width) * 2)]
+        calc(var(--kbq-form-field-size-border-width) * 2)]
     );
 
     padding: kbq-difference-series-css-variables([input-size-padding-vertical, form-field-size-border-width])
-        kbq-css-variable(input-size-padding-horizontal);
+        var(--kbq-input-size-padding-horizontal);
 }
 
 input.kbq-input[type='number'] {

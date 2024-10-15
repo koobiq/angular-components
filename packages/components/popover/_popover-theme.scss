@@ -2,28 +2,28 @@
 
 @mixin kbq-popover-theme() {
     .kbq-popover {
-        box-shadow: kbq-css-variable(popover-container-box-shadow);
+        box-shadow: var(--kbq-popover-container-box-shadow);
     }
 
     .kbq-popover__container {
-        background: kbq-css-variable(popover-container-background);
+        background: var(--kbq-popover-container-background);
     }
 
     .kbq-popover__arrow {
-        box-shadow: kbq-css-variable(popover-container-box-shadow);
-        background: kbq-css-variable(popover-container-background);
+        box-shadow: var(--kbq-popover-container-box-shadow);
+        background: var(--kbq-popover-container-background);
     }
 
     .kbq-popover__close {
-        background-color: kbq-css-variable(background-overlay-inverse);
+        background-color: var(--kbq-background-overlay-inverse);
     }
 
     .kbq-popover__header {
-        color: kbq-css-variable(popover-header-text-color);
+        color: var(--kbq-popover-header-text-color);
     }
 
     .kbq-popover__content {
-        color: kbq-css-variable(popover-content-text-color);
+        color: var(--kbq-popover-content-text-color);
     }
 }
 

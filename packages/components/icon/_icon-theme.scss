@@ -3,27 +3,27 @@
 @mixin kbq-icon-theme() {
     .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
         &.kbq-theme {
-            color: kbq-css-variable(icon-theme-color);
+            color: var(--kbq-icon-theme-color);
         }
 
         &.kbq-contrast {
-            color: kbq-css-variable(icon-contrast-color);
+            color: var(--kbq-icon-contrast-color);
         }
 
         &.kbq-contrast-fade {
-            color: kbq-css-variable(icon-fade-contrast-color);
+            color: var(--kbq-icon-fade-contrast-color);
         }
 
         &.kbq-error {
-            color: kbq-css-variable(icon-error-color);
+            color: var(--kbq-icon-error-color);
         }
 
         &.kbq-warning {
-            color: kbq-css-variable(icon-warning-color);
+            color: var(--kbq-icon-warning-color);
         }
 
         &.kbq-success {
-            color: kbq-css-variable(icon-success-color);
+            color: var(--kbq-icon-success-color);
         }
     }
 }

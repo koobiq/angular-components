@@ -7,16 +7,16 @@
 @mixin kbq-accordion-theme() {
     .kbq-accordion.cdk-keyboard-focused {
         & .kbq-accordion-item:focus-within {
-            border-color: kbq-css-variable(accordion-item-states-focus-border-color);
+            border-color: var(--kbq-accordion-item-states-focus-border-color);
         }
     }
 
     .kbq-accordion-item {
-        background: kbq-css-variable(accordion-item-default-background);
-        color: kbq-css-variable(accordion-item-default-text-color);
+        background: var(--kbq-accordion-item-default-background);
+        color: var(--kbq-accordion-item-default-text-color);
 
         & .kbq-accordion-trigger__icon {
-            color: kbq-css-variable(accordion-item-default-icon-color);
+            color: var(--kbq-accordion-item-default-icon-color);
         }
     }
 
@@ -26,21 +26,21 @@
         border: none;
         outline: none;
 
-        color: kbq-css-variable(accordion-item-default-text-color);
+        color: var(--kbq-accordion-item-default-text-color);
 
         &:hover:not([data-disabled='true']) {
             cursor: pointer;
 
             & .kbq-accordion-trigger__icon {
-                color: kbq-css-variable(accordion-item-states-hover-icon-color);
+                color: var(--kbq-accordion-item-states-hover-icon-color);
             }
         }
 
         &[data-disabled='true'] {
-            color: kbq-css-variable(accordion-item-states-disabled-text-color);
+            color: var(--kbq-accordion-item-states-disabled-text-color);
 
             & .kbq-accordion-trigger__icon {
-                color: kbq-css-variable(accordion-item-states-disabled-icon-color) !important;
+                color: var(--kbq-accordion-item-states-disabled-icon-color) !important;
             }
         }
     }

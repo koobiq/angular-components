@@ -7,7 +7,7 @@
 
     max-width: 100%;
 
-    padding: kbq-css-variable(tag-size-padding-vertical) kbq-css-variable(tag-size-padding-horizontal);
+    padding: var(--kbq-tag-size-padding-vertical) var(--kbq-tag-size-padding-horizontal);
 
     border-radius: 4px;
 
@@ -24,7 +24,7 @@
 
         flex-shrink: 0;
 
-        margin-right: kbq-css-variable(tag-size-close-button-margin-right);
+        margin-right: var(--kbq-tag-size-close-button-margin-right);
 
         &:hover {
             cursor: pointer;
@@ -40,11 +40,11 @@
         white-space: nowrap;
         overflow: hidden;
 
-        margin: 0 kbq-css-variable(tag-size-content-gap-horizontal);
+        margin: 0 var(--kbq-tag-size-content-gap-horizontal);
     }
 
     & .kbq-icon_left {
-        margin-left: kbq-css-variable(tag-size-icon-margin-left);
+        margin-left: var(--kbq-tag-size-icon-margin-left);
     }
 }
 

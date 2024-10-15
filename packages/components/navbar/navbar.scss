@@ -23,7 +23,7 @@
 }
 
 .kbq-navbar .kbq-navbar-container + .kbq-navbar-container {
-    margin-left: kbq-css-variable(size-xxl);
+    margin-left: var(--kbq-size-xxl);
 }
 
 @include kbq-navbar-theme();

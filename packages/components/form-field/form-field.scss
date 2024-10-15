@@ -19,13 +19,13 @@
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
-        height: kbq-css-variable(form-field-size-height);
+        height: var(--kbq-form-field-size-height);
     }
 
     &,
     .kbq-input,
     .kbq-textarea {
-        border-radius: kbq-css-variable(form-field-size-border-radius);
+        border-radius: var(--kbq-form-field-size-border-radius);
     }
 
     &:hover {
@@ -65,17 +65,17 @@
     }
 
     & + .kbq-password-hint {
-        margin-top: kbq-css-variable(size-m);
+        margin-top: var(--kbq-size-m);
     }
 }
 
 .kbq-form-field__container {
     position: relative;
 
-    border-width: kbq-css-variable(form-field-size-border-width);
+    border-width: var(--kbq-form-field-size-border-width);
     border-style: solid;
     border-color: transparent;
-    border-radius: kbq-css-variable(form-field-size-border-radius);
+    border-radius: var(--kbq-form-field-size-border-radius);
 }
 
 .kbq-form-field__prefix,
@@ -115,12 +115,12 @@
     justify-content: center;
     align-items: center;
 
-    width: kbq-css-variable(form-field-size-icon-button-size);
+    width: var(--kbq-form-field-size-icon-button-size);
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
         cursor: pointer;
-        width: kbq-css-variable(form-field-size-icon-button-size);
+        width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
     }
 
@@ -132,15 +132,15 @@
 .kbq-form-field__hint {
     display: flex;
     flex-direction: column;
-    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
+    margin-top: var(--kbq-form-field-hint-size-margin-top);
 
     & .kbq-password-hint:first-child {
-        margin-top: kbq-css-variable(size-s);
+        margin-top: var(--kbq-size-s);
     }
 }
 
 .kbq-password-hint {
-    margin-top: kbq-css-variable(form-field-hint-size-gap);
+    margin-top: var(--kbq-form-field-hint-size-gap);
 }
 
 @include kbq-form-field-theme();

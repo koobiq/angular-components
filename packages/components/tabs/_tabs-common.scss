@@ -24,10 +24,10 @@
         );
 
     border: {
-        width: kbq-css-variable(tabs-size-tab-item-focus-outline-width);
+        width: var(--kbq-tabs-size-tab-item-focus-outline-width);
         style: solid;
         color: transparent;
-        radius: kbq-css-variable(tabs-size-tab-item-border-radius);
+        radius: var(--kbq-tabs-size-tab-item-border-radius);
     }
 
     outline: none;
@@ -67,7 +67,7 @@
         display: flex;
         align-items: center;
 
-        gap: kbq-css-variable(tabs-size-tab-item-content-gap-horizontal);
+        gap: var(--kbq-tabs-size-tab-item-content-gap-horizontal);
     }
 
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
