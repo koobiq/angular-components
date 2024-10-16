@@ -243,6 +243,19 @@ export const enUSLocaleData: {
             };
         };
     };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
+    };
 };
 
 // @public
@@ -327,6 +340,19 @@ export const esLALocaleData: {
             };
         };
     };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
+    };
 };
 
 // @public (undocumented)
@@ -404,6 +430,19 @@ export const faIRLocaleData: {
                 size: string;
             };
         };
+    };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
     };
 };
 
@@ -536,6 +575,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -599,6 +651,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     size: string;
                 };
             };
+        };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
         };
     };
     'es-LA': {
@@ -665,6 +730,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -729,6 +807,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     size: string;
                 };
             };
+        };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
         };
     };
     'ru-RU': {
@@ -797,6 +888,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -862,6 +966,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     size: string;
                 };
             };
+        };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
         };
     };
 };
@@ -1615,6 +1732,8 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
+    hasPlaceholder(): boolean;
+    // (undocumented)
     isSearchChanged: boolean;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -1626,6 +1745,8 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     reset(): void;
     // (undocumented)
     searchChangesSubscription: Subscription;
+    // (undocumented)
+    setPlaceholder(value: string): void;
     // (undocumented)
     value(): any;
     // (undocumented)
@@ -1924,6 +2045,19 @@ export const ptBRLocaleData: {
             };
         };
     };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
+    };
 };
 
 // @public (undocumented)
@@ -2104,6 +2238,19 @@ export const ruRULocaleData: {
                 size: string;
             };
         };
+    };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
     };
 };
 
@@ -2288,6 +2435,19 @@ export const zhCNLocaleData: {
                 size: string;
             };
         };
+    };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
     };
 };
 

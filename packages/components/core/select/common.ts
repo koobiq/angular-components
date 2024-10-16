@@ -43,6 +43,14 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
         formField.canCleanerClearByEsc = false;
     }
 
+    setPlaceholder(value: string): void {
+        this.formField.control.placeholder = value;
+    }
+
+    hasPlaceholder(): boolean {
+        return !!this.formField?.control.placeholder;
+    }
+
     focus(): void {
         this.formField.focusViaKeyboard();
     }

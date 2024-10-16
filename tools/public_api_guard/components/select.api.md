@@ -152,6 +152,8 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
+    protected localeService?: KbqLocaleService | undefined;
+    // (undocumented)
     get multiple(): boolean;
     set multiple(value: boolean);
     // (undocumented)
