@@ -1,20 +1,26 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { RdxAccordionTriggerDirective } from '@radix-ng/primitives/accordion';
 import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
     template: `
-        <i
-            class="kbq-accordion-trigger__icon"
-            kbq-icon="kbq-chevron-right-s_16"
-        ></i>
+        @if (isHugSpaceBetween) {
+            <i
+                class="kbq-accordion-trigger__icon"
+                kbq-icon="kbq-chevron-down-s_16"
+            ></i>
+        } @else {
+            <i
+                class="kbq-accordion-trigger__icon"
+                kbq-icon="kbq-chevron-right-s_16"
+            ></i>
+        }
 
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
     hostDirectives: [RdxAccordionTriggerDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion-trigger',

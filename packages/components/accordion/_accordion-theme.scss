@@ -52,6 +52,10 @@
         @include kbq-typography-css-variables(accordion, item-header-text);
     }
 
+    .kbq-accordion-trigger__caption {
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+    }
+
     .kbq-accordion-content {
         @include kbq-typography-css-variables(accordion, item-content-text);
     }
