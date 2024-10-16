@@ -1,3 +1,19 @@
+# 18.2.0 (2024-10-16)
+
+### Koobiq
+
+ * bug fix  **accordion:** additional fixes ([#DS-2984](https://github.com/koobiq/angular-components/issues/issue/DS-2984)) ([#369](https://github.com/koobiq/angular-components/issues/369)) ([6e36e1c](https://github.com/koobiq/angular-components/commit/6e36e1c028c53179f0d308a5f92c1ab159d02ccc))
+ * bug fix  **alert:** aligned close button according to design ([#DS-2886](https://github.com/koobiq/angular-components/issues/issue/DS-2886)) ([#356](https://github.com/koobiq/angular-components/issues/356)) ([63c92d2](https://github.com/koobiq/angular-components/commit/63c92d2dca87293d4a68d7b136f51b0e5f68637c))
+ * bug fix  **layout:** removed map.get from properties used in styles ([#DS-2972](https://github.com/koobiq/angular-components/issues/issue/DS-2972)) ([#365](https://github.com/koobiq/angular-components/issues/365)) ([978caa2](https://github.com/koobiq/angular-components/commit/978caa2c055d990317604b27fc041c0b496b3755))
+ * bug fix  **schematics:** added radix-ng to init ([#363](https://github.com/koobiq/angular-components/issues/363)) ([42f09ff](https://github.com/koobiq/angular-components/commit/42f09ffb2f8d979de7817ce83910a31b56aed272))
+ * bug fix  **tabs:** underline dark theme support ([#DS-2961](https://github.com/koobiq/angular-components/issues/issue/DS-2961)) ([#359](https://github.com/koobiq/angular-components/issues/359)) ([14ae5e8](https://github.com/koobiq/angular-components/commit/14ae5e8924e590fa022329bab2438757b0a3d364))
+ * feature  added accordion ([#DS-2932](https://github.com/koobiq/angular-components/issues/issue/DS-2932)) ([#341](https://github.com/koobiq/angular-components/issues/341)) ([9097c91](https://github.com/koobiq/angular-components/commit/9097c91aad73d05a40762054823aa065b89b0740))
+ * feature  **docs,dropdown:** set button to active on dropdown opened ([#DS-2709](https://github.com/koobiq/angular-components/issues/issue/DS-2709)) ([#358](https://github.com/koobiq/angular-components/issues/358)) ([11af6b4](https://github.com/koobiq/angular-components/commit/11af6b4373ba742c918a1106fb6b36adfb7b3846))
+ * feature  **docs:** badges examples ([#DS-2639](https://github.com/koobiq/angular-components/issues/issue/DS-2639)) ([#364](https://github.com/koobiq/angular-components/issues/364)) ([aa71fdc](https://github.com/koobiq/angular-components/commit/aa71fdc5787ff4173b49af674c39cd14b358d844))
+ * feature  **docs:** updated 6 covers for our welcome page ([#368](https://github.com/koobiq/angular-components/issues/368)) ([77e75e0](https://github.com/koobiq/angular-components/commit/77e75e07084379a0a6b6b30879e966c649724012))
+ * feature  **modal:** added shadows on scroll/overflow ([#DS-2892](https://github.com/koobiq/angular-components/issues/issue/DS-2892)) ([#361](https://github.com/koobiq/angular-components/issues/361)) ([a4e3743](https://github.com/koobiq/angular-components/commit/a4e37434ed267b5e1af6483339650d4683c88244))
+ * feature  **tabs:** full custom tab labels examples ([#DS-2977](https://github.com/koobiq/angular-components/issues/issue/DS-2977)) ([#362](https://github.com/koobiq/angular-components/issues/362)) ([0ce11d7](https://github.com/koobiq/angular-components/commit/0ce11d7c31b3c23f1bba534a1e860e7eed918cef))
+
 # 18.1.0 (2024-10-09)
 
 ### Koobiq
