@@ -1,27 +1,70 @@
-### With default parameters
+Селект — позволяет пользователю выбрать одно или несколько значений из преднастроенного списка.
 
-<!-- example(select-overview) -->
+<img src="assets/images/code-block-example.png"/>
 
-### Multiple select
+### Состояния
 
-<!-- example(select-multiple-overview) -->
+#### Валидация
 
-### With search
+<img src="assets/images/code-block-example.png"/>
 
-<!-- example(select-search-overview) -->
+#### Неактивные состояния
 
-### With popped up selected options
+<img src="assets/images/code-block-example.png"/>
 
-<!-- example(select-prioritized-selected) -->
+#### Множественный выбор
 
-### With groups
+<img src="assets/images/code-block-example.png"/>
 
-<!-- example(select-groups) -->
+#### Группировка значений
 
-### With footer
+<img src="assets/images/code-block-example.png"/>
 
-<!-- example(select-footer) -->
+#### Наполнение списка значений
 
-### With cdk-virtual-scroll-viewport
+<img src="assets/images/code-block-example.png"/>
 
-<!-- example(select-virtual-scroll) -->
+#### Список с поиском
+
+Используйте поиск, когда в списке больше 10 элементов.
+
+Поиск может осуществляться по первым символам или полному совпадению, в зависимости от конкретной задачи и предпочтений пользователей.
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Список с нижним колонтитулом
+
+Если необходимо расположить дополнительные контролы, можно включить отображение нижнего колонтитула. В нижнем колонтитуле можно отображать различные вспомогательные контролы: кнопки, ссылки, подсказки.
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Высота выпадающего списка
+
+При необходимости можно вручную настроить высоту выпадающего списка.
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Ширина выпадающего списка
+
+Список значений может содержать элементы различной длины. Для удобства пользователя доступны несколько размеров всплывающего списка.
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Дополнительная иконка
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Преднастроенный выбор
+
+<img src="assets/images/code-block-example.png"/>
+
+#### Использование cdk-virtual-scroll-viewport
+
+Добавьте cdk-virtual-scroll-viewport в шаблон компонента, чтобы отображать только видимые элементы и улучшить производительность.
+
+<img src="assets/images/code-block-example.png"/>
+
+### Рекомендации
+
+-   Если вы используете селект без лейбла, то советуем добавить placeholder для указания, какую информацию пользователь должен выбрать. Например, "Страна".
+-   Если в списке значений более 10 элементов, то включите отображение поиска в шапке выпадающего списка. Это позволит упростить поиск значений.
