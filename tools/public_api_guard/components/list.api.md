@@ -175,7 +175,7 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor, OnDestroy {
+export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
@@ -207,8 +207,6 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     static ngAcceptInputType_horizontal: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);
