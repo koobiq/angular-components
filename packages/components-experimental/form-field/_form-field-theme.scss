@@ -1,0 +1,86 @@
+@use '../../components/core/styles/theming/theming' as *;
+@use '../../components/core/styles/typography/typography-utils' as *;
+@use '../../components/core/styles/common/tokens' as *;
+
+@mixin kbq-form-field-state($state-name) {
+    .kbq-form-field_container {
+        border-color: var(--kbq-form-field-#{$state-name}-border-color);
+        background-color: var(--kbq-form-field-#{$state-name}-background);
+    }
+
+    .kbq-input,
+    .kbq-tag-input,
+    .kbq-textarea {
+        color: var(--kbq-form-field-#{$state-name}-text);
+
+        &::placeholder {
+            color: var(--kbq-form-field-#{$state-name}-placeholder);
+        }
+
+        &::-ms-input-placeholder {
+            color: var(--kbq-form-field-#{$state-name}-placeholder);
+        }
+
+        &::-webkit-input-placeholder {
+            color: var(--kbq-form-field-#{$state-name}-placeholder);
+        }
+    }
+}
+
+@mixin kbq-form-field-theme() {
+    .kbq-form-field {
+        @include kbq-form-field-state(default);
+
+        & .kbq-input {
+            //https://css-tricks.com/almanac/selectors/a/autofill/
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus {
+                -webkit-box-shadow: inset 0 0 0 40rem var(--kbq-form-field-states-autofill-background);
+                -webkit-text-fill-color: var(--kbq-form-field-states-autofill-text);
+                caret-color: var(--kbq-form-field-states-autofill-text);
+            }
+        }
+
+        &.kbq-form-field_focused {
+            @include kbq-form-field-state(states-focused);
+
+            & .kbq-form-field_container {
+                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+            }
+        }
+
+        &.kbq-form-field_invalid {
+            @include kbq-form-field-state(states-error);
+
+            &.kbq-form-field_focused .kbq-form-field_container {
+                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+            }
+        }
+
+        &.kbq-form-field_disabled {
+            @include kbq-form-field-state(states-disabled);
+
+            .kbq-icon {
+                color: var(--kbq-form-field-states-disabled-text);
+                -webkit-text-fill-color: var(--kbq-form-field-states-disabled-text);
+            }
+        }
+    }
+
+    .kbq-form-field_hint {
+        .kbq-hint {
+            color: var(--kbq-form-field-hint-text);
+        }
+    }
+}
+
+@mixin kbq-form-field-typography() {
+    .kbq-form-field {
+        @include kbq-typography-css-variables(form-field, text);
+    }
+
+    .kbq-form-field_hint .kbq-hint:not(.kbq-password-hint) .kbq-hint_text {
+        @include kbq-typography-css-variables(form-field-hint, text);
+    }
+}

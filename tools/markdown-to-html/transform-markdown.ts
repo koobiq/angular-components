@@ -4,9 +4,16 @@
  */
 import { docTask } from './utils';
 
-const examplesDirComponents = ['packages/components/**/!(README|examples*).md', 'docs/guides/*.md'];
+const examplesDirComponents = [
+    'packages/components/**/!(README|examples*).md',
+    'packages/components-experimental/**/!(README|examples*).md',
+    'docs/guides/*.md'
+];
 const examplesDirCdk = 'packages/cdk/**/!(README|examples*).md';
-const examplesDirExamples = 'packages/components/**/examples.*.md';
+const examplesDirExamples = [
+    'packages/components/**/examples.*.md',
+    'packages/components-experimental/**/examples.*.md'
+];
 
 const markdownDocsKoobiq = docTask('markdown-docs-koobiq', {
     source: examplesDirComponents,

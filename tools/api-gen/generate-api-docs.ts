@@ -13,12 +13,14 @@ const modules: ModuleInfo[] = [
     {
         /** List of koobiq packages that need to be documented. */
         moduleName: 'components'
+    },
+    {
+        moduleName: 'components-experimental'
     }
 ];
 
 export const generateApiDocs = () => {
     const taskId = 'api-docs-koobiq';
-
     console.log(`Starting ${chalk.blue(taskId)}...`);
     const data = extractApiToJson(modules);
     const filteredData = generateManifest(data);
