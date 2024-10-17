@@ -9,9 +9,11 @@ import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
+    inject,
     Inject,
     Input,
     NgZone,
@@ -19,6 +21,7 @@ import {
     Optional,
     QueryList
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
@@ -137,8 +140,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      */
     @Input() disablePagination: boolean = false;
 
-    /** Emits when the component is destroyed. */
-    protected readonly destroyed = new Subject<void>();
+    private readonly destroyRef = inject(DestroyRef);
 
     protected vertical: boolean = false;
 
@@ -175,7 +177,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
         ngZone.runOutsideAngular(() => {
             fromEvent(elementRef.nativeElement, 'mouseleave')
-                .pipe(takeUntil(this.destroyed))
+                .pipe(takeUntilDestroyed())
                 .subscribe(() => this.stopInterval());
         });
     }
@@ -184,11 +186,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     ngAfterViewInit() {
         // We need to handle these events manually, because we want to bind passive event listeners.
         fromEvent(this.previousPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-            .pipe(takeUntil(this.destroyed))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.handlePaginatorPress('before'));
 
         fromEvent(this.nextPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-            .pipe(takeUntil(this.destroyed))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.handlePaginatorPress('after'));
     }
 
@@ -213,7 +215,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // On dir change or window resize, realign the ink bar and update the orientation of
         // the key manager if the direction has changed.
         merge(dirChange, resize, this.items.changes)
-            .pipe(takeUntil(this.destroyed))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 // We need to defer this to give the browser some time to recalculate
                 // the element dimensions. The call has to be wrapped in `NgZone.run`,
@@ -231,7 +233,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // If there is a change in the focus key manager we need to emit the `indexFocused`
         // event in order to provide a public event that notifies about focus changes. Also we realign
         // the tabs container by scrolling the new focused tab into the visible section.
-        this.keyManager.change.pipe(takeUntil(this.destroyed)).subscribe((newFocusIndex) => {
+        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
             this.indexFocused.emit(newFocusIndex);
             this.setTabFocus(newFocusIndex);
         });
@@ -264,8 +266,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     ngOnDestroy() {
-        this.destroyed.next();
-        this.destroyed.complete();
         this.stopScrolling.complete();
     }
 
@@ -554,7 +554,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // Start a timer after the delay and keep firing based on the interval.
         timer(HEADER_SCROLL_DELAY, HEADER_SCROLL_INTERVAL)
             // Keep the timer going until something tells it to stop or the component is destroyed.
-            .pipe(takeUntil(merge(this.stopScrolling, this.destroyed)))
+            .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.stopScrolling))
             .subscribe(() => {
                 const { maxScrollDistance, distance } = this.scrollHeader(direction);
 

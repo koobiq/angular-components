@@ -1,9 +1,8 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Optional, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, Optional, Renderer2 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TreeSizeIndentLevel } from '@koobiq/design-tokens';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
 
@@ -14,7 +13,7 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
     selector: '[kbqTreeNodePadding]',
     exportAs: 'kbqTreeNodePadding'
 })
-export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
+export class KbqTreeNodePadding<T> implements AfterViewInit {
     get level(): number {
         return this._level;
     }
@@ -48,8 +47,6 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
     withIcon: boolean;
     iconWidth: number = 24;
 
-    private destroyed = new Subject<void>();
-
     constructor(
         protected treeNode: KbqTreeNode<T>,
         protected tree: KbqTreeBase<T>,
@@ -58,17 +55,12 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
         private option: KbqTreeOption,
         @Optional() private dir: Directionality
     ) {
-        this.dir?.change?.pipe(takeUntil(this.destroyed)).subscribe(() => this.setPadding());
+        this.dir?.change?.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
     }
 
     ngAfterViewInit(): void {
         this.withIcon = this.option.isToggleInDefaultPlace;
         this.setPadding();
-    }
-
-    ngOnDestroy() {
-        this.destroyed.next();
-        this.destroyed.complete();
     }
 
     paddingIndent(): string | null {

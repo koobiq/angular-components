@@ -37,15 +37,17 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     // (undocumented)
     blur(): void;
     // (undocumented)
-    protected changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    protected readonly destroyed: Subject<void>;
+    protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     protected dropSubscriptions(): void;
+    // (undocumented)
+    protected readonly elementRef: ElementRef;
     // (undocumented)
     focus(): void;
     // (undocumented)
     focusableItems: QueryList<KbqNavbarFocusableItem>;
+    // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
     // (undocumented)
@@ -70,6 +72,12 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
 // @public (undocumented)
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly elementRef: ElementRef;
+    // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
     navbarItems: QueryList<KbqNavbarItem>;
     // (undocumented)
@@ -101,7 +109,7 @@ export class KbqNavbarBento {
 }
 
 // @public (undocumented)
-export class KbqNavbarBrand implements AfterContentInit, OnDestroy {
+export class KbqNavbarBrand implements AfterContentInit {
     constructor(navbar: KbqVerticalNavbar);
     // (undocumented)
     get hasBento(): boolean;
@@ -111,8 +119,6 @@ export class KbqNavbarBrand implements AfterContentInit, OnDestroy {
     logo: KbqNavbarLogo;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     title: KbqNavbarTitle;
     // (undocumented)

@@ -11,9 +11,10 @@ import {
     ViewEncapsulation,
     forwardRef
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThemePalette } from '@koobiq/components/core';
-import { BehaviorSubject, Subject, merge } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { kbqToastAnimations } from './toast-animations';
 import { KbqToastService } from './toast.service';
 import { KbqToastData, KbqToastStyle } from './toast.type';
@@ -73,8 +74,6 @@ export class KbqToastComponent implements OnDestroy {
         return this.hovered.getValue() || this.focused.getValue();
     }
 
-    private destroyed: Subject<boolean> = new Subject();
-
     constructor(
         readonly data: KbqToastData,
         @Inject(forwardRef(() => KbqToastService)) readonly service: KbqToastService,
@@ -98,7 +97,7 @@ export class KbqToastComponent implements OnDestroy {
         merge(this.hovered, this.focused)
             .pipe(
                 filter((value) => value),
-                takeUntil(this.destroyed)
+                takeUntilDestroyed()
             )
             .subscribe(() => {
                 if (this.ttl === 0) {
@@ -114,8 +113,6 @@ export class KbqToastComponent implements OnDestroy {
 
         this.hovered.next(false);
         this.focused.next(false);
-
-        this.destroyed.next(true);
     }
 
     close(): void {

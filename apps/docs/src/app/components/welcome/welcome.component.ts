@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThemeService } from '@koobiq/components/core';
-import { Observable, Subject, fromEvent } from 'rxjs';
-import { debounceTime, map, takeUntil } from 'rxjs/operators';
+import { fromEvent, Observable } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { DocCategory, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
 
@@ -14,8 +15,7 @@ import { DocStates } from '../doс-states';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class WelcomeComponent implements OnInit, OnDestroy {
-    readonly destroyed = new Subject<void>();
+export class WelcomeComponent implements OnInit {
     docCategories: DocCategory[];
     currentTheme$: Observable<string>;
 
@@ -26,7 +26,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
         private themeService: ThemeService
     ) {
         fromEvent(elementRef.nativeElement, 'scroll')
-            .pipe(debounceTime(10), takeUntil(this.destroyed))
+            .pipe(debounceTime(10), takeUntilDestroyed())
             .subscribe(this.checkOverflow);
     }
 
@@ -36,10 +36,6 @@ export class WelcomeComponent implements OnInit, OnDestroy {
             map((currentTheme) => currentTheme.className.replace('kbq-theme-', ''))
         );
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
-    }
-
-    ngOnDestroy(): void {
-        this.destroyed.next();
     }
 
     checkOverflow = () => {

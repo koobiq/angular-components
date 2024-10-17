@@ -10,8 +10,8 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
 
@@ -93,7 +93,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     }
 
     setupButtonEvents() {
-        this.instance.onConfirm.pipe(takeUntil(this.destroyed)).subscribe(() => {
+        this.instance.onConfirm.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.confirm.emit();
             this.hide();
         });

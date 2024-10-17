@@ -11,12 +11,13 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationStart, Router, UrlSegment } from '@angular/router';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { Subject, filter } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AnchorsComponent } from '../anchors/anchors.component';
 import { DocItem, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
@@ -33,8 +34,6 @@ import { DocStates } from '../doс-states';
 export class ComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
     docItem: DocItem;
     docCategoryName: string;
-
-    private destroyed: Subject<void> = new Subject();
 
     constructor(
         private routeActivated: ActivatedRoute,
@@ -55,7 +54,7 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
         this.routeActivated.url
             .pipe(
                 map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
-                takeUntil(this.destroyed)
+                takeUntilDestroyed()
             )
             .subscribe((docItem) => {
                 this.sidepanelService.closeAll();
@@ -78,12 +77,11 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
 
     ngOnDestroy() {
         this.scrollDispatcher.deregister(this);
-        this.destroyed.next();
     }
 }
 
 @Directive()
-export class BaseOverviewComponent implements OnDestroy {
+export class BaseOverviewComponent {
     readonly animationDone = new Subject<boolean>();
 
     animationState: 'fadeIn' | 'fadeOut' = 'fadeOut';
@@ -104,8 +102,6 @@ export class BaseOverviewComponent implements OnDestroy {
         return `docs-content/overviews/components/${this.componentDocItem.id}.html`;
     }
 
-    private destroyed: Subject<void> = new Subject();
-
     constructor(
         protected routeActivated: ActivatedRoute,
         protected docItems: DocumentationItems,
@@ -119,7 +115,7 @@ export class BaseOverviewComponent implements OnDestroy {
             .parent!.url.pipe(
                 map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
                 filter((p) => !!p),
-                takeUntil(this.destroyed)
+                takeUntilDestroyed()
             )
             .subscribe((d) => (this.componentDocItem = d!));
 
@@ -128,7 +124,7 @@ export class BaseOverviewComponent implements OnDestroy {
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationStart),
-                takeUntil(this.destroyed)
+                takeUntilDestroyed()
             )
             .subscribe((event: any) => {
                 const rootUrl = this.getRoute(event.url);
@@ -171,10 +167,6 @@ export class BaseOverviewComponent implements OnDestroy {
 
         this.startAnimation();
         this.changeDetectorRef.detectChanges();
-    }
-
-    ngOnDestroy() {
-        this.destroyed.next();
     }
 
     private startAnimation() {

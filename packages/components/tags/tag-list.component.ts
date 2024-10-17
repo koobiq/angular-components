@@ -8,9 +8,11 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -20,6 +22,7 @@ import {
     Self,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
@@ -30,8 +33,8 @@ import {
     mixinErrorState
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Observable, Subject, Subscription, merge } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import { KbqTag, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
 
@@ -333,9 +336,6 @@ export class KbqTagList
      */
     private lastDestroyedTagIndex: number | null = null;
 
-    /** Subject that emits when the component has been destroyed. */
-    private destroyed = new Subject<void>();
-
     /** Subscription to focus changes in the tags. */
     private tagFocusSubscription: Subscription | null;
 
@@ -347,6 +347,8 @@ export class KbqTagList
 
     /** Subscription to remove changes in tags. */
     private tagRemoveSubscription: Subscription | null;
+
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         protected elementRef: ElementRef<HTMLElement>,
@@ -372,13 +374,13 @@ export class KbqTagList
 
         if (this.dir) {
             this.dir.change
-                .pipe(takeUntil(this.destroyed))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((dir) => this.keyManager.withHorizontalOrientation(dir));
         }
 
         // Prevents the tag list from capturing focus and redirecting
         // it back to the first tag when the user tabs out.
-        this.keyManager.tabOut.pipe(takeUntil(this.destroyed)).subscribe(() => {
+        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this._tabIndex = -1;
 
             setTimeout(() => {
@@ -388,7 +390,7 @@ export class KbqTagList
         });
 
         // When the list changes, re-subscribe
-        this.tags.changes.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+        this.tags.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.disabled) {
                 // Since this happens after the content has been
                 // checked, we need to defer it to the next tick.
@@ -435,8 +437,6 @@ export class KbqTagList
     }
 
     ngOnDestroy() {
-        this.destroyed.next();
-        this.destroyed.complete();
         this.stateChanges.complete();
 
         this.dropSubscriptions();

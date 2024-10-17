@@ -18,6 +18,7 @@ import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
 import { DateFormats } from '@koobiq/date-adapter';
 import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
+import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -1425,7 +1426,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected _customClass: string;
     // (undocumented)
-    protected readonly destroyed: Subject<void>;
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     detach: () => void;
     // (undocumented)

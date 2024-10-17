@@ -16,6 +16,7 @@ import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { ControlValueAccessor } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
+import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -173,6 +174,8 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     protected dataDiffer: IterableDiffer<T>;
     get dataSource(): DataSource<T> | Observable<T[]> | T[];
     set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]);
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     protected differs: IterableDiffers;
     getNodeDef(data: T, i: number): KbqTreeNodeDef<T>;
@@ -353,7 +356,7 @@ export class KbqTreeNodeOutletContext<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
+export class KbqTreeNodePadding<T> implements AfterViewInit {
     constructor(treeNode: KbqTreeNode<T>, tree: KbqTreeBase<T>, renderer: Renderer2, element: ElementRef<HTMLElement>, option: KbqTreeOption, dir: Directionality);
     // (undocumented)
     baseLeftPadding: number;
@@ -370,8 +373,6 @@ export class KbqTreeNodePadding<T> implements OnDestroy, AfterViewInit {
     set level(value: number);
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     paddingIndent(): string | null;
     // (undocumented)
@@ -551,7 +552,7 @@ export class KbqTreeSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex, OnDestroy {
+export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex {
     constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
@@ -587,8 +588,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     readonly navigationChange: EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     nodeOutlet: KbqTreeNodeOutlet;
     // (undocumented)

@@ -11,6 +11,7 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
@@ -30,8 +31,10 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
+    inject,
     isDevMode
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
@@ -503,8 +506,8 @@ export class KbqSelect
     private readonly uid = `kbq-select-${nextUniqueId++}`;
 
     private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    /** Emits whenever the component is destroyed. */
-    private readonly destroy = new Subject<void>();
+
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -542,23 +545,25 @@ export class KbqSelect
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
         // https://github.com/angular/angular/issues/24084
-        this.panelDoneAnimatingStream.pipe(distinctUntilChanged(), takeUntil(this.destroy)).subscribe(() => {
-            if (this.panelOpen) {
-                this.scrollTop = 0;
+        this.panelDoneAnimatingStream
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                if (this.panelOpen) {
+                    this.scrollTop = 0;
 
-                if (this.search) {
-                    this.search.focus();
+                    if (this.search) {
+                        this.search.focus();
+                    }
+
+                    this.openedChange.emit(true);
+                } else {
+                    this.openedChange.emit(false);
+                    this._changeDetectorRef.markForCheck();
                 }
-
-                this.openedChange.emit(true);
-            } else {
-                this.openedChange.emit(false);
-                this._changeDetectorRef.markForCheck();
-            }
-        });
+            });
 
         merge(this.optionSelectionChanges, this.visibleChanges)
-            .pipe(distinctUntilChanged(), takeUntil(this.destroy))
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => setTimeout(() => this.calculateHiddenItems(), 0));
     }
 
@@ -566,12 +571,12 @@ export class KbqSelect
         this.withVirtualScroll = !!this.cdkVirtualForOf;
         this.initKeyManager();
 
-        this.selectionModel.changed.pipe(takeUntil(this.destroy)).subscribe((event) => {
+        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             event.added.forEach((option) => option.select());
             event.removed.forEach((option) => option.deselect());
         });
 
-        this.options.changes.pipe(startWith(null), takeUntil(this.destroy)).subscribe(() => {
+        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
             this.initializeSelection();
         });
@@ -600,8 +605,6 @@ export class KbqSelect
     }
 
     ngOnDestroy() {
-        this.destroy.next();
-        this.destroy.complete();
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
     }
@@ -1132,7 +1135,7 @@ export class KbqSelect
             .withVerticalOrientation()
             .withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
-        this.keyManager.change.pipe(takeUntil(this.destroy)).subscribe(() => {
+        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.panelOpen && this.panel) {
                 this.scrollActiveOptionIntoView();
             } else if (!this.panelOpen && !this.multiple && this.keyManager.activeItem) {
@@ -1143,27 +1146,27 @@ export class KbqSelect
 
     /** Drops current option subscriptions and IDs and resets from scratch. */
     private resetOptions(): void {
-        const changedOrDestroyed = merge(this.options.changes, this.destroy);
+        this.optionSelectionChanges
+            .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
+            .subscribe((event) => {
+                this.onSelect(event.source, event.isUserInput);
 
-        this.optionSelectionChanges.pipe(takeUntil(changedOrDestroyed)).subscribe((event) => {
-            this.onSelect(event.source, event.isUserInput);
+                if (this.search && this.search.isSearchChanged) {
+                    Promise.resolve().then(() => this.keyManager.updateActiveItem(0));
 
-            if (this.search && this.search.isSearchChanged) {
-                Promise.resolve().then(() => this.keyManager.updateActiveItem(0));
+                    this.search.isSearchChanged = false;
+                }
 
-                this.search.isSearchChanged = false;
-            }
-
-            if (event.isUserInput && !this.multiple && this.panelOpen) {
-                this.close();
-                this.focus();
-            }
-        });
+                if (event.isUserInput && !this.multiple && this.panelOpen) {
+                    this.close();
+                    this.focus();
+                }
+            });
 
         // Listen to changes in the internal state of the options and react accordingly.
         // Handles cases like the labels of the selected options changing.
         merge(...this.options.map((option) => option.stateChanges))
-            .pipe(takeUntil(changedOrDestroyed))
+            .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
             .subscribe(() => {
                 this._changeDetectorRef.markForCheck();
                 this.stateChanges.next();

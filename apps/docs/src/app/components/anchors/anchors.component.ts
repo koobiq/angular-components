@@ -1,8 +1,19 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    DestroyRef,
+    inject,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Subject, Subscription, filter, fromEvent } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { filter, fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 interface KbqDocsAnchor {
     href: string;
@@ -45,7 +56,6 @@ export class AnchorsComponent implements OnDestroy, OnInit {
     private noSmoothScrollDebounce = 10;
     private debounceTime = 15;
 
-    private destroyed: Subject<boolean> = new Subject();
     private scrollSubscription: Subscription;
 
     private get scrollContainer(): HTMLElement {
@@ -63,6 +73,8 @@ export class AnchorsComponent implements OnDestroy, OnInit {
     private get scrollOffset(): number {
         return this.scrollContainer.scrollTop + this.headerHeight * this.anchorHeaderCoef;
     }
+
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private router: Router,
@@ -82,7 +94,7 @@ export class AnchorsComponent implements OnDestroy, OnInit {
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                takeUntil(this.destroyed)
+                takeUntilDestroyed()
             )
             .subscribe(() => {
                 const [rootUrl] = router.url.split('#');
@@ -97,14 +109,13 @@ export class AnchorsComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         // attached to anchor's change in the address bar manually or by clicking on the anchor
-        this.route.fragment.pipe(takeUntil(this.destroyed)).subscribe((fragment) => (this.fragment = fragment || ''));
+        this.route.fragment
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((fragment) => (this.fragment = fragment || ''));
     }
 
     ngOnDestroy() {
         this.scrollSubscription?.unsubscribe();
-
-        this.destroyed.next(true);
-        this.destroyed.complete();
     }
 
     getAnchorByHref(href: string): KbqDocsAnchor | null {
@@ -129,7 +140,7 @@ export class AnchorsComponent implements OnDestroy, OnInit {
         this.scrollSubscription?.unsubscribe();
 
         this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
-            .pipe(debounceTime(this.debounceTime), takeUntil(this.destroyed))
+            .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe(this.onScroll);
 
         this.ref.detectChanges();
